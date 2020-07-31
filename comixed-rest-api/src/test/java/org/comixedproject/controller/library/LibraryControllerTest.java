@@ -60,6 +60,7 @@ public class LibraryControllerTest {
   private static final String TEST_RENAMING_RULE = "PUBLISHER/SERIES/VOLUME/SERIES vVOLUME #ISSUE";
   private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
   private static final Boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
+  private static final Boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
@@ -215,10 +216,19 @@ public class LibraryControllerTest {
   public void testConvertComics() {
     libraryController.convertComics(
         new ConvertComicsRequest(
-            comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_PAGES));
+            comicIdList,
+            TEST_ARCHIVE_TYPE,
+            TEST_RENAME_PAGES,
+            TEST_DELETE_PAGES,
+            TEST_DELETE_ORIGINAL_COMIC));
 
     Mockito.verify(libraryService, Mockito.times(1))
-        .convertComics(comicIdList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_PAGES);
+        .convertComics(
+            comicIdList,
+            TEST_ARCHIVE_TYPE,
+            TEST_RENAME_PAGES,
+            TEST_DELETE_PAGES,
+            TEST_DELETE_ORIGINAL_COMIC);
   }
 
   @Test

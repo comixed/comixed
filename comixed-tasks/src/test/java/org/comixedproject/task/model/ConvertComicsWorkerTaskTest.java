@@ -40,6 +40,7 @@ public class ConvertComicsWorkerTaskTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
+  private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
 
   @InjectMocks private ConvertComicsWorkerTask task;
   @Mock private TaskRepository taskRepository;
@@ -80,13 +81,25 @@ public class ConvertComicsWorkerTaskTest {
   }
 
   @Test
+  public void testSetDeleteOriginal() {
+    task.setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
+
+    assertEquals(TEST_DELETE_ORIGINAL_COMIC, task.isDeleteOriginal());
+  }
+
+  @Test
   public void testGetDescription() {
     task.setComicList(comicList);
     task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
+    task.setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
 
-    assertNotNull(task.getDescription());
+    String expectedDescription =
+        String.format(
+            "Preparing to save %d comic%s",
+            this.comicList.size(), this.comicList.size() == 1 ? "" : "s");
+    assertEquals(expectedDescription, task.getDescription());
   }
 
   @Test
@@ -98,6 +111,7 @@ public class ConvertComicsWorkerTaskTest {
     task.setTargetArchiveType(TEST_ARCHIVE_TYPE);
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
+    task.setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
 
     Mockito.when(saveComicTaskEncoderObjectFactory.getObject()).thenReturn(convertComicTaskEncoder);
     Mockito.when(taskRepository.save(taskArgumentCaptor.capture())).thenReturn(savedTask);
@@ -112,6 +126,8 @@ public class ConvertComicsWorkerTaskTest {
         .setRenamePages(TEST_RENAME_PAGES);
     Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
         .setDeletePages(TEST_DELETE_PAGES);
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
+        .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
     Mockito.verify(taskRepository, Mockito.times(comicList.size()))
         .save(taskArgumentCaptor.getValue());
   }

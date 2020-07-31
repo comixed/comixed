@@ -337,7 +337,9 @@ public class Comic {
   @JsonView({View.ComicList.class, View.LibraryUpdate.class})
   private Integer duplicateCount;
 
-  @ManyToMany(mappedBy = "comics", cascade = CascadeType.ALL)
+  @ManyToMany(
+      mappedBy = "comics",
+      cascade = {CascadeType.ALL})
   @JsonProperty("readingLists")
   @JsonView({View.ComicList.class, View.LibraryUpdate.class})
   @Getter
@@ -373,15 +375,18 @@ public class Comic {
     }
 
     if (replacement) {
-      log.debug("Removing existing file entry: [{}] {}", index, fileEntry.getFileName());
-      final ComicFileEntry deadEntry = fileEntries.get(index);
-      deadEntry.setComic(null);
-      fileEntries.remove(deadEntry);
+      log.debug("update existing file entry: [{}] {}", index, fileEntry.getFileName());
+      final ComicFileEntry updatedEntry = fileEntries.get(index);
+      updatedEntry.setComic(this);
+      updatedEntry.setFileNumber(index);
+      updatedEntry.setFileSize(fileEntry.getFileSize());
+      updatedEntry.setFileType(fileEntry.getFileType());
+    } else {
+      log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
+      fileEntry.setFileNumber(index);
+      this.fileEntries.add(index, fileEntry);
+      fileEntry.setComic(this);
     }
-    log.debug("Adding file entry: [{}] {}", index, fileEntry.getFileName());
-    fileEntry.setFileNumber(index);
-    this.fileEntries.add(index, fileEntry);
-    fileEntry.setComic(this);
   }
 
   /**

@@ -44,8 +44,9 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
   ) {
     this.conversionForm = this.formBuilder.group({
       archiveType: ['', Validators.required],
-      renamePages: ['', Validators.required],
-      deletePages: ['', Validators.required]
+      renamePages: [''],
+      deletePages: [''],
+      deleteOriginal: ['']
     });
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -72,6 +73,7 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
         USER_PREFERENCE_DELETE_PAGES_ON_CONVERT
       ) || 'false') === 'true'
     );
+    this.conversionForm.controls['deleteOriginal'].setValue(false);
   }
 
   ngOnDestroy() {
@@ -116,6 +118,8 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
         const archiveType = this.conversionForm.controls['archiveType'].value;
         const renamePages = this.conversionForm.controls['renamePages'].value;
         const deletePages = this.conversionForm.controls['deletePages'].value;
+        const deleteOriginal = this.conversionForm.controls['deleteOriginal']
+          .value;
         this.logger.debug(
           `saving user preferences: archive type=${archiveType} renamePages=${renamePages} deletePages=${deletePages}`
         );
@@ -136,7 +140,8 @@ export class ConvertComicsSettingsComponent implements OnInit, OnDestroy {
           this.selectedComics,
           archiveType,
           renamePages,
-          deletePages
+          deletePages,
+          deleteOriginal
         );
         this.selectionAdaptor.clearComicSelections();
         this.cancel.emit(true);

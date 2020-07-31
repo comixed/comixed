@@ -375,7 +375,8 @@ describe('Library Reducer', () => {
           comics: COMICS,
           archiveType: 'CBZ',
           renamePages: true,
-          deletePages: true
+          deletePages: true,
+          deleteOriginal: true
         })
       );
     });

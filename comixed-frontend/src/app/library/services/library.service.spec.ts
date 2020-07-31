@@ -165,7 +165,7 @@ describe('LibraryService', () => {
 
   it('can convert comics', () => {
     service
-      .convertComics(COMICS, 'CBZ', true, false)
+      .convertComics(COMICS, 'CBZ', true, false, false)
       .subscribe((response: HttpResponse<any>) =>
         expect(response.status).toEqual(200)
       );
@@ -176,9 +176,12 @@ describe('LibraryService', () => {
       ids: COMICS.map(comic => comic.id),
       archiveType: 'CBZ',
       renamePages: true,
-      deletePages: false
+      deletePages: false,
+      deleteOriginal: false
     } as ConvertComicsRequest);
-    req.flush(new HttpResponse<any>({ status: 200 }));
+    req.flush(
+      new HttpResponse<any>({ status: 200 })
+    );
   });
 
   it('can consolidate the library', () => {

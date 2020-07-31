@@ -397,7 +397,8 @@
     "label": {
       "archive-type": "Type d'archives",
       "rename-pages": "Renommer les pages",
-      "delete-pages": "Enlever les pages supprimées et bloquées"
+      "delete-pages": "Enlever les pages supprimées et bloquées",
+      "delete-original": "Supprimer la bande dessinée originale"
     },
     "option": {
       "cbz": "CBZ (Zip)",

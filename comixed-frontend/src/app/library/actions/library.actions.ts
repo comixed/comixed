@@ -151,6 +151,7 @@ export class LibraryConvertComics implements Action {
       archiveType: string;
       renamePages: boolean;
       deletePages: boolean;
+      deleteOriginal: boolean;
     }
   ) {}
 }
