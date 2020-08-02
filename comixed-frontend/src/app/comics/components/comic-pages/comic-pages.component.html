@@ -3,7 +3,7 @@
           [resizable]="false"
           (onHide)="clearSelectedPage()">
   <img *ngIf="!!selectedPage"
-       [style.height]="'75vh'"
+       [style.height]="'50vh'"
        [src]="selectedPage|comicPageUrl"
        [alt]="selectedPage.filename"/>
 </p-dialog>

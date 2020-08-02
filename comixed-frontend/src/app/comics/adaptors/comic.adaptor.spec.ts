@@ -38,12 +38,15 @@ import {
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
+  ComicPageDeletedSet,
   ComicPageTypeSet,
   ComicRestore,
   ComicRestored,
   ComicRestoreFailed,
   ComicSave,
   ComicSavePage,
+  ComicSetPageDeleted,
+  ComicSetPageDeletedFailed,
   ComicSetPageHashBlocking,
   ComicSetPageType,
   ComicSetPageTypeFailed
@@ -527,6 +530,98 @@ describe('ComicAdaptor', () => {
       it('provides updates on the comic', () => {
         adaptor.comic$.subscribe(response =>
           expect(response.lastRead).toEqual(LAST_READ_DATE.lastRead)
+        );
+      });
+    });
+  });
+
+  describe('deleting a page', () => {
+    beforeEach(() => {
+      adaptor.deletePage(PAGE);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicSetPageDeleted({ page: PAGE, deleted: true })
+      );
+    });
+
+    it('provides updates on deleting', () => {
+      adaptor.deletingPage$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicPageDeletedSet({ comic: COMIC }));
+      });
+
+      it('provides updates on deleting', () => {
+        adaptor.deletingPage$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('updates the comic', () => {
+        adaptor.comic$.subscribe(response => expect(response).toEqual(COMIC));
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicSetPageDeletedFailed());
+      });
+
+      it('provides updates on deleting', () => {
+        adaptor.deletingPage$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('undeleting a page', () => {
+    beforeEach(() => {
+      adaptor.undeletePage(PAGE);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        new ComicSetPageDeleted({ page: PAGE, deleted: false })
+      );
+    });
+
+    it('provides updates on deleting', () => {
+      adaptor.deletingPage$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicPageDeletedSet({ comic: COMIC }));
+      });
+
+      it('provides updates on deleting', () => {
+        adaptor.deletingPage$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+
+      it('updates the comic', () => {
+        adaptor.comic$.subscribe(response => expect(response).toEqual(COMIC));
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ComicSetPageDeletedFailed());
+      });
+
+      it('provides updates on deleting', () => {
+        adaptor.deletingPage$.subscribe(response =>
+          expect(response).toBeFalsy()
         );
       });
     });

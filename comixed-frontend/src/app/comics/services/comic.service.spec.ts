@@ -31,8 +31,10 @@ import {
   GET_PAGE_TYPES_URL,
   GET_SCAN_TYPES_URL,
   MARK_COMIC_AS_READ_URL,
+  MARK_PAGE_DELETED_URL,
   RESTORE_COMIC_URL,
-  SAVE_COMIC_URL
+  SAVE_COMIC_URL,
+  UNMARK_PAGE_DELETED_URL
 } from 'app/comics/comics.constants';
 import {
   FORMAT_1,
@@ -50,11 +52,13 @@ import {
 import { ComicService } from './comic.service';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
+import { PAGE_2 } from 'app/comics/comics.fixtures';
 
 describe('ComicService', () => {
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
   const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
+  const PAGE = PAGE_2;
 
   let service: ComicService;
   let httpMock: HttpTestingController;
@@ -197,5 +201,33 @@ describe('ComicService', () => {
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(null);
+  });
+
+  it('can mark a page as deleted', () => {
+    service
+      .deletePage(PAGE, true)
+      .subscribe(response => expect(response).toEqual(COMIC));
+
+    const req = httpMock.expectOne(
+      interpolate(MARK_PAGE_DELETED_URL, {
+        id: PAGE.id
+      })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(COMIC);
+  });
+
+  it('can unmark a page as deleted', () => {
+    service
+      .deletePage(PAGE, false)
+      .subscribe(response => expect(response).toEqual(COMIC));
+
+    const req = httpMock.expectOne(
+      interpolate(UNMARK_PAGE_DELETED_URL, {
+        id: PAGE.id
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    req.flush(COMIC);
   });
 });

@@ -43,6 +43,7 @@ import {
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
   ComicMetadataCleared,
+  ComicPageDeletedSet,
   ComicPageHashBlockingSet,
   ComicPageSaved,
   ComicPageTypeSet,
@@ -51,6 +52,7 @@ import {
   ComicSaved,
   ComicSaveFailed,
   ComicSavePageFailed,
+  ComicSetPageDeletedFailed,
   ComicSetPageHashBlockingFailed,
   ComicSetPageTypeFailed
 } from '../actions/comic.actions';
@@ -493,6 +495,54 @@ export class ComicEffects {
         )
       });
       return of(new ComicMarkAsReadFailed());
+    })
+  );
+
+  @Effect()
+  deletePage$: Observable<Action> = this.actions$.pipe(
+    ofType(ComicActionTypes.SetPageDeleted),
+    map(action => action.payload),
+    tap(action =>
+      this.logger.debug('effect: setting page deleted status:', action)
+    ),
+    switchMap(action =>
+      this.comicService.deletePage(action.page, action.deleted).pipe(
+        tap(response => this.logger.debug('received response:', response)),
+        tap(() =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'comics-effects.set-page-deleted.success.detail',
+              { deleted: action.deleted }
+            )
+          })
+        ),
+        map((response: Comic) => new ComicPageDeletedSet({ comic: response })),
+        catchError(error => {
+          this.logger.error(
+            'service failure setting page deleted state:',
+            error
+          );
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'comics-effects.set-page-deleted.error.detail',
+              { deleted: action.deleted }
+            )
+          });
+          return of(new ComicSetPageDeletedFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.error('service failure setting page deleted state:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ComicSetPageDeletedFailed());
     })
   );
 }

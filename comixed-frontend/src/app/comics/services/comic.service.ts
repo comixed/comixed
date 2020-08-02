@@ -19,7 +19,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { interpolate } from 'app/app.functions';
-import { Comic } from 'app/comics';
+import { Comic, Page } from 'app/comics';
 import {
   CLEAR_METADATA_URL,
   DELETE_COMIC_URL,
@@ -29,8 +29,10 @@ import {
   GET_SCAN_TYPES_URL,
   MARK_COMIC_AS_READ_URL,
   MARK_COMIC_AS_UNREAD_URL,
+  MARK_PAGE_DELETED_URL,
   RESTORE_COMIC_URL,
-  SAVE_COMIC_URL
+  SAVE_COMIC_URL,
+  UNMARK_PAGE_DELETED_URL
 } from 'app/comics/comics.constants';
 import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
@@ -84,6 +86,25 @@ export class ComicService {
       this.logger.debug('http [DELETE]: Unmarking comic as read');
       return this.http.delete(
         interpolate(MARK_COMIC_AS_UNREAD_URL, { id: comic.id })
+      );
+    }
+  }
+
+  deletePage(page: Page, mark: boolean): Observable<any> {
+    if (mark) {
+      this.logger.debug('http [DELETE]: Marking page as deleted');
+      return this.http.delete(
+        interpolate(MARK_PAGE_DELETED_URL, {
+          id: page.id
+        })
+      );
+    } else {
+      this.logger.debug('http [POST]: Unmarking page as deleted');
+      return this.http.post(
+        interpolate(UNMARK_PAGE_DELETED_URL, {
+          id: page.id
+        }),
+        {}
       );
     }
   }
