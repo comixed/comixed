@@ -38,7 +38,8 @@
   </ng-template>
   <ng-template pTemplate="body"
                let-page>
-    <tr [pSelectableRow]="page">
+    <tr [pSelectableRow]="page"
+        [class.cx-deleted-page-row]="page.deleted">
       <td class="cx-table-column-align-center">{{ page.index + 1}}</td>
       <td>
         <div class="cx-comic-page-thumbnail">
@@ -54,10 +55,9 @@
             {{ "comic-pages.page-type." + page.page_type.name | translate }}
           </span>
           <span pInplaceContent>
-            <p-dropdown
-              [options]="pageTypeOptions"
-              [(ngModel)]="page.page_type"
-              (onChange)="setPageType(page, $event.value)"></p-dropdown>
+            <p-dropdown [options]="pageTypeOptions"
+                        [(ngModel)]="page.page_type"
+                        (onChange)="setPageType(page, $event.value)"></p-dropdown>
           </span>
         </p-inplace>
       </td>
@@ -66,10 +66,9 @@
         {{ page.width }}x{{ page.height }}
       </td>
       <td class="cx-table-column-align-center">
-        <span
-          class="fa fa-fw fa-switch"
-          (click)="page.blocked ? unblockPage(page) : blockPage(page)"
-          [pTooltip]="'comic-pages.tooltip.blocked'|translate:{blocked:page.blocked}">
+        <span class="fa fa-fw fa-switch"
+              (click)="page.blocked ? unblockPage(page) : blockPage(page)"
+              [pTooltip]="'comic-pages.tooltip.blocked'|translate:{blocked:page.blocked}">
         {{"comic-pages.table.column.blocked-status"|translate: {blocked: page.blocked} }}
         </span>
       </td>
