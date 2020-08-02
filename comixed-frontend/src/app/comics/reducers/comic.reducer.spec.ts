@@ -17,6 +17,7 @@
  */
 
 import {
+  ComicSetPageDeletedFailed,
   ComicClearMetadata,
   ComicClearMetadataFailed,
   ComicDelete,
@@ -38,6 +39,7 @@ import {
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
   ComicMetadataCleared,
+  ComicPageDeletedSet,
   ComicPageHashBlockingSet,
   ComicPageSaved,
   ComicPageTypeSet,
@@ -49,6 +51,7 @@ import {
   ComicSaveFailed,
   ComicSavePage,
   ComicSavePageFailed,
+  ComicSetPageDeleted,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed,
   ComicSetPageType,
@@ -146,6 +149,10 @@ describe('Comic Reducer', () => {
 
     it('clears the setting page type flag', () => {
       expect(state.settingPageType).toBeFalsy();
+    });
+
+    it('clears the deleting page flag', () => {
+      expect(state.deletingPage).toBeFalsy();
     });
 
     it('clears the blocking hash state flag', () => {
@@ -488,6 +495,49 @@ describe('Comic Reducer', () => {
 
     it('clears the setting page type flag', () => {
       expect(state.settingPageType).toBeFalsy();
+    });
+  });
+
+  describe('deleting a page', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deletingPage: false },
+        new ComicSetPageDeleted({ page: COMIC.pages[0], deleted: true })
+      );
+    });
+
+    it('sets the deleting page flag', () => {
+      expect(state.deletingPage).toBeTruthy();
+    });
+  });
+
+  describe('when a page is deleted', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deletingPage: true, comic: null },
+        new ComicPageDeletedSet({ comic: COMIC })
+      );
+    });
+
+    it('clears the deleting page flag', () => {
+      expect(state.deletingPage).toBeFalsy();
+    });
+
+    it('updates the comic', () => {
+      expect(state.comic).toEqual(COMIC);
+    });
+  });
+
+  describe('failure to delete a page', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deletingPage: true },
+        new ComicSetPageDeletedFailed()
+      );
+    });
+
+    it('clears the deleting page flag', () => {
+      expect(state.deletingPage).toBeFalsy();
     });
   });
 

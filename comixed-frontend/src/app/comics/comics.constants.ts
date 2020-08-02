@@ -17,6 +17,7 @@
  */
 
 import { API_ROOT_URL } from 'app/app.functions';
+import {COMIXED_API_ROOT} from "app/app.constants";
 
 export const GET_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scan_types`;
 export const GET_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
@@ -30,6 +31,8 @@ export const DOWNLOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}/download`;
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const MARK_COMIC_AS_READ_URL = `${API_ROOT_URL}/comics/\${id}/read`;
 export const MARK_COMIC_AS_UNREAD_URL = `${API_ROOT_URL}/comics/\${id}/read`;
+export const MARK_PAGE_DELETED_URL = `${COMIXED_API_ROOT}/pages/\${id}`;
+export const UNMARK_PAGE_DELETED_URL = `${COMIXED_API_ROOT}/pages/\${id}/undelete`;
 
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 

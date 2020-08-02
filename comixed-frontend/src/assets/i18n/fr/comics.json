@@ -88,6 +88,14 @@
       "error": {
         "detail": "Échec de la modification de la date de dernière lecture."
       }
+    },
+    "set-page-deleted": {
+      "success": {
+        "detail": "Page {deleted, select, true{marked} other{unmarked}} for deletion..."
+      },
+      "error": {
+        "detail": "Failed to {deleted, select, true{marked} other{unmarked}} for deletion..."
+      }
     }
   },
   "comic-overview": {

@@ -42,6 +42,7 @@ import {
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
   ComicMetadataCleared,
+  ComicPageDeletedSet,
   ComicPageHashBlockingSet,
   ComicPageSaved,
   ComicPageTypeSet,
@@ -53,6 +54,8 @@ import {
   ComicSaveFailed,
   ComicSavePage,
   ComicSavePageFailed,
+  ComicSetPageDeleted,
+  ComicSetPageDeletedFailed,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed,
   ComicSetPageType,
@@ -108,16 +111,17 @@ describe('ComicEffects', () => {
         {
           provide: ComicService,
           useValue: {
-            getIssue: jasmine.createSpy('ComicService.getIssue'),
-            getScanTypes: jasmine.createSpy('ComicService.getScanTypes'),
-            getFormats: jasmine.createSpy('ComicService.getFormats'),
-            getPageTypes: jasmine.createSpy('ComicService.getPageTypes'),
-            saveComic: jasmine.createSpy('ComicSave.saveComic'),
-            clearMetadata: jasmine.createSpy('ComicService.clearMetadata'),
-            deleteComic: jasmine.createSpy('ComicService.deleteComic'),
+            getIssue: jasmine.createSpy('ComicService.getIssue()'),
+            getScanTypes: jasmine.createSpy('ComicService.getScanTypes()'),
+            getFormats: jasmine.createSpy('ComicService.getFormats()'),
+            getPageTypes: jasmine.createSpy('ComicService.getPageTypes()'),
+            saveComic: jasmine.createSpy('ComicSave.saveComic()'),
+            clearMetadata: jasmine.createSpy('ComicService.clearMetadata()'),
+            deleteComic: jasmine.createSpy('ComicService.deleteComic()'),
             restoreComic: jasmine.createSpy('ComicService.restoreComic()'),
-            scrapeComic: jasmine.createSpy('ComicService.scrapeComic'),
-            markAsRead: jasmine.createSpy('ComicService.markAsRead')
+            scrapeComic: jasmine.createSpy('ComicService.scrapeComic()'),
+            markAsRead: jasmine.createSpy('ComicService.markAsRead()'),
+            deletePage: jasmine.createSpy('ComicService.deletePage()')
           }
         },
         {
@@ -747,6 +751,54 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.markAsRead$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('deleting a page', () => {
+    const DELETED = Math.random() < 0.5;
+
+    it('fires an action on success', () => {
+      const serviceResponse = COMIC;
+      const action = new ComicSetPageDeleted({ page: PAGE, deleted: DELETED });
+      const outcome = new ComicPageDeletedSet({ comic: COMIC });
+
+      actions$ = hot('-a', { a: action });
+      comicService.deletePage.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.deletePage$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ComicSetPageDeleted({ page: PAGE, deleted: DELETED });
+      const outcome = new ComicSetPageDeletedFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.deletePage.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.deletePage$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ComicSetPageDeleted({ page: PAGE, deleted: DELETED });
+      const outcome = new ComicSetPageDeletedFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.deletePage.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.deletePage$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

@@ -37,6 +37,7 @@ import {
   ComicRestore,
   ComicSave,
   ComicSavePage,
+  ComicSetPageDeleted,
   ComicSetPageHashBlocking,
   ComicSetPageType
 } from 'app/comics/actions/comic.actions';
@@ -65,6 +66,7 @@ export class ComicAdaptor {
   private _restoringComic$ = new BehaviorSubject<boolean>(false);
   private _markingAsRead$ = new BehaviorSubject<boolean>(false);
   private _settingPageType$ = new BehaviorSubject<boolean>(false);
+  private _deletingPage$ = new BehaviorSubject<boolean>(false);
 
   constructor(private logger: LoggerService, private store: Store<AppState>) {
     this.store
@@ -113,6 +115,9 @@ export class ComicAdaptor {
         }
         if (state.settingPageType !== this._settingPageType$.getValue()) {
           this._settingPageType$.next(state.settingPageType);
+        }
+        if (state.deletingPage !== this._deletingPage$.getValue()) {
+          this._deletingPage$.next(state.deletingPage);
         }
       });
   }
@@ -251,5 +256,21 @@ export class ComicAdaptor {
 
   get settingPageType$(): Observable<boolean> {
     return this._settingPageType$.asObservable();
+  }
+
+  deletePage(page: Page) {
+    this.logger.debug('deleting a page:', page);
+    this.store.dispatch(new ComicSetPageDeleted({ page: page, deleted: true }));
+  }
+
+  undeletePage(page: Page) {
+    this.logger.debug('undeleting a page:', page);
+    this.store.dispatch(
+      new ComicSetPageDeleted({ page: page, deleted: false })
+    );
+  }
+
+  get deletingPage$(): Observable<boolean> {
+    return this._deletingPage$.asObservable();
   }
 }

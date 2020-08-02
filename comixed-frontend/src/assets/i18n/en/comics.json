@@ -88,6 +88,14 @@
       "error": {
         "detail": "Failed to change the last read date."
       }
+    },
+    "set-page-deleted": {
+      "success": {
+        "detail": "Page {deleted, select, true{marked} other{unmarked}} for deletion..."
+      },
+      "error": {
+        "detail": "Failed to {deleted, select, true{marked} other{unmarked}} for deletion..."
+      }
     }
   },
   "comic-overview": {

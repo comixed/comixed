@@ -37,6 +37,9 @@ export enum ComicActionTypes {
   SavePageFailed = '[COMIC] Page was not saved',
   SetPageType = '[COMIC] Set the page type',
   PageTypeSet = '[COMIC] The page type is set',
+  SetPageDeleted = '[COMIC] Set the deleted state for a page',
+  PageDeletedSet = '[COMIC] The deleted state for a page is set',
+  SetPageDeletedFailed = '[COMIC] Failed to set the deleted state for a page',
   SetPageTypeFailed = '[COMIC] Set the page type failed',
   SetPageHashBlocking = '[COMIC] Set the blocking state for a page hash',
   PageHashBlockingSet = '[COMIC] The blocking state is set for a page hash',
@@ -162,6 +165,24 @@ export class ComicPageTypeSet implements Action {
 
 export class ComicSetPageTypeFailed implements Action {
   readonly type = ComicActionTypes.SetPageTypeFailed;
+
+  constructor() {}
+}
+
+export class ComicSetPageDeleted implements Action {
+  readonly type = ComicActionTypes.SetPageDeleted;
+
+  constructor(public payload: { page: Page; deleted: boolean }) {}
+}
+
+export class ComicPageDeletedSet implements Action {
+  readonly type = ComicActionTypes.PageDeletedSet;
+
+  constructor(public payload: { comic: Comic }) {}
+}
+
+export class ComicSetPageDeletedFailed implements Action {
+  readonly type = ComicActionTypes.SetPageDeletedFailed;
 
   constructor() {}
 }
@@ -293,6 +314,9 @@ export type ComicActions =
   | ComicSetPageType
   | ComicPageTypeSet
   | ComicSetPageTypeFailed
+  | ComicSetPageDeleted
+  | ComicPageDeletedSet
+  | ComicSetPageDeletedFailed
   | ComicSetPageHashBlocking
   | ComicPageHashBlockingSet
   | ComicSetPageHashBlockingFailed
