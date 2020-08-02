@@ -3,7 +3,7 @@
           [resizable]="false"
           (onHide)="clearSelectedPage()">
   <img *ngIf="!!selectedPage"
-       [style.height]="'50vh'"
+       [style.height]="'75vh'"
        [src]="selectedPage|comicPageUrl"
        [alt]="selectedPage.filename"/>
 </p-dialog>
@@ -24,6 +24,7 @@
     <col/>
     <col class="cx-table-column-medium"/>
     <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
@@ -34,6 +35,7 @@
       <th id="cx-page-hash">{{ "comic-pages.table.header.hash" | translate }}</th>
       <th id="cx-page-dimensions">{{ "comic-pages.table.header.dimensions" | translate }}</th>
       <th id="cx-page-blocked-status">{{ "comic-pages.table.header.blocked-status" | translate }}</th>
+      <th id="cx-page-deleted-status">{{ "comic-pages.table.header.deleted-status" | translate }}</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body"
@@ -71,6 +73,14 @@
           (click)="page.blocked ? unblockPage(page) : blockPage(page)"
           [pTooltip]="'comic-pages.tooltip.blocked'|translate:{blocked:page.blocked}">
         {{"comic-pages.table.column.blocked-status"|translate: {blocked: page.blocked} }}
+        </span>
+      </td>
+      <td class="cx-table-column-align-center">
+        <span
+          class="fa fa-fw fa-switch"
+          (click)="page.deleted ? undeletePage(page) : deletePage(page)"
+          [pTooltip]="'comic-pages.tooltip.deleted'|translate:{deleted:page.deleted}">
+        {{"comic-pages.table.column.deleted-status"|translate: {deleted: page.deleted} }}
         </span>
       </td>
     </tr>

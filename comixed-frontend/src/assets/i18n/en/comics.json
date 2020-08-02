@@ -186,10 +186,12 @@
         "page-type": "Page Type",
         "hash": "Page Hash",
         "dimensions": "Size",
-        "blocked-status": "Blocked"
+        "blocked-status": "Blocked",
+        "deleted-status": "Delete"
       },
       "column": {
-        "blocked-status": "{blocked, select, true{Yes} other{No}}"
+        "blocked-status": "{blocked, select, true{Yes} other{No}}",
+        "deleted-status": "{deleted, select, true{Yes} other{No}}"
       }
     },
     "page-type": {
@@ -206,7 +208,8 @@
       "filtered": "Filtered"
     },
     "tooltip": {
-      "blocked": "Click to {blocked, select, true{unblock} other{block}} this page type..."
+      "blocked": "Click to {blocked, select, true{unblock} other{block}} this page type...",
+      "deleted": "Click to {deleted, select, true{undelete} other{delete}} this page..."
     }
   },
   "comic-details-editor": {

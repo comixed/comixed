@@ -90,4 +90,14 @@ export class ComicPagesComponent implements OnInit, OnDestroy {
     this.logger.debug('clearing selected page');
     this.selectedPage = null;
   }
+
+  undeletePage(page: Page) {
+    this.logger.debug('undeleting page:', page);
+    this.comicAdaptor.undeletePage(page);
+  }
+
+  deletePage(page: Page) {
+    this.logger.debug('deleting page:', page);
+    this.comicAdaptor.deletePage(page);
+  }
 }
