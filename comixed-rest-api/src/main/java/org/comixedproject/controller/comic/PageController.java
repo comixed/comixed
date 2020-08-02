@@ -43,6 +43,7 @@ import org.comixedproject.views.View.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -74,11 +75,19 @@ public class PageController {
     return this.pageService.deleteAllWithHash(hash);
   }
 
+  /**
+   * Marks a page for deletion.
+   *
+   * @param id the page id
+   * @return the parent comic
+   */
   @DeleteMapping(value = "/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public boolean deletePage(@PathVariable("id") long id) {
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.ComicDetails.class)
+  public Comic deletePage(@PathVariable("id") long id) {
     log.info("Deleting page: id={}", id);
 
-    return this.pageService.deletePage(id) != null;
+    return this.pageService.deletePage(id);
   }
 
   @GetMapping(value = "/comics/{id}/pages", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -192,11 +201,19 @@ public class PageController {
     return this.pageService.undeleteAllWithHash(hash);
   }
 
+  /**
+   * Unmarks the page for deletion.
+   *
+   * @param id the page id
+   * @return the parent comic
+   */
   @PostMapping(value = "/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
-  public boolean undeletePage(@PathVariable("id") long id) {
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.ComicDetails.class)
+  public Comic undeletePage(@PathVariable("id") long id) {
     log.info("Undeleting page: id={}", id);
 
-    return this.pageService.undeletePage(id) != null;
+    return this.pageService.undeletePage(id);
   }
 
   @PutMapping(value = "/pages/{id}/type", produces = MediaType.APPLICATION_JSON_VALUE)

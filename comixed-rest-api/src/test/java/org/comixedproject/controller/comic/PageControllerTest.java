@@ -190,16 +190,21 @@ public class PageControllerTest {
   public void testDeletePageInvalidId() {
     Mockito.when(pageService.deletePage(Mockito.anyLong())).thenReturn(null);
 
-    assertFalse(pageController.deletePage(TEST_PAGE_ID));
+    final Comic result = pageController.deletePage(TEST_PAGE_ID);
+
+    assertNull(result);
 
     Mockito.verify(pageService, Mockito.times(1)).deletePage(TEST_PAGE_ID);
   }
 
   @Test
   public void testDeletePage() {
-    Mockito.when(pageService.deletePage(Mockito.anyLong())).thenReturn(page);
+    Mockito.when(pageService.deletePage(Mockito.anyLong())).thenReturn(comic);
 
-    assertTrue(pageController.deletePage(TEST_PAGE_ID));
+    final Comic result = pageController.deletePage(TEST_PAGE_ID);
+
+    assertNotNull(result);
+    assertSame(comic, result);
 
     Mockito.verify(pageService, Mockito.times(1)).deletePage(TEST_PAGE_ID);
   }
@@ -208,16 +213,21 @@ public class PageControllerTest {
   public void testUndeletePageForNonexistentPage() {
     Mockito.when(pageService.undeletePage(Mockito.anyLong())).thenReturn(null);
 
-    assertFalse(pageController.undeletePage(TEST_PAGE_ID));
+    final Comic result = pageController.undeletePage(TEST_PAGE_ID);
+
+    assertNull(result);
 
     Mockito.verify(pageService, Mockito.times(1)).undeletePage(TEST_PAGE_ID);
   }
 
   @Test
   public void testUndeletePage() {
-    Mockito.when(pageService.undeletePage(Mockito.anyLong())).thenReturn(page);
+    Mockito.when(pageService.undeletePage(Mockito.anyLong())).thenReturn(comic);
 
-    assertTrue(pageController.undeletePage(TEST_PAGE_ID));
+    final Comic result = pageController.undeletePage(TEST_PAGE_ID);
+
+    assertNotNull(result);
+    assertSame(comic, result);
 
     Mockito.verify(pageService, Mockito.times(1)).undeletePage(TEST_PAGE_ID);
   }

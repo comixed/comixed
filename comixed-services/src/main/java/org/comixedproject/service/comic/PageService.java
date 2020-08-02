@@ -131,20 +131,26 @@ public class PageService {
     return null;
   }
 
+  /**
+   * Marks a page for deletion.
+   *
+   * @param id the page id
+   * @return the comic
+   */
   @Transactional
-  public Page deletePage(final long id) {
+  public Comic deletePage(final long id) {
     log.debug("Marking page as deleted: id={}", id);
     final Optional<Page> page = this.pageRepository.findById(id);
 
     if (page.isPresent()) {
       if (page.get().isDeleted()) {
         log.debug("Page was already marked as deleted");
-        return page.get();
+        return page.get().getComic();
       } else {
         page.get().setDeleted(true);
         final Page result = this.pageRepository.save(page.get());
         log.debug("Page deleted");
-        return result;
+        return result.getComic();
       }
     }
 
@@ -152,21 +158,26 @@ public class PageService {
     return null;
   }
 
+  /**
+   * Unmarks a page for deletion.
+   *
+   * @param id the page id
+   * @return the comic
+   */
   @Transactional
-  public Page undeletePage(final long id) {
+  public Comic undeletePage(final long id) {
     log.debug("Marking page as not deleted: id={}", id);
-
     final Optional<Page> page = this.pageRepository.findById(id);
 
     if (page.isPresent()) {
       if (page.get().isDeleted()) {
         page.get().setDeleted(false);
         log.debug("Page undeleted");
-        return this.pageRepository.save(page.get());
+        return this.pageRepository.save(page.get()).getComic();
 
       } else {
         log.debug("Page was not marked as deleted");
-        return page.get();
+        return page.get().getComic();
       }
     } else {
       log.warn("No such page");
