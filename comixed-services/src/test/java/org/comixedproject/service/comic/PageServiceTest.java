@@ -269,11 +269,12 @@ public class PageServiceTest {
   public void testDeletePageAlreadyMarkedAsDeleted() {
     Mockito.when(pageRepository.findById(TEST_PAGE_ID)).thenReturn(Optional.of(page));
     Mockito.when(page.isDeleted()).thenReturn(true);
+    Mockito.when(page.getComic()).thenReturn(comic);
 
-    final Page result = pageService.deletePage(TEST_PAGE_ID);
+    final Comic result = pageService.deletePage(TEST_PAGE_ID);
 
     assertNotNull(result);
-    assertSame(page, result);
+    assertSame(comic, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
     Mockito.verify(page, Mockito.times(1)).isDeleted();
@@ -285,11 +286,12 @@ public class PageServiceTest {
     Mockito.when(page.isDeleted()).thenReturn(false);
     Mockito.doNothing().when(page).setDeleted(Mockito.anyBoolean());
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
+    Mockito.when(page.getComic()).thenReturn(comic);
 
-    final Page result = pageService.deletePage(TEST_PAGE_ID);
+    final Comic result = pageService.deletePage(TEST_PAGE_ID);
 
     assertNotNull(result);
-    assertSame(page, result);
+    assertSame(comic, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
     Mockito.verify(page, Mockito.times(1)).isDeleted();
@@ -310,11 +312,12 @@ public class PageServiceTest {
   public void testUndeletePageForUnmarkedPage() {
     Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
     Mockito.when(page.isDeleted()).thenReturn(false);
+    Mockito.when(page.getComic()).thenReturn(comic);
 
-    final Page result = pageService.undeletePage(TEST_PAGE_ID);
+    final Comic result = pageService.undeletePage(TEST_PAGE_ID);
 
     assertNotNull(result);
-    assertSame(page, result);
+    assertSame(comic, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
     Mockito.verify(page, Mockito.times(1)).isDeleted();
@@ -326,11 +329,12 @@ public class PageServiceTest {
     Mockito.when(page.isDeleted()).thenReturn(true);
     Mockito.doNothing().when(page).setDeleted(Mockito.anyBoolean());
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
+    Mockito.when(page.getComic()).thenReturn(comic);
 
-    final Page result = pageService.undeletePage(TEST_PAGE_ID);
+    final Comic result = pageService.undeletePage(TEST_PAGE_ID);
 
     assertNotNull(result);
-    assertSame(page, result);
+    assertSame(comic, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
     Mockito.verify(page, Mockito.times(1)).isDeleted();
