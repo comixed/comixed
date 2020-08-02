@@ -179,13 +179,38 @@
     }
   },
   "comic-pages": {
-    "label": {
-      "filename": "Nom du fichier",
-      "dimensions": "Dimensions"
+    "table": {
+      "header": {
+        "thumbnail": "Thumbnail",
+        "filename": "Filename",
+        "page-type": "Page Type",
+        "hash": "Page Hash",
+        "dimensions": "Size",
+        "blocked-status": "Blocked",
+        "deleted-status": "Delete"
+      },
+      "column": {
+        "blocked-status": "{blocked, select, true{Yes} other{No}}",
+        "deleted-status": "{deleted, select, true{Yes} other{No}}"
+      }
     },
-    "text": {
-      "marked-for-deletion": "Cette page est marquée pour suppression.",
-      "page-is-blocked": "Cette page est bloquée."
+    "page-type": {
+      "front-cover": "Front Cover",
+      "inner-cover": "Inner Cover",
+      "back-cover": "Back Cover",
+      "roundup": "Roundup",
+      "story": "Story",
+      "advertisement": "Advertisement",
+      "editorial": "Editorial",
+      "letters": "Letters Page",
+      "preview": "Preview",
+      "other": "Other",
+      "filtered": "Filtered"
+    },
+    "tooltip": {
+      "blocked": "Click to {blocked, select, true{unblock} other{block}} this page type...",
+      "deleted": "Click to {deleted, select, true{undelete} other{delete}} this page..."
+    }
     }
   },
   "comic-details-editor": {
