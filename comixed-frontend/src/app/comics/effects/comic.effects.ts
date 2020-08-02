@@ -82,7 +82,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.get-scan-types.error.detail'
+              'comic-effects.get-scan-types.error.detail'
             )
           });
           return of(new ComicGetScanTypesFailed());
@@ -113,7 +113,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.get-formats.error.detail'
+              'comic-effects.get-formats.error.detail'
             )
           });
           return of(new ComicGetFormatsFailed());
@@ -145,7 +145,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.get-page-types.error.detail'
+              'comic-effects.get-page-types.error.detail'
             )
           });
           return of(new ComicGetPageTypesFailed());
@@ -175,7 +175,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.get-issue.error.detail',
+              'comic-effects.get-issue.error.detail',
               { id: action.id }
             )
           });
@@ -204,7 +204,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.save-page.success.detail'
+              'comic-effects.save-page.success.detail'
             )
           })
         ),
@@ -213,7 +213,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.save-page.error.detail'
+              'comic-effects.save-page.error.detail'
             )
           });
           return of(new ComicSavePageFailed());
@@ -243,7 +243,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.set-page-type.success.detail'
+              'comic-effects.set-page-type.success.detail'
             )
           })
         ),
@@ -253,7 +253,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.set-page-type.error.detail'
+              'comic-effects.set-page-type.error.detail'
             )
           });
           return of(new ComicSetPageTypeFailed());
@@ -282,7 +282,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.set-page-hash-blocking.success.detail',
+              'comic-effects.set-page-hash-blocking.success.detail',
               { hash: action.page.hash, state: action.state }
             )
           })
@@ -294,7 +294,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.set-page-hash-blocking.error.detail'
+              'comic-effects.set-page-hash-blocking.error.detail'
             )
           });
           return of(new ComicSetPageHashBlockingFailed());
@@ -322,7 +322,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.save-comic.success.detail'
+              'comic-effects.save-comic.success.detail'
             )
           })
         ),
@@ -331,7 +331,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.save-comic.error.detail'
+              'comic-effects.save-comic.error.detail'
             )
           });
           return of(new ComicSaveFailed());
@@ -359,7 +359,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.clear-metadata.success.detail'
+              'comic-effects.clear-metadata.success.detail'
             )
           })
         ),
@@ -368,7 +368,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.clear-metadata.error.detail'
+              'comic-effects.clear-metadata.error.detail'
             )
           });
           return of(new ComicClearMetadataFailed());
@@ -396,7 +396,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.delete-comic.success.detail'
+              'comic-effects.delete-comic.success.detail'
             )
           })
         ),
@@ -405,7 +405,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.delete-comics.error.detail'
+              'comic-effects.delete-comics.error.detail'
             )
           });
           return of(new ComicDeleteFailed());
@@ -433,7 +433,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.restore-comic.success.detail'
+              'comic-effects.restore-comic.success.detail'
             )
           })
         ),
@@ -442,7 +442,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.restore-comic.error.detail'
+              'comic-effects.restore-comic.error.detail'
             )
           });
           return of(new ComicRestoreFailed());
@@ -479,7 +479,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.mark-as-read.error-details'
+              'comic-effects.mark-as-read.error-details'
             )
           });
           return of(new ComicMarkAsReadFailed());
@@ -512,7 +512,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'info',
             detail: this.translateService.instant(
-              'comics-effects.set-page-deleted.success.detail',
+              'comic-effects.set-page-deleted.success.detail',
               { deleted: action.deleted }
             )
           })
@@ -526,7 +526,7 @@ export class ComicEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'comics-effects.set-page-deleted.error.detail',
+              'comic-effects.set-page-deleted.error.detail',
               { deleted: action.deleted }
             )
           });

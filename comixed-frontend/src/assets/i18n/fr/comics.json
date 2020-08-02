@@ -1,5 +1,5 @@
 {
-  "comics-effects": {
+  "comic-effects": {
     "get-scan-types": {
       "error": {
         "detail": "Échec du chargement des types de scan."
