@@ -2,7 +2,7 @@
   "build-details-effects": {
     "get-build-details": {
       "error": {
-        "details": "Échec de la récupération des détails du build depuis le service..."
+        "detail": "Échec de la récupération des détails du build..."
       }
     }
   },

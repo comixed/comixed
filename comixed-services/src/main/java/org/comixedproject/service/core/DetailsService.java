@@ -25,6 +25,7 @@ import org.comixedproject.model.core.BuildDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @PropertySource({"classpath:/build-details.properties"})
@@ -71,10 +72,10 @@ public class DetailsService {
 
     result.setBranch(branch);
     result.setBuildHost(buildHost);
-    result.setBuildTime(dateParser.parse(buildTime));
+    if (!StringUtils.isEmpty(buildTime)) result.setBuildTime(dateParser.parse(buildTime));
     result.setBuildVersion(buildVersion);
     result.setCommitId(commitId);
-    result.setCommitTime(dateParser.parse(commitTime));
+    if (!StringUtils.isEmpty(commitTime)) result.setCommitTime(dateParser.parse(commitTime));
     result.setCommitMessage(commitMessage);
     result.setCommitUser(commitUser);
     result.setCommitEmail(commitEmail);
