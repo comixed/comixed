@@ -2,7 +2,7 @@
   "build-details-effects": {
     "get-build-details": {
       "error": {
-        "details": "Error al recabar los datos de compilación desde el servidor..."
+        "detail": "Error al recabar los datos de compilación..."
       }
     }
   },

@@ -2,7 +2,7 @@
   "build-details-effects": {
     "get-build-details": {
       "error": {
-        "details": "Failed to get the build details from the service..."
+        "detail": "Failed to get the build details..."
       }
     }
   },

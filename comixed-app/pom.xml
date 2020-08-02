@@ -80,6 +80,7 @@
           <verbose>false</verbose>
           <prefix>build-details</prefix>
           <useNativeGit>true</useNativeGit>
+          <offline>true</offline>
         </configuration>
       </plugin>
     </plugins>
