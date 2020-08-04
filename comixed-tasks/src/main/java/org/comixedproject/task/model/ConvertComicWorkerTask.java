@@ -31,7 +31,9 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.library.ReadingListService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ProcessComicWorkerTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
@@ -58,7 +60,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
   private ObjectFactory<ProcessComicWorkerTaskEncoder> processComicTaskEncoderObjectFactory;
 
   @Autowired private ComicFileHandler comicFileHandler;
-  @Autowired private ReadingListRepository readingListRepository;
+  @Autowired private ReadingListService readingListService;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private ArchiveType targetArchiveType;
@@ -116,7 +118,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
     try {
       FileUtils.forceDelete(file);
       log.debug("Removing comic from repository: id={}", this.comic.getId());
-      this.comicRepository.delete(this.comic);
+      this.comicService.delete(this.comic);
     } catch (IOException error) {
       log.error("Unable to delete comic: {}", filename, error);
       throw new WorkerTaskException("failed to delete comic", error);
@@ -138,7 +140,7 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
         }
         readingList.getComics().add(convertedComic);
         log.debug("Updating reading list: {}", readingList.getName());
-        this.readingListRepository.save(readingList);
+        this.readingListService.save(readingList);
       }
     }
   }

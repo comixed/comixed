@@ -35,6 +35,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.library.ReadingListService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ProcessComicWorkerTaskEncoder;
 import org.junit.Assert;
@@ -71,15 +72,15 @@ class ConvertComicWorkerTaskTest {
   @Mock private Task processComicTask;
   @Mock private TaskService taskService;
   @Mock private ComicFileHandler comicFileHandler;
-  @Mock private ReadingListRepository readingListRepository;
+  @Mock private ReadingListService readingListService;
 
   public ConvertComicWorkerTaskTest() {}
 
   @Test
   public void testSetComic() {
-    task.setComic(originalComic);
+    task.setComic(sourceComic);
 
-    assertSame(originalComic, task.getComic());
+    assertSame(sourceComic, task.getComic());
   }
 
   @Test
@@ -113,7 +114,7 @@ class ConvertComicWorkerTaskTest {
   @Test
   public void testStartTaskWithoutDeleteOriginal()
       throws IOException, ArchiveAdaptorException, WorkerTaskException {
-    task.setComic(originalComic);
+    task.setComic(sourceComic);
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
@@ -122,22 +123,21 @@ class ConvertComicWorkerTaskTest {
     Set<ReadingList> readingListSet = new HashSet<>();
     ReadingList readingList = new ReadingList();
     readingList.setName("test");
-    readingList.getComics().add(originalComic);
+    readingList.getComics().add(sourceComic);
     readingListSet.add(readingList);
 
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
     Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
         .thenReturn(savedComic);
-    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(storedComic);
+    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(savedComic);
     Mockito.when(processComicTaskEncoderObjectFactory.getObject())
         .thenReturn(processComicTaskEncoder);
     Mockito.when(processComicTaskEncoder.encode()).thenReturn(processComicTask);
     Mockito.when(taskService.save(Mockito.any(Task.class))).thenReturn(processComicTask);
 
-    Mockito.when(originalComic.getReadingLists()).thenReturn(readingListSet);
-    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
-        .thenReturn(readingList);
+    Mockito.when(sourceComic.getReadingLists()).thenReturn(readingListSet);
+    Mockito.when(readingListService.save(Mockito.any(ReadingList.class))).thenReturn(readingList);
     /*
     Mockito.when(sourceComic.getFilename()).thenReturn(TEST_ORIGINAL_COMIC_FILENAME);
     PowerMockito.mockStatic(FileUtils.class);
@@ -145,20 +145,19 @@ class ConvertComicWorkerTaskTest {
 
     task.startTask();
 
-    Mockito.verify(originalComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
+    Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
-        .saveComic(originalComic, TEST_RENAME_PAGES);
+        .saveComic(sourceComic, TEST_RENAME_PAGES);
     Mockito.verify(savedComic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));
-    Mockito.verify(comicRepository, Mockito.times(1)).save(savedComic);
+    Mockito.verify(comicService, Mockito.times(1)).save(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(convertedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
-    Mockito.verify(taskRepository, Mockito.times(1)).save(processComicTask);
-    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
+    Mockito.verify(taskService, Mockito.times(1)).save(processComicTask);
+    Mockito.verify(readingListService, Mockito.times(1)).save(readingList);
 
     Assert.assertTrue(
-        "Reading list don't contain original comic",
-        readingList.getComics().contains(originalComic));
+        "Reading list don't contain original comic", readingList.getComics().contains(sourceComic));
     Assert.assertTrue(
         "Reading list don't contain converted comic",
         readingList.getComics().contains(convertedComic));
@@ -167,7 +166,7 @@ class ConvertComicWorkerTaskTest {
   @Test
   public void testStartTaskWithDeleteOriginal()
       throws IOException, ArchiveAdaptorException, WorkerTaskException {
-    task.setComic(originalComic);
+    task.setComic(sourceComic);
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(TEST_RENAME_PAGES);
     task.setDeletePages(TEST_DELETE_PAGES);
@@ -176,33 +175,32 @@ class ConvertComicWorkerTaskTest {
     Set<ReadingList> readingListSet = new HashSet<>();
     ReadingList readingList = new ReadingList();
     readingList.setName("test");
-    readingList.getComics().add(originalComic);
+    readingList.getComics().add(sourceComic);
     readingListSet.add(readingList);
 
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
     Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
         .thenReturn(savedComic);
-    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(convertedComic);
+    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(convertedComic);
     Mockito.when(processComicTaskEncoderObjectFactory.getObject())
         .thenReturn(processComicTaskEncoder);
     Mockito.when(processComicTaskEncoder.encode()).thenReturn(processComicTask);
-    Mockito.when(taskRepository.save(Mockito.any(Task.class))).thenReturn(processComicTask);
+    Mockito.when(taskService.save(Mockito.any(Task.class))).thenReturn(processComicTask);
 
-    Mockito.when(originalComic.getReadingLists()).thenReturn(readingListSet);
-    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
-        .thenReturn(readingList);
+    Mockito.when(sourceComic.getReadingLists()).thenReturn(readingListSet);
+    Mockito.when(readingListService.save(Mockito.any(ReadingList.class))).thenReturn(readingList);
 
-    Mockito.when(originalComic.getFilename()).thenReturn(TEST_ORIGINAL_COMIC_FILENAME);
+    Mockito.when(sourceComic.getFilename()).thenReturn(TEST_ORIGINAL_COMIC_FILENAME);
     PowerMockito.mockStatic(FileUtils.class);
     PowerMockito.doNothing().when(FileUtils.class);
     FileUtils.forceDelete(Mockito.any());
 
     task.startTask();
 
-    Mockito.verify(originalComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
+    Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
-        .saveComic(originalComic, TEST_RENAME_PAGES);
+        .saveComic(sourceComic, TEST_RENAME_PAGES);
     Mockito.verify(savedComic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));
     Mockito.verify(comicService, Mockito.times(1)).save(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(savedComic);
@@ -211,7 +209,7 @@ class ConvertComicWorkerTaskTest {
     Mockito.verify(taskService, Mockito.times(1)).save(processComicTask);
 
     Assert.assertFalse(
-        "Reading list contain original comic", readingList.getComics().contains(originalComic));
+        "Reading list contain original comic", readingList.getComics().contains(sourceComic));
     Assert.assertTrue(
         "Reading list don't contain converted comic",
         readingList.getComics().contains(convertedComic));
