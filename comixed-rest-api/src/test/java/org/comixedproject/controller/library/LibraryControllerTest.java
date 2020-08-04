@@ -228,7 +228,12 @@ public class LibraryControllerTest {
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
     libraryController.convertComics(
-        new ConvertComicsRequest(idList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_PAGES));
+        new ConvertComicsRequest(
+            idList,
+            TEST_ARCHIVE_TYPE,
+            TEST_RENAME_PAGES,
+            TEST_DELETE_PAGES,
+            TEST_DELETE_ORIGINAL_COMIC));
 
     Mockito.verify(taskManager, Mockito.times(1)).runTask(convertComicsWorkerTask);
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setIdList(idList);
@@ -236,7 +241,8 @@ public class LibraryControllerTest {
         .setTargetArchiveType(TEST_ARCHIVE_TYPE);
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
     Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setDeletePages(TEST_DELETE_PAGES);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
+    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
+        .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
   }
 
   @Test

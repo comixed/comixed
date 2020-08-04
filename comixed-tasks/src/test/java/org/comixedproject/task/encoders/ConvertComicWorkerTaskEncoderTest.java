@@ -75,7 +75,7 @@ public class ConvertComicWorkerTaskEncoderTest {
         result.getProperty(ConvertComicWorkerTaskEncoder.DELETE_PAGES));
     assertEquals(
         String.valueOf(TEST_DELETE_ORIGINAL_COMIC),
-        result.getProperty(ConvertComicTaskEncoder.DELETE_ORIGINAL_COMIC));
+        result.getProperty(ConvertComicWorkerTaskEncoder.DELETE_ORIGINAL_COMIC));
   }
 
   @Test
@@ -89,7 +89,7 @@ public class ConvertComicWorkerTaskEncoderTest {
         .thenReturn(String.valueOf(TEST_RENAME_PAGES));
     Mockito.when(task.getProperty(ConvertComicWorkerTaskEncoder.DELETE_PAGES))
         .thenReturn(String.valueOf(TEST_DELETE_PAGES));
-    Mockito.when(task.getProperty(ConvertComicTaskEncoder.DELETE_ORIGINAL_COMIC))
+    Mockito.when(task.getProperty(ConvertComicWorkerTaskEncoder.DELETE_ORIGINAL_COMIC))
         .thenReturn(String.valueOf(TEST_DELETE_ORIGINAL_COMIC));
 
     ConvertComicWorkerTask result = encoder.decode(task);

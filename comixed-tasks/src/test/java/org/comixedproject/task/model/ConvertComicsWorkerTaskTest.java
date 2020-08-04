@@ -18,7 +18,8 @@
 
 package org.comixedproject.task.model;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,8 +101,7 @@ public class ConvertComicsWorkerTaskTest {
 
     String expectedDescription =
         String.format(
-            "Preparing to save %d comic%s",
-            this.comicList.size(), this.comicList.size() == 1 ? "" : "s");
+            "Preparing to save %d comic%s", this.idList.size(), this.idList.size() == 1 ? "" : "s");
     assertEquals(expectedDescription, task.getDescription());
   }
 
@@ -132,7 +132,7 @@ public class ConvertComicsWorkerTaskTest {
         .setRenamePages(TEST_RENAME_PAGES);
     Mockito.verify(convertComicTaskEncoder, Mockito.times(idList.size()))
         .setDeletePages(TEST_DELETE_PAGES);
-    Mockito.verify(convertComicTaskEncoder, Mockito.times(comicList.size()))
+    Mockito.verify(convertComicTaskEncoder, Mockito.times(idList.size()))
         .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
     Mockito.verify(taskService, Mockito.times(idList.size())).save(taskArgumentCaptor.getValue());
   }
