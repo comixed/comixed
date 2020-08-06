@@ -522,6 +522,9 @@
         "author": "Author",
         "description": "Description"
       }
+    },
+    "tooltip": {
+      "reload-plugins": "Reload plugins"
     }
   },
   "plugin-effects": {
