@@ -85,4 +85,9 @@ export class PluginsPageComponent implements OnInit, OnDestroy {
     ];
     this.breadcrumbAdaptor.loadEntries(entries);
   }
+
+  reloadPlugins() {
+    this.logger.debug('Reloading plugins');
+    this.pluginAdaptor.reloadPlugins();
+  }
 }

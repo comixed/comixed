@@ -1,3 +1,12 @@
+<p-toolbar styleClass="p-mb-4">
+  <div class="ui-toolbar-group-left">
+    <button pButton
+            class="ui-button-danger"
+            [pTooltip]="'plugins-page.tooltip.reload-plugins'|translate"
+            icon="fa fa-fw fas fa-sync"
+            (click)="reloadPlugins()"></button>
+  </div>
+</p-toolbar>
 <p-table [value]="plugins">
   <ng-template pTemplate="colgroup">
     <colgroup>

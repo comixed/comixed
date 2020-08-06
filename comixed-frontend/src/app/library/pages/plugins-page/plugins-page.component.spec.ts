@@ -33,6 +33,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService } from 'primeng/api';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { PluginAdaptor } from 'app/library/adaptors/plugin.adaptor';
+import { ButtonModule, ToolbarModule, TooltipModule } from 'primeng/primeng';
 
 describe('PluginsPageComponent', () => {
   let component: PluginsPageComponent;
@@ -50,7 +51,10 @@ describe('PluginsPageComponent', () => {
         StoreModule.forFeature(PLUGIN_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([PluginEffects]),
-        TableModule
+        TableModule,
+        TooltipModule,
+        ButtonModule,
+        ToolbarModule
       ],
       declarations: [PluginsPageComponent],
       providers: [MessageService, BreadcrumbAdaptor, PluginAdaptor]
