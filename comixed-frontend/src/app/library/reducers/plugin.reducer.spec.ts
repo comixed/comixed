@@ -20,7 +20,10 @@ import { initialState, PluginState, reducer } from './plugin.reducer';
 import {
   AllPluginsReceived,
   GetAllPlugins,
-  GetAllPluginsFailed
+  GetAllPluginsFailed,
+  PluginsReloaded,
+  ReloadPlugins,
+  ReloadPluginsFailed
 } from 'app/library/actions/plugin.actions';
 import { PLUGIN_DESCRIPTOR_1 } from 'app/library/models/plugin-descriptor.fixtures';
 
@@ -77,6 +80,43 @@ describe('Plugin Reducer', () => {
   describe('failing the load the list of plugins', () => {
     beforeEach(() => {
       state = reducer({ ...state, loading: true }, new GetAllPluginsFailed());
+    });
+
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalsy();
+    });
+  });
+
+  describe('reloading plugins', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, loading: false }, new ReloadPlugins());
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTruthy();
+    });
+  });
+
+  describe('plugins reloaded', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: true, plugins: [] },
+        new PluginsReloaded({ pluginDescriptors: PLUGINS })
+      );
+    });
+
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalsy();
+    });
+
+    it('sets the list of plugins', () => {
+      expect(state.plugins).toEqual(PLUGINS);
+    });
+  });
+
+  describe('failure to reload plugins', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, loading: true }, new ReloadPluginsFailed());
     });
 
     it('clears the loading flag', () => {

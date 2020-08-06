@@ -23,7 +23,9 @@ import {
   AllPluginsReceived,
   GetAllPluginsFailed,
   PluginActions,
-  PluginActionTypes
+  PluginActionTypes,
+  PluginsReloaded,
+  ReloadPluginsFailed
 } from '../actions/plugin.actions';
 import { LoggerService } from '@angular-ru/logger';
 import { Action } from '@ngrx/store';
@@ -59,7 +61,7 @@ export class PluginEffects {
           this.messageService.add({
             severity: 'error',
             detail: this.translateService.instant(
-              'plugin-effects.get-all.error.details'
+              'plugin-effects.get-all.error.detail'
             )
           });
           return of(new GetAllPluginsFailed());
@@ -75,6 +77,50 @@ export class PluginEffects {
         )
       });
       return of(new GetAllPluginsFailed());
+    })
+  );
+
+  @Effect()
+  reloadPlugins$: Observable<Action> = this.actions$.pipe(
+    ofType(PluginActionTypes.Reload),
+    tap(action => this.logger.debug('effect: reload plugins:', action)),
+    switchMap(action =>
+      this.pluginService.reloadPlugins().pipe(
+        tap(response => this.logger.debug('response received:', response)),
+        tap((response: PluginDescriptor[]) =>
+          this.messageService.add({
+            severity: 'info',
+            detail: this.translateService.instant(
+              'plugin-effects.reload-plugins.success.detail',
+              { count: response.length }
+            )
+          })
+        ),
+        map(
+          (response: PluginDescriptor[]) =>
+            new PluginsReloaded({ pluginDescriptors: response })
+        ),
+        catchError(error => {
+          this.logger.debug('service failure reloading plugins:', error);
+          this.messageService.add({
+            severity: 'error',
+            detail: this.translateService.instant(
+              'plugin-effects.reload-plugins.error.detail'
+            )
+          });
+          return of(new ReloadPluginsFailed());
+        })
+      )
+    ),
+    catchError(error => {
+      this.logger.debug('service failure reloading plugins:', error);
+      this.messageService.add({
+        severity: 'error',
+        detail: this.translateService.instant(
+          'general-message.error.general-service-failure'
+        )
+      });
+      return of(new ReloadPluginsFailed());
     })
   );
 }

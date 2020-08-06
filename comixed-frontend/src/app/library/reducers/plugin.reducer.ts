@@ -49,6 +49,19 @@ export function reducer(
     case PluginActionTypes.GetAllFailed:
       return { ...state, loading: false };
 
+    case PluginActionTypes.Reload:
+      return { ...state, loading: true };
+
+    case PluginActionTypes.Reloaded:
+      return {
+        ...state,
+        loading: false,
+        plugins: action.payload.pluginDescriptors
+      };
+
+    case PluginActionTypes.ReloadFailed:
+      return { ...state, loading: false };
+
     default:
       return state;
   }

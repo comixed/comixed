@@ -513,6 +513,33 @@
     }
   },
   "plugins-page": {
-    "title": "Plugins"
+    "title": "Plugins",
+    "table": {
+      "header": {
+        "name": "Name",
+        "language": "Language",
+        "version": "Version",
+        "author": "Author",
+        "description": "Description"
+      }
+    },
+    "tooltip": {
+      "reload-plugins": "Reload plugins"
+    }
+  },
+  "plugin-effects": {
+    "get-all": {
+      "error": {
+        "detail": "Failed to load plugins..."
+      }
+    },
+    "reload-plugins": {
+      "success": {
+        "detail": "Loaded {count, plural, =1{one plugin} other{# plugins}}..."
+      },
+      "error": {
+        "detail": "Failed to reload plugins..."
+      }
+    }
   }
 }

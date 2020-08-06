@@ -19,7 +19,10 @@
 import { PluginAdaptor } from './plugin.adaptor';
 import { TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
-import { PLUGIN_FEATURE_KEY, reducer } from 'app/library/reducers/plugin.reducer';
+import {
+  PLUGIN_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/plugin.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { PluginEffects } from 'app/library/effects/plugin.effects';
 import { AppState } from 'app/library';
@@ -27,7 +30,10 @@ import { PLUGIN_DESCRIPTOR_1 } from 'app/library/models/plugin-descriptor.fixtur
 import {
   AllPluginsReceived,
   GetAllPlugins,
-  GetAllPluginsFailed
+  GetAllPluginsFailed,
+  PluginsReloaded,
+  ReloadPlugins,
+  ReloadPluginsFailed
 } from 'app/library/actions/plugin.actions';
 import { LoggerModule } from '@angular-ru/logger';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -99,6 +105,52 @@ describe('PluginAdaptor', () => {
     describe('failure', () => {
       beforeEach(() => {
         store.dispatch(new GetAllPluginsFailed());
+      });
+
+      it('provides updates', () => {
+        pluginAdaptor.loading$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+  });
+
+  describe('reloading plugins', () => {
+    beforeEach(() => {
+      pluginAdaptor.reloadPlugins();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new ReloadPlugins());
+    });
+
+    it('provides updates on reloading', () => {
+      pluginAdaptor.loading$.subscribe(response =>
+        expect(response).toBeTruthy()
+      );
+    });
+
+    describe('success', () => {
+      beforeEach(() => {
+        store.dispatch(new PluginsReloaded({ pluginDescriptors: PLUGINS }));
+      });
+
+      it('updates the plugin list', () => {
+        pluginAdaptor.plugins$.subscribe(response =>
+          expect(response).toEqual(PLUGINS)
+        );
+      });
+
+      it('provides updates', () => {
+        pluginAdaptor.loading$.subscribe(response =>
+          expect(response).toBeFalsy()
+        );
+      });
+    });
+
+    describe('failure', () => {
+      beforeEach(() => {
+        store.dispatch(new ReloadPluginsFailed());
       });
 
       it('provides updates', () => {

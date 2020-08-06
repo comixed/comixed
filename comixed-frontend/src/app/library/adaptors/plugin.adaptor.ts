@@ -25,7 +25,10 @@ import { AppState } from 'app/library';
 import { PLUGIN_FEATURE_KEY } from 'app/library/reducers/plugin.reducer';
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { GetAllPlugins } from 'app/library/actions/plugin.actions';
+import {
+  GetAllPlugins,
+  ReloadPlugins
+} from 'app/library/actions/plugin.actions';
 
 @Injectable()
 export class PluginAdaptor {
@@ -58,5 +61,10 @@ export class PluginAdaptor {
 
   get plugins$(): Observable<PluginDescriptor[]> {
     return this._plugins$.asObservable();
+  }
+
+  reloadPlugins(): void {
+    this.logger.debug('reloading plugins');
+    this.store.dispatch(new ReloadPlugins());
   }
 }
