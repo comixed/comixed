@@ -26,7 +26,10 @@ import { PLUGIN_DESCRIPTOR_1 } from 'app/library/models/plugin-descriptor.fixtur
 import {
   AllPluginsReceived,
   GetAllPlugins,
-  GetAllPluginsFailed
+  GetAllPluginsFailed,
+  PluginsReloaded,
+  ReloadPlugins,
+  ReloadPluginsFailed
 } from 'app/library/actions/plugin.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/logger';
@@ -52,7 +55,8 @@ describe('PluginEffects', () => {
         {
           provide: PluginService,
           useValue: {
-            getAllPlugins: jasmine.createSpy('PluginService.getAllPlugins()')
+            getAllPlugins: jasmine.createSpy('PluginService.getAllPlugins()'),
+            reloadPlugins: jasmine.createSpy('PluginService.reloadPlugins()')
           }
         },
         MessageService
@@ -106,6 +110,52 @@ describe('PluginEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.getAllPlugins$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+  });
+
+  describe('reloading plugins', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = PLUGINS;
+      const action = new ReloadPlugins();
+      const outcome = new PluginsReloaded({ pluginDescriptors: PLUGINS });
+
+      actions$ = hot('-a', { a: action });
+      pluginService.reloadPlugins.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.reloadPlugins$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'info' })
+      );
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = new ReloadPlugins();
+      const outcome = new ReloadPluginsFailed();
+
+      actions$ = hot('-a', { a: action });
+      pluginService.reloadPlugins.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.reloadPlugins$).toBeObservable(expected);
+      expect(messageService.add).toHaveBeenCalledWith(
+        objectContaining({ severity: 'error' })
+      );
+    });
+
+    it('fires an action on general failure', () => {
+      const action = new ReloadPlugins();
+      const outcome = new ReloadPluginsFailed();
+
+      actions$ = hot('-a', { a: action });
+      pluginService.reloadPlugins.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.reloadPlugins$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

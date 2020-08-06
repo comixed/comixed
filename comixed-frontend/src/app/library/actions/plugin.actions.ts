@@ -22,7 +22,10 @@ import { PluginDescriptor } from 'app/library/models/plugin-descriptor';
 export enum PluginActionTypes {
   GetAll = '[PLUGIN] Get all plugins',
   AllReceived = '[PLUGIN] All plugins received',
-  GetAllFailed = '[PLUGIN] Get all plugins failed'
+  GetAllFailed = '[PLUGIN] Get all plugins failed',
+  Reload = '[PLUGIN] Reload plugins',
+  Reloaded = '[PLUGIN] Plugins reloaded',
+  ReloadFailed = '[PLUGIN] Reload plugins failed'
 }
 
 export class GetAllPlugins implements Action {
@@ -43,7 +46,28 @@ export class GetAllPluginsFailed implements Action {
   constructor() {}
 }
 
+export class ReloadPlugins implements Action {
+  readonly type = PluginActionTypes.Reload;
+
+  constructor() {}
+}
+
+export class PluginsReloaded implements Action {
+  readonly type = PluginActionTypes.Reloaded;
+
+  constructor(public payload: { pluginDescriptors: PluginDescriptor[] }) {}
+}
+
+export class ReloadPluginsFailed implements Action {
+  readonly type = PluginActionTypes.ReloadFailed;
+
+  constructor() {}
+}
+
 export type PluginActions =
   | GetAllPlugins
   | AllPluginsReceived
-  | GetAllPluginsFailed;
+  | GetAllPluginsFailed
+  | ReloadPlugins
+  | PluginsReloaded
+  | ReloadPluginsFailed;

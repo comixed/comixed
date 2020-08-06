@@ -21,7 +21,10 @@ import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from 'app/app.functions';
-import { GET_ALL_PLUGINS_URL } from 'app/library/library.constants';
+import {
+  GET_ALL_PLUGINS_URL,
+  RELOAD_PLUGINS_URL
+} from 'app/library/library.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +35,10 @@ export class PluginService {
   getAllPlugins(): Observable<any> {
     this.logger.debug('[GET] http request: get all plugins');
     return this.http.get(interpolate(GET_ALL_PLUGINS_URL));
+  }
+
+  reloadPlugins(): Observable<any> {
+    this.logger.debug('[POST] http request: reload plugins');
+    return this.http.post(interpolate(RELOAD_PLUGINS_URL), {});
   }
 }

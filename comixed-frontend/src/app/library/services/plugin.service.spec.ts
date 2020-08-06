@@ -25,7 +25,10 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { interpolate } from 'app/app.functions';
-import { GET_ALL_PLUGINS_URL } from 'app/library/library.constants';
+import {
+  GET_ALL_PLUGINS_URL,
+  RELOAD_PLUGINS_URL
+} from 'app/library/library.constants';
 import { LoggerModule } from '@angular-ru/logger';
 
 describe('PluginService', () => {
@@ -55,6 +58,16 @@ describe('PluginService', () => {
 
     const req = httpMock.expectOne(interpolate(GET_ALL_PLUGINS_URL));
     expect(req.request.method).toEqual('GET');
+    req.flush(PLUGINS);
+  });
+
+  it('can reload the list of plugins', () => {
+    pluginService
+      .reloadPlugins()
+      .subscribe(response => expect(response).toEqual(PLUGINS));
+
+    const req = httpMock.expectOne(interpolate(RELOAD_PLUGINS_URL));
+    expect(req.request.method).toEqual('POST');
     req.flush(PLUGINS);
   });
 });
