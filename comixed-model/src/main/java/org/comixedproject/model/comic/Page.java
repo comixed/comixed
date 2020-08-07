@@ -99,7 +99,6 @@ public class Page {
       "(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
   @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
   @Getter
-  @Setter
   private boolean blocked;
 
   @Transient @Getter @Setter private byte[] content;

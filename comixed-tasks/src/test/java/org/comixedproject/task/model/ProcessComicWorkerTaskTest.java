@@ -22,14 +22,20 @@ import static junit.framework.TestCase.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
+import org.comixedproject.model.comic.Page;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.comic.PageService;
 import org.comixedproject.utils.Utils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -43,6 +49,8 @@ import org.springframework.test.context.TestPropertySource;
 public class ProcessComicWorkerTaskTest {
   private static final String TEST_FILE_HASH = "OICU812";
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final String TEST_BLOCKED_PAGE_HASH = "1234567890";
+  private static final String TEST_UNBLOCKED_PAGE_HASH = "0987654321";
 
   @InjectMocks private ProcessComicWorkerTask task;
   @Mock private Comic comic;
@@ -51,11 +59,23 @@ public class ProcessComicWorkerTaskTest {
   @Mock private ComicService comicService;
   @Mock private Utils utils;
   @Mock private ComicFileHandler comicFileHandler;
+  @Mock private PageService pageService;
+  @Mock private Page blockedPage;
+  @Mock private Page unblockedPage;
 
+  private List<String> blockedPageHashes = new ArrayList<>();
   private ArchiveType archiveType = ArchiveType.CBZ;
+  private List<Page> pageList = new ArrayList<>();
 
-  @Test
-  public void testStartTask() throws WorkerTaskException, ArchiveAdaptorException, IOException {
+  @Before
+  public void setUp() throws ArchiveAdaptorException, IOException {
+    this.pageList.add(blockedPage);
+    this.pageList.add(unblockedPage);
+    this.blockedPageHashes.add(TEST_BLOCKED_PAGE_HASH);
+
+    Mockito.when(blockedPage.getHash()).thenReturn(TEST_BLOCKED_PAGE_HASH);
+    Mockito.when(unblockedPage.getHash()).thenReturn(TEST_UNBLOCKED_PAGE_HASH);
+
     Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(archiveAdaptor);
@@ -64,7 +84,36 @@ public class ProcessComicWorkerTaskTest {
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsCaptor.capture());
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
+  }
 
+  @After
+  public void tearDown() throws ArchiveAdaptorException {
+    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(archiveType);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
+    Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
+  }
+
+  @Test
+  public void testStartTaskCheckForBlockedPages()
+      throws WorkerTaskException, ArchiveAdaptorException, IOException {
+    Mockito.when(pageService.getAllBlockedPageHashes()).thenReturn(blockedPageHashes);
+    Mockito.when(comic.getPages()).thenReturn(pageList);
+
+    task.setComic(comic);
+    task.setIgnoreMetadata(false);
+    task.setDeleteBlockedPages(true);
+
+    task.startTask();
+
+    assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
+
+    Mockito.verify(pageService, Mockito.times(1)).getAllBlockedPageHashes();
+    Mockito.verify(blockedPage, Mockito.times(1)).setDeleted(true);
+  }
+
+  @Test
+  public void testStartTask() throws WorkerTaskException, ArchiveAdaptorException, IOException {
     task.setComic(comic);
     task.setIgnoreMetadata(false);
     task.setDeleteBlockedPages(false);
@@ -73,9 +122,7 @@ public class ProcessComicWorkerTaskTest {
 
     assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
 
-    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(archiveType);
-    Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
-    Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(comicService, Mockito.times(1)).save(comic);
+    Mockito.verify(pageService, Mockito.never()).getAllBlockedPageHashes();
+    Mockito.verify(blockedPage, Mockito.never()).setDeleted(true);
   }
 }
