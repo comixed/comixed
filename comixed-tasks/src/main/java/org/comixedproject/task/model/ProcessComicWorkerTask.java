@@ -18,22 +18,26 @@
 
 package org.comixedproject.task.model;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
+import org.comixedproject.model.comic.Page;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.comic.PageService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Date;
 
 /**
  * <code>ProcessComicWorkerTask</code> handles loading the details of a comic into the library
@@ -43,16 +47,18 @@ import java.util.Date;
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Log4j2
 public class ProcessComicWorkerTask extends AbstractWorkerTask {
   private static final Object semaphore = new Object();
 
   @Autowired private ComicService comicService;
   @Autowired private Utils utils;
   @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private PageService pageService;
 
   @Getter @Setter private Comic comic;
-  @Getter @Setter private Boolean deleteBlockedPages;
-  @Getter @Setter private Boolean ignoreMetadata;
+  @Getter @Setter private boolean deleteBlockedPages;
+  @Getter @Setter private boolean ignoreMetadata;
 
   @Override
   protected String createDescription() {
@@ -71,6 +77,19 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
       adaptor.loadComic(comic);
     } catch (ArchiveAdaptorException error) {
       throw new WorkerTaskException("failed to load comic: " + comic.getFilename(), error);
+    }
+
+    if (this.deleteBlockedPages) {
+      log.debug("Loading blocked page hashes");
+      final List<String> blockedHashes = this.pageService.getAllBlockedPageHashes();
+
+      log.debug("Checking for blocked pages");
+      for (Page page : comic.getPages()) {
+        if (blockedHashes.contains(page.getHash())) {
+          log.debug("Marking page as blocked: [{}:{}]", page.getFilename(), page.getHash());
+          page.setDeleted(true);
+        }
+      }
     }
 
     logger.debug("Sorting pages");
