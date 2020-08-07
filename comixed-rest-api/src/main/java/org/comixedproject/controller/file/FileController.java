@@ -41,6 +41,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -136,11 +137,18 @@ public class FileController {
     return result;
   }
 
+  /**
+   * Begins the process of enqueueing comic files for import
+   *
+   * @param request the request body
+   * @return the response body
+   * @throws UnsupportedEncodingException if an error occurs
+   */
   @PostMapping(
       value = "/import",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Secured("ROLE_ADMIN")
+  @PreAuthorize("hasRole('ADMIN')")
   public ImportComicFilesResponse importComicFiles(@RequestBody() ImportComicFilesRequest request)
       throws UnsupportedEncodingException {
     final List<String> filenames = request.getFilenames();
