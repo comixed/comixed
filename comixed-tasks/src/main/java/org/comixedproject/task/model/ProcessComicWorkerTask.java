@@ -18,9 +18,8 @@
 
 package org.comixedproject.task.model;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -32,6 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * <code>ProcessComicWorkerTask</code> handles loading the details of a comic into the library
@@ -48,9 +50,9 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
   @Autowired private Utils utils;
   @Autowired private ComicFileHandler comicFileHandler;
 
-  private Comic comic;
-  private Boolean deleteBlockedPages;
-  private Boolean ignoreMetadata;
+  @Getter @Setter private Comic comic;
+  @Getter @Setter private Boolean deleteBlockedPages;
+  @Getter @Setter private Boolean ignoreMetadata;
 
   @Override
   protected String createDescription() {
@@ -92,17 +94,5 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
     logger.debug("Updating comic");
     comic.setDateLastUpdated(new Date());
     this.comicService.save(comic);
-  }
-
-  public void setComic(final Comic comic) {
-    this.comic = comic;
-  }
-
-  public void setDeleteBlockedPages(final Boolean deleteBlockedPages) {
-    this.deleteBlockedPages = deleteBlockedPages;
-  }
-
-  public void setIgnoreMetadata(final Boolean ignoreMetadata) {
-    this.ignoreMetadata = ignoreMetadata;
   }
 }
