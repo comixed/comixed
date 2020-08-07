@@ -19,6 +19,8 @@
 package org.comixedproject.task.model;
 
 import java.io.File;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -55,9 +57,9 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
 
   @Autowired private TaskService taskService;
 
-  private String filename;
-  private boolean deleteBlockedPages = false;
-  private boolean ignoreMetadata = false;
+  @Getter @Setter private String filename;
+  @Getter @Setter private boolean deleteBlockedPages = false;
+  @Getter @Setter private boolean ignoreMetadata = false;
 
   @Override
   @Transactional
@@ -113,34 +115,5 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
         .append(this.ignoreMetadata ? "Yes" : "No");
 
     return result.toString();
-  }
-
-  public String getFilename() {
-    return this.filename;
-  }
-
-  public void setFilename(final String filename) {
-    this.filename = filename;
-  }
-
-  public boolean getDeleteBlockedPages() {
-    return this.deleteBlockedPages;
-  }
-
-  /**
-   * Sets whether blocked pages are marked as deleted.
-   *
-   * @param deleteBlockedPages the flag
-   */
-  public void setDeleteBlockedPages(boolean deleteBlockedPages) {
-    this.deleteBlockedPages = deleteBlockedPages;
-  }
-
-  public boolean getIgnoreMetadata() {
-    return this.ignoreMetadata;
-  }
-
-  public void setIgnoreMetadata(boolean ignore) {
-    this.ignoreMetadata = ignore;
   }
 }
