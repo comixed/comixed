@@ -66,22 +66,32 @@ public class DetailsService {
   @Value("${build-details.remote.origin.url}")
   private String remoteOriginURL;
 
+  @Value("${spring.datasource.url}")
+  private String jdbcUrl;
+
+  private BuildDetails buildDetails = null;
+
   public BuildDetails getBuildDetails() throws ParseException {
     log.debug("Getting build details");
-    final BuildDetails result = new BuildDetails();
+    if (this.buildDetails == null) {
+      this.buildDetails = new BuildDetails();
 
-    result.setBranch(branch);
-    result.setBuildHost(buildHost);
-    if (!StringUtils.isEmpty(buildTime)) result.setBuildTime(dateParser.parse(buildTime));
-    result.setBuildVersion(buildVersion);
-    result.setCommitId(commitId);
-    if (!StringUtils.isEmpty(commitTime)) result.setCommitTime(dateParser.parse(commitTime));
-    result.setCommitMessage(commitMessage);
-    result.setCommitUser(commitUser);
-    result.setCommitEmail(commitEmail);
-    result.setDirty(Boolean.valueOf(dirty));
-    result.setRemoteOriginURL(remoteOriginURL);
+      this.buildDetails.setBranch(this.branch);
+      this.buildDetails.setBuildHost(this.buildHost);
+      if (!StringUtils.isEmpty(this.buildTime))
+        this.buildDetails.setBuildTime(dateParser.parse(this.buildTime));
+      this.buildDetails.setBuildVersion(this.buildVersion);
+      this.buildDetails.setCommitId(this.commitId);
+      if (!StringUtils.isEmpty(this.commitTime))
+        this.buildDetails.setCommitTime(dateParser.parse(this.commitTime));
+      this.buildDetails.setCommitMessage(this.commitMessage);
+      this.buildDetails.setCommitUser(this.commitUser);
+      this.buildDetails.setCommitEmail(this.commitEmail);
+      this.buildDetails.setDirty(Boolean.valueOf(this.dirty));
+      this.buildDetails.setRemoteOriginURL(this.remoteOriginURL);
+      this.buildDetails.setJdbcUrl(this.jdbcUrl);
+    }
 
-    return result;
+    return this.buildDetails;
   }
 }

@@ -8,31 +8,31 @@
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.build-host' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.build_host }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.buildHost }}</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.build-time' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.build_time|date:'medium' }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.buildTime|date:'medium' }}</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.build-version' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.build_version }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.buildVersion }}</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-id' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.commit_id }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.commitId }}</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-user' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.commit_user }}&nbsp;({{ buildDetails.commit_email }})</td>
+        <td class='cx-table-details-value'>{{ buildDetails.commitUser }}&nbsp;({{ buildDetails.commit_email }})</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-time' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.commit_time | date: 'medium' }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.commitTime | date: 'medium' }}</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-message' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.commit_message }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.commitMessage }}</td>
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.dirty' | translate }}</td>
@@ -40,7 +40,11 @@
     </tr>
     <tr>
         <td class='cx-table-details-label'>{{ 'build-details-page.table.remote-origin-url' | translate }}</td>
-        <td class='cx-table-details-value'>{{ buildDetails.remote_origin_url }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.remoteOriginUrl }}</td>
+    </tr>
+    <tr>
+        <td class='cx-table-details-label'>{{ 'build-details-page.table.jdbc-url' | translate }}</td>
+        <td class='cx-table-details-value'>{{ buildDetails.jdbcUrl }}</td>
     </tr>
     </tbody>
 </table>
