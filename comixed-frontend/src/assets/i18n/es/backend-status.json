@@ -18,7 +18,8 @@
       "commit-message": "Mensaje del Commit",
       "commit-time": "Fecha del último Commit",
       "dirty": "¿Compilado desde código Uncommitted?",
-      "remote-origin-url": "Remote Origin"
+      "remote-origin-url": "Remote Origin",
+      "jdbc-url": "JDBC Connection URL"
     }
   },
   "task-audit-log-effects": {

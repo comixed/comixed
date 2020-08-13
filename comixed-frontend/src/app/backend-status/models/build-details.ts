@@ -1,13 +1,14 @@
 export interface BuildDetails {
   branch: string;
-  build_host: string;
-  build_time: Date;
-  build_version: string;
-  commit_id: string;
-  commit_time: Date;
-  commit_message: string;
-  commit_user: string;
-  commit_email: string;
+  buildHost: string;
+  buildTime: Date;
+  buildVersion: string;
+  commitId: string;
+  commitTime: Date;
+  commitMessage: string;
+  commitUser: string;
+  commitEmail: string;
   dirty: boolean;
-  remote_origin_url: string;
+  remoteOriginUrl: string;
+  jdbcUrl: string;
 }

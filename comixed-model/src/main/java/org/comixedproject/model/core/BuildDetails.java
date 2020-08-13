@@ -34,42 +34,42 @@ public class BuildDetails {
   @Setter
   private String branch;
 
-  @JsonProperty("build_time")
+  @JsonProperty("buildTime")
   @Getter
   @Setter
   private Date buildTime;
 
-  @JsonProperty("build_host")
+  @JsonProperty("buildHost")
   @Getter
   @Setter
   private String buildHost;
 
-  @JsonProperty("build_version")
+  @JsonProperty("buildVersion")
   @Getter
   @Setter
   private String buildVersion;
 
-  @JsonProperty("commit_id")
+  @JsonProperty("commitId")
   @Getter
   @Setter
   private String commitId;
 
-  @JsonProperty("commit_time")
+  @JsonProperty("commitTime")
   @Getter
   @Setter
   private Date commitTime;
 
-  @JsonProperty("commit_message")
+  @JsonProperty("commitMessage")
   @Getter
   @Setter
   private String commitMessage;
 
-  @JsonProperty("commit_user")
+  @JsonProperty("commitUser")
   @Getter
   @Setter
   private String commitUser;
 
-  @JsonProperty("commit_email")
+  @JsonProperty("commitEmail")
   @Getter
   @Setter
   private String commitEmail;
@@ -79,8 +79,13 @@ public class BuildDetails {
   @Setter
   private boolean dirty;
 
-  @JsonProperty("remote_origin_url")
+  @JsonProperty("remoteOriginURL")
   @Getter
   @Setter
   private String remoteOriginURL;
+
+  @JsonProperty("jdbcUrl")
+  @Getter
+  @Setter
+  private String jdbcUrl;
 }

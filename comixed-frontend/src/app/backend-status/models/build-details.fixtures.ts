@@ -20,14 +20,15 @@ import { BuildDetails } from 'app/backend-status/models/build-details';
 
 export const BUILD_DETAILS: BuildDetails = {
   branch: 'release/0.5.0',
-  build_host: 'localhost',
-  build_time: new Date(),
-  build_version: '0.5.0',
-  commit_id: 'OICU812',
-  commit_time: new Date(),
-  commit_message: 'This is a feature',
-  commit_user: 'Joey Baggodonuts',
-  commit_email: 'comixedcoder@localhost',
+  buildHost: 'localhost',
+  buildTime: new Date(),
+  buildVersion: '0.5.0',
+  commitId: 'OICU812',
+  commitTime: new Date(),
+  commitMessage: 'This is a feature',
+  commitUser: 'Joey Baggodonuts',
+  commitEmail: 'comixedcoder@localhost',
   dirty: false,
-  remote_origin_url: 'git@github.com:comixed.git'
+  remoteOriginUrl: 'git@github.com:comixed.git',
+  jdbcUrl: 'jdbc:h2:mem:'
 };
