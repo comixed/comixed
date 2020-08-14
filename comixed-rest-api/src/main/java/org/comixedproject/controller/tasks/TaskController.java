@@ -24,6 +24,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.service.ComiXedServiceException;
 import org.comixedproject.service.task.TaskService;
@@ -31,10 +32,7 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>TaskController</code> provides REST APIs for interacting with the tasks system.
@@ -67,5 +65,29 @@ public class TaskController {
     } catch (ComiXedServiceException error) {
       throw new ComiXedControllerException("unable to get task audit log entries", error);
     }
+  }
+
+  /**
+   * Endpoint for clearing the task log.
+   *
+   * @return the success of the operation
+   */
+  @DeleteMapping(value = "/entries", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.ApiResponse.class)
+  public ApiResponse<Void> clearTaskAuditLog() {
+    log.debug("Clearing task audit log");
+    final ApiResponse<Void> response = new ApiResponse<>();
+
+    try {
+      this.taskService.clearTaskAuditLog();
+      response.setSuccess(true);
+    } catch (Exception error) {
+      log.error("Failed to clear audit log", error);
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+    }
+
+    return response;
   }
 }

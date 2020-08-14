@@ -25,6 +25,9 @@ package org.comixedproject.views;
  * @author Darryl L. Pierce
  */
 public class View {
+  /** The parent type for all views. */
+  public interface ApiResponse {}
+
   /** Show full details on a single comic. */
   public interface ComicDetails extends ComicList {}
 

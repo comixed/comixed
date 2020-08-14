@@ -123,6 +123,7 @@ public class TaskService {
    * @return the tasks
    */
   public List<Task> getTasksToRun(final int max) {
+    log.debug("Fetching next task to run");
     return this.taskRepository.getTasksToRun(PageRequest.of(0, max));
   }
 
@@ -133,6 +134,14 @@ public class TaskService {
    */
   @Transactional
   public void saveAuditLogEntry(final TaskAuditLogEntry entry) {
+    log.debug("Adding task audit log entry: {}", entry.getDescription());
     this.taskAuditLogRepository.save(entry);
+  }
+
+  /** Clears the task audit log. */
+  @Transactional
+  public void clearTaskAuditLog() {
+    log.debug("Clearing task audit log");
+    this.taskAuditLogRepository.deleteAll();
   }
 }

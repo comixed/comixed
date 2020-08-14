@@ -18,13 +18,13 @@
 
 package org.comixedproject.controller.tasks;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.service.ComiXedServiceException;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.UserService;
@@ -57,5 +57,27 @@ public class TaskControllerTest {
     assertSame(auditLogEntries, result);
 
     Mockito.verify(taskService, Mockito.times(1)).getAuditLogEntriesAfter(TEST_LAST_UPDATED_DATE);
+  }
+
+  @Test
+  public void testClearTaskLogServiceRaisesException() {
+    Mockito.doThrow(new RuntimeException("Test")).when(taskService).clearTaskAuditLog();
+
+    final ApiResponse<Void> result = taskController.clearTaskAuditLog();
+
+    assertNotNull(result);
+    assertFalse(result.isSuccess());
+    assertNotNull(result.getError());
+  }
+
+  @Test
+  public void testClearTaskLog() {
+    Mockito.doNothing().when(taskService).clearTaskAuditLog();
+
+    final ApiResponse<Void> result = taskController.clearTaskAuditLog();
+
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertNull(result.getError());
   }
 }
