@@ -41,6 +41,15 @@
     }
   },
   "task": {
+    "list": {
+      "effects": {
+        "load": {
+          "error": {
+            "detail": "Failed to load the log entries..."
+          }
+        }
+      }
+    },
     "clear-audit-log": {
       "tooltip": "Clear the task audit log...",
       "confirm-header": "Clear Task Audit Log",

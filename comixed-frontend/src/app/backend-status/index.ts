@@ -19,13 +19,13 @@
 import * as fromRouter from '@ngrx/router-store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
 import { BuildDetailsState } from './reducers/build-details.reducer';
-import * as fromTaskAuditLog from './reducers/task-audit-log.reducer';
 import * as fromClearTaskAuditLog from './reducers/clear-task-audit-log.reducer';
+import * as fromLoadTaskAuditLog from './reducers/load-task-audit-log.reducer';
+import { LoadTaskAuditLogState } from './reducers/load-task-audit-log.reducer';
 import { Params } from '@angular/router';
 
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import { TaskAuditLogState } from 'app/backend-status/reducers/task-audit-log.reducer';
 import { ClearTaskAuditLogState } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
 
 interface RouterStateUrl {
@@ -37,7 +37,7 @@ interface RouterStateUrl {
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   build_details: BuildDetailsState;
-  task_audit_log_state: TaskAuditLogState;
+  load_task_audit_log_state: LoadTaskAuditLogState;
   clear_task_audit_log_state: ClearTaskAuditLogState;
 }
 
@@ -46,7 +46,7 @@ export type State = AppState;
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   build_details: fromBuildDetails.reducer,
-  task_audit_log_state: fromTaskAuditLog.reducer,
+  load_task_audit_log_state: fromLoadTaskAuditLog.reducer,
   clear_task_audit_log_state: fromClearTaskAuditLog.reducer
 };
 

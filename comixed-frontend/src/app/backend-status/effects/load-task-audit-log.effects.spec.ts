@@ -18,9 +18,9 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-import { TaskAuditLogEffects } from './task-audit-log.effects';
+import { LoadTaskAuditLogEffects } from './load-task-audit-log.effects';
 import { TaskAuditLogService } from 'app/backend-status/services/task-audit-log.service';
 import {
   TASK_AUDIT_LOG_ENTRY_1,
@@ -30,18 +30,22 @@ import {
   TASK_AUDIT_LOG_ENTRY_5
 } from 'app/backend-status/backend-status.fixtures';
 import {
-  GetTaskAuditLogEntries,
-  GetTaskAuditLogEntriesFailed,
-  ReceivedTaskAuditLogEntries
-} from 'app/backend-status/actions/task-audit-log.actions';
+  loadTaskAuditLogEntries,
+  loadTaskAuditLogFailed,
+  taskAuditLogEntriesLoaded
+} from 'app/backend-status/actions/load-task-audit-log.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
 import { LoggerModule } from '@angular-ru/logger';
+import { AlertService, ApiResponse } from 'app/core';
+import { TaskAuditLogEntry } from 'app/backend-status/models/task-audit-log-entry';
 import { TranslateModule } from '@ngx-translate/core';
-import objectContaining = jasmine.objectContaining;
+import { CoreModule } from 'app/core/core.module';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LoadTaskAuditLogResponse } from 'app/backend-status/models/net/load-task-audit-log-response';
+import { MessageService } from 'primeng/api';
 
-describe('TaskAuditLogEffects', () => {
+describe('LoadTaskAuditLogEffects', () => {
+  const LATEST = new Date().getTime();
   const LOG_ENTRIES = [
     TASK_AUDIT_LOG_ENTRY_1,
     TASK_AUDIT_LOG_ENTRY_2,
@@ -51,15 +55,15 @@ describe('TaskAuditLogEffects', () => {
   ];
 
   let actions$: Observable<any>;
-  let effects: TaskAuditLogEffects;
+  let effects: LoadTaskAuditLogEffects;
   let taskAuditLogService: jasmine.SpyObj<TaskAuditLogService>;
-  let messageService: MessageService;
+  let alertService: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
+      imports: [CoreModule, LoggerModule.forRoot(), TranslateModule.forRoot()],
       providers: [
-        TaskAuditLogEffects,
+        LoadTaskAuditLogEffects,
         provideMockActions(() => actions$),
         {
           provide: TaskAuditLogService,
@@ -73,64 +77,76 @@ describe('TaskAuditLogEffects', () => {
       ]
     });
 
-    effects = TestBed.get<TaskAuditLogEffects>(TaskAuditLogEffects);
+    effects = TestBed.get<LoadTaskAuditLogEffects>(LoadTaskAuditLogEffects);
     taskAuditLogService = TestBed.get(TaskAuditLogService);
-    messageService = TestBed.get(MessageService);
-    spyOn(messageService, 'add');
+    alertService = TestBed.get(AlertService);
+    spyOn(alertService, 'error');
   });
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('getting the list of log entries', () => {
+  describe('loading the task audit log entries', () => {
     it('fires an action on success', () => {
-      const serviceResponse = LOG_ENTRIES;
-      const action = new GetTaskAuditLogEntries({
-        cutoff: new Date().getTime()
+      const serviceResponse = {
+        success: true,
+        result: {
+          entries: LOG_ENTRIES,
+          latest: LATEST
+        } as LoadTaskAuditLogResponse
+      } as ApiResponse<LoadTaskAuditLogResponse>;
+      const action = loadTaskAuditLogEntries({ since: 0 });
+      const outcome = taskAuditLogEntriesLoaded({
+        entries: LOG_ENTRIES,
+        latest: LATEST
       });
-      const outcome = new ReceivedTaskAuditLogEntries({ entries: LOG_ENTRIES });
 
       actions$ = hot('-a', { a: action });
       taskAuditLogService.getLogEntries.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.getLogEntries$).toBeObservable(expected);
+      expect(effects.loadTaskAuditLogEntries$).toBeObservable(expected);
+    });
+
+    it('fires an action on failure', () => {
+      const serviceResponse = {
+        success: false
+      } as ApiResponse<TaskAuditLogEntry[]>;
+      const action = loadTaskAuditLogEntries({ since: 0 });
+      const outcome = loadTaskAuditLogFailed();
+
+      actions$ = hot('-a', { a: action });
+      taskAuditLogService.getLogEntries.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadTaskAuditLogEntries$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = new GetTaskAuditLogEntries({
-        cutoff: new Date().getTime()
-      });
-      const outcome = new GetTaskAuditLogEntriesFailed();
+      const action = loadTaskAuditLogEntries({ since: 0 });
+      const outcome = loadTaskAuditLogFailed();
 
       actions$ = hot('-a', { a: action });
-      taskAuditLogService.getLogEntries.and.returnValue(
-        throwError(serviceResponse)
-      );
+      taskAuditLogService.getLogEntries.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.getLogEntries$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
+      expect(effects.loadTaskAuditLogEntries$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = new GetTaskAuditLogEntries({
-        cutoff: new Date().getTime()
-      });
-      const outcome = new GetTaskAuditLogEntriesFailed();
+      const action = loadTaskAuditLogEntries({ since: 0 });
+      const outcome = loadTaskAuditLogFailed();
 
       actions$ = hot('-a', { a: action });
       taskAuditLogService.getLogEntries.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.getLogEntries$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
+      expect(effects.loadTaskAuditLogEntries$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });

@@ -20,13 +20,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TaskAuditLogPageComponent } from './task-audit-log-page.component';
 import { TableModule } from 'primeng/table';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { Store, StoreModule } from '@ngrx/store';
-import * as fromTaskAuditLog from 'app/backend-status/reducers/task-audit-log.reducer';
-import { TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/task-audit-log.reducer';
+import * as fromLoadTaskAuditLog from 'app/backend-status/reducers/load-task-audit-log.reducer';
+import { LOAD_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/load-task-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { TaskAuditLogEffects } from 'app/backend-status/effects/task-audit-log.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { LibraryModule } from 'app/library/library.module';
@@ -40,12 +39,16 @@ import * as fromClearTaskAuditLog from 'app/backend-status/reducers/build-detail
 import { ClearTaskAuditLogEffects } from 'app/backend-status/effects/clear-task-audit-log.effects';
 import { AppState } from 'app/backend-status';
 import { clearTaskAuditLog } from 'app/backend-status/actions/clear-task-audit-log.actions';
+import { Title } from '@angular/platform-browser';
 
 describe('TaskAuditLogPageComponent', () => {
   let component: TaskAuditLogPageComponent;
   let fixture: ComponentFixture<TaskAuditLogPageComponent>;
   let store: Store<AppState>;
   let confirmationService: ConfirmationService;
+  let titleService: Title;
+  let breadcrumbAdaptor: BreadcrumbAdaptor;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -58,18 +61,15 @@ describe('TaskAuditLogPageComponent', () => {
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(
-          TASK_AUDIT_LOG_FEATURE_KEY,
-          fromTaskAuditLog.reducer
+          LOAD_TASK_AUDIT_LOG_FEATURE_KEY,
+          fromLoadTaskAuditLog.reducer
         ),
         StoreModule.forFeature(
           CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
           fromClearTaskAuditLog.reducer
         ),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([
-          TaskAuditLogEffects,
-          ClearTaskAuditLogEffects
-        ]),
+        EffectsModule.forFeature([ClearTaskAuditLogEffects]),
         TableModule,
         ScrollPanelModule,
         ToolbarModule,
@@ -85,10 +85,29 @@ describe('TaskAuditLogPageComponent', () => {
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     confirmationService = TestBed.get(ConfirmationService);
+    titleService = TestBed.get(Title);
+    spyOn(titleService, 'setTitle');
+    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
+    spyOn(breadcrumbAdaptor, 'loadEntries');
+    translateService = TestBed.get(TranslateService);
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('resets the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalled();
+    });
+
+    it('reloads the breadcrumb trail', () => {
+      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
+    });
   });
 
   describe('clearing the task audit log', () => {
