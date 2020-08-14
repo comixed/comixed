@@ -38,5 +38,5 @@ public interface TaskAuditLogRepository extends JpaRepository<TaskAuditLogEntry,
    * @param startTime the earliest startTime date
    * @return the log entries
    */
-  List<TaskAuditLogEntry> findAllByStartTimeGreaterThan(Date startTime);
+  List<TaskAuditLogEntry> findAllByStartTimeGreaterThanOrderByStartTime(Date startTime);
 }
