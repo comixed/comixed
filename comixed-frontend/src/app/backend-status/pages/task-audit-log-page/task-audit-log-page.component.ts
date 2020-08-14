@@ -20,7 +20,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TaskAuditLogEntry } from 'app/backend-status/models/task-audit-log-entry';
 import { LoggerService } from '@angular-ru/logger';
-import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.adaptor';
 import { LibraryDisplayAdaptor } from 'app/user/adaptors/library-display.adaptor';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,6 +29,13 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'app/backend-status';
 import { clearTaskAuditLog } from 'app/backend-status/actions/clear-task-audit-log.actions';
 import { selectClearTaskingAuditLogWorking } from 'app/backend-status/selectors/clear-task-audit-log.selectors';
+import {
+  selectLoadTaskAuditLogState,
+  selectTaskAuditLogEntries
+} from 'app/backend-status/selectors/load-task-audit-log.selectors';
+import { loadTaskAuditLogEntries } from 'app/backend-status/actions/load-task-audit-log.actions';
+import { LoadTaskAuditLogState } from 'app/backend-status/reducers/load-task-audit-log.reducer';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-audit-log-page',
@@ -37,9 +43,6 @@ import { selectClearTaskingAuditLogWorking } from 'app/backend-status/selectors/
   styleUrls: ['./task-audit-log-page.component.scss']
 })
 export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
-  fetchingSubscription: Subscription;
-  fetching = false;
-  entriesSubscription: Subscription;
   entries: TaskAuditLogEntry[] = [];
   rowsSubscription: Subscription;
   rows = 0;
@@ -48,7 +51,6 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: LoggerService,
-    private taskAuditLogAdaptor: TaskAuditLogAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
@@ -57,19 +59,21 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
     private store: Store<AppState>
   ) {
     this.store
-      .select(selectClearTaskingAuditLogWorking)
-      .subscribe(clearing => (this.clearingAuditLog = clearing));
-    this.fetchingSubscription = this.taskAuditLogAdaptor.fetchingEntries$.subscribe(
-      fetching => {
-        this.fetching = fetching;
-        if (fetching === false) {
-          this.taskAuditLogAdaptor.getEntries();
+      .select(selectLoadTaskAuditLogState)
+      .pipe(filter(state => !!state))
+      .subscribe((state: LoadTaskAuditLogState) => {
+        if (!state.loading) {
+          this.store.dispatch(loadTaskAuditLogEntries({ since: state.latest }));
         }
-      }
-    );
-    this.entriesSubscription = this.taskAuditLogAdaptor.entries$.subscribe(
-      entries => (this.entries = entries)
-    );
+      });
+    this.store
+      .select(selectTaskAuditLogEntries)
+      .pipe(filter(state => !!state))
+      .subscribe(entries => (this.entries = entries));
+    this.store
+      .select(selectClearTaskingAuditLogWorking)
+      .pipe(filter(state => !!state))
+      .subscribe(clearing => (this.clearingAuditLog = clearing));
     this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(
       rows => (this.rows = rows)
     );
@@ -84,8 +88,6 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
   ngOnInit() {}
 
   ngOnDestroy() {
-    this.fetchingSubscription.unsubscribe();
-    this.entriesSubscription.unsubscribe();
     this.rowsSubscription.unsubscribe();
   }
 

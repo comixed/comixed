@@ -24,20 +24,20 @@ import { BackendStatusRoutingModule } from 'app/backend-status/backend-status-ro
 import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
 import { StoreModule } from '@ngrx/store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
-import * as fromTaskAuditLog from './reducers/task-audit-log.reducer';
 import * as fromClearTaskAuditLog from './reducers/clear-task-audit-log.reducer';
+import * as fromLoadTaskAuditLog from './reducers/load-task-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { TranslateModule } from '@ngx-translate/core';
-import { TaskAuditLogEffects } from 'app/backend-status/effects/task-audit-log.effects';
 import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
-import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.adaptor';
 import { TableModule } from 'primeng/table';
 import { ScrollPanelModule } from 'primeng/primeng';
 import { CoreModule } from 'app/core/core.module';
 import { CLEAR_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
 import { ClearTaskAuditLogEffects } from 'app/backend-status/effects/clear-task-audit-log.effects';
 import { ToolbarModule, TooltipModule } from 'primeng/primeng';
+import { LOAD_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/load-task-audit-log.reducer';
+import { LoadTaskAuditLogEffects } from 'app/backend-status/effects/load-task-audit-log.effects';
 
 @NgModule({
   declarations: [BuildDetailsPageComponent, TaskAuditLogPageComponent],
@@ -51,8 +51,8 @@ import { ToolbarModule, TooltipModule } from 'primeng/primeng';
       fromBuildDetails.reducer
     ),
     StoreModule.forFeature(
-      fromTaskAuditLog.TASK_AUDIT_LOG_FEATURE_KEY,
-      fromTaskAuditLog.reducer
+      LOAD_TASK_AUDIT_LOG_FEATURE_KEY,
+      fromLoadTaskAuditLog.reducer
     ),
     StoreModule.forFeature(
       CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
@@ -60,7 +60,7 @@ import { ToolbarModule, TooltipModule } from 'primeng/primeng';
     ),
     EffectsModule.forFeature([
       BuildDetailsEffects,
-      TaskAuditLogEffects,
+      LoadTaskAuditLogEffects,
       ClearTaskAuditLogEffects
     ]),
     TableModule,
@@ -69,6 +69,6 @@ import { ToolbarModule, TooltipModule } from 'primeng/primeng';
     TooltipModule
   ],
   exports: [CommonModule, CoreModule],
-  providers: [BuildDetailsService, BuildDetailsAdaptor, TaskAuditLogAdaptor]
+  providers: [BuildDetailsService, BuildDetailsAdaptor]
 })
 export class BackendStatusModule {}
