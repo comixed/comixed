@@ -22,9 +22,12 @@ import {
   TaskAuditLogState
 } from './task-audit-log.reducer';
 import {
+  ClearTaskAuditLog,
+  ClearTaskAuditLogFailed,
   GetTaskAuditLogEntries,
   GetTaskAuditLogEntriesFailed,
-  ReceivedTaskAuditLogEntries
+  ReceivedTaskAuditLogEntries,
+  TaskAuditLogCleared
 } from 'app/backend-status/actions/task-audit-log.actions';
 import {
   TASK_AUDIT_LOG_ENTRY_1,
@@ -34,7 +37,7 @@ import {
   TASK_AUDIT_LOG_ENTRY_5
 } from 'app/backend-status/models/task-audit-log-entry.fixtures';
 
-describe('TaskAuditLog Reducer', () => {
+fdescribe('TaskAuditLog Reducer', () => {
   const LOG_ENTRIES = [
     TASK_AUDIT_LOG_ENTRY_1,
     TASK_AUDIT_LOG_ENTRY_3,
@@ -63,6 +66,10 @@ describe('TaskAuditLog Reducer', () => {
 
     it('has a last entry date of 0', () => {
       expect(state.lastEntryDate).toEqual(0);
+    });
+
+    it('clears the clearing audit log flag', () => {
+      expect(state.clearingLog).toBeFalsy();
     });
   });
 
@@ -117,6 +124,45 @@ describe('TaskAuditLog Reducer', () => {
 
     it('clears the fetching flag', () => {
       expect(state.fetchingEntries).toBeFalsy();
+    });
+  });
+
+  describe('when clearing the audit log', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingLog: false },
+        new ClearTaskAuditLog()
+      );
+    });
+
+    it('sets the clearing audit log flag', () => {
+      expect(state.clearingLog).toBeTruthy();
+    });
+  });
+
+  describe('when clearing the audit log succeeds', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingLog: true },
+        new TaskAuditLogCleared()
+      );
+    });
+
+    it('sets the clearing audit log flag', () => {
+      expect(state.clearingLog).toBeFalsy();
+    });
+  });
+
+  describe('when clearing the audit log fails', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingLog: true },
+        new ClearTaskAuditLogFailed()
+      );
+    });
+
+    it('sets the clearing audit log flag', () => {
+      expect(state.clearingLog).toBeFalsy();
     });
   });
 });
