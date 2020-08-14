@@ -20,14 +20,17 @@ package org.comixedproject.controller.tasks;
 
 import static junit.framework.TestCase.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.net.ApiResponse;
+import org.comixedproject.net.GetTaskAuditLogResponse;
 import org.comixedproject.service.ComiXedServiceException;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.UserService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -43,18 +46,28 @@ public class TaskControllerTest {
   @InjectMocks private TaskController taskController;
   @Mock private UserService userService;
   @Mock private TaskService taskService;
-  @Mock private List<TaskAuditLogEntry> auditLogEntries;
+  @Mock private TaskAuditLogEntry taskAuditLogEntry;
+
+  private List<TaskAuditLogEntry> auditLogEntries = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    this.auditLogEntries.add(taskAuditLogEntry);
+    Mockito.when(taskAuditLogEntry.getStartTime()).thenReturn(TEST_LAST_UPDATED_DATE);
+  }
 
   @Test
   public void testGetAllEntries() throws ComiXedServiceException, ComiXedControllerException {
     Mockito.when(taskService.getAuditLogEntriesAfter(Mockito.any(Date.class)))
         .thenReturn(auditLogEntries);
 
-    final List<TaskAuditLogEntry> result =
+    final ApiResponse<GetTaskAuditLogResponse> result =
         taskController.getAllAfterDate(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
-    assertSame(auditLogEntries, result);
+    assertTrue(result.isSuccess());
+    assertSame(auditLogEntries, result.getResult().getEntries());
+    assertEquals(TEST_LAST_UPDATED_DATE, result.getResult().getLatest());
 
     Mockito.verify(taskService, Mockito.times(1)).getAuditLogEntriesAfter(TEST_LAST_UPDATED_DATE);
   }

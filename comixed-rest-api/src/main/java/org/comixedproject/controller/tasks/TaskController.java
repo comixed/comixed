@@ -25,6 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.net.ApiResponse;
+import org.comixedproject.net.GetTaskAuditLogResponse;
 import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.service.ComiXedServiceException;
 import org.comixedproject.service.task.TaskService;
@@ -55,16 +56,26 @@ public class TaskController {
   @GetMapping(value = "/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.TaskAuditLogEntryList.class)
-  public List<TaskAuditLogEntry> getAllAfterDate(@PathVariable("cutoff") final Long timestamp)
-      throws ComiXedControllerException {
+  public ApiResponse<GetTaskAuditLogResponse> getAllAfterDate(
+      @PathVariable("cutoff") final Long timestamp) throws ComiXedControllerException {
+    ApiResponse<GetTaskAuditLogResponse> result = new ApiResponse<>();
+
     final Date cutoff = new Date(timestamp);
     log.debug("Getting all task audit log entries after: {}", cutoff);
 
     try {
-      return this.taskService.getAuditLogEntriesAfter(cutoff);
+      final List<TaskAuditLogEntry> entries = this.taskService.getAuditLogEntriesAfter(cutoff);
+      result.setResult(new GetTaskAuditLogResponse());
+      result.getResult().setEntries(entries);
+      result.getResult().setLatest(entries.get(entries.size() - 1).getStartTime());
+      result.setSuccess(true);
     } catch (ComiXedServiceException error) {
-      throw new ComiXedControllerException("unable to get task audit log entries", error);
+      log.error("Failed to load task audit log entries", error);
+      result.setSuccess(false);
+      result.setError(error.getMessage());
     }
+
+    return result;
   }
 
   /**

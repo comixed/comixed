@@ -73,7 +73,7 @@ public class TaskService {
     boolean done = false;
     long started = System.currentTimeMillis();
     while (!done) {
-      result = this.taskAuditLogRepository.findAllByStartTimeGreaterThan(cutoff);
+      result = this.taskAuditLogRepository.findAllByStartTimeGreaterThanOrderByStartTime(cutoff);
 
       if (result.isEmpty()) {
         log.debug("Waiting for task audit log entries");

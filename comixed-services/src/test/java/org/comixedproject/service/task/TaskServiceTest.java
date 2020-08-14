@@ -60,7 +60,9 @@ public class TaskServiceTest {
 
   @Test
   public void testGetAuditLogEntriesAfter() throws ComiXedServiceException {
-    Mockito.when(taskAuditLogRepository.findAllByStartTimeGreaterThan(Mockito.any(Date.class)))
+    Mockito.when(
+            taskAuditLogRepository.findAllByStartTimeGreaterThanOrderByStartTime(
+                Mockito.any(Date.class)))
         .thenReturn(auditLogEntryList);
 
     final List<TaskAuditLogEntry> result =
@@ -70,7 +72,7 @@ public class TaskServiceTest {
     assertSame(auditLogEntryList, result);
 
     Mockito.verify(taskAuditLogRepository, Mockito.times(1))
-        .findAllByStartTimeGreaterThan(TEST_AUDIT_LOG_CUTOFF_DATE);
+        .findAllByStartTimeGreaterThanOrderByStartTime(TEST_AUDIT_LOG_CUTOFF_DATE);
   }
 
   @Test

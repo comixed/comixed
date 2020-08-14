@@ -63,7 +63,7 @@ public class TaskAuditLogRepositoryTest {
   @Test
   public void testGetEntriesEarliestStartTime() {
     final List<TaskAuditLogEntry> result =
-        this.repository.findAllByStartTimeGreaterThan(new Date(0L));
+        this.repository.findAllByStartTimeGreaterThanOrderByStartTime(new Date(0L));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -78,7 +78,7 @@ public class TaskAuditLogRepositoryTest {
   @Test
   public void testGetEntriesAfterSpecifiedDate() {
     final List<TaskAuditLogEntry> result =
-        this.repository.findAllByStartTimeGreaterThan(TEST_START_TIMESTAMP);
+        this.repository.findAllByStartTimeGreaterThanOrderByStartTime(TEST_START_TIMESTAMP);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -108,7 +108,7 @@ public class TaskAuditLogRepositoryTest {
     assertEquals(TEST_DESCRIPTION, result.getDescription());
 
     final List<TaskAuditLogEntry> entries =
-        repository.findAllByStartTimeGreaterThan(TEST_START_TIMESTAMP);
+        repository.findAllByStartTimeGreaterThanOrderByStartTime(TEST_START_TIMESTAMP);
 
     assertTrue(entries.contains(result));
   }

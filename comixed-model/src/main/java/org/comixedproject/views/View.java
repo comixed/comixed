@@ -67,5 +67,5 @@ public class View {
   public interface PluginList {}
 
   /** Uses when viewing the list of task audit log entries. */
-  public interface TaskAuditLogEntryList {}
+  public interface TaskAuditLogEntryList extends ApiResponse {}
 }
