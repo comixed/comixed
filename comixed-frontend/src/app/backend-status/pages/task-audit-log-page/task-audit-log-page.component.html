@@ -1,8 +1,17 @@
 <h2>{{"task-audit-log-page.title"|translate}}</h2>
+<p-toolbar>
+  <div class="ui-toolbar-group-left">
+    <button pButton
+            icon="fa fa-fw fas fa-trash"
+            [pTooltip]="'task.clear-audit-log.tooltip'|translate"
+            (click)="doClearAuditLog()"></button>
+  </div>
+</p-toolbar>
 <p-table [value]="entries"
          [rows]="rows"
          [paginator]="true"
-         paginatorPosition="both">
+         paginatorPosition="both"
+         [loading]="clearingAuditLog">
   <ng-template pTemplate="colgroup">
     <col class="cx-table-column-medium"/>
     <col class="cx-table-column-medium"/>

@@ -39,5 +39,22 @@
         "description": "Description"
       }
     }
+  },
+  "task": {
+    "clear-audit-log": {
+      "tooltip": "Clear the task audit log...",
+      "confirm-header": "Clear Task Audit Log",
+      "confirm-message": "Are you sure you want to clear the task audit log?",
+      "effects": {
+        "clear-audit-log": {
+          "success": {
+            "detail": "The task audit log is cleared..."
+          },
+          "error": {
+            "detail": "Failed to clear the task audit log..."
+          }
+        }
+      }
+    }
   }
 }

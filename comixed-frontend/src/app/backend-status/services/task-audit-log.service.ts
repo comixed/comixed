@@ -20,7 +20,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
-import { GET_TASK_LOG_ENTRIES_URL } from 'app/backend-status/backend-status.constants';
+import {
+  CLEAR_TASK_AUDIT_LOG_URL,
+  GET_TASK_LOG_ENTRIES_URL
+} from 'app/backend-status/backend-status.constants';
 import { interpolate } from 'app/app.functions';
 
 @Injectable({
@@ -30,12 +33,17 @@ export class TaskAuditLogService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   getLogEntries(timestamp: number): Observable<any> {
-    this.logger.debug(
-      '[GET] http request: get task audit log entries:',
-        timestamp
-    );
+    this.logger.debug('service: get task audit log entries:', timestamp);
     return this.http.get(
       interpolate(GET_TASK_LOG_ENTRIES_URL, { timestamp: timestamp })
     );
+  }
+
+  /**
+   * Sends a request to clear the task audit log.
+   */
+  clearAuditLog(): Observable<any> {
+    this.logger.debug('service: send request to clear the task audit log');
+    return this.http.delete(interpolate(CLEAR_TASK_AUDIT_LOG_URL));
   }
 }

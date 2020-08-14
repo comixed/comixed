@@ -17,3 +17,4 @@
  */
 
 export * from './models/api-response';
+export * from './services/alert.service';

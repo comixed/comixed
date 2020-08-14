@@ -16,7 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
+import { createAction } from '@ngrx/store';
 
-export const GET_TASK_LOG_ENTRIES_URL = `${API_ROOT_URL}/tasks/entries/\${timestamp}`;
-export const CLEAR_TASK_AUDIT_LOG_URL = `${API_ROOT_URL}/tasks/entries`;
+export const clearTaskAuditLog = createAction(
+  '[ClearTaskAuditLog] Clear the log'
+);
+
+export const taskAuditLogCleared = createAction(
+  '[ClearTaskAuditLog] The log was cleared'
+);
+
+export const cleartaskAuditLogFailed = createAction(
+  '[ClearTaskAuditLog] Failed to clear the log'
+);

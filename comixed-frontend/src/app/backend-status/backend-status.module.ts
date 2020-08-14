@@ -25,6 +25,7 @@ import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.a
 import { StoreModule } from '@ngrx/store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
 import * as fromTaskAuditLog from './reducers/task-audit-log.reducer';
+import * as fromClearTaskAuditLog from './reducers/clear-task-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { TranslateModule } from '@ngx-translate/core';
@@ -34,6 +35,9 @@ import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.
 import { TableModule } from 'primeng/table';
 import { ScrollPanelModule } from 'primeng/primeng';
 import { CoreModule } from 'app/core/core.module';
+import { CLEAR_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
+import { ClearTaskAuditLogEffects } from 'app/backend-status/effects/clear-task-audit-log.effects';
+import { ToolbarModule, TooltipModule } from 'primeng/primeng';
 
 @NgModule({
   declarations: [BuildDetailsPageComponent, TaskAuditLogPageComponent],
@@ -50,9 +54,19 @@ import { CoreModule } from 'app/core/core.module';
       fromTaskAuditLog.TASK_AUDIT_LOG_FEATURE_KEY,
       fromTaskAuditLog.reducer
     ),
-    EffectsModule.forFeature([BuildDetailsEffects, TaskAuditLogEffects]),
+    StoreModule.forFeature(
+      CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
+      fromClearTaskAuditLog.reducer
+    ),
+    EffectsModule.forFeature([
+      BuildDetailsEffects,
+      TaskAuditLogEffects,
+      ClearTaskAuditLogEffects
+    ]),
     TableModule,
-    ScrollPanelModule
+    ToolbarModule,
+    ScrollPanelModule,
+    TooltipModule
   ],
   exports: [CommonModule, CoreModule],
   providers: [BuildDetailsService, BuildDetailsAdaptor, TaskAuditLogAdaptor]

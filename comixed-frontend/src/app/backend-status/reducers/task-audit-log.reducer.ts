@@ -28,14 +28,12 @@ export interface TaskAuditLogState {
   fetchingEntries: boolean;
   entries: TaskAuditLogEntry[];
   lastEntryDate: number;
-  clearingLog: boolean;
 }
 
 export const initialState: TaskAuditLogState = {
   fetchingEntries: false,
   entries: [],
-  lastEntryDate: 0,
-  clearingLog: false
+  lastEntryDate: 0
 };
 
 export function reducer(
@@ -64,15 +62,6 @@ export function reducer(
 
     case TaskAuditLogActionTypes.GetEntriesFailed:
       return { ...state, fetchingEntries: false };
-
-    case TaskAuditLogActionTypes.ClearLog:
-      return { ...state, clearingLog: true };
-
-    case TaskAuditLogActionTypes.LogCleared:
-      return { ...state, clearingLog: false };
-
-    case TaskAuditLogActionTypes.ClearLogFailed:
-      return { ...state, clearingLog: false };
 
     default:
       return state;

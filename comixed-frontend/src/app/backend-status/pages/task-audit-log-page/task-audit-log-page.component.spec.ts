@@ -22,49 +22,89 @@ import { TaskAuditLogPageComponent } from './task-audit-log-page.component';
 import { TableModule } from 'primeng/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
-import { StoreModule } from '@ngrx/store';
-import {
-  reducer,
-  TASK_AUDIT_LOG_FEATURE_KEY
-} from 'app/backend-status/reducers/task-audit-log.reducer';
+import { Store, StoreModule } from '@ngrx/store';
+import * as fromTaskAuditLog from 'app/backend-status/reducers/task-audit-log.reducer';
+import { TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/task-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TaskAuditLogEffects } from 'app/backend-status/effects/task-audit-log.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MessageService } from 'primeng/api';
+import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { LibraryModule } from 'app/library/library.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ScrollPanelModule } from 'primeng/primeng';
+import { CoreModule } from 'app/core/core.module';
+import { ToolbarModule, TooltipModule } from 'primeng/primeng';
+import { CLEAR_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
+import * as fromClearTaskAuditLog from 'app/backend-status/reducers/build-details.reducer';
+import { ClearTaskAuditLogEffects } from 'app/backend-status/effects/clear-task-audit-log.effects';
+import { AppState } from 'app/backend-status';
+import { clearTaskAuditLog } from 'app/backend-status/actions/clear-task-audit-log.actions';
 
 describe('TaskAuditLogPageComponent', () => {
   let component: TaskAuditLogPageComponent;
   let fixture: ComponentFixture<TaskAuditLogPageComponent>;
+  let store: Store<AppState>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule,
         LibraryModule,
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(TASK_AUDIT_LOG_FEATURE_KEY, reducer),
+        StoreModule.forFeature(
+          TASK_AUDIT_LOG_FEATURE_KEY,
+          fromTaskAuditLog.reducer
+        ),
+        StoreModule.forFeature(
+          CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
+          fromClearTaskAuditLog.reducer
+        ),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([TaskAuditLogEffects]),
+        EffectsModule.forFeature([
+          TaskAuditLogEffects,
+          ClearTaskAuditLogEffects
+        ]),
         TableModule,
-        ScrollPanelModule
+        ScrollPanelModule,
+        ToolbarModule,
+        TooltipModule
       ],
       declarations: [TaskAuditLogPageComponent],
-      providers: [MessageService, BreadcrumbAdaptor]
+      providers: [MessageService, BreadcrumbAdaptor, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TaskAuditLogPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
+    confirmationService = TestBed.get(ConfirmationService);
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('clearing the task audit log', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.accept()
+      );
+      component.doClearAuditLog();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('notifies the store', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(clearTaskAuditLog());
+    });
   });
 });

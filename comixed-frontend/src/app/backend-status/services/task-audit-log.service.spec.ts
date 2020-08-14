@@ -32,7 +32,11 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { interpolate } from 'app/app.functions';
-import { GET_TASK_LOG_ENTRIES_URL } from 'app/backend-status/backend-status.constants';
+import {
+  CLEAR_TASK_AUDIT_LOG_URL,
+  GET_TASK_LOG_ENTRIES_URL
+} from 'app/backend-status/backend-status.constants';
+import { ApiResponse } from 'app/core';
 
 describe('TaskAuditLogService', () => {
   const LAST_ENTRY_DATE = new Date().getTime();
@@ -73,5 +77,18 @@ describe('TaskAuditLogService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(LOG_ENTRIES);
+  });
+
+  it('can clear the task audit log', () => {
+    const success = Math.random() * 100 > 50;
+    taskAuditLogService
+      .clearAuditLog()
+      .subscribe(response =>
+        expect(response).toEqual({ success } as ApiResponse<void>)
+      );
+
+    const req = httpMock.expectOne(interpolate(CLEAR_TASK_AUDIT_LOG_URL));
+    expect(req.request.method).toEqual('DELETE');
+    req.flush({ success } as ApiResponse<void>);
   });
 });
