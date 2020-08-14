@@ -110,4 +110,13 @@ public class TaskServiceTest {
     Mockito.verify(taskRepository, Mockito.times(1))
         .getTasksToRun(pageRequestArgumentCaptor.getValue());
   }
+
+  @Test
+  public void testClearTaskAuditLog() {
+    Mockito.doNothing().when(taskAuditLogRepository).deleteAll();
+
+    taskService.clearTaskAuditLog();
+
+    Mockito.verify(taskAuditLogRepository, Mockito.times(1)).deleteAll();
+  }
 }
