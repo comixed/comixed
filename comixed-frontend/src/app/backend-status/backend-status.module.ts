@@ -33,11 +33,13 @@ import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audi
 import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.adaptor';
 import { TableModule } from 'primeng/table';
 import { ScrollPanelModule } from 'primeng/primeng';
+import { CoreModule } from 'app/core/core.module';
 
 @NgModule({
   declarations: [BuildDetailsPageComponent, TaskAuditLogPageComponent],
   imports: [
     CommonModule,
+    CoreModule,
     BackendStatusRoutingModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(
@@ -52,7 +54,7 @@ import { ScrollPanelModule } from 'primeng/primeng';
     TableModule,
     ScrollPanelModule
   ],
-  exports: [CommonModule],
+  exports: [CommonModule, CoreModule],
   providers: [BuildDetailsService, BuildDetailsAdaptor, TaskAuditLogAdaptor]
 })
 export class BackendStatusModule {}
