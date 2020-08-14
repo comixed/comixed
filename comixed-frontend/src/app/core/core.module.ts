@@ -18,6 +18,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AlertService } from 'app/core/services/alert.service';
 
 /**
  * The core module contains code that is shared between all other modules.
@@ -26,6 +27,7 @@ import { CommonModule } from '@angular/common';
  */
 @NgModule({
   declarations: [],
-  imports: [CommonModule]
+  imports: [CommonModule],
+  providers: [AlertService]
 })
 export class CoreModule {}

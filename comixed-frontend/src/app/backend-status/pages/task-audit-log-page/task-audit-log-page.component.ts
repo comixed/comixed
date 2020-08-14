@@ -25,6 +25,11 @@ import { LibraryDisplayAdaptor } from 'app/user/adaptors/library-display.adaptor
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { ConfirmationService } from 'primeng/api';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/backend-status';
+import { clearTaskAuditLog } from 'app/backend-status/actions/clear-task-audit-log.actions';
+import { selectClearTaskingAuditLogWorking } from 'app/backend-status/selectors/clear-task-audit-log.selectors';
 
 @Component({
   selector: 'app-task-audit-log-page',
@@ -39,6 +44,7 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
   rowsSubscription: Subscription;
   rows = 0;
   langChangeSubscription: Subscription;
+  clearingAuditLog = false;
 
   constructor(
     private logger: LoggerService,
@@ -46,8 +52,13 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
-    private titleService: Title
+    private titleService: Title,
+    private confirmationService: ConfirmationService,
+    private store: Store<AppState>
   ) {
+    this.store
+      .select(selectClearTaskingAuditLogWorking)
+      .subscribe(clearing => (this.clearingAuditLog = clearing));
     this.fetchingSubscription = this.taskAuditLogAdaptor.fetchingEntries$.subscribe(
       fetching => {
         this.fetching = fetching;
@@ -90,5 +101,17 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
         )
       }
     ]);
+  }
+
+  doClearAuditLog() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'task.clear-audit-log.confirm-header'
+      ),
+      message: this.translateService.instant(
+        'task.clear-audit-log.confirm-message'
+      ),
+      accept: () => this.store.dispatch(clearTaskAuditLog())
+    });
   }
 }

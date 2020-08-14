@@ -16,7 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
+import { Injectable } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
-export const GET_TASK_LOG_ENTRIES_URL = `${API_ROOT_URL}/tasks/entries/\${timestamp}`;
-export const CLEAR_TASK_AUDIT_LOG_URL = `${API_ROOT_URL}/tasks/entries`;
+/**
+ * Provides methods for sending alerts to the user.
+ */
+@Injectable({
+  providedIn: 'root'
+})
+export class AlertService {
+  constructor(private messageService: MessageService) {}
+
+  /**
+   * Display an information alert to the user.
+   * @param text the text
+   */
+  info(text: string): void {
+    this.messageService.add({ severity: 'info', detail: text });
+  }
+
+  /**
+   * Display an error alert to the user.
+   * @param text the text
+   */
+  error(text: string): void {
+    this.messageService.add({ severity: 'error', detail: text });
+  }
+}
