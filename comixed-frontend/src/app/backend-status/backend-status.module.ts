@@ -32,6 +32,7 @@ import { TaskAuditLogEffects } from 'app/backend-status/effects/task-audit-log.e
 import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
 import { TaskAuditLogAdaptor } from 'app/backend-status/adaptors/task-audit-log.adaptor';
 import { TableModule } from 'primeng/table';
+import { ScrollPanelModule } from 'primeng/primeng';
 
 @NgModule({
   declarations: [BuildDetailsPageComponent, TaskAuditLogPageComponent],
@@ -48,7 +49,8 @@ import { TableModule } from 'primeng/table';
       fromTaskAuditLog.reducer
     ),
     EffectsModule.forFeature([BuildDetailsEffects, TaskAuditLogEffects]),
-    TableModule
+    TableModule,
+    ScrollPanelModule
   ],
   exports: [CommonModule],
   providers: [BuildDetailsService, BuildDetailsAdaptor, TaskAuditLogAdaptor]
