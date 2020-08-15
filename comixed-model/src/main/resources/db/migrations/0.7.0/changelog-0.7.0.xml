@@ -10,5 +10,6 @@
   <include file="/db/migrations/0.7.0/002_issue-356_add_created_date_to_last_read_date_table.xml"/>
   <include file="/db/migrations/0.7.0/003_issue-301_add_scraping_cache_table.xml"/>
   <include file="/db/migrations/0.7.0/004_issue-204_add_task_audit_log.xml"/>
+  <include file="/db/migrations/0.7.0/005_issue-471_add_exception_field_to_task_audit_log.xml"/>
 
 </databaseChangeLog>

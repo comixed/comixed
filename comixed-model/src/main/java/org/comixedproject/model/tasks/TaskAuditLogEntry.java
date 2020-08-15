@@ -72,6 +72,14 @@ public class TaskAuditLogEntry {
   @JsonView(View.TaskAuditLogEntryList.class)
   private String description;
 
+  @Column(name = "exception", nullable = true, updatable = false)
+  @Lob
+  @Getter
+  @Setter
+  @JsonProperty("exception")
+  @JsonView(View.TaskAuditLogEntryList.class)
+  private String exception;
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
