@@ -21,4 +21,5 @@ export interface TaskAuditLogEntry {
   endTime: number;
   successful: boolean;
   description: string;
+  exception?: string;
 }

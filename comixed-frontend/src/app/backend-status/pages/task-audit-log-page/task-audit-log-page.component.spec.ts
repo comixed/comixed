@@ -34,6 +34,7 @@ import { MessageService } from 'primeng/api';
 import { LibraryModule } from 'app/library/library.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { ScrollPanelModule } from 'primeng/primeng';
 
 describe('TaskAuditLogPageComponent', () => {
   let component: TaskAuditLogPageComponent;
@@ -51,7 +52,8 @@ describe('TaskAuditLogPageComponent', () => {
         StoreModule.forFeature(TASK_AUDIT_LOG_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([TaskAuditLogEffects]),
-        TableModule
+        TableModule,
+        ScrollPanelModule
       ],
       declarations: [TaskAuditLogPageComponent],
       providers: [MessageService, BreadcrumbAdaptor]

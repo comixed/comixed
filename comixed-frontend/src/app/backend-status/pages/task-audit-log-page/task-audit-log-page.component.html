@@ -25,5 +25,13 @@
       <td class="cx-table-column-align-center">{{entry.successful}}</td>
       <td class="cx-no-wrap-text">{{entry.description}}</td>
     </tr>
+    <tr *ngIf="!!entry.exception">
+      <td colspan="4"
+          class="cx-no-wrap-text">
+        <p-scrollPanel>
+          <pre>{{entry.exception}}</pre>
+        </p-scrollPanel>
+      </td>
+    </tr>
   </ng-template>
 </p-table>
