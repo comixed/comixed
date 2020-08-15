@@ -18,6 +18,8 @@
 
 package org.comixedproject.task.runner;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
@@ -47,26 +49,47 @@ public class TaskManager implements InitializingBean {
           final String description = task.getDescription();
           log.debug("Preparing to run task: {}", description);
           final Date started = new Date();
-          boolean success = false;
           try {
             task.startTask();
-            success = true;
+            if (!(task instanceof MonitorTaskQueueWorkerTask))
+              this.updateAuditLog(true, started, description, null);
           } catch (WorkerTaskException error) {
-            log.error("Error executing task: {}" + description, error);
+            log.error("Error executing task: {}" + description, description, error);
+            if (!(task instanceof MonitorTaskQueueWorkerTask))
+              this.updateAuditLog(false, started, description, error);
           } finally {
             task.afterExecution();
           }
-          final Date ended = new Date();
-          // do not log MonitorTaskQueueWorkerTask events
-          if (!(task instanceof MonitorTaskQueueWorkerTask)) {
-            final TaskAuditLogEntry entry = new TaskAuditLogEntry();
-            entry.setStartTime(started);
-            entry.setEndTime(ended);
-            entry.setSuccessful(success);
-            entry.setDescription(description);
-            TaskManager.this.taskService.saveAuditLogEntry(entry);
-          }
         });
+  }
+
+  /**
+   * Creates a task audit log entry.
+   *
+   * @param success the success flag
+   * @param started the started time
+   * @param description the task decription
+   * @param exception the optional exception message
+   */
+  private void updateAuditLog(
+      final boolean success,
+      final Date started,
+      final String description,
+      final Exception exception) {
+    log.debug("Creating audit log entry");
+    final TaskAuditLogEntry entry = new TaskAuditLogEntry();
+    entry.setStartTime(started);
+    entry.setEndTime(new Date());
+    entry.setSuccessful(success);
+    entry.setDescription(description);
+    if (exception != null) {
+      log.debug("Converting exception stacktrace to a string");
+      final StringWriter stringWriter = new StringWriter();
+      final PrintWriter printWriter = new PrintWriter(stringWriter);
+      exception.printStackTrace(printWriter);
+      entry.setException(stringWriter.toString());
+    }
+    TaskManager.this.taskService.saveAuditLogEntry(entry);
   }
 
   @Override
