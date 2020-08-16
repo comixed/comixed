@@ -18,11 +18,11 @@
 
 package org.comixedproject.controller.core;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.text.ParseException;
 import org.comixedproject.model.core.BuildDetails;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.service.core.DetailsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,18 +35,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class DetailsControllerTest {
+  private static final String TEST_STACKTRACE = "The error message";
+
   @InjectMocks private DetailsController detailsController;
   @Mock private DetailsService detailsService;
   @Mock private BuildDetails buildDetails;
+  @Mock private ParseException parseException;
+
+  @Test
+  public void testGetBuildDetailsParsingException() throws ParseException {
+    Mockito.when(detailsService.getBuildDetails()).thenThrow(parseException);
+    Mockito.when(parseException.getMessage()).thenReturn(TEST_STACKTRACE);
+
+    final ApiResponse<BuildDetails> result = detailsController.getBuildDetails();
+
+    assertNotNull(result);
+    assertFalse(result.isSuccess());
+    assertEquals(TEST_STACKTRACE, result.getError());
+
+    Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
+  }
 
   @Test
   public void testGetBuildDetails() throws ParseException {
     Mockito.when(detailsService.getBuildDetails()).thenReturn(buildDetails);
 
-    final BuildDetails result = detailsController.getBuildDetails();
+    final ApiResponse<BuildDetails> result = detailsController.getBuildDetails();
 
     assertNotNull(result);
-    assertSame(buildDetails, result);
+    assertTrue(result.isSuccess());
+    assertSame(buildDetails, result.getResult());
 
     Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
   }
