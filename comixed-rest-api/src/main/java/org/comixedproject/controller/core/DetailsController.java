@@ -20,23 +20,47 @@ package org.comixedproject.controller.core;
 
 import java.text.ParseException;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.aspect.AuditableEndpoint;
 import org.comixedproject.model.core.BuildDetails;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.service.core.DetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <code>DetailsController</code> handles requests for build details.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
 @RequestMapping("/api/core")
 @Log4j2
 public class DetailsController {
   @Autowired private DetailsService detailsService;
 
+  /**
+   * Retrieves the build details.
+   *
+   * @return the build details
+   */
   @GetMapping("/build-details")
-  public BuildDetails getBuildDetails() throws ParseException {
+  @AuditableEndpoint
+  public ApiResponse<BuildDetails> getBuildDetails() {
     log.info("Getting application build details");
+    final ApiResponse<BuildDetails> result = new ApiResponse<>();
 
-    return this.detailsService.getBuildDetails();
+    try {
+      final BuildDetails details = this.detailsService.getBuildDetails();
+      result.setSuccess(true);
+      result.setResult(details);
+    } catch (ParseException error) {
+      log.error("Failed to get build details", error);
+      result.setError(error.getMessage());
+      result.setSuccess(false);
+    }
+
+    return result;
   }
 }
