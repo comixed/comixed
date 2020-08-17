@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BuildDetailsPageComponent } from './build-details-page.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StoreModule } from '@ngrx/store';
 import {
   BUILD_DETAILS_FEATURE_KEY,
@@ -29,35 +29,59 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { MessageService } from 'primeng/api';
-import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { RouterTestingModule } from '@angular/router/testing';
+import { LoggerModule } from '@angular-ru/logger';
+import { Title } from '@angular/platform-browser';
 
 describe('BuildDetailsPageComponent', () => {
   let component: BuildDetailsPageComponent;
   let fixture: ComponentFixture<BuildDetailsPageComponent>;
+  let breadcrumbAdaptor: BreadcrumbAdaptor;
+  let titleService: Title;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
+        LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         StoreModule.forRoot({}),
         StoreModule.forFeature(BUILD_DETAILS_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([BuildDetailsEffects])
       ],
-      providers: [BuildDetailsAdaptor, BreadcrumbAdaptor, MessageService],
+      providers: [BreadcrumbAdaptor, MessageService],
       declarations: [BuildDetailsPageComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BuildDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
+    spyOn(breadcrumbAdaptor, 'loadEntries');
+    titleService = TestBed.get(Title);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.get(TranslateService);
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('reloads the breadcrumb trail', () => {
+      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
+    });
+
+    it('reloads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalled();
+    });
   });
 });

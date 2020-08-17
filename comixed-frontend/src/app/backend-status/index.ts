@@ -36,7 +36,7 @@ interface RouterStateUrl {
 
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
-  build_details: BuildDetailsState;
+  build_details_state: BuildDetailsState;
   load_task_audit_log_state: LoadTaskAuditLogState;
   clear_task_audit_log_state: ClearTaskAuditLogState;
 }
@@ -45,7 +45,7 @@ export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  build_details: fromBuildDetails.reducer,
+  build_details_state: fromBuildDetails.reducer,
   load_task_audit_log_state: fromLoadTaskAuditLog.reducer,
   clear_task_audit_log_state: fromClearTaskAuditLog.reducer
 };

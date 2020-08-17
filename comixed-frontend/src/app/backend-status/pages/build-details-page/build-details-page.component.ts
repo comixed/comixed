@@ -16,36 +16,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
 import { BuildDetails } from 'app/backend-status/models/build-details';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/backend-status';
+import { selectBuildDetails } from 'app/backend-status/selectors/build-detail.selectors';
+import { fetchBuildDetails } from 'app/backend-status/actions/build-details.actions';
 
 @Component({
   selector: 'app-build-details-page',
   templateUrl: './build-details-page.component.html',
   styleUrls: ['./build-details-page.component.scss']
 })
-export class BuildDetailsPageComponent implements OnInit, OnDestroy {
-  buildDetailsSubscription: Subscription;
+export class BuildDetailsPageComponent implements OnDestroy {
   buildDetails: BuildDetails;
   langChangeSubscription: Subscription;
 
   constructor(
     private titleService: Title,
-    private buildDetailsAdaptor: BuildDetailsAdaptor,
     private translateService: TranslateService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
-  ) {}
-
-  ngOnInit() {
-    this.buildDetailsSubscription = this.buildDetailsAdaptor.build_detail$.subscribe(
-      buildDetails => (this.buildDetails = buildDetails)
-    );
-    this.buildDetailsAdaptor.get_build_details();
+    private breadcrumbAdaptor: BreadcrumbAdaptor,
+    private store: Store<AppState>
+  ) {
+    this.store.dispatch(fetchBuildDetails());
+    this.store
+      .select(selectBuildDetails)
+      .subscribe(buildDetails => (this.buildDetails = buildDetails));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -53,7 +53,6 @@ export class BuildDetailsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.buildDetailsSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
   }
 
@@ -67,7 +66,7 @@ export class BuildDetailsPageComponent implements OnInit, OnDestroy {
       }
     ]);
     this.titleService.setTitle(
-      this.translateService.instant('build-details-page.title')
+      this.translateService.instant('build-details.page-title')
     );
   }
 }

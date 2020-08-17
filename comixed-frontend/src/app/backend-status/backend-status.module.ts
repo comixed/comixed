@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
 import { BuildDetailsService } from 'app/backend-status/services/build-details.service';
 import { BuildDetailsPageComponent } from './pages/build-details-page/build-details-page.component';
 import { BackendStatusRoutingModule } from 'app/backend-status/backend-status-routing.module';
-import { BuildDetailsAdaptor } from 'app/backend-status/adaptors/build-details.adaptor';
 import { StoreModule } from '@ngrx/store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
 import * as fromClearTaskAuditLog from './reducers/clear-task-audit-log.reducer';
@@ -69,6 +68,6 @@ import { LoadTaskAuditLogEffects } from 'app/backend-status/effects/load-task-au
     TooltipModule
   ],
   exports: [CommonModule, CoreModule],
-  providers: [BuildDetailsService, BuildDetailsAdaptor]
+  providers: [BuildDetailsService]
 })
 export class BackendStatusModule {}

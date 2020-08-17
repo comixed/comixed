@@ -1,23 +1,23 @@
 {
-  "build-details-effects": {
-    "get-build-details": {
-      "error": {
-        "detail": "Error al recabar los datos de compilación..."
+  "build-details": {
+    "effects": {
+      "get-build-details": {
+        "error": {
+          "detail": "Failed to fetch build details..."
+        }
       }
-    }
-  },
-  "build-details-page": {
-    "title": "Detalles de la compilación",
+    },
+    "page-title": "Build Details",
     "table": {
-      "branch": "Rama origen",
-      "build-host": "Nombre de la compilación",
-      "build-time": "Compilado el",
-      "build-version": "Versión",
-      "commit-user": "Nombre del Committer",
+      "branch": "Source Branch",
+      "build-host": "Build Hostname",
+      "build-time": "Built On",
+      "build-version": "Version",
+      "commit-user": "Committer Name",
       "commit-id": "Commit Hash",
-      "commit-message": "Mensaje del Commit",
-      "commit-time": "Fecha del último Commit",
-      "dirty": "¿Compilado desde código Uncommitted?",
+      "commit-message": "Commit Message",
+      "commit-time": "Time Of Last Commit",
+      "dirty": "Built From Uncommitted Code?",
       "remote-origin-url": "Remote Origin",
       "jdbc-url": "JDBC Connection URL"
     }

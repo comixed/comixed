@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { BuildDetailsService } from './build-details.service';
-import { BUILD_DETAILS } from 'app/backend-status/models/build-details.fixtures';
+import { BUILD_DETAILS_1 } from 'app/backend-status/models/build-details.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -47,11 +47,11 @@ describe('BuildDetailsService', () => {
 
   it('can get the build details', () => {
     service
-      .get_build_details()
-      .subscribe(response => expect(response).toEqual(BUILD_DETAILS));
+      .getBuildDetails()
+      .subscribe(response => expect(response).toEqual(BUILD_DETAILS_1));
 
     const req = http_mock.expectOne(interpolate(GET_BUILD_DETAILS_URL));
     expect(req.request.method).toEqual('GET');
-    req.flush(BUILD_DETAILS);
+    req.flush(BUILD_DETAILS_1);
   });
 });

@@ -28,7 +28,10 @@ import { GET_BUILD_DETAILS_URL } from 'app/app.constants';
 export class BuildDetailsService {
   constructor(private http: HttpClient) {}
 
-  get_build_details(): Observable<any> {
+  /**
+   * Retrieves the build detail from the backend.
+   */
+  getBuildDetails(): Observable<any> {
     return this.http.get(interpolate(GET_BUILD_DETAILS_URL));
   }
 }
