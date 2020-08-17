@@ -19,38 +19,43 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { BuildDetailsEffects } from './build-details.effects';
 import { BuildDetailsService } from 'app/backend-status/services/build-details.service';
-import { BUILD_DETAILS } from 'app/backend-status/models/build-details.fixtures';
-import {
-  BuildDetailsGet,
-  BuildDetailsGetFailed,
-  BuildDetailsReceive
-} from 'app/backend-status/actions/build-details.actions';
-import { hot } from 'jasmine-marbles';
+import { AlertService, ApiResponse } from 'app/core';
+import { CoreModule } from 'app/core/core.module';
+import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import objectContaining = jasmine.objectContaining;
+import { BuildDetails } from 'app/backend-status/models/build-details';
+import { BUILD_DETAILS_1 } from 'app/backend-status/backend-status.fixtures';
+import {
+  buildDetailsReceived,
+  fetchBuildDetails,
+  fetchBuildDetailsFailed
+} from 'app/backend-status/actions/build-details.actions';
+import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('BuildDetailsEffects', () => {
+describe('BuildDetailEffects', () => {
+  const BUILD_DETAILS = BUILD_DETAILS_1;
+  const ERROR_MESSAGE = 'The error message';
+
   let actions$: Observable<any>;
   let effects: BuildDetailsEffects;
-  let build_details_service: jasmine.SpyObj<BuildDetailsService>;
-  let message_service: MessageService;
+  let buildDetailService: jasmine.SpyObj<BuildDetailsService>;
+  let alertService: AlertService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
+      imports: [CoreModule, LoggerModule.forRoot(), TranslateModule.forRoot()],
       providers: [
         BuildDetailsEffects,
         provideMockActions(() => actions$),
         {
           provide: BuildDetailsService,
           useValue: {
-            get_build_details: jasmine.createSpy(
-              'BuildDetailsService.get_build_details'
+            getBuildDetails: jasmine.createSpy(
+              'BuildDetailsService.getBuildDetails()'
             )
           }
         },
@@ -58,62 +63,75 @@ describe('BuildDetailsEffects', () => {
       ]
     });
 
-    effects = TestBed.get(BuildDetailsEffects);
-    build_details_service = TestBed.get(BuildDetailsService);
-    message_service = TestBed.get(MessageService);
-    spyOn(message_service, 'add');
+    effects = TestBed.get<BuildDetailsEffects>(BuildDetailsEffects);
+    buildDetailService = TestBed.get(BuildDetailsService) as jasmine.SpyObj<
+      BuildDetailsService
+    >;
+    alertService = TestBed.get(AlertService);
+    spyOn(alertService, 'error');
   });
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('when getting the build details', () => {
+  describe('fetching the build details', () => {
     it('fires an action on success', () => {
-      const service_response = BUILD_DETAILS;
-      const action = new BuildDetailsGet();
-      const outcome = new BuildDetailsReceive({
-        build_details: service_response
-      });
+      const serviceResponse = {
+        success: true,
+        result: BUILD_DETAILS
+      } as ApiResponse<BuildDetails>;
+      const action = fetchBuildDetails();
+      const outcome = buildDetailsReceived({ buildDetails: BUILD_DETAILS });
 
       actions$ = hot('-a', { a: action });
-      build_details_service.get_build_details.and.returnValue(
-        of(service_response)
-      );
+      buildDetailService.getBuildDetails.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.get_build_details$).toBeObservable(expected);
+      expect(effects.getBuildDetails$).toBeObservable(expected);
+    });
+
+    it('fires an action on failure', () => {
+      const serviceResponse = {
+        success: false,
+        error: ERROR_MESSAGE
+      } as ApiResponse<BuildDetails>;
+      const action = fetchBuildDetails();
+      const outcome = fetchBuildDetailsFailed();
+
+      actions$ = hot('-a', { a: action });
+      buildDetailService.getBuildDetails.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.getBuildDetails$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
-      const service_response = new HttpErrorResponse({});
-      const action = new BuildDetailsGet();
-      const outcome = new BuildDetailsGetFailed();
+      const serviceResponse = new HttpErrorResponse({});
+      const action = fetchBuildDetails();
+      const outcome = fetchBuildDetailsFailed();
 
       actions$ = hot('-a', { a: action });
-      build_details_service.get_build_details.and.returnValue(
-        throwError(service_response)
+      buildDetailService.getBuildDetails.and.returnValue(
+        throwError(serviceResponse)
       );
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.get_build_details$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
+      expect(effects.getBuildDetails$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = new BuildDetailsGet();
-      const outcome = new BuildDetailsGetFailed();
+      const action = fetchBuildDetails();
+      const outcome = fetchBuildDetailsFailed();
 
       actions$ = hot('-a', { a: action });
-      build_details_service.get_build_details.and.throwError('expected');
+      buildDetailService.getBuildDetails.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.get_build_details$).toBeObservable(expected);
-      expect(message_service.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
+      expect(effects.getBuildDetails$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });

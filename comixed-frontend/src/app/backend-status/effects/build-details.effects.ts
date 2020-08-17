@@ -17,59 +17,73 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action } from '@ngrx/store';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { LoggerService } from '@angular-ru/logger';
+import { AlertService, ApiResponse } from 'app/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BuildDetails } from 'app/backend-status/models/build-details';
 import { BuildDetailsService } from 'app/backend-status/services/build-details.service';
-import { MessageService } from 'primeng/api';
-import { Observable, of } from 'rxjs';
-
-import { catchError, map, switchMap } from 'rxjs/operators';
 import {
-  BuildDetailsActions,
-  BuildDetailsActionTypes,
-  BuildDetailsGetFailed,
-  BuildDetailsReceive
-} from '../actions/build-details.actions';
+  buildDetailsReceived,
+  fetchBuildDetails,
+  fetchBuildDetailsFailed
+} from 'app/backend-status/actions/build-details.actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { BuildDetails } from 'app/backend-status/models/build-details';
+import { of } from 'rxjs';
 
 @Injectable()
 export class BuildDetailsEffects {
   constructor(
-    private actions$: Actions<BuildDetailsActions>,
-    private build_details_service: BuildDetailsService,
-    private message_service: MessageService,
-    private translate_service: TranslateService
+    private logger: LoggerService,
+    private actions$: Actions,
+    private buildDetailsService: BuildDetailsService,
+    private alertService: AlertService,
+    private translateService: TranslateService
   ) {}
 
-  @Effect()
-  get_build_details$: Observable<Action> = this.actions$.pipe(
-    ofType(BuildDetailsActionTypes.GetBuildDetails),
-    switchMap(action =>
-      this.build_details_service.get_build_details().pipe(
-        map(
-          (response: BuildDetails) =>
-            new BuildDetailsReceive({ build_details: response })
-        ),
-        catchError(error => {
-          this.message_service.add({
-            severity: 'error',
-            detail: this.translate_service.instant(
-              'build-details-effects.get-build-details.error.detail'
-            )
-          });
-          return of(new BuildDetailsGetFailed());
-        })
-      )
-    ),
-    catchError(error => {
-      this.message_service.add({
-        severity: 'error',
-        detail: this.translate_service.instant(
-          'general-message.error.general-service-failure'
+  getBuildDetails$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(fetchBuildDetails),
+      tap(action =>
+        this.logger.debug('effect: fetching build details:', action)
+      ),
+      switchMap(action =>
+        this.buildDetailsService.getBuildDetails().pipe(
+          tap(response => this.logger.debug('response received:', response)),
+          tap(
+            (response: ApiResponse<BuildDetails>) =>
+              !response.success &&
+              this.alertService.error(
+                this.translateService.instant(
+                  'build-details.effects.get-build-details.error.detail'
+                )
+              )
+          ),
+          map((response: ApiResponse<BuildDetails>) =>
+            response.success
+              ? buildDetailsReceived({ buildDetails: response.result })
+              : fetchBuildDetailsFailed()
+          ),
+          catchError(error => {
+            this.logger.error('service failure fetching build details:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'build-details.effects.get-build-details.error.detail'
+              )
+            );
+            return of(fetchBuildDetailsFailed());
+          })
         )
-      });
-      return of(new BuildDetailsGetFailed());
-    })
-  );
+      ),
+      catchError(error => {
+        this.logger.error('service failure fetching build details:', error);
+        this.alertService.error(
+          this.translateService.instant(
+            'build-details.effects.get-build-details.error.detail'
+          )
+        );
+        return of(fetchBuildDetailsFailed());
+      })
+    );
+  });
 }

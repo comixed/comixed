@@ -1,13 +1,13 @@
 {
-  "build-details-effects": {
-    "get-build-details": {
-      "error": {
-        "detail": "Failed to get the build details..."
+  "build-details": {
+    "effects": {
+      "get-build-details": {
+        "error": {
+          "detail": "Failed to fetch build details..."
+        }
       }
-    }
-  },
-  "build-details-page": {
-    "title": "Build Details",
+    },
+    "page-title": "Build Details",
     "table": {
       "branch": "Source Branch",
       "build-host": "Build Hostname",

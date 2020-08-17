@@ -16,43 +16,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  BuildDetailsActions,
-  BuildDetailsActionTypes
-} from '../actions/build-details.actions';
+import { Action, createReducer, on } from '@ngrx/store';
+import * as BuildDetailActions from '../actions/build-details.actions';
 import { BuildDetails } from 'app/backend-status/models/build-details';
 
-export const BUILD_DETAILS_FEATURE_KEY = 'build_details';
+export const BUILD_DETAILS_FEATURE_KEY = 'build_details_state';
 
 export interface BuildDetailsState {
-  fetching_details: boolean;
+  fetching: boolean;
   details: BuildDetails;
 }
 
-export const initial_state: BuildDetailsState = {
-  fetching_details: false,
+export const initialState: BuildDetailsState = {
+  fetching: false,
   details: null
 };
 
-export function reducer(
-  state = initial_state,
-  action: BuildDetailsActions
-): BuildDetailsState {
-  switch (action.type) {
-    case BuildDetailsActionTypes.GetBuildDetails:
-      return { ...state, fetching_details: true };
+const buildDetailsReducer = createReducer(
+  initialState,
 
-    case BuildDetailsActionTypes.BuildDetailsReceived:
-      return {
-        ...state,
-        fetching_details: false,
-        details: action.payload.build_details
-      };
+  on(BuildDetailActions.fetchBuildDetails, state => ({
+    ...state,
+    fetching: true
+  })),
+  on(BuildDetailActions.buildDetailsReceived, (state, action) => ({
+    ...state,
+    fetching: false,
+    details: action.buildDetails
+  })),
+  on(BuildDetailActions.fetchBuildDetailsFailed, state => ({
+    ...state,
+    fetching: false
+  }))
+);
 
-    case BuildDetailsActionTypes.GetBuildDetailsFailed:
-      return { ...state, fetching_details: false };
-
-    default:
-      return state;
-  }
+export function reducer(state: BuildDetailsState | undefined, action: Action) {
+  return buildDetailsReducer(state, action);
 }

@@ -18,7 +18,7 @@
 
 import { BuildDetails } from 'app/backend-status/models/build-details';
 
-export const BUILD_DETAILS: BuildDetails = {
+export const BUILD_DETAILS_1: BuildDetails = {
   branch: 'release/0.5.0',
   buildHost: 'localhost',
   buildTime: new Date(),
