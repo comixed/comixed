@@ -1,24 +1,24 @@
 {
-  "build-details-effects": {
-    "get-build-details": {
-      "error": {
-        "detail": "Échec de la récupération des détails du build..."
+  "build-details": {
+    "effects": {
+      "get-build-details": {
+        "error": {
+          "detail": "Failed to fetch build details..."
+        }
       }
-    }
-  },
-  "build-details-page": {
-    "title": "Détails du build",
+    },
+    "page-title": "Build Details",
     "table": {
-      "branch": "Branche source",
-      "build-host": "Nom d'hôte du build",
-      "build-time": "Build réalisé le",
+      "branch": "Source Branch",
+      "build-host": "Build Hostname",
+      "build-time": "Built On",
       "build-version": "Version",
-      "commit-user": "Nom du Committer",
-      "commit-id": "Hash du Commit",
-      "commit-message": "Message du Commit",
-      "commit-time": "Date du dernier Commit",
-      "dirty": "Construit à partir d'un code non comité?",
-      "remote-origin-url": "url du \"Remote Origin\"",
+      "commit-user": "Committer Name",
+      "commit-id": "Commit Hash",
+      "commit-message": "Commit Message",
+      "commit-time": "Time Of Last Commit",
+      "dirty": "Built From Uncommitted Code?",
+      "remote-origin-url": "Remote Origin",
       "jdbc-url": "JDBC Connection URL"
     }
   },

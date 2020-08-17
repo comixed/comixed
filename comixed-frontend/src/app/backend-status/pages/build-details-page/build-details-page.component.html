@@ -1,49 +1,49 @@
-<h2>{{ 'build-details-page.title' | translate }}</h2>
+<h2>{{ 'build-details.page-title' | translate }}</h2>
 <table *ngIf="buildDetails"
        class='cx-table-details'>
     <tbody>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.branch' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.branch' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.branch }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.build-host' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.build-host' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.buildHost }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.build-time' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.build-time' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.buildTime|date:'medium' }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.build-version' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.build-version' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.buildVersion }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-id' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.commit-id' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.commitId }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-user' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.commit-user' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.commitUser }}&nbsp;({{ buildDetails.commit_email }})</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-time' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.commit-time' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.commitTime | date: 'medium' }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.commit-message' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.commit-message' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.commitMessage }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.dirty' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.dirty' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.dirty }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.remote-origin-url' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.remote-origin-url' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.remoteOriginUrl }}</td>
     </tr>
     <tr>
-        <td class='cx-table-details-label'>{{ 'build-details-page.table.jdbc-url' | translate }}</td>
+        <td class='cx-table-details-label'>{{ 'build-details.table.jdbc-url' | translate }}</td>
         <td class='cx-table-details-value'>{{ buildDetails.jdbcUrl }}</td>
     </tr>
     </tbody>

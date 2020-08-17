@@ -16,34 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { BuildDetails } from 'app/backend-status/models/build-details';
 
-export enum BuildDetailsActionTypes {
-  GetBuildDetails = '[BUILD] Get the build details',
-  BuildDetailsReceived = '[BUILD] Got the build details',
-  GetBuildDetailsFailed = '[BUILD] Failed to get the build details'
-}
+/**
+ * Retrieves the build details from the server.
+ */
+export const fetchBuildDetails = createAction(
+  '[Build Detail] Fetch the build details'
+);
 
-export class BuildDetailsGet implements Action {
-  readonly type = BuildDetailsActionTypes.GetBuildDetails;
+/**
+ * The build details were retrieved.
+ */
+export const buildDetailsReceived = createAction(
+  '[Build Detail] Build details received',
+  props<{ buildDetails: BuildDetails }>()
+);
 
-  constructor() {}
-}
-
-export class BuildDetailsReceive implements Action {
-  readonly type = BuildDetailsActionTypes.BuildDetailsReceived;
-
-  constructor(public payload: { build_details: BuildDetails }) {}
-}
-
-export class BuildDetailsGetFailed implements Action {
-  readonly type = BuildDetailsActionTypes.GetBuildDetailsFailed;
-
-  constructor() {}
-}
-
-export type BuildDetailsActions =
-  | BuildDetailsGet
-  | BuildDetailsReceive
-  | BuildDetailsGetFailed;
+/**
+ * Failed to retrieve the build details
+ */
+export const fetchBuildDetailsFailed = createAction(
+  '[Build Detail] Fetching the build details failed'
+);

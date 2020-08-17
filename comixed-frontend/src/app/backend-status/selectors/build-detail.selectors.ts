@@ -16,13 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export {
-  BUILD_DETAILS_1
-} from 'app/backend-status/models/build-details.fixtures';
-export {
-  TASK_AUDIT_LOG_ENTRY_1,
-  TASK_AUDIT_LOG_ENTRY_2,
-  TASK_AUDIT_LOG_ENTRY_3,
-  TASK_AUDIT_LOG_ENTRY_4,
-  TASK_AUDIT_LOG_ENTRY_5
-} from 'app/backend-status/models/task-audit-log-entry.fixtures';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  BUILD_DETAILS_FEATURE_KEY,
+  BuildDetailsState
+} from 'app/backend-status/reducers/build-details.reducer';
+
+/**
+ * Selects for the entire state.
+ */
+export const selectBuildDetailState = createFeatureSelector<BuildDetailsState>(
+  BUILD_DETAILS_FEATURE_KEY
+);
+
+/**
+ * Selects for the fetching state.
+ */
+export const selectBuildDetailsFetching = createSelector(
+  selectBuildDetailState,
+  (state: BuildDetailsState) => state.fetching
+);
+
+/**
+ * Selects for the build details.
+ */
+export const selectBuildDetails = createSelector(
+  selectBuildDetailState,
+  (state: BuildDetailsState) => state.details
+);

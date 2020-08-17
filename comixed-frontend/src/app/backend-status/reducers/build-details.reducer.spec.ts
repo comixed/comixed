@@ -17,78 +17,77 @@
  */
 
 import {
-  reducer,
-  initial_state,
-  BuildDetailsState
+  BuildDetailsState,
+  initialState,
+  reducer
 } from './build-details.reducer';
 import {
-  BuildDetailsGet,
-  BuildDetailsGetFailed,
-  BuildDetailsReceive
+  buildDetailsReceived,
+  fetchBuildDetails,
+  fetchBuildDetailsFailed
 } from 'app/backend-status/actions/build-details.actions';
-import { BUILD_DETAILS } from 'app/backend-status/models/build-details.fixtures';
+import { BUILD_DETAILS_1 } from 'app/backend-status/backend-status.fixtures';
 
-describe('BuildDetails Reducer', () => {
+describe('BuildDetail Reducer', () => {
+  const BUILD_DETAIL = BUILD_DETAILS_1;
+
   let state: BuildDetailsState;
 
   beforeEach(() => {
-    state = initial_state;
+    state = initialState;
   });
 
-  describe('the default state', () => {
+  describe('the initial state', () => {
     beforeEach(() => {
-      state = reducer(state, {} as any);
+      state = reducer({ ...state }, {} as any);
     });
 
-    it('clears the fetching build details flag', () => {
-      expect(state.fetching_details).toBeFalsy();
+    it('clears the fetching flag', () => {
+      expect(state.fetching).toBeFalsy();
     });
 
-    it('has no build details', () => {
+    it('has no detail', () => {
       expect(state.details).toBeNull();
     });
   });
 
-  describe('when getting the build details', () => {
+  describe('when fetching the build detail', () => {
     beforeEach(() => {
-      state = reducer(
-        { ...state, fetching_details: false },
-        new BuildDetailsGet()
-      );
+      state = reducer({ ...state, fetching: false }, fetchBuildDetails());
     });
 
-    it('sets the fetching details flag', () => {
-      expect(state.fetching_details).toBeTruthy();
+    it('sets the fetching flag', () => {
+      expect(state.fetching).toBeTruthy();
     });
   });
 
   describe('when the build details are received', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_details: true, details: null },
-        new BuildDetailsReceive({ build_details: BUILD_DETAILS })
+        { ...state, fetching: true, details: null },
+        buildDetailsReceived({ buildDetails: BUILD_DETAIL })
       );
     });
 
-    it('clears the fetching details flag', () => {
-      expect(state.fetching_details).toBeFalsy();
+    it('clears the fetching flag', () => {
+      expect(state.fetching).toBeFalsy();
     });
 
-    it('sets the details', () => {
-      expect(state.details).toEqual(BUILD_DETAILS);
+    it('sets the build state', () => {
+      expect(state.details).toEqual(BUILD_DETAIL);
     });
   });
 
-  describe('when it fails to get the build details', () => {
+  describe('when fetching the build details fails', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, fetching_details: true },
-        new BuildDetailsGetFailed()
+        { ...state, fetching: true, details: null },
+        fetchBuildDetailsFailed()
       );
     });
 
-    it('clears the fetching details flag', () => {
-      expect(state.fetching_details).toBeFalsy();
+    it('clears the fetching flag', () => {
+      expect(state.fetching).toBeFalsy();
     });
   });
 });
