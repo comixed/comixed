@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.aspect;
+package org.comixedproject.auditlog;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
 import org.comixedproject.net.ApiResponse;
@@ -30,23 +31,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuditableEndpointAspectTest {
+  private static final byte[] TEST_RESPONSE_OBJECT = "JSON content".getBytes();
+
   @InjectMocks private AuditableEndpointAspect auditableEndpointAspect;
   @Mock private RestAuditLogService restAuditLogService;
   @Mock private ProceedingJoinPoint proceedingJoinPoint;
   @Mock private ApiResponse<?> apiResponse;
   @Captor private ArgumentCaptor<RestAuditLogEntry> restAuditLogEntryArgumentCaptor;
   @Mock private RestAuditLogEntry savedEntry;
+  @Mock private ObjectMapper objectMapper;
+  @Mock private ContentCachingRequestWrapper requestWrapper;
 
   @Before
   public void setUp() {
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(requestWrapper));
+    Mockito.when(requestWrapper.getContentAsByteArray()).thenReturn(TEST_RESPONSE_OBJECT);
   }
 
   @Test

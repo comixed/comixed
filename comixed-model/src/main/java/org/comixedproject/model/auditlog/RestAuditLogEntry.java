@@ -51,16 +51,22 @@ public class RestAuditLogEntry {
   @Setter
   private String method;
 
-  @Column(name = "content", nullable = true, updatable = false)
+  @Column(name = "request_content", nullable = true, updatable = false)
   @Lob
   @Getter
   @Setter
-  private String content;
+  private String requestContent;
+
+  @Column(name = "response_content", nullable = true, updatable = false)
+  @Lob
+  @Getter
+  @Setter
+  private String responseContent;
 
   @Column(name = "email", nullable = true, updatable = false)
   @Getter
   @Setter
-  private String emai;
+  private String email;
 
   @Column(name = "start_time", nullable = false, updatable = false)
   @Getter

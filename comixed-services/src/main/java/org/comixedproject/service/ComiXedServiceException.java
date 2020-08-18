@@ -24,7 +24,7 @@ package org.comixedproject.service;
  * @author Darryl L. Pierce
  */
 public class ComiXedServiceException extends Exception {
-  public ComiXedServiceException(final String message, final InterruptedException cause) {
+  public ComiXedServiceException(final String message, final Exception cause) {
     super(message, cause);
   }
 }

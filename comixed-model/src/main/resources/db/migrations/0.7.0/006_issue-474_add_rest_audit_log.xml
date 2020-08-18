@@ -41,7 +41,11 @@
               type="boolean">
         <constraints nullable="false"/>
       </column>
-      <column name="content"
+      <column name="request_content"
+              type="clob">
+        <constraints nullable="true"/>
+      </column>
+      <column name="response_content"
               type="clob">
         <constraints nullable="true"/>
       </column>
