@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @ComponentScan("org.comixedproject.controller")
 @Log4j2
 public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
-  @Autowired private ComiXedAuthenticationEntryPoint unauthorizedHandler;
+  @Autowired private ComiXedUnauthorizedEntryPoint unauthorizedHandler;
   @Autowired private ComiXedAuthenticationFilter authenticationFilter;
   @Autowired private ComiXedAuthenticationProvider authenticationProvider;
 

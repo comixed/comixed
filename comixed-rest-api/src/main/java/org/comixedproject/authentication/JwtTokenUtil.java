@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
-import static org.comixedproject.web.authentication.AuthenticationConstants.ROLE_PREFIX;
-import static org.comixedproject.web.authentication.AuthenticationConstants.SIGNING_KEY;
+import static org.comixedproject.authentication.AuthenticationConstants.ROLE_PREFIX;
+import static org.comixedproject.authentication.AuthenticationConstants.SIGNING_KEY;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,6 +39,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>JwtTokenUtil</code> provides utility functions used by the authentication codebase.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Log4j2
 public class JwtTokenUtil {
@@ -70,7 +75,7 @@ public class JwtTokenUtil {
     return doGenerateToken(user.getEmail());
   }
 
-  private String doGenerateToken(String email) {
+  String doGenerateToken(String email) {
 
     Claims claims = Jwts.claims().setSubject(email);
     List<GrantedAuthority> authorities = new ArrayList<>();
