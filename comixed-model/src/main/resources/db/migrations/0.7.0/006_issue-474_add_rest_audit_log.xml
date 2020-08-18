@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="006_issue-474_add_rest_audit_log.xml"
+             author="mcpierce">
+    <createTable tableName="rest_audit_log">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="remote_ip"
+              type="varchar(15)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="url"
+              type="varchar(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="method"
+              type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email"
+              type="varchar(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="start_time"
+              type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="end_time"
+              type="timestamp"
+              defaultValueComputed="NOW()">
+        <constraints nullable="false"/>
+      </column>
+      <column name="successful"
+              type="boolean">
+        <constraints nullable="false"/>
+      </column>
+      <column name="content"
+              type="clob">
+        <constraints nullable="true"/>
+      </column>
+      <column name="exception"
+              type="clob">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="rest_audit_log"
+                      columnName="id"
+                      columnDataType="bigint"
+                      incrementBy="1"
+                      startWith="1"/>
+
+    <createIndex tableName="rest_audit_log"
+                 indexName="rest_audit_log_start_time_idx">
+      <column name="start_time"/>
+    </createIndex>
+
+    <createIndex tableName="rest_audit_log"
+                 indexName="rest_audit_log_successful_idx">
+      <column name="successful"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>
