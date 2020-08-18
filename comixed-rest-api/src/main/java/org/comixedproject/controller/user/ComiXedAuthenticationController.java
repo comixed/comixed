@@ -19,10 +19,10 @@
 package org.comixedproject.controller.user;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.authentication.AuthToken;
+import org.comixedproject.authentication.JwtTokenUtil;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.ComiXedUserRepository;
-import org.comixedproject.web.authentication.AuthToken;
-import org.comixedproject.web.authentication.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

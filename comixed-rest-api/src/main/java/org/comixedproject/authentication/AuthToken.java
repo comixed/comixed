@@ -16,36 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * <code>AuthToken</code> represents the token used by authentication.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
 public class AuthToken {
-  private String token;
-  private String email;
-
-  public AuthToken() {}
-
-  public AuthToken(String token, String email) {
-    this.token = token;
-    this.email = email;
-  }
-
-  public AuthToken(String token) {
-    this.token = token;
-  }
-
-  public String getToken() {
-    return token;
-  }
-
-  public void setToken(String token) {
-    this.token = token;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
+  @Getter @Setter private String token;
+  @Getter @Setter private String email;
 }

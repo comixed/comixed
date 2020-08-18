@@ -16,27 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
 import java.io.IOException;
-import java.io.Serializable;
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
+/**
+ * <code>CachingRequestBodyFilter</code> provides a filter that wraps the incoming request in a
+ * caching request object.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
-public class ComiXedAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
-  private static final long serialVersionUID = 1755156956041714494L;
-
+public class CachingRequestBodyFilter extends GenericFilterBean {
   @Override
-  public void commence(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      AuthenticationException authException)
+  public void doFilter(
+      ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
       throws IOException, ServletException {
-    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+    HttpServletRequest currentRequest = (HttpServletRequest) servletRequest;
+    ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(currentRequest);
+
+    chain.doFilter(wrappedRequest, servletResponse);
   }
 }

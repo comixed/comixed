@@ -16,13 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
-import static org.comixedproject.web.authentication.AuthenticationConstants.HEADER_STRING;
-import static org.comixedproject.web.authentication.AuthenticationConstants.TOKEN_PREFIX;
+import static org.comixedproject.authentication.AuthenticationConstants.HEADER_STRING;
+import static org.comixedproject.authentication.AuthenticationConstants.TOKEN_PREFIX;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -30,6 +28,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +38,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * <code>ComiXedAuthenticationFilter</code> authenticates the user request.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
+@Log4j2
 public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
   @Autowired private ComiXedUserDetailsService userDetailsService;
   @Autowired private JwtTokenUtil jwtTokenUtil;
@@ -54,15 +59,11 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
     String password = null;
     String authToken = null;
     if ((header != null) && header.startsWith(TOKEN_PREFIX)) {
-      authToken = header.replace(TOKEN_PREFIX, "");
+      authToken = header.replace(TOKEN_PREFIX, "").trim();
       try {
         username = this.jwtTokenUtil.getEmailFromToken(authToken);
-      } catch (IllegalArgumentException e) {
-        this.logger.error("an error occured during getting username from token", e);
-      } catch (ExpiredJwtException e) {
-        this.logger.warn("the token is expired and not valid anymore", e);
-      } catch (SignatureException e) {
-        this.logger.error("Authentication Failed. Username or Password not valid.");
+      } catch (Exception error) {
+        log.error("Unable to extract username from auth token", error);
       }
     } else if ((header != null) && header.toLowerCase().startsWith("basic")) {
 

@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.repositories.ComiXedUserRepository;
+import org.comixedproject.service.user.ComiXedUserException;
+import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
@@ -29,19 +30,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>ComiXedUserDetailsService</code> handles mapping instances of {@link ComiXedUser} to
+ * instances of {@link UserDetails}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Log4j2
 public class ComiXedUserDetailsService implements UserDetailsService {
-  @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private UserService userService;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     log.debug("Loading user: email={}", email);
 
-    ComiXedUser user = userRepository.findByEmail(email);
+    ComiXedUser user = null;
 
-    if (user == null) {
-      throw new UsernameNotFoundException("User not found");
+    try {
+      user = userService.findByEmail(email);
+    } catch (ComiXedUserException error) {
+      throw new UsernameNotFoundException("User not found", error);
     }
 
     UserBuilder result = User.withUsername(email);

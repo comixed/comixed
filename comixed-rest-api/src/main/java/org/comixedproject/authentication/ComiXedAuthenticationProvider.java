@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.web.authentication;
+package org.comixedproject.authentication;
 
-import static org.comixedproject.web.authentication.AuthenticationConstants.ROLE_PREFIX;
+import static org.comixedproject.authentication.AuthenticationConstants.ROLE_PREFIX;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +26,8 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
-import org.comixedproject.repositories.ComiXedUserRepository;
+import org.comixedproject.service.user.ComiXedUserException;
+import org.comixedproject.service.user.UserService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -37,10 +38,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>ComiXedAuthenticationProvider</code> performs the actual authentication of a user.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Log4j2
 public class ComiXedAuthenticationProvider implements AuthenticationProvider {
-  @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private UserService userService;
   @Autowired private Utils utils;
 
   @Override
@@ -50,10 +56,16 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
 
     log.debug("Attempting to authenticate: email={}", email);
 
-    ComiXedUser user = userRepository.findByEmail(email);
+    ComiXedUser user = null;
+    try {
+      user = userService.findByEmail(email);
+    } catch (ComiXedUserException error) {
+      log.error("Could not load user", error);
+      return null;
+    }
 
     if (user == null) {
-      log.debug("No such user");
+      log.debug("No such user: {}", email);
       return null;
     }
 
@@ -68,7 +80,11 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
       }
       // update the last authenticated date
       user.setLastLoginDate(new Date());
-      userRepository.save(user);
+      try {
+        userService.save(user);
+      } catch (ComiXedUserException error) {
+        log.error("Failed to update user", error);
+      }
       return new UsernamePasswordAuthenticationToken(email, password, roles);
     }
 
