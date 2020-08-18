@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.aspect;
+package org.comixedproject.auditlog;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
@@ -45,6 +46,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 @Log4j2
 public class AuditableEndpointAspect {
   @Autowired private RestAuditLogService restAuditLogService;
+  @Autowired private ObjectMapper objectMapper;
 
   /**
    * Wraps REST API calls and records the results.
@@ -52,7 +54,7 @@ public class AuditableEndpointAspect {
    * @param joinPoint the join point.
    * @return the response object
    */
-  @Around("@annotation(org.comixedproject.aspect.AuditableEndpoint)")
+  @Around("@annotation(org.comixedproject.auditlog.AuditableEndpoint)")
   public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
     Throwable error = null;
     Object response = null;
@@ -71,15 +73,18 @@ public class AuditableEndpointAspect {
           ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
       if (request.getUserPrincipal() != null) {
-        entry.setEmai(request.getUserPrincipal().getName());
+        entry.setEmail(request.getUserPrincipal().getName());
       } else {
         entry.setException("anonymous");
       }
       entry.setRemoteIp(request.getRemoteAddr());
       entry.setUrl(request.getRequestURI());
       entry.setMethod(request.getMethod());
-      entry.setContent(
+      entry.setRequestContent(
           new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
+      if (apiResponse.getResult() != null) {
+        entry.setResponseContent(this.objectMapper.writeValueAsString(apiResponse.getResult()));
+      }
       entry.setStartTime(started);
       entry.setEndTime(ended);
       entry.setSuccessful(apiResponse.isSuccess());
@@ -88,7 +93,8 @@ public class AuditableEndpointAspect {
         log.debug("Storing stacktrace");
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
-        entry.setException(printWriter.toString());
+        apiResponse.getThrowable().printStackTrace(printWriter);
+        entry.setException(stringWriter.toString());
       }
 
       this.restAuditLogService.save(entry);

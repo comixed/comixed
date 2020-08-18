@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.net.ApiResponse;
@@ -56,26 +57,29 @@ public class TaskController {
   @GetMapping(value = "/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.TaskAuditLogEntryList.class)
+  @AuditableEndpoint
   public ApiResponse<GetTaskAuditLogResponse> getAllAfterDate(
       @PathVariable("cutoff") final Long timestamp) throws ComiXedControllerException {
-    ApiResponse<GetTaskAuditLogResponse> result = new ApiResponse<>();
+    ApiResponse<GetTaskAuditLogResponse> response = new ApiResponse<>();
 
     final Date cutoff = new Date(timestamp);
     log.debug("Getting all task audit log entries after: {}", cutoff);
 
     try {
       final List<TaskAuditLogEntry> entries = this.taskService.getAuditLogEntriesAfter(cutoff);
-      result.setResult(new GetTaskAuditLogResponse());
-      result.getResult().setEntries(entries);
-      result.getResult().setLatest(entries.get(entries.size() - 1).getStartTime());
-      result.setSuccess(true);
+      response.setResult(new GetTaskAuditLogResponse());
+      response.getResult().setEntries(entries);
+      if (!entries.isEmpty())
+        response.getResult().setLatest(entries.get(entries.size() - 1).getStartTime());
+      response.setSuccess(true);
     } catch (ComiXedServiceException error) {
       log.error("Failed to load task audit log entries", error);
-      result.setSuccess(false);
-      result.setError(error.getMessage());
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+      response.setThrowable(error);
     }
 
-    return result;
+    return response;
   }
 
   /**
@@ -86,6 +90,7 @@ public class TaskController {
   @DeleteMapping(value = "/entries", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ApiResponse.class)
+  @AuditableEndpoint
   public ApiResponse<Void> clearTaskAuditLog() {
     log.debug("Clearing task audit log");
     final ApiResponse<Void> response = new ApiResponse<>();
@@ -97,6 +102,7 @@ public class TaskController {
       log.error("Failed to clear audit log", error);
       response.setSuccess(false);
       response.setError(error.getMessage());
+      response.setThrowable(error);
     }
 
     return response;

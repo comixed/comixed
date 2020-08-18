@@ -61,6 +61,14 @@ public class FileController {
 
   private int requestId = 0;
 
+  /**
+   * Retrieves all comic files under the specified directory.
+   *
+   * @param request the request body
+   * @return the list of comic files
+   * @throws IOException if an error occurs
+   * @throws JSONException if an error occurs
+   */
   @PostMapping(
       value = "/contents",
       produces = MediaType.APPLICATION_JSON_VALUE,
