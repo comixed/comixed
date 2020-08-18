@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.aspect.AuditableEndpoint;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.net.ApiResponse;
@@ -56,6 +57,7 @@ public class TaskController {
   @GetMapping(value = "/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.TaskAuditLogEntryList.class)
+  @AuditableEndpoint
   public ApiResponse<GetTaskAuditLogResponse> getAllAfterDate(
       @PathVariable("cutoff") final Long timestamp) throws ComiXedControllerException {
     ApiResponse<GetTaskAuditLogResponse> result = new ApiResponse<>();
@@ -86,6 +88,7 @@ public class TaskController {
   @DeleteMapping(value = "/entries", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ApiResponse.class)
+  @AuditableEndpoint
   public ApiResponse<Void> clearTaskAuditLog() {
     log.debug("Clearing task audit log");
     final ApiResponse<Void> response = new ApiResponse<>();
