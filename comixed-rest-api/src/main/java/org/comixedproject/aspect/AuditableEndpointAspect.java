@@ -21,6 +21,7 @@ package org.comixedproject.aspect;
 import java.util.Date;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -39,6 +40,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Aspect
 @Configuration
+@Log4j2
 public class AuditableEndpointAspect {
   @Autowired private RestAuditLogService restAuditLogService;
 
@@ -80,6 +82,10 @@ public class AuditableEndpointAspect {
       entry.setEndTime(ended);
       entry.setSuccessful(apiResponse.isSuccess());
       entry.setException(apiResponse.getError());
+      if (entry.getException() != null) {
+        log.debug("Storing stacktrace");
+        entry.getException().lines().collect(Collectors.joining(System.lineSeparator()));
+      }
       this.restAuditLogService.save(entry);
     }
     if (error != null) throw error;

@@ -18,12 +18,15 @@
 
 package org.comixedproject.controller.scraping;
 
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
 import org.comixedproject.net.GetVolumesRequest;
@@ -109,38 +112,41 @@ public class ScrapingControllerTest {
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
   }
 
-  @Test(expected = ComiXedControllerException.class)
-  public void testQueryForIssueAdaptorRaisesException()
-      throws ScrapingException, ComiXedControllerException {
+  @Test
+  public void testQueryForIssueAdaptorRaisesException() throws ScrapingException {
     Mockito.when(
             scrapingService.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    try {
-      controller.queryForIssue(
-          TEST_VOLUME,
-          new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
-    } finally {
-      Mockito.verify(scrapingService, Mockito.times(1))
-          .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
-    }
-  }
-
-  @Test
-  public void testQueryForIssue() throws ScrapingException, ComiXedControllerException {
-    Mockito.when(
-            scrapingService.getIssue(
-                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(comicIssue);
-
-    ScrapingIssue result =
+    final ApiResponse<ScrapingIssue> result =
         controller.queryForIssue(
             TEST_VOLUME,
             new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
 
     assertNotNull(result);
-    assertSame(comicIssue, result);
+    assertFalse(result.isSuccess());
+    assertNotNull(result.getException());
+
+    Mockito.verify(scrapingService, Mockito.times(1))
+        .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
+  }
+
+  @Test
+  public void testQueryForIssue() throws ScrapingException {
+    Mockito.when(
+            scrapingService.getIssue(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicIssue);
+
+    ApiResponse<ScrapingIssue> result =
+        controller.queryForIssue(
+            TEST_VOLUME,
+            new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
+
+    assertNotNull(result);
+    assertTrue(result.isSuccess());
+    assertSame(comicIssue, result.getResult());
 
     Mockito.verify(scrapingService, Mockito.times(1))
         .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);

@@ -21,8 +21,10 @@ package org.comixedproject.controller.scraping;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.aspect.AuditableEndpoint;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
 import org.comixedproject.net.GetVolumesRequest;
@@ -58,10 +60,11 @@ public class ScrapingController {
       value = "/volumes/{volume}/issues",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ScrapingIssue queryForIssue(
+  @AuditableEndpoint
+  public ApiResponse<ScrapingIssue> queryForIssue(
       @PathVariable("volume") final Integer volume,
-      @RequestBody() final GetScrapingIssueRequest request)
-      throws ComiXedControllerException {
+      @RequestBody() final GetScrapingIssueRequest request) {
+    final ApiResponse<ScrapingIssue> result = new ApiResponse<>();
     String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
@@ -70,10 +73,17 @@ public class ScrapingController {
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
     try {
-      return this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
+      final ScrapingIssue scrapingIssue =
+          this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
+      result.setResult(scrapingIssue);
+      result.setSuccess(true);
     } catch (ScrapingException error) {
-      throw new ComiXedControllerException("Failed to get single scraping issue", error);
+      result.setSuccess(false);
+      result.setError(error.getMessage());
+      result.setException(error);
     }
+
+    return result;
   }
 
   /**
