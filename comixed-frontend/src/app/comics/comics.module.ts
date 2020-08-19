@@ -72,13 +72,24 @@ import {
   TooltipModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
-import { ScrapingIssueCoverUrlPipe } from './pipes/scraping-issue-cover-url.pipe';
-import * as fromComics from './reducers/comic.reducer';
-import * as fromScraping from './reducers/scraping.reducer';
-import { PublisherThumbnailUrlPipe } from './pipes/publisher-thumbnail-url.pipe';
-import { PublisherPipe } from './pipes/publisher.pipe';
-import { SeriesCollectionNamePipe } from './pipes/series-collection-name.pipe';
-import { FileEntryListComponent } from './components/file-entry-list/file-entry-list.component';
+import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
+import * as fromComics from 'app/comics/reducers/comic.reducer';
+import * as fromScraping from 'app/comics/reducers/scraping.reducer';
+import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
+import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
+import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
+import { FileEntryListComponent } from 'app/comics/components/file-entry-list/file-entry-list.component';
+import * as fromScrapingIssue from 'app/comics/reducers/scraping-issue.reducer';
+import { SCRAPING_ISSUE_FEATURE_KEY } from 'app/comics/reducers/scraping-issue.reducer';
+import { ScrapingIssueEffects } from 'app/comics/effects/scraping-issue.effects';
+import * as fromScrapingVolumes from 'app/comics/reducers/scraping-volumes.reducer';
+import { SCRAPING_VOLUMES_FEATURE_KEY } from 'app/comics/reducers/scraping-volumes.reducer';
+import { ScrapingVolumesEffects } from 'app/comics/effects/scraping-volumes.effects';
+import * as fromScrapeComic from 'app/comics/reducers/scrape-comic.reducer';
+import { SCRAPE_COMIC_FEATURE_KEY } from 'app/comics/reducers/scrape-comic.reducer';
+import { ScrapeComicEffects } from 'app/comics/effects/scrape-comic.effects';
+import * as fromScrapeMultipleComics from 'app/comics/reducers/scrape-multiple-comic.reducer';
+import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multiple-comic.reducer';
 
 @NgModule({
   declarations: [
@@ -124,10 +135,29 @@ import { FileEntryListComponent } from './components/file-entry-list/file-entry-
     TranslateModule.forRoot(),
     StoreModule.forFeature(fromComics.COMIC_FEATURE_KEY, fromComics.reducer),
     StoreModule.forFeature(
+      SCRAPING_VOLUMES_FEATURE_KEY,
+      fromScrapingVolumes.reducer
+    ),
+    StoreModule.forFeature(
+      SCRAPING_ISSUE_FEATURE_KEY,
+      fromScrapingIssue.reducer
+    ),
+    StoreModule.forFeature(SCRAPE_COMIC_FEATURE_KEY, fromScrapeComic.reducer),
+    StoreModule.forFeature(
+      SCRAPE_MULTIPLE_COMICS_STATE,
+      fromScrapeMultipleComics.reducer
+    ),
+    StoreModule.forFeature(
       fromScraping.SCRAPING_FEATURE_KEY,
       fromScraping.reducer
     ),
-    EffectsModule.forFeature([ComicEffects, ScrapingEffects]),
+    EffectsModule.forFeature([
+      ComicEffects,
+      ScrapingVolumesEffects,
+      ScrapingIssueEffects,
+      ScrapeComicEffects,
+      ScrapingEffects
+    ]),
     ProgressSpinnerModule,
     TooltipModule,
     InputTextModule,
