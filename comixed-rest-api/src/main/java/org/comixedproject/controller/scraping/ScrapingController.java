@@ -21,8 +21,9 @@ package org.comixedproject.controller.scraping;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.controller.ComiXedControllerException;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
 import org.comixedproject.net.GetVolumesRequest;
@@ -52,16 +53,16 @@ public class ScrapingController {
    * @param volume the volume id
    * @param request the request body
    * @return the issue
-   * @throws ComiXedControllerException if an error occurs
    */
   @PostMapping(
       value = "/volumes/{volume}/issues",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ScrapingIssue queryForIssue(
+  @AuditableEndpoint
+  public ApiResponse<ScrapingIssue> queryForIssue(
       @PathVariable("volume") final Integer volume,
-      @RequestBody() final GetScrapingIssueRequest request)
-      throws ComiXedControllerException {
+      @RequestBody() final GetScrapingIssueRequest request) {
+    final ApiResponse<ScrapingIssue> result = new ApiResponse<>();
     String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
@@ -70,10 +71,17 @@ public class ScrapingController {
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
     try {
-      return this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
+      final ScrapingIssue scrapingIssue =
+          this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
+      result.setResult(scrapingIssue);
+      result.setSuccess(true);
     } catch (ScrapingException error) {
-      throw new ComiXedControllerException("Failed to get single scraping issue", error);
+      result.setSuccess(false);
+      result.setError(error.getMessage());
+      result.setThrowable(error);
     }
+
+    return result;
   }
 
   /**
@@ -81,14 +89,15 @@ public class ScrapingController {
    *
    * @param request the reqwuest body
    * @return the list of volumes
-   * @throws ComiXedControllerException if an error occurs
    */
   @PostMapping(
       value = "/volumes",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
-      throws ComiXedControllerException {
+  @AuditableEndpoint
+  public ApiResponse<List<ScrapingVolume>> queryForVolumes(
+      @RequestBody() final GetVolumesRequest request) {
+    final ApiResponse<List<ScrapingVolume>> response = new ApiResponse<>();
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
@@ -106,10 +115,15 @@ public class ScrapingController {
 
       log.debug("Returning {} volume{}", result.size(), result.size() == 1 ? "" : "s");
 
-      return result;
+      response.setSuccess(true);
+      response.setResult(result);
     } catch (ScrapingException error) {
-      throw new ComiXedControllerException("Failed to get list of volumes", error);
+      response.setSuccess(false);
+      response.setThrowable(error);
+      response.setError(error.getMessage());
     }
+
+    return response;
   }
 
   /**
@@ -118,19 +132,18 @@ public class ScrapingController {
    * @param comicId the comic id
    * @param issueId the issue id
    * @param request the request body
-   * @return the scraped and updaed {@link Comic}
-   * @throws ComiXedControllerException if an error occurs
+   * @return the scraped and updated {@link Comic}
    */
   @PostMapping(
       value = "/comics/{comicId}/issue/{issueId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
-  public Comic scrapeAndSaveComicDetails(
+  public ApiResponse<Comic> scrapeAndSaveComicDetails(
       @PathVariable("comicId") final Long comicId,
       @PathVariable("issueId") final Integer issueId,
-      @RequestBody() final ComicScrapeRequest request)
-      throws ComiXedControllerException {
+      @RequestBody() final ComicScrapeRequest request) {
+    final ApiResponse<Comic> response = new ApiResponse<>();
     boolean skipCache = request.getSkipCache();
     String apiKey = request.getApiKey();
 
@@ -138,9 +151,15 @@ public class ScrapingController {
 
     try {
       log.debug("Scraping comic details");
-      return this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache);
+      final Comic result = this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache);
+      response.setSuccess(true);
+      response.setResult(result);
     } catch (ScrapingException error) {
-      throw new ComiXedControllerException("Failed to scrape comic", error);
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+      response.setThrowable(error);
     }
+
+    return response;
   }
 }
