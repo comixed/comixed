@@ -32,7 +32,7 @@ public class View {
   public interface ComicDetails extends ComicList {}
 
   /** Show minimal details for more than one comic. */
-  public interface ComicList {}
+  public interface ComicList extends ApiResponse {}
 
   /** Used when deleting comics. */
   public interface DeletedComicList {}

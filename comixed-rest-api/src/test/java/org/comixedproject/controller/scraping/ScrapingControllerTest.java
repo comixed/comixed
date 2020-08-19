@@ -18,19 +18,21 @@
 
 package org.comixedproject.controller.scraping;
 
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.net.ApiResponse;
 import org.comixedproject.net.ComicScrapeRequest;
 import org.comixedproject.net.GetScrapingIssueRequest;
 import org.comixedproject.net.GetVolumesRequest;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingVolume;
-import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.scraping.ScrapingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,125 +60,133 @@ public class ScrapingControllerTest {
   @Mock private ScrapingIssue comicIssue;
   @Mock private Comic comic;
 
-  @Test(expected = ComiXedControllerException.class)
-  public void testQueryForVolumesAdaptorRaisesException()
-      throws ScrapingException, ComiXedControllerException {
+  @Test
+  public void testQueryForVolumesAdaptorRaisesException() throws ScrapingException {
     Mockito.when(
             scrapingService.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    try {
-      controller.queryForVolumes(
-          new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
-    } finally {
-      Mockito.verify(scrapingService, Mockito.times(1))
-          .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
-    }
-  }
-
-  @Test
-  public void testQueryForVolumes() throws ComiXedControllerException, ScrapingException {
-    Mockito.when(
-            scrapingService.getVolumes(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
-        .thenReturn(comicVolumeList);
-
-    final List<ScrapingVolume> result =
+    final ApiResponse<List<ScrapingVolume>> response =
         controller.queryForVolumes(
             new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
 
-    assertSame(comicVolumeList, result);
+    assertFalse(response.isSuccess());
+    assertNotNull(response.getThrowable());
 
     Mockito.verify(scrapingService, Mockito.times(1))
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
   }
 
   @Test
-  public void testQueryForVolumesSkipCache() throws ScrapingException, ComiXedControllerException {
+  public void testQueryForVolumes() throws ScrapingException {
     Mockito.when(
             scrapingService.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenReturn(comicVolumeList);
 
-    final List<ScrapingVolume> result =
+    final ApiResponse<List<ScrapingVolume>> response =
+        controller.queryForVolumes(
+            new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
+
+    assertTrue(response.isSuccess());
+    assertSame(comicVolumeList, response.getResult());
+
+    Mockito.verify(scrapingService, Mockito.times(1))
+        .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
+  }
+
+  @Test
+  public void testQueryForVolumesSkipCache() throws ScrapingException {
+    Mockito.when(
+            scrapingService.getVolumes(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
+        .thenReturn(comicVolumeList);
+
+    final ApiResponse<List<ScrapingVolume>> response =
         controller.queryForVolumes(
             new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true));
 
-    assertSame(comicVolumeList, result);
+    assertTrue(response.isSuccess());
+    assertSame(comicVolumeList, response.getResult());
 
     Mockito.verify(scrapingService, Mockito.times(1))
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
   }
 
-  @Test(expected = ComiXedControllerException.class)
-  public void testQueryForIssueAdaptorRaisesException()
-      throws ScrapingException, ComiXedControllerException {
+  @Test
+  public void testQueryForIssueAdaptorRaisesException() throws ScrapingException {
     Mockito.when(
             scrapingService.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    try {
-      controller.queryForIssue(
-          TEST_VOLUME,
-          new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
-    } finally {
-      Mockito.verify(scrapingService, Mockito.times(1))
-          .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
-    }
-  }
-
-  @Test
-  public void testQueryForIssue() throws ScrapingException, ComiXedControllerException {
-    Mockito.when(
-            scrapingService.getIssue(
-                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(comicIssue);
-
-    ScrapingIssue result =
+    final ApiResponse<ScrapingIssue> response =
         controller.queryForIssue(
             TEST_VOLUME,
             new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
 
-    assertNotNull(result);
-    assertSame(comicIssue, result);
+    assertNotNull(response);
+    assertFalse(response.isSuccess());
+    assertNotNull(response.getThrowable());
 
     Mockito.verify(scrapingService, Mockito.times(1))
         .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
   }
 
-  @Test(expected = ComiXedControllerException.class)
+  @Test
+  public void testQueryForIssue() throws ScrapingException {
+    Mockito.when(
+            scrapingService.getIssue(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicIssue);
+
+    ApiResponse<ScrapingIssue> response =
+        controller.queryForIssue(
+            TEST_VOLUME,
+            new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
+
+    assertNotNull(response);
+    assertTrue(response.isSuccess());
+    assertSame(comicIssue, response.getResult());
+
+    Mockito.verify(scrapingService, Mockito.times(1))
+        .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
+  }
+
+  @Test
   public void testScrapeAndSaveComicDetailsScrapingAdaptorRaisesException()
-      throws ComicException, ScrapingException, ComiXedControllerException {
+      throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingService.scrapeComic(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    try {
-      controller.scrapeAndSaveComicDetails(
-          TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
-    } finally {
-      Mockito.verify(scrapingService, Mockito.times(1))
-          .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
-    }
+    final ApiResponse<Comic> response =
+        controller.scrapeAndSaveComicDetails(
+            TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
+
+    assertNotNull(response);
+    assertFalse(response.isSuccess());
+
+    Mockito.verify(scrapingService, Mockito.times(1))
+        .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
   }
 
   @Test
-  public void testScrapeAndSaveComicDetails()
-      throws ComicException, ScrapingException, ComiXedControllerException {
+  public void testScrapeAndSaveComicDetails() throws ScrapingException, ComiXedControllerException {
     Mockito.when(
             scrapingService.scrapeComic(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenReturn(comic);
 
-    Comic result =
+    ApiResponse<Comic> response =
         controller.scrapeAndSaveComicDetails(
             TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
 
-    assertNotNull(result);
-    assertSame(comic, result);
+    assertNotNull(response);
+    assertTrue(response.isSuccess());
+    assertSame(comic, response.getResult());
 
     Mockito.verify(scrapingService, Mockito.times(1))
         .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
