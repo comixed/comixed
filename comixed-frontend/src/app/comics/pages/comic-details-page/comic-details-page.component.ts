@@ -21,7 +21,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { Comic } from 'app/comics';
+import { AppState, Comic } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { AuthenticationAdaptor } from 'app/user';
 import { MenuItem, MessageService } from 'primeng/api';
@@ -29,6 +29,8 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { filter } from 'rxjs/operators';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
+import { Store } from '@ngrx/store';
+import { selectScrapeComicSuccess } from 'app/comics/selectors/scrape-comic.selectors';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -39,8 +41,9 @@ export const CURRENT_PAGE_PARAMETER = 'page';
   styleUrls: ['./comic-details-page.component.scss']
 })
 export class ComicDetailsPageComponent implements OnInit, OnDestroy {
+  private _comic: Comic;
+
   comicSubscription: Subscription;
-  comic: Comic;
   noComicSubscription: Subscription;
   fetchingSubscription: Subscription;
   fetching = false;
@@ -69,7 +72,8 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     private comicAdaptor: ComicAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) {
     this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
@@ -97,24 +101,15 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       () => this.loadTranslations()
     );
     this.loadTranslations();
+    this.store.select(selectScrapeComicSuccess).subscribe(success => {
+      if (success) {
+        this.comicAdaptor.getComicById(this.id);
+      }
+    });
     this.comicSubscription = this.comicAdaptor.comic$
       .pipe(filter(comic => !!comic))
       .subscribe(comic => {
         this.comic = comic;
-        this.loadTranslations();
-        this.characters = comic.characters;
-        this.teams = comic.teams;
-        this.locations = comic.locations;
-        this.storyArcs = comic.storyArcs;
-
-        this.titleService.setTitle(
-          this.translateService.instant('comic-details-page.title', {
-            id: this.comic.id,
-            series: this.comic.series,
-            volume: this.comic.volume,
-            issue_number: this.comic.issueNumber
-          })
-        );
       });
     this.fetchingSubscription = this.comicAdaptor.fetchingIssue$.subscribe(
       fetching => (this.fetching = fetching)
@@ -135,6 +130,34 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
     this.comicSubscription.unsubscribe();
     this.fetchingSubscription.unsubscribe();
     this.noComicSubscription.unsubscribe();
+  }
+
+  /**
+   * Sets the comic.
+   * @param comic the comic
+   */
+  set comic(comic: Comic) {
+    this._comic = comic;
+    this.loadTranslations();
+    this.characters = comic.characters;
+    this.teams = comic.teams;
+    this.locations = comic.locations;
+    this.storyArcs = comic.storyArcs;
+
+    this.logger.debug('comic loaded:', comic);
+
+    this.titleService.setTitle(
+      this.translateService.instant('comic-details-page.title', {
+        id: this.comic.id,
+        series: this.comic.series,
+        volume: this.comic.volume,
+        issue_number: this.comic.issueNumber
+      })
+    );
+  }
+
+  get comic(): Comic {
+    return this._comic;
   }
 
   setPageSize(page_size: number): void {

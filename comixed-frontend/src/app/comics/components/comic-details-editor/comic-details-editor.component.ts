@@ -26,9 +26,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { Comic } from 'app/comics';
+import { AppState, Comic } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import { AuthenticationAdaptor, COMICVINE_API_KEY } from 'app/user';
@@ -39,6 +38,22 @@ import {
   USER_PREFERENCE_MAX_SCRAPING_RECORDS,
   USER_PREFERENCE_SKIP_CACHE
 } from 'app/user/user.constants';
+import { Store } from '@ngrx/store';
+import {
+  selectScrapingIssue,
+  selectScrapingIssuesFetching
+} from 'app/comics/selectors/scraping-issue.selectors';
+import { getScrapingIssue } from 'app/comics/actions/scraping-issue.actions';
+import {
+  selectScrapingVolumes,
+  selectScrapingVolumesFetching
+} from 'app/comics/selectors/scraping-volumes.selectors';
+import { getScrapingVolumes } from 'app/comics/actions/scraping-volumes.actions';
+import { scrapeComic } from 'app/comics/actions/scrape-comic.actions';
+import {
+  selectScrapeComicScraping,
+  selectScrapeComicSuccess
+} from 'app/comics/selectors/scrape-comic.selectors';
 
 @Component({
   selector: 'app-comic-details-editor',
@@ -53,12 +68,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   private _comic: Comic;
 
   userSubscription: Subscription;
-  scrapingComicsSubscription: Subscription;
-  scrapingComics = [];
   fetchingVolumesSubscription: Subscription;
   fetchingVolumes = false;
   volumesSubscription: Subscription;
-  volumes: ScrapingVolume[];
+  volumes: ScrapingVolume[] = [];
   fetchingIssueSubscription: Subscription;
   fetchingIssue = false;
   scrapingSubscription: Subscription;
@@ -78,10 +91,10 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private comicAdaptor: ComicAdaptor,
-    private scrapingAdaptor: ScrapingAdaptor,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private store: Store<AppState>
   ) {
     this.comicDetailsForm = this.formBuilder.group({
       apiKey: ['', [Validators.required]],
@@ -89,6 +102,23 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
       volumeName: [''],
       issueNumber: ['', [Validators.required]],
       maxRecords: ['', [Validators.required]]
+    });
+    this.fetchingVolumesSubscription = this.store
+      .select(selectScrapingVolumesFetching)
+      .subscribe(fetching => (this.fetchingVolumes = fetching));
+    this.volumesSubscription = this.store
+      .select(selectScrapingVolumes)
+      .subscribe(volumes => (this.volumes = volumes));
+    this.fetchingIssueSubscription = this.store
+      .select(selectScrapingIssuesFetching)
+      .subscribe(fetching => (this.fetchingIssue = fetching));
+    this.currentIssueSubscription = this.store
+      .select(selectScrapingIssue)
+      .subscribe(issue => (this.currentIssue = issue));
+    this.store.select(selectScrapeComicSuccess).subscribe(success => {
+      if (success) {
+        this.volumes = [];
+      }
     });
   }
 
@@ -107,24 +137,9 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         10
       );
     });
-    this.scrapingComicsSubscription = this.scrapingAdaptor.comics$.subscribe(
-      comics => (this.scrapingComics = comics)
-    );
-    this.fetchingVolumesSubscription = this.scrapingAdaptor.fetchingVolumes$.subscribe(
-      fetching => (this.fetchingVolumes = fetching)
-    );
-    this.volumesSubscription = this.scrapingAdaptor.volumes$.subscribe(
-      volumes => (this.volumes = volumes)
-    );
-    this.fetchingIssueSubscription = this.scrapingAdaptor.fetchingIssue$.subscribe(
-      fetching => (this.fetchingIssue = fetching)
-    );
-    this.scrapingSubscription = this.scrapingAdaptor.scraping$.subscribe(
-      scraping => (this.scraping = scraping)
-    );
-    this.currentIssueSubscription = this.scrapingAdaptor.issue$.subscribe(
-      issue => (this.currentIssue = issue)
-    );
+    this.store
+      .select(selectScrapeComicScraping)
+      .subscribe(scraping => (this.scraping = scraping));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslatedOptions()
     );
@@ -133,20 +148,15 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.userSubscription.unsubscribe();
-    this.scrapingComicsSubscription.unsubscribe();
     this.fetchingVolumesSubscription.unsubscribe();
     this.fetchingIssueSubscription.unsubscribe();
     this.currentIssueSubscription.unsubscribe();
-    this.scrapingSubscription.unsubscribe();
   }
 
   @Input()
   set comic(comic: Comic) {
     this._comic = comic;
     this.loadComicDetailsForm();
-    if (!this.multiComicMode) {
-      this.scrapingAdaptor.startScraping([comic]);
-    }
   }
 
   get comic(): Comic {
@@ -208,12 +218,14 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         `${skipCache}`
       );
     }
-    this.scrapingAdaptor.getVolumes(
-      this.apiKey,
-      this.seriesName,
-      this.issueNumber,
-      this.maxRecords,
-      skipCache
+    this.store.dispatch(
+      getScrapingVolumes({
+        apiKey: this.apiKey,
+        series: this.seriesName,
+        volume: this.volume,
+        maxRecords: this.maxRecords,
+        skipCache: this.skipCache
+      })
     );
   }
 
@@ -271,7 +283,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   }
 
   set volume(volume: string) {
-    this.comicDetailsForm.controls['volume'].setValue(volume);
+    this.comicDetailsForm.controls['volumeName'].setValue(volume);
   }
 
   get volume(): string {
@@ -316,11 +328,14 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
   volumeSelected(volume: ScrapingVolume) {
     this.currentVolume = volume;
     if (!!volume) {
-      this.scrapingAdaptor.getIssue(
-        this.apiKey,
-        volume.id,
-        this.issueNumber,
-        this.skipCache
+      this.logger.trace('Fetch scraping issue');
+      this.store.dispatch(
+        getScrapingIssue({
+          apiKey: this.apiKey,
+          volumeId: volume.id,
+          issueNumber: this.issueNumber,
+          skipCache: this.skipCache
+        })
       );
     } else {
       this.currentIssue = null;
@@ -336,17 +351,19 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
         'comic-details-editor.issue-selected.message'
       ),
       accept: () =>
-        this.scrapingAdaptor.loadMetadata(
-          this.apiKey,
-          this.comic.id,
-          `${issue.id}`,
-          this.skipCache
+        this.store.dispatch(
+          scrapeComic({
+            apiKey: this.apiKey,
+            comicId: this.comic.id,
+            issueNumber: `${issue.id}`,
+            skipCache: this.skipCache
+          })
         )
     });
   }
 
   selectionCancelled() {
-    this.scrapingAdaptor.resetVolumes();
+    this.volumes = [];
   }
 
   skipCurrentComic() {

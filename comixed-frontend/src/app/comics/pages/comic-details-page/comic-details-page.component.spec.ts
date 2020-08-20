@@ -74,6 +74,15 @@ import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
 import { FileEntryListComponent } from 'app/comics/components/file-entry-list/file-entry-list.component';
 import { TableModule } from 'primeng/table';
+import * as fromScrapingVolumes from 'app/comics/reducers/scraping-volumes.reducer';
+import { SCRAPING_VOLUMES_FEATURE_KEY } from 'app/comics/reducers/scraping-volumes.reducer';
+import * as fromScrapingIssue from 'app/comics/reducers/scraping-issue.reducer';
+import { SCRAPING_ISSUE_FEATURE_KEY } from 'app/comics/reducers/scraping-issue.reducer';
+import * as fromScrapeComic from 'app/comics/reducers/scrape-comic.reducer';
+import { SCRAPE_COMIC_FEATURE_KEY } from 'app/comics/reducers/scrape-comic.reducer';
+import { ScrapingVolumesEffects } from 'app/comics/effects/scraping-volumes.effects';
+import { ScrapingIssueEffects } from 'app/comics/effects/scraping-issue.effects';
+import { ScrapeComicEffects } from 'app/comics/effects/scrape-comic.effects';
 
 describe('ComicDetailsPageComponent', () => {
   const COMIC = COMIC_2;
@@ -99,8 +108,25 @@ describe('ComicDetailsPageComponent', () => {
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
+        StoreModule.forFeature(
+          SCRAPING_VOLUMES_FEATURE_KEY,
+          fromScrapingVolumes.reducer
+        ),
+        StoreModule.forFeature(
+          SCRAPING_ISSUE_FEATURE_KEY,
+          fromScrapingIssue.reducer
+        ),
+        StoreModule.forFeature(
+          SCRAPE_COMIC_FEATURE_KEY,
+          fromScrapeComic.reducer
+        ),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ComicEffects]),
+        EffectsModule.forFeature([
+          ComicEffects,
+          ScrapingVolumesEffects,
+          ScrapingIssueEffects,
+          ScrapeComicEffects
+        ]),
         CardModule,
         DropdownModule,
         InplaceModule,

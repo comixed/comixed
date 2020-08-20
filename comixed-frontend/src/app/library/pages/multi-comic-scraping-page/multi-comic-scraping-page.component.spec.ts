@@ -23,11 +23,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComicsModule } from 'app/comics/comics.module';
-import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
-import {
-  reducer,
-  SCRAPING_FEATURE_KEY
-} from 'app/comics/reducers/scraping.reducer';
 import { ScrapingComicListComponent } from 'app/library/components/scraping-comic-list/scraping-comic-list.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MessageService } from 'primeng/api';
@@ -42,13 +37,11 @@ describe('MultiComicScrapingPageComponent', () => {
       imports: [
         ComicsModule,
         HttpClientTestingModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([{ path: 'comics', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
-        EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ScrapingEffects])
+        EffectsModule.forRoot([])
       ],
       declarations: [
         MultiComicScrapingPageComponent,
