@@ -28,8 +28,8 @@ import {
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Comic } from 'app/comics';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import {
+  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   ReadingListAdaptor,
@@ -53,6 +53,8 @@ import {
   COMIC_LIST_MENU_SCRAPE_SELECTED,
   COMIC_LIST_MENU_SELECT_ALL
 } from 'app/library/library.constants';
+import { scrapeMultipleComics } from 'app/comics/actions/scrape-multiple-comic.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-comic-list',
@@ -101,12 +103,12 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private selectionAdaptor: SelectionAdaptor,
     private contextMenuAdaptor: ContextMenuAdaptor,
-    private scrapingAdaptor: ScrapingAdaptor,
     private readingListAdaptor: ReadingListAdaptor,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) {
     this.addContextMenuItems();
     this.contextMenuItemsSubscription = this.contextMenuAdaptor.items$.subscribe(
@@ -238,7 +240,9 @@ export class ComicListComponent implements OnInit, OnDestroy {
         { count: this.selectedComics.length }
       ),
       accept: () => {
-        this.scrapingAdaptor.startScraping(this.selectedComics);
+        this.store.dispatch(
+          scrapeMultipleComics({ comics: this.selectedComics })
+        );
         this.selectionAdaptor.clearComicSelections();
         this.router.navigateByUrl('/scraping');
       }

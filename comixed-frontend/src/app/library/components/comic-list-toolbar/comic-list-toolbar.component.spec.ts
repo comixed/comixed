@@ -24,7 +24,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { ComicsModule } from 'app/comics/comics.module';
 import {
@@ -66,7 +65,6 @@ describe('ComicListToolbarComponent', () => {
   let component: ComicListToolbarComponent;
   let fixture: ComponentFixture<ComicListToolbarComponent>;
   let confirmationService: ConfirmationService;
-  let scrapingAdaptor: ScrapingAdaptor;
   let selectionAdaptor: SelectionAdaptor;
   let router: Router;
   let store: Store<AppState>;
@@ -122,10 +120,9 @@ describe('ComicListToolbarComponent', () => {
     fixture = TestBed.createComponent(ComicListToolbarComponent);
     component = fixture.componentInstance;
     confirmationService = TestBed.get(ConfirmationService);
-    scrapingAdaptor = TestBed.get(ScrapingAdaptor);
-    selectionAdaptor = TestBed.get(SelectionAdaptor);
-    spyOn(selectionAdaptor, 'clearComicSelections');
     store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
+    selectionAdaptor = TestBed.get(SelectionAdaptor);
     router = TestBed.get(Router);
     spyOn(router, 'navigateByUrl');
     translateService = TestBed.get(TranslateService);
@@ -224,6 +221,7 @@ describe('ComicListToolbarComponent', () => {
   describe('deselecting all comics', () => {
     beforeEach(() => {
       component.comics = COMICS;
+      spyOn(selectionAdaptor, 'clearComicSelections');
       component.deselectAll();
     });
 
@@ -239,12 +237,12 @@ describe('ComicListToolbarComponent', () => {
     ];
 
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.accept());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.accept()
+      );
       spyOn(libraryAdaptor, 'deleteComics');
       component.selectedComics = SELECTED_COMICS;
+      spyOn(selectionAdaptor, 'clearComicSelections');
       component.deleteComics();
     });
 

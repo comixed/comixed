@@ -23,7 +23,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_3 } from 'app/comics/comics.fixtures';
-import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
 import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
 import {
@@ -32,10 +31,6 @@ import {
 } from 'app/comics/models/scraping-volume.fixtures';
 import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
 import { ScrapingIssueTitlePipe } from 'app/comics/pipes/scraping-issue-title.pipe';
-import {
-  reducer,
-  SCRAPING_FEATURE_KEY
-} from 'app/comics/reducers/scraping.reducer';
 import { LoggerModule } from '@angular-ru/logger';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -80,9 +75,8 @@ describe('VolumeListComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
-        StoreModule.forFeature(SCRAPING_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ScrapingEffects]),
+        EffectsModule.forFeature([]),
         TableModule,
         CardModule,
         ButtonModule,
