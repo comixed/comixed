@@ -29,7 +29,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { ScrapingAdaptor } from 'app/comics/adaptors/scraping.adaptor';
 import { ComicsRoutingModule } from 'app/comics/comics-routing.module';
 import { ComicCoverComponent } from 'app/comics/components/comic-cover/comic-cover.component';
 import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
@@ -40,7 +39,6 @@ import { ComicPagesComponent } from 'app/comics/components/comic-pages/comic-pag
 import { ComicStoryComponent } from 'app/comics/components/comic-story/comic-story.component';
 import { VolumeListComponent } from 'app/comics/components/volume-list/volume-list.component';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { ScrapingEffects } from 'app/comics/effects/scraping.effects';
 import { ComicDetailsPageComponent } from 'app/comics/pages/comic-details-page/comic-details-page.component';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicDownloadLinkPipe } from 'app/comics/pipes/comic-download-link.pipe';
@@ -74,7 +72,6 @@ import {
 import { TableModule } from 'primeng/table';
 import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
 import * as fromComics from 'app/comics/reducers/comic.reducer';
-import * as fromScraping from 'app/comics/reducers/scraping.reducer';
 import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
 import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
@@ -147,16 +144,11 @@ import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multipl
       SCRAPE_MULTIPLE_COMICS_STATE,
       fromScrapeMultipleComics.reducer
     ),
-    StoreModule.forFeature(
-      fromScraping.SCRAPING_FEATURE_KEY,
-      fromScraping.reducer
-    ),
     EffectsModule.forFeature([
       ComicEffects,
       ScrapingVolumesEffects,
       ScrapingIssueEffects,
-      ScrapeComicEffects,
-      ScrapingEffects
+      ScrapeComicEffects
     ]),
     ProgressSpinnerModule,
     TooltipModule,
@@ -196,13 +188,7 @@ import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multipl
     ComicTitlePipe,
     SeriesCollectionNamePipe
   ],
-  providers: [
-    ComicAdaptor,
-    ComicService,
-    ScrapingAdaptor,
-    ScrapingService,
-    PageService
-  ]
+  providers: [ComicAdaptor, ComicService, ScrapingService, PageService]
 })
 export class ComicsModule {
   constructor(@Optional() @SkipSelf() parentModule?: ComicsModule) {

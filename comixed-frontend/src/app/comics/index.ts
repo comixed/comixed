@@ -21,8 +21,6 @@ import * as fromRouter from '@ngrx/router-store';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import * as fromComics from 'app/comics/reducers/comic.reducer';
 import { ComicState } from 'app/comics/reducers/comic.reducer';
-import * as fromScraping from 'app/comics/reducers/scraping.reducer';
-import { ScrapingState } from 'app/comics/reducers/scraping.reducer';
 import { environment } from '../../environments/environment';
 import * as fromScrapingIssue from 'app/comics/reducers/scraping-issue.reducer';
 import {
@@ -62,7 +60,6 @@ interface RouterStateUrl {
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   comic: ComicState;
-  scraping_state: ScrapingState;
   [SCRAPING_VOLUMES_FEATURE_KEY]: ScrapingVolumesState;
   [SCRAPING_ISSUE_FEATURE_KEY]: ScrapingIssueState;
   [SCRAPE_COMIC_FEATURE_KEY]: ScrapeComicState;
@@ -74,7 +71,6 @@ export type State = AppState;
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   comic: fromComics.reducer,
-  scraping_state: fromScraping.reducer,
   [SCRAPING_VOLUMES_FEATURE_KEY]: fromScrapingVolumes.reducer,
   [SCRAPING_ISSUE_FEATURE_KEY]: fromScrapingIssue.reducer,
   [SCRAPE_COMIC_FEATURE_KEY]: fromScrapeComic.reducer,
