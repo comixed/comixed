@@ -20,7 +20,6 @@ package org.comixed.web.authentication;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
-import org.comixed.model.user.Role;
 import org.comixed.repositories.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -48,9 +47,11 @@ public class ComiXedUserDetailsService implements UserDetailsService {
     UserBuilder result = User.withUsername(email);
 
     result.password(user.getPasswordHash());
-    for (Role role : user.getRoles()) {
-      result.roles(role.getName());
+    String[] roles = new String[user.getRoles().size()];
+    for (int index = 0; index < user.getRoles().size(); index++) {
+      roles[index] = user.getRoles().get(index).getName();
     }
+    result.roles(roles);
 
     return result.build();
   }

@@ -18,11 +18,13 @@
 
 package org.comixed.web.authentication;
 
+import static org.comixed.web.authentication.AuthenticationConstants.HEADER_STRING;
+import static org.comixed.web.authentication.AuthenticationConstants.TOKEN_PREFIX;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.comixed.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -39,12 +40,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class ComiXedAuthenticationFilter extends OncePerRequestFilter
-    implements AuthenticationConstants {
+public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
   @Autowired private ComiXedUserDetailsService userDetailsService;
-
   @Autowired private JwtTokenUtil jwtTokenUtil;
-
   @Autowired private Utils utils;
 
   @Override
@@ -88,7 +86,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter
           || this.jwtTokenUtil.validateToken(authToken, userDetails)) {
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(
-                userDetails, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+                userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         this.logger.debug("authenticated user " + username + ", setting security context");
         SecurityContextHolder.getContext().setAuthentication(authentication);

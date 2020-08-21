@@ -46,8 +46,8 @@ public class UserControllerTest {
   private static final String INVALID_EMAIL = "nosuchreader@comixed.org";
   private static final String TEST_PASSWORD = "this!is!my!password";
   private static final String TEST_PASSWORD_HASH = "0123456789ABCDEF";
-  private static final Role TEST_ROLE_READER = new Role();
-  private static final Role TEST_ROLE_ADMIN = new Role();
+  private static final Role TEST_ROLE_READER = new Role("READER");
+  private static final Role TEST_ROLE_ADMIN = new Role("ADMIN");
   private static final long TEST_USER_ID = 717;
   private static final Boolean TEST_IS_ADMIN = true;
   private static final String TEST_AUTH_EMAIL = "comixedadmin@comixed.org";

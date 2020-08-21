@@ -18,21 +18,31 @@
 
 package org.comixed.web.authentication;
 
+import static org.comixed.web.authentication.AuthenticationConstants.ROLE_PREFIX;
+import static org.comixed.web.authentication.AuthenticationConstants.SIGNING_KEY;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
+import lombok.extern.log4j.Log4j2;
 import org.comixed.model.user.ComiXedUser;
+import org.comixed.model.user.Role;
+import org.comixed.service.user.ComiXedUserException;
+import org.comixed.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtTokenUtil implements Serializable, AuthenticationConstants {
-  private static final long serialVersionUID = 5217543483664508841L;
+@Log4j2
+public class JwtTokenUtil {
+  @Autowired private UserService userService;
 
   public String getEmailFromToken(String token) {
     return getClaimFromToken(token, Claims::getSubject);
@@ -60,14 +70,23 @@ public class JwtTokenUtil implements Serializable, AuthenticationConstants {
     return doGenerateToken(user.getEmail());
   }
 
-  private String doGenerateToken(String subject) {
+  private String doGenerateToken(String email) {
 
-    Claims claims = Jwts.claims().setSubject(subject);
-    claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+    Claims claims = Jwts.claims().setSubject(email);
+    List<GrantedAuthority> authorities = new ArrayList<>();
+    try {
+      ComiXedUser user = this.userService.findByEmail(email);
+      for (Role role : user.getRoles()) {
+        authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
+      }
+    } catch (ComiXedUserException error) {
+      log.error("Setting user authorities", error);
+    }
+    claims.put("scopes", authorities);
 
     return Jwts.builder()
         .setClaims(claims)
-        .setIssuer("http://comixed.org")
+        .setIssuer("http://www.comixedproject.org")
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + (5 * 60 * 60) * 1000))
         .signWith(SignatureAlgorithm.HS256, SIGNING_KEY)

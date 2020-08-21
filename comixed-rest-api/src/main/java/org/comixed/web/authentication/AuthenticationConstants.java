@@ -18,8 +18,19 @@
 
 package org.comixed.web.authentication;
 
-public interface AuthenticationConstants {
-  String SIGNING_KEY = "comixed";
-  String HEADER_STRING = "Authorization";
-  String TOKEN_PREFIX = "Bearer ";
+/**
+ * <code>AuthenticationConstants</code> is a placeholder for constant values used in the
+ * authentication code.
+ *
+ * @author Darryl L. Pierce
+ */
+public final class AuthenticationConstants {
+  public static final String ROLE_PREFIX = "ROLE_";
+  public static final String SIGNING_KEY = "comixedproject";
+  public static final String HEADER_STRING = "Authorization";
+  public static final String TOKEN_PREFIX = "Bearer ";
+
+  private AuthenticationConstants() {
+    // prevent it from being instantiates
+  }
 }
