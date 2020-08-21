@@ -18,6 +18,8 @@
 
 package org.comixedproject.web.authentication;
 
+import static org.comixedproject.web.authentication.AuthenticationConstants.ROLE_PREFIX;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +64,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
 
       for (Role role : user.getRoles()) {
         log.debug("Granting role: {}", role.getName());
-        roles.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        roles.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
       }
       // update the last authenticated date
       user.setLastLoginDate(new Date());
