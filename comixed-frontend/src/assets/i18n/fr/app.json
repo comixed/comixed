@@ -416,7 +416,8 @@
         "import-page": "Importer des bandes dessinées",
         "duplicates-page": "Page dupliquées",
         "missing-comics": "Bandes dessinées manquantes",
-        "task-audit-log": "Task Log"
+        "task-audit-log": "Task Log",
+        "rest-audit-log": "REST logs"
       }
     }
   },

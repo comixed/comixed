@@ -21,6 +21,7 @@ import { BuildDetailsPageComponent } from 'app/backend-status/pages/build-detail
 import { NgModule } from '@angular/core';
 import { TaskAuditLogPageComponent } from 'app/backend-status/pages/task-audit-log-page/task-audit-log-page.component';
 import { AdminGuard } from 'app/user';
+import { RestAuditLogPageComponent } from 'app/backend-status/pages/rest-audit-log-page/rest-audit-log-page.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
   {
     path: 'admin/tasks/logs',
     component: TaskAuditLogPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'admin/logs/rest',
+    component: RestAuditLogPageComponent,
     canActivate: [AdminGuard]
   }
 ];

@@ -411,7 +411,8 @@
         "import-page": "Import Comics",
         "duplicates-page": "Duplicates Page",
         "missing-comics": "Missing Comics",
-        "task-audit-log": "Task Log"
+        "task-audit-log": "Task Log",
+        "rest-audit-log": "REST logs"
       }
     }
   },
