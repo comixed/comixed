@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.net.*;
+import org.comixedproject.model.net.*;
 import org.comixedproject.repositories.library.ReadingListRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.library.NoSuchReadingListException;
