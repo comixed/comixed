@@ -31,6 +31,7 @@
         "duplicate-pages": "Pages dupliquées",
         "missing-comics": "Bandes dessinées manquantes",
         "task-audit-log": "Task Logs",
+        "rest-audit-log": "Web Logs",
         "clear-image-cache": "Vider le cache des images"
       },
       "help": {

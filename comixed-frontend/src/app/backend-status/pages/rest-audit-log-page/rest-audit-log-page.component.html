@@ -1,0 +1,83 @@
+<h2>{{"backend-status.rest-audit-log.page-title"|translate}}</h2>
+<p-table [value]="entries"
+         [paginator]="true"
+         [rows]="10"
+         [paginatorPosition]="'both'"
+         selectionMode="single"
+         [(selection)]="currentEntry"
+         [dataKey]="'id'"
+         (onRowSelect)="showEntryDetails($event.data)"
+         (onRowUnselect)="hideEntryDetails()">
+  <ng-template pTemplate="colgroup">
+    <col class="cx-table-column-medium"/>
+    <col/>
+    <col class="cx-table-column-medium-large"/>
+    <col class="cx-table-column-medium-large"/>
+    <col class="cx-table-column-medium-large"/>
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
+    <col class="cx-table-column-medium"/>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th id="entry-remote-ip">{{"backend-status.rest-audit-log.entries.header.remote-ip"|translate}}</th>
+      <th id="entry-url">{{"backend-status.rest-audit-log.entries.header.url"|translate}}</th>
+      <th id="entry-email">{{"backend-status.rest-audit-log.entries.header.email"|translate}}</th>
+      <th id="entry-start-time">{{"backend-status.rest-audit-log.entries.header.start-time"|translate}}</th>
+      <th id="entry-end-time">{{"backend-status.rest-audit-log.entries.header.end-time"|translate}}</th>
+      <th id="entry-bytes-received">{{"backend-status.rest-audit-log.entries.header.bytes-received"|translate}}</th>
+      <th id="entry-bytes-returned">{{"backend-status.rest-audit-log.entries.header.bytes-returned"|translate}}</th>
+      <th id="entry-success">{{"backend-status.rest-audit-log.entries.header.success"|translate}}</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body"
+               let-entry>
+    <tr [pSelectableRow]="entry"
+        [pSelectableRowDisabled]="!entry.requestContent && !entry.responseContent && !entry.exception">
+      <td class="cx-no-wrap-text">{{entry.remoteIp}}</td>
+      <td class="cx-no-wrap-text">[{{entry.method}}] {{entry.url}}</td>
+      <td class="cx-no-wrap-text cx-table-column-align-center">{{entry.email}}</td>
+      <td class="cx-no-wrap-text cx-table-column-align-center">{{entry.startTime|date:'medium'}}</td>
+      <td class="cx-no-wrap-text cx-table-column-align-center">{{entry.endTime|date:'medium'}}</td>
+      <td class="cx-no-wrape-text cx-table-column-align-center">
+        <span *ngIf="!!entry.requestContent">{{entry.requestContent.length|number}}</span>
+      </td>
+      <td class="cx-no-wrape-text cx-table-column-align-center">
+        <span *ngIf="!!entry.responseContent">{{entry.responseContent.length|number}}</span>
+      </td>
+
+      <td class="cx-table-column-align-center">{{entry.successful}}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-sidebar *ngIf="currentEntry"
+           [title]="'backend-status.rest-audit-log.details-title'|translate"
+           [style]="{width:'50%'}"
+           [(visible)]="showDetailsDialog"
+           [closeOnEscape]="true"
+           (onHide)="hideEntryDetails()"
+           [modal]="true"
+           [position]="'right'">
+  <p-scrollPanel [style]="{width: '100%',height: '100%'}">
+    <div *ngIf="!!currentEntry.requestContent"
+         class="cx-no-wrap-text">
+      <h3>{{"backend-status.rest-audit-log.entries.header.request-content"|translate}}</h3>
+      <pre>
+      {{asJson(currentEntry.requestContent)|json}}
+      </pre>
+    </div>
+    <div *ngIf="!!currentEntry.responseContent"
+         class="cx-no-wrap-text">
+      <h3>{{"backend-status.rest-audit-log.entries.header.response-content"|translate}}</h3>
+      <pre>
+      {{asJson(currentEntry.responseContent)|json}}
+      </pre>
+    </div>
+    <div *ngIf="!!currentEntry.exception"
+         class="cx-no-wrap-text">
+      <h3>{{"backend-status.rest-audit-log.entries.header.exception"|translate}}</h3>
+      <pre>{{currentEntry.exception}}</pre>
+    </div>
+  </p-scrollPanel>
+</p-sidebar>

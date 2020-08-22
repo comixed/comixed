@@ -4,6 +4,24 @@
       "get-rest-audit-log-entries": {
         "error-detail": "Failed to load audit log entries..."
       }
+    },
+    "rest-audit-log": {
+      "page-title": "Web Logs",
+      "entries": {
+        "header": {
+          "remote-ip": "Originating IP",
+          "url": "Endpoint URL",
+          "email": "Account",
+          "start-time": "Started",
+          "end-time": "Completed",
+          "bytes-received": "Bytes In",
+          "bytes-returned": "Bytes Out",
+          "success": "Success",
+          "request-content": "Request Content",
+          "response-content": "Response Content",
+          "exception": "Exception"
+        }
+      }
     }
   },
   "build-details-effects": {
