@@ -18,15 +18,29 @@
 
 import * as fromRouter from '@ngrx/router-store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
-import { BuildDetailsState } from './reducers/build-details.reducer';
+import {
+  BUILD_DETAILS_FEATURE_KEY,
+  BuildDetailsState
+} from './reducers/build-details.reducer';
 import * as fromClearTaskAuditLog from './reducers/clear-task-audit-log.reducer';
 import * as fromLoadTaskAuditLog from './reducers/load-task-audit-log.reducer';
-import { LoadTaskAuditLogState } from './reducers/load-task-audit-log.reducer';
+import {
+  LOAD_TASK_AUDIT_LOG_FEATURE_KEY,
+  LoadTaskAuditLogState
+} from './reducers/load-task-audit-log.reducer';
+import * as fromLoadRestAuditLog from './reducers/load-rest-audit-log.reducer';
 import { Params } from '@angular/router';
 
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import { ClearTaskAuditLogState } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
+import {
+  CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
+  ClearTaskAuditLogState
+} from 'app/backend-status/reducers/clear-task-audit-log.reducer';
+import {
+  LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY,
+  LoadRestAuditLogEntriesState
+} from 'app/backend-status/reducers/load-rest-audit-log.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -36,18 +50,20 @@ interface RouterStateUrl {
 
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
-  build_details_state: BuildDetailsState;
-  load_task_audit_log_state: LoadTaskAuditLogState;
-  clear_task_audit_log_state: ClearTaskAuditLogState;
+  [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
+  [LOAD_TASK_AUDIT_LOG_FEATURE_KEY]: LoadTaskAuditLogState;
+  [CLEAR_TASK_AUDIT_LOG_FEATURE_KEY]: ClearTaskAuditLogState;
+  [LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY]: LoadRestAuditLogEntriesState;
 }
 
 export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  build_details_state: fromBuildDetails.reducer,
-  load_task_audit_log_state: fromLoadTaskAuditLog.reducer,
-  clear_task_audit_log_state: fromClearTaskAuditLog.reducer
+  [BUILD_DETAILS_FEATURE_KEY]: fromBuildDetails.reducer,
+  [LOAD_TASK_AUDIT_LOG_FEATURE_KEY]: fromLoadTaskAuditLog.reducer,
+  [CLEAR_TASK_AUDIT_LOG_FEATURE_KEY]: fromClearTaskAuditLog.reducer,
+  [LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY]: fromLoadRestAuditLog.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

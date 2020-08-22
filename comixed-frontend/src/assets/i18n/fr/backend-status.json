@@ -1,10 +1,15 @@
 {
-  "build-details": {
+  "backend-status": {
     "effects": {
-      "get-build-details": {
-        "error": {
-          "detail": "Failed to fetch build details..."
-        }
+      "get-rest-audit-log-entries": {
+        "error-detail": "Failed to load audit log entries..."
+      }
+    }
+  },
+  "build-details-effects": {
+    "get-build-details": {
+      "error": {
+        "detail": "Échec de la récupération des détails du build..."
       }
     },
     "page-title": "Build Details",
