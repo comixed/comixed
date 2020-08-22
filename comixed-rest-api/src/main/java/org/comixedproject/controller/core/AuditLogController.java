@@ -24,17 +24,22 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.controller.ComiXedControllerException;
+import org.comixedproject.model.auditlog.RestAuditLogEntry;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.net.ApiResponse;
+import org.comixedproject.net.GetRestAuditLogResponse;
 import org.comixedproject.net.GetTaskAuditLogResponse;
-import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.service.ComiXedServiceException;
+import org.comixedproject.service.auditlog.RestAuditLogService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <code>AuditLogController</code> provides REST APIs for interacting with the tasks system.
@@ -44,8 +49,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class AuditLogController {
-  @Autowired private TaskAuditLogRepository taskAuditLogRepository;
   @Autowired private TaskService taskService;
+  @Autowired private RestAuditLogService restAuditLogService;
 
   /**
    * Retrieve the list of log entries after the cutoff time.
@@ -55,7 +60,7 @@ public class AuditLogController {
    */
   @GetMapping(value = "/api/tasks/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.TaskAuditLogEntryList.class)
+  @JsonView(View.AuditLogEntryList.class)
   @AuditableEndpoint
   public ApiResponse<GetTaskAuditLogResponse> getAllTaskEntriesAfterDate(
       @PathVariable("cutoff") final Long timestamp) throws ComiXedControllerException {
@@ -99,6 +104,42 @@ public class AuditLogController {
       response.setSuccess(true);
     } catch (Exception error) {
       log.error("Failed to clear audit log", error);
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+      response.setThrowable(error);
+    }
+
+    return response;
+  }
+
+  /**
+   * Returns the list of REST audit log entries that ended after the given date.
+   *
+   * <p><b>NOTE:</b> this endpoint is <em>NOT</em> audited since it would create an infinite
+   * feedback loop.
+   *
+   * @param cutoff the cutoff timestamp
+   * @return the list of entries
+   */
+  @GetMapping(
+      value = "/api/auditing/rest/entries/{cutoff}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.AuditLogEntryList.class)
+  public ApiResponse<GetRestAuditLogResponse> getAllRestEntriesAfterDate(
+      @PathVariable("cutoff") final Long cutoff) {
+    log.info("Getting all REST audit entries since {}", cutoff);
+    ApiResponse<GetRestAuditLogResponse> response = new ApiResponse<>();
+
+    try {
+      final List<RestAuditLogEntry> result = this.restAuditLogService.getEntriesAfterDate(cutoff);
+      response.setSuccess(true);
+      response.setResult(new GetRestAuditLogResponse());
+      response.getResult().setEntries(result);
+      response
+          .getResult()
+          .setLatest(result.isEmpty() ? new Date() : result.get(result.size() - 1).getEndTime());
+    } catch (Exception error) {
       response.setSuccess(false);
       response.setError(error.getMessage());
       response.setThrowable(error);

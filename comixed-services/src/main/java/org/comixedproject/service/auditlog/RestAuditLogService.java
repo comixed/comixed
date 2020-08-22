@@ -18,10 +18,13 @@
 
 package org.comixedproject.service.auditlog;
 
+import java.util.Date;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
 import org.comixedproject.repositories.auditlog.RestAuditLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class RestAuditLogService {
+  private static final Object SEMAPHORE = new Object();
+
   @Autowired private RestAuditLogRepository auditLogRepository;
 
   /**
@@ -46,5 +51,40 @@ public class RestAuditLogService {
   public RestAuditLogEntry save(final RestAuditLogEntry entry) {
     log.debug("Saving new REST audit log entry: started={}", entry.getStartTime());
     return this.auditLogRepository.save(entry);
+  }
+
+  /**
+   * Returns all REST audit log entries after the specified threshold date.
+   *
+   * @param cutoff the cutoff timestamp
+   * @return the entries
+   */
+  public List<RestAuditLogEntry> getEntriesAfterDate(final Long cutoff) {
+    log.debug("Fetching up to 100 REST audit log entries");
+
+    List<RestAuditLogEntry> result = null;
+    boolean done = false;
+    long started = System.currentTimeMillis();
+
+    while (!done) {
+      result =
+          this.auditLogRepository.findByEndTimeAfterOrderByEndTime(
+              new Date(cutoff), PageRequest.of(0, 100));
+      if (result.isEmpty()) {
+        log.debug("Waiting for REST audit log entries");
+        synchronized (SEMAPHORE) {
+          try {
+            SEMAPHORE.wait(1000L);
+          } catch (InterruptedException error) {
+            log.debug("Interrupted while getting REST audit log entries", error);
+            Thread.currentThread().interrupt();
+          }
+        }
+      }
+
+      done = !result.isEmpty() || (System.currentTimeMillis() - started > 60000);
+    }
+
+    return result;
   }
 }

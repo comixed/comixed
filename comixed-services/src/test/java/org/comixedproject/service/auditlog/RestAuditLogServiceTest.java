@@ -18,24 +18,30 @@
 
 package org.comixedproject.service.auditlog;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
 import org.comixedproject.repositories.auditlog.RestAuditLogRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RestAuditLogServiceTest {
+  private static final Long TEST_CUTOFF = System.currentTimeMillis();
+
   @InjectMocks private RestAuditLogService restAuditLogService;
   @Mock private RestAuditLogRepository restAuditLogRepository;
   @Mock private RestAuditLogEntry incomingEntry;
   @Mock private RestAuditLogEntry savedEntry;
+  @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
+
+  private List<RestAuditLogEntry> auditLogEntryList = new ArrayList<>();
 
   @Test
   public void testSave() {
@@ -47,5 +53,26 @@ public class RestAuditLogServiceTest {
     assertSame(savedEntry, result);
 
     Mockito.verify(restAuditLogRepository, Mockito.times(1)).save(incomingEntry);
+  }
+
+  @Test
+  public void testGetEntriesAfterDate() {
+    auditLogEntryList.add(incomingEntry);
+
+    Mockito.when(
+            restAuditLogRepository.findByEndTimeAfterOrderByEndTime(
+                Mockito.any(Date.class), pageableArgumentCaptor.capture()))
+        .thenReturn(auditLogEntryList);
+
+    final List<RestAuditLogEntry> result = restAuditLogService.getEntriesAfterDate(TEST_CUTOFF);
+
+    assertNotNull(result);
+    assertSame(auditLogEntryList, result);
+    assertNotNull(pageableArgumentCaptor.getValue());
+    assertEquals(0, pageableArgumentCaptor.getValue().getPageNumber());
+    assertEquals(100, pageableArgumentCaptor.getValue().getPageSize());
+
+    Mockito.verify(restAuditLogRepository, Mockito.times(1))
+        .findByEndTimeAfterOrderByEndTime(new Date(TEST_CUTOFF), pageableArgumentCaptor.getValue());
   }
 }

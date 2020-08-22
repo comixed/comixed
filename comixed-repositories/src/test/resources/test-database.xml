@@ -532,4 +532,13 @@
               COMIC_VINE_ID="23173"
               COMIC_VINE_URL="http://localhost"
               DESCRIPTION="This is a publisher"/>
+  <rest_audit_log id="1000"
+                  remote_ip="192.168.1.125"
+                  url="/api/comics"
+                  method="GET"
+                  email="reader@comixedproject.org"
+                  start_time="[now+1h]"
+                  end_time="[now+1h+1m]"
+                  successful="true"
+                  response_content="some data"/>
 </dataset>
