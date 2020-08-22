@@ -47,7 +47,7 @@ public class TaskAuditLogEntry {
   @Setter
   @JsonProperty("startTime")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.TaskAuditLogEntryList.class)
+  @JsonView(View.AuditLogEntryList.class)
   private Date startTime = new Date();
 
   @Column(name = "end_time", nullable = false, updatable = false)
@@ -55,21 +55,21 @@ public class TaskAuditLogEntry {
   @Setter
   @JsonProperty("endTime")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.TaskAuditLogEntryList.class)
+  @JsonView(View.AuditLogEntryList.class)
   private Date endTime = new Date();
 
   @Column(name = "successful", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonProperty("successful")
-  @JsonView(View.TaskAuditLogEntryList.class)
+  @JsonView(View.AuditLogEntryList.class)
   private Boolean successful;
 
   @Column(name = "description", nullable = false, updatable = false, length = 2048)
   @Getter
   @Setter
   @JsonProperty("description")
-  @JsonView(View.TaskAuditLogEntryList.class)
+  @JsonView(View.AuditLogEntryList.class)
   private String description;
 
   @Column(name = "exception", nullable = true, updatable = false)
@@ -77,7 +77,7 @@ public class TaskAuditLogEntry {
   @Getter
   @Setter
   @JsonProperty("exception")
-  @JsonView(View.TaskAuditLogEntryList.class)
+  @JsonView(View.AuditLogEntryList.class)
   private String exception;
 
   @Override
