@@ -29,14 +29,20 @@ import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { TranslateModule } from '@ngx-translate/core';
 import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
-import { TableModule } from 'primeng/table';
-import { ScrollPanelModule } from 'primeng/primeng';
-import { CoreModule } from 'app/core/core.module';
-import { CLEAR_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
-import { ClearTaskAuditLogEffects } from 'app/backend-status/effects/clear-task-audit-log.effects';
-import { ToolbarModule, TooltipModule } from 'primeng/primeng';
-import { LOAD_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/load-task-audit-log.reducer';
-import { LoadTaskAuditLogEffects } from 'app/backend-status/effects/load-task-audit-log.effects';
+import {TableModule} from 'primeng/table';
+import {
+  ScrollPanelModule,
+  ToolbarModule,
+  TooltipModule
+} from 'primeng/primeng';
+import {CoreModule} from 'app/core/core.module';
+import {CLEAR_TASK_AUDIT_LOG_FEATURE_KEY} from 'app/backend-status/reducers/clear-task-audit-log.reducer';
+import {ClearTaskAuditLogEffects} from 'app/backend-status/effects/clear-task-audit-log.effects';
+import {LOAD_TASK_AUDIT_LOG_FEATURE_KEY} from 'app/backend-status/reducers/load-task-audit-log.reducer';
+import {LoadTaskAuditLogEffects} from 'app/backend-status/effects/load-task-audit-log.effects';
+import * as fromLoadRestAuditLogEntries from 'app/backend-status/reducers/load-rest-audit-log.reducer';
+import {LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY} from 'app/backend-status/reducers/load-rest-audit-log.reducer';
+import {LoadRestAuditLogEffects} from 'app/backend-status/effects/load-rest-audit-log.effects';
 
 @NgModule({
   declarations: [BuildDetailsPageComponent, TaskAuditLogPageComponent],
@@ -46,21 +52,26 @@ import { LoadTaskAuditLogEffects } from 'app/backend-status/effects/load-task-au
     BackendStatusRoutingModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(
-      fromBuildDetails.BUILD_DETAILS_FEATURE_KEY,
-      fromBuildDetails.reducer
+        fromBuildDetails.BUILD_DETAILS_FEATURE_KEY,
+        fromBuildDetails.reducer
     ),
     StoreModule.forFeature(
-      LOAD_TASK_AUDIT_LOG_FEATURE_KEY,
-      fromLoadTaskAuditLog.reducer
+        LOAD_TASK_AUDIT_LOG_FEATURE_KEY,
+        fromLoadTaskAuditLog.reducer
     ),
     StoreModule.forFeature(
-      CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
-      fromClearTaskAuditLog.reducer
+        CLEAR_TASK_AUDIT_LOG_FEATURE_KEY,
+        fromClearTaskAuditLog.reducer
+    ),
+    StoreModule.forFeature(
+        LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY,
+        fromLoadRestAuditLogEntries.reducer
     ),
     EffectsModule.forFeature([
       BuildDetailsEffects,
       LoadTaskAuditLogEffects,
-      ClearTaskAuditLogEffects
+      ClearTaskAuditLogEffects,
+      LoadRestAuditLogEffects
     ]),
     TableModule,
     ToolbarModule,

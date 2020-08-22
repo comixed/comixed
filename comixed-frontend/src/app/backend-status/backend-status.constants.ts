@@ -20,3 +20,5 @@ import { API_ROOT_URL } from 'app/app.functions';
 
 export const GET_TASK_LOG_ENTRIES_URL = `${API_ROOT_URL}/tasks/entries/\${timestamp}`;
 export const CLEAR_TASK_AUDIT_LOG_URL = `${API_ROOT_URL}/tasks/entries`;
+
+export const GET_REST_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/auditing/rest/entries/\${cutoff}`;
