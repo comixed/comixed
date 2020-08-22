@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import java.text.ParseException;
 import org.comixedproject.model.core.BuildDetails;
-import org.comixedproject.net.ApiResponse;
+import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.core.DetailsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

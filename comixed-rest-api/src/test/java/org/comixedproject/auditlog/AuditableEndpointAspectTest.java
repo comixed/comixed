@@ -24,7 +24,7 @@ import static junit.framework.TestCase.assertSame;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.net.ApiResponse;
+import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.auditlog.RestAuditLogService;
 import org.junit.Before;
 import org.junit.Test;
