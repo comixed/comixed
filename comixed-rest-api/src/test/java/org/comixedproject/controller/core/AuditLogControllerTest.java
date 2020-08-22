@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.tasks;
+package org.comixedproject.controller.core;
 
 import static junit.framework.TestCase.*;
 
@@ -39,11 +39,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TaskControllerTest {
+public class AuditLogControllerTest {
   private static final Date TEST_LAST_UPDATED_DATE = new Date();
   private static final String TEST_USER_EMAIL = "user@domain.tld";
 
-  @InjectMocks private TaskController taskController;
+  @InjectMocks private AuditLogController auditLogController;
   @Mock private UserService userService;
   @Mock private TaskService taskService;
   @Mock private TaskAuditLogEntry taskAuditLogEntry;
@@ -57,12 +57,12 @@ public class TaskControllerTest {
   }
 
   @Test
-  public void testGetAllEntries() throws ComiXedServiceException, ComiXedControllerException {
+  public void testGetAllTaskEntries() throws ComiXedServiceException, ComiXedControllerException {
     Mockito.when(taskService.getAuditLogEntriesAfter(Mockito.any(Date.class)))
         .thenReturn(auditLogEntries);
 
     final ApiResponse<GetTaskAuditLogResponse> result =
-        taskController.getAllAfterDate(TEST_LAST_UPDATED_DATE.getTime());
+        auditLogController.getAllTaskEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
     assertTrue(result.isSuccess());
@@ -76,7 +76,7 @@ public class TaskControllerTest {
   public void testClearTaskLogServiceRaisesException() {
     Mockito.doThrow(new RuntimeException("Test")).when(taskService).clearTaskAuditLog();
 
-    final ApiResponse<Void> result = taskController.clearTaskAuditLog();
+    final ApiResponse<Void> result = auditLogController.clearTaskAuditLog();
 
     assertNotNull(result);
     assertFalse(result.isSuccess());
@@ -87,7 +87,7 @@ public class TaskControllerTest {
   public void testClearTaskLog() {
     Mockito.doNothing().when(taskService).clearTaskAuditLog();
 
-    final ApiResponse<Void> result = taskController.clearTaskAuditLog();
+    final ApiResponse<Void> result = auditLogController.clearTaskAuditLog();
 
     assertNotNull(result);
     assertTrue(result.isSuccess());

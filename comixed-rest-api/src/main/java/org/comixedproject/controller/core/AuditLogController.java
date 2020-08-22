@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.tasks;
+package org.comixedproject.controller.core;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
@@ -37,14 +37,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>TaskController</code> provides REST APIs for interacting with the tasks system.
+ * <code>AuditLogController</code> provides REST APIs for interacting with the tasks system.
  *
  * @author Darryl L. Pierce
  */
 @RestController
-@RequestMapping(value = "/api/tasks")
 @Log4j2
-public class TaskController {
+public class AuditLogController {
   @Autowired private TaskAuditLogRepository taskAuditLogRepository;
   @Autowired private TaskService taskService;
 
@@ -54,11 +53,11 @@ public class TaskController {
    * @param cutoff the cutoff
    * @return the log entries
    */
-  @GetMapping(value = "/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/api/tasks/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.TaskAuditLogEntryList.class)
   @AuditableEndpoint
-  public ApiResponse<GetTaskAuditLogResponse> getAllAfterDate(
+  public ApiResponse<GetTaskAuditLogResponse> getAllTaskEntriesAfterDate(
       @PathVariable("cutoff") final Long timestamp) throws ComiXedControllerException {
     ApiResponse<GetTaskAuditLogResponse> response = new ApiResponse<>();
 
@@ -87,7 +86,7 @@ public class TaskController {
    *
    * @return the success of the operation
    */
-  @DeleteMapping(value = "/entries", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(value = "/api/tasks/entries", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ApiResponse.class)
   @AuditableEndpoint
