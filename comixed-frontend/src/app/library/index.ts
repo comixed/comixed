@@ -32,6 +32,11 @@ import * as fromPublisher from 'app/library/reducers/publisher.reducer';
 import { PublisherState } from 'app/library/reducers/publisher.reducer';
 import * as fromPlugin from 'app/library/reducers/plugin.reducer';
 import { PluginState } from 'app/library/reducers/plugin.reducer';
+import * as fromMoveComics from 'app/library/reducers/move-comics.reducer';
+import {
+  MOVE_COMICS_FEATURE_KEY,
+  MoveComicsState
+} from 'app/library/reducers/move-comics.reducer';
 
 export { LibraryAdaptor } from './adaptors/library.adaptor';
 export { SelectionAdaptor } from './adaptors/selection.adaptor';
@@ -54,6 +59,7 @@ export interface AppState {
   reading_list_state: ReadingListState;
   publisher_state: PublisherState;
   plugin_state: PluginState;
+  [MOVE_COMICS_FEATURE_KEY]: MoveComicsState;
 }
 
 export type State = AppState;
@@ -65,7 +71,8 @@ export const reducers: ActionReducerMap<AppState> = {
   duplicate_pages_state: fromDupePages.reducer,
   reading_list_state: fromReadingLists.reducer,
   publisher_state: fromPublisher.reducer,
-  plugin_state: fromPlugin.reducer
+  plugin_state: fromPlugin.reducer,
+  [MOVE_COMICS_FEATURE_KEY]: fromMoveComics.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production

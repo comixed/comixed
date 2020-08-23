@@ -86,6 +86,9 @@ import { PluginEffects } from './effects/plugin.effects';
 import { PluginAdaptor } from 'app/library/adaptors/plugin.adaptor';
 import * as fromPlugin from 'app/library/reducers/plugin.reducer';
 import { PluginsPageComponent } from './pages/plugins-page/plugins-page.component';
+import * as fromMoveComics from 'app/library/reducers/move-comics.reducer';
+import { MOVE_COMICS_FEATURE_KEY } from 'app/library/reducers/move-comics.reducer';
+import { MoveComicsEffects } from 'app/library/effects/move-comics.effects';
 
 @NgModule({
   imports: [
@@ -94,6 +97,7 @@ import { PluginsPageComponent } from './pages/plugins-page/plugins-page.componen
     ComicsModule,
     UserExperienceModule,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(MOVE_COMICS_FEATURE_KEY, fromMoveComics.reducer),
     StoreModule.forFeature(
       fromLibrary.LIBRARY_FEATURE_KEY,
       fromLibrary.reducer
@@ -116,6 +120,7 @@ import { PluginsPageComponent } from './pages/plugins-page/plugins-page.componen
     ),
     StoreModule.forFeature(fromPlugin.PLUGIN_FEATURE_KEY, fromPlugin.reducer),
     EffectsModule.forFeature([
+      MoveComicsEffects,
       LibraryEffects,
       ReadingListEffects,
       DuplicatePagesEffects,
