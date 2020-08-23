@@ -19,6 +19,8 @@
 package org.comixedproject.task.model;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
@@ -48,8 +50,8 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
   @Autowired private TaskService taskService;
   @Autowired private ComicService comicService;
 
-  private String directory;
-  private String renamingRule;
+  @Getter @Setter private String directory;
+  @Getter @Setter private String renamingRule;
 
   @Override
   protected String createDescription() {
@@ -68,7 +70,7 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
             this.moveComicWorkerTaskEncoderObjectFactory.getObject();
 
         encoder.setComic(comics.get(index));
-        encoder.setDirectory(this.directory);
+        encoder.setTargetDirectory(this.directory);
         encoder.setRenamingRule(this.renamingRule);
         log.debug("Saving move comic task");
         this.taskService.save(encoder.encode());
@@ -76,23 +78,5 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
       // we're done when we've processed fewer comics than the page size
       done = comics.size() < (MAX_COMIC_PAGE + 1);
     }
-  }
-
-  /**
-   * Sets the directory into which the comics will be moved.
-   *
-   * @param directory the directory
-   */
-  public void setDirectory(String directory) {
-    this.directory = directory;
-  }
-
-  /**
-   * Sets the renaming rule to be used.
-   *
-   * @param renamingRule the renaming rule
-   */
-  public void setRenamingRule(String renamingRule) {
-    this.renamingRule = renamingRule;
   }
 }

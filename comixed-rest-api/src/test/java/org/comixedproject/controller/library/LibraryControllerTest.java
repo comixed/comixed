@@ -28,6 +28,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
+import org.comixedproject.model.net.library.MoveComicsRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.service.comic.ComicService;
@@ -289,7 +290,7 @@ public class LibraryControllerTest {
     Mockito.when(moveComicsWorkerTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    MoveComicsResponse result =
+    final ApiResponse<Void> result =
         libraryController.moveComics(
             new MoveComicsRequest(
                 TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE));

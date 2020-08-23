@@ -47,7 +47,8 @@ public class MoveComicWorkerTaskEncoderTest {
   @Test
   public void testEncode() {
     moveComicTaskEncoder.setComic(comic);
-    moveComicTaskEncoder.setDirectory(TEST_DIRECTORY);
+    moveComicTaskEncoder.setTargetDirectory(TEST_DIRECTORY);
+    moveComicTaskEncoder.setTargetDirectory(TEST_DIRECTORY);
     moveComicTaskEncoder.setRenamingRule(TEST_RENAMING_RULE);
 
     Task result = moveComicTaskEncoder.encode();
@@ -74,7 +75,7 @@ public class MoveComicWorkerTaskEncoderTest {
 
     Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setComic(comic);
-    Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setDirectory(TEST_DIRECTORY);
+    Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setTargetDirectory(TEST_DIRECTORY);
     Mockito.verify(moveComicWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULE);
   }
 }

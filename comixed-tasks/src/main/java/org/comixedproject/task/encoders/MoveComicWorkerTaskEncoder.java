@@ -18,6 +18,8 @@
 
 package org.comixedproject.task.encoders;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
@@ -45,22 +47,22 @@ public class MoveComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<MoveCo
   @Autowired private ObjectFactory<MoveComicWorkerTask> moveComicWorkerTaskObjectFactory;
   @Autowired private TaskService taskService;
 
-  private Comic comic;
-  private String directory;
-  private String renamingRule;
+  @Getter @Setter private Comic comic;
+  @Getter @Setter private String targetDirectory;
+  @Getter @Setter private String renamingRule;
 
   @Override
   public Task encode() {
     log.debug(
         "encoding move comic task: id={} directory={} rename rule={}",
         this.comic.getId(),
-        this.directory,
+        this.targetDirectory,
         this.renamingRule);
 
     Task result = new Task();
     result.setTaskType(TaskType.MOVE_COMIC);
     result.setComic(this.comic);
-    result.setProperty(DIRECTORY, this.directory);
+    result.setProperty(DIRECTORY, this.targetDirectory);
     result.setProperty(RENAMING_RULE, this.renamingRule);
 
     return result;
@@ -74,36 +76,9 @@ public class MoveComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<MoveCo
 
     MoveComicWorkerTask result = this.moveComicWorkerTaskObjectFactory.getObject();
     result.setComic(task.getComic());
-    result.setDirectory(task.getProperty(DIRECTORY));
+    result.setTargetDirectory(task.getProperty(DIRECTORY));
     result.setRenamingRule(task.getProperty(RENAMING_RULE));
 
     return result;
-  }
-
-  /**
-   * Sets the comic to be moved.
-   *
-   * @param comic the comic
-   */
-  public void setComic(Comic comic) {
-    this.comic = comic;
-  }
-
-  /**
-   * Sets the root directory into which the comic is to be moved.
-   *
-   * @param directory the directory
-   */
-  public void setDirectory(String directory) {
-    this.directory = directory;
-  }
-
-  /**
-   * Sets the renaming rule to be applied.
-   *
-   * @param renamingRule the renaming rule
-   */
-  public void setRenamingRule(String renamingRule) {
-    this.renamingRule = renamingRule;
   }
 }

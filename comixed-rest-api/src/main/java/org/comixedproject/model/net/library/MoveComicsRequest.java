@@ -16,19 +16,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MoveComicsResponse {
-  @JsonProperty("success")
-  private boolean success;
+public class MoveComicsRequest {
+  @JsonProperty("deletePhysicalFiles")
+  private Boolean deletePhysicalFiles;
 
-  public MoveComicsResponse(boolean success) {
-    this.success = success;
+  @JsonProperty("targetDirectory")
+  private String targetDirectory;
+
+  @JsonProperty("renamingRule")
+  private String renamingRule;
+
+  public MoveComicsRequest(
+      Boolean deletePhysicalFiles, String targetDirectory, String renamingRule) {
+    this.deletePhysicalFiles = deletePhysicalFiles;
+    this.targetDirectory = targetDirectory;
+    this.renamingRule = renamingRule;
   }
 
-  public boolean isSuccess() {
-    return this.success;
+  public Boolean getDeletePhysicalFiles() {
+    return deletePhysicalFiles;
+  }
+
+  public String getTargetDirectory() {
+    return targetDirectory;
+  }
+
+  public String getRenamingRule() {
+    return renamingRule;
   }
 }
