@@ -103,7 +103,14 @@ export class LibraryService {
     } as ConvertComicsRequest);
   }
 
-  consolidate(
+  /**
+   * Notifies the server to begin moving the entire library.
+   *
+   * @param deletePhysicalFiles the delete physical files flag
+   * @param targetDirectory the target directory
+   * @param renamingRule the renaming rules
+   */
+  moveComics(
     deletePhysicalFiles: boolean,
     targetDirectory: string,
     renamingRule: string

@@ -1,4 +1,12 @@
 {
+  "library": {
+    "move-comics": {
+      "effects": {
+        "success-detail": "Library consolidation has started...",
+        "error-detail": "Failed to start library consolidation..."
+      }
+    }
+  },
   "library-effects": {
     "get-scan-types": {
       "error": {

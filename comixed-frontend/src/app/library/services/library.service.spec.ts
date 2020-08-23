@@ -186,7 +186,7 @@ describe('LibraryService', () => {
 
   it('can consolidate the library', () => {
     service
-      .consolidate(true, DIRECTORY, RENAMING_RULE)
+      .moveComics(true, DIRECTORY, RENAMING_RULE)
       .subscribe(response => expect(response).toEqual(COMICS));
 
     const req = httpMock.expectOne(interpolate(CONSOLIDATE_LIBRARY_URL));
