@@ -68,7 +68,7 @@ public class MoveComicsWorkerTaskTest {
         .getObject();
     Mockito.verify(moveComicTaskEncoder, Mockito.times(comicList.size())).setComic(comic);
     Mockito.verify(moveComicTaskEncoder, Mockito.times(comicList.size()))
-        .setDirectory(TEST_DIRECTORY);
+        .setTargetDirectory(TEST_DIRECTORY);
     Mockito.verify(moveComicTaskEncoder, Mockito.times(comicList.size()))
         .setRenamingRule(TEST_RENAMING_RULE);
     Mockito.verify(taskService, Mockito.times(comicList.size())).save(task);

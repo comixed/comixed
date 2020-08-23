@@ -23,10 +23,12 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
+import org.comixedproject.model.net.library.MoveComicsRequest;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
@@ -41,6 +43,7 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -185,24 +188,43 @@ public class LibraryController {
     return new ClearImageCacheResponse(true);
   }
 
+  /**
+   * Consolidates the library, moving all comics under the specified parent directory and using
+   * given naming rules. Will delete comics marked for deletion as well.
+   *
+   * @param request the request body
+   * @return the response body
+   */
   @PostMapping(
       value = "/library/move",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public MoveComicsResponse moveComics(@RequestBody() MoveComicsRequest request) {
-    String targetDirectory = request.getTargetDirectory();
-    String renamingRule = request.getRenamingRule();
-    Boolean deletePhysicalFiles = request.getDeletePhysicalFiles();
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public ApiResponse<Void> moveComics(@RequestBody() MoveComicsRequest request) {
+    final ApiResponse<Void> response = new ApiResponse<>();
 
-    log.info("Moving comics: targetDirectory={}", targetDirectory);
-    log.info("             : renamingRule={}", renamingRule);
+    try {
+      String targetDirectory = request.getTargetDirectory();
+      String renamingRule = request.getRenamingRule();
+      Boolean deletePhysicalFiles = request.getDeletePhysicalFiles();
 
-    final MoveComicsWorkerTask task = this.moveComicsWorkerTaskObjectFactory.getObject();
-    task.setDirectory(targetDirectory);
-    task.setRenamingRule(renamingRule);
+      log.info("Moving comics: targetDirectory={}", targetDirectory);
+      log.info("             : renamingRule={}", renamingRule);
 
-    this.taskManager.runTask(task);
+      final MoveComicsWorkerTask task = this.moveComicsWorkerTaskObjectFactory.getObject();
+      task.setDirectory(targetDirectory);
+      task.setRenamingRule(renamingRule);
 
-    return new MoveComicsResponse(true);
+      this.taskManager.runTask(task);
+
+      response.setSuccess(true);
+    } catch (Exception error) {
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+      response.setThrowable(error);
+    }
+
+    return response;
   }
 }
