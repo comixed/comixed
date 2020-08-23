@@ -21,6 +21,8 @@ import { TaskAuditLogEntry } from 'app/backend-status/models/task-audit-log-entr
 import {
   loadTaskAuditLogEntries,
   loadTaskAuditLogFailed,
+  startLoadingTaskAuditLogEntries,
+  stopLoadingTaskAuditLogEntries,
   taskAuditLogEntriesLoaded
 } from 'app/backend-status/actions/load-task-audit-log.actions';
 
@@ -28,12 +30,14 @@ export const LOAD_TASK_AUDIT_LOG_FEATURE_KEY = 'load_task_audit_log_state';
 
 export interface LoadTaskAuditLogState {
   loading: boolean;
+  stopped: boolean;
   entries: TaskAuditLogEntry[];
   latest: number;
 }
 
 export const initialState: LoadTaskAuditLogState = {
   loading: false,
+  stopped: false,
   entries: [],
   latest: 0
 };
@@ -41,6 +45,12 @@ export const initialState: LoadTaskAuditLogState = {
 const loadTaskAuditLogReducer = createReducer(
   initialState,
 
+  on(startLoadingTaskAuditLogEntries, state => ({
+    ...state,
+    stopped: false,
+    entries: [],
+    latest: 0
+  })),
   on(loadTaskAuditLogEntries, state => ({ ...state, loading: true })),
   on(taskAuditLogEntriesLoaded, (state, action) => {
     const entries = state.entries.concat(action.entries);
@@ -51,7 +61,8 @@ const loadTaskAuditLogReducer = createReducer(
       latest: action.latest
     };
   }),
-  on(loadTaskAuditLogFailed, state => ({ ...state, loading: false }))
+  on(loadTaskAuditLogFailed, state => ({ ...state, loading: false })),
+  on(stopLoadingTaskAuditLogEntries, state => ({ ...state, stopped: true }))
 );
 
 export function reducer(

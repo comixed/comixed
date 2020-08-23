@@ -54,7 +54,6 @@ describe('TaskAuditLogPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,
-        LibraryModule,
         RouterTestingModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),

@@ -73,8 +73,10 @@ public class AuditLogController {
       final List<TaskAuditLogEntry> entries = this.taskService.getAuditLogEntriesAfter(cutoff);
       response.setResult(new GetTaskAuditLogResponse());
       response.getResult().setEntries(entries);
-      if (!entries.isEmpty())
-        response.getResult().setLatest(entries.get(entries.size() - 1).getStartTime());
+      response
+          .getResult()
+          .setLatest(
+              entries.isEmpty() ? new Date() : entries.get(entries.size() - 1).getStartTime());
       response.setSuccess(true);
     } catch (ComiXedServiceException error) {
       log.error("Failed to load task audit log entries", error);
