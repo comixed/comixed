@@ -20,7 +20,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TaskAuditLogEntry } from 'app/backend-status/models/task-audit-log-entry';
 import { LoggerService } from '@angular-ru/logger';
-import { LibraryDisplayAdaptor } from 'app/user/adaptors/library-display.adaptor';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
@@ -33,7 +32,10 @@ import {
   selectLoadTaskAuditLogState,
   selectTaskAuditLogEntries
 } from 'app/backend-status/selectors/load-task-audit-log.selectors';
-import { loadTaskAuditLogEntries } from 'app/backend-status/actions/load-task-audit-log.actions';
+import {
+  loadTaskAuditLogEntries,
+  startLoadingTaskAuditLogEntries
+} from 'app/backend-status/actions/load-task-audit-log.actions';
 import { LoadTaskAuditLogState } from 'app/backend-status/reducers/load-task-audit-log.reducer';
 import { filter } from 'rxjs/operators';
 
@@ -43,40 +45,38 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./task-audit-log-page.component.scss']
 })
 export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
+  taskAuditLogStateSubscription: Subscription;
+  entriesSubscription: Subscription;
   entries: TaskAuditLogEntry[] = [];
-  rowsSubscription: Subscription;
-  rows = 0;
-  langChangeSubscription: Subscription;
+  clearingAuditLogSubscription: Subscription;
   clearingAuditLog = false;
+  langChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
-    private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
     private titleService: Title,
     private confirmationService: ConfirmationService,
     private store: Store<AppState>
   ) {
-    this.store
+    this.taskAuditLogStateSubscription = this.store
       .select(selectLoadTaskAuditLogState)
       .pipe(filter(state => !!state))
       .subscribe((state: LoadTaskAuditLogState) => {
-        if (!state.loading) {
+        if (!state.loading && !state.stopped) {
+          this.logger.trace('Fetching task audit log entries');
           this.store.dispatch(loadTaskAuditLogEntries({ since: state.latest }));
         }
       });
-    this.store
+    this.entriesSubscription = this.store
       .select(selectTaskAuditLogEntries)
       .pipe(filter(state => !!state))
       .subscribe(entries => (this.entries = entries));
-    this.store
+    this.clearingAuditLogSubscription = this.store
       .select(selectClearTaskingAuditLogWorking)
       .pipe(filter(state => !!state))
       .subscribe(clearing => (this.clearingAuditLog = clearing));
-    this.rowsSubscription = this.libraryDisplayAdaptor.rows$.subscribe(
-      rows => (this.rows = rows)
-    );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => {
         this.loadTranslations();
@@ -85,10 +85,14 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
     this.loadTranslations();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.store.dispatch(startLoadingTaskAuditLogEntries());
+  }
 
   ngOnDestroy() {
-    this.rowsSubscription.unsubscribe();
+    this.taskAuditLogStateSubscription.unsubscribe();
+    this.entriesSubscription.unsubscribe();
+    this.clearingAuditLogSubscription.unsubscribe();
   }
 
   private loadTranslations() {

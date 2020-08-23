@@ -20,10 +20,17 @@ import { createAction, props } from '@ngrx/store';
 import { TaskAuditLogEntry } from 'app/backend-status/models/task-audit-log-entry';
 
 /**
+ * Starts the process of loading task audit log entries.
+ */
+export const startLoadingTaskAuditLogEntries = createAction(
+  '[Load Task Audit Log] Start loading entries'
+);
+
+/**
  * Loads all task audit log entries after the specified date.
  */
 export const loadTaskAuditLogEntries = createAction(
-  '[LoadTaskAuditLog] Load task audit log entries',
+  '[Load Task Audit Log] Load task audit log entries',
   props<{ since: number }>()
 );
 
@@ -31,7 +38,7 @@ export const loadTaskAuditLogEntries = createAction(
  * Receives additional task audit log entries.
  */
 export const taskAuditLogEntriesLoaded = createAction(
-  '[LoadTaskAuditLog] Task audit log entries loaded',
+  '[Load Task Audit Log] Task audit log entries loaded',
   props<{ entries: TaskAuditLogEntry[]; latest: number }>()
 );
 
@@ -39,5 +46,12 @@ export const taskAuditLogEntriesLoaded = createAction(
  * Failed to get task audit log entries.
  */
 export const loadTaskAuditLogFailed = createAction(
-  '[LoadTaskAuditLog] Failed to load the task audit log entries'
+  '[Load Task Audit Log] Failed to load the task audit log entries'
+);
+
+/**
+ * Stops loading task audit log entries.
+ */
+export const stopLoadingTaskAuditLogEntries = createAction(
+  '[Load Task Audit Log] Stop loading task audit log entries'
 );

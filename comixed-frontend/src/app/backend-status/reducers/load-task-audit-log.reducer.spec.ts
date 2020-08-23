@@ -24,6 +24,8 @@ import {
 import {
   loadTaskAuditLogEntries,
   loadTaskAuditLogFailed,
+  startLoadingTaskAuditLogEntries,
+  stopLoadingTaskAuditLogEntries,
   taskAuditLogEntriesLoaded
 } from 'app/backend-status/actions/load-task-audit-log.actions';
 import {
@@ -59,11 +61,41 @@ describe('LoadTaskAuditLog Reducer', () => {
       expect(state.loading).toBeFalsy();
     });
 
+    it('clears the stopped flag', () => {
+      expect(state.stopped).toBeFalsy();
+    });
+
     it('has no entries', () => {
       expect(state.entries).toEqual([]);
     });
 
     it('has a default latest date', () => {
+      expect(state.latest).toEqual(0);
+    });
+  });
+
+  describe('starting loading entries', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          stopped: true,
+          entries: LOG_ENTRIES,
+          latest: new Date().getTime()
+        },
+        startLoadingTaskAuditLogEntries()
+      );
+    });
+
+    it('clears the stopped flag', () => {
+      expect(state.stopped).toBeFalsy();
+    });
+
+    it('clears the entries', () => {
+      expect(state.entries).toEqual([]);
+    });
+
+    it('resets the latest date', () => {
       expect(state.latest).toEqual(0);
     });
   });
@@ -116,6 +148,19 @@ describe('LoadTaskAuditLog Reducer', () => {
 
     it('clears the load flag', () => {
       expect(state.loading).toBeFalsy();
+    });
+  });
+
+  describe('stopping loading entries', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, stopped: false },
+        stopLoadingTaskAuditLogEntries()
+      );
+    });
+
+    it('sets the stopped flag', () => {
+      expect(state.stopped).toBeTruthy();
     });
   });
 });
