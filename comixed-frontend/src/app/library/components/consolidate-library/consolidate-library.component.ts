@@ -61,8 +61,8 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authenticationAdaptor.user$.subscribe(() => {
       this.consolidationForm.controls['deletePhysicalFiles'].setValue(
         this.authenticationAdaptor.getPreference(
-          MOVE_COMICS_DELETE_PHYSICAL_FILE
-        ) === '1'
+            MOVE_COMICS_DELETE_PHYSICAL_FILE
+        ) === 'true'
       );
     });
   }
@@ -103,7 +103,7 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
           .value;
         this.authenticationAdaptor.setPreference(
           MOVE_COMICS_DELETE_PHYSICAL_FILE,
-          deletePhysicalFiles ? '1' : '0'
+            `${deletePhysicalFiles}`
         );
         this.authenticationAdaptor.setPreference(
           MOVE_COMICS_TARGET_DIRECTORY,

@@ -99,7 +99,7 @@ describe('ConsolidateLibraryComponent', () => {
           user: {
             ...USER_ADMIN,
             preferences: [
-              { name: MOVE_COMICS_DELETE_PHYSICAL_FILE, value: '1' }
+              { name: MOVE_COMICS_DELETE_PHYSICAL_FILE, value: 'true' }
             ]
           }
         })
@@ -115,7 +115,7 @@ describe('ConsolidateLibraryComponent', () => {
           user: {
             ...USER_ADMIN,
             preferences: [
-              { name: MOVE_COMICS_DELETE_PHYSICAL_FILE, value: '0' }
+              { name: MOVE_COMICS_DELETE_PHYSICAL_FILE, value: 'false' }
             ]
           }
         })
@@ -164,7 +164,7 @@ describe('ConsolidateLibraryComponent', () => {
       it('saves the delete physical files flag as a preference', () => {
         expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
           MOVE_COMICS_DELETE_PHYSICAL_FILE,
-          '1'
+          'true'
         );
       });
 
@@ -212,7 +212,7 @@ describe('ConsolidateLibraryComponent', () => {
       it('saves the delete physical files flag as a preference', () => {
         expect(authenticationAdaptor.setPreference).toHaveBeenCalledWith(
           MOVE_COMICS_DELETE_PHYSICAL_FILE,
-          '0'
+          'false'
         );
       });
 

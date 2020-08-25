@@ -84,7 +84,7 @@ export class LibraryDisplayAdaptor {
       }
       if (params[SAME_HEIGHT_QUERY_PARAM]) {
         this.ignoreFields.push(SAME_HEIGHT_QUERY_PARAM);
-        this._sameHeight$.next(params[SAME_HEIGHT_QUERY_PARAM] === '1');
+        this._sameHeight$.next(params[SAME_HEIGHT_QUERY_PARAM] === 'true');
       }
       if (params[COVER_SIZE_QUERY_PARAM]) {
         this.ignoreFields.push(COVER_SIZE_QUERY_PARAM);
