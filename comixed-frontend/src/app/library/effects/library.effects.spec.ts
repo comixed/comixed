@@ -25,7 +25,6 @@ import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -33,8 +32,6 @@ import {
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryImageCacheCleared,
-  LibraryMoveComics,
-  LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
   LibraryMultipleComicsUndeleted,
   LibraryRescanStarted,
@@ -55,8 +52,8 @@ import { MessageService } from 'primeng/api';
 import { Observable, of, throwError } from 'rxjs';
 import { LibraryEffects } from './library.effects';
 import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
-import objectContaining = jasmine.objectContaining;
 import { UndeleteMultipleComicsResponse } from 'app/library/models/net/undelete-multiple-comics-response';
+import objectContaining = jasmine.objectContaining;
 
 describe('LibraryEffects', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -65,9 +62,6 @@ describe('LibraryEffects', () => {
   const LAST_READ_DATES = [COMIC_1_LAST_READ_DATE];
   const COUNT = 25;
   const ASCENDING = false;
-  const DIRECTORY = '/Users/comixedreader/Documents/comics';
-  const RENAMING_RULE =
-    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
 
   let actions$: Observable<any>;
   let effects: LibraryEffects;
@@ -95,7 +89,6 @@ describe('LibraryEffects', () => {
               'LibraryService.undeleteMultipleComics()'
             ),
             convertComics: jasmine.createSpy('LibraryService.convertComics()'),
-            consolidate: jasmine.createSpy('LibraryService.consolidate()'),
             clearImageCache: jasmine.createSpy(
               'LibraryService.clearImageCache()'
             )
@@ -412,64 +405,6 @@ describe('LibraryEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.convertComics$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-  });
-
-  describe('consolidating the library', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = COMICS;
-      const action = new LibraryMoveComics({
-        deletePhysicalFiles: true,
-        directory: DIRECTORY,
-        renamingRule: RENAMING_RULE
-      });
-      const outcome = new LibraryComicsMoved();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.consolidate.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.consolidate$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'info' })
-      );
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = new LibraryMoveComics({
-        deletePhysicalFiles: true,
-        directory: DIRECTORY,
-        renamingRule: RENAMING_RULE
-      });
-      const outcome = new LibraryMoveComicsFailed();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.consolidate.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.consolidate$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new LibraryMoveComics({
-        deletePhysicalFiles: true,
-        directory: DIRECTORY,
-        renamingRule: RENAMING_RULE
-      });
-      const outcome = new LibraryMoveComicsFailed();
-
-      actions$ = hot('-a', { a: action });
-      libraryService.consolidate.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.consolidate$).toBeObservable(expected);
       expect(messageService.add).toHaveBeenCalledWith(
         objectContaining({ severity: 'error' })
       );

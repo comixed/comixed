@@ -47,14 +47,11 @@ import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComicsFailed,
   LibraryGetUpdates,
   LibraryImageCacheCleared,
-  LibraryMoveComics,
-  LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
   LibraryMultipleComicsUndeleted,
   LibraryUndeleteMultipleComicsFailed,
@@ -81,10 +78,7 @@ describe('LibraryAdaptor', () => {
   const RENAME_PAGES = true;
   const DELETE_PAGES = false;
   const READING_LISTS = [READING_LIST_1, READING_LIST_2];
-  const DIRECTORY = '/Users/comixedreader/Documents/comics';
-  const RENAMING_RULE =
-    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
-  const DELETE_ORIGINAL_COMIC = false;
+  const DELETE_ORIGINAL_COMIC = Math.random() * 100 > 50;
 
   let adaptor: LibraryAdaptor;
   let store: Store<AppState>;
@@ -388,66 +382,6 @@ describe('LibraryAdaptor', () => {
 
       it('provides updates on conversion', () => {
         adaptor.converting$.subscribe(response => expect(response).toBeFalsy());
-      });
-    });
-  });
-
-  describe('consolidating the library', () => {
-    beforeEach(() => {
-      adaptor.consolidate(true, DIRECTORY, RENAMING_RULE);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        new LibraryMoveComics({
-          deletePhysicalFiles: true,
-          directory: DIRECTORY,
-          renamingRule: RENAMING_RULE
-        })
-      );
-    });
-
-    it('provides updates on consolidating', () => {
-      adaptor.consolidating$.subscribe(response =>
-        expect(response).toBeTruthy()
-      );
-    });
-
-    describe('success', () => {
-      const DELETED_COMICS = [COMICS[2]];
-
-      beforeEach(() => {
-        // preload the library
-        store.dispatch(
-          new LibraryUpdatesReceived({
-            lastComicId: LAST_COMIC_ID,
-            mostRecentUpdate: MOST_RECENT_UPDATE,
-            moreUpdates: MORE_UPDATES,
-            processingCount: PROCESSING_COUNT,
-            comics: COMICS,
-            lastReadDates: [],
-            readingLists: []
-          })
-        );
-        store.dispatch(new LibraryComicsMoved());
-      });
-
-      it('provides updates on consolidating', () => {
-        adaptor.consolidating$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
-      });
-    });
-
-    describe('failure', () => {
-      beforeEach(() => {
-        store.dispatch(new LibraryMoveComicsFailed());
-      });
-
-      it('provides updates on consolidating', () => {
-        adaptor.consolidating$.subscribe(response =>
-          expect(response).toBeFalsy()
-        );
       });
     });
   });

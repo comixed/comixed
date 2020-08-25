@@ -27,7 +27,6 @@ import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -35,8 +34,6 @@ import {
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryImageCacheCleared,
-  LibraryMoveComics,
-  LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
   LibraryMultipleComicsUndeleted,
   LibraryRescanStarted,
@@ -66,9 +63,6 @@ describe('Library Reducer', () => {
   const ASCENDING = true;
   const COMIC_COUNT = 2372;
   const LATEST_UPDATED_DATE = new Date();
-  const DIRECTORY = '/Users/comixedreader/Documents/comics';
-  const RENAMING_RULE =
-    '$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE [$COVERDATE]';
   const COMIC_IDS = [1, 2, 3, 4];
 
   let state: LibraryState;
@@ -124,10 +118,6 @@ describe('Library Reducer', () => {
 
     it('clears the converting comics flag', () => {
       expect(state.convertingComics).toBeFalsy();
-    });
-
-    it('clears the consolidating library flag', () => {
-      expect(state.consolidating).toBeFalsy();
     });
 
     it('has no reading lists', () => {
@@ -409,53 +399,6 @@ describe('Library Reducer', () => {
 
     it('clears the converting comics flag', () => {
       expect(state.convertingComics).toBeFalsy();
-    });
-  });
-
-  describe('when consolidating the library', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, consolidating: false },
-        new LibraryMoveComics({
-          deletePhysicalFiles: true,
-          directory: DIRECTORY,
-          renamingRule: RENAMING_RULE
-        })
-      );
-    });
-
-    it('sets the consolidating library flag', () => {
-      expect(state.consolidating).toBeTruthy();
-    });
-  });
-
-  describe('when the library is consolidated', () => {
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          consolidating: true,
-          comics: COMICS
-        },
-        new LibraryComicsMoved()
-      );
-    });
-
-    it('clears the consolidating library flag', () => {
-      expect(state.consolidating).toBeFalsy();
-    });
-  });
-
-  describe('when consolidation fails', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, consolidating: true },
-        new LibraryMoveComicsFailed()
-      );
-    });
-
-    it('clears the consolidating library flag', () => {
-      expect(state.consolidating).toBeFalsy();
     });
   });
 

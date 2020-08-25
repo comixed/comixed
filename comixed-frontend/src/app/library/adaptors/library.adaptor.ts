@@ -34,7 +34,6 @@ import {
   LibraryConvertComics,
   LibraryDeleteMultipleComics,
   LibraryGetUpdates,
-  LibraryMoveComics,
   LibraryReset,
   LibraryStartRescan,
   LibraryUndeleteMultipleComics
@@ -67,7 +66,6 @@ export class LibraryAdaptor {
   private _timeout = 60;
   private _maximum = 100;
   private _converting$ = new BehaviorSubject<boolean>(false);
-  private _consolidating$ = new BehaviorSubject<boolean>(false);
   private _clearingImageCache$ = new BehaviorSubject<boolean>(false);
   private _deleting$ = new BehaviorSubject<boolean>(false);
 
@@ -169,9 +167,6 @@ export class LibraryAdaptor {
         }
         if (state.convertingComics !== this._converting$.getValue()) {
           this._converting$.next(state.convertingComics);
-        }
-        if (state.consolidating !== this._consolidating$.getValue()) {
-          this._consolidating$.next(state.consolidating);
         }
         if (state.clearingImageCache !== this._clearingImageCache$.getValue()) {
           this._clearingImageCache$.next(state.clearingImageCache);
@@ -327,27 +322,6 @@ export class LibraryAdaptor {
 
   get converting$(): Observable<boolean> {
     return this._converting$.asObservable();
-  }
-
-  consolidate(
-    deletePhysicalFiles: boolean,
-    targetDirectory: string,
-    renamingRule: string
-  ): void {
-    this.logger.debug(
-      `firing action to consolidate library: deletePhysicalFiles=${deletePhysicalFiles}`
-    );
-    this.store.dispatch(
-      new LibraryMoveComics({
-        deletePhysicalFiles: deletePhysicalFiles,
-        directory: targetDirectory,
-        renamingRule: renamingRule
-      })
-    );
-  }
-
-  get consolidating$(): Observable<boolean> {
-    return this._consolidating$.asObservable();
   }
 
   getReadingList(name: string): ReadingList {

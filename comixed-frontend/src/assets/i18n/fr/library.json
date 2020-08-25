@@ -1,10 +1,36 @@
 {
   "library": {
     "move-comics": {
+      "title": "Organize Library",
+      "label": {
+        "delete-physical-files": "Delete physical files (WARNING: be sure to backup your library first)",
+        "target-directory": "The new parent directory for the library",
+        "renaming-rule": "The file renaming rule (see notes below)",
+        "variable-name": "Variable Name",
+        "variable-description": "Description"
+      },
+      "button": {
+        "start": "Organize Library"
+      },
+      "warning-text": "Organizing your library cannot be stopped once started.",
       "effects": {
         "success-detail": "Library consolidation has started...",
         "error-detail": "Failed to start library consolidation..."
-      }
+      },
+      "variables-note": "The following list shows the variables that can used in the renaming rules.",
+      "variables-example": "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)",
+      "variables-example-note": "This example organizes a library by publisher, series, volume and then a detailed filename. Note you do NOT need to specify the extension: that is added automatically.",
+      "variable": {
+        "PUBLISHER": "The name of the publisher of the comic",
+        "SERIES": "The name of the series of the comic",
+        "VOLUME": "The first year this volume of the comic was published",
+        "ISSUE": "The issue number for this isue",
+        "COVERDATE": "The coverdate for this issue"
+      },
+      "delete-files-warning-header": "Delete Physical Files",
+      "delete-files-warning-message": "Deleting physical files cannot be undone. Are you SURE you want to do this?",
+      "confirmation-header": "Organize Library",
+      "confirmation-message": "Are you sure you want to {deletePhysicalFiles, select, true{delete comic files marked for deletion and} other{}} organizing the library?"
     }
   },
   "library-effects": {
@@ -78,14 +104,6 @@
       },
       "error": {
         "detail": "Échec de la conversion des bandes dessinées."
-      }
-    },
-    "consolidate": {
-      "success": {
-        "detail": "Consolidation réussie de la bibliothèque."
-      },
-      "error": {
-        "detail": "Il y a eu une erreur durant la consolidation de la bibliothèque."
       }
     },
     "clear-image-cache": {
@@ -428,27 +446,6 @@
       }
     }
   },
-  "consolidate-library": {
-    "label": {
-      "delete-physical-files": "Supprimer les fichiers physiques de la bande dessinée.",
-      "target-directory": "Répertoire cible",
-      "renaming-rule": "Règle de renommage"
-    },
-    "button": {
-      "start": "Commencer la consolidation"
-    },
-    "delete-files-warning": {
-      "header": "Delete Files Warning",
-      "message": "WARNING! Deleting the physical files can NOT be undone. Are you sure you want to delete the physical files?"
-    },
-    "confirm": {
-      "header": "Consolider la bibliothèque",
-      "message": "Êtes-vous sûr de vouloir consolider la bibliothèque et {deletePhysicalFiles, select, true{supprimer} other{ne pas supprimer}} les fichiers de bande dessinée?"
-    },
-    "text": {
-      "paragraph-1": "La consolidation de la bibliothèque implique l'action suivante : suppression des fichiers de bandes dessinées marqués pour suppression."
-    }
-  },
   "library-admin-page": {
     "title": "ComiXed: Administration de la bibliothèque",
     "rescan": {
@@ -468,9 +465,6 @@
       "buttons": {
         "export-library": "Exporter la bibliothèque"
       }
-    },
-    "consolidate": {
-      "header": "Consolider les fichiers de la bibliothèque"
     }
   },
   "account-preferences": {
