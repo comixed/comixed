@@ -24,15 +24,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { ButtonModule } from 'primeng/button';
-import { AppState, LibraryAdaptor } from 'app/library';
+import { AppState } from 'app/library';
 import { UserModule } from 'app/user/user.module';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import {
-  LIBRARY_FEATURE_KEY,
-  reducer
-} from 'app/library/reducers/library.reducer';
-import { LibraryEffects } from 'app/library/effects/library.effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { ComicsModule } from 'app/comics/comics.module';
@@ -44,6 +39,13 @@ import {
   MOVE_COMICS_TARGET_DIRECTORY
 } from 'app/user/models/preferences.constants';
 import { RouterTestingModule } from '@angular/router/testing';
+import {
+  MOVE_COMICS_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/move-comics.reducer';
+import { MoveComicsEffects } from 'app/library/effects/move-comics.effects';
+import { CoreModule } from 'app/core/core.module';
+import { moveComics } from 'app/library/actions/move-comics.actions';
 
 describe('ConsolidateLibraryComponent', () => {
   const DIRECTORY = '/Users/comixedreader/Documents/comics';
@@ -53,13 +55,13 @@ describe('ConsolidateLibraryComponent', () => {
   let component: ConsolidateLibraryComponent;
   let fixture: ComponentFixture<ConsolidateLibraryComponent>;
   let confirmationService: ConfirmationService;
-  let libraryAdaptor: LibraryAdaptor;
   let authenticationAdaptor: AuthenticationAdaptor;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        CoreModule,
         UserModule,
         ComicsModule,
         RouterTestingModule,
@@ -68,23 +70,23 @@ describe('ConsolidateLibraryComponent', () => {
         ReactiveFormsModule,
         TranslateModule,
         StoreModule.forRoot({}),
-        StoreModule.forFeature(LIBRARY_FEATURE_KEY, reducer),
+        StoreModule.forFeature(MOVE_COMICS_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([LibraryEffects]),
+        EffectsModule.forFeature([MoveComicsEffects]),
         LoggerModule.forRoot(),
         CheckboxModule,
         ButtonModule
       ],
       declarations: [ConsolidateLibraryComponent],
-      providers: [LibraryAdaptor, MessageService, ConfirmationService]
+      providers: [MessageService, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConsolidateLibraryComponent);
     component = fixture.componentInstance;
     confirmationService = TestBed.get(ConfirmationService);
-    libraryAdaptor = TestBed.get(LibraryAdaptor);
     authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
     store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
     fixture.detectChanges();
   }));
 
@@ -131,7 +133,6 @@ describe('ConsolidateLibraryComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirm: Confirmation) => confirm.accept()
       );
-      spyOn(libraryAdaptor, 'consolidate');
       spyOn(authenticationAdaptor, 'setPreference');
     });
 
@@ -154,10 +155,12 @@ describe('ConsolidateLibraryComponent', () => {
       });
 
       it('calls the library adaptor', () => {
-        expect(libraryAdaptor.consolidate).toHaveBeenCalledWith(
-          true,
-          DIRECTORY,
-          RENAMING_RULE
+        expect(store.dispatch).toHaveBeenCalledWith(
+          moveComics({
+            directory: DIRECTORY,
+            renamingRule: RENAMING_RULE,
+            deletePhysicalFiles: true
+          })
         );
       });
 
@@ -202,10 +205,12 @@ describe('ConsolidateLibraryComponent', () => {
       });
 
       it('calls the library adaptor', () => {
-        expect(libraryAdaptor.consolidate).toHaveBeenCalledWith(
-          false,
-          DIRECTORY,
-          RENAMING_RULE
+        expect(store.dispatch).toHaveBeenCalledWith(
+          moveComics({
+            directory: DIRECTORY,
+            renamingRule: RENAMING_RULE,
+            deletePhysicalFiles: false
+          })
         );
       });
 

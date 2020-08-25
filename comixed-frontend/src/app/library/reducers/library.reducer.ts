@@ -37,7 +37,6 @@ export interface LibraryState {
   startingRescan: boolean;
   deletingComics: boolean;
   convertingComics: boolean;
-  consolidating: boolean;
   readingLists: ReadingList[];
   clearingImageCache: boolean;
 }
@@ -55,7 +54,6 @@ export const initialState: LibraryState = {
   startingRescan: false,
   deletingComics: false,
   convertingComics: false,
-  consolidating: false,
   readingLists: [],
   clearingImageCache: false
 };
@@ -133,16 +131,6 @@ export function reducer(
 
     case LibraryActionTypes.ConvertComicsFailed:
       return { ...state, convertingComics: false };
-
-    case LibraryActionTypes.MoveComics:
-      return { ...state, consolidating: true };
-
-    case LibraryActionTypes.ComicsMoved: {
-      return { ...state, consolidating: false };
-    }
-
-    case LibraryActionTypes.MoveComicsFailed:
-      return { ...state, consolidating: false };
 
     case LibraryActionTypes.ClearImageCache:
       return { ...state, clearingImageCache: true };

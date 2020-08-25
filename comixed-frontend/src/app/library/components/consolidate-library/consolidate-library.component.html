@@ -5,11 +5,11 @@
                   [binary]="true"
                   (onChange)="showDeleteFilesWarning($event)"
                   formControlName="deletePhysicalFiles"></p-checkbox>
-      <label for="delete-physical-files">{{"consolidate-library.label.delete-physical-files"|translate}}</label>
+      <label for="delete-physical-files">{{"library.move-comics.label.delete-physical-files"|translate}}</label>
     </div>
     <div class="ui-g-12">
       <label for="cx-target-directory"
-             class="cx-input-label">{{"consolidate-library.label.target-directory"|translate}}</label>
+             class="cx-input-label">{{"library.move-comics.label.target-directory"|translate}}</label>
     </div>
     <div class="ui-g-12">
       <input pInputText
@@ -19,7 +19,7 @@
     </div>
     <div class="ui-g-12">
       <label for="cx-renaming-rule"
-             class="cx-input-label">{{"consolidate-library.label.renaming-rule"|translate}}</label>
+             class="cx-input-label">{{"library.move-comics.label.renaming-rule"|translate}}</label>
     </div>
     <div class="ui-g-12">
       <input pInputText
@@ -28,13 +28,39 @@
              formControlName="renamingRule">
     </div>
     <div class="ui-g-12">
-      <p>{{"consolidate-library.text.paragraph-1"|translate}}</p>
+      <p>{{"library.move-comics.variables-note"|translate}}</p>
+
+      <pre>{{"library.move-comics.variables-example"|translate}}</pre>
+
+      <p>{{"library.move-comics.variables-example-note"|translate}}</p>
+      <p-table [value]="VARIABLES">
+        <ng-template pTemplate="colgroup">
+          <col class="cx-table-column-large"/>
+          <col/>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th id="variable-name">{{"library.move-comics.label.variable-name"|translate}}</th>
+            <th id="variable-description">{{"library.move-comics.label.variable-description"|translate}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body"
+                     let-variable>
+          <tr>
+            <td [pTooltip]="'library.move-comics.variable.' + variable|translate">${{variable}}</td>
+            <td class="cx-no-wrap-text">{{"library.move-comics.variable." + variable|translate}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div class="ui-g-12">
+      <p>{{"library.move-comics.warning-text"|translate}}</p>
     </div>
     <div class="ui-g-12 cx-container-centered-text">
       <button pButton
               type="button"
               class="cx-action-button"
-              [label]="'consolidate-library.button.start'|translate"
+              [label]="'library.move-comics.button.start'|translate"
               (click)="consolidateLibrary()"></button>
     </div>
   </form>

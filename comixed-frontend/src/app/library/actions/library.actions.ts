@@ -38,9 +38,6 @@ export enum LibraryActionTypes {
   ConvertComics = '[LIBRARY] Convert comics to a new archive type',
   ComicsConverting = '[LIBRARY] Comics converting to a new archive type',
   ConvertComicsFailed = '[LIBRARY] Failed to convert comics',
-  MoveComics = '[LIBRARY] Move the library',
-  ComicsMoved = '[LIBRARY] Library was moved',
-  MoveComicsFailed = '[LIBRARY] Moving the library failed',
   ClearImageCache = '[LIBRARY] Clear the image cache',
   ImageCacheCleared = '[LIBRARY] Image cache cleared',
   ClearImageCacheFailed = '[LIBRARY] Failed to clear the image cache'
@@ -168,30 +165,6 @@ export class LibraryConvertComicsFailed implements Action {
   constructor() {}
 }
 
-export class LibraryMoveComics implements Action {
-  readonly type = LibraryActionTypes.MoveComics;
-
-  constructor(
-    public payload: {
-      deletePhysicalFiles: boolean;
-      directory: string;
-      renamingRule: string;
-    }
-  ) {}
-}
-
-export class LibraryComicsMoved implements Action {
-  readonly type = LibraryActionTypes.ComicsMoved;
-
-  constructor() {}
-}
-
-export class LibraryMoveComicsFailed implements Action {
-  readonly type = LibraryActionTypes.MoveComicsFailed;
-
-  constructor() {}
-}
-
 export class LibraryClearImageCache implements Action {
   readonly type = LibraryActionTypes.ClearImageCache;
 
@@ -227,9 +200,6 @@ export type LibraryActions =
   | LibraryConvertComics
   | LibraryComicsConverting
   | LibraryConvertComicsFailed
-  | LibraryMoveComics
-  | LibraryComicsMoved
-  | LibraryMoveComicsFailed
   | LibraryClearImageCache
   | LibraryImageCacheCleared
   | LibraryClearImageCacheFailed;

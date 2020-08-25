@@ -32,7 +32,6 @@ import {
   LibraryActionTypes,
   LibraryClearImageCacheFailed,
   LibraryComicsConverting,
-  LibraryComicsMoved,
   LibraryConvertComics,
   LibraryConvertComicsFailed,
   LibraryDeleteMultipleComics,
@@ -40,8 +39,6 @@ import {
   LibraryGetUpdates,
   LibraryGetUpdatesFailed,
   LibraryImageCacheCleared,
-  LibraryMoveComics,
-  LibraryMoveComicsFailed,
   LibraryMultipleComicsDeleted,
   LibraryMultipleComicsUndeleted,
   LibraryRescanStarted,
@@ -50,7 +47,6 @@ import {
   LibraryUndeleteMultipleComicsFailed,
   LibraryUpdatesReceived
 } from '../actions/library.actions';
-import { Comic } from 'app/comics';
 import { ClearImageCacheResponse } from 'app/library/models/net/clear-image-cache-response';
 
 @Injectable()
@@ -307,53 +303,6 @@ export class LibraryEffects {
         )
       });
       return of(new LibraryConvertComicsFailed());
-    })
-  );
-
-  @Effect()
-  consolidate$: Observable<Action> = this.actions$.pipe(
-    ofType(LibraryActionTypes.MoveComics),
-    tap(action => this.logger.debug('effect: consolidate library:', action)),
-    map((action: LibraryMoveComics) => action.payload),
-    switchMap(action =>
-      this.libraryService
-        .consolidate(
-          action.deletePhysicalFiles,
-          action.directory,
-          action.renamingRule
-        )
-        .pipe(
-          tap(response => this.logger.debug('received response:', response)),
-          tap(() =>
-            this.messageService.add({
-              severity: 'info',
-              detail: this.translateService.instant(
-                'library-effects.consolidate.success.detail'
-              )
-            })
-          ),
-          map((response: Comic[]) => new LibraryComicsMoved()),
-          catchError(error => {
-            this.logger.error('service failure conslidating library:', error);
-            this.messageService.add({
-              severity: 'error',
-              detail: this.translateService.instant(
-                'library-effects.consolidate.error.detail'
-              )
-            });
-            return of(new LibraryMoveComicsFailed());
-          })
-        )
-    ),
-    catchError(error => {
-      this.logger.error('general failure conslidating library:', error);
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new LibraryMoveComicsFailed());
     })
   );
 

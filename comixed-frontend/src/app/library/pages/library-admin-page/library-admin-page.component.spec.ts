@@ -39,6 +39,11 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserModule } from 'app/user/user.module';
 import { ComicsModule } from 'app/comics/comics.module';
+import {
+  MOVE_COMICS_FEATURE_KEY,
+  reducer
+} from 'app/library/reducers/move-comics.reducer';
+import { MoveComicsEffects } from 'app/library/effects/move-comics.effects';
 
 describe('LibraryAdminPageComponent', () => {
   let component: LibraryAdminPageComponent;
@@ -61,7 +66,9 @@ describe('LibraryAdminPageComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
+        StoreModule.forFeature(MOVE_COMICS_FEATURE_KEY, reducer),
         EffectsModule.forRoot([]),
+        EffectsModule.forFeature([MoveComicsEffects]),
         FileSaverModule,
         ButtonModule,
         PanelModule,
