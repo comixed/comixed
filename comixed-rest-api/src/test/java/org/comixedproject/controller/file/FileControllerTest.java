@@ -22,16 +22,15 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.file.FileDetails;
+import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
-import org.comixedproject.model.net.ImportComicFilesResponse;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.QueueComicsWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
@@ -91,11 +90,11 @@ public class FileControllerTest {
     Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(fileDetailsList);
 
-    final List<FileDetails> result =
+    final ApiResponse<List<FileDetails>> response =
         controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_NO_LIMIT));
 
-    assertNotNull(result);
-    assertSame(fileDetailsList, result);
+    assertNotNull(response);
+    assertSame(fileDetailsList, response.getResult());
 
     Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_NO_LIMIT);
   }
@@ -105,22 +104,13 @@ public class FileControllerTest {
     Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(fileDetailsList);
 
-    final List<FileDetails> result =
+    final ApiResponse<List<FileDetails>> response =
         controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_LIMIT));
 
-    assertNotNull(result);
-    assertSame(fileDetailsList, result);
+    assertNotNull(response);
+    assertSame(fileDetailsList, response.getResult());
 
     Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_LIMIT);
-  }
-
-  @Test
-  public void testGetImportStatus() throws NoSuchAlgorithmException, InterruptedException {
-    Mockito.when(fileService.getImportStatus()).thenReturn(TEST_IMPORT_STATUS);
-
-    final int result = controller.getImportStatus();
-
-    assertEquals(TEST_IMPORT_STATUS, result);
   }
 
   @Test
@@ -128,12 +118,13 @@ public class FileControllerTest {
     Mockito.when(queueComicsWorkerTaskObjectFactory.getObject()).thenReturn(queueComicsWorkerTask);
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    final ImportComicFilesResponse result =
+    final ApiResponse<Void> response =
         controller.importComicFiles(
             new ImportComicFilesRequest(
-                TEST_FILENAMES, TEST_DELETE_BLOCKED_PAGES, TEST_IGNORE_METADATA));
+                TEST_FILENAMES, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
 
-    assertEquals(TEST_FILENAMES.size(), result.getImportComicCount());
+    assertNotNull(response);
+    assertTrue(response.isSuccess());
 
     Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
     Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setFilenames(TEST_FILENAMES);
