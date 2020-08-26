@@ -20,17 +20,17 @@ package org.comixedproject.controller.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.controller.comic.ComicController;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.file.FileDetails;
+import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
-import org.comixedproject.model.net.ImportComicFilesResponse;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.QueueComicsWorkerTask;
@@ -40,7 +40,6 @@ import org.json.JSONException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,9 +72,10 @@ public class FileController {
       value = "/contents",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @Secured("ROLE_ADMIN")
-  public List<FileDetails> getAllComicsUnder(@RequestBody() final GetAllComicsUnderRequest request)
-      throws IOException, JSONException {
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public ApiResponse<List<FileDetails>> getAllComicsUnder(
+      @RequestBody() final GetAllComicsUnderRequest request) throws IOException, JSONException {
     String directory = request.getDirectory();
     Integer maximum = request.getMaximum();
 
@@ -84,11 +84,20 @@ public class FileController {
         directory,
         maximum > 0 ? maximum : "UNLIMITED");
 
-    final List<FileDetails> result = this.fileService.getAllComicsUnder(directory, maximum);
+    final ApiResponse<List<FileDetails>> response = new ApiResponse<>();
 
-    log.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
+    try {
+      final List<FileDetails> result = this.fileService.getAllComicsUnder(directory, maximum);
+      log.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
+      response.setSuccess(true);
+      response.setResult(result);
+    } catch (Exception error) {
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+      response.setThrowable(error);
+    }
 
-    return result;
+    return response;
   }
 
   private void getAllFilesUnder(File root, List<FileDetails> result) throws IOException {
@@ -107,7 +116,14 @@ public class FileController {
     }
   }
 
-  @RequestMapping(value = "/import/cover", method = RequestMethod.GET)
+  /**
+   * Returns the content for the first image in the specified file.
+   *
+   * @param filename the file
+   * @return the image content, or null
+   */
+  @GetMapping(value = "/import/cover")
+  @AuditableEndpoint
   public byte[] getImportFileCover(@RequestParam("filename") String filename) {
     // for some reason, during development, this value ALWAYS had a trailing
     // space...
@@ -134,31 +150,19 @@ public class FileController {
     return result;
   }
 
-  @RequestMapping(value = "/import/status", method = RequestMethod.GET)
-  public int getImportStatus() throws InterruptedException {
-    log.info("Getting import status");
-
-    final int result = this.fileService.getImportStatus();
-
-    log.debug("Returning {}", result);
-
-    return result;
-  }
-
   /**
    * Begins the process of enqueueing comic files for import
    *
    * @param request the request body
-   * @return the response body
-   * @throws UnsupportedEncodingException if an error occurs
+   * @return the response
    */
   @PostMapping(
       value = "/import",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  public ImportComicFilesResponse importComicFiles(@RequestBody() ImportComicFilesRequest request)
-      throws UnsupportedEncodingException {
+  @AuditableEndpoint
+  public ApiResponse<Void> importComicFiles(@RequestBody() ImportComicFilesRequest request) {
     final List<String> filenames = request.getFilenames();
     final boolean deleteBlockedPages = request.isDeleteBlockedPages();
     final boolean ignoreMetadata = request.isIgnoreMetadata();
@@ -169,17 +173,27 @@ public class FileController {
         deleteBlockedPages,
         ignoreMetadata);
 
-    final QueueComicsWorkerTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
-    task.setFilenames(filenames);
-    task.setDeleteBlockedPages(deleteBlockedPages);
-    task.setIgnoreMetadata(ignoreMetadata);
+    final ApiResponse<Void> response = new ApiResponse<>();
 
-    log.debug("Enqueueing task");
-    this.taskManager.runTask(task);
+    try {
+      final QueueComicsWorkerTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
+      task.setFilenames(filenames);
+      task.setDeleteBlockedPages(deleteBlockedPages);
+      task.setIgnoreMetadata(ignoreMetadata);
 
-    log.debug("Notifying waiting processes");
-    ComicController.stopWaitingForStatus();
+      log.debug("Enqueueing task");
+      this.taskManager.runTask(task);
 
-    return new ImportComicFilesResponse(filenames.size());
+      log.debug("Notifying waiting processes");
+      ComicController.stopWaitingForStatus();
+
+      response.setSuccess(true);
+    } catch (Exception error) {
+      response.setSuccess(false);
+      response.setError(error.getMessage());
+      response.setThrowable(error);
+    }
+
+    return response;
   }
 }

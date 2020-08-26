@@ -21,7 +21,9 @@ package org.comixedproject.model.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -30,6 +32,8 @@ import lombok.Setter;
  *
  * @author Darryl L. Pierce
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImportComicFilesRequest {
   @JsonProperty("filenames")
   @Getter
@@ -45,13 +49,4 @@ public class ImportComicFilesRequest {
   @Getter
   @Setter
   private boolean deleteBlockedPages;
-
-  public ImportComicFilesRequest(
-      final List<String> filenames,
-      final boolean deleteBlockedPages,
-      final boolean ignoreMetadata) {
-    this.filenames = filenames;
-    this.deleteBlockedPages = deleteBlockedPages;
-    this.ignoreMetadata = ignoreMetadata;
-  }
 }
