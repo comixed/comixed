@@ -66,39 +66,52 @@ public class AuditableEndpointAspect {
       error = throwable;
     }
     final Date ended = new Date();
+    final RestAuditLogEntry entry = new RestAuditLogEntry();
+    HttpServletRequest request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+    if (request.getUserPrincipal() != null) {
+      entry.setEmail(request.getUserPrincipal().getName());
+    } else {
+      entry.setEmail("anonymous");
+    }
+    entry.setRemoteIp(request.getRemoteAddr());
+    entry.setUrl(request.getRequestURI());
+    entry.setMethod(request.getMethod());
+    entry.setStartTime(started);
+    entry.setEndTime(ended);
+    entry.setRequestContent(
+        new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
+
     if (response instanceof ApiResponse<?>) {
       final ApiResponse<?> apiResponse = (ApiResponse<?>) response;
-      final RestAuditLogEntry entry = new RestAuditLogEntry();
-      HttpServletRequest request =
-          ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-
-      if (request.getUserPrincipal() != null) {
-        entry.setEmail(request.getUserPrincipal().getName());
-      } else {
-        entry.setException("anonymous");
-      }
-      entry.setRemoteIp(request.getRemoteAddr());
-      entry.setUrl(request.getRequestURI());
-      entry.setMethod(request.getMethod());
-      entry.setRequestContent(
-          new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
+      entry.setSuccessful(apiResponse.isSuccess());
       if (apiResponse.getResult() != null) {
         entry.setResponseContent(this.objectMapper.writeValueAsString(apiResponse.getResult()));
       }
-      entry.setStartTime(started);
-      entry.setEndTime(ended);
-      entry.setSuccessful(apiResponse.isSuccess());
       entry.setException(apiResponse.getError());
       if (apiResponse.getThrowable() != null) {
-        log.debug("Storing stacktrace");
+        log.debug("Storing API exception stacktrace");
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
         apiResponse.getThrowable().printStackTrace(printWriter);
         entry.setException(stringWriter.toString());
       }
-
-      this.restAuditLogService.save(entry);
     }
+
+    if (error != null) {
+      log.debug("Storing method exception stacktrace");
+      final StringWriter stringWriter = new StringWriter();
+      final PrintWriter printWriter = new PrintWriter(stringWriter);
+      error.printStackTrace(printWriter);
+      entry.setException(stringWriter.toString());
+      entry.setSuccessful(false);
+    } else {
+      entry.setSuccessful(true);
+    }
+
+    this.restAuditLogService.save(entry);
+
     if (error != null) throw error;
     return response;
   }
