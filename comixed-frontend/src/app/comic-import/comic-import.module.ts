@@ -53,6 +53,9 @@ import { ComicsModule } from 'app/comics/comics.module';
 import * as fromFindComicFiles from './reducers/find-comic-files.reducer';
 import { FIND_COMIC_FILES_FEATURE_KEY } from './reducers/find-comic-files.reducer';
 import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files.effects';
+import * as fromSelectedComicFiles from './reducers/selected-comic-files.reducer';
+import { SELECTED_COMIC_FILES_FEATURE_KEY } from './reducers/selected-comic-files.reducer';
+import { SelectedComicFilesEffects } from 'app/comic-import/effects/selected-comic-files.effects';
 
 @NgModule({
   declarations: [
@@ -75,7 +78,15 @@ import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files
       FIND_COMIC_FILES_FEATURE_KEY,
       fromFindComicFiles.reducer
     ),
-    EffectsModule.forFeature([ComicImportEffects, FindComicFilesEffects]),
+    StoreModule.forFeature(
+      SELECTED_COMIC_FILES_FEATURE_KEY,
+      fromSelectedComicFiles.reducer
+    ),
+    EffectsModule.forFeature([
+      ComicImportEffects,
+      FindComicFilesEffects,
+      SelectedComicFilesEffects
+    ]),
     ContextMenuModule,
     DataViewModule,
     ProgressBarModule,
