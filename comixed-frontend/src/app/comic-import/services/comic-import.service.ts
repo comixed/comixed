@@ -47,6 +47,13 @@ export class ComicImportService {
     } as GetComicFilesRequest);
   }
 
+  /**
+   * Starts the process of importing comic files.
+   *
+   * @param comicFiles the comic files
+   * @param ignoreMetadata the ignore metadata flag
+   * @param deleteBlockedPages the delete blocked pages flag
+   */
   startImport(
     comicFiles: ComicFile[],
     ignoreMetadata: boolean,
