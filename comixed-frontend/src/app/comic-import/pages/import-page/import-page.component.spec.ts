@@ -27,7 +27,6 @@ import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppState } from 'app/comic-import';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { ComicFileGridItemComponent } from 'app/comic-import/components/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
 import { ComicFileListToolbarComponent } from 'app/comic-import/components/comic-file-list-toolbar/comic-file-list-toolbar.component';
@@ -59,6 +58,15 @@ import { SliderModule } from 'primeng/slider';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ImportPageComponent } from './import-page.component';
+import * as fromFindComicFiles from 'app/comic-import/reducers/find-comic-files.reducer';
+import { FIND_COMIC_FILES_FEATURE_KEY } from 'app/comic-import/reducers/find-comic-files.reducer';
+import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files.effects';
+import * as fromSelectedComicFiles from 'app/comic-import/reducers/selected-comic-files.reducer';
+import { SELECTED_COMIC_FILES_FEATURE_KEY } from 'app/comic-import/reducers/selected-comic-files.reducer';
+import { SelectedComicFilesEffects } from 'app/comic-import/effects/selected-comic-files.effects';
+import * as fromImportComic from 'app/comic-import/reducers/import-comics.reducer';
+import { IMPORT_COMICS_FEATURE_KEY } from 'app/comic-import/reducers/import-comics.reducer';
+import { ImportComicsEffects } from 'app/comic-import/effects/import-comics.effects';
 
 const DIRECTORY_TO_USE = '/OldUser/comixed/Downloads';
 
@@ -66,7 +74,6 @@ describe('ImportPageComponent', () => {
   let component: ImportPageComponent;
   let fixture: ComponentFixture<ImportPageComponent>;
   let libraryAdaptor: LibraryAdaptor;
-  let comicImportAdaptor: ComicImportAdaptor;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
@@ -82,7 +89,24 @@ describe('ImportPageComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
+        StoreModule.forFeature(
+          FIND_COMIC_FILES_FEATURE_KEY,
+          fromFindComicFiles.reducer
+        ),
+        StoreModule.forFeature(
+          SELECTED_COMIC_FILES_FEATURE_KEY,
+          fromSelectedComicFiles.reducer
+        ),
+        StoreModule.forFeature(
+          IMPORT_COMICS_FEATURE_KEY,
+          fromImportComic.reducer
+        ),
         EffectsModule.forRoot([]),
+        EffectsModule.forFeature([
+          FindComicFilesEffects,
+          SelectedComicFilesEffects,
+          ImportComicsEffects
+        ]),
         DataViewModule,
         SliderModule,
         ButtonModule,
@@ -109,7 +133,6 @@ describe('ImportPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ComicImportAdaptor,
         BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
@@ -121,7 +144,6 @@ describe('ImportPageComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.get(Store);
     libraryAdaptor = TestBed.get(LibraryAdaptor);
-    comicImportAdaptor = TestBed.get(ComicImportAdaptor);
     fixture.detectChanges();
   }));
 

@@ -11,24 +11,6 @@
       }
     }
   },
-  "comic-import-effects": {
-    "get-files": {
-      "success": {
-        "detail": "Found {count, plural, =1{one comic file} other{# comic files}}."
-      },
-      "failure": {
-        "detail": "Failed to find any files."
-      }
-    },
-    "start-import": {
-      "success": {
-        "detail": "Started the import of {count, plural, =1{one file} other{# files}}."
-      },
-      "error": {
-        "detail": "Failed to start the import process."
-      }
-    }
-  },
   "comic-file-list-toolbar": {
     "options": {
       "sort-field": {

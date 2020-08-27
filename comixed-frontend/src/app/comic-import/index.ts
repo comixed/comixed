@@ -17,8 +17,6 @@
  */
 import { Params } from '@angular/router';
 import * as fromRouter from '@ngrx/router-store';
-import * as fromImporting from './reducers/comic-import.reducer';
-import { ComicImportState } from './reducers/comic-import.reducer';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import {
@@ -40,7 +38,6 @@ interface RouterStateUrl {
 
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
-  comicImport: ComicImportState;
   [FIND_COMIC_FILES_FEATURE_KEY]: FindComicFilesState;
   [SELECTED_COMIC_FILES_FEATURE_KEY]: SelectedComicFilesState;
 }
@@ -49,7 +46,6 @@ export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  comicImport: fromImporting.reducer,
   [FIND_COMIC_FILES_FEATURE_KEY]: fromFindComicFiles.reducer,
   [SELECTED_COMIC_FILES_FEATURE_KEY]: fromSelectedComicFiles.reducer
 };

@@ -11,24 +11,6 @@
       }
     }
   },
-  "comic-import-effects": {
-    "get-files": {
-      "success": {
-        "detail": "{count, plural, =1{un fichier de bande dessinée trouvée} other{# fichiers de bandes dessinées trouvées}}."
-      },
-      "failure": {
-        "detail": "Aucun fichier n'a pu être trouvé."
-      }
-    },
-    "start-import": {
-      "success": {
-        "detail": "DÉbut de l'import {count, plural, =1{du fichier} other{des # fichiers}}."
-      },
-      "error": {
-        "detail": "Échec du démarrage du processus d'import"
-      }
-    }
-  },
   "comic-file-list-toolbar": {
     "options": {
       "sort-field": {

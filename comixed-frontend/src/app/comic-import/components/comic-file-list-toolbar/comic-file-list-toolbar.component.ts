@@ -29,13 +29,20 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor } from 'app/user';
 import { LibraryDisplayAdaptor } from 'app/library';
 import { ComicFile } from 'app/comic-import/models/comic-file';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { Subscription } from 'rxjs';
 import {
   COMIC_IMPORT_DIRECTORY,
   COMIC_IMPORT_MAXIMUM
 } from 'app/comic-import/comic-import.constants';
 import { LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/comic-import';
+import { findComicFiles } from 'app/comic-import/actions/find-comic-files.actions';
+import {
+  clearComicFileSelections,
+  selectComicFile
+} from 'app/comic-import/actions/selected-comic-files.actions';
+import { importComics } from 'app/comic-import/actions/import-comics.actions';
 
 @Component({
   selector: 'app-comic-file-list-toolbar',
@@ -77,9 +84,9 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
-    private comicImportAdaptor: ComicImportAdaptor,
     private translateService: TranslateService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
@@ -122,19 +129,26 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
   }
 
   findComics(): void {
+    this.logger.trace('Finding comic files');
     this.authenticationAdaptor.setPreference(
       COMIC_IMPORT_DIRECTORY,
       this.directory
     );
-    this.comicImportAdaptor.getComicFiles(this.directory, this.maximum);
+    this.store.dispatch(
+      findComicFiles({ directory: this.directory, maximum: this.maximum })
+    );
   }
 
   selectAllComicFiles(): void {
-    this.comicImportAdaptor.selectComicFiles(this.comicFiles);
+    this.logger.trace('Selecting all comic files');
+    this.comicFiles.forEach(comicFile =>
+      this.store.dispatch(selectComicFile({ file: comicFile }))
+    );
   }
 
   deselectAllComicFiles(): void {
-    this.comicImportAdaptor.deselectComicFiles(this.selectedComicFiles);
+    this.logger.trace('Deselecting all comic files');
+    this.store.dispatch(clearComicFileSelections());
   }
 
   setSortField(sortField: string): void {
@@ -242,12 +256,16 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
         { count: this.selectedComicFiles.length, withMetadata: withMetadata }
       ),
       icon: 'fa fa-fw fa-question-circle',
-      accept: () =>
-        this.comicImportAdaptor.startImport(
-          this.selectedComicFiles,
-          !withMetadata,
-          this.deleteBlockedPages
-        )
+      accept: () => {
+        this.logger.trace('Starting to the comic file import process');
+        this.store.dispatch(
+          importComics({
+            files: this.selectedComicFiles,
+            ignoreMetadata: !withMetadata,
+            deleteBlockedPages: this.deleteBlockedPages
+          })
+        );
+      }
     });
   }
 

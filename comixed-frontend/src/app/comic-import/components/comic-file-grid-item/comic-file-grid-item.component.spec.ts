@@ -24,7 +24,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
 import { LibraryModule } from 'app/library/library.module';
@@ -59,12 +58,7 @@ describe('ComicFileGridItemComponent', () => {
         CardModule
       ],
       declarations: [ComicFileGridItemComponent, ComicFileCoverUrlPipe],
-      providers: [
-        UserService,
-        MessageService,
-        ComicImportAdaptor,
-        ConfirmationService
-      ]
+      providers: [UserService, MessageService, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileGridItemComponent);
