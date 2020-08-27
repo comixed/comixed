@@ -24,13 +24,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer
-} from 'app/comic-import/reducers/comic-import.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
 import { ComicFileListComponent } from 'app/comic-import/components/comic-file-list/comic-file-list.component';
 import { ImportPageComponent } from 'app/comic-import/pages/import-page/import-page.component';
 import { ComicFileCoverUrlPipe } from 'app/comic-import/pipes/comic-file-cover-url.pipe';
@@ -77,7 +71,6 @@ import { ImportComicsEffects } from 'app/comic-import/effects/import-comics.effe
     ComicsModule,
     TranslateModule.forRoot(),
     ComicImportRoutingModule,
-    StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
     StoreModule.forFeature(
       FIND_COMIC_FILES_FEATURE_KEY,
       fromFindComicFiles.reducer
@@ -88,7 +81,6 @@ import { ImportComicsEffects } from 'app/comic-import/effects/import-comics.effe
     ),
     StoreModule.forFeature(IMPORT_COMICS_FEATURE_KEY, fromImportComic.reducer),
     EffectsModule.forFeature([
-      ComicImportEffects,
       FindComicFilesEffects,
       SelectedComicFilesEffects,
       ImportComicsEffects

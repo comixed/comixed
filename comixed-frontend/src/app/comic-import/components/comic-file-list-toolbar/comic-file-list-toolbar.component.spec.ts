@@ -21,20 +21,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ComicImportAdaptor } from 'app/comic-import/adaptors/comic-import.adaptor';
-import { ComicImportEffects } from 'app/comic-import/effects/comic-import.effects';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3,
-  COMIC_FILE_4
-} from 'app/comic-import/models/comic-file.fixtures';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer
-} from 'app/comic-import/reducers/comic-import.reducer';
 import { LibraryDisplayAdaptor } from 'app/library';
 import { LibraryModule } from 'app/library/library.module';
 import { UserService } from 'app/services/user.service';
@@ -54,6 +42,22 @@ import {
 } from 'primeng/primeng';
 import { ComicFileListToolbarComponent } from './comic-file-list-toolbar.component';
 import { COMIC_IMPORT_MAXIMUM } from 'app/comic-import/comic-import.constants';
+import * as fromFindComicFiles from 'app/comic-import/reducers/find-comic-files.reducer';
+import { FIND_COMIC_FILES_FEATURE_KEY } from 'app/comic-import/reducers/find-comic-files.reducer';
+import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files.effects';
+import { AppState } from 'app/comic-import';
+import { findComicFiles } from 'app/comic-import/actions/find-comic-files.actions';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3,
+  COMIC_FILE_4
+} from 'app/comic-import/comic-import.fixtures';
+import {
+  clearComicFileSelections,
+  selectComicFile
+} from 'app/comic-import/actions/selected-comic-files.actions';
+import { importComics } from 'app/comic-import/actions/import-comics.actions';
 
 const DIRECTORY_TO_SEARCH = '/Users/comixed/library';
 
@@ -64,11 +68,11 @@ describe('ComicFileListToolbarComponent', () => {
 
   let component: ComicFileListToolbarComponent;
   let fixture: ComponentFixture<ComicFileListToolbarComponent>;
-  let comicImportAdaptor: ComicImportAdaptor;
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
   let libraryDisplayAdaptor: LibraryDisplayAdaptor;
   let authenticationAdaptor: AuthenticationAdaptor;
+  let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -78,9 +82,12 @@ describe('ComicFileListToolbarComponent', () => {
         RouterTestingModule,
         FormsModule,
         StoreModule.forRoot({}),
-        StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
+        StoreModule.forFeature(
+          FIND_COMIC_FILES_FEATURE_KEY,
+          fromFindComicFiles.reducer
+        ),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ComicImportEffects]),
+        EffectsModule.forFeature([FindComicFilesEffects]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         ToolbarModule,
@@ -95,7 +102,6 @@ describe('ComicFileListToolbarComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        ComicImportAdaptor,
         UserService,
         MessageService,
         ConfirmationService
@@ -104,13 +110,13 @@ describe('ComicFileListToolbarComponent', () => {
 
     fixture = TestBed.createComponent(ComicFileListToolbarComponent);
     component = fixture.componentInstance;
-    comicImportAdaptor = TestBed.get(ComicImportAdaptor);
     translateService = TestBed.get(TranslateService);
     confirmationService = TestBed.get(ConfirmationService);
     libraryDisplayAdaptor = TestBed.get(LibraryDisplayAdaptor);
     authenticationAdaptor = TestBed.get(AuthenticationAdaptor);
     spyOn(authenticationAdaptor, 'setPreference');
-
+    store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
     fixture.detectChanges();
   }));
 
@@ -141,45 +147,41 @@ describe('ComicFileListToolbarComponent', () => {
 
   describe('finding comics', () => {
     beforeEach(() => {
-      spyOn(comicImportAdaptor, 'getComicFiles');
       component.directory = DIRECTORY;
       component.maximum = MAXIMUM;
       component.findComics();
     });
 
-    it('invokes the adaptor', () => {
-      expect(comicImportAdaptor.getComicFiles).toHaveBeenCalledWith(
-        DIRECTORY,
-        MAXIMUM
+    it('fires an action to get comic files', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        findComicFiles({ directory: DIRECTORY, maximum: MAXIMUM })
       );
     });
   });
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      spyOn(comicImportAdaptor, 'selectComicFiles');
       component.comicFiles = COMIC_FILES;
       component.selectAllComicFiles();
     });
 
-    it('invokes the adaptor', () => {
-      expect(comicImportAdaptor.selectComicFiles).toHaveBeenCalledWith(
-        COMIC_FILES
+    it('fires an action', () => {
+      COMIC_FILES.forEach(comicFile =>
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicFile({ file: comicFile })
+        )
       );
     });
   });
 
   describe('deselecting all comic files', () => {
     beforeEach(() => {
-      spyOn(comicImportAdaptor, 'deselectComicFiles');
       component.selectedComicFiles = COMIC_FILES;
       component.deselectAllComicFiles();
     });
 
-    it('invokes the adaptor', () => {
-      expect(comicImportAdaptor.deselectComicFiles).toHaveBeenCalledWith(
-        COMIC_FILES
-      );
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
     });
   });
 
@@ -277,7 +279,6 @@ describe('ComicFileListToolbarComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirm: Confirmation) => confirm.accept()
       );
-      spyOn(comicImportAdaptor, 'startImport');
       component.selectedComicFiles = COMIC_FILES;
     });
 
@@ -286,11 +287,13 @@ describe('ComicFileListToolbarComponent', () => {
         component.importOptions[0].command();
       });
 
-      it('invokes the adaptor', () => {
-        expect(comicImportAdaptor.startImport).toHaveBeenCalledWith(
-          COMIC_FILES,
-          false,
-          component.deleteBlockedPages
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          importComics({
+            files: COMIC_FILES,
+            ignoreMetadata: false,
+            deleteBlockedPages: component.deleteBlockedPages
+          })
         );
       });
     });
@@ -302,10 +305,12 @@ describe('ComicFileListToolbarComponent', () => {
       });
 
       it('invokes the adaptor', () => {
-        expect(comicImportAdaptor.startImport).toHaveBeenCalledWith(
-          COMIC_FILES,
-          true,
-          component.deleteBlockedPages
+        expect(store.dispatch).toHaveBeenCalledWith(
+          importComics({
+            files: COMIC_FILES,
+            ignoreMetadata: true,
+            deleteBlockedPages: component.deleteBlockedPages
+          })
         );
       });
     });
