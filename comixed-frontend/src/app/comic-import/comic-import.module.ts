@@ -50,6 +50,9 @@ import {
 } from 'primeng/primeng';
 import { UserModule } from 'app/user/user.module';
 import { ComicsModule } from 'app/comics/comics.module';
+import * as fromFindComicFiles from './reducers/find-comic-files.reducer';
+import { FIND_COMIC_FILES_FEATURE_KEY } from './reducers/find-comic-files.reducer';
+import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files.effects';
 
 @NgModule({
   declarations: [
@@ -68,7 +71,11 @@ import { ComicsModule } from 'app/comics/comics.module';
     TranslateModule.forRoot(),
     ComicImportRoutingModule,
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, reducer),
-    EffectsModule.forFeature([ComicImportEffects]),
+    StoreModule.forFeature(
+      FIND_COMIC_FILES_FEATURE_KEY,
+      fromFindComicFiles.reducer
+    ),
+    EffectsModule.forFeature([ComicImportEffects, FindComicFilesEffects]),
     ContextMenuModule,
     DataViewModule,
     ProgressBarModule,

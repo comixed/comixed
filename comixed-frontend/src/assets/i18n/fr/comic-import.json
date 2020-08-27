@@ -1,4 +1,12 @@
 {
+  "comic-import": {
+    "effects": {
+      "find-comic-files": {
+        "success-detail": "Found {count, plural, =1{one comic} other{# comics}} available for importing...",
+        "error-detail": "Failed to find any comic files..."
+      }
+    }
+  },
   "comic-import-effects": {
     "get-files": {
       "success": {
