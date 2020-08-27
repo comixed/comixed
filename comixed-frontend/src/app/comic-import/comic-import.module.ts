@@ -56,6 +56,10 @@ import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files
 import * as fromSelectedComicFiles from './reducers/selected-comic-files.reducer';
 import { SELECTED_COMIC_FILES_FEATURE_KEY } from './reducers/selected-comic-files.reducer';
 import { SelectedComicFilesEffects } from 'app/comic-import/effects/selected-comic-files.effects';
+import { ComicImportService } from 'app/comic-import/services/comic-import.service';
+import * as fromImportComic from './reducers/import-comics.reducer';
+import { IMPORT_COMICS_FEATURE_KEY } from './reducers/import-comics.reducer';
+import { ImportComicsEffects } from 'app/comic-import/effects/import-comics.effects';
 
 @NgModule({
   declarations: [
@@ -82,10 +86,12 @@ import { SelectedComicFilesEffects } from 'app/comic-import/effects/selected-com
       SELECTED_COMIC_FILES_FEATURE_KEY,
       fromSelectedComicFiles.reducer
     ),
+    StoreModule.forFeature(IMPORT_COMICS_FEATURE_KEY, fromImportComic.reducer),
     EffectsModule.forFeature([
       ComicImportEffects,
       FindComicFilesEffects,
-      SelectedComicFilesEffects
+      SelectedComicFilesEffects,
+      ImportComicsEffects
     ]),
     ContextMenuModule,
     DataViewModule,
@@ -96,7 +102,7 @@ import { SelectedComicFilesEffects } from 'app/comic-import/effects/selected-com
     ToolbarModule
   ],
   exports: [CommonModule],
-  providers: [ComicImportAdaptor]
+  providers: [ComicImportService]
 })
 export class ComicImportModule {
   static forRoot(): ModuleWithProviders {
