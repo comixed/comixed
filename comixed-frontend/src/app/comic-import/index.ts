@@ -21,6 +21,11 @@ import * as fromImporting from './reducers/comic-import.reducer';
 import { ComicImportState } from './reducers/comic-import.reducer';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
+import {
+  FIND_COMIC_FILES_FEATURE_KEY,
+  FindComicFilesState
+} from 'app/comic-import/reducers/find-comic-files.reducer';
+import * as fromFindComicFiles from './reducers/find-comic-files.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -31,13 +36,15 @@ interface RouterStateUrl {
 export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   comicImport: ComicImportState;
+  [FIND_COMIC_FILES_FEATURE_KEY]: FindComicFilesState;
 }
 
 export type State = AppState;
 
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  comicImport: fromImporting.reducer
+  comicImport: fromImporting.reducer,
+  [FIND_COMIC_FILES_FEATURE_KEY]: fromFindComicFiles.reducer
 };
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
