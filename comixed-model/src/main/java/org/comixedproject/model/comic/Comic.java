@@ -437,7 +437,14 @@ public class Comic {
    * @return <code>true</code> if the file is missing
    */
   @JsonProperty("missing")
-  @JsonView(View.ComicList.class)
+  @JsonView({
+    View.ComicList.class,
+    View.DeletedComicList.class,
+    View.PageList.class,
+    View.DuplicatePageList.class,
+    View.LibraryUpdate.class,
+    View.ReadingList.class
+  })
   public boolean isMissing() {
     if (this.backingFile == null) {
       this.backingFile = new File(this.filename);
