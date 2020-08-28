@@ -38,7 +38,7 @@ import { BehaviorSubject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerModule } from '@angular-ru/logger';
 
-describe('LibraryDisplayAdaptor', () => {
+fdescribe('LibraryDisplayAdaptor', () => {
   const USER = { ...USER_READER };
 
   let libraryDisplayAdaptor: LibraryDisplayAdaptor;
@@ -158,7 +158,7 @@ describe('LibraryDisplayAdaptor', () => {
 
     beforeEach(() => {
       (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        same_height: SAME_HEIGHT ? '1' : '0'
+        same_height: SAME_HEIGHT ? 'true' : 'false'
       });
     });
 
