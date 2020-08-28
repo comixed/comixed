@@ -23,7 +23,6 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.util.Random;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.AddComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +41,6 @@ public class AddComicWorkerTaskEncoderTest {
   @InjectMocks private AddComicWorkerTaskEncoder adaptor;
   @Mock private ObjectFactory<AddComicWorkerTask> addComicWorkerTaskObjectFactory;
   @Mock private AddComicWorkerTask addComicWorkerTask;
-  @Mock private TaskService taskService;
 
   private boolean deleteBlockedPages = RANDOM.nextBoolean();
   private boolean ignoreMetadata = !deleteBlockedPages;
@@ -75,7 +73,6 @@ public class AddComicWorkerTaskEncoderTest {
         AddComicWorkerTaskEncoder.IGNORE_METADATA, String.valueOf(this.ignoreMetadata));
 
     Mockito.when(addComicWorkerTaskObjectFactory.getObject()).thenReturn(addComicWorkerTask);
-    Mockito.doNothing().when(taskService).delete(Mockito.any());
 
     final AddComicWorkerTask result = adaptor.decode(task);
 
@@ -83,6 +80,5 @@ public class AddComicWorkerTaskEncoderTest {
     Mockito.verify(addComicWorkerTask, Mockito.times(1))
         .setDeleteBlockedPages(this.deleteBlockedPages);
     Mockito.verify(addComicWorkerTask, Mockito.times(1)).setIgnoreMetadata(this.ignoreMetadata);
-    Mockito.verify(taskService, Mockito.times(1)).delete(task);
   }
 }

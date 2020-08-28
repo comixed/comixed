@@ -103,7 +103,7 @@ public class MonitorTaskQueueWorkerTaskTest {
     Mockito.verify(task, Mockito.times(taskList.size())).getTaskType();
     Mockito.verify(workerTaskAdaptor, Mockito.times(taskList.size())).getEncoder(TEST_TASK_TYPE);
     Mockito.verify(workerTaskEncoder, Mockito.times(taskList.size())).decode(task);
-    Mockito.verify(taskManager, Mockito.times(taskList.size())).runTask(workerTask);
+    Mockito.verify(taskManager, Mockito.times(taskList.size())).runTask(workerTask, task);
   }
 
   @Test

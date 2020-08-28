@@ -66,7 +66,6 @@ public class AddComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<AddComi
 
   @Override
   public AddComicWorkerTask decode(final Task task) {
-    this.deleteTask(task);
     log.debug("Decoding persisted task: id={} type={}", task.getId(), task.getTaskType());
     final AddComicWorkerTask result = this.addComicWorkerTaskObjectFactory.getObject();
 
