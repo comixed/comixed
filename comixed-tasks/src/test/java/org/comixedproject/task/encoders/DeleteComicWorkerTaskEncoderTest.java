@@ -22,7 +22,6 @@ import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.DeleteComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +35,6 @@ import org.springframework.beans.factory.ObjectFactory;
 public class DeleteComicWorkerTaskEncoderTest {
   @InjectMocks private DeleteComicWorkerTaskEncoder encoder;
   @Mock private Comic comic;
-  @Mock private TaskService taskService;
   @Mock private ObjectFactory<DeleteComicWorkerTask> deleteComicsWorkerTaskObjectFactory;
   @Mock private DeleteComicWorkerTask deleteComicWorkerTask;
 
@@ -79,8 +77,8 @@ public class DeleteComicWorkerTaskEncoderTest {
     assertNotNull(result);
     assertSame(deleteComicWorkerTask, result);
 
-    Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setComic(comic);
+    Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setDeleteFile(false);
   }
 
   @Test
@@ -96,7 +94,7 @@ public class DeleteComicWorkerTaskEncoderTest {
     assertNotNull(result);
     assertSame(deleteComicWorkerTask, result);
 
-    Mockito.verify(taskService, Mockito.times(1)).delete(task);
     Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setComic(comic);
+    Mockito.verify(deleteComicWorkerTask, Mockito.times(1)).setDeleteFile(true);
   }
 }

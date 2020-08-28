@@ -18,6 +18,7 @@
 
 package org.comixedproject.task.encoders;
 
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
@@ -43,8 +44,8 @@ public class DeleteComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<Dele
 
   @Autowired private ObjectFactory<DeleteComicWorkerTask> deleteComicWorkerTaskObjectFactory;
 
-  private Comic comic;
-  private boolean deleteComicFile;
+  @Setter private Comic comic;
+  @Setter private boolean deleteComicFile;
 
   @Override
   public Task encode() {
@@ -59,20 +60,9 @@ public class DeleteComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<Dele
 
   @Override
   public DeleteComicWorkerTask decode(final Task task) {
-    log.debug("Decoding delete comic task");
-    this.deleteTask(task);
-
     final DeleteComicWorkerTask result = this.deleteComicWorkerTaskObjectFactory.getObject();
     result.setComic(task.getComic());
     result.setDeleteFile(Boolean.valueOf(task.getProperty(DELETE_COMIC)));
     return result;
-  }
-
-  public void setComic(final Comic comic) {
-    this.comic = comic;
-  }
-
-  public void setDeleteComicFile(final boolean deleteComicFile) {
-    this.deleteComicFile = deleteComicFile;
   }
 }

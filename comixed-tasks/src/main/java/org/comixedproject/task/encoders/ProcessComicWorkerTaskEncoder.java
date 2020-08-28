@@ -63,7 +63,6 @@ public class ProcessComicWorkerTaskEncoder
 
   @Override
   public ProcessComicWorkerTask decode(final Task task) {
-    this.deleteTask(task);
     log.debug("Decoding process comic task: comic={}", task.getComic().getId());
 
     final ProcessComicWorkerTask result = this.processComicTaskObjectFactory.getObject();

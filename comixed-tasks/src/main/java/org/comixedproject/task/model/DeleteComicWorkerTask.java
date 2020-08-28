@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
@@ -44,12 +46,8 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
   @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
 
-  private boolean deleteFile;
-  private Comic comic;
-
-  public void setDeleteFile(boolean deleteFile) {
-    this.deleteFile = deleteFile;
-  }
+  @Getter @Setter private Boolean deleteFile;
+  @Getter @Setter private Comic comic;
 
   @Override
   @Transactional
@@ -95,9 +93,5 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
   protected String createDescription() {
     return MessageFormat.format(
         "Deleting comic: id={0} [delete file={1}]", this.comic.getId(), this.deleteFile);
-  }
-
-  public void setComic(final Comic comic) {
-    this.comic = comic;
   }
 }

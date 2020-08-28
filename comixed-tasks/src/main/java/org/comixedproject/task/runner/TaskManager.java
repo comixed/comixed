@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
@@ -43,24 +44,43 @@ public class TaskManager implements InitializingBean {
   @Autowired private ThreadPoolTaskExecutor taskExecutor;
   @Autowired private TaskService taskService;
 
-  public void runTask(final WorkerTask task) {
+  /**
+   * Enqueues a task, then deletes it upon successful completion.
+   *
+   * @param workerTask the worker task
+   * @param task the persisted task
+   */
+  public void runTask(final WorkerTask workerTask, final Task task) {
     this.taskExecutor.execute(
         () -> {
-          final String description = task.getDescription();
+          final String description = workerTask.getDescription();
           log.debug("Preparing to run task: {}", description);
           final Date started = new Date();
           try {
-            task.startTask();
-            if (!(task instanceof MonitorTaskQueueWorkerTask))
+            workerTask.startTask();
+            if (!(workerTask instanceof MonitorTaskQueueWorkerTask))
               this.updateAuditLog(true, started, description, null);
           } catch (WorkerTaskException error) {
             log.error("Error executing task: {}" + description, description, error);
-            if (!(task instanceof MonitorTaskQueueWorkerTask))
+            if (!(workerTask instanceof MonitorTaskQueueWorkerTask))
               this.updateAuditLog(false, started, description, error);
           } finally {
-            task.afterExecution();
+            workerTask.afterExecution();
+            if (task != null) {
+              log.debug("Deleting persisted task");
+              this.taskService.delete(task);
+            }
           }
         });
+  }
+
+  /**
+   * Enqueue and execute the given task.
+   *
+   * @param workerTask the task
+   */
+  public void runTask(final WorkerTask workerTask) {
+    this.runTask(workerTask, null);
   }
 
   /**

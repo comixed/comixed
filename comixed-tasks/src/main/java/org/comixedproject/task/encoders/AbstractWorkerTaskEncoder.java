@@ -19,11 +19,7 @@
 package org.comixedproject.task.encoders;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.tasks.Task;
-import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.AbstractWorkerTask;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>AbstractWorkerTaskEncoder</code> provides a foundation for building new {@link
@@ -33,12 +29,4 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Log4j2
 public abstract class AbstractWorkerTaskEncoder<T extends AbstractWorkerTask>
-    implements WorkerTaskEncoder<T> {
-  @Autowired private TaskService taskService;
-
-  @Transactional
-  public void deleteTask(final Task task) {
-    log.debug("Deleting persisted task: id={} type={}", task.getId(), task.getTaskType());
-    this.taskService.delete(task);
-  }
-}
+    implements WorkerTaskEncoder<T> {}

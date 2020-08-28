@@ -68,7 +68,7 @@ public class MonitorTaskQueueWorkerTask extends AbstractWorkerTask implements In
       }
       WorkerTask nextTask = decoder.decode(task);
       log.debug("Passing task to task manager");
-      this.taskManager.runTask(nextTask);
+      this.taskManager.runTask(nextTask, task);
     }
     try {
       Thread.sleep(1000L);
