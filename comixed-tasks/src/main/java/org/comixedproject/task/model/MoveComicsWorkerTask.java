@@ -66,14 +66,21 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
       log.debug("Preparing to page {} of {} comics", page, MAX_COMIC_PAGE);
       List<Comic> comics = this.comicService.findComicsToMove(MAX_COMIC_PAGE + 1);
       for (int index = 0; index < comics.size(); index++) {
-        MoveComicWorkerTaskEncoder encoder =
-            this.moveComicWorkerTaskEncoderObjectFactory.getObject();
+        final Comic comic = comics.get(index);
 
-        encoder.setComic(comics.get(index));
-        encoder.setTargetDirectory(this.directory);
-        encoder.setRenamingRule(this.renamingRule);
-        log.debug("Saving move comic task");
-        this.taskService.save(encoder.encode());
+        if (comic.getDateDeleted() == null) {
+          MoveComicWorkerTaskEncoder encoder =
+              this.moveComicWorkerTaskEncoderObjectFactory.getObject();
+
+          encoder.setComic(comic);
+          encoder.setTargetDirectory(this.directory);
+          encoder.setRenamingRule(this.renamingRule);
+          log.debug("Saving move comic task");
+          this.taskService.save(encoder.encode());
+        } else {
+          log.debug("Removing comic: filename={}", comic.getFilename());
+          this.comicService.delete(comic);
+        }
       }
       // we're done when we've processed fewer comics than the page size
       done = comics.size() < (MAX_COMIC_PAGE + 1);
