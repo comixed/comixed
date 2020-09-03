@@ -57,10 +57,10 @@ public class FilenameEntryLoaderTest extends BaseLoaderTest {
 
     Mockito.when(entryLoaders.get(Mockito.anyString())).thenReturn(null);
 
-    loader.loadContent(comic, TEST_FILENAME, content);
+    loader.loadContent(comic, TEST_FILENAME, content, false);
 
     Mockito.verify(entryLoaders, Mockito.times(1)).get("ComicInfo.xml");
-    Mockito.verify(entryLoader, Mockito.never()).loadContent(comic, TEST_FILENAME, content);
+    Mockito.verify(entryLoader, Mockito.never()).loadContent(comic, TEST_FILENAME, content, false);
   }
 
   @Test
@@ -70,11 +70,12 @@ public class FilenameEntryLoaderTest extends BaseLoaderTest {
     Mockito.when(entryLoaders.get(Mockito.anyString())).thenReturn(entryLoader);
     Mockito.doNothing()
         .when(entryLoader)
-        .loadContent(Mockito.any(Comic.class), Mockito.anyString(), Mockito.any());
+        .loadContent(
+            Mockito.any(Comic.class), Mockito.anyString(), Mockito.any(), Mockito.anyBoolean());
 
-    loader.loadContent(comic, TEST_FILENAME, content);
+    loader.loadContent(comic, TEST_FILENAME, content, false);
 
     Mockito.verify(entryLoaders, Mockito.times(1)).get("ComicInfo.xml");
-    Mockito.verify(entryLoader, Mockito.times(1)).loadContent(comic, TEST_FILENAME, content);
+    Mockito.verify(entryLoader, Mockito.times(1)).loadContent(comic, TEST_FILENAME, content, false);
   }
 }

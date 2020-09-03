@@ -62,7 +62,8 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
   }
 
   @Override
-  public void loadContent(Comic comic, String filename, byte[] content)
+  public void loadContent(
+      final Comic comic, final String filename, final byte[] content, final boolean ignoreMetadata)
       throws EntryLoaderException {
     // get the filename.ext only
     String key = new File(filename).getName();
@@ -70,7 +71,7 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
     EntryLoader loader = this.entryLoaders.get(key);
     if (loader != null) {
       log.debug("Using adaptor: " + loader);
-      loader.loadContent(comic, filename, content);
+      loader.loadContent(comic, filename, content, ignoreMetadata);
     } else {
       log.debug("No filename adaptor defined");
     }

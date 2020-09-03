@@ -72,7 +72,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   }
 
   @Override
-  protected void loadAllFiles(Comic comic, ZipFile archiveReference)
+  protected void loadAllFiles(
+      final Comic comic, final ZipFile archiveReference, final boolean ignoreMetadata)
       throws ArchiveAdaptorException {
     log.debug("Processing entries for archive");
     comic.setArchiveType(ArchiveType.CBZ);
@@ -89,7 +90,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       try {
         byte[] content =
             this.loadContent(filename, fileSize, archiveReference.getInputStream(entry));
-        this.processContent(comic, filename, content);
+        this.processContent(comic, filename, content, ignoreMetadata);
       } catch (IOException error) {
         throw new ArchiveAdaptorException("failed to load entry: " + filename, error);
       }

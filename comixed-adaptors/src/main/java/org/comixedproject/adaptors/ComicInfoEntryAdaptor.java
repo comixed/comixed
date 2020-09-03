@@ -25,7 +25,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.loaders.EntryLoader;
+import org.comixedproject.loaders.AbstractEntryLoader;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Credit;
@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ComicInfoEntryAdaptor implements EntryLoader {
+public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
   private final XMLInputFactory xmlInputFactory;
 
   public ComicInfoEntryAdaptor() {
@@ -46,8 +46,13 @@ public class ComicInfoEntryAdaptor implements EntryLoader {
   }
 
   @Override
-  public void loadContent(Comic comic, String filename, byte[] content)
+  public void loadContent(
+      final Comic comic, final String filename, final byte[] content, final boolean ignoreMetadata)
       throws EntryLoaderException {
+    if (ignoreMetadata) {
+      log.debug("Ignoring metadata");
+      return;
+    }
     try {
       this.loadXmlData(new ByteArrayInputStream(content), comic);
     } catch (final XMLStreamException error) {

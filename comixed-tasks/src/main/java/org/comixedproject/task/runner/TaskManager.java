@@ -21,6 +21,8 @@ package org.comixedproject.task.runner;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
@@ -44,13 +46,22 @@ public class TaskManager implements InitializingBean {
   @Autowired private ThreadPoolTaskExecutor taskExecutor;
   @Autowired private TaskService taskService;
 
+  Set<Long> runningTasks = new HashSet<>();
+
   /**
    * Enqueues a task, then deletes it upon successful completion.
    *
    * @param workerTask the worker task
-   * @param task the persisted task
+   * @param persistedTask the persisted task
    */
-  public void runTask(final WorkerTask workerTask, final Task task) {
+  public void runTask(final WorkerTask workerTask, final Task persistedTask) {
+    if (persistedTask != null) {
+      if (this.runningTasks.contains(persistedTask.getId())) {
+        log.debug("Rejecting task: already running");
+        return;
+      }
+      this.runningTasks.add(persistedTask.getId());
+    }
     this.taskExecutor.execute(
         () -> {
           final String description = workerTask.getDescription();
@@ -66,9 +77,10 @@ public class TaskManager implements InitializingBean {
               this.updateAuditLog(false, started, description, error);
           } finally {
             workerTask.afterExecution();
-            if (task != null) {
+            if (persistedTask != null) {
               log.debug("Deleting persisted task");
-              this.taskService.delete(task);
+              this.runningTasks.remove(persistedTask.getId());
+              this.taskService.delete(persistedTask);
             }
           }
         });

@@ -42,7 +42,11 @@ public class ImageEntryLoader extends AbstractEntryLoader {
   @Autowired private Utils utils;
 
   @Override
-  public void loadContent(Comic comic, String filename, byte[] content) {
+  public void loadContent(
+      final Comic comic,
+      final String filename,
+      final byte[] content,
+      final boolean ignoreMetadata) {
     log.debug("Loading image into comic");
     // if the comic already has this offset then update the offset's content
     if (comic.hasPageWithFilename(filename)) {

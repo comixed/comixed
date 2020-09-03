@@ -18,11 +18,9 @@
 
 package org.comixedproject.adaptors;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 import org.comixedproject.loaders.BaseLoaderTest;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.comic.Comic;
@@ -30,6 +28,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,60 +39,65 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   private static final String TEST_PUBLISHER_NAME = "Test Publisher";
   private static final String TEST_SERIES_NAME = "Test Series";
   private static final String TEST_VOLUME_NAME = "2011";
-  @InjectMocks ComicInfoEntryAdaptor adaptor;
+  private static final String TEST_ISSUE_NUMBER = "24";
+  private static final String TEST_TITLE = "Test Title";
+  private static final String TEST_SUMMARY = "Test summary";
+  private static final String TEST_NOTES = "Test notes";
 
-  private Comic comic;
+  @InjectMocks ComicInfoEntryAdaptor adaptor;
+  @Mock private Comic comic;
 
   @Before
-  public void setUp() {
-    comic = new Comic();
+  public void setup() {
+    Mockito.when(comic.getPublisher()).thenReturn(TEST_PUBLISHER_NAME);
+    Mockito.when(comic.getSeries()).thenReturn(TEST_SERIES_NAME);
+    Mockito.when(comic.getVolume()).thenReturn(TEST_VOLUME_NAME);
+    Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(comic.getTitle()).thenReturn(TEST_TITLE);
+    Mockito.when(comic.getSummary()).thenReturn(TEST_SUMMARY);
+    Mockito.when(comic.getNotes()).thenReturn(TEST_NOTES);
+  }
 
-    comic.setPublisher(TEST_PUBLISHER_NAME);
-    comic.setSeries(TEST_SERIES_NAME);
-    comic.setVolume(TEST_VOLUME_NAME);
-    comic.setCoverDate(new Date());
-    comic.setDateAdded(new Date());
+  @Test
+  public void testLoadComicInfoXmlIgnoreMetadata() throws IOException, EntryLoaderException {
+    adaptor.loadContent(
+        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE), true);
+
+    Mockito.verify(comic, Mockito.never()).setPublisher(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setTitle(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setSummary(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setNotes(Mockito.anyString());
   }
 
   @Test
   public void testLoadComicInfoXml() throws IOException, EntryLoaderException {
     adaptor.loadContent(
-        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE), false);
 
-    assertEquals(TEST_PUBLISHER_NAME, comic.getPublisher());
-    assertEquals(TEST_SERIES_NAME, comic.getSeries());
-    assertEquals(TEST_VOLUME_NAME, comic.getVolume());
-    assertEquals("Test Title", comic.getTitle());
-    assertEquals("24", comic.getIssueNumber());
-    assertEquals("Test summary", comic.getSummary());
-    assertEquals("Test notes", comic.getNotes());
-
-    Calendar gc = Calendar.getInstance();
-    gc.setTime(comic.getCoverDate());
-    assertEquals(2013, gc.get(Calendar.YEAR));
-    assertEquals(11, gc.get(Calendar.MONTH));
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER_NAME);
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME_NAME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setTitle(TEST_TITLE);
+    Mockito.verify(comic, Mockito.times(1)).setSummary(TEST_SUMMARY);
+    Mockito.verify(comic, Mockito.times(1)).setNotes(TEST_NOTES);
   }
 
   @Test
   public void testSaveComicInfoXml() throws EntryLoaderException, IOException {
-    adaptor.loadContent(
-        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
-
     byte[] result = adaptor.saveContent(comic);
 
-    Comic second = new Comic();
-    adaptor.loadContent(second, TEST_COMICINFO_FILE_COMPLETE, result);
+    assertNotNull(result);
 
-    assertEquals(comic.getPublisher(), second.getPublisher());
-    assertEquals(comic.getSeries(), second.getSeries());
-    assertEquals(comic.getVolume(), second.getVolume());
-    assertEquals(comic.getIssueNumber(), second.getIssueNumber());
-    assertEquals(comic.getTitle(), second.getTitle());
-    assertEquals(comic.getSummary(), second.getSummary());
-    assertEquals(comic.getNotes(), second.getNotes());
-    assertEquals(comic.getCoverDate(), second.getCoverDate());
-    assertEquals(comic.getCharacters(), second.getCharacters());
-    assertEquals(comic.getTeams(), second.getTeams());
-    assertEquals(comic.getLocations(), second.getLocations());
+    Mockito.verify(comic, Mockito.times(1)).getPublisher();
+    Mockito.verify(comic, Mockito.times(1)).getSeries();
+    Mockito.verify(comic, Mockito.times(1)).getVolume();
+    Mockito.verify(comic, Mockito.times(1)).getIssueNumber();
+    Mockito.verify(comic, Mockito.times(1)).getTitle();
+    Mockito.verify(comic, Mockito.times(1)).getSummary();
+    Mockito.verify(comic, Mockito.times(1)).getNotes();
   }
 }

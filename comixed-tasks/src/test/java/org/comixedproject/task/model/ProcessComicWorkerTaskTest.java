@@ -19,7 +19,9 @@
 package org.comixedproject.task.model;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -80,6 +82,7 @@ public class ProcessComicWorkerTaskTest {
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(archiveAdaptor);
     Mockito.doNothing().when(archiveAdaptor).loadComic(comic);
+    Mockito.doNothing().when(archiveAdaptor).fillComic(comic);
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsCaptor.capture());
@@ -89,9 +92,6 @@ public class ProcessComicWorkerTaskTest {
   @After
   public void tearDown() throws ArchiveAdaptorException {
     Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(archiveType);
-    Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
-    Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 
   @Test
@@ -110,6 +110,25 @@ public class ProcessComicWorkerTaskTest {
 
     Mockito.verify(pageService, Mockito.times(1)).getAllBlockedPageHashes();
     Mockito.verify(blockedPage, Mockito.times(1)).setDeleted(true);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
+    Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
+  }
+
+  @Test
+  public void testStartTaskIgnoreMetadata()
+      throws WorkerTaskException, ArchiveAdaptorException, IOException {
+    task.setComic(comic);
+    task.setIgnoreMetadata(true);
+    task.setDeleteBlockedPages(false);
+
+    task.startTask();
+
+    assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
+
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).fillComic(comic);
+    Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 
   @Test
@@ -121,8 +140,46 @@ public class ProcessComicWorkerTaskTest {
     task.startTask();
 
     assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
+    assertFalse(task.createDescription().isEmpty());
 
     Mockito.verify(pageService, Mockito.never()).getAllBlockedPageHashes();
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(blockedPage, Mockito.never()).setDeleted(true);
+    Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
+  }
+
+  @Test(expected = WorkerTaskException.class)
+  public void testStartTaskArchiveAdaptorRaisesException()
+      throws WorkerTaskException, ArchiveAdaptorException, IOException {
+    task.setComic(comic);
+    task.setIgnoreMetadata(false);
+    task.setDeleteBlockedPages(false);
+
+    Mockito.doThrow(ArchiveAdaptorException.class).when(archiveAdaptor).loadComic(comic);
+
+    try {
+      task.startTask();
+    } finally {
+      Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
+    }
+  }
+
+  @Test(expected = WorkerTaskException.class)
+  public void testStartTaskExceptionOnFileHash()
+      throws WorkerTaskException, ArchiveAdaptorException, IOException {
+    task.setComic(comic);
+    task.setIgnoreMetadata(false);
+    task.setDeleteBlockedPages(false);
+
+    Mockito.doNothing().when(archiveAdaptor).loadComic(comic);
+    Mockito.when(utils.createHash(Mockito.any(FileInputStream.class))).thenThrow(IOException.class);
+
+    try {
+      task.startTask();
+    } finally {
+      Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
+      Mockito.verify(utils, Mockito.times(1)).createHash(Mockito.any(FileInputStream.class));
+    }
   }
 }
