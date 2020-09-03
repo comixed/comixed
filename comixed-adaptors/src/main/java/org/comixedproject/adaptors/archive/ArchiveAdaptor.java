@@ -47,6 +47,14 @@ public interface ArchiveAdaptor {
   void loadComic(Comic comic) throws ArchiveAdaptorException;
 
   /**
+   * Files the entire comic's contents from disk, but ignores any embedded metadata files.
+   *
+   * @param comic the comic
+   * @throws ArchiveAdaptorException if an error occurs
+   */
+  void fillComic(Comic comic) throws ArchiveAdaptorException;
+
+  /**
    * Loads a single file from the archive file.
    *
    * @param comic the comic
