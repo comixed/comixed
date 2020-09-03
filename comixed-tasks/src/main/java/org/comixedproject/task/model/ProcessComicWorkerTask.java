@@ -74,7 +74,13 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
     if (adaptor == null) throw new WorkerTaskException("No archive adaptor found");
     logger.debug("Loading comic");
     try {
-      adaptor.loadComic(comic);
+      if (this.ignoreMetadata) {
+        log.debug("Filling comic from disk");
+        adaptor.fillComic(comic);
+      } else {
+        log.debug("Loading comic from disk");
+        adaptor.loadComic(comic);
+      }
     } catch (ArchiveAdaptorException error) {
       throw new WorkerTaskException("failed to load comic: " + comic.getFilename(), error);
     }
