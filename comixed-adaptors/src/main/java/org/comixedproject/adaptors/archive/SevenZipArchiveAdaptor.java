@@ -89,7 +89,8 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   }
 
   @Override
-  protected void loadAllFiles(Comic comic, SevenZFile archiveReference)
+  protected void loadAllFiles(
+      final Comic comic, final SevenZFile archiveReference, final boolean ignoreMetadata)
       throws ArchiveAdaptorException {
     log.debug("Processing entries for archive");
     comic.setArchiveType(ArchiveType.CB7);
@@ -110,7 +111,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
         byte[] content = new byte[(int) fileSize];
         try {
           archiveReference.read(content, 0, (int) fileSize);
-          this.processContent(comic, filename, content);
+          this.processContent(comic, filename, content, ignoreMetadata);
         } catch (IOException error) {
           throw new ArchiveAdaptorException("Failed to load entry: " + filename, error);
         }

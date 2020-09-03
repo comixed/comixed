@@ -66,7 +66,8 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
   }
 
   @Override
-  protected void loadAllFiles(Comic comic, Archive archiveReference)
+  protected void loadAllFiles(
+      final Comic comic, final Archive archiveReference, final boolean ignoreMetadata)
       throws ArchiveAdaptorException {
     comic.setArchiveType(ArchiveType.CBR);
     List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
@@ -80,7 +81,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
       } catch (IOException | RarException error) {
         throw new ArchiveAdaptorException("Failed to load entry: " + filename, error);
       }
-      this.processContent(comic, filename, content);
+      this.processContent(comic, filename, content, ignoreMetadata);
     }
   }
 

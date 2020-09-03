@@ -23,9 +23,11 @@ import static junit.framework.TestCase.*;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
+import org.comixedproject.task.model.AbstractWorkerTask;
 import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.model.WorkerTaskException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -35,16 +37,68 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @RunWith(MockitoJUnitRunner.class)
 public class TaskManagerTest {
   private static final String TEST_DESCRIPTION = "The task description";
+  private static final Long TEST_PERSISTED_TASK_ID = 237L;
 
   @InjectMocks private TaskManager taskManager;
   @Mock private ThreadPoolTaskExecutor taskExecutor;
   @Mock private TaskService taskService;
   @Mock private WorkerTask workerTask;
-  @Mock private Task task;
+  @Mock private Task persistedTask;
   @Captor private ArgumentCaptor<Runnable> runnableArgumentCaptor;
   @Captor private ArgumentCaptor<TaskAuditLogEntry> logEntryArgumentCaptor;
   @Mock private TaskAuditLogEntry logEntryRecord;
   @Mock private MonitorTaskQueueWorkerTask monitorTaskQueueWorkerTask;
+
+  @Before
+  public void setUp() {
+    Mockito.when(persistedTask.getId()).thenReturn(TEST_PERSISTED_TASK_ID);
+    taskManager.runningTasks.clear();
+  }
+
+  @Test
+  public void testRunTaskWithPersistedTask() throws WorkerTaskException {
+    Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
+    Mockito.doNothing().when(taskService).saveAuditLogEntry(logEntryArgumentCaptor.capture());
+
+    taskManager.runTask(
+        new AbstractWorkerTask() {
+          @Override
+          public void startTask() throws WorkerTaskException {
+            assertFalse(taskManager.runningTasks.isEmpty());
+          }
+
+          @Override
+          protected String createDescription() {
+            return TEST_DESCRIPTION;
+          }
+        },
+        persistedTask);
+
+    assertNotNull(runnableArgumentCaptor.getValue());
+
+    Mockito.verify(taskExecutor, Mockito.times(1)).execute(runnableArgumentCaptor.getValue());
+
+    runnableArgumentCaptor.getValue().run();
+
+    final TaskAuditLogEntry logEntry = logEntryArgumentCaptor.getValue();
+    assertNotNull(logEntry);
+    assertNotNull(logEntry.getStartTime());
+    assertNotNull(logEntry.getEndTime());
+    assertTrue(logEntry.getSuccessful());
+    assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
+
+    Mockito.verify(taskService, Mockito.times(1)).saveAuditLogEntry(logEntry);
+    Mockito.verify(taskService, Mockito.times(1)).delete(persistedTask);
+  }
+
+  @Test
+  public void testRunTaskWithPersistedTaskAlreadyRunning() throws WorkerTaskException {
+    taskManager.runningTasks.add(TEST_PERSISTED_TASK_ID);
+
+    taskManager.runTask(workerTask, persistedTask);
+
+    Mockito.verify(taskExecutor, Mockito.never()).execute(Mockito.any());
+  }
 
   @Test
   public void testRunTask() throws WorkerTaskException {
@@ -70,37 +124,9 @@ public class TaskManagerTest {
     assertNotNull(logEntry.getEndTime());
     assertTrue(logEntry.getSuccessful());
     assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
+    assertTrue(taskManager.runningTasks.isEmpty());
 
     Mockito.verify(taskService, Mockito.times(1)).saveAuditLogEntry(logEntry);
-  }
-
-  @Test
-  public void testRunTaskWithPersistedTask() throws WorkerTaskException {
-    Mockito.when(workerTask.getDescription()).thenReturn(TEST_DESCRIPTION);
-    Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
-    Mockito.doNothing().when(taskService).saveAuditLogEntry(logEntryArgumentCaptor.capture());
-
-    taskManager.runTask(workerTask, task);
-
-    assertNotNull(runnableArgumentCaptor.getValue());
-
-    Mockito.verify(taskExecutor, Mockito.times(1)).execute(runnableArgumentCaptor.getValue());
-
-    runnableArgumentCaptor.getValue().run();
-
-    Mockito.verify(workerTask, Mockito.times(1)).getDescription();
-    Mockito.verify(workerTask, Mockito.times(1)).startTask();
-    Mockito.verify(workerTask, Mockito.times(1)).afterExecution();
-
-    final TaskAuditLogEntry logEntry = logEntryArgumentCaptor.getValue();
-    assertNotNull(logEntry);
-    assertNotNull(logEntry.getStartTime());
-    assertNotNull(logEntry.getEndTime());
-    assertTrue(logEntry.getSuccessful());
-    assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
-
-    Mockito.verify(taskService, Mockito.times(1)).saveAuditLogEntry(logEntry);
-    Mockito.verify(taskService, Mockito.times(1)).delete(task);
   }
 
   @Test

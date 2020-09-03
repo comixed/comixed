@@ -62,7 +62,7 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
 
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    loader.loadContent(comic, TEST_JPEG_FILENAME, content);
+    loader.loadContent(comic, TEST_JPEG_FILENAME, content, false);
 
     Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
 
@@ -78,7 +78,7 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
 
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
-    loader.loadContent(comic, TEST_WEBP_FILENAME, content);
+    loader.loadContent(comic, TEST_WEBP_FILENAME, content, false);
 
     Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
 

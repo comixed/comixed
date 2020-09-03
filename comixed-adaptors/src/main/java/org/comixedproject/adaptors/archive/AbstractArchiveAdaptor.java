@@ -131,7 +131,17 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   @Override
-  public void loadComic(Comic comic) throws ArchiveAdaptorException {
+  public void loadComic(final Comic comic) throws ArchiveAdaptorException {
+    this.doLoadComic(comic, false);
+  }
+
+  @Override
+  public void fillComic(final Comic comic) throws ArchiveAdaptorException {
+    this.doLoadComic(comic, true);
+  }
+
+  private void doLoadComic(final Comic comic, final boolean ignoreMetadata)
+      throws ArchiveAdaptorException {
     I archiveReference = null;
 
     log.debug("Processing archive: {}", comic.getFilename());
@@ -142,7 +152,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       archiveReference = this.openArchive(comicFile);
 
       log.debug("Loading entire comic: {}", comic.getFilename());
-      this.loadAllFiles(comic, archiveReference);
+      this.loadAllFiles(comic, archiveReference, ignoreMetadata);
     } finally {
       // clean up
       if (archiveReference != null) {
@@ -160,10 +170,12 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
    * @param comic the comic
    * @param archiveReference the archive
    */
-  protected abstract void loadAllFiles(Comic comic, I archiveReference)
+  protected abstract void loadAllFiles(
+      final Comic comic, final I archiveReference, final boolean ignoreMetadata)
       throws ArchiveAdaptorException;
 
-  protected byte[] loadContent(String filename, long size, InputStream input) throws IOException {
+  protected byte[] loadContent(final String filename, final long size, final InputStream input)
+      throws IOException {
     log.debug("Loading entry: name={} size={}", filename, size);
     byte[] content = new byte[(int) size];
 
@@ -209,13 +221,17 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
    */
   protected abstract I openArchive(File comicFile) throws ArchiveAdaptorException;
 
-  protected void processContent(Comic comic, String filename, byte[] content) {
+  protected void processContent(
+      final Comic comic,
+      final String filename,
+      final byte[] content,
+      final boolean ignoreMetadata) {
     this.recordFileEntry(comic, filename, content);
     EntryLoader loader = this.getLoaderForContent(content);
     if (loader != null) {
       try {
         log.debug("Loading content: filename={} length={}", filename, content.length);
-        loader.loadContent(comic, filename, content);
+        loader.loadContent(comic, filename, content, ignoreMetadata);
       } catch (EntryLoaderException error) {
         log.error("Error loading content", error);
       }

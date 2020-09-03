@@ -33,7 +33,9 @@ public interface EntryLoader {
    * @param comic the comic
    * @param filename the content's filename
    * @param content the content
+   * @param ignoreMetadata ignore any metadata if found
    * @throws EntryLoaderException if an error occurs while loading the content
    */
-  void loadContent(Comic comic, String filename, byte[] content) throws EntryLoaderException;
+  void loadContent(Comic comic, String filename, byte[] content, boolean ignoreMetadata)
+      throws EntryLoaderException;
 }
