@@ -12,8 +12,6 @@
   <artifactId>comixed-frontend</artifactId>
   <name>comixed-frontend</name>
   <url>${comixed.url}</url>
-  <dependencies>
-  </dependencies>
   <build>
     <resources>
       <resource>
