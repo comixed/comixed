@@ -33,8 +33,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicsWorkerTask</code> handles encoding instances of {@link MoveComicTask} to move
- * individual comics.
+ * <code>MoveComicsWorkerTask</code> handles encoding instances of {@link MoveComicWorkerTask} to
+ * move individual comics.
  *
  * @author Darryl L. Pierce
  */

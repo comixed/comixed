@@ -22,6 +22,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.adaptors.AbstractScrapingAdaptor;
+import org.comixedproject.scrapers.adaptors.ScrapingAdaptor;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineGetIssueAction;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineGetIssueDetailsAction;
 import org.comixedproject.scrapers.comicvine.actions.ComicVineGetVolumesAction;

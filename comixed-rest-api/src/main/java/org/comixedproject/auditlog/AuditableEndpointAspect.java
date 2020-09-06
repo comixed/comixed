@@ -53,6 +53,7 @@ public class AuditableEndpointAspect {
    *
    * @param joinPoint the join point.
    * @return the response object
+   * @throws Throwable if any underying call raises an exception
    */
   @Around("@annotation(org.comixedproject.auditlog.AuditableEndpoint)")
   public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
