@@ -19,8 +19,7 @@
 package org.comixedproject.task.model;
 
 /**
- * <code>WorkerTask</code> defines a type that is executed by the
- * {@link Worker] class.
+ * <code>WorkerTask</code> defines a type that is executed.
  *
  * @author Darryl L. Pierce
  */

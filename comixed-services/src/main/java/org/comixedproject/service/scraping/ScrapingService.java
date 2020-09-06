@@ -26,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Credit;
 import org.comixedproject.scrapers.ScrapingException;
+import org.comixedproject.scrapers.adaptors.ScrapingAdaptor;
 import org.comixedproject.scrapers.comicvine.adaptors.ComicVineScrapingAdaptor;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingIssueDetails;

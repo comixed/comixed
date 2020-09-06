@@ -77,7 +77,7 @@ public class Task {
    * Retrieves a property on the task.
    *
    * @param name the property name
-   * @return
+   * @return the property value
    */
   public String getProperty(final String name) {
     return this.properties.get(name);

@@ -36,7 +36,7 @@ public interface WorkerTaskEncoder<T extends WorkerTask> {
   Task encode();
 
   /**
-   * Decodes a {@link Task} and returns a {@link WorkTask}.
+   * Decodes a {@link Task} and returns a {@link WorkerTask}.
    *
    * @param task the saved task
    * @return the worker task
