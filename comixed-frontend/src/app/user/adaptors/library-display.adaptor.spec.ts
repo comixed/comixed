@@ -38,7 +38,7 @@ import { BehaviorSubject } from 'rxjs';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerModule } from '@angular-ru/logger';
 
-fdescribe('LibraryDisplayAdaptor', () => {
+describe('LibraryDisplayAdaptor', () => {
   const USER = { ...USER_READER };
 
   let libraryDisplayAdaptor: LibraryDisplayAdaptor;

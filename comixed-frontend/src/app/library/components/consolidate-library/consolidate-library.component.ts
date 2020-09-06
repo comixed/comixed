@@ -77,7 +77,7 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authenticationAdaptor.user$.subscribe(() => {
       this.consolidationForm.controls['deletePhysicalFiles'].setValue(
         this.authenticationAdaptor.getPreference(
-            MOVE_COMICS_DELETE_PHYSICAL_FILE
+          MOVE_COMICS_DELETE_PHYSICAL_FILE
         ) === 'true'
       );
     });
@@ -120,7 +120,7 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
           .value;
         this.authenticationAdaptor.setPreference(
           MOVE_COMICS_DELETE_PHYSICAL_FILE,
-            `${deletePhysicalFiles}`
+          `${deletePhysicalFiles}`
         );
         this.authenticationAdaptor.setPreference(
           MOVE_COMICS_TARGET_DIRECTORY,
@@ -154,5 +154,20 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
         reject: () => (this.deletePhysicalFiles = false)
       });
     }
+  }
+
+  onPaste(event: ClipboardEvent): void {
+    this.filterRenamingRule(event.clipboardData.getData('text'));
+  }
+
+  onInput() {
+    this.filterRenamingRule(this.consolidationForm.controls.renamingRule.value);
+  }
+
+  private filterRenamingRule(rule: string): void {
+    console.log('*** rule:', rule);
+    const re = /[:\\*?|<>\[\]]/gi;
+    rule = rule.replace(re, '_');
+    this.consolidationForm.controls.renamingRule.setValue(rule);
   }
 }
