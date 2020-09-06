@@ -262,4 +262,27 @@ describe('ConsolidateLibraryComponent', () => {
       expect(confirmationService.confirm).not.toHaveBeenCalled();
     });
   });
+
+  describe('invalid characters are scrubbed', () => {
+    it('applies to typed characters', () => {
+      component.consolidationForm.controls.renamingRule.setValue('[]:\\*?|<>');
+      component.onInput();
+      expect(component.consolidationForm.controls.renamingRule.value).toEqual(
+        '_________'
+      );
+    });
+
+    it('applies to pasted characters', () => {
+      const event = new ClipboardEvent('paste', {
+        clipboardData: new DataTransfer()
+      });
+      event.clipboardData.setData('text', '[]:\\*?|<>');
+      console.log('*** event:', event);
+      component.onPaste(event);
+      fixture.detectChanges();
+      expect(component.consolidationForm.controls.renamingRule.value).toEqual(
+        '_________'
+      );
+    });
+  });
 });

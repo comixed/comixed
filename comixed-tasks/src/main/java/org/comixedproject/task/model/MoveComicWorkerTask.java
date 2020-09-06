@@ -45,8 +45,11 @@ import org.springframework.util.StringUtils;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class MoveComicWorkerTask extends AbstractWorkerTask {
-  static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
+  private static final String FORBIDDING_RULE_CHARACTERS = "[:\\\\*?|<>]";
+  private static final String FORBIDDING_PROPERTY_CHARACTERS = "[:\\\\/*?|<>]";
   private static final String UNKNOWN_VALUE = "Unknown";
+
+  static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
 
   @Autowired private ComicService comicService;
 
@@ -120,26 +123,30 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
       return FilenameUtils.getBaseName(this.comic.getFilename());
     }
 
-    log.debug("Generating relative filename based on renaming rule: {}", this.renamingRule);
+    log.debug("Scrubbing renaming rule: {}", this.renamingRule);
+    final String rule = this.scrub(this.renamingRule, FORBIDDING_RULE_CHARACTERS);
+
+    log.debug("Generating relative filename based on renaming rule: {}", rule);
 
     final String publisher =
-        StringUtils.isEmpty(this.comic.getPublisher()) ? UNKNOWN_VALUE : this.comic.getPublisher();
+        StringUtils.isEmpty(this.comic.getPublisher())
+            ? UNKNOWN_VALUE
+            : scrub(this.comic.getPublisher());
     final String series =
-        StringUtils.isEmpty(this.comic.getSeries()) ? UNKNOWN_VALUE : this.comic.getSeries();
+        StringUtils.isEmpty(this.comic.getSeries()) ? UNKNOWN_VALUE : scrub(this.comic.getSeries());
     final String volume =
         StringUtils.isEmpty(this.comic.getVolume()) ? UNKNOWN_VALUE : this.comic.getVolume();
     final String issueNumber =
         StringUtils.isEmpty(this.comic.getIssueNumber())
             ? UNKNOWN_VALUE
-            : this.comic.getIssueNumber();
+            : scrub(this.comic.getIssueNumber());
     final String coverDate =
         this.comic.getCoverDate() != null
             ? dateFormat.format(this.comic.getCoverDate())
             : "No Cover Date";
 
-    final String result =
-        this.renamingRule
-            .replace("$PUBLISHER", publisher)
+    String result =
+        rule.replace("$PUBLISHER", publisher)
             .replace("$SERIES", series)
             .replace("$VOLUME", volume)
             .replace("$ISSUE", issueNumber)
@@ -148,6 +155,15 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
     log.debug("Relative comic filename: {}", result);
 
     return result;
+  }
+
+  private String scrub(final String text) {
+    return this.scrub(text, FORBIDDING_PROPERTY_CHARACTERS);
+  }
+
+  private String scrub(final String text, final String forbidden) {
+    log.trace("Pre-sanitized text: {}", text);
+    return text.replaceAll(forbidden, "_");
   }
 
   private void addDirectory(StringBuilder result, String value) {

@@ -106,6 +106,34 @@ public class MoveComicWorkerTaskTest {
           TEST_VOLUME,
           TEST_ISSUE,
           "No Cover Date");
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "?Publisher*";
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "_Publisher_";
+  private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|Series?>";
+  private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Series__";
+  private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";
+  private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__717_";
+  private static final String TEST_RELATIVE_NAME_SCRUBBED =
+      String.format(
+          "%s/%s/%s/%s v%s #%s (%s)",
+          TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+          TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+          TEST_VOLUME,
+          TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+          TEST_VOLUME,
+          TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+          TEST_FORMATTED_COVER_DATE);
+  private static final String TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS =
+      "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
+  private static final String TEST_RELATIVE_NAME_WITH_RULE_WITH_SCRUBBED_CHARACTERS =
+      String.format(
+          "__%s/____%s/__%s/%s v%s #%s (%s)",
+          TEST_PUBLISHER,
+          TEST_SERIES,
+          TEST_VOLUME,
+          TEST_SERIES,
+          TEST_VOLUME,
+          TEST_ISSUE,
+          TEST_FORMATTED_COVER_DATE);
 
   @InjectMocks private MoveComicWorkerTask task;
   @Mock private ComicService comicService;
@@ -138,6 +166,26 @@ public class MoveComicWorkerTaskTest {
     final String result = task.getRelativeComicFilename();
 
     assertEquals(TEST_RELATIVE_NAME_WITH_RULE, result);
+  }
+
+  @Test
+  public void testGetRelativeComicFilenameRenamingRuleHasUnsupportedCharacters() {
+    task.setRenamingRule(TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS);
+
+    final String result = task.getRelativeComicFilename();
+
+    assertEquals(TEST_RELATIVE_NAME_WITH_RULE_WITH_SCRUBBED_CHARACTERS, result);
+  }
+
+  @Test
+  public void testGetRelativeComicFilenameWithUnsupportedCharacters() {
+    Mockito.when(comic.getPublisher()).thenReturn(TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS);
+    Mockito.when(comic.getSeries()).thenReturn(TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS);
+    Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS);
+
+    final String result = task.getRelativeComicFilename();
+
+    assertEquals(TEST_RELATIVE_NAME_SCRUBBED, result);
   }
 
   @Test
