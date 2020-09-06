@@ -23,8 +23,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <code>GetVolumesRequest</code>> represents the payload for requesting a set of volumes for a
- * given series.
+ * <code>GetVolumesRequest</code> represents the payload for requesting a set of volumes for a given
+ * series.
  *
  * @author Darryl L. Pierce
  */

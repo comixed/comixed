@@ -533,7 +533,7 @@ public class Comic {
   /**
    * Returns the offset for the given filename.
    *
-   * @param filename
+   * @param filename the filename
    * @return the {@link Page} or null
    */
   public Page getPageWithFilename(String filename) {

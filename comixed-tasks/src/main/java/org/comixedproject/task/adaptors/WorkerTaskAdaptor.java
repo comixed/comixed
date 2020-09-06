@@ -88,6 +88,7 @@ public class WorkerTaskAdaptor implements InitializingBean {
    * Returns the configured {@link WorkerTaskEncoder} for the given {@link TaskType}.
    *
    * @param taskType the task type
+   * @param <T> the task encoder type
    * @return the adaptor bean
    * @throws TaskException if no adaptor is configured
    */

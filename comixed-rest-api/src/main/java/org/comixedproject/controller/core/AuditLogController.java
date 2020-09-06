@@ -55,8 +55,9 @@ public class AuditLogController {
   /**
    * Retrieve the list of log entries after the cutoff time.
    *
-   * @param cutoff the cutoff
+   * @param timestamp the cutoff timestamp
    * @return the log entries
+   * @throws ComiXedControllerException if an error occurs
    */
   @GetMapping(value = "/api/tasks/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")

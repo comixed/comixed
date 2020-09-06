@@ -87,7 +87,7 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
    * @param volume the vname
    * @param issueNumber the issue number
    * @return the issue
-   * @throws ScrapingException
+   * @throws ScrapingException if an error occurs
    */
   protected abstract ScrapingIssue doGetIssue(
       final String apiKey, final Integer volume, final String issueNumber) throws ScrapingException;

@@ -110,8 +110,10 @@ public class Page {
    * Creates a new instance with the given filename and image content.
    *
    * @param filename the filename
-   * @param content the content
    * @param pageType the offset type
+   * @param hash the page hash
+   * @param width the image width
+   * @param height the image height
    */
   public Page(
       String filename,

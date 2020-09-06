@@ -35,7 +35,7 @@ import org.comixedproject.scrapers.actions.AbstractScrapingAction;
  * built.
  *
  * @author Darryl L. Pierce
- * @param <T>
+ * @param <T> the action return type
  */
 @Log4j2
 public abstract class AbstractComicVineScrapingAction<T> extends AbstractScrapingAction<T> {

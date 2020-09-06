@@ -142,7 +142,7 @@ public class ComiXedUser {
   /**
    * Returns the user's mark with the given book.
    *
-   * @param book the bookmark's book
+   * @param comic the bookmark's comic
    * @return the value, or null if none is set
    */
   public String getBookmark(Comic comic) {

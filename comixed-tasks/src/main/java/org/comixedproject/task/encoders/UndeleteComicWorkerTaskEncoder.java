@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>UndeleteComicWorkerTaskEncoder</code> defines a type that can encode and decode instances
- * of {@link UndeleteComicTask}.
+ * of {@link UndeleteComicWorkerTask}.
  *
  * @author Darryl L. Pierce
  */
