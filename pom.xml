@@ -6,7 +6,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>0.7.0-0</version>
+  <version>0.7.0-rc1</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -17,7 +17,6 @@
   <properties>
     <assembly.name>local</assembly.name>
     <comixed.url>http://www.comixedproject.org</comixed.url>
-    <comixed.version>0.7.0-0</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
     <java-version>12</java-version>
   </properties>
