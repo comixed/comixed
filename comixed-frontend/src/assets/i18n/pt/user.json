@@ -2,60 +2,60 @@
   "user-admin-effects": {
     "get-all": {
       "error": {
-        "detail": "Failed to get all users."
+        "detail": "Erro a carregar todos os utilizadores."
       }
     },
     "save": {
       "success": {
-        "detail": "Successfully updated {email}."
+        "detail": "{email} actualizado com sucesso."
       },
       "error": {
-        "detail": "Failed to {update, select, true{update} other{save}} user."
+        "detail": "Erro ao {update, select, true{update} other{save}} o utilizador."
       }
     },
     "delete-user": {
       "success": {
-        "detail": "Deleted user: {email}"
+        "detail": "Utilizador apagado: {email}"
       },
       "error": {
-        "delete": "Failed to delete user."
+        "delete": "Erro ao apagar o utilizador."
       }
     }
   },
   "account-page": {
     "title": "ComiXed: {email}",
     "label": {
-      "details": "Details",
-      "edit-details": "Edit Details",
-      "preferences": "Preferences"
+      "details": "Detalhes",
+      "edit-details": "Editar os detalhes",
+      "preferences": "Preferências"
     },
     "save-user": {
-      "header": "Update Your Account",
-      "message": "Are you sure you want to save these changes to your login account? You will need to log in again if your email address was changed."
+      "header": "Actualizar a sua conta",
+      "message": "Tem a certeza que quer gravar as alterações feitas à sua conta? Precisa de entrar de novo se o seu email foi alterado."
     }
   },
   "user-details-editor": {
     "user-form": {
-      "email-required": "Email is required.",
-      "email-invalid": "Email address is invalid.",
-      "password-required": "Password is required",
-      "password-min-length": "Password must be at least {length} characters.",
-      "password-max-length": "Password must be no more than {length} characters.",
-      "passwords-must-match": "Passwords must match."
+      "email-required": "Necessário o Email.",
+      "email-invalid": "O Email está incorreto.",
+      "password-required": "Necessária a senha",
+      "password-min-length": "A senha tem que ter pelo menos {length} caracteres.",
+      "password-max-length": "A senha não pode ter mais do que {length} caracteres.",
+      "passwords-must-match": "A senhas têm que ser iguais."
     },
     "label": {
-      "email-address": "Email Address",
-      "password": "Password",
-      "password-verify": "Password (Again)",
-      "user-is-reader": "Reader Account",
-      "user-is-admin": "Admin Account"
+      "email-address": "Endereço de Email",
+      "password": "Senha",
+      "password-verify": "Senha (Outra vez)",
+      "user-is-reader": "Conta de leitor",
+      "user-is-admin": "Conta de administrador"
     }
   },
   "users-page": {
-    "title": "ComiXed: Manage User Accounts",
+    "title": "ComiXed: Gerir contas de utilizador",
     "text": {
-      "cant-delete-yourself": "You cannot delete your account",
-      "delete-user": "Delete the current user."
+      "cant-delete-yourself": "Não pode apagar a própria conta",
+      "delete-user": "Apagar o utilizador actual."
     }
   }
 }
