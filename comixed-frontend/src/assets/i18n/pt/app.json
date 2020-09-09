@@ -1,133 +1,133 @@
 {
   "menu": {
     "home": {
-      "root": "Home"
+      "root": "Início"
     },
     "library": {
-      "root": "Library",
+      "root": "Biblioteca",
       "comics": "Comics",
-      "import": "Import",
-      "duplicate-pages": "Duplicate Pages",
-      "missing-comics": "Missing Comics"
+      "import": "Importar",
+      "duplicate-pages": "Páginas duplicadas",
+      "missing-comics": "Comics em falta"
     },
     "admin": {
-      "root": "Admin",
-      "users": "Users",
-      "library": "Library"
+      "root": "Administrador",
+      "users": "Utilizadores",
+      "library": "Biblioteca"
     },
     "help": {
-      "root": "Help",
-      "build-details": "Build Details"
+      "root": "Ajuda",
+      "build-details": "Informação da compilação"
     }
   },
   "app-component": {
     "copyright": "<b>Copyright &copy; {years}, The ComiXed Project Team</b>",
-    "library-counts": "<b>Total:</b> {comic_count} <b>Read:</b> {read_count} <b>Processing:</b> {import_count}"
+    "library-counts": "<b>Total:</b> {comic_count} <b>Lidos:</b> {read_count} <b>Processando:</b> {import_count}"
   },
   "language": {
     "option": {
-      "english": "English",
-      "french": "French",
-      "spanish": "Spanish",
-      "portuguese": "Portuguese"
+      "english": "Inglês",
+      "french": "Frances",
+      "spanish": "Espanhol",
+      "portuguese": "Português"
     }
   },
   "main-page": {
     "text": {
-      "please-login": "Please login to view the library.",
-      "library-status": "There are {comic_count} comics in the library."
+      "please-login": "Por favor dê entrada no Comixed para ver a biblioteca.",
+      "library-status": "Há {comic_count} comics na biblioteca."
     },
     "title": "ComiXed"
   },
   "iconbar": {
-    "home": "Home",
-    "library": "Library",
-    "import": "Import",
-    "duplicate-pages": "Duplicate Pages",
-    "users": "Users",
-    "user-link": "Logged in as"
+    "home": "Início",
+    "library": "Biblioteca",
+    "import": "Importar",
+    "duplicate-pages": "Páginas duplicadas",
+    "users": "Utilizadores",
+    "user-link": "Logado como"
   },
   "login": {
-    "title": "Login To ComiXed",
+    "title": "Entrada no ComiXed",
     "email": "Email",
-    "password": "Password"
+    "password": "Senha"
   },
   "library": {
     "tab": {
-      "covers": "Covers",
-      "details": "Details",
-      "scraping": "Scraping"
+      "covers": "Capas",
+      "details": "Detalhes",
+      "scraping": "Obter metadados"
     },
     "tooltip": {
-      "remove-comic": "Remove this comic from the library...",
-      "open-comic": "Open this comic for reading..."
+      "remove-comic": "Apagar este comic da biblioteca...",
+      "open-comic": "Ler este comic..."
     },
     "label": {
-      "no-title": "No Title",
-      "unknown": "Unknown",
-      "publisher": "Publisher",
+      "no-title": "Sem título",
+      "unknown": "Desconhecido",
+      "publisher": "Editora",
       "series": "Series",
       "volume": "Volume",
-      "cover-date": "Cover Date",
-      "issue-number": "Issue #",
-      "title": "Title",
-      "added-date": "Added to library",
-      "pages": "Pages",
-      "page-count": "# Of Pages",
-      "published": "Published",
-      "comicvine-details": "ComicVine Details",
-      "format": "Format",
-      "scan-type": "Scan Type",
-      "sort-name": "Sort Name"
+      "cover-date": "Data da capa",
+      "issue-number": "Número #",
+      "title": "Título",
+      "added-date": "Adicionado à biblioteca",
+      "pages": "Páginas",
+      "page-count": "# de Página",
+      "published": "Publicado",
+      "comicvine-details": "Detalhes do ComicVine",
+      "format": "Formato",
+      "scan-type": "Tipo de digitalização",
+      "sort-name": "Nome de ordenação"
     },
     "constraints": {
-      "sort-by": "Sort by",
-      "rows-per-page": "Show",
-      "cover-size": "Cover size: {cover_size}px"
+      "sort-by": "Ordenado por",
+      "rows-per-page": "Mostrar",
+      "cover-size": "Tamanho da capa: {cover_size}px"
     },
     "messages": {
-      "no-comics-found": "No comics found...",
-      "comicvine-url": "The details can be found here: <a target='_comicvine' href='http://comicvine.gamespot.com/issue/4000-{comic_vine_id}'>{comic_vine_id}</a>",
-      "no-summary": "No summary available...",
-      "no-description": "No description available...",
-      "delete-comic-title": "Delete This Comic?",
-      "delete-comic-question": "Are you sure? This will not delete the file, but only remove it from the library.",
-      "rescan-library-title": "Rescan Library?",
-      "rescan-library-message": "Are you sure? This could take a very long time to complete..."
+      "no-comics-found": "Nenhum comic encontrado...",
+      "comicvine-url": "Os detalhes podem ser vistos aqui: <a target='_comicvine' href='http://comicvine.gamespot.com/issue/4000-{comic_vine_id}'>{comic_vine_id}</a>",
+      "no-summary": "Não há resumo disponível...",
+      "no-description": "Não há descrição disponível...",
+      "delete-comic-title": "Apagar este comic?",
+      "delete-comic-question": "Tem a certeza? Não irá apagar o ficheiro, apenas o vai remover da biblioteca.",
+      "rescan-library-title": "Reimportar a biblioteca?",
+      "rescan-library-message": "Tem a certeza? Pode demorar muito tempo a finalizar..."
     },
     "scraping": {
-      "comics-available-header": "{available_comics} Comics Available",
-      "comics-selected-header": "{selected_comics} Comics Selected",
-      "source-search-filter": "Search by series name...",
-      "target-search-filter": "Search by series name..."
+      "comics-available-header": "{available_comics} Comics disponiveis",
+      "comics-selected-header": "{selected_comics} Comics seleccionados",
+      "source-search-filter": "Pesquisar por nome da serie...",
+      "target-search-filter": "Pesquisar por nome da serie..."
     }
   },
   "library-contents": {
     "label": {
-      "cover-size": "Cover size: {cover_size}px"
+      "cover-size": "Tamanho da página: {cover_size}px"
     },
     "options": {
       "layout": {
-        "grid-layout": "Grid View",
-        "list-layout": "List View"
+        "grid-layout": "Visualização em grelha",
+        "list-layout": "Visualização em lista"
       },
       "rows": {
-        "10-per-page": "Show 10 Comics",
-        "25-per-page": "Show 25 Comics",
-        "50-per-page": "Show 50 Comics",
-        "100-per-page": "Show 100 Comics"
+        "10-per-page": "Mostrar 10 Comics",
+        "25-per-page": "Mostrar 25 Comics",
+        "50-per-page": "Mostrar 50 Comics",
+        "100-per-page": "Mostrar 100 Comics"
       },
       "cover-size": {
-        "same-height": "Use As Height"
+        "same-height": "Usar como altura"
       }
     }
   },
   "publishers-page": {
     "table": {
       "label": {
-        "publisher-name": "Publisher Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
+        "publisher-name": "Nome da editora",
+        "comic-count": "# de comics",
+        "latest-comic-added-date": "Ultimo comic adicionado"
       },
       "value": {
         "comic-count": "{comic_count} comic(s)"
@@ -137,9 +137,9 @@
   "series-page": {
     "table": {
       "label": {
-        "series-name": "Series Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
+        "series-name": "Nome da series",
+        "comic-count": "# de Comics",
+        "latest-comic-added-date": "Ultimo comic adicionado"
       },
       "value": {
         "comic-count": "{comic_count} comic(s)"
@@ -148,108 +148,108 @@
   },
   "user-details": {
     "title": {
-      "new-user": "Create New User"
+      "new-user": "Novo utilizador"
     },
     "label": {
-      "email-address": "Email Address",
-      "roles": "Roles",
-      "member-since": "Member Since",
-      "last-logged-on": "Last Logged On"
+      "email-address": "Endereço de Email",
+      "roles": "Papeis",
+      "member-since": "Membro desde",
+      "last-logged-on": "Ultima entrada em"
     }
   },
   "account-page": {
     "title": "ComiXed: {email}",
     "label": {
-      "details": "Details",
-      "preferences": "Preferences"
+      "details": "Detalhes",
+      "preferences": "Preferências"
     }
   },
   "comic-list": {
     "label": {
       "series": "Series",
       "volume": "Volume",
-      "issue-number": "Issue #"
+      "issue-number": "Número #"
     },
     "text": {
-      "no-comics-to-scrape": "No comics to scrape..."
+      "no-comics-to-scrape": "Não há comics para procurar metadados..."
     },
     "popup": {
-      "open-comic": "Open comic...",
-      "select-all": "Select all",
-      "deselect-all": "Deselect all",
-      "scrape-comics": "Scrape comics...",
-      "delete-comics": "Delete comics...",
-      "reading-lists": "Reading lists"
+      "open-comic": "Abrir comic...",
+      "select-all": "Selecionar todos",
+      "deselect-all": "Desselecionar todos",
+      "scrape-comics": "Obter metadados...",
+      "delete-comics": "Apagar comics...",
+      "reading-lists": "Listas de leitura"
     },
     "delete-comics": {
-      "header": "Delete {count} Comics",
-      "message": "Are you sure you want to delete these comics?"
+      "header": "Apagar {count} Comics",
+      "message": "Tem a certeza que quer apagar estes comics?"
     },
     "remove-from-reading-list": {
-      "header": "Remove From Reading List",
-      "message": "Are you sure you want to remove these comics from '{reading_list_name}?"
+      "header": "Remover da lista de leitura",
+      "message": "Tem a certeza que quer remover estes comics da '{reading_list_name}?"
     }
   },
   "issue-details": {
     "label": {
-      "description": "Description",
-      "credit-name": "Name",
-      "credit-role": "Role"
+      "description": "Descrição",
+      "credit-name": "Nome",
+      "credit-role": "Papel"
     }
   },
   "effects": {
     "importing": {
       "info": {
-        "found_files": "Found {file_count} file(s)..."
+        "found_files": "Encontrado(s) {file_count} ficheiro(s)..."
       }
     },
     "library": {
       "info": {
-        "format-type-set": "Set the format type to {format_type}...",
-        "scan-type-set": "Set the scan type to {scan_type}...",
-        "sort-name-set": "Set the sort name to {sort_name}...",
-        "metadata-cleared": "Metadata has been cleared...",
-        "comic-removed": "Comic removed from the library...",
-        "rescan-started": "Started rescanning the library..."
+        "format-type-set": "Seleccionar o tipo de formato para {format_type}...",
+        "scan-type-set": "Seleccionar o tipo de digitalização para {scan_type}...",
+        "sort-name-set": "Seleccionar o nome de ordenação para{sort_name}...",
+        "metadata-cleared": "Metadados apagados...",
+        "comic-removed": "Comic removido da biblioteca...",
+        "rescan-started": "Começou a reimportação da biblioteca..."
       },
       "error": {
-        "scan-type-fetch-failure": "Failed to fetch scan types...",
-        "set-scan-type-failed": "Failed to set the scan type...",
-        "format-type-fetch-failure": "Failed to fetch format types...",
-        "format-type-set-failed": "Failed to set the format type...",
-        "sort-name-set-failed": "Failed to set the sort name...",
-        "library-update-failed": "Failed to get library updates...",
-        "comic-remove-failed": "Failed to remove the comic from the library...",
-        "metadata-clear-failed": "Failed to clear the metadata...",
-        "rescan-failed-to-start": "Failed to start rescanning the library...",
-        "set-blocked-failed": "Failed to block the page..."
+        "scan-type-fetch-failure": "Erro ao carregar tipos de digitalização...",
+        "set-scan-type-failed": "Error ao selecionar tipo de digitalização...",
+        "format-type-fetch-failure": "Erro ao carregar tipos de formato...",
+        "format-type-set-failed": "Error ao selecionar tipo de formato...",
+        "sort-name-set-failed": "Error ao selecionar nome para ordenar...",
+        "library-update-failed": "Erro ao carregar actulizações da biblioteca...",
+        "comic-remove-failed": "Erro ao remover o comic da biblioteca...",
+        "metadata-clear-failed": "Erro ao limpar os metadados...",
+        "rescan-failed-to-start": "Error a comçar a reimportação da biblioteca...",
+        "set-blocked-failed": "Erro a bloquear a página..."
       }
     },
     "single-comic-scraping": {
       "info": {
-        "retrieved-volume-count": "Retrieved {count} volumes...",
-        "details-scraped": "Comic details scraped..."
+        "retrieved-volume-count": "Descarregados {count} volumes...",
+        "details-scraped": "Obtidos os metadados do comic..."
       }
     },
     "user-admin": {
       "info": {
-        "account-created": "Created an account for {email}...",
-        "account-deleted": "Deleted the account for {email}..."
+        "account-created": "Criada uma conta para {email}...",
+        "account-deleted": "Apagada uma conta para {email}..."
       },
       "error": {
-        "account-create-failed": "Failed to create an account for {email}...",
-        "account-delete-failed": "Failed to delete the account for {email}..."
+        "account-create-failed": "Erro ao criar uma conta para {email}...",
+        "account-delete-failed": "Erro ao apagar uma conta para {email}..."
       }
     }
   },
   "publishers": {
-    "title": "Showing {publisher_count} Publishers"
+    "title": "Mostrando {publisher_count} editora(s)"
   },
   "publisher-details": {
     "title": "{publisher_name}"
   },
   "series-": {
-    "title": "Showing {series_count} Series"
+    "title": "Mostrados {series_count} Serie(s)"
   },
   "series-details": {
     "title": "{series_name}"
@@ -257,9 +257,9 @@
   "characters-page": {
     "table": {
       "label": {
-        "character-name": "Character Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
+        "character-name": "Nome da personagem",
+        "comic-count": "# de comics",
+        "latest-comic-added-date": "Ultimo comic adicionado"
       },
       "value": {
         "comic-count": "{comic_count} comic(s)"
@@ -272,9 +272,9 @@
   "teams-page": {
     "table": {
       "label": {
-        "team-name": "Team Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
+        "team-name": "Nome da equipa",
+        "comic-count": "# de comics",
+        "latest-comic-added-date": "Ultimo comic adicionado"
       },
       "value": {
         "comic-count": "{comic_count} comic(s)"
@@ -287,9 +287,9 @@
   "locations-page": {
     "table": {
       "label": {
-        "location-name": "Location Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
+        "location-name": "Nome da localização",
+        "comic-count": "# de comics",
+        "latest-comic-added-date": "Ultimo comic adicionado"
       },
       "value": {
         "comic-count": "{comic_count} comic(s)"
@@ -302,9 +302,9 @@
   "story-arcs-page": {
     "table": {
       "label": {
-        "story-arc-name": "Story Arc Name",
-        "comic-count": "# Of Comics",
-        "latest-comic-added-date": "Latest Comic Added"
+        "story-arc-name": "Nome do arco da história",
+        "comic-count": "# de comics",
+        "latest-comic-added-date": "Ultimo comic adicionado"
       },
       "value": {
         "comic-count": "{comic_count} comic(s)"
@@ -316,118 +316,124 @@
   },
   "backup-page": {
     "header": {
-      "download-backup": "Download Backup"
+      "download-backup": "Descarregar Backup"
     },
     "text": {
-      "download-backup": "To download a backup of the current database, simply click the button below."
+      "download-backup": "Carregue no botão em baixo para descarregar o backup da base de dados."
     }
   },
   "missing-comics-page": {
-    "title": "{comic_count} Missing Comics"
+    "title": "{comic_count} comics em falta"
   },
   "text": {
-    "unknown": "Unknown",
-    "comic-no-description": "This comic does not have a description"
+    "unknown": "Desconhecido",
+    "comic-no-description": "Este comic não tem uma descrição"
   },
   "button": {
-    "block-all": "Block All",
-    "unblock-all": "Unblock All",
-    "blocked": "Blocked",
-    "not-blocked": "Not Blocked",
-    "delete": "Delete",
-    "undelete": "Undelete",
-    "delete-all": "Delete All",
-    "download": "Download",
-    "undelete-all": "Undelete All",
-    "login": "Login",
-    "logout": "Logout",
-    "cancel": "Cancel",
-    "close": "Close",
-    "apply": "Apply",
-    "reset": "Reset",
-    "remove": "Remove",
-    "rescan-library": "Rescan Library...",
-    "save": "Save",
-    "show-comics": "Show Comics",
-    "start-scraping": "Start Scraping...",
-    "selected": "Selected",
-    "not-selected": "Not Selected",
-    "new-user": "New User"
+    "block-all": "Bloquear todos",
+    "unblock-all": "Desbloquear todos",
+    "blocked": "Bloqueado",
+    "not-blocked": "Não bloqueado",
+    "delete": "Apagar",
+    "undelete": "Restaurar",
+    "delete-all": "Apagar todos",
+    "download": "Descarregar",
+    "undelete-all": "Restaurar todos",
+    "login": "Entrar",
+    "logout": "Sair",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "apply": "Aplicar",
+    "reset": "Redefinir",
+    "remove": "Remover",
+    "rescan-library": "Reimportar a biblioteca...",
+    "save": "Gravar",
+    "show-comics": "Mostrar comics",
+    "start-scraping": "Obter metadados...",
+    "selected": "Selecionado",
+    "not-selected": "Não Selecionado",
+    "new-user": "Novo utilizador"
   },
   "user-effects": {
     "login": {
       "summary": {
-        "login-failure": "Login Failure"
+        "login-failure": "Erro na entrada"
       },
       "detail": {
-        "login-failure": "The email or password were invalid."
+        "login-failure": "O email ou a senha estão errados."
       }
     }
   },
   "authentication-effects": {
     "submit-login-data": {
       "success": {
-        "detail": "Successfully logged in!"
+        "detail": "Entrada com sucesso!"
       },
       "failure": {
-        "detail": "Login failed..."
+        "detail": "Erro na entrada..."
       }
     },
     "logout": {
-      "detail": "Successfully logged out."
+      "detail": "Saída com sucesso."
     }
   },
   "breadcrumb": {
     "collections": {
-      "root": "Collections",
-      "publishers": "Publishers",
+      "root": "Coleções",
+      "publishers": "Editoras",
       "series": "Series",
-      "characters": "Characters",
-      "teams": "Teams",
-      "locations": "Locations",
-      "stories": "Stories",
-      "lists": "Reading Lists"
+      "characters": "Personagens",
+      "teams": "Equipas",
+      "locations": "Localizações",
+      "stories": "Historias",
+      "lists": "Listas de leitura"
     },
     "entry": {
       "library-page": "Comics",
-      "duplicates-page": "Duplicates",
+      "duplicates-page": "Duplicados",
       "comic-details-page": {
         "publisher": "{name}",
         "series": "{name}",
         "volume": "v{volume}",
-        "issue-number": "Issue #{issue}"
+        "issue-number": "Número #{issue}"
       },
-      "multi-comic-scraping-page": "Scraping",
-      "account-page": "Account",
+      "multi-comic-scraping-page": "Obter metadados",
+      "account-page": "Conta",
       "help": {
-        "root": "Help",
-        "build-details-page": "Build Details"
+        "root": "Ajuda",
+        "build-details-page": "Informação da compilação"
       },
       "admin": {
-        "root": "Admin",
-        "library-admin": "Library",
+        "root": "Administrador",
+        "library-admin": "Biblioteca",
         "plugins-page": "Plugins",
-        "users-admin": "Users",
-        "import-page": "Import Comics",
-        "duplicates-page": "Duplicates Page",
-        "missing-comics": "Missing Comics",
-        "task-audit-log": "Task Log",
-        "rest-audit-log": "REST logs"
+        "users-admin": "Utilizador",
+        "import-page": "Importar comics",
+        "duplicates-page": "Páginas duplicadas",
+        "missing-comics": "Comics em falta",
+        "task-audit-log": "Registro de tarefas",
+        "rest-audit-log": "Registro REST"
       }
     }
   },
   "general-message": {
     "error": {
-      "general-service-failure": "A general system failure has occurred."
+      "general-service-failure": "Aconteceu um erro genérico."
     }
   },
   "global": {
     "errors": {
-      "form-field-required": "{name} is required."
+      "form-field-required": "{name} é necessário."
     },
     "tooltip": {
-      "unprocessed-comic": "This comic is scheduled for processing.",
-      "deleted-comic": "This comic is marked for deletion."
+      "unprocessed-comic": "Este comic está agendado para ser processado.",
+      "deleted-comic": "Este comic está selecionado para ser apagado."
+    },
+    "confirmation": {
+      "logout": {
+        "header": "Sair",
+        "message": "Tem a certeza que quer sair?"
+      }
     }
   },
   "toolbar": {
@@ -435,17 +441,17 @@
       "sorting": {
         "volume-asc": "Volume",
         "volume-desc": "Volume (desc)",
-        "issue-number-asc": "Issue #",
-        "issue-number-desc": "Issue # (desc)",
-        "added-date-asc": "Added date",
-        "added-date-desc": "Added date (desc)",
-        "cover-date-asc": "Cover date",
-        "cover-date-desc": "Cover date (desc)"
+        "issue-number-asc": "Número #",
+        "issue-number-desc": "Número # (desc)",
+        "added-date-asc": "Adicionado em",
+        "added-date-desc": "Adicionado em (desc)",
+        "cover-date-asc": "Data da capa",
+        "cover-date-desc": "Data da capa (desc)"
       }
     },
     "tooltip": {
-      "select-all": "Select all...",
-      "deselect-all": "Deselect all..."
+      "select-all": "Selecionar todos...",
+      "deselect-all": "Desselecionar todos..."
     }
   }
 }

@@ -68,22 +68,22 @@
       "effects": {
         "load": {
           "error": {
-            "detail": "Failed to load the log entries..."
+            "detail": "Erro ao carregar as entradas do registro..."
           }
         }
       }
     },
     "clear-audit-log": {
-      "tooltip": "Clear the task audit log...",
-      "confirm-header": "Clear Task Audit Log",
-      "confirm-message": "Are you sure you want to clear the task audit log?",
+      "tooltip": "Apagar as entradas do registro de tarefas...",
+      "confirm-header": "Apagar as entradas do registro de tarefas",
+      "confirm-message": "Tem a certeza que quer apagar as entradas do registro de tarefas?",
       "effects": {
         "clear-audit-log": {
           "success": {
-            "detail": "The task audit log is cleared..."
+            "detail": "Entradas do registro de tarefas foram limpas..."
           },
           "error": {
-            "detail": "Failed to clear the task audit log..."
+            "detail": "Erro ao apagar as entradas do registro de tarefas..."
           }
         }
       }
