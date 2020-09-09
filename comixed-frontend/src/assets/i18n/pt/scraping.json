@@ -2,19 +2,19 @@
   "scraping": {
     "effects": {
       "get-scraping-volumes": {
-        "success-detail": "Received {count, plural, =1{one volume} other{# volumes}}...",
-        "error-detail": "Failed to get volumes..."
+        "success-detail": "Recebido {count, plural, =1{one volume} other{# volumes}}...",
+        "error-detail": "Erro ao importar volumes..."
       },
       "get-scraping-issue": {
-        "error-detail": "Failed to get issue..."
+        "error-detail": "Erro ao importar edição..."
       },
       "scrape-comic": {
-        "success-detail": "Comic details updated...",
-        "error-detail": "Failed to update comic details..."
+        "success-detail": "Detalhes do comic actualizados...",
+        "error-detail": "Erro ao actualizar detalhes do comic..."
       }
     },
     "multiple-comics": {
-      "completed": "Finished scraping comics..."
+      "completed": "Importação de metadados finalizada..."
     }
   }
 }
