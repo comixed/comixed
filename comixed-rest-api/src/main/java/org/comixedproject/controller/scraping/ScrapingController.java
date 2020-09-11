@@ -53,6 +53,7 @@ public class ScrapingController {
    * @param volume the volume id
    * @param request the request body
    * @return the issue
+   * @throws ScrapingException if an error occurs
    */
   @PostMapping(
       value = "/volumes/{volume}/issues",
@@ -61,8 +62,8 @@ public class ScrapingController {
   @AuditableEndpoint
   public ApiResponse<ScrapingIssue> queryForIssue(
       @PathVariable("volume") final Integer volume,
-      @RequestBody() final GetScrapingIssueRequest request) {
-    final ApiResponse<ScrapingIssue> result = new ApiResponse<>();
+      @RequestBody() final GetScrapingIssueRequest request)
+      throws ScrapingException {
     String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
@@ -70,18 +71,8 @@ public class ScrapingController {
     log.info(
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
-    try {
-      final ScrapingIssue scrapingIssue =
-          this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
-      result.setResult(scrapingIssue);
-      result.setSuccess(true);
-    } catch (ScrapingException error) {
-      result.setSuccess(false);
-      result.setError(error.getMessage());
-      result.setThrowable(error);
-    }
-
-    return result;
+    return new ApiResponse<ScrapingIssue>(
+        this.scrapingService.getIssue(apiKey, volume, issue, skipCache));
   }
 
   /**
@@ -89,6 +80,7 @@ public class ScrapingController {
    *
    * @param request the reqwuest body
    * @return the list of volumes
+   * @throws ScrapingException if an error occurs
    */
   @PostMapping(
       value = "/volumes",
@@ -96,8 +88,7 @@ public class ScrapingController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   public ApiResponse<List<ScrapingVolume>> queryForVolumes(
-      @RequestBody() final GetVolumesRequest request) {
-    final ApiResponse<List<ScrapingVolume>> response = new ApiResponse<>();
+      @RequestBody() final GetVolumesRequest request) throws ScrapingException {
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
@@ -109,21 +100,8 @@ public class ScrapingController {
         maxRecords,
         skipCache ? "(Skipping cache)" : "");
 
-    try {
-      final List<ScrapingVolume> result =
-          this.scrapingService.getVolumes(apiKey, series, maxRecords, skipCache);
-
-      log.debug("Returning {} volume{}", result.size(), result.size() == 1 ? "" : "s");
-
-      response.setSuccess(true);
-      response.setResult(result);
-    } catch (ScrapingException error) {
-      response.setSuccess(false);
-      response.setThrowable(error);
-      response.setError(error.getMessage());
-    }
-
-    return response;
+    return new ApiResponse<List<ScrapingVolume>>(
+        this.scrapingService.getVolumes(apiKey, series, maxRecords, skipCache));
   }
 
   /**
@@ -133,6 +111,7 @@ public class ScrapingController {
    * @param issueId the issue id
    * @param request the request body
    * @return the scraped and updated {@link Comic}
+   * @throws ScrapingException if an error occurs
    */
   @PostMapping(
       value = "/comics/{comicId}/issue/{issueId}",
@@ -142,24 +121,15 @@ public class ScrapingController {
   public ApiResponse<Comic> scrapeAndSaveComicDetails(
       @PathVariable("comicId") final Long comicId,
       @PathVariable("issueId") final Integer issueId,
-      @RequestBody() final ComicScrapeRequest request) {
-    final ApiResponse<Comic> response = new ApiResponse<>();
+      @RequestBody() final ComicScrapeRequest request)
+      throws ScrapingException {
     boolean skipCache = request.getSkipCache();
     String apiKey = request.getApiKey();
 
     log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
 
-    try {
-      log.debug("Scraping comic details");
-      final Comic result = this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache);
-      response.setSuccess(true);
-      response.setResult(result);
-    } catch (ScrapingException error) {
-      response.setSuccess(false);
-      response.setError(error.getMessage());
-      response.setThrowable(error);
-    }
-
-    return response;
+    log.debug("Scraping comic details");
+    return new ApiResponse<Comic>(
+        this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache));
   }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
@@ -16,6 +17,7 @@ import org.comixedproject.views.View;
  *
  * @author Darryl L. Pierce
  */
+@AllArgsConstructor
 public class GetRestAuditLogResponse {
   @Getter
   @Setter

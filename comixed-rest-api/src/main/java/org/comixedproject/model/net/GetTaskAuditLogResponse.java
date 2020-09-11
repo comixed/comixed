@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
@@ -17,6 +18,7 @@ import org.comixedproject.views.View;
  *
  * @author Darryl L. Pierce
  */
+@AllArgsConstructor
 public class GetTaskAuditLogResponse {
   @Getter
   @Setter

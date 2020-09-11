@@ -40,20 +40,16 @@ public class DetailsControllerTest {
   @InjectMocks private DetailsController detailsController;
   @Mock private DetailsService detailsService;
   @Mock private BuildDetails buildDetails;
-  @Mock private ParseException parseException;
 
-  @Test
+  @Test(expected = ParseException.class)
   public void testGetBuildDetailsParsingException() throws ParseException {
-    Mockito.when(detailsService.getBuildDetails()).thenThrow(parseException);
-    Mockito.when(parseException.getMessage()).thenReturn(TEST_STACKTRACE);
+    Mockito.when(detailsService.getBuildDetails()).thenThrow(ParseException.class);
 
-    final ApiResponse<BuildDetails> result = detailsController.getBuildDetails();
-
-    assertNotNull(result);
-    assertFalse(result.isSuccess());
-    assertEquals(TEST_STACKTRACE, result.getError());
-
-    Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
+    try {
+      detailsController.getBuildDetails();
+    } finally {
+      Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
+    }
   }
 
   @Test

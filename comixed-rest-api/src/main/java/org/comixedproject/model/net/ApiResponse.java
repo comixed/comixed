@@ -18,7 +18,6 @@
 
 package org.comixedproject.model.net;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
@@ -40,15 +39,16 @@ public class ApiResponse<T> {
 
   @Getter
   @Setter
-  @JsonProperty("error")
-  @JsonView(View.ApiResponse.class)
-  private String error;
-
-  @Getter @Setter @JsonIgnore private Throwable throwable;
-
-  @Getter
-  @Setter
   @JsonProperty("result")
   @JsonView(View.ApiResponse.class)
   private T result;
+
+  public ApiResponse(final T result) {
+    this(result, true);
+  }
+
+  public ApiResponse(final T result, final boolean success) {
+    this.result = result;
+    this.success = success;
+  }
 }

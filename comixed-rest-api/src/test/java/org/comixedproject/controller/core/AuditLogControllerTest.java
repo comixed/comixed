@@ -80,17 +80,6 @@ public class AuditLogControllerTest {
   }
 
   @Test
-  public void testClearTaskLogServiceRaisesException() {
-    Mockito.doThrow(new RuntimeException("Test")).when(taskService).clearTaskAuditLog();
-
-    final ApiResponse<Void> result = auditLogController.clearTaskAuditLog();
-
-    assertNotNull(result);
-    assertFalse(result.isSuccess());
-    assertNotNull(result.getError());
-  }
-
-  @Test
   public void testClearTaskLog() {
     Mockito.doNothing().when(taskService).clearTaskAuditLog();
 
@@ -98,23 +87,6 @@ public class AuditLogControllerTest {
 
     assertNotNull(result);
     assertTrue(result.isSuccess());
-    assertNull(result.getError());
-  }
-
-  @Test
-  public void testGetRestAuditLogEntriesAfterDateServiceThrowsException() {
-    Mockito.when(restAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
-        .thenThrow(RuntimeException.class);
-
-    ApiResponse<GetRestAuditLogResponse> result =
-        auditLogController.getAllRestEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
-
-    assertNotNull(result);
-    assertNull(result.getResult());
-    assertFalse(result.isSuccess());
-
-    Mockito.verify(restAuditLogService, Mockito.times(1))
-        .getEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
   }
 
   @Test

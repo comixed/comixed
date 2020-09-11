@@ -18,7 +18,6 @@
 
 package org.comixedproject.controller.scraping;
 
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -60,22 +59,20 @@ public class ScrapingControllerTest {
   @Mock private ScrapingIssue comicIssue;
   @Mock private Comic comic;
 
-  @Test
+  @Test(expected = ScrapingException.class)
   public void testQueryForVolumesAdaptorRaisesException() throws ScrapingException {
     Mockito.when(
             scrapingService.getVolumes(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    final ApiResponse<List<ScrapingVolume>> response =
-        controller.queryForVolumes(
-            new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
-
-    assertFalse(response.isSuccess());
-    assertNotNull(response.getThrowable());
-
-    Mockito.verify(scrapingService, Mockito.times(1))
-        .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
+    try {
+      controller.queryForVolumes(
+          new GetVolumesRequest(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false));
+    } finally {
+      Mockito.verify(scrapingService, Mockito.times(1))
+          .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, false);
+    }
   }
 
   @Test
@@ -114,24 +111,21 @@ public class ScrapingControllerTest {
         .getVolumes(TEST_API_KEY, TEST_SERIES_NAME, TEST_MAX_RECORDS, true);
   }
 
-  @Test
+  @Test(expected = ScrapingException.class)
   public void testQueryForIssueAdaptorRaisesException() throws ScrapingException {
     Mockito.when(
             scrapingService.getIssue(
                 Mockito.anyString(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    final ApiResponse<ScrapingIssue> response =
-        controller.queryForIssue(
-            TEST_VOLUME,
-            new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
-
-    assertNotNull(response);
-    assertFalse(response.isSuccess());
-    assertNotNull(response.getThrowable());
-
-    Mockito.verify(scrapingService, Mockito.times(1))
-        .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
+    try {
+      controller.queryForIssue(
+          TEST_VOLUME,
+          new GetScrapingIssueRequest(TEST_API_KEY, TEST_SKIP_CACHE, TEST_ISSUE_NUMBER));
+    } finally {
+      Mockito.verify(scrapingService, Mockito.times(1))
+          .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
+    }
   }
 
   @Test
@@ -154,23 +148,21 @@ public class ScrapingControllerTest {
         .getIssue(TEST_API_KEY, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_SKIP_CACHE);
   }
 
-  @Test
+  @Test(expected = ScrapingException.class)
   public void testScrapeAndSaveComicDetailsScrapingAdaptorRaisesException()
-      throws ScrapingException, ComiXedControllerException {
+      throws ScrapingException {
     Mockito.when(
             scrapingService.scrapeComic(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
         .thenThrow(ScrapingException.class);
 
-    final ApiResponse<Comic> response =
-        controller.scrapeAndSaveComicDetails(
-            TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
-
-    assertNotNull(response);
-    assertFalse(response.isSuccess());
-
-    Mockito.verify(scrapingService, Mockito.times(1))
-        .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
+    try {
+      controller.scrapeAndSaveComicDetails(
+          TEST_COMIC_ID, TEST_ISSUE_ID, new ComicScrapeRequest(TEST_API_KEY, TEST_SKIP_CACHE));
+    } finally {
+      Mockito.verify(scrapingService, Mockito.times(1))
+          .scrapeComic(TEST_API_KEY, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
+    }
   }
 
   @Test
