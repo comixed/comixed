@@ -23,6 +23,5 @@
  */
 export interface ApiResponse<T> {
   success: boolean;
-  error?: string;
   result: T;
 }

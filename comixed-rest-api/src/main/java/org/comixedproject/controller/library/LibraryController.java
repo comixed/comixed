@@ -202,29 +202,19 @@ public class LibraryController {
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
   public ApiResponse<Void> moveComics(@RequestBody() MoveComicsRequest request) {
-    final ApiResponse<Void> response = new ApiResponse<>();
+    String targetDirectory = request.getTargetDirectory();
+    String renamingRule = request.getRenamingRule();
+    Boolean deletePhysicalFiles = request.getDeletePhysicalFiles();
 
-    try {
-      String targetDirectory = request.getTargetDirectory();
-      String renamingRule = request.getRenamingRule();
-      Boolean deletePhysicalFiles = request.getDeletePhysicalFiles();
+    log.info("Moving comics: targetDirectory={}", targetDirectory);
+    log.info("             : renamingRule={}", renamingRule);
 
-      log.info("Moving comics: targetDirectory={}", targetDirectory);
-      log.info("             : renamingRule={}", renamingRule);
+    final MoveComicsWorkerTask task = this.moveComicsWorkerTaskObjectFactory.getObject();
+    task.setDirectory(targetDirectory);
+    task.setRenamingRule(renamingRule);
 
-      final MoveComicsWorkerTask task = this.moveComicsWorkerTaskObjectFactory.getObject();
-      task.setDirectory(targetDirectory);
-      task.setRenamingRule(renamingRule);
+    this.taskManager.runTask(task);
 
-      this.taskManager.runTask(task);
-
-      response.setSuccess(true);
-    } catch (Exception error) {
-      response.setSuccess(false);
-      response.setError(error.getMessage());
-      response.setThrowable(error);
-    }
-
-    return response;
+    return new ApiResponse<Void>(null);
   }
 }
