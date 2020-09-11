@@ -38,7 +38,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 describe('BuildDetailEffects', () => {
   const BUILD_DETAILS = BUILD_DETAILS_1;
-  const ERROR_MESSAGE = 'The error message';
 
   let actions$: Observable<any>;
   let effects: BuildDetailsEffects;
@@ -93,8 +92,7 @@ describe('BuildDetailEffects', () => {
 
     it('fires an action on failure', () => {
       const serviceResponse = {
-        success: false,
-        error: ERROR_MESSAGE
+        success: false
       } as ApiResponse<BuildDetails>;
       const action = fetchBuildDetails();
       const outcome = fetchBuildDetailsFailed();

@@ -44,23 +44,12 @@ public class DetailsController {
    * Retrieves the build details.
    *
    * @return the build details
+   * @throws ParseException if an error occurs
    */
   @GetMapping("/build-details")
   @AuditableEndpoint
-  public ApiResponse<BuildDetails> getBuildDetails() {
+  public ApiResponse<BuildDetails> getBuildDetails() throws ParseException {
     log.info("Getting application build details");
-    final ApiResponse<BuildDetails> result = new ApiResponse<>();
-
-    try {
-      final BuildDetails details = this.detailsService.getBuildDetails();
-      result.setSuccess(true);
-      result.setResult(details);
-    } catch (ParseException error) {
-      log.error("Failed to get build details", error);
-      result.setError(error.getMessage());
-      result.setSuccess(false);
-    }
-
-    return result;
+    return new ApiResponse<BuildDetails>(this.detailsService.getBuildDetails());
   }
 }

@@ -75,7 +75,7 @@ public class FileController {
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
   public ApiResponse<List<FileDetails>> getAllComicsUnder(
-      @RequestBody() final GetAllComicsUnderRequest request) throws IOException, JSONException {
+      @RequestBody() final GetAllComicsUnderRequest request) throws IOException {
     String directory = request.getDirectory();
     Integer maximum = request.getMaximum();
 
@@ -84,20 +84,8 @@ public class FileController {
         directory,
         maximum > 0 ? maximum : "UNLIMITED");
 
-    final ApiResponse<List<FileDetails>> response = new ApiResponse<>();
-
-    try {
-      final List<FileDetails> result = this.fileService.getAllComicsUnder(directory, maximum);
-      log.info("Returning {} file{}", result.size(), result.size() != 1 ? "s" : "");
-      response.setSuccess(true);
-      response.setResult(result);
-    } catch (Exception error) {
-      response.setSuccess(false);
-      response.setError(error.getMessage());
-      response.setThrowable(error);
-    }
-
-    return response;
+    return new ApiResponse<List<FileDetails>>(
+        this.fileService.getAllComicsUnder(directory, maximum));
   }
 
   private void getAllFilesUnder(File root, List<FileDetails> result) throws IOException {
@@ -173,27 +161,17 @@ public class FileController {
         deleteBlockedPages,
         ignoreMetadata);
 
-    final ApiResponse<Void> response = new ApiResponse<>();
+    final QueueComicsWorkerTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
+    task.setFilenames(filenames);
+    task.setDeleteBlockedPages(deleteBlockedPages);
+    task.setIgnoreMetadata(ignoreMetadata);
 
-    try {
-      final QueueComicsWorkerTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
-      task.setFilenames(filenames);
-      task.setDeleteBlockedPages(deleteBlockedPages);
-      task.setIgnoreMetadata(ignoreMetadata);
+    log.debug("Enqueueing task");
+    this.taskManager.runTask(task);
 
-      log.debug("Enqueueing task");
-      this.taskManager.runTask(task);
+    log.debug("Notifying waiting processes");
+    ComicController.stopWaitingForStatus();
 
-      log.debug("Notifying waiting processes");
-      ComicController.stopWaitingForStatus();
-
-      response.setSuccess(true);
-    } catch (Exception error) {
-      response.setSuccess(false);
-      response.setError(error.getMessage());
-      response.setThrowable(error);
-    }
-
-    return response;
+    return new ApiResponse<Void>(null);
   }
 }

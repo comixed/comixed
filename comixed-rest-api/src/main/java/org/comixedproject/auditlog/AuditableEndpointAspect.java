@@ -90,14 +90,6 @@ public class AuditableEndpointAspect {
       if (apiResponse.getResult() != null) {
         entry.setResponseContent(this.objectMapper.writeValueAsString(apiResponse.getResult()));
       }
-      entry.setException(apiResponse.getError());
-      if (apiResponse.getThrowable() != null) {
-        log.debug("Storing API exception stacktrace");
-        final StringWriter stringWriter = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(stringWriter);
-        apiResponse.getThrowable().printStackTrace(printWriter);
-        entry.setException(stringWriter.toString());
-      }
     }
 
     if (error != null) {
