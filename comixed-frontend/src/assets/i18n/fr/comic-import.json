@@ -2,12 +2,12 @@
   "comic-import": {
     "effects": {
       "find-comic-files": {
-        "success-detail": "Found {count, plural, =1{one comic} other{# comics}} available for importing...",
-        "error-detail": "Failed to find any comic files..."
+        "success-detail": "{count, plural, =1{une bande dessinée disponible} other{# bandes dessinées disponibles}} pour importation...",
+        "error-detail": "Aucune bande dessinée n'a été trouvée..."
       },
       "import-comics": {
-        "success-detail": "Comic import process started...",
-        "error-detail": "Failed to start importing comics..."
+        "success-detail": "Processus d'importation des bandes dessinées débuté...",
+        "error-detail": "Impossible de débuter le processus d'importation des bandes dessinées"
       }
     }
   },
