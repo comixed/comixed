@@ -20,7 +20,11 @@ package org.comixedproject.task.model;
 
 import static junit.framework.TestCase.assertEquals;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.Date;
+import java.util.Locale;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
 import org.junit.Before;
@@ -44,8 +48,13 @@ public class MoveComicWorkerTaskTest {
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2020";
   private static final String TEST_ISSUE = "717";
-  private static final Date TEST_COVER_DATE = new Date(120, 7, 1);
-  private static final String TEST_FORMATTED_COVER_DATE = "Aug 2020";
+  private static final Date TEST_COVER_DATE = new Date(120, 6, 1);
+  private static final LocalDate TEST_COVER_DATE_LOCALDATE =
+      TEST_COVER_DATE.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+  private static final String TEST_FORMATTED_COVER_DATE =
+      TEST_COVER_DATE_LOCALDATE.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault())
+          + " "
+          + TEST_COVER_DATE_LOCALDATE.getYear();
   private static final String TEST_RELATIVE_NAME_WITH_RULE =
       String.format(
           "%s/%s/%s/%s v%s #%s (%s)",

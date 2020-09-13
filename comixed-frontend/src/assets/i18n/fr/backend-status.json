@@ -2,23 +2,23 @@
   "backend-status": {
     "effects": {
       "get-rest-audit-log-entries": {
-        "error-detail": "Failed to load audit log entries..."
+        "error-detail": "Echec du chargement des logs d'audit..."
       }
     },
     "rest-audit-log": {
-      "page-title": "Web Logs",
+      "page-title": "Logs des appels webservices",
       "entries": {
         "header": {
-          "remote-ip": "Originating IP",
-          "url": "Endpoint URL",
-          "email": "Account",
-          "start-time": "Started",
-          "end-time": "Completed",
-          "bytes-received": "Bytes In",
-          "bytes-returned": "Bytes Out",
-          "success": "Success",
-          "request-content": "Request Content",
-          "response-content": "Response Content",
+          "remote-ip": "IP d'origine",
+          "url": "URL du point d'arrivée",
+          "email": "Compte",
+          "start-time": "Commencé le",
+          "end-time": "Complété le",
+          "bytes-received": "Bytes reçus",
+          "bytes-returned": "Bytes envoyés",
+          "success": "Succès",
+          "request-content": "Contenu de la requête",
+          "response-content": "Contenu de la réponse",
           "exception": "Exception"
         }
       }
@@ -30,35 +30,35 @@
         "detail": "Échec de la récupération des détails du build..."
       }
     },
-    "page-title": "Build Details",
+    "page-title": "Détails du build",
     "table": {
       "branch": "Branche source",
       "build-host": "Nom d'hôte du build",
       "build-time": "Build réalisé le",
       "build-version": "Version",
-      "commit-user": "Committer Name",
-      "commit-id": "Commit Hash",
-      "commit-message": "Commit Message",
-      "commit-time": "Time Of Last Commit",
-      "dirty": "Built From Uncommitted Code?",
-      "remote-origin-url": "Remote Origin",
-      "jdbc-url": "JDBC Connection URL"
+      "commit-user": "Nom du commiter",
+      "commit-id": "Hash du commit",
+      "commit-message": "Message du commit",
+      "commit-time": "Date du dernier commit",
+      "dirty": "Construit depuis du code non commité ?",
+      "remote-origin-url": "Url de la source d'origine",
+      "jdbc-url": "URL de la connection JDBC"
     }
   },
   "task-audit-log-effects": {
     "get-log-entries": {
       "error": {
-        "detail": "Failed to get task audit log entries."
+        "detail": "Échec de la récupération des logs d'audit."
       }
     }
   },
   "task-audit-log-page": {
-    "title": "Task Logs",
+    "title": "Logs des tâches",
     "table": {
       "header": {
-        "start-time": "Started",
-        "end-time": "Ended",
-        "successful": "Success?",
+        "start-time": "Commencé le",
+        "end-time": "Complété le",
+        "successful": "Succès ?",
         "description": "Description"
       }
     }
@@ -68,22 +68,22 @@
       "effects": {
         "load": {
           "error": {
-            "detail": "Failed to load the log entries..."
+            "detail": "Impossible de charger les logs"
           }
         }
       }
     },
     "clear-audit-log": {
-      "tooltip": "Clear the task audit log...",
-      "confirm-header": "Clear Task Audit Log",
-      "confirm-message": "Are you sure you want to clear the task audit log?",
+      "tooltip": "Effacer les d'audit des tâches...",
+      "confirm-header": "Effacer les d'audit des tâches",
+      "confirm-message": "Êtes-vous sûr de vouloir effacer les logs d'audit des tâches ?",
       "effects": {
         "clear-audit-log": {
           "success": {
-            "detail": "The task audit log is cleared..."
+            "detail": "Les logs d'audit des tâches sont effacés..."
           },
           "error": {
-            "detail": "Failed to clear the task audit log..."
+            "detail": "Échec de la suppression des logs d'audit des tâches..."
           }
         }
       }
