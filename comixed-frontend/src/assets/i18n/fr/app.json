@@ -29,7 +29,7 @@
       "english": "Anglais",
       "french": "Français",
       "spanish": "Espanol",
-      "portuguese": "Portuguese"
+      "portuguese": "Portuguais"
     }
   },
   "navigation-bar": {
@@ -416,8 +416,8 @@
         "import-page": "Importer des bandes dessinées",
         "duplicates-page": "Page dupliquées",
         "missing-comics": "Bandes dessinées manquantes",
-        "task-audit-log": "Task Log",
-        "rest-audit-log": "REST logs"
+        "task-audit-log": "Logs des tâches",
+        "rest-audit-log": "logs des appels webservices REST"
       }
     }
   },

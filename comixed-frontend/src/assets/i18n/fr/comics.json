@@ -91,10 +91,10 @@
     },
     "set-page-deleted": {
       "success": {
-        "detail": "Page {deleted, select, true{marked} other{unmarked}} for deletion..."
+        "detail": "Page {deleted, select, true{marquée} other{non marquée}} pour suppression..."
       },
       "error": {
-        "detail": "Failed to {deleted, select, true{marked} other{unmarked}} for deletion..."
+        "detail": "Impossible de {deleted, select, true{marquer} other{de supprimer le marquage}} pour suppression..."
       }
     }
   },
@@ -161,7 +161,7 @@
       "undelete-comic": "Ne pas marquer la bande dessinée pour la suppression.",
       "save-changes": "Sauvegarder les changements",
       "undo-changes": "Annuler les changements.",
-      "toggle-read": "{marked, select, true{Annuler} other{Définir}} la date de dernière lecturethe last read date."
+      "toggle-read": "{marked, select, true{Annuler} other{Définir}} la date de dernière lecture."
     }
   },
   "comic-story": {
@@ -181,36 +181,35 @@
   "comic-pages": {
     "table": {
       "header": {
-        "thumbnail": "Thumbnail",
-        "filename": "Filename",
-        "page-type": "Page Type",
-        "hash": "Page Hash",
-        "dimensions": "Size",
-        "blocked-status": "Blocked",
-        "deleted-status": "Delete"
+        "thumbnail": "Miniature",
+        "filename": "nom du fichier",
+        "page-type": "Type de la page",
+        "hash": "Hash de la page",
+        "dimensions": "Taille",
+        "blocked-status": "Bloquée",
+        "deleted-status": "supprimée"
       },
       "column": {
-        "blocked-status": "{blocked, select, true{Yes} other{No}}",
-        "deleted-status": "{deleted, select, true{Yes} other{No}}"
+        "blocked-status": "{bloquée, select, true{Oui} other{Non}}",
+        "deleted-status": "{supprimée, select, true{Oui} other{Non}}"
       }
     },
     "page-type": {
-      "front-cover": "Front Cover",
-      "inner-cover": "Inner Cover",
-      "back-cover": "Back Cover",
-      "roundup": "Roundup",
-      "story": "Story",
-      "advertisement": "Advertisement",
-      "editorial": "Editorial",
-      "letters": "Letters Page",
-      "preview": "Preview",
-      "other": "Other",
-      "filtered": "Filtered"
+      "front-cover": "Page de couverture",
+      "inner-cover": "Couverture intérieure",
+      "back-cover": "Quatrième de couverture",
+      "roundup": "Synthèse",
+      "story": "Histoire",
+      "advertisement": "Publicité",
+      "editorial": "Edito",
+      "letters": "Page de courriers",
+      "preview": "Aperçu",
+      "other": "Autre",
+      "filtered": "Filtré"
     },
     "tooltip": {
-      "blocked": "Click to {blocked, select, true{unblock} other{block}} this page type...",
-      "deleted": "Click to {deleted, select, true{undelete} other{delete}} this page..."
-    }
+      "blocked": "Cliquer pour {bloquer, select, true{débloquer} other{bloquer}} le type de cette page...",
+      "deleted": "Cliquer pour {supprimer, select, true{annuler la suppression} other{supprimer}} cette page..."
     }
   },
   "comic-details-editor": {
@@ -219,7 +218,7 @@
       "series-name": "Série",
       "volume-name": "Volume",
       "issue-number": "Numéro #",
-      "max-records": "Max Records To Fetch"
+      "max-records": "Nombre maximum de résultats à récupérer"
     },
     "tooltip": {
       "comicvine-api-key": "Cliquez pour modifier...",
@@ -232,9 +231,9 @@
         "skip-cache": "Récupérer (en ignorant le cache)"
       },
       "max-records": {
-        "all-records": "All records",
-        "100-records": "100 Records",
-        "1000-records": "1000 Records"
+        "all-records": "Toutes les enregistrements",
+        "100-records": "100 enregistrements",
+        "1000-records": "1000 enregistrements"
       }
     },
     "text": {
@@ -252,7 +251,7 @@
     },
     "issue-selected": {
       "header": "Récupérer les métadonnées de ce numéro?",
-      "message": "Are you sure you want to replace this comic's details?"
+      "message": "Êtes-vous sûr de vouloir remplacer les détails de cette bande dessinée ?"
     }
   },
   "comic-details-page": {
@@ -305,7 +304,7 @@
   "scraping-effects": {
     "get-volumes": {
       "success": {
-        "detail": "{count, plural, =1{one volume trouvé} other{# volumes trouvés}}."
+        "detail": "{count, plural, =1{un volume trouvé} other{# volumes trouvés}}."
       },
       "error": {
         "detail": "Échec de la récupération des volumes de cette bande dessinée."

@@ -1,36 +1,36 @@
 {
   "library": {
     "move-comics": {
-      "title": "Organize Library",
+      "title": "Organiser la bibliothèque",
       "label": {
-        "delete-physical-files": "Delete physical files (WARNING: be sure to backup your library first)",
-        "target-directory": "The new parent directory for the library",
-        "renaming-rule": "The file renaming rule (see notes below)",
-        "variable-name": "Variable Name",
+        "delete-physical-files": "Supprimer les fichiers physiques (ATTENTION : soyez sûr de sauvegarder votre bibliothèque au préalable)",
+        "target-directory": "Le nouveau répertoire parent de la bibliothèque",
+        "renaming-rule": "La règle de renommage des fichiers (voir notes ci-dessous)",
+        "variable-name": "Nom de la variable",
         "variable-description": "Description"
       },
       "button": {
-        "start": "Organize Library"
+        "start": "Organiser la bibliothèque"
       },
-      "warning-text": "Organizing your library cannot be stopped once started.",
+      "warning-text": "L'organisation de votre bibliothèque ne peut pas être arrêtée une fois commencée.",
       "effects": {
-        "success-detail": "Library consolidation has started...",
-        "error-detail": "Failed to start library consolidation..."
+        "success-detail": "La consolidation de la bibliothèque a commencé...",
+        "error-detail": "Échec de la consolidation de la bibliothèque..."
       },
-      "variables-note": "The following list shows the variables that can used in the renaming rules.",
+      "variables-note": "La liste suivante indique les variables qui peuvent être utilisées dans les règles de renommage.",
       "variables-example": "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)",
-      "variables-example-note": "This example organizes a library by publisher, series, volume and then a detailed filename. Note you do NOT need to specify the extension: that is added automatically.",
+      "variables-example-note": "Cet exemple organise une bibliothèque par éditeur, série, volume et ensuite un nom de fichier détaillé. Notez que vous n'avez pas besoin de spécifier l'extension : celle-ci est ajoutée automatiquement.",
       "variable": {
-        "PUBLISHER": "The name of the publisher of the comic",
-        "SERIES": "The name of the series of the comic",
-        "VOLUME": "The first year this volume of the comic was published",
-        "ISSUE": "The issue number for this isue",
-        "COVERDATE": "The coverdate for this issue"
+        "PUBLISHER": "Le nom de l'éditeur de la bande dessinée",
+        "SERIES": "Le nom de la série de la bande dessinée",
+        "VOLUME": "La première année de publication de ce volume de la bande dessinée",
+        "ISSUE": "Le numéro de la publication",
+        "COVERDATE": "La date de couverture pour cette publication"
       },
-      "delete-files-warning-header": "Delete Physical Files",
-      "delete-files-warning-message": "Deleting physical files cannot be undone. Are you SURE you want to do this?",
-      "confirmation-header": "Organize Library",
-      "confirmation-message": "Are you sure you want to {deletePhysicalFiles, select, true{delete comic files marked for deletion and} other{}} organizing the library?"
+      "delete-files-warning-header": "Suppression des fichiers physiques",
+      "delete-files-warning-message": "La suppression des fichiers physiques ne peut pas être annulée. Êtes-vous sûr de vouloir le faire ?",
+      "confirmation-header": "Organiser la bibliothèque",
+      "confirmation-message": "Êtes-vous sûr de vouloir {deletePhysicalFiles, select, true{effacer les fichiers dex bande dessinée marqués pour suppression et} other{ et}} organiser la bibliothèque ?"
     }
   },
   "library-effects": {
@@ -518,29 +518,29 @@
     "title": "Plugins",
     "table": {
       "header": {
-        "name": "Name",
+        "name": "Nom",
         "language": "Language",
         "version": "Version",
-        "author": "Author",
+        "author": "Auteur",
         "description": "Description"
       }
     },
     "tooltip": {
-      "reload-plugins": "Reload plugins"
+      "reload-plugins": "Recharger les plugins"
     }
   },
   "plugin-effects": {
     "get-all": {
       "error": {
-        "detail": "Failed to load plugins..."
+        "detail": "Échec du chargement des plugins..."
       }
     },
     "reload-plugins": {
       "success": {
-        "detail": "Loaded {count, plural, =1{one plugin} other{# plugins}}..."
+        "detail": "{count, plural, =1{un plugin chargé} other{# plugins chargés}}..."
       },
       "error": {
-        "detail": "Failed to reload plugins..."
+        "detail": "Échec du rechargement des plugins..."
       }
     }
   }
