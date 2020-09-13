@@ -27,7 +27,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           release_branch: ${{ github.ref }}
           due_tag: v0.7.0-rc1
-          since_tag: v0.5.2-2
+          since_tag: v0.6.3
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly.name=GA
 #      - name: Create SHA file.
