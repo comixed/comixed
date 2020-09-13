@@ -26,18 +26,18 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release_branch: ${{ github.ref }}
-          due_tag: v0.7.0-rc1
+          due_tag: v0.7.0-rc2
           since_tag: v0.6.3
       - name: Build project
         run: mvn package -Pci -DskipTests -Dassembly.name=GA
 #      - name: Create SHA file.
-#        run: (cd release; shasum comixed-app-0.7.0-rc1-GA.zip > comixed-app-0.7.0-rc1-GA.zip-sha)
+#        run: (cd release; shasum comixed-app-0.7.0-rc2-GA.zip > comixed-app-0.7.0-rc2-GA.zip-sha)
       - name: Upload release artifact
         uses: softprops/action-gh-release@v1
         with:
           body_path: CHANGELOG.md
           files: |
-            release/comixed-release-0.7.0-rc1-GA.zip
- #           release/comixed-release-0.7.0-rc1-GA.zip-sha
+            release/comixed-release-0.7.0-rc2-GA.zip
+ #           release/comixed-release-0.7.0-rc2-GA.zip-sha
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
