@@ -157,15 +157,16 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
   }
 
   onPaste(event: ClipboardEvent): void {
+    event.preventDefault();
     this.filterRenamingRule(event.clipboardData.getData('text'));
   }
 
-  onInput() {
+  onInput(event: any): void {
+    event.stopPropagation();
     this.filterRenamingRule(this.consolidationForm.controls.renamingRule.value);
   }
 
   private filterRenamingRule(rule: string): void {
-    console.log('*** rule:', rule);
     const re = /[:\\*?|<>\[\]]/gi;
     rule = rule.replace(re, '_');
     this.consolidationForm.controls.renamingRule.setValue(rule);
