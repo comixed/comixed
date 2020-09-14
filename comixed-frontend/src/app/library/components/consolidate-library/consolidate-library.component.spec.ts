@@ -266,7 +266,9 @@ describe('ConsolidateLibraryComponent', () => {
   describe('invalid characters are scrubbed', () => {
     it('applies to typed characters', () => {
       component.consolidationForm.controls.renamingRule.setValue('[]:\\*?|<>');
-      component.onInput();
+      component.onInput({
+        stopPropagation: () => {}
+      });
       expect(component.consolidationForm.controls.renamingRule.value).toEqual(
         '_________'
       );
@@ -277,7 +279,6 @@ describe('ConsolidateLibraryComponent', () => {
         clipboardData: new DataTransfer()
       });
       event.clipboardData.setData('text', '[]:\\*?|<>');
-      console.log('*** event:', event);
       component.onPaste(event);
       fixture.detectChanges();
       expect(component.consolidationForm.controls.renamingRule.value).toEqual(
