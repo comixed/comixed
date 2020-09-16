@@ -30,10 +30,10 @@
     },
     "set-page-type": {
       "success": {
-        "detail": "Page type changed."
+        "detail": "Cambiado tipo de página."
       },
       "error": {
-        "detail": "Failed to change page type."
+        "detail": "Error al cambiar tipo de página."
       }
     },
     "set-page-hash-blocking": {
@@ -86,15 +86,15 @@
     },
     "mark-as-read": {
       "error": {
-        "detail": "Failed to change the last read date."
+        "detail": "Error al cambiar la fecha de última lectura."
       }
     },
     "set-page-deleted": {
       "success": {
-        "detail": "Page {deleted, select, true{marked} other{unmarked}} for deletion..."
+        "detail": "Página {deleted, select, true{marcada} other{desmarcada}} para eliminación..."
       },
       "error": {
-        "detail": "Failed to {deleted, select, true{marked} other{unmarked}} for deletion..."
+        "detail": "Error al {deleted, select, true{marcar} other{desmarcar}} para eliminación..."
       }
     }
   },
@@ -104,7 +104,7 @@
       "message": "¿Seguro que quieres guardar los cambios en este cómic?"
     },
     "show-file-entries": {
-      "title": "Archive File List"
+      "title": "Lista de archivos"
     },
     "label": {
       "filename": "El nombre del fichero es <strong>{filename}</strong> en el equipo host*****.",
@@ -118,7 +118,7 @@
       "added-date": "Añadido a la biblioteca el",
       "last-read-date": "Leído por última vez el",
       "page-count": "# de páginas",
-      "file-entry-count": "# Of Files",
+      "file-entry-count": "# de ficheros",
       "comicvine-details-link": "Página de detalle en ComicVine",
       "format": "Formato",
       "scan-type": "Tipo de escaneado",
@@ -144,7 +144,7 @@
       "scan-type-placeholder": "Click para elegir tipo de escaneado...",
       "sort-name-placeholder": "Click para elegir un nombre (de ordenación)...",
       "comicvine-details-link": "Los detalles se encuentran <a href='http://comicvine.gamespot.com/issue/4000-{comicVineId}'>aquí</a>.",
-      "never-read": "Never"
+      "never-read": "Nunca"
     },
     "scan-type": {
       "option": {
@@ -161,7 +161,7 @@
       "undelete-comic": "Marcar el cómic para eliminación.",
       "save-changes": "Guardar cambios.",
       "undo-changes": "Deshacer cambios.",
-      "toggle-read": "{marked, select, true{Clear} other{Set}} the last read date."
+      "toggle-read": "{marked, select, true{Borrar} other{Fijar}} última fecha de lectura."
     }
   },
   "comic-story": {
@@ -181,35 +181,35 @@
   "comic-pages": {
     "table": {
       "header": {
-        "thumbnail": "Thumbnail",
-        "filename": "Filename",
-        "page-type": "Page Type",
-        "hash": "Page Hash",
-        "dimensions": "Size",
-        "blocked-status": "Blocked",
-        "deleted-status": "Delete"
+        "thumbnail": "Miniatura",
+        "filename": "Nobre del fichero",
+        "page-type": "Tipo de página",
+        "hash": "Hash de la página",
+        "dimensions": "Tamaño",
+        "blocked-status": "Bloqueada",
+        "deleted-status": "Borrar"
       },
       "column": {
-        "blocked-status": "{blocked, select, true{Yes} other{No}}",
-        "deleted-status": "{deleted, select, true{Yes} other{No}}"
+        "blocked-status": "{blocked, select, true{Sí} other{No}}",
+        "deleted-status": "{deleted, select, true{Sí} other{No}}"
       }
     },
     "page-type": {
-      "front-cover": "Front Cover",
-      "inner-cover": "Inner Cover",
-      "back-cover": "Back Cover",
-      "roundup": "Roundup",
-      "story": "Story",
-      "advertisement": "Advertisement",
+      "front-cover": "Portada",
+      "inner-cover": "Portada interior",
+      "back-cover": "Contracubierta",
+      "roundup": "Resumen",
+      "story": "Historia",
+      "advertisement": "Publicidad",
       "editorial": "Editorial",
-      "letters": "Letters Page",
+      "letters": "Cartas",
       "preview": "Preview",
-      "other": "Other",
-      "filtered": "Filtered"
+      "other": "Otro",
+      "filtered": "Filtrado"
     },
     "tooltip": {
-      "blocked": "Click to {blocked, select, true{unblock} other{block}} this page type...",
-      "deleted": "Click to {deleted, select, true{undelete} other{delete}} this page..."
+      "blocked": "Click para {blocked, select, true{desbloquear} other{bloquear}} este tipo de página...",
+      "deleted": "Click para {deleted, select, true{recuperar} other{borrar}} esta página..."
     }
   },
   "comic-details-editor": {
@@ -218,7 +218,7 @@
       "series-name": "Serie",
       "volume-name": "Volumen",
       "issue-number": "Número #",
-      "max-records": "Max Records To Fetch"
+      "max-records": "Máximo número de registrso para leer"
     },
     "tooltip": {
       "comicvine-api-key": "Click para editar...",
@@ -231,9 +231,9 @@
         "skip-cache": "Obtener (ignorar caché)"
       },
       "max-records": {
-        "all-records": "All records",
-        "100-records": "100 Records",
-        "1000-records": "1000 Records"
+        "all-records": "Todos los registros",
+        "100-records": "100 registros",
+        "1000-records": "1000 registros"
       }
     },
     "text": {
@@ -251,14 +251,14 @@
     },
     "issue-selected": {
       "header": "¿Obtener metadatos para este número?",
-      "message": "Are you sure you want to replace this comic's details?"
+      "message": "¿Seguro que quiere sobreescribir los detalles de este cómic?"
     }
   },
   "comic-details-page": {
     "tab": {
       "overview": "Resumen",
       "story": "Historia",
-      "reader": "Lector*****",
+      "reader": "Lector",
       "credits": "Créditos",
       "pages": "Páginas",
       "comicvine": "ComicVine"
@@ -290,15 +290,15 @@
     "context-menu": {
       "open-comic": "Abrir cómic...",
       "delete-comic": "Eliminar cómic...",
-      "restore-comic": "Restore comic"
+      "restore-comic": "Recuperar comic"
     },
     "delete-comic": {
       "header": "¿Eliminar Comic?",
       "message": "¿Seguro que quieres eliminar {title}?"
     },
     "restore-comic": {
-      "header": "Restore Comic",
-      "message": "Are you sure you want to restore {title}?"
+      "header": "Recuperar cómic",
+      "message": "¿Seguro que quieres recuperar {title}?"
     }
   },
   "scraping-effects": {
@@ -349,12 +349,12 @@
     "table": {
       "header": {
         "file-number": "#",
-        "file-name": "Filename",
-        "file-size": "Size",
-        "file-type": "Type"
+        "file-name": "Nombre",
+        "file-size": "Tamaño",
+        "file-type": "Tipo"
       },
       "column": {
-        "file-size": "{size, plural, =1{One byte} other{# bytes}}"
+        "file-size": "{size, plural, =1{Un byte} other{# bytes}}"
       }
     }
   }

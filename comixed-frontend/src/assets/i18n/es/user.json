@@ -10,7 +10,7 @@
         "detail": "Actualizado con éxito: {email}."
       },
       "error": {
-        "detail": "Error al {update, select, true{update} other{save}} usuario."
+        "detail": "Error al {update, select, true{actualizar} other{guardar}} usuario."
       }
     },
     "delete-user": {

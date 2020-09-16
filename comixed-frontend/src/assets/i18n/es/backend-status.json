@@ -2,24 +2,24 @@
   "backend-status": {
     "effects": {
       "get-rest-audit-log-entries": {
-        "error-detail": "Failed to load audit log entries..."
+        "error-detail": "Error al cargar las entradas en el log de auditoría de web..."
       }
     },
     "rest-audit-log": {
       "page-title": "Web Logs",
       "entries": {
         "header": {
-          "remote-ip": "Originating IP",
-          "url": "Endpoint URL",
-          "email": "Account",
-          "start-time": "Started",
-          "end-time": "Completed",
-          "bytes-received": "Bytes In",
-          "bytes-returned": "Bytes Out",
-          "success": "Success",
-          "request-content": "Request Content",
-          "response-content": "Response Content",
-          "exception": "Exception"
+          "remote-ip": "IP de origen",
+          "url": "URL final",
+          "email": "Cuenta",
+          "start-time": "Comenzado",
+          "end-time": "Completado",
+          "bytes-received": "Bytes Entrantes",
+          "bytes-returned": "Bytes Salientes",
+          "success": "Éxito",
+          "request-content": "Contenido de la solicitud (Request)",
+          "response-content": "Contenido de la respuesta (Response)",
+          "exception": "Excepción"
         }
       }
     }
@@ -30,7 +30,7 @@
         "detail": "Error al recabar los datos de compilación..."
       }
     },
-    "page-title": "Build Details",
+    "page-title": "Detalles de la compilación",
     "table": {
       "branch": "Source Branch",
       "build-host": "Build Hostname",
@@ -48,7 +48,7 @@
   "task-audit-log-effects": {
     "get-log-entries": {
       "error": {
-        "detail": "Failed to get task audit log entries."
+        "detail": "Error al cargar las entradas en el log de aduitoría de tareas (tasks)."
       }
     }
   },
@@ -56,10 +56,10 @@
     "title": "Task Logs",
     "table": {
       "header": {
-        "start-time": "Started",
-        "end-time": "Ended",
-        "successful": "Success?",
-        "description": "Description"
+        "start-time": "Comenzada",
+        "end-time": "Terminada",
+        "successful": "¿Éxito?",
+        "description": "Descripción"
       }
     }
   },
@@ -68,22 +68,22 @@
       "effects": {
         "load": {
           "error": {
-            "detail": "Failed to load the log entries..."
+            "detail": "Error al cargar las entradas del log..."
           }
         }
       }
     },
     "clear-audit-log": {
-      "tooltip": "Clear the task audit log...",
-      "confirm-header": "Clear Task Audit Log",
-      "confirm-message": "Are you sure you want to clear the task audit log?",
+      "tooltip": "Borrar el log de tareas (Task Audit)...",
+      "confirm-header": "Borrar el log Task Audit",
+      "confirm-message": "¿Seguro que quiere borrar el log de tareas (Task Audit)?",
       "effects": {
         "clear-audit-log": {
           "success": {
-            "detail": "The task audit log is cleared..."
+            "detail": "El log de tareas (task audit) borrado..."
           },
           "error": {
-            "detail": "Failed to clear the task audit log..."
+            "detail": "Error al borrar el log de tareas (task audit)..."
           }
         }
       }

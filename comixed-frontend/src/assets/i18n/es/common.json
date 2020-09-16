@@ -32,10 +32,10 @@
         "missing-comics": "Cómics que faltan",
         "task-audit-log": "Task Logs",
         "rest-audit-log": "Web Logs",
-        "clear-image-cache": "Clear Image Cache"
+        "clear-image-cache": "Borrar caché de imágenes"
       },
       "help": {
-        "root": "Help",
+        "root": "Ayuda",
         "build-details": "Detalles de la compilación",
         "enable-debugging": "Habilitar depuración",
         "disable-debugging": "Deshabilitar depuración"
