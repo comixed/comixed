@@ -11,7 +11,7 @@
       "missing-comics": "Cómics no encontrados"
     },
     "admin": {
-      "root": "Admin",
+      "root": "Administrador",
       "users": "Usuarios",
       "library": "Biblioteca"
     },
@@ -29,7 +29,7 @@
       "english": "Inglés",
       "french": "Francés",
       "spanish": "Español",
-      "portuguese": "Portuguese"
+      "portuguese": "Portugués"
     }
   },
   "main-page": {
@@ -327,16 +327,16 @@
   },
   "text": {
     "unknown": "Unknown",
-    "comic-no-description": "Este cómic no tiene descripción"
+    "comic-no-description": "Sin descripción"
   },
   "button": {
     "block-all": "Bloquear todo",
     "unblock-all": "Desbloquear todo",
-    "blocked": "Bloqueado*****",
-    "not-blocked": "No bloqueado*****",
+    "blocked": "Bloqueado",
+    "not-blocked": "No bloqueado",
     "delete": "Eliminar",
     "undelete": "Recuperar",
-    "delete-all": "Eliminar todo*****",
+    "delete-all": "Eliminar todo",
     "download": "Descargar",
     "undelete-all": "Recuperar todo",
     "login": "Ingresar",
@@ -350,8 +350,8 @@
     "save": "Guardar",
     "show-comics": "Mostrar cómics",
     "start-scraping": "Comenzar a obtener metadatos...",
-    "selected": "Seleccionado*****",
-    "not-selected": "No seleccionado*****",
+    "selected": "Seleccionado",
+    "not-selected": "No seleccionado",
     "new-user": "Nuevo usuario"
   },
   "user-effects": {
@@ -412,7 +412,7 @@
         "duplicates-page": "Páginas duplicadas",
         "missing-comics": "Cómics no encontrados",
         "task-audit-log": "Task Log",
-        "rest-audit-log": "REST logs"
+        "rest-audit-log": "REST log)"
       }
     }
   },

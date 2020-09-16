@@ -1,36 +1,36 @@
 {
   "library": {
     "move-comics": {
-      "title": "Organize Library",
+      "title": "Organizar Biblioteca",
       "label": {
-        "delete-physical-files": "Delete physical files (WARNING: be sure to backup your library first)",
-        "target-directory": "The new parent directory for the library",
-        "renaming-rule": "The file renaming rule (see notes below)",
-        "variable-name": "Variable Name",
-        "variable-description": "Description"
+        "delete-physical-files": "Borrar archivos físicos (AVISO: Haz primero una copia de seguridad de tu biblioteca)",
+        "target-directory": "Nuevo directorio raíz de tu biblioteca",
+        "renaming-rule": "Regla de renombrado (ver notas abajo)",
+        "variable-name": "Nombre Variable ",
+        "variable-description": "Descripción"
       },
       "button": {
-        "start": "Organize Library"
+        "start": "Organizar Biblioteca"
       },
-      "warning-text": "Organizing your library cannot be stopped once started.",
+      "warning-text": "Una vez comenzado, el proceso de organización de la biblioteca no puede detenerse.",
       "effects": {
-        "success-detail": "Library consolidation has started...",
-        "error-detail": "Failed to start library consolidation..."
+        "success-detail": "Comenzada la consolidación de la biblioteca...",
+        "error-detail": "Error al comenzar la consolidación de la biblioteca..."
       },
-      "variables-note": "The following list shows the variables that can used in the renaming rules.",
+      "variables-note": "La siguiente lista muestra las variables que pueden ser usadas en las reglas renombar.",
       "variables-example": "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)",
-      "variables-example-note": "This example organizes a library by publisher, series, volume and then a detailed filename. Note you do NOT need to specify the extension: that is added automatically.",
+      "variables-example-note": "Este ejemplo organiza la  biblioteca por editorial, series, volumen y finalmente un nombre de fichero detallado. Ten en cuenta que NO necesitas añadir extensión, se añade automáticamente.",
       "variable": {
-        "PUBLISHER": "The name of the publisher of the comic",
-        "SERIES": "The name of the series of the comic",
-        "VOLUME": "The first year this volume of the comic was published",
-        "ISSUE": "The issue number for this isue",
-        "COVERDATE": "The coverdate for this issue"
+        "PUBLISHER": "Nombre de la editorial del cómic",
+        "SERIES": "Nombre de la serie del cómic",
+        "VOLUME": "Primer año en que se publicó el volumen del cómic",
+        "ISSUE": "Número en la serie del cómic",
+        "COVERDATE": "Fecha de publicación del cómic"
       },
-      "delete-files-warning-header": "Delete Physical Files",
-      "delete-files-warning-message": "Deleting physical files cannot be undone. Are you SURE you want to do this?",
-      "confirmation-header": "Organize Library",
-      "confirmation-message": "Are you sure you want to {deletePhysicalFiles, select, true{delete comic files marked for deletion and} other{}} organizing the library?"
+      "delete-files-warning-header": "Borrar ficheros físicos",
+      "delete-files-warning-message": "El borrado de ficheros físicos no puede deshacerse. ¿SEGURO que quieres hacer esto?",
+      "confirmation-header": "Organizar Biblioteca",
+      "confirmation-message": "¿Seguro que quieres {deletePhysicalFiles, select, true{borrar los archivos de cómic marcados para eliminación y} other{}} organizar la biblioteca?"
     }
   },
   "library-effects": {
@@ -92,10 +92,10 @@
     },
     "restore-multiple-comics": {
       "success": {
-        "detail": "Restores comics."
+        "detail": "Recuperar cómics."
       },
       "error": {
-        "detail": "Failed to restore multiple comics."
+        "detail": "Error al recuperar varios cómics."
       }
     },
     "convert-comics": {
@@ -108,17 +108,17 @@
     },
     "clear-image-cache": {
       "success": {
-        "detail": "Image cache {success, select, true{successfully} other{failed to be}} cleared..."
+        "detail": "{success, select, true{Éxito} other{Fallo}} al limpiar la caché de imágenes ..."
       },
       "error": {
-        "detail": "Error clearing image cache..."
+        "detail": "Error al limpiar la caché de imágenes..."
       }
     }
   },
   "import-effects": {
     "get-comic-files": {
       "success": {
-        "detail": "Encontrado{count, plural, =1{ un archivo de cómics} other{s# archivos de cómics}}."
+        "detail": "Encontrado{count, plural, =1{ un archivo de cómics} other{s # archivos de cómics}}."
       },
       "error": {
         "detail": "Error al obtener los ficheros para importar."
@@ -129,7 +129,7 @@
         "detail": "Importando {comic_count, plural, =1{un archivo de cómics} other{# archivos de cómics}}."
       },
       "error": {
-        "detail": "Erro al comenzar a importar cómics."
+        "detail": "Error al comenzar a importar cómics."
       }
     }
   },
@@ -259,7 +259,7 @@
       "convert-comics": "Convertir los cómics seleccionados"
     },
     "label": {
-      "series": "Series",
+      "series": "Serie",
       "volume": "Volumen",
       "issue-number": "Número #"
     },
@@ -280,7 +280,7 @@
       "delete-selected": "Borrar selección...",
       "restore-selected": "Restore selections...",
       "scrape-selected": "Buscar metadatos de la selección",
-      "convert-comic": "Convertir      cómic...",
+      "convert-comic": "Convertir cómic...",
       "add-to-reading-list": "Añadir a lista...",
       "remove-from-reading-list": "Quitar de lista..."
     },
@@ -293,8 +293,8 @@
       "message": "¿Seguro que quieres eliminar estos cómics?"
     },
     "restore-comics": {
-      "header": "Restore {count} Comics",
-      "message": "Are you sure you want to restore these comics?"
+      "header": "Restaurar {count} cómics",
+      "message": "¿Seguro que quieres restaurar estos cómics?"
     },
     "remove-from-reading-list": {
       "header": "Quitar de lista de lectura",
@@ -384,8 +384,8 @@
       }
     },
     "button": {
-      "blocking-options": "Bloqueando*****",
-      "deleting-options": "Eliminando*****"
+      "blocking-options": "Bloqueando",
+      "deleting-options": "Eliminando"
     },
     "set-blocking": {
       "header": "Establecer estado de bloqueo para las páginas",
@@ -397,17 +397,17 @@
     }
   },
   "duplicate-page-grid-item": {
-    "tooltip": "Esta página está {blocked, select, true{bloqueada} other{no bloqueada}}, and {deletedCount, plural, =0{ninguna está marcada} =1{# está marcada} other{# están marcadas}} para eliminación.",
+    "tooltip": "Esta página está {blocked, select, true{bloqueada} other{no bloqueada}}, y {deletedCount, plural, =0{ninguna está marcada} =1{# está marcada} other{# están marcadas}} para eliminación.",
     "caption": "Encontrada{count, plural, =1{una copia} other{s # copias}}."
   },
   "duplicate-page-list-item": {
-    "title": "Encontrada{count, plural, =1{una copia} other{s # copias}}.",
-    "subtitle": "Esta página está {blocked, select, true{bloqueada} other{no bloqueada}}, and {deletedCount, plural, =0{ninguna está marcada} =1{# está marcada} other{# están marcadas}} para eliminación."
+    "title": "Encontrada{count, plural, =1{ una copia} other{s # copias}}.",
+    "subtitle": "Esta página está {blocked, select, true{bloqueada} other{no bloqueada}}, y {deletedCount, plural, =0{ninguna está marcada} =1{# está marcada} other{# están marcadas}} para eliminación."
   },
   "collection-effects": {
     "get-entries": {
       "error": {
-        "detail": "Error al obtener las entradas por***** {collectionType}."
+        "detail": "Error al obtener las entradas por {collectionType}."
       }
     },
     "get-page-for-entry": {
@@ -423,8 +423,8 @@
     "label": {
       "archive-type": "Tipo de archivo",
       "rename-pages": "Renombrar páginas",
-      "delete-pages": "Remove Deleted And Blocked Pages",
-      "delete-original": "Delete Original Comic"
+      "delete-pages": "Eliminar páginas borradas y bloqueadas",
+      "delete-original": "Borrar cómic original"
     },
     "option": {
       "cbz": "CBZ (Zip)",
@@ -509,7 +509,7 @@
     }
   },
   "add-comics-to-reading-list": {
-    "title": "Añadir {count, plural, =1{un cómic} other{# cómics}}) a una lista de lectura",
+    "title": "Añadir {count, plural, =1{un cómic} other{# cómics}} a una lista de lectura",
     "label": {
       "select-reading-list": "Seleccionar una lista de lectura"
     }
@@ -518,29 +518,29 @@
     "title": "Plugins",
     "table": {
       "header": {
-        "name": "Name",
-        "language": "Language",
-        "version": "Version",
-        "author": "Author",
-        "description": "Description"
+        "name": "Nombre",
+        "language": "Idioma",
+        "version": "Versión",
+        "author": "Autor",
+        "description": "Descripción"
       }
     },
     "tooltip": {
-      "reload-plugins": "Reload plugins"
+      "reload-plugins": "Recargar plugins"
     }
   },
   "plugin-effects": {
     "get-all": {
       "error": {
-        "detail": "Failed to load plugins..."
+        "detail": "Error al cargar plugins..."
       }
     },
     "reload-plugins": {
       "success": {
-        "detail": "Loaded {count, plural, =1{one plugin} other{# plugins}}..."
+        "detail": "Cargado{count, plural, =1{ un plugin} other{s # plugins}}..."
       },
       "error": {
-        "detail": "Failed to reload plugins..."
+        "detail": "Error al cargar plugins..."
       }
     }
   }

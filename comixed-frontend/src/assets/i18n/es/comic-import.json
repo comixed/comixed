@@ -2,12 +2,12 @@
   "comic-import": {
     "effects": {
       "find-comic-files": {
-        "success-detail": "Found {count, plural, =1{one comic} other{# comics}} available for importing...",
-        "error-detail": "Failed to find any comic files..."
+        "success-detail": "Encontrado{count, plural, =1{un cómic} other{s # cómics}} para importar...",
+        "error-detail": "No se ha podido encontrar ningún cómic..."
       },
       "import-comics": {
-        "success-detail": "Comic import process started...",
-        "error-detail": "Failed to start importing comics..."
+        "success-detail": "Comenzado el proceso de importación de cómics...",
+        "error-detail": "Error al intentar empezar a importar..."
       }
     }
   },
@@ -65,7 +65,7 @@
     "label": {
       "filename": "Nombre del archivo",
       "file-size": "Tamaño",
-      "search-comic-names": "Buscar nombres de cómics*****"
+      "search-comic-names": "Buscar por nombre"
     },
     "text": {
       "blocked-pages-notice": "Las páginas bloqueadas se marcarán automáticamente como eliminadas.",
@@ -90,7 +90,7 @@
     },
     "import": {
       "header": "Importar archivos de cómics",
-      "message": "Importar {comic_count} cómics?",
+      "message": "¿Importar {comic_count} cómics?",
       "message-ignore-metadata": "¿Importar {comic_count} cómic(s), ignorando todos los metadatos existentes??"
     }
   }
