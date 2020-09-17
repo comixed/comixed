@@ -66,7 +66,7 @@ public class FileController {
    * @param request the request body
    * @return the list of comic files
    * @throws IOException if an error occurs
-   * @throws JSONException if an error occurs
+   * @throws IOException if an error occurs
    */
   @PostMapping(
       value = "/contents",
