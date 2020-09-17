@@ -107,7 +107,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Query("SELECT c FROM Comic c WHERE c.dateDeleted IS NOT NULL")
   List<Comic> findAllMarkedForDeletion();
 
-  @Query("SELECT c FROM Comic c")
+  @Query("SELECT c FROM Comic c ORDER BY c.id")
   List<Comic> findComicsToMove(PageRequest page);
 
   /**

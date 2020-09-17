@@ -65,7 +65,8 @@ public class MoveComicsWorkerTaskTest {
   public void testStartTask() throws WorkerTaskException {
     Mockito.when(moveComicWorkerTaskEncoderObjectFactory.getObject())
         .thenReturn(moveComicTaskEncoder);
-    Mockito.when(comicService.findComicsToMove(Mockito.anyInt())).thenReturn(comicList);
+    Mockito.when(comicService.findComicsToMove(Mockito.anyInt(), Mockito.anyInt()))
+        .thenReturn(comicList);
     Mockito.when(moveComicTaskEncoder.encode()).thenReturn(task);
     Mockito.when(taskService.save(Mockito.any(Task.class))).thenReturn(task);
 
