@@ -64,7 +64,7 @@ public class MoveComicsWorkerTask extends AbstractWorkerTask {
     int page = 0;
     while (!done) {
       log.debug("Preparing to page {} of {} comics", page, MAX_COMIC_PAGE);
-      List<Comic> comics = this.comicService.findComicsToMove(MAX_COMIC_PAGE + 1);
+      List<Comic> comics = this.comicService.findComicsToMove(page++, MAX_COMIC_PAGE + 1);
       for (int index = 0; index < comics.size(); index++) {
         final Comic comic = comics.get(index);
 

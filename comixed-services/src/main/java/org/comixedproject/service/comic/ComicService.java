@@ -356,11 +356,14 @@ public class ComicService {
   }
 
   /**
+   * Retrieves a page of comics to be moved.
+   *
+   * @param page the page
    * @param max the maximum number of comics to return
    * @return the list of comics
    */
-  public List<Comic> findComicsToMove(final int max) {
-    return this.comicRepository.findComicsToMove(PageRequest.of(0, max));
+  public List<Comic> findComicsToMove(final int page, final int max) {
+    return this.comicRepository.findComicsToMove(PageRequest.of(page, max));
   }
 
   /**
