@@ -65,7 +65,7 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
     } catch (IOException error) {
       throw new WorkerTaskException("Could not rename original comic file", error);
     }
-    File destFile = new File(this.getRelativeDirectory(), getRelativeComicFilename());
+    File destFile = new File(this.targetDirectory, getRelativeComicFilename());
     String defaultExtension = FilenameUtils.getExtension(comic.getFilename());
     destFile =
         new File(
@@ -103,16 +103,6 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
     log.debug("Renaming comic file: {} => {}", originalFilename, newFilename);
     FileUtils.moveFile(new File(originalFilename), result);
     return result;
-  }
-
-  private String getRelativeDirectory() {
-    StringBuilder result = new StringBuilder(this.targetDirectory);
-
-    this.addDirectory(result, this.comic.getPublisher());
-    this.addDirectory(result, this.comic.getSeries());
-    this.addDirectory(result, this.comic.getVolume());
-
-    return result.toString();
   }
 
   String getRelativeComicFilename() {
@@ -164,16 +154,6 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
   private String scrub(final String text, final String forbidden) {
     log.trace("Pre-sanitized text: {}", text);
     return text.replaceAll(forbidden, "_");
-  }
-
-  private void addDirectory(StringBuilder result, String value) {
-    result.append(File.separator);
-
-    if ((value != null) && !value.isEmpty()) {
-      result.append(value);
-    } else {
-      result.append(UNKNOWN_VALUE);
-    }
   }
 
   @Override
