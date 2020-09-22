@@ -143,3 +143,31 @@ As it scrapes, you'll see the running total of comics remaining to be scraped as
 If you reload your browser, you **will** lose your list of remaining comics to be scraped. The list of comics is currently maintained in the browser, so reloading the browser will result in that list being lost.
 
 Any comics already processed will keep their data, but all other comics that haven't been processed will need to be reselected.
+
+## Reading Your Library
+
+### Open Publication Distribution System (OPDS) Support
+
+ComiXed provides support for accessing a comic's library via an OPDS browser.
+
+## Reading Comics Remotely
+
+You can read comics from your library using any comic reader that supports the [OPDS](https://opds.io/),
+such as [Chunky Reader](http://chunkyreader.com/).
+
+To allow your reader to access the library, you will need either the hostname or IP address for the computer
+running ComiXed. So, for example, if that computers IP address is **192.168.1.29** then you would tell the
+reader:
+
+    Hostname: http://192.168.1.29:7171/opds-comics
+    Username: [the username for your login]
+    Password: [the password for your login]
+
+Please note that some readers (such as Chunky) assume the **/opds** portion of the URL. SO if your reader
+does not see a reading list, try removing **/opds** from the URL.
+
+Then your reader should see, at least, a reading list named **All Comics**. This list will allow you to read
+all comics in your library.
+
+Future work will allow for different reading lists to be presented via OPDS. Please stay tuned for those
+changes to arrive.
