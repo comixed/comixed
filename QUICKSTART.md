@@ -48,7 +48,7 @@ Sometimes you might want (or need) to capture some additional information to rep
 
 To capture the logging to a file, you can add the following commandline option:
 ```
- $ java -jar [path to your JAR file] --logging.file=comixed.log
+ $ java -jar [path to your JAR file] --logging.file.name=comixed.log
 ```
 
 ## Logging In And Configuring Your Account

@@ -32,6 +32,7 @@ IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
 IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 if "%PARAM%" == "-l" GOTO set_lib_dir
+IF "%PARAM%" == "-L" GOTO set_logging_file
 GOTO process_command_line
 
 :set_jdbc_url
@@ -64,6 +65,12 @@ SHIFT
 SHIFT
 GOTO process_command_line
 
+:set_logging_file
+SET LOGFILE=%ARG%
+SHIFT
+SHIFT
+GOTO process_command_line
+
 :show_help
 ECHO Usage: run.bat [OPTIONS]
 ECHO.
@@ -77,6 +84,7 @@ ECHO.
 ECHO OTHER OPTIONS:
 ECHO  -d            - Enable debugging (def. off)
 ECHO  -D            - Turn on ALL debugging (def. off)
+ECHO  -L [LOGFILE]  - Write logs to a logfile
 ECHO  -h            - Show help (this text)
 GOTO exit_script
 
@@ -91,6 +99,10 @@ SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject=DEBUG
 IF "%FULLDEBUG%" == "" GOTO skip_full_debug
 SET OPTIONS=%OPTIONS% --logging.level.root=DEBUG
 :skip_full_debug
+
+IF "%LOGFILE%" == "" GOTO :skip_logfile
+SET OPTIONS=%OPTIONS% --logging.file.name=%LOGFILE%
+:skip_logfile
 
 IF "%JDBCURL%" == "" GOTO skip_jdbc_url
 SET OPTIONS=%OPTIONS% --spring.datasource.url=%JDBCURL%
