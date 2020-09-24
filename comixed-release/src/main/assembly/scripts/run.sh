@@ -31,6 +31,7 @@ JDBCURL=""
 DBUSER=""
 DBPWRD=""
 IMGCACHEDIR=""
+LOGFILE=""
 
 usage() {
   echo "Usage: run.sh [OPTIONS]"
@@ -43,13 +44,14 @@ usage() {
   echo " -l [DIR]\t\t-Set the JAR library directory"
   echo ""
   echo "Other options:"
-  echo " -d\t\t\t- Debug mode (def. false)"
-  echo " -D\t\t\t- Turn on ALL debugging (def. false)"
-  echo " -v\t\t\t- Verbose mode (def. false)"
+  echo " -d           - Debug mode (def. false)"
+  echo " -D           - Turn on ALL debugging (def. false)"
+  echo " -v           - Verbose mode (def. false)"
+  echo " -L [LOGFILE] - Write logs to a file"
   exit 0
 }
 
-while getopts "j:u:p:i:l:dDv" option; do
+while getopts "j:u:p:i:l:dDvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
@@ -59,6 +61,7 @@ while getopts "j:u:p:i:l:dDv" option; do
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
   v) VERBOSE=true ;;
+  L) LOGFILE="${OPTARG}" ;;
   \?) usage ;;
   esac
 done
@@ -80,6 +83,10 @@ fi
 if $FULL_DEBUG; then
   # enable all debugging for all dependencies
   JAROPTIONS="${JAROPTIONS} --logging.level.root=DEBUG"
+fi
+
+if [[ $LOGFILE ]]; then
+  JAROPTIONS="${JAROPTIONS} --logging.file.name=${LOGFILE}"
 fi
 
 if [[ $JDBCURL ]]; then
