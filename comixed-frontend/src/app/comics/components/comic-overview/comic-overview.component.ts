@@ -21,9 +21,16 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { Comic, ComicFormat, ScanType } from 'app/comics';
+import { AppState, Comic, ComicFormat, ScanType } from 'app/comics';
 import { LibraryAdaptor } from 'app/library';
 import { LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
+import {
+  selectScanTypes,
+  selectScanTypesState
+} from 'app/comics/selectors/scan-types.selectors';
+import { filter } from 'rxjs/operators';
+import { getScanTypes } from 'app/comics/actions/scan-types.actions';
 
 @Component({
   selector: 'app-comic-overview',
@@ -35,11 +42,12 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   @Input() is_admin: boolean;
 
   comicBackup: Comic;
-  scanTypes: ScanType[];
   scanTypeOptions: SelectItem[];
   formats: ComicFormat[];
   formatOptions: SelectItem[];
-  scanTypeSubscription: Subscription;
+  scanTypesStateSubscription: Subscription;
+  scanTypesSubscription: Subscription;
+  scanTypes: ScanType[];
   formatSubscription: Subscription;
   editing = false;
   publishersSubscription: Subscription;
@@ -52,18 +60,23 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: LoggerService,
+    private store: Store<AppState>,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private comicAdaptor: ComicAdaptor,
     private libraryAdaptor: LibraryAdaptor
   ) {
-    this.scanTypeSubscription = this.comicAdaptor.scanTypes$.subscribe(
-      scanTypes => {
-        this.scanTypes = scanTypes;
-        this.loadScanTypeOptions();
-      }
-    );
-    this.comicAdaptor.getScanTypes();
+    this.scanTypesStateSubscription = this.store
+      .select(selectScanTypesState)
+      .pipe(filter(state => !!state))
+      .subscribe(state => {
+        if (!state.loaded && !state.fetching) {
+          this.store.dispatch(getScanTypes());
+        }
+      });
+    this.scanTypesSubscription = this.store
+      .select(selectScanTypes)
+      .subscribe(scanTypes => this.loadScanTypeOptions(scanTypes));
     this.formatSubscription = this.comicAdaptor.formats$.subscribe(formats => {
       this.formats = formats;
       this.loadFormatOptions();
@@ -87,7 +100,8 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {}
 
-  loadScanTypeOptions(): void {
+  loadScanTypeOptions(scanTypes: ScanType[]): void {
+    this.scanTypes = scanTypes;
     this.scanTypeOptions = [
       {
         label: this.translateService.instant(
@@ -116,7 +130,8 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.scanTypeSubscription.unsubscribe();
+    this.scanTypesStateSubscription.unsubscribe();
+    this.scanTypesSubscription.unsubscribe();
     this.formatSubscription.unsubscribe();
     this.publishersSubscription.unsubscribe();
     this.seriesSubscription.unsubscribe();

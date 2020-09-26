@@ -72,6 +72,7 @@ import {
 import { TableModule } from 'primeng/table';
 import { ScrapingIssueCoverUrlPipe } from 'app/comics/pipes/scraping-issue-cover-url.pipe';
 import * as fromComics from 'app/comics/reducers/comic.reducer';
+import { COMIC_FEATURE_KEY } from 'app/comics/reducers/comic.reducer';
 import { PublisherThumbnailUrlPipe } from 'app/comics/pipes/publisher-thumbnail-url.pipe';
 import { PublisherPipe } from 'app/comics/pipes/publisher.pipe';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
@@ -87,6 +88,9 @@ import { SCRAPE_COMIC_FEATURE_KEY } from 'app/comics/reducers/scrape-comic.reduc
 import { ScrapeComicEffects } from 'app/comics/effects/scrape-comic.effects';
 import * as fromScrapeMultipleComics from 'app/comics/reducers/scrape-multiple-comic.reducer';
 import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multiple-comic.reducer';
+import * as fromScanTypes from 'app/comics/reducers/scan-types.reducer';
+import { SCAN_TYPES_FEATURE_KEY } from 'app/comics/reducers/scan-types.reducer';
+import { ScanTypesEffects } from 'app/comics/effects/scan-types.effects';
 
 @NgModule({
   declarations: [
@@ -130,7 +134,8 @@ import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multipl
     TableModule,
     TabViewModule,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(fromComics.COMIC_FEATURE_KEY, fromComics.reducer),
+    StoreModule.forFeature(COMIC_FEATURE_KEY, fromComics.reducer),
+    StoreModule.forFeature(SCAN_TYPES_FEATURE_KEY, fromScanTypes.reducer),
     StoreModule.forFeature(
       SCRAPING_VOLUMES_FEATURE_KEY,
       fromScrapingVolumes.reducer
@@ -146,6 +151,7 @@ import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multipl
     ),
     EffectsModule.forFeature([
       ComicEffects,
+      ScanTypesEffects,
       ScrapingVolumesEffects,
       ScrapingIssueEffects,
       ScrapeComicEffects

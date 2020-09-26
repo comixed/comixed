@@ -32,12 +32,9 @@ import {
   ComicGetIssueFailed,
   ComicGetPageTypes,
   ComicGetPageTypesFailed,
-  ComicGetScanTypes,
-  ComicGetScanTypesFailed,
   ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
-  ComicGotScanTypes,
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
@@ -73,11 +70,6 @@ import {
   STORY
 } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import { ComicService } from 'app/comics/services/comic.service';
 import { PageService } from 'app/comics/services/page.service';
 import { hot } from 'jasmine-marbles';
@@ -112,7 +104,6 @@ describe('ComicEffects', () => {
           provide: ComicService,
           useValue: {
             getIssue: jasmine.createSpy('ComicService.getIssue()'),
-            getScanTypes: jasmine.createSpy('ComicService.getScanTypes()'),
             getFormats: jasmine.createSpy('ComicService.getFormats()'),
             getPageTypes: jasmine.createSpy('ComicService.getPageTypes()'),
             saveComic: jasmine.createSpy('ComicSave.saveComic()'),
@@ -147,49 +138,6 @@ describe('ComicEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
-  });
-
-  describe('when getting the scan types', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
-      const action = new ComicGetScanTypes();
-      const outcome = new ComicGotScanTypes({ scanTypes: serviceResponse });
-
-      actions$ = hot('-a', { a: action });
-      comicService.getScanTypes.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getScanTypes$).toBeObservable(expected);
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = new ComicGetScanTypes();
-      const outcome = new ComicGetScanTypesFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.getScanTypes.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getScanTypes$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new ComicGetScanTypes();
-      const outcome = new ComicGetScanTypesFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.getScanTypes.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.getScanTypes$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
   });
 
   describe('when getting the formats', () => {

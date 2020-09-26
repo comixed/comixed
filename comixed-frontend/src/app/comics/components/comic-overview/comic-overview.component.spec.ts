@@ -26,7 +26,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { COMIC_1, FORMAT_3, SCAN_TYPE_1 } from 'app/comics/comics.fixtures';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
-import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
+import * as fromComic from 'app/comics/reducers/comic.reducer';
+import { COMIC_FEATURE_KEY } from 'app/comics/reducers/comic.reducer';
 import { AppState, LibraryAdaptor } from 'app/library';
 import { LoggerModule } from '@angular-ru/logger';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
@@ -48,6 +49,10 @@ import { CollectionType } from 'app/library/models/collection-type.enum';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
 import { FileEntryListComponent } from 'app/comics/components/file-entry-list/file-entry-list.component';
 import { TableModule } from 'primeng/table';
+import { scanTypesReceived } from 'app/comics/actions/scan-types.actions';
+import * as fromScanTypes from 'app/comics/reducers/scan-types.reducer';
+import { SCAN_TYPES_FEATURE_KEY } from 'app/comics/reducers/scan-types.reducer';
+import { ScanTypesEffects } from 'app/comics/effects/scan-types.effects';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = Object.assign({}, COMIC_1);
@@ -66,9 +71,10 @@ describe('ComicOverviewComponent', () => {
         LoggerModule.forRoot(),
         HttpClientTestingModule,
         StoreModule.forRoot({}),
-        StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
+        StoreModule.forFeature(COMIC_FEATURE_KEY, fromComic.reducer),
+        StoreModule.forFeature(SCAN_TYPES_FEATURE_KEY, fromScanTypes.reducer),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ComicEffects]),
+        EffectsModule.forFeature([ComicEffects, ScanTypesEffects]),
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),
@@ -119,11 +125,22 @@ describe('ComicOverviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('subscribes to the available scan types list', () => {
-    component.scanTypes = [SCAN_TYPE_1];
-    component.loadScanTypeOptions();
-    expect(component.scanTypeOptions.length).toEqual(2);
-    expect(component.scanTypeOptions[1].value).toEqual(SCAN_TYPE_1);
+  describe('the available scan types list', () => {
+    const SCAN_TYPES = [SCAN_TYPE_1];
+
+    beforeEach(() => {
+      component.scanTypes = [];
+      component.scanTypeOptions = [];
+      store.dispatch(scanTypesReceived({ types: SCAN_TYPES }));
+    });
+
+    it('loads the set of scan type options', () => {
+      expect(component.scanTypeOptions).not.toEqual([]);
+    });
+
+    it('sets the scan types reference', () => {
+      expect(component.scanTypes).toEqual(SCAN_TYPES);
+    });
   });
 
   it('subscribes to the available format list', () => {

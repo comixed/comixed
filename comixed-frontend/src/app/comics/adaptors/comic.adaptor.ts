@@ -18,21 +18,13 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  AppState,
-  Comic,
-  ComicFormat,
-  Page,
-  PageType,
-  ScanType
-} from 'app/comics';
+import { AppState, Comic, ComicFormat, Page, PageType } from 'app/comics';
 import {
   ComicClearMetadata,
   ComicDelete,
   ComicGetFormats,
   ComicGetIssue,
   ComicGetPageTypes,
-  ComicGetScanTypes,
   ComicMarkAsRead,
   ComicRestore,
   ComicSave,
@@ -52,8 +44,6 @@ import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ComicAdaptor {
-  private _scanTypesLoaded$ = new BehaviorSubject<boolean>(false);
-  private _scanTypes$ = new BehaviorSubject<ScanType[]>([]);
   private _formatsLoaded$ = new BehaviorSubject<boolean>(false);
   private _formats$ = new BehaviorSubject<ComicFormat[]>([]);
   private _fetchingIssue$ = new BehaviorSubject<boolean>(false);
@@ -74,12 +64,6 @@ export class ComicAdaptor {
       .pipe(filter(state => !!state))
       .subscribe((state: ComicState) => {
         this.logger.debug('comic state updated:', state);
-        if (state.scanTypesLoaded !== this._scanTypesLoaded$.getValue()) {
-          this._scanTypesLoaded$.next(state.scanTypesLoaded);
-        }
-        if (!_.isEqual(this._scanTypes$.getValue(), state.scanTypes)) {
-          this._scanTypes$.next(state.scanTypes);
-        }
         if (state.formatsLoaded !== this._formatsLoaded$.getValue()) {
           this._formatsLoaded$.next(state.formatsLoaded);
         }
@@ -120,21 +104,6 @@ export class ComicAdaptor {
           this._deletingPage$.next(state.deletingPage);
         }
       });
-  }
-
-  getScanTypes(): void {
-    this.logger.debug('firing action to get scan types');
-    if (this._scanTypesLoaded$.getValue() === false) {
-      this.store.dispatch(new ComicGetScanTypes());
-    }
-  }
-
-  get scanTypesLoaded$(): Observable<boolean> {
-    return this._scanTypesLoaded$.asObservable();
-  }
-
-  get scanTypes$(): Observable<ScanType[]> {
-    return this._scanTypes$.asObservable();
   }
 
   getFormats(): void {
