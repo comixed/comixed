@@ -30,11 +30,9 @@ import {
   ComicGetIssue,
   ComicGetIssueFailed,
   ComicGetPageTypes,
-  ComicGetScanTypes,
   ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
-  ComicGotScanTypes,
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
@@ -59,11 +57,6 @@ import {
 } from 'app/comics/models/comic-format.fixtures';
 import { COMIC_1 } from 'app/comics/models/comic.fixtures';
 import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import * as fromComics from 'app/comics/reducers/comic.reducer';
 import { MessageService } from 'primeng/api';
 import { ComicAdaptor } from './comic.adaptor';
@@ -71,7 +64,6 @@ import { LoggerModule } from '@angular-ru/logger';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 
 describe('ComicAdaptor', () => {
-  const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
   const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
@@ -106,37 +98,6 @@ describe('ComicAdaptor', () => {
 
   it('should create an instance', () => {
     expect(adaptor).toBeTruthy();
-  });
-
-  describe('loading scan types', () => {
-    it('can load the scan types', () => {
-      adaptor.getScanTypes();
-      expect(store.dispatch).toHaveBeenCalledWith(new ComicGetScanTypes());
-    });
-
-    it('only retrieves the scan types once', () => {
-      store.dispatch(new ComicGotScanTypes({ scanTypes: SCAN_TYPES }));
-      adaptor.getScanTypes();
-      expect(store.dispatch).not.toHaveBeenCalledWith(new ComicGetScanTypes());
-    });
-
-    describe('when the scan types are received', () => {
-      beforeEach(() => {
-        store.dispatch(new ComicGotScanTypes({ scanTypes: SCAN_TYPES }));
-      });
-
-      it('provides notice when the scan types are loaded', () => {
-        adaptor.scanTypesLoaded$.subscribe(result =>
-          expect(result).toBeTruthy()
-        );
-      });
-
-      it('provides notice when the scan types are changed', () => {
-        adaptor.scanTypes$.subscribe(result =>
-          expect(result).toEqual(SCAN_TYPES)
-        );
-      });
-    });
   });
 
   describe('loading the comic formats', () => {

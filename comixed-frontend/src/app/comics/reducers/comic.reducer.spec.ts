@@ -17,7 +17,6 @@
  */
 
 import {
-  ComicSetPageDeletedFailed,
   ComicClearMetadata,
   ComicClearMetadataFailed,
   ComicDelete,
@@ -29,12 +28,9 @@ import {
   ComicGetIssueFailed,
   ComicGetPageTypes,
   ComicGetPageTypesFailed,
-  ComicGetScanTypes,
-  ComicGetScanTypesFailed,
   ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
-  ComicGotScanTypes,
   ComicMarkAsRead,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
@@ -52,6 +48,7 @@ import {
   ComicSavePage,
   ComicSavePageFailed,
   ComicSetPageDeleted,
+  ComicSetPageDeletedFailed,
   ComicSetPageHashBlocking,
   ComicSetPageHashBlockingFailed,
   ComicSetPageType,
@@ -69,11 +66,6 @@ import {
   STORY
 } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 import { ComicState, initialState, reducer } from './comic.reducer';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { Page } from 'app/comics';
@@ -93,18 +85,6 @@ describe('Comic Reducer', () => {
   describe('by default', () => {
     beforeEach(() => {
       state = reducer(state, {} as any);
-    });
-
-    it('clears the fetching scan types flag', () => {
-      expect(state.fetchingScanTypes).toBeFalsy();
-    });
-
-    it('clears the set of scan types', () => {
-      expect(state.scanTypes).toEqual([]);
-    });
-
-    it('clears the scan types loaded flag', () => {
-      expect(state.scanTypesLoaded).toBeFalsy();
     });
 
     it('clears the fetching comic formats flag', () => {
@@ -181,64 +161,6 @@ describe('Comic Reducer', () => {
 
     it('clears the setting read state flag', () => {
       expect(state.settingReadState).toBeFalsy();
-    });
-  });
-
-  describe('when fetching the scan types', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetchingScanTypes: false },
-        new ComicGetScanTypes()
-      );
-    });
-
-    it('sets the fetching scan types flag', () => {
-      expect(state.fetchingScanTypes).toBeTruthy();
-    });
-  });
-
-  describe('when the scan types are received', () => {
-    const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
-
-    beforeEach(() => {
-      state = reducer(
-        {
-          ...state,
-          fetchingScanTypes: true,
-          scanTypesLoaded: false,
-          scanTypes: []
-        },
-        new ComicGotScanTypes({ scanTypes: SCAN_TYPES })
-      );
-    });
-
-    it('clears the fetching scan types flag', () => {
-      expect(state.fetchingScanTypes).toBeFalsy();
-    });
-
-    it('sets the scan types loaded flag', () => {
-      expect(state.scanTypesLoaded).toBeTruthy();
-    });
-
-    it('sets the scan types', () => {
-      expect(state.scanTypes).toEqual(SCAN_TYPES);
-    });
-  });
-
-  describe('when loading the scan types fails', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetchingScanTypes: true, scanTypesLoaded: true },
-        new ComicGetScanTypesFailed()
-      );
-    });
-
-    it('clears the fetching scan types flag', () => {
-      expect(state.fetchingScanTypes).toBeFalsy();
-    });
-
-    it('clears the scan types loaded flag', () => {
-      expect(state.scanTypesLoaded).toBeFalsy();
     });
   });
 
