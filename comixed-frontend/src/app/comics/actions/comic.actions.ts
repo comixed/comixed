@@ -17,12 +17,9 @@
  */
 
 import { Action } from '@ngrx/store';
-import { Comic, ComicFormat, Page, PageType, ScanType } from 'app/comics';
+import { Comic, ComicFormat, Page, PageType } from 'app/comics';
 
 export enum ComicActionTypes {
-  GetScanTypes = '[COMIC] Get the set of scan types',
-  GotScanTypes = '[COMIC] Got the scan types',
-  GetScanTypesFailed = '[COMIC] Failed to get the set of scan types',
   GetFormats = '[COMIC] Get the set of formats',
   GotFormats = '[COMIC] Got the set of formats',
   GetFormatsFailed = '[COMIC] Failed to get the set of formats',
@@ -59,24 +56,6 @@ export enum ComicActionTypes {
   MarkAsRead = '[COMIC] Change the read state of a comic',
   MarkedAsRead = '[COMIC} The read state of a comic was changed',
   MarkAsReadFailed = '[COMIC] Changing the read state of a comic failed'
-}
-
-export class ComicGetScanTypes implements Action {
-  readonly type = ComicActionTypes.GetScanTypes;
-
-  constructor() {}
-}
-
-export class ComicGotScanTypes implements Action {
-  readonly type = ComicActionTypes.GotScanTypes;
-
-  constructor(public payload: { scanTypes: ScanType[] }) {}
-}
-
-export class ComicGetScanTypesFailed implements Action {
-  readonly type = ComicActionTypes.GetScanTypesFailed;
-
-  constructor() {}
 }
 
 export class ComicGetFormats implements Action {
@@ -296,9 +275,6 @@ export class ComicMarkAsReadFailed implements Action {
 }
 
 export type ComicActions =
-  | ComicGetScanTypes
-  | ComicGotScanTypes
-  | ComicGetScanTypesFailed
   | ComicGetFormats
   | ComicGotFormats
   | ComicGetFormatsFailed

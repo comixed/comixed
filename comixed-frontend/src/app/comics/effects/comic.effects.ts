@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Comic, ComicFormat, Page, PageType, ScanType } from 'app/comics';
+import { Comic, ComicFormat, Page, PageType } from 'app/comics';
 import { ComicService } from 'app/comics/services/comic.service';
 import { PageService } from 'app/comics/services/page.service';
 import { MessageService } from 'primeng/api';
@@ -35,11 +35,9 @@ import {
   ComicGetFormatsFailed,
   ComicGetIssueFailed,
   ComicGetPageTypesFailed,
-  ComicGetScanTypesFailed,
   ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
-  ComicGotScanTypes,
   ComicMarkAsReadFailed,
   ComicMarkedAsRead,
   ComicMetadataCleared,
@@ -68,37 +66,6 @@ export class ComicEffects {
     private messageService: MessageService,
     private translateService: TranslateService
   ) {}
-
-  @Effect()
-  getScanTypes$: Observable<Action> = this.actions$.pipe(
-    ofType(ComicActionTypes.GetScanTypes),
-    switchMap(action =>
-      this.comicService.getScanTypes().pipe(
-        map(
-          (response: ScanType[]) =>
-            new ComicGotScanTypes({ scanTypes: response })
-        ),
-        catchError(error => {
-          this.messageService.add({
-            severity: 'error',
-            detail: this.translateService.instant(
-              'comic-effects.get-scan-types.error.detail'
-            )
-          });
-          return of(new ComicGetScanTypesFailed());
-        })
-      )
-    ),
-    catchError(error => {
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new ComicGetScanTypesFailed());
-    })
-  );
 
   @Effect()
   getFormats$: Observable<Action> = this.actions$.pipe(
