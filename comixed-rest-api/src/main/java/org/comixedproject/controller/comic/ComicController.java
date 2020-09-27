@@ -71,10 +71,10 @@ public class ComicController {
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileService fileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
-  @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ComicFormatRepository comicFormatRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private TaskManager taskManager;
+  @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
   @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
@@ -241,12 +241,6 @@ public class ComicController {
     }
 
     return new GetLibraryUpdatesResponse(comics, lastReadDates, rescanCount, processCount);
-  }
-
-  @GetMapping(value = "/scan_types")
-  public Iterable<ScanType> getScanTypes() {
-    log.debug("Fetching all scan types");
-    return this.scanTypeRepository.findAll();
   }
 
   /**
