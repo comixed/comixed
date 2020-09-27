@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.comic;
+package org.comixedproject.service.comic;
 
+import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.ScanType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.comixedproject.repositories.comic.ScanTypeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * <code>ScanTypeRepository</code> provides methods for working with persisted instances of {@link
+ * <code>ScanTypeService</code> provides business logic methods for working with instances of {@link
  * ScanType}.
  *
  * @author Darryl L. Pierce
  */
-@Repository
-public interface ScanTypeRepository extends JpaRepository<ScanType, Long> {}
+@Service
+@Log4j2
+public class ScanTypeService {
+  @Autowired private ScanTypeRepository scanTypeRepository;
+
+  /**
+   * Returns the list of all defined {@link ScanType}s.
+   *
+   * @return the list
+   */
+  public List<ScanType> getAll() {
+    log.debug("Getting all scan types");
+    return this.scanTypeRepository.findAll();
+  }
+}
