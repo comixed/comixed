@@ -45,8 +45,8 @@ import org.springframework.util.StringUtils;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class MoveComicWorkerTask extends AbstractWorkerTask {
-  private static final String FORBIDDING_RULE_CHARACTERS = "[:\\\\*?|<>]";
-  private static final String FORBIDDING_PROPERTY_CHARACTERS = "[:\\\\/*?|<>]";
+  private static final String FORBIDDEN_RULE_CHARACTERS = "[\"':\\\\*?|<>]";
+  private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>]";
   private static final String UNKNOWN_VALUE = "Unknown";
 
   static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
@@ -114,7 +114,7 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
     }
 
     log.debug("Scrubbing renaming rule: {}", this.renamingRule);
-    final String rule = this.scrub(this.renamingRule, FORBIDDING_RULE_CHARACTERS);
+    final String rule = this.scrub(this.renamingRule, FORBIDDEN_RULE_CHARACTERS);
 
     log.debug("Generating relative filename based on renaming rule: {}", rule);
 
@@ -148,7 +148,7 @@ public class MoveComicWorkerTask extends AbstractWorkerTask {
   }
 
   private String scrub(final String text) {
-    return this.scrub(text, FORBIDDING_PROPERTY_CHARACTERS);
+    return this.scrub(text, FORBIDDEN_PROPERTY_CHARACTERS);
   }
 
   private String scrub(final String text, final String forbidden) {
