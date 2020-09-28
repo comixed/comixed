@@ -115,8 +115,8 @@ public class MoveComicWorkerTaskTest {
           TEST_VOLUME,
           TEST_ISSUE,
           "No Cover Date");
-  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "?Publisher*";
-  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "_Publisher_";
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "\"?Publisher*'";
+  private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Publisher__";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|Series?>";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Series__";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";
