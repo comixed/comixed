@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.7.0-rc4</version>
+    <version>0.7.0-1</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-plugins</artifactId>
-  <version>0.7.0-rc4</version>
+  <version>0.7.0-1</version>
   <name>comixed-plugins</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
-      <version>0.7.0-rc4</version>
+      <version>0.7.0-1</version>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
