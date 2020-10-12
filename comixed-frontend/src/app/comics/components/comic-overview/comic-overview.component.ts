@@ -31,6 +31,11 @@ import {
 } from 'app/comics/selectors/scan-types.selectors';
 import { filter } from 'rxjs/operators';
 import { getScanTypes } from 'app/comics/actions/scan-types.actions';
+import {
+  selectComicFormats,
+  selectComicFormatState
+} from 'app/comics/selectors/comic-format.selectors';
+import { loadComicFormats } from 'app/comics/actions/comic-format.actions';
 
 @Component({
   selector: 'app-comic-overview',
@@ -43,12 +48,13 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
 
   comicBackup: Comic;
   scanTypeOptions: SelectItem[];
+  formatSubscription: Subscription;
+  formatStateSubscription: Subscription;
   formats: ComicFormat[];
   formatOptions: SelectItem[];
   scanTypesStateSubscription: Subscription;
   scanTypesSubscription: Subscription;
   scanTypes: ScanType[];
-  formatSubscription: Subscription;
   editing = false;
   publishersSubscription: Subscription;
   publishersNames: string[] = [];
@@ -77,11 +83,21 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
     this.scanTypesSubscription = this.store
       .select(selectScanTypes)
       .subscribe(scanTypes => this.loadScanTypeOptions(scanTypes));
-    this.formatSubscription = this.comicAdaptor.formats$.subscribe(formats => {
-      this.formats = formats;
-      this.loadFormatOptions();
-    });
-    this.comicAdaptor.getFormats();
+    this.formatSubscription = this.store
+      .select(selectComicFormats)
+      .pipe(filter(state => !!state))
+      .subscribe(formats => {
+        this.formats = formats;
+        this.loadFormatOptions();
+      });
+    this.formatStateSubscription = this.store
+      .select(selectComicFormatState)
+      .subscribe(state => {
+        if (!state.loaded && !state.loading) {
+          this.logger.debug('Loading comic formats');
+          this.store.dispatch(loadComicFormats());
+        }
+      });
     this.publishersSubscription = this.libraryAdaptor.publishers$.subscribe(
       publishers => {
         this.logger.info('received publishers:', publishers);
@@ -99,6 +115,15 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {}
+
+  ngOnDestroy(): void {
+    this.scanTypesStateSubscription.unsubscribe();
+    this.scanTypesSubscription.unsubscribe();
+    this.formatSubscription.unsubscribe();
+    this.formatStateSubscription.unsubscribe();
+    this.publishersSubscription.unsubscribe();
+    this.seriesSubscription.unsubscribe();
+  }
 
   loadScanTypeOptions(scanTypes: ScanType[]): void {
     this.scanTypes = scanTypes;
@@ -127,14 +152,6 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
     this.formats.forEach(format =>
       this.formatOptions.push({ label: format.name, value: format })
     );
-  }
-
-  ngOnDestroy(): void {
-    this.scanTypesStateSubscription.unsubscribe();
-    this.scanTypesSubscription.unsubscribe();
-    this.formatSubscription.unsubscribe();
-    this.publishersSubscription.unsubscribe();
-    this.seriesSubscription.unsubscribe();
   }
 
   clearMetadata(): void {

@@ -22,7 +22,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from 'app/comics/models/comic.fixtures';
+} from 'app/comics/comics.fixtures';
 import {
   latestUpdatedDate,
   mergeComics,

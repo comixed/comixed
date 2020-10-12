@@ -26,7 +26,7 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_FILE_1 } from 'app/comic-import/models/comic-file.fixtures';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { ComicCoverUrlPipe } from 'app/comics/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from 'app/comics/pipes/comic-title.pipe';
 import { LibraryAdaptor } from 'app/library';

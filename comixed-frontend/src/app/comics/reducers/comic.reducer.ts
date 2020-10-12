@@ -16,15 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic, ComicFormat, PageType } from 'app/comics';
+import { Comic, PageType } from 'app/comics';
 import { ComicActions, ComicActionTypes } from '../actions/comic.actions';
 
 export const COMIC_FEATURE_KEY = 'comic';
 
 export interface ComicState {
-  fetchingFormats: boolean;
-  formats: ComicFormat[];
-  formatsLoaded: boolean;
   fetchingPageTypes: boolean;
   pageTypes: PageType[];
   pageTypesLoaded: boolean;
@@ -44,9 +41,6 @@ export interface ComicState {
 }
 
 export const initialState: ComicState = {
-  fetchingFormats: false,
-  formats: [],
-  formatsLoaded: false,
   fetchingPageTypes: false,
   pageTypes: [],
   pageTypesLoaded: false,
@@ -70,20 +64,6 @@ export function reducer(
   action: ComicActions
 ): ComicState {
   switch (action.type) {
-    case ComicActionTypes.GetFormats:
-      return { ...state, fetchingFormats: true };
-
-    case ComicActionTypes.GotFormats:
-      return {
-        ...state,
-        fetchingFormats: false,
-        formatsLoaded: true,
-        formats: action.payload.formats
-      };
-
-    case ComicActionTypes.GetFormatsFailed:
-      return { ...state, fetchingFormats: false, formatsLoaded: false };
-
     case ComicActionTypes.GetPageTypes:
       return { ...state, fetchingPageTypes: true };
 

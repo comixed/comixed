@@ -20,7 +20,7 @@ import { API_ROOT_URL } from 'app/app.functions';
 import { COMIXED_API_ROOT } from 'app/app.constants';
 
 export const GET_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scantypes`;
-export const GET_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
+export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
 export const GET_PAGE_TYPES_URL = `${API_ROOT_URL}/pages/types`;
 export const GET_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const SAVE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;

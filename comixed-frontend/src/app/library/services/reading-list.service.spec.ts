@@ -33,7 +33,7 @@ import {
   UPDATE_READING_LIST_URL
 } from 'app/library/library.constants';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
-import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
 import { AddComicsToReadingListRequest } from 'app/library/models/net/add-comics-to-reading-list-request';
 import { AddComicsToReadingListResponse } from 'app/library/models/net/add-comics-to-reading-list-response';
 import { RemoveComicsFromReadingListRequest } from 'app/library/models/net/remove-comics-from-reading-list-request';

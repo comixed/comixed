@@ -53,6 +53,9 @@ import { scanTypesReceived } from 'app/comics/actions/scan-types.actions';
 import * as fromScanTypes from 'app/comics/reducers/scan-types.reducer';
 import { SCAN_TYPES_FEATURE_KEY } from 'app/comics/reducers/scan-types.reducer';
 import { ScanTypesEffects } from 'app/comics/effects/scan-types.effects';
+import * as fromComicFormat from 'app/comics/reducers/comic-format.reducer';
+import { COMIC_FORMAT_FEATURE_KEY } from 'app/comics/reducers/comic-format.reducer';
+import { ComicFormatEffects } from 'app/comics/effects/comic-format.effects';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = Object.assign({}, COMIC_1);
@@ -73,8 +76,16 @@ describe('ComicOverviewComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature(COMIC_FEATURE_KEY, fromComic.reducer),
         StoreModule.forFeature(SCAN_TYPES_FEATURE_KEY, fromScanTypes.reducer),
+        StoreModule.forFeature(
+          COMIC_FORMAT_FEATURE_KEY,
+          fromComicFormat.reducer
+        ),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([ComicEffects, ScanTypesEffects]),
+        EffectsModule.forFeature([
+          ComicEffects,
+          ScanTypesEffects,
+          ComicFormatEffects
+        ]),
         FormsModule,
         RouterTestingModule,
         TranslateModule.forRoot(),

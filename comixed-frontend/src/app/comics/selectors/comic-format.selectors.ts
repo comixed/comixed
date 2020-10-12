@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicFormat } from 'app/comics/models/comic-format';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  COMIC_FORMAT_FEATURE_KEY,
+  ComicFormatState
+} from 'app/comics/reducers/comic-format.reducer';
 
-export const FORMAT_1: ComicFormat = {
-  id: 1,
-  name: 'standard'
-};
+/**
+ * Select the feature state.
+ */
+export const selectComicFormatState = createFeatureSelector<ComicFormatState>(
+  COMIC_FORMAT_FEATURE_KEY
+);
 
-export const FORMAT_2: ComicFormat = {
-  id: 2,
-  name: 'trade-paperback'
-};
-
-export const FORMAT_3: ComicFormat = {
-  id: 3,
-  name: 'graphic-novel'
-};
-
-export const FORMAT_4: ComicFormat = {
-  id: 4,
-  name: 'deluxe-edition'
-};
-
-export const FORMAT_5: ComicFormat = {
-  id: 5,
-  name: 'treasury'
-};
+/**
+ * Select just the format list.
+ */
+export const selectComicFormats = createSelector(
+  selectComicFormatState,
+  state => state.formats
+);

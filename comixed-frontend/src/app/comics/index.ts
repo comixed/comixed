@@ -47,6 +47,11 @@ import {
   SCAN_TYPES_FEATURE_KEY,
   ScanTypesState
 } from 'app/comics/reducers/scan-types.reducer';
+import * as fromComicFormat from 'app/comics/reducers/comic-format.reducer';
+import {
+  COMIC_FORMAT_FEATURE_KEY,
+  ComicFormatState
+} from 'app/comics/reducers/comic-format.reducer';
 
 export { Comic } from 'app/comics/models/comic';
 export { ComicFormat } from 'app/comics/models/comic-format';
@@ -66,6 +71,7 @@ export interface AppState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   comic: ComicState;
   [SCAN_TYPES_FEATURE_KEY]: ScanTypesState;
+  [COMIC_FORMAT_FEATURE_KEY]: ComicFormatState;
   [SCRAPING_VOLUMES_FEATURE_KEY]: ScrapingVolumesState;
   [SCRAPING_ISSUE_FEATURE_KEY]: ScrapingIssueState;
   [SCRAPE_COMIC_FEATURE_KEY]: ScrapeComicState;
@@ -78,6 +84,7 @@ export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
   comic: fromComics.reducer,
   [SCAN_TYPES_FEATURE_KEY]: fromScanTypes.reducer,
+  [COMIC_FORMAT_FEATURE_KEY]: fromComicFormat.reducer,
   [SCRAPING_VOLUMES_FEATURE_KEY]: fromScrapingVolumes.reducer,
   [SCRAPING_ISSUE_FEATURE_KEY]: fromScrapingIssue.reducer,
   [SCRAPE_COMIC_FEATURE_KEY]: fromScrapeComic.reducer,

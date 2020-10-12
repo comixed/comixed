@@ -26,11 +26,9 @@ import {
   ComicClearMetadata,
   ComicDelete,
   ComicDeleted,
-  ComicGetFormats,
   ComicGetIssue,
   ComicGetIssueFailed,
   ComicGetPageTypes,
-  ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
   ComicMarkAsRead,
@@ -50,12 +48,7 @@ import {
   ComicSetPageTypeFailed
 } from 'app/comics/actions/comic.actions';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
-import {
-  FORMAT_1,
-  FORMAT_3,
-  FORMAT_5
-} from 'app/comics/models/comic-format.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import * as fromComics from 'app/comics/reducers/comic.reducer';
 import { MessageService } from 'primeng/api';
@@ -64,7 +57,6 @@ import { LoggerModule } from '@angular-ru/logger';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 
 describe('ComicAdaptor', () => {
-  const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
   const COMIC = COMIC_1;
   const SKIP_CACHE = false;
   const LAST_READ_DATE = COMIC_1_LAST_READ_DATE;
@@ -98,33 +90,6 @@ describe('ComicAdaptor', () => {
 
   it('should create an instance', () => {
     expect(adaptor).toBeTruthy();
-  });
-
-  describe('loading the comic formats', () => {
-    it('can load the comic formats', () => {
-      adaptor.getFormats();
-      expect(store.dispatch).toHaveBeenCalledWith(new ComicGetFormats());
-    });
-
-    it('only retrieves the scan types once', () => {
-      store.dispatch(new ComicGotFormats({ formats: FORMATS }));
-      adaptor.getFormats();
-      expect(store.dispatch).not.toHaveBeenCalledWith(new ComicGetFormats());
-    });
-
-    describe('when the formats are received', () => {
-      beforeEach(() => {
-        store.dispatch(new ComicGotFormats({ formats: FORMATS }));
-      });
-
-      it('provides notice when the formats are loaded', () => {
-        adaptor.formatsLoaded$.subscribe(result => expect(result).toBeTruthy());
-      });
-
-      it('provides notice when the formats are changed', () => {
-        adaptor.formats$.subscribe(result => expect(result).toEqual(FORMATS));
-      });
-    });
   });
 
   it('provides notice when fetching page types', () => {
