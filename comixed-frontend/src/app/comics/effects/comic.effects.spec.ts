@@ -26,13 +26,10 @@ import {
   ComicDelete,
   ComicDeleted,
   ComicDeleteFailed,
-  ComicGetFormats,
-  ComicGetFormatsFailed,
   ComicGetIssue,
   ComicGetIssueFailed,
   ComicGetPageTypes,
   ComicGetPageTypesFailed,
-  ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
   ComicMarkAsRead,
@@ -58,12 +55,7 @@ import {
   ComicSetPageType,
   ComicSetPageTypeFailed
 } from 'app/comics/actions/comic.actions';
-import {
-  FORMAT_1,
-  FORMAT_3,
-  FORMAT_5
-} from 'app/comics/models/comic-format.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import {
   BACK_COVER,
   FRONT_COVER,
@@ -138,49 +130,6 @@ describe('ComicEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
-  });
-
-  describe('when getting the formats', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = [FORMAT_1, FORMAT_3, FORMAT_5];
-      const action = new ComicGetFormats();
-      const outcome = new ComicGotFormats({ formats: serviceResponse });
-
-      actions$ = hot('-a', { a: action });
-      comicService.getFormats.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getFormats$).toBeObservable(expected);
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = new ComicGetFormats();
-      const outcome = new ComicGetFormatsFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.getFormats.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getFormats$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
-
-    it('fires an action on general failure', () => {
-      const action = new ComicGetFormats();
-      const outcome = new ComicGetFormatsFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.getFormats.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.getFormats$).toBeObservable(expected);
-      expect(messageService.add).toHaveBeenCalledWith(
-        objectContaining({ severity: 'error' })
-      );
-    });
   });
 
   describe('when getting the page types', () => {

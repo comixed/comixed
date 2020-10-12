@@ -27,7 +27,7 @@ import {
   scrapeComicFailed
 } from 'app/comics/actions/scrape-comic.actions';
 import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 
 describe('ScrapeComic Reducer', () => {
   const API_KEY = 'A0B1C2D3E4F56789';

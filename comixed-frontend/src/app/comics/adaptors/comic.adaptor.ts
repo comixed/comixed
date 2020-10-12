@@ -18,11 +18,10 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState, Comic, ComicFormat, Page, PageType } from 'app/comics';
+import { AppState, Comic, Page, PageType } from 'app/comics';
 import {
   ComicClearMetadata,
   ComicDelete,
-  ComicGetFormats,
   ComicGetIssue,
   ComicGetPageTypes,
   ComicMarkAsRead,
@@ -44,8 +43,6 @@ import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
 export class ComicAdaptor {
-  private _formatsLoaded$ = new BehaviorSubject<boolean>(false);
-  private _formats$ = new BehaviorSubject<ComicFormat[]>([]);
   private _fetchingIssue$ = new BehaviorSubject<boolean>(false);
   private _noComic$ = new BehaviorSubject<boolean>(false);
   private _fetchingPageTypes$ = new BehaviorSubject<boolean>(false);
@@ -64,12 +61,6 @@ export class ComicAdaptor {
       .pipe(filter(state => !!state))
       .subscribe((state: ComicState) => {
         this.logger.debug('comic state updated:', state);
-        if (state.formatsLoaded !== this._formatsLoaded$.getValue()) {
-          this._formatsLoaded$.next(state.formatsLoaded);
-        }
-        if (!_.isEqual(this._formats$.getValue(), state.formats)) {
-          this._formats$.next(state.formats);
-        }
         if (this._fetchingPageTypes$.getValue() !== state.fetchingPageTypes) {
           this._fetchingPageTypes$.next(state.fetchingPageTypes);
         }
@@ -104,21 +95,6 @@ export class ComicAdaptor {
           this._deletingPage$.next(state.deletingPage);
         }
       });
-  }
-
-  getFormats(): void {
-    this.logger.debug('firing action to get formats');
-    if (this._formatsLoaded$.getValue() === false) {
-      this.store.dispatch(new ComicGetFormats());
-    }
-  }
-
-  get formatsLoaded$(): Observable<boolean> {
-    return this._formatsLoaded$.asObservable();
-  }
-
-  get formats$(): Observable<ComicFormat[]> {
-    return this._formats$.asObservable();
   }
 
   getPageTypes(): void {

@@ -91,6 +91,9 @@ import { SCRAPE_MULTIPLE_COMICS_STATE } from 'app/comics/reducers/scrape-multipl
 import * as fromScanTypes from 'app/comics/reducers/scan-types.reducer';
 import { SCAN_TYPES_FEATURE_KEY } from 'app/comics/reducers/scan-types.reducer';
 import { ScanTypesEffects } from 'app/comics/effects/scan-types.effects';
+import * as fromComicFormat from 'app/comics/reducers/comic-format.reducer';
+import { COMIC_FORMAT_FEATURE_KEY } from 'app/comics/reducers/comic-format.reducer';
+import { ComicFormatEffects } from 'app/comics/effects/comic-format.effects';
 
 @NgModule({
   declarations: [
@@ -136,6 +139,7 @@ import { ScanTypesEffects } from 'app/comics/effects/scan-types.effects';
     TranslateModule.forRoot(),
     StoreModule.forFeature(COMIC_FEATURE_KEY, fromComics.reducer),
     StoreModule.forFeature(SCAN_TYPES_FEATURE_KEY, fromScanTypes.reducer),
+    StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, fromComicFormat.reducer),
     StoreModule.forFeature(
       SCRAPING_VOLUMES_FEATURE_KEY,
       fromScrapingVolumes.reducer
@@ -152,6 +156,7 @@ import { ScanTypesEffects } from 'app/comics/effects/scan-types.effects';
     EffectsModule.forFeature([
       ComicEffects,
       ScanTypesEffects,
+      ComicFormatEffects,
       ScrapingVolumesEffects,
       ScrapingIssueEffects,
       ScrapeComicEffects

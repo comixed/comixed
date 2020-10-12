@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Comic, ComicFormat, Page, PageType } from 'app/comics';
+import { Comic, Page, PageType } from 'app/comics';
 import { ComicService } from 'app/comics/services/comic.service';
 import { PageService } from 'app/comics/services/page.service';
 import { MessageService } from 'primeng/api';
@@ -32,10 +32,8 @@ import {
   ComicClearMetadataFailed,
   ComicDeleted,
   ComicDeleteFailed,
-  ComicGetFormatsFailed,
   ComicGetIssueFailed,
   ComicGetPageTypesFailed,
-  ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
   ComicMarkAsReadFailed,
@@ -66,37 +64,6 @@ export class ComicEffects {
     private messageService: MessageService,
     private translateService: TranslateService
   ) {}
-
-  @Effect()
-  getFormats$: Observable<Action> = this.actions$.pipe(
-    ofType(ComicActionTypes.GetFormats),
-    switchMap(action =>
-      this.comicService.getFormats().pipe(
-        map(
-          (response: ComicFormat[]) =>
-            new ComicGotFormats({ formats: response })
-        ),
-        catchError(error => {
-          this.messageService.add({
-            severity: 'error',
-            detail: this.translateService.instant(
-              'comic-effects.get-formats.error.detail'
-            )
-          });
-          return of(new ComicGetFormatsFailed());
-        })
-      )
-    ),
-    catchError(error => {
-      this.messageService.add({
-        severity: 'error',
-        detail: this.translateService.instant(
-          'general-message.error.general-service-failure'
-        )
-      });
-      return of(new ComicGetFormatsFailed());
-    })
-  );
 
   @Effect()
   getPageTypes$: Observable<Action> = this.actions$.pipe(

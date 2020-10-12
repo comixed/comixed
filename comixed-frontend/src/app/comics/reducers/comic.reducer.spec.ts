@@ -22,13 +22,10 @@ import {
   ComicDelete,
   ComicDeleted,
   ComicDeleteFailed,
-  ComicGetFormats,
-  ComicGetFormatsFailed,
   ComicGetIssue,
   ComicGetIssueFailed,
   ComicGetPageTypes,
   ComicGetPageTypesFailed,
-  ComicGotFormats,
   ComicGotIssue,
   ComicGotPageTypes,
   ComicMarkAsRead,
@@ -54,12 +51,7 @@ import {
   ComicSetPageType,
   ComicSetPageTypeFailed
 } from 'app/comics/actions/comic.actions';
-import {
-  FORMAT_1,
-  FORMAT_3,
-  FORMAT_5
-} from 'app/comics/models/comic-format.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import {
   BACK_COVER,
   FRONT_COVER,
@@ -85,18 +77,6 @@ describe('Comic Reducer', () => {
   describe('by default', () => {
     beforeEach(() => {
       state = reducer(state, {} as any);
-    });
-
-    it('clears the fetching comic formats flag', () => {
-      expect(state.fetchingFormats).toBeFalsy();
-    });
-
-    it('clears the set of formats', () => {
-      expect(state.formats).toEqual([]);
-    });
-
-    it('clears the formats loaded flag', () => {
-      expect(state.formatsLoaded).toBeFalsy();
     });
 
     it('clears the fetching page types flag', () => {
@@ -161,59 +141,6 @@ describe('Comic Reducer', () => {
 
     it('clears the setting read state flag', () => {
       expect(state.settingReadState).toBeFalsy();
-    });
-  });
-
-  describe('when fetching the format types', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetchingFormats: false },
-        new ComicGetFormats()
-      );
-    });
-
-    it('sets the fetching formats flag', () => {
-      expect(state.fetchingFormats).toBeTruthy();
-    });
-  });
-
-  describe('when the format types are retrieved', () => {
-    const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
-
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetchingFormats: true, formatsLoaded: false, formats: [] },
-        new ComicGotFormats({ formats: FORMATS })
-      );
-    });
-
-    it('clears the fetching formats flag', () => {
-      expect(state.fetchingFormats).toBeFalsy();
-    });
-
-    it('sets the formats loaded flag', () => {
-      expect(state.formatsLoaded).toBeTruthy();
-    });
-
-    it('sets the formats', () => {
-      expect(state.formats).toEqual(FORMATS);
-    });
-  });
-
-  describe('when fetching the formats fails', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, fetchingFormats: true, formatsLoaded: true },
-        new ComicGetFormatsFailed()
-      );
-    });
-
-    it('clears the fetching formats flag', () => {
-      expect(state.fetchingFormats).toBeFalsy();
-    });
-
-    it('clears the formats loaded flag', () => {
-      expect(state.formatsLoaded).toBeFalsy();
     });
   });
 

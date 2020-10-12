@@ -31,7 +31,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from 'app/comics/models/comic.fixtures';
+} from 'app/comics/comics.fixtures';
 import { AppState } from 'app/library';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';

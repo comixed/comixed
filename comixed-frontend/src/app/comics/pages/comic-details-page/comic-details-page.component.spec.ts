@@ -85,6 +85,9 @@ import { ScrapingIssueEffects } from 'app/comics/effects/scraping-issue.effects'
 import { ScrapeComicEffects } from 'app/comics/effects/scrape-comic.effects';
 import * as fromScanTypes from 'app/comics/reducers/scan-types.reducer';
 import { SCAN_TYPES_FEATURE_KEY } from 'app/comics/reducers/scan-types.reducer';
+import * as fromComicFormat from 'app/comics/reducers/comic-format.reducer';
+import { COMIC_FORMAT_FEATURE_KEY } from 'app/comics/reducers/comic-format.reducer';
+import { ComicFormatEffects } from 'app/comics/effects/comic-format.effects';
 
 describe('ComicDetailsPageComponent', () => {
   const COMIC = COMIC_2;
@@ -110,6 +113,10 @@ describe('ComicDetailsPageComponent', () => {
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         StoreModule.forRoot({}),
         StoreModule.forFeature(SCAN_TYPES_FEATURE_KEY, fromScanTypes.reducer),
+        StoreModule.forFeature(
+          COMIC_FORMAT_FEATURE_KEY,
+          fromComicFormat.reducer
+        ),
         StoreModule.forFeature(COMIC_FEATURE_KEY, reducer),
         StoreModule.forFeature(
           SCRAPING_VOLUMES_FEATURE_KEY,
@@ -126,6 +133,7 @@ describe('ComicDetailsPageComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([
           ComicEffects,
+          ComicFormatEffects,
           ScrapingVolumesEffects,
           ScrapingIssueEffects,
           ScrapeComicEffects

@@ -24,7 +24,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { interpolate } from 'app/app.functions';
 import {
   BLOCK_PAGE_HASH_URL,
