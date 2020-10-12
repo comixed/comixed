@@ -22,7 +22,7 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { interpolate } from 'app/app.functions';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import { DeleteMultipleComicsResponse } from 'app/library/models/net/delete-multiple-comics-response';
 import { GetLibraryUpdateResponse } from 'app/library/models/net/get-library-update-response';

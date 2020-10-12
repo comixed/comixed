@@ -20,7 +20,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import {
   LibraryClearImageCache,
   LibraryClearImageCacheFailed,

@@ -27,7 +27,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { AlertService, ApiResponse } from 'app/core';
 import { MessageService } from 'primeng/api';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { SCRAPING_ISSUE_1000 } from 'app/comics/models/scraping-issue.fixtures';
 import {
   comicScraped,

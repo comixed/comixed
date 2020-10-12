@@ -27,7 +27,7 @@ import {
   GET_VOLUMES_URL,
   LOAD_METADATA_URL
 } from 'app/comics/comics.constants';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { GetScrapingIssueRequest } from 'app/comics/models/net/get-scraping-issue-request';
 import { GetVolumesRequest } from 'app/comics/models/net/get-volumes-request';
 import { LoadMetadataRequest } from 'app/comics/models/net/load-metadata-request';

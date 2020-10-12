@@ -24,9 +24,7 @@ import {
   CLEAR_METADATA_URL,
   DELETE_COMIC_URL,
   GET_COMIC_URL,
-  GET_FORMATS_URL,
   GET_PAGE_TYPES_URL,
-  GET_SCAN_TYPES_URL,
   MARK_COMIC_AS_READ_URL,
   MARK_COMIC_AS_UNREAD_URL,
   MARK_PAGE_DELETED_URL,
@@ -42,14 +40,6 @@ import { LoggerService } from '@angular-ru/logger';
 })
 export class ComicService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
-
-  getScanTypes(): Observable<any> {
-    return this.http.get(interpolate(GET_SCAN_TYPES_URL));
-  }
-
-  getFormats(): Observable<any> {
-    return this.http.get(interpolate(GET_FORMATS_URL));
-  }
 
   getPageTypes(): Observable<any> {
     return this.http.get(interpolate(GET_PAGE_TYPES_URL));

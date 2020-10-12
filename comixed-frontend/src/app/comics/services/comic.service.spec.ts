@@ -27,27 +27,15 @@ import {
   CLEAR_METADATA_URL,
   DELETE_COMIC_URL,
   GET_COMIC_URL,
-  GET_FORMATS_URL,
   GET_PAGE_TYPES_URL,
-  GET_SCAN_TYPES_URL,
   MARK_COMIC_AS_READ_URL,
   MARK_PAGE_DELETED_URL,
   RESTORE_COMIC_URL,
   SAVE_COMIC_URL,
   UNMARK_PAGE_DELETED_URL
 } from 'app/comics/comics.constants';
-import {
-  FORMAT_1,
-  FORMAT_3,
-  FORMAT_5
-} from 'app/comics/models/comic-format.fixtures';
-import { COMIC_1 } from 'app/comics/models/comic.fixtures';
+import { COMIC_1 } from 'app/comics/comics.fixtures';
 import { BACK_COVER, FRONT_COVER } from 'app/comics/models/page-type.fixtures';
-import {
-  SCAN_TYPE_1,
-  SCAN_TYPE_3,
-  SCAN_TYPE_5
-} from 'app/comics/models/scan-type.fixtures';
 
 import { ComicService } from './comic.service';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
@@ -75,30 +63,6 @@ describe('ComicService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  it('can get the list of scan types', () => {
-    const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
-
-    service
-      .getScanTypes()
-      .subscribe(response => expect(response).toEqual(SCAN_TYPES));
-
-    const req = httpMock.expectOne(interpolate(GET_SCAN_TYPES_URL));
-    expect(req.request.method).toEqual('GET');
-    req.flush(SCAN_TYPES);
-  });
-
-  it('can get the list of formats', () => {
-    const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
-
-    service
-      .getFormats()
-      .subscribe(response => expect(response).toEqual(FORMATS));
-
-    const req = httpMock.expectOne(interpolate(GET_FORMATS_URL));
-    expect(req.request.method).toEqual('GET');
-    req.flush(FORMATS);
   });
 
   it('can get the list of page types', () => {
