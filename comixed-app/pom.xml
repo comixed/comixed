@@ -12,7 +12,7 @@
   <artifactId>comixed-app</artifactId>
   <version>0.7.0-1</version>
   <name>comixed-app</name>
-  <url>${comixed.url}</url>
+  <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>

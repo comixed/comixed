@@ -12,7 +12,7 @@
   <artifactId>comixed-scrapers</artifactId>
   <version>0.7.0-1</version>
   <name>comixed-scrapers</name>
-  <url>${comixed.url}</url>
+  <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
