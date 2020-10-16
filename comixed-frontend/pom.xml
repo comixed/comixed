@@ -11,7 +11,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-frontend</artifactId>
   <name>comixed-frontend</name>
-  <url>${comixed.url}</url>
+  <url>http://www.comixedproject.org</url>
   <build>
     <resources>
       <resource>

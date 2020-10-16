@@ -11,7 +11,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-tasks</artifactId>
   <name>comixed-tasks</name>
-  <url>${comixed.url}</url>
+  <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
