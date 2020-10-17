@@ -169,12 +169,6 @@ public class ComicController {
     return result;
   }
 
-  @GetMapping(value = "/formats")
-  public Iterable<ComicFormat> getComicFormats() {
-    log.debug("Fetching all comic format types");
-    return this.comicFormatRepository.findAll();
-  }
-
   @PostMapping(
       value = "/since/{timestamp}",
       produces = MediaType.APPLICATION_JSON_VALUE,
