@@ -306,7 +306,7 @@ public class Comic {
   @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
   @Column(name = "story_name")
   @JsonProperty("storyArcs")
-  @JsonView({View.ComicList.class, View.DatabaseBackup.class})
+  @JsonView({View.ComicList.class, View.LibraryUpdate.class})
   @Getter
   List<String> storyArcs = new ArrayList<>();
 
