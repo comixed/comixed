@@ -6,28 +6,28 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.7.0-1</version>
+    <version>0.7.0-2</version>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-services</artifactId>
-  <version>0.7.0-1</version>
+  <version>0.7.0-2</version>
   <name>comixed-services</name>
   <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-repositories</artifactId>
-      <version>0.7.0-1</version>
+      <version>0.7.0-2</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-adaptors</artifactId>
-      <version>0.7.0-1</version>
+      <version>0.7.0-2</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-scrapers</artifactId>
-      <version>0.7.0-1</version>
+      <version>0.7.0-2</version>
     </dependency>
   </dependencies>
 </project>
