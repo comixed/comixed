@@ -29,7 +29,6 @@ import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
-import org.comixedproject.task.model.WorkerTaskException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -71,7 +70,7 @@ public class TaskManager implements InitializingBean {
             workerTask.startTask();
             if (!(workerTask instanceof MonitorTaskQueueWorkerTask))
               this.updateAuditLog(true, started, description, null);
-          } catch (WorkerTaskException error) {
+          } catch (Exception error) {
             log.error("Error executing task: {}" + description, description, error);
             if (!(workerTask instanceof MonitorTaskQueueWorkerTask))
               this.updateAuditLog(false, started, description, error);
