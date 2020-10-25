@@ -22,9 +22,10 @@ import { PluginDescriptor } from 'app/library/models/plugin-descriptor';
 import { LoggerService } from '@angular-ru/logger';
 import { PluginAdaptor } from 'app/library/adaptors/plugin.adaptor';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { LibraryModuleState } from 'app/library';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-plugins-page',
@@ -41,9 +42,9 @@ export class PluginsPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: LoggerService,
+    private store: Store<LibraryModuleState>,
     private translateService: TranslateService,
     private titleService: Title,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private pluginAdaptor: PluginAdaptor
   ) {
     this.pluginsSubscription = this.pluginAdaptor.plugins$.subscribe(
@@ -76,14 +77,17 @@ export class PluginsPageComponent implements OnInit, OnDestroy {
   }
 
   private loadBreadcrumbTrail() {
-    const entries: MenuItem[] = [
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.plugins-page'
-        )
-      }
-    ];
-    this.breadcrumbAdaptor.loadEntries(entries);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.plugins-page'
+            )
+          }
+        ]
+      })
+    );
   }
 
   reloadPlugins() {

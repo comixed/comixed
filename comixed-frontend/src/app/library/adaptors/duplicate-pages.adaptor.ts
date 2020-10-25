@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import {
@@ -44,7 +44,7 @@ export class DuplicatePagesAdaptors {
   private _setBlocking$ = new BehaviorSubject<boolean>(false);
   private _setDeleted$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<AppState>, private logger: LoggerService) {
+  constructor(private store: Store<LibraryModuleState>, private logger: LoggerService) {
     this.store
       .select(DUPLICATE_PAGES_FEATURE_KEY)
       .pipe(filter(state => !!state))

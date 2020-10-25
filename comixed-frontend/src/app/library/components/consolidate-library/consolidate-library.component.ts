@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/logger';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { Subscription } from 'rxjs';
 import {
   MOVE_COMICS_DELETE_PHYSICAL_FILE,
@@ -58,7 +58,7 @@ export class ConsolidateLibraryComponent implements OnInit, OnDestroy {
     private authenticationAdaptor: AuthenticationAdaptor,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private store: Store<AppState>
+    private store: Store<LibraryModuleState>
   ) {
     this.consolidationForm = this.formBuilder.group({
       deletePhysicalFiles: [''],

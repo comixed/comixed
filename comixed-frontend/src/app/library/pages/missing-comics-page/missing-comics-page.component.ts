@@ -18,11 +18,12 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { LibraryAdaptor, LibraryModuleState, SelectionAdaptor } from 'app/library';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-missing-comics-page',
@@ -37,11 +38,11 @@ export class MissingComicsPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<LibraryModuleState>,
     private titleService: Title,
     private translateService: TranslateService,
     private libraryAdaptor: LibraryAdaptor,
-    private selectionAdaptor: SelectionAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
+    private selectionAdaptor: SelectionAdaptor
   ) {}
 
   ngOnInit() {
@@ -69,13 +70,19 @@ export class MissingComicsPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.missing-comics'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.admin.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.missing-comics'
+            )
+          }
+        ]
+      })
+    );
   }
 }

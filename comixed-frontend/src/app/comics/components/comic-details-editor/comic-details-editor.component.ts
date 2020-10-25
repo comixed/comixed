@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { AppState, Comic } from 'app/comics';
+import { ComicModuleState, Comic } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ScrapingIssue } from 'app/comics/models/scraping-issue';
 import { ScrapingVolume } from 'app/comics/models/scraping-volume';
@@ -94,7 +94,7 @@ export class ComicDetailsEditorComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private formBuilder: FormBuilder,
-    private store: Store<AppState>
+    private store: Store<ComicModuleState>
   ) {
     this.comicDetailsForm = this.formBuilder.group({
       apiKey: ['', [Validators.required]],

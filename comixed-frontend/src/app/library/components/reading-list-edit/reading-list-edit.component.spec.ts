@@ -28,7 +28,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
-import { AppState, ReadingListAdaptor } from 'app/library';
+import { LibraryModuleState, ReadingListAdaptor } from 'app/library';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
 import { ReadingList } from 'app/comics/models/reading-list';
@@ -57,7 +57,7 @@ describe('ReadingListEditComponent', () => {
 
   let component: ReadingListEditComponent;
   let fixture: ComponentFixture<ReadingListEditComponent>;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
   let readingListAdaptor: ReadingListAdaptor;
   let confirmationService: ConfirmationService;
 

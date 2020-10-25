@@ -25,7 +25,7 @@ import {
 } from 'app/library/reducers/duplicate-pages.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import {
   DuplicatePagesAllReceived,
   DuplicatePagesBlockingSet,
@@ -49,7 +49,7 @@ describe('DuplicatePagesAdaptors', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2];
 
   let adaptor: DuplicatePagesAdaptors;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

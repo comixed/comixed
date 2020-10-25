@@ -36,7 +36,7 @@ import {
 } from 'app/comic-import/comic-import.constants';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/comic-import';
+import { ComicImportState } from 'app/comic-import';
 import { findComicFiles } from 'app/comic-import/actions/find-comic-files.actions';
 import {
   clearComicFileSelections,
@@ -86,7 +86,7 @@ export class ComicFileListToolbarComponent implements OnInit, OnDestroy {
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private store: Store<AppState>
+    private store: Store<ComicImportState>
   ) {}
 
   ngOnInit() {

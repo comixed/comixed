@@ -24,7 +24,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppComponent } from 'app/app.component';
 import { LoginComponent } from 'app/components/login/login.component';
 import { LibraryAdaptor } from 'app/library';
@@ -50,6 +49,12 @@ import {
 } from 'primeng/primeng';
 import { ToastModule } from 'primeng/toast';
 import { NavigationBarComponent } from 'app/components/navigation-bar/navigation-bar.component';
+import * as fromBreadcrumb from 'app/reducers/breadcrumb.reducer';
+import {
+  BREADCRUMB_FEATURE_KEY,
+  BreadcrumbState
+} from 'app/reducers/breadcrumb.reducer';
+import { MockStore } from '@ngrx/store/testing';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -59,7 +64,7 @@ describe('AppComponent', () => {
   let authenticationAdaptor: AuthenticationAdaptor;
   let libraryAdaptor: LibraryAdaptor;
   let translateService: TranslateService;
-  let store: Store<any>;
+  let store: MockStore<BreadcrumbState>;
   let originalTimeout;
 
   beforeAll(async done => {
@@ -81,6 +86,7 @@ describe('AppComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         StoreModule.forRoot({}),
+        StoreModule.forFeature(BREADCRUMB_FEATURE_KEY, fromBreadcrumb.reducer),
         EffectsModule.forRoot([]),
         MenubarModule,
         ButtonModule,
@@ -97,7 +103,6 @@ describe('AppComponent', () => {
         MessageService,
         ConfirmationService,
         AuthenticationAdaptor,
-        BreadcrumbAdaptor,
         UserService
       ]
     }).compileComponents();

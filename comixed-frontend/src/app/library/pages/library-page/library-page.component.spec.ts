@@ -23,9 +23,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store, StoreModule } from '@ngrx/store';
 import {
-  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
+  LibraryModuleState,
   ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
@@ -59,7 +59,6 @@ import {
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EffectsModule } from '@ngrx/effects';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { ComicListToolbarComponent } from 'app/library/components/comic-list-toolbar/comic-list-toolbar.component';
 import {
   LIBRARY_FEATURE_KEY,
@@ -79,7 +78,7 @@ describe('LibraryPageComponent', () => {
 
   let component: LibraryPageComponent;
   let fixture: ComponentFixture<LibraryPageComponent>;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -133,7 +132,6 @@ describe('LibraryPageComponent', () => {
         SelectionAdaptor,
         ReadingListAdaptor,
         LibraryDisplayAdaptor,
-        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService,

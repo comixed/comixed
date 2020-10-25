@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/backend-status';
+import { BackendStatusState } from 'app/backend-status';
 import {
   selectLoadRestAuditLogEntries,
   selectLoadRestAuditLogLoading,
@@ -32,9 +32,9 @@ import {
 } from 'app/backend-status/actions/load-rest-audit-log.actions';
 import { RestAuditLogEntry } from 'app/backend-status/models/rest-audit-log-entry';
 import { Subscription } from 'rxjs';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-rest-audit-log-page',
@@ -52,9 +52,8 @@ export class RestAuditLogPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<BackendStatusState>,
     private logger: LoggerService,
-    private store: Store<AppState>,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
     private titleService: Title
   ) {
@@ -101,14 +100,20 @@ export class RestAuditLogPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('backend-status.rest-audit-log.page-title')
     );
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.rest-audit-log'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.admin.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.rest-audit-log'
+            )
+          }
+        ]
+      })
+    );
   }
 
   /**

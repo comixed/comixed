@@ -36,20 +36,20 @@ interface RouterStateUrl {
   queryParams: Params;
 }
 
-export interface AppState {
+export interface ComicImportState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   [FIND_COMIC_FILES_FEATURE_KEY]: FindComicFilesState;
   [SELECTED_COMIC_FILES_FEATURE_KEY]: SelectedComicFilesState;
 }
 
-export type State = AppState;
+export type State = ComicImportState;
 
-export const reducers: ActionReducerMap<AppState> = {
+export const reducers: ActionReducerMap<ComicImportState> = {
   router: fromRouter.routerReducer,
   [FIND_COMIC_FILES_FEATURE_KEY]: fromFindComicFiles.reducer,
   [SELECTED_COMIC_FILES_FEATURE_KEY]: fromSelectedComicFiles.reducer
 };
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production
-  ? []
-  : [];
+export const metaReducers: MetaReducer<
+  ComicImportState
+>[] = !environment.production ? [] : [];

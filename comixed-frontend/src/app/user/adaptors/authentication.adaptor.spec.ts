@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthenticationAdaptor } from 'app/user';
 import { Store, StoreModule } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import * as AuthActions from 'app/user/actions/authentication.actions';
 import { USER_ADMIN, USER_READER } from 'app/user/models/user.fixtures';
 import { reducer } from 'app/user/reducers/authentication.reducer';
@@ -33,7 +33,7 @@ describe('AuthenticationAdaptor', () => {
   const PREFERENCE_VALUE = 'pref-value';
 
   let auth_adaptor: AuthenticationAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

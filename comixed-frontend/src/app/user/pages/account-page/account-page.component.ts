@@ -18,14 +18,15 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthenticationAdaptor, User } from 'app/user';
+import { AuthenticationAdaptor, UserModuleState, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
 import { ConfirmationService } from 'primeng/api';
 import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-account-page',
@@ -38,12 +39,12 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<UserModuleState>,
     private titleService: Title,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private userAdminAdaptor: UserAdminAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
+    private userAdminAdaptor: UserAdminAdaptor
   ) {}
 
   ngOnInit() {
@@ -69,9 +70,17 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.account-page') }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.account-page'
+            )
+          }
+        ]
+      })
+    );
   }
 
   saveUser(details: SaveUserDetails): void {

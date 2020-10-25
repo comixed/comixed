@@ -21,7 +21,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppState, USER_ADMIN, USER_READER } from 'app/user';
+import { UserModuleState, USER_ADMIN, USER_READER } from 'app/user';
 import {
   UserAdminAllReceived,
   UserAdminCreateNew,
@@ -47,7 +47,7 @@ describe('UserAdminAdaptor', () => {
   const PASSWORD = '12345678';
 
   let adaptor: UserAdminAdaptor;
-  let store: Store<AppState>;
+  let store: Store<UserModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

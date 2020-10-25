@@ -21,7 +21,7 @@ import { ConfirmationService, SelectItem } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { AppState, Comic, ComicFormat, ScanType } from 'app/comics';
+import { ComicModuleState, Comic, ComicFormat, ScanType } from 'app/comics';
 import { LibraryAdaptor } from 'app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
@@ -66,7 +66,7 @@ export class ComicOverviewComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: LoggerService,
-    private store: Store<AppState>,
+    private store: Store<ComicModuleState>,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private comicAdaptor: ComicAdaptor,

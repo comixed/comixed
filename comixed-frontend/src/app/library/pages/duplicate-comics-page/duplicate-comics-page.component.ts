@@ -17,11 +17,12 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LibraryAdaptor, SelectionAdaptor } from 'app/library';
+import { LibraryAdaptor, LibraryModuleState, SelectionAdaptor } from 'app/library';
 import { Comic } from 'app/comics';
 import { Subscription } from 'rxjs';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-duplicate-comics-page',
@@ -36,9 +37,9 @@ export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<LibraryModuleState>,
     private libraryAdaptor: LibraryAdaptor,
     private selectionAdaptor: SelectionAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService
   ) {
     this.comicsSubscription = this.libraryAdaptor.comic$.subscribe(
@@ -63,14 +64,22 @@ export class DuplicateComicsPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      {
-        label: this.translateService.instant('breadcrumb.entry.library-page'),
-        routerLink: '/comics'
-      },
-      {
-        label: this.translateService.instant('breadcrumb.entry.duplicates-page')
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.library-page'
+            ),
+            link: '/comics'
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.duplicates-page'
+            )
+          }
+        ]
+      })
+    );
   }
 }

@@ -27,8 +27,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { AppState } from 'app/comics';
+import { ComicModuleState } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { ComicCreditsComponent } from 'app/comics/components/comic-credits/comic-credits.component';
 import { ComicDetailsEditorComponent } from 'app/comics/components/comic-details-editor/comic-details-editor.component';
@@ -98,7 +97,7 @@ describe('ComicDetailsPageComponent', () => {
   let messageService: MessageService;
   let router: Router;
   let activatedRoute: ActivatedRoute;
-  let store: Store<AppState>;
+  let store: Store<ComicModuleState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -173,7 +172,6 @@ describe('ComicDetailsPageComponent', () => {
       ],
       providers: [
         ComicAdaptor,
-        BreadcrumbAdaptor,
         MessageService,
         ConfirmationService,
         LibraryAdaptor,

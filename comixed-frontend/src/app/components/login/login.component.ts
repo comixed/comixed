@@ -19,7 +19,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationAdaptor } from 'app/user';
 
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   password: string;
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store<LibraryModuleState>,
     private router: Router,
     private form_builder: FormBuilder,
     private auth_adaptor: AuthenticationAdaptor

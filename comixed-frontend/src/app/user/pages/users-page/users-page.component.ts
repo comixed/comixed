@@ -19,12 +19,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AuthenticationAdaptor, User } from 'app/user';
+import { AuthenticationAdaptor, UserModuleState, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 import { SaveUserDetails } from 'app/user/models/save-user-details';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-users-page',
@@ -45,11 +46,11 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   current = null;
 
   constructor(
+    private store: Store<UserModuleState>,
     private titleService: Title,
     private messageService: MessageService,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private authenticationAdaptor: AuthenticationAdaptor,
     private userAdminAdaptor: UserAdminAdaptor
   ) {}
@@ -119,14 +120,20 @@ export class UsersPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.users-admin'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.admin.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.users-admin'
+            )
+          }
+        ]
+      })
+    );
   }
 
   saveUser(details: SaveUserDetails): void {

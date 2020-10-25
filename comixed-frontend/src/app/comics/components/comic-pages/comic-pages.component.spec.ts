@@ -30,7 +30,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { COMIC_FEATURE_KEY, reducer } from 'app/comics/reducers/comic.reducer';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
-import { AppState } from 'app/comics';
+import { ComicModuleState } from 'app/comics';
 import { ComicGotPageTypes } from 'app/comics/actions/comic.actions';
 import { FRONT_COVER } from 'app/comics/models/page-type.fixtures';
 import { PAGE_1 } from 'app/comics/models/page.fixtures';
@@ -46,7 +46,7 @@ describe('ComicPagesComponent', () => {
 
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
-  let store: Store<AppState>;
+  let store: Store<ComicModuleState>;
   let comicAdaptor: ComicAdaptor;
 
   beforeEach(async(() => {
