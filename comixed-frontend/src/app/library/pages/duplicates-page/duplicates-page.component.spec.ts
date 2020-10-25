@@ -47,7 +47,6 @@ import { LibraryDisplayAdaptor } from 'app/library';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserModule } from 'app/user/user.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { LoggerModule } from '@angular-ru/logger';
 
 describe('DuplicatesPageComponent', () => {
@@ -88,7 +87,6 @@ describe('DuplicatesPageComponent', () => {
         DuplicatePagesAdaptors,
         LibraryDisplayAdaptor,
         MessageService,
-        BreadcrumbAdaptor,
         ConfirmationService
       ]
     }).compileComponents();

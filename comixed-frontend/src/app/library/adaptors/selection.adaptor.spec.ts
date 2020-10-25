@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Store, StoreModule } from '@ngrx/store';
 import { COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { reducer } from 'app/library/reducers/selection.reducer';
 import { LoggerModule } from '@angular-ru/logger';
 import { SelectionAdaptor } from './selection.adaptor';
@@ -29,7 +29,7 @@ describe('SelectionAdaptor', () => {
   const COMIC = COMIC_2;
 
   let adaptor: SelectionAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

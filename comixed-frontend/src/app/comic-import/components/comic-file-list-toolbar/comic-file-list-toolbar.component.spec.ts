@@ -45,7 +45,7 @@ import { COMIC_IMPORT_MAXIMUM } from 'app/comic-import/comic-import.constants';
 import * as fromFindComicFiles from 'app/comic-import/reducers/find-comic-files.reducer';
 import { FIND_COMIC_FILES_FEATURE_KEY } from 'app/comic-import/reducers/find-comic-files.reducer';
 import { FindComicFilesEffects } from 'app/comic-import/effects/find-comic-files.effects';
-import { AppState } from 'app/comic-import';
+import { ComicImportState } from 'app/comic-import';
 import { findComicFiles } from 'app/comic-import/actions/find-comic-files.actions';
 import {
   COMIC_FILE_1,
@@ -72,7 +72,7 @@ describe('ComicFileListToolbarComponent', () => {
   let confirmationService: ConfirmationService;
   let libraryDisplayAdaptor: LibraryDisplayAdaptor;
   let authenticationAdaptor: AuthenticationAdaptor;
-  let store: Store<AppState>;
+  let store: Store<ComicImportState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

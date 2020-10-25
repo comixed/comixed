@@ -46,9 +46,9 @@ import {
 import { LibraryNavigationTreeComponent } from 'app/library/components/library-navigation-tree/library-navigation-tree.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  AppState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
+  LibraryModuleState,
   ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
@@ -62,7 +62,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { LoggerModule } from '@angular-ru/logger';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMIC_2, COMIC_5 } from 'app/comics/comics.fixtures';
@@ -75,9 +74,8 @@ describe('DuplicateComicsPageComponent', () => {
 
   let component: DuplicateComicsPageComponent;
   let fixture: ComponentFixture<DuplicateComicsPageComponent>;
-  let breadcrumbAdaptor: BreadcrumbAdaptor;
   let translateService: TranslateService;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -123,7 +121,6 @@ describe('DuplicateComicsPageComponent', () => {
         LibraryDisplayAdaptor,
         ReadingListAdaptor,
         SelectionAdaptor,
-        BreadcrumbAdaptor,
         MessageService,
         ConfirmationService
       ]
@@ -131,7 +128,6 @@ describe('DuplicateComicsPageComponent', () => {
 
     fixture = TestBed.createComponent(DuplicateComicsPageComponent);
     component = fixture.componentInstance;
-    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
     translateService = TestBed.get(TranslateService);
     store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
@@ -160,17 +156,6 @@ describe('DuplicateComicsPageComponent', () => {
 
     it('populates the list of duplicate comics', () => {
       expect(component.duplicates).toEqual([DUPLICATE_COMIC]);
-    });
-  });
-
-  describe('when the language changes', () => {
-    beforeEach(() => {
-      spyOn(breadcrumbAdaptor, 'loadEntries');
-      translateService.use('fr');
-    });
-
-    it('reloads the breadcrumb train', () => {
-      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
     });
   });
 });

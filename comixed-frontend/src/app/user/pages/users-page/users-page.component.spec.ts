@@ -24,7 +24,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AuthenticationAdaptor, TokenService } from 'app/user';
 import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 import { UserDetailsEditorComponent } from 'app/user/components/user-details-editor/user-details-editor.component';
@@ -73,7 +72,6 @@ describe('UsersPageComponent', () => {
       ],
       declarations: [UsersPageComponent, UserDetailsEditorComponent],
       providers: [
-        BreadcrumbAdaptor,
         AuthenticationAdaptor,
         UserAdminAdaptor,
         ConfirmationService,

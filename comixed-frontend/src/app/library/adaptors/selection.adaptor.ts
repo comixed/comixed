@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Comic } from 'app/comics';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import {
   SelectAddComic,
   SelectBulkAddComics,
@@ -40,7 +40,7 @@ import { filter } from 'rxjs/operators';
 export class SelectionAdaptor {
   private _comicSelection$ = new BehaviorSubject<Comic[]>([]);
 
-  constructor(private store: Store<AppState>, private logger: LoggerService) {
+  constructor(private store: Store<LibraryModuleState>, private logger: LoggerService) {
     this.store
       .select(SELECTION_FEATURE_KEY)
       .pipe(filter(state => !!state))

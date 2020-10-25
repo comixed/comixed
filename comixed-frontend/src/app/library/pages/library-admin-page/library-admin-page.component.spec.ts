@@ -29,7 +29,6 @@ import { DebugElement } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserService } from 'app/services/user.service';
 import { LibraryAdaptor } from 'app/library';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -79,7 +78,6 @@ describe('LibraryAdminPageComponent', () => {
         LibraryAdaptor,
         MessageService,
         UserService,
-        BreadcrumbAdaptor,
         ConfirmationService
       ]
     }).compileComponents();

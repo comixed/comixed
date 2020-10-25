@@ -20,12 +20,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { TaskAuditLogEntry } from 'app/backend-status/models/task-audit-log-entry';
 import { LoggerService } from '@angular-ru/logger';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { ConfirmationService } from 'primeng/api';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/backend-status';
+import { BackendStatusState } from 'app/backend-status';
 import { clearTaskAuditLog } from 'app/backend-status/actions/clear-task-audit-log.actions';
 import { selectClearTaskingAuditLogWorking } from 'app/backend-status/selectors/clear-task-audit-log.selectors';
 import {
@@ -38,6 +37,7 @@ import {
 } from 'app/backend-status/actions/load-task-audit-log.actions';
 import { LoadTaskAuditLogState } from 'app/backend-status/reducers/load-task-audit-log.reducer';
 import { filter } from 'rxjs/operators';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-task-audit-log-page',
@@ -53,12 +53,11 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<BackendStatusState>,
     private logger: LoggerService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
     private titleService: Title,
-    private confirmationService: ConfirmationService,
-    private store: Store<AppState>
+    private confirmationService: ConfirmationService
   ) {
     this.taskAuditLogStateSubscription = this.store
       .select(selectLoadTaskAuditLogState)
@@ -99,14 +98,20 @@ export class TaskAuditLogPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('task-audit-log-page.title')
     );
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.task-audit-log'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.admin.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.task-audit-log'
+            )
+          }
+        ]
+      })
+    );
   }
 
   doClearAuditLog() {

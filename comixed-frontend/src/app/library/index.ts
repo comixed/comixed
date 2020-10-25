@@ -51,7 +51,7 @@ interface RouterStateUrl {
   queryParams: Params;
 }
 
-export interface AppState {
+export interface LibraryModuleState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   library_state: LibraryState;
   selection_state: SelectionState;
@@ -62,9 +62,9 @@ export interface AppState {
   [MOVE_COMICS_FEATURE_KEY]: MoveComicsState;
 }
 
-export type State = AppState;
+export type State = LibraryModuleState;
 
-export const reducers: ActionReducerMap<AppState> = {
+export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: fromRouter.routerReducer,
   library_state: fromLibrary.reducer,
   selection_state: fromSelection.reducer,
@@ -75,6 +75,6 @@ export const reducers: ActionReducerMap<AppState> = {
   [MOVE_COMICS_FEATURE_KEY]: fromMoveComics.reducer
 };
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production
+export const metaReducers: MetaReducer<LibraryModuleState>[] = !environment.production
   ? []
   : [];

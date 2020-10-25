@@ -21,15 +21,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
   LibraryAdaptor,
+  LibraryModuleState,
   ReadingListAdaptor,
   SelectionAdaptor
 } from 'app/library';
 import { UserService } from 'app/services/user.service';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { Title } from '@angular/platform-browser';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { Comic } from 'app/comics';
 import { filter } from 'rxjs/operators';
 import { CollectionType } from 'app/library/models/collection-type.enum';
@@ -37,6 +37,9 @@ import { LoggerService } from '@angular-ru/logger';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { ContextMenuAdaptor } from 'app/user-experience/adaptors/context-menu.adaptor';
 import { REMOVE_READING_LIST_ITEMS } from 'app/library/library.constants';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
+import { BreadcrumbEntry } from 'app/models/ui/breadcrumb-entry';
 
 @Component({
   selector: 'app-library-page',
@@ -56,13 +59,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   paramsSubscription: Subscription;
   collectionType: CollectionType;
   collectionName: string;
-  breadcrumbEntryParent: MenuItem;
-  breadcrumbEntryChild: MenuItem;
+  breadcrumbEntryParent: BreadcrumbEntry;
+  breadcrumbEntryChild: BreadcrumbEntry;
 
   title: string;
 
   constructor(
     private logger: LoggerService,
+    private store: Store<LibraryModuleState>,
     private titleService: Title,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -73,7 +77,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private messageService: MessageService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private contextMenuAdaptor: ContextMenuAdaptor,
     private readingListAdaptor: ReadingListAdaptor
   ) {
@@ -110,12 +113,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         let titleKey = null;
         this.breadcrumbEntryParent = {
           label: this.collectionName
-        } as MenuItem;
+        } as BreadcrumbEntry;
         this.breadcrumbEntryChild = {
           label: this.translateService.instant(
             `breadcrumb.collections.${this.collectionType}`
           )
-        } as MenuItem;
+        } as BreadcrumbEntry;
 
         switch (this.collectionType) {
           case CollectionType.PUBLISHERS:
@@ -244,14 +247,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    const entries: MenuItem[] = [
+    const entries: BreadcrumbEntry[] = [
       { label: this.translateService.instant('breadcrumb.entry.library-page') }
     ];
     if (!!this.breadcrumbEntryParent) {
       entries.push(this.breadcrumbEntryChild);
       entries.push(this.breadcrumbEntryParent);
     }
-    this.breadcrumbAdaptor.loadEntries(entries);
+    this.store.dispatch(setBreadcrumbs({ entries }));
   }
 
   private updateContextMenu() {

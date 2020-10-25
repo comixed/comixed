@@ -28,26 +28,26 @@ import { LOAD_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/loa
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
-import { LibraryModule } from 'app/library/library.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { ScrollPanelModule } from 'primeng/primeng';
+import {
+  ScrollPanelModule,
+  ToolbarModule,
+  TooltipModule
+} from 'primeng/primeng';
 import { CoreModule } from 'app/core/core.module';
-import { ToolbarModule, TooltipModule } from 'primeng/primeng';
 import { CLEAR_TASK_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-task-audit-log.reducer';
 import * as fromClearTaskAuditLog from 'app/backend-status/reducers/build-details.reducer';
 import { ClearTaskAuditLogEffects } from 'app/backend-status/effects/clear-task-audit-log.effects';
-import { AppState } from 'app/backend-status';
+import { BackendStatusState } from 'app/backend-status';
 import { clearTaskAuditLog } from 'app/backend-status/actions/clear-task-audit-log.actions';
 import { Title } from '@angular/platform-browser';
 
 describe('TaskAuditLogPageComponent', () => {
   let component: TaskAuditLogPageComponent;
   let fixture: ComponentFixture<TaskAuditLogPageComponent>;
-  let store: Store<AppState>;
+  let store: Store<BackendStatusState>;
   let confirmationService: ConfirmationService;
   let titleService: Title;
-  let breadcrumbAdaptor: BreadcrumbAdaptor;
   let translateService: TranslateService;
 
   beforeEach(async(() => {
@@ -75,7 +75,7 @@ describe('TaskAuditLogPageComponent', () => {
         TooltipModule
       ],
       declarations: [TaskAuditLogPageComponent],
-      providers: [MessageService, BreadcrumbAdaptor, ConfirmationService]
+      providers: [MessageService, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TaskAuditLogPageComponent);
@@ -86,8 +86,6 @@ describe('TaskAuditLogPageComponent', () => {
     confirmationService = TestBed.get(ConfirmationService);
     titleService = TestBed.get(Title);
     spyOn(titleService, 'setTitle');
-    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
-    spyOn(breadcrumbAdaptor, 'loadEntries');
     translateService = TestBed.get(TranslateService);
   }));
 
@@ -102,10 +100,6 @@ describe('TaskAuditLogPageComponent', () => {
 
     it('resets the title', () => {
       expect(titleService.setTitle).toHaveBeenCalled();
-    });
-
-    it('reloads the breadcrumb trail', () => {
-      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
     });
   });
 

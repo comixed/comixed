@@ -29,7 +29,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Comic } from 'app/comics';
 import {
-  AppState,
+  LibraryModuleState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   ReadingListAdaptor,
@@ -108,7 +108,7 @@ export class ComicListComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<LibraryModuleState>
   ) {
     this.addContextMenuItems();
     this.contextMenuItemsSubscription = this.contextMenuAdaptor.items$.subscribe(

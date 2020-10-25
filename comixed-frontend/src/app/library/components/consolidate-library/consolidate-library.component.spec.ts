@@ -24,7 +24,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { ButtonModule } from 'primeng/button';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { UserModule } from 'app/user/user.module';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -56,7 +56,7 @@ describe('ConsolidateLibraryComponent', () => {
   let fixture: ComponentFixture<ConsolidateLibraryComponent>;
   let confirmationService: ConfirmationService;
   let authenticationAdaptor: AuthenticationAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

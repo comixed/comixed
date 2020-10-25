@@ -31,7 +31,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService } from 'primeng/api';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { PluginAdaptor } from 'app/library/adaptors/plugin.adaptor';
 import { ButtonModule, ToolbarModule, TooltipModule } from 'primeng/primeng';
 
@@ -39,7 +38,6 @@ describe('PluginsPageComponent', () => {
   let component: PluginsPageComponent;
   let fixture: ComponentFixture<PluginsPageComponent>;
   let translateService: TranslateService;
-  let breadcrumbAdaptor: BreadcrumbAdaptor;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -57,29 +55,17 @@ describe('PluginsPageComponent', () => {
         ToolbarModule
       ],
       declarations: [PluginsPageComponent],
-      providers: [MessageService, BreadcrumbAdaptor, PluginAdaptor]
+      providers: [MessageService, PluginAdaptor]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PluginsPageComponent);
     component = fixture.componentInstance;
     translateService = TestBed.get(TranslateService);
-    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
 
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('when the language changes', () => {
-    beforeEach(() => {
-      spyOn(breadcrumbAdaptor, 'loadEntries');
-      translateService.use('fr');
-    });
-
-    it('reloads the breadcrumb trails', () => {
-      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
-    });
   });
 });

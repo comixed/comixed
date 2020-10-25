@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Comic } from 'app/comics/models/comic';
 import {
@@ -70,7 +70,7 @@ export class LibraryAdaptor {
   private _deleting$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private store: Store<AppState>,
+    private store: Store<LibraryModuleState>,
     private comicAdaptor: ComicAdaptor,
     private logger: LoggerService
   ) {

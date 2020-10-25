@@ -28,11 +28,10 @@ import { AuthenticationAdaptor, User } from 'app/user';
 import { SelectItem } from 'primeng/api';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { LibraryAdaptor } from 'app/library';
 import { ComicFile } from 'app/comic-import/models/comic-file';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/comic-import';
+import { ComicImportState } from 'app/comic-import';
 import {
   selectFindComicFiles,
   selectFindComicFilesState
@@ -44,6 +43,7 @@ import {
 } from 'app/comic-import/actions/selected-comic-files.actions';
 import { selectSelectedComicFiles } from 'app/comic-import/selectors/selected-comic-files.selectors';
 import { importComics } from 'app/comic-import/actions/import-comics.actions';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 const ROWS_PARAMETER = 'rows';
 const SORT_PARAMETER = 'sort';
@@ -84,15 +84,14 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   protected deleteBlockedPages = false;
 
   constructor(
+    private store: Store<ComicImportState>,
     private logger: LoggerService,
     private titleService: Title,
     private translateService: TranslateService,
     private libraryAdaptor: LibraryAdaptor,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<AppState>
+    private router: Router
   ) {
     activatedRoute.queryParams.subscribe(params => {
       this.sort_by = params[SORT_PARAMETER] || 'filename';
@@ -292,13 +291,19 @@ export class ImportPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.admin.root') },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.import-page'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.admin.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.import-page'
+            )
+          }
+        ]
+      })
+    );
   }
 }

@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Comic } from 'app/comics';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { selectScrapingMultipleComics } from 'app/comics/selectors/scrape-multiple-comic.selectors';
 import {
   removeScrapedComic,
@@ -44,7 +44,7 @@ export class MultiComicScrapingPageComponent {
 
   constructor(
     private logger: LoggerService,
-    private store: Store<AppState>,
+    private store: Store<LibraryModuleState>,
     private router: Router,
     private alertService: AlertService,
     private translateService: TranslateService

@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Roles } from 'app/models/ui/roles';
-import { AppState, User } from 'app/user';
+import { UserModuleState, User } from 'app/user';
 import {
   AuthCheckState,
   AuthHideLogin,
@@ -47,7 +47,7 @@ export class AuthenticationAdaptor {
     reader: false
   });
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<UserModuleState>) {
     this.store
       .select(AUTHENTICATION_FEATURE_KEY)
       .pipe(filter(state => !!state))

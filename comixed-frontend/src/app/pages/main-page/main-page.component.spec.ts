@@ -27,7 +27,6 @@ import { DropdownModule, MessageService } from 'primeng/primeng';
 import { LibraryModule } from 'app/library/library.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UserService } from 'app/services/user.service';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { LoggerModule } from '@angular-ru/logger';
@@ -54,7 +53,7 @@ describe('MainPageComponent', () => {
         DropdownModule
       ],
       declarations: [MainPageComponent],
-      providers: [BreadcrumbAdaptor, MessageService, UserService]
+      providers: [MessageService, UserService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainPageComponent);

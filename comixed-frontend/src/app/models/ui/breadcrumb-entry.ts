@@ -19,5 +19,5 @@
 /** A single element of the breadcrumb trail. */
 export interface BreadcrumbEntry {
   label: string;
-  link?: string;
+  link?: any;
 }
