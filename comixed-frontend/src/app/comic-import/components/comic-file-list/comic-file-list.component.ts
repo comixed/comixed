@@ -27,7 +27,7 @@ import { MenuItem } from 'primeng/api';
 import { ContextMenu } from 'primeng/contextmenu';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/comic-import';
+import { ComicImportState } from 'app/comic-import';
 import { selectFindComicFilesState } from 'app/comic-import/selectors/find-comic-files.selectors';
 import {
   clearComicFileSelections,
@@ -78,7 +78,7 @@ export class ComicFileListComponent implements OnInit, OnDestroy {
     private libraryDisplayAdaptor: LibraryDisplayAdaptor,
     private contextMenuAdaptor: ContextMenuAdaptor,
     private translateService: TranslateService,
-    private store: Store<AppState>
+    private store: Store<ComicImportState>
   ) {
     this.addContextMenuItems();
     this.fetchingFilesSubscription = this.store

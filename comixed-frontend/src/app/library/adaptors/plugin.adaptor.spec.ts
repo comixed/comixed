@@ -25,7 +25,7 @@ import {
 } from 'app/library/reducers/plugin.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { PluginEffects } from 'app/library/effects/plugin.effects';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { PLUGIN_DESCRIPTOR_1 } from 'app/library/models/plugin-descriptor.fixtures';
 import {
   AllPluginsReceived,
@@ -44,7 +44,7 @@ describe('PluginAdaptor', () => {
   const PLUGINS = [PLUGIN_DESCRIPTOR_1];
 
   let pluginAdaptor: PluginAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

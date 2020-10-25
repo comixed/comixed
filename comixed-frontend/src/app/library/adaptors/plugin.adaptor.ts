@@ -21,7 +21,7 @@ import { LoggerService } from '@angular-ru/logger';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PluginDescriptor } from 'app/library/models/plugin-descriptor';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { PLUGIN_FEATURE_KEY } from 'app/library/reducers/plugin.reducer';
 import { filter } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -35,7 +35,7 @@ export class PluginAdaptor {
   private _loading$ = new BehaviorSubject<boolean>(false);
   private _plugins$ = new BehaviorSubject<PluginDescriptor[]>([]);
 
-  constructor(private logger: LoggerService, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<LibraryModuleState>) {
     this.store
       .select(PLUGIN_FEATURE_KEY)
       .pipe(filter(state => !!state))

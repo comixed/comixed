@@ -21,10 +21,12 @@ import { Subscription } from 'rxjs';
 import { SelectItem } from 'primeng/api';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AuthenticationAdaptor } from 'app/user';
 import { ComicCollectionEntry } from 'app/library/models/comic-collection-entry';
 import { LibraryAdaptor } from 'app/library';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/app-state';
+import { clearBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 const COLOR_PALLETTE = [
   '#C0C0C0',
@@ -78,11 +80,11 @@ export class MainPageComponent implements OnInit, OnDestroy {
   dataToShow = 'publishers';
 
   constructor(
+    private store: Store<AppState>,
     private titleService: Title,
     private translateService: TranslateService,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private libraryAdaptor: LibraryAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
+    private libraryAdaptor: LibraryAdaptor
   ) {
     this.options = {
       title: {
@@ -135,7 +137,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         this.buildData();
       }
     );
-    this.breadcrumbAdaptor.loadEntries([]);
+    this.store.dispatch(clearBreadcrumbs());
   }
 
   ngOnDestroy() {

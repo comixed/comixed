@@ -25,8 +25,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { AppState } from 'app/comic-import';
+import { ComicImportState } from 'app/comic-import';
 import { ComicFileGridItemComponent } from 'app/comic-import/components/comic-file-grid-item/comic-file-grid-item.component';
 import { ComicFileListItemComponent } from 'app/comic-import/components/comic-file-list-item/comic-file-list-item.component';
 import { ComicFileListToolbarComponent } from 'app/comic-import/components/comic-file-list-toolbar/comic-file-list-toolbar.component';
@@ -74,7 +73,7 @@ describe('ImportPageComponent', () => {
   let component: ImportPageComponent;
   let fixture: ComponentFixture<ImportPageComponent>;
   let libraryAdaptor: LibraryAdaptor;
-  let store: Store<AppState>;
+  let store: Store<ComicImportState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -133,7 +132,6 @@ describe('ImportPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         LibraryDisplayAdaptor,
-        BreadcrumbAdaptor,
         ConfirmationService,
         MessageService,
         UserService

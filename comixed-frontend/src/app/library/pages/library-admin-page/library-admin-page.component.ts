@@ -20,8 +20,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { LibraryAdaptor } from 'app/library';
+import { LibraryAdaptor, LibraryModuleState } from 'app/library';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-library-admin-page',
@@ -34,10 +35,10 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<LibraryModuleState>,
     private titleService: Title,
     private translateService: TranslateService,
-    private libraryAdaptor: LibraryAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor
+    private libraryAdaptor: LibraryAdaptor
   ) {}
 
   ngOnInit() {
@@ -62,15 +63,19 @@ export class LibraryAdminPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      {
-        label: this.translateService.instant('breadcrumb.entry.admin.root')
-      },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.admin.library-admin'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.admin.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.admin.library-admin'
+            )
+          }
+        ]
+      })
+    );
   }
 }

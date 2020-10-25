@@ -21,8 +21,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthenticationAdaptor, User } from 'app/user';
 import { LibraryAdaptor } from 'app/library';
 import { Subscription } from 'rxjs';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
+import { AppState } from 'app/app-state';
+import { selectBreadcrumbs } from 'app/selectors/breadcrumb.selectors';
+import { filter } from 'rxjs/operators';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -37,17 +41,29 @@ export class AppComponent implements OnInit {
   comicCount = 0;
   processingCount = 0;
   fetchingUpdateSubscription: Subscription;
-  breadcrumbs = [];
+  breadcrumbs: MenuItem[] = [];
 
   constructor(
+    private store: Store<AppState>,
+    private logger: LoggerService,
     private translateService: TranslateService,
     private authenticationAdaptor: AuthenticationAdaptor,
-    private libraryAdaptor: LibraryAdaptor,
-    private breadcrumbsAdaptor: BreadcrumbAdaptor,
-    private logger: LoggerService
+    private libraryAdaptor: LibraryAdaptor
   ) {
     this.logger.level = LoggerLevel.INFO;
     translateService.setDefaultLang('en');
+    this.store
+      .select(selectBreadcrumbs)
+      .pipe(filter(entries => !!entries))
+      .subscribe(
+        entries =>
+          (this.breadcrumbs = entries.map(entry => {
+            return {
+              label: entry.label,
+              routerLink: entry.link
+            } as MenuItem;
+          }))
+      );
   }
 
   ngOnInit() {
@@ -80,9 +96,6 @@ export class AppComponent implements OnInit {
     );
     this.libraryAdaptor.processingCount$.subscribe(
       imports => (this.processingCount = imports)
-    );
-    this.breadcrumbsAdaptor.entries$.subscribe(
-      entries => (this.breadcrumbs = entries)
     );
   }
 }

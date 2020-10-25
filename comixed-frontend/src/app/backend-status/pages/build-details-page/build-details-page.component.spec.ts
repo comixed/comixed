@@ -29,7 +29,6 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 import { BuildDetailsEffects } from 'app/backend-status/effects/build-details.effects';
 import { MessageService } from 'primeng/api';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { Title } from '@angular/platform-browser';
@@ -37,7 +36,6 @@ import { Title } from '@angular/platform-browser';
 describe('BuildDetailsPageComponent', () => {
   let component: BuildDetailsPageComponent;
   let fixture: ComponentFixture<BuildDetailsPageComponent>;
-  let breadcrumbAdaptor: BreadcrumbAdaptor;
   let titleService: Title;
   let translateService: TranslateService;
 
@@ -53,15 +51,13 @@ describe('BuildDetailsPageComponent', () => {
         EffectsModule.forRoot([]),
         EffectsModule.forFeature([BuildDetailsEffects])
       ],
-      providers: [BreadcrumbAdaptor, MessageService],
+      providers: [MessageService],
       declarations: [BuildDetailsPageComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BuildDetailsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
-    spyOn(breadcrumbAdaptor, 'loadEntries');
     titleService = TestBed.get(Title);
     spyOn(titleService, 'setTitle');
     translateService = TestBed.get(TranslateService);
@@ -74,10 +70,6 @@ describe('BuildDetailsPageComponent', () => {
   describe('when the language changes', () => {
     beforeEach(() => {
       translateService.use('fr');
-    });
-
-    it('reloads the breadcrumb trail', () => {
-      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
     });
 
     it('reloads the title', () => {

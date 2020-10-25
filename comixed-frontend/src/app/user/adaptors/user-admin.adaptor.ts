@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState, User } from 'app/user';
+import { UserModuleState, User } from 'app/user';
 import {
   UserAdminClearCurrent,
   UserAdminCreateNew,
@@ -43,7 +43,7 @@ export class UserAdminAdaptor {
   private _saved$ = new BehaviorSubject<boolean>(false);
   private _deleting$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private logger: LoggerService, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<UserModuleState>) {
     this.store
       .select(USER_ADMIN_FEATURE_KEY)
       .pipe(filter(state => !!state))

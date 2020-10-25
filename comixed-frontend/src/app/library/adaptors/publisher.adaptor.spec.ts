@@ -26,7 +26,7 @@ import {
 import { Store, StoreModule } from '@ngrx/store';
 import { PublisherEffects } from 'app/library/effects/publisher.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import {
   PublisherGet,
   PublisherGetFailed,
@@ -42,7 +42,7 @@ describe('PublisherAdaptor', () => {
   const PUBLISHER_NAME = PUBLISHER.name;
 
   let adaptor: PublisherAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

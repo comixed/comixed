@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState, Comic, Page, PageType } from 'app/comics';
+import { ComicModuleState, Comic, Page, PageType } from 'app/comics';
 import {
   ComicClearMetadata,
   ComicDelete,
@@ -55,7 +55,7 @@ export class ComicAdaptor {
   private _settingPageType$ = new BehaviorSubject<boolean>(false);
   private _deletingPage$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private logger: LoggerService, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<ComicModuleState>) {
     this.store
       .select(COMIC_FEATURE_KEY)
       .pipe(filter(state => !!state))

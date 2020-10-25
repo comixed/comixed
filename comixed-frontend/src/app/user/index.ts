@@ -61,21 +61,21 @@ interface RouterStateUrl {
   queryParams: Params;
 }
 
-export interface AppState {
+export interface UserModuleState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   auth_state: AuthenticationState;
   user_admin_state: UserAdminState;
 }
 
-export type State = AppState;
+export type State = UserModuleState;
 
-export const reducers: ActionReducerMap<AppState> = {
+export const reducers: ActionReducerMap<UserModuleState> = {
   router: fromRouter.routerReducer,
   auth_state: fromAuth.reducer,
   user_admin_state: fromUserAdmin.reducer
 };
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production
+export const metaReducers: MetaReducer<UserModuleState>[] = !environment.production
   ? []
   : [];
 

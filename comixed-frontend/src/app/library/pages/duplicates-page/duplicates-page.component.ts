@@ -20,10 +20,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DuplicatePage } from 'app/library/models/duplicate-page';
 import { DuplicatePagesAdaptors } from 'app/library/adaptors/duplicate-pages.adaptor';
-import { LibraryDisplayAdaptor } from 'app/library';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
+import { LibraryDisplayAdaptor, LibraryModuleState } from 'app/library';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { Store } from '@ngrx/store';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-duplicates-page',
@@ -48,9 +49,9 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<LibraryModuleState>,
     private duplicatesAdaptor: DuplicatePagesAdaptors,
     private displayAdaptor: LibraryDisplayAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private translateService: TranslateService,
     private titleService: Title
   ) {}
@@ -95,11 +96,17 @@ export class DuplicatesPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      {
-        label: this.translateService.instant('breadcrumb.admin.duplicates-page')
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant(
+              'breadcrumb.admin.duplicates-page'
+            )
+          }
+        ]
+      })
+    );
     this.titleService.setTitle(
       this.translateService.instant('duplicates-page.title')
     );

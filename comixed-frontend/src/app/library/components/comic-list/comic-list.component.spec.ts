@@ -28,7 +28,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { COMIC_1, COMIC_2, COMIC_3, COMIC_5 } from 'app/comics/comics.fixtures';
 import { ComicsModule } from 'app/comics/comics.module';
 import {
-  AppState,
+  LibraryModuleState,
   LibraryAdaptor,
   LibraryDisplayAdaptor,
   SelectionAdaptor
@@ -101,7 +101,7 @@ describe('ComicListComponent', () => {
   let activatedRoute: ActivatedRoute;
   let confirmationService: ConfirmationService;
   let contextMenuAdaptor: ContextMenuAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

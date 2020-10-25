@@ -67,7 +67,7 @@ interface RouterStateUrl {
   queryParams: Params;
 }
 
-export interface AppState {
+export interface ComicModuleState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   comic: ComicState;
   [SCAN_TYPES_FEATURE_KEY]: ScanTypesState;
@@ -78,9 +78,9 @@ export interface AppState {
   [SCRAPE_MULTIPLE_COMICS_STATE]: ScrapeMultipleComicsState;
 }
 
-export type State = AppState;
+export type State = ComicModuleState;
 
-export const reducers: ActionReducerMap<AppState> = {
+export const reducers: ActionReducerMap<ComicModuleState> = {
   router: fromRouter.routerReducer,
   comic: fromComics.reducer,
   [SCAN_TYPES_FEATURE_KEY]: fromScanTypes.reducer,
@@ -91,6 +91,6 @@ export const reducers: ActionReducerMap<AppState> = {
   [SCRAPE_MULTIPLE_COMICS_STATE]: fromScrapeMultipleComics.reducer
 };
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production
+export const metaReducers: MetaReducer<ComicModuleState>[] = !environment.production
   ? []
   : [];

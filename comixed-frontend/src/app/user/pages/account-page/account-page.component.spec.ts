@@ -24,9 +24,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { UserService } from 'app/services/user.service';
-import { AppState, AuthenticationAdaptor, TokenService } from 'app/user';
+import { AuthenticationAdaptor, UserModuleState, TokenService } from 'app/user';
 import { AuthUserLoaded } from 'app/user/actions/authentication.actions';
 import { UserAdminAdaptor } from 'app/user/adaptors/user-admin.adaptor';
 import { AccountPreferencesComponent } from 'app/user/components/account-preferences/account-preferences.component';
@@ -60,8 +59,7 @@ describe('AccountPageComponent', () => {
   let authenticationAdaptor: AuthenticationAdaptor;
   let userAdminAdaptor: UserAdminAdaptor;
   let confirmationService: ConfirmationService;
-  let store: Store<AppState>;
-  let breadcrumbAdaptor: BreadcrumbAdaptor;
+  let store: Store<UserModuleState>;
   let translateService: TranslateService;
 
   beforeEach(async(() => {
@@ -94,7 +92,6 @@ describe('AccountPageComponent', () => {
       providers: [
         AuthenticationAdaptor,
         UserAdminAdaptor,
-        BreadcrumbAdaptor,
         MessageService,
         UserService,
         TokenService,
@@ -109,8 +106,6 @@ describe('AccountPageComponent', () => {
     confirmationService = TestBed.get(ConfirmationService);
     store = TestBed.get(Store);
     store.dispatch(new AuthUserLoaded({ user: USER }));
-    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
-    spyOn(breadcrumbAdaptor, 'loadEntries');
     translateService = TestBed.get(TranslateService);
     fixture.detectChanges();
   }));
@@ -126,16 +121,6 @@ describe('AccountPageComponent', () => {
 
     it('sets the user field', () => {
       expect(component.user).toEqual(USER_ADMIN);
-    });
-  });
-
-  describe('when the language changes', () => {
-    beforeEach(() => {
-      translateService.use('fr');
-    });
-
-    it('updates the breadcrumb trail', () => {
-      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
     });
   });
 

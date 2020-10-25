@@ -19,13 +19,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { BuildDetails } from 'app/backend-status/models/build-details';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/backend-status';
+import { BackendStatusState } from 'app/backend-status';
 import { selectBuildDetails } from 'app/backend-status/selectors/build-detail.selectors';
 import { fetchBuildDetails } from 'app/backend-status/actions/build-details.actions';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
   selector: 'app-build-details-page',
@@ -37,10 +37,9 @@ export class BuildDetailsPageComponent implements OnDestroy {
   langChangeSubscription: Subscription;
 
   constructor(
+    private store: Store<BackendStatusState>,
     private titleService: Title,
-    private translateService: TranslateService,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
-    private store: Store<AppState>
+    private translateService: TranslateService
   ) {
     this.store.dispatch(fetchBuildDetails());
     this.store
@@ -57,14 +56,20 @@ export class BuildDetailsPageComponent implements OnDestroy {
   }
 
   private loadTranslations() {
-    this.breadcrumbAdaptor.loadEntries([
-      { label: this.translateService.instant('breadcrumb.entry.help.root') },
-      {
-        label: this.translateService.instant(
-          'breadcrumb.entry.help.build-details-page'
-        )
-      }
-    ]);
+    this.store.dispatch(
+      setBreadcrumbs({
+        entries: [
+          {
+            label: this.translateService.instant('breadcrumb.entry.help.root')
+          },
+          {
+            label: this.translateService.instant(
+              'breadcrumb.entry.help.build-details-page'
+            )
+          }
+        ]
+      })
+    );
     this.titleService.setTitle(
       this.translateService.instant('build-details.page-title')
     );

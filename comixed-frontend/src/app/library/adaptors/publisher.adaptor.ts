@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import {
   PUBLISHER_FEATURE_KEY,
   PublisherState
@@ -36,7 +36,7 @@ export class PublisherAdaptor {
   private _noSuchPublisher$ = new BehaviorSubject<boolean>(false);
   private _publisher$ = new BehaviorSubject<Publisher>(null);
 
-  constructor(private logger: LoggerService, private store: Store<AppState>) {
+  constructor(private logger: LoggerService, private store: Store<LibraryModuleState>) {
     this.store
       .select(PUBLISHER_FEATURE_KEY)
       .pipe(filter(state => !!state))

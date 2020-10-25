@@ -30,7 +30,6 @@ import { LoadRestAuditLogEffects } from 'app/backend-status/effects/load-rest-au
 import { LoggerModule } from '@angular-ru/logger';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MessageService } from 'primeng/api';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { REST_AUDIT_LOG_ENTRY_1 } from 'app/backend-status/backend-status.fixtures';
 import { Title } from '@angular/platform-browser';
 import { ScrollPanelModule, SidebarModule } from 'primeng/primeng';
@@ -40,7 +39,6 @@ describe('RestAuditLogPageComponent', () => {
 
   let component: RestAuditLogPageComponent;
   let fixture: ComponentFixture<RestAuditLogPageComponent>;
-  let breadcrumbAdaptor: BreadcrumbAdaptor;
   let titleService: Title;
   let translateService: TranslateService;
 
@@ -63,13 +61,11 @@ describe('RestAuditLogPageComponent', () => {
         ScrollPanelModule
       ],
       declarations: [RestAuditLogPageComponent],
-      providers: [MessageService, BreadcrumbAdaptor, Title]
+      providers: [MessageService, Title]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RestAuditLogPageComponent);
     component = fixture.componentInstance;
-    breadcrumbAdaptor = TestBed.get(BreadcrumbAdaptor);
-    spyOn(breadcrumbAdaptor, 'loadEntries');
     titleService = TestBed.get(Title);
     spyOn(titleService, 'setTitle');
     translateService = TestBed.get(TranslateService);
@@ -173,10 +169,6 @@ describe('RestAuditLogPageComponent', () => {
 
     it('changes the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('reloads the breadcrumb trail', () => {
-      expect(breadcrumbAdaptor.loadEntries).toHaveBeenCalled();
     });
   });
 });

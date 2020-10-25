@@ -28,7 +28,7 @@ import { COMIC_1, FORMAT_3, SCAN_TYPE_1 } from 'app/comics/comics.fixtures';
 import { ComicEffects } from 'app/comics/effects/comic.effects';
 import * as fromComic from 'app/comics/reducers/comic.reducer';
 import { COMIC_FEATURE_KEY } from 'app/comics/reducers/comic.reducer';
-import { AppState, LibraryAdaptor } from 'app/library';
+import { LibraryModuleState, LibraryAdaptor } from 'app/library';
 import { LoggerModule } from '@angular-ru/logger';
 import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
@@ -62,7 +62,7 @@ describe('ComicOverviewComponent', () => {
 
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
   let confirmationService: ConfirmationService;
   let comicAdaptor: ComicAdaptor;
   const publishers = new BehaviorSubject<ComicCollectionEntry[]>([]);

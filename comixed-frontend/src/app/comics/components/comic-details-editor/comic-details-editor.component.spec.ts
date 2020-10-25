@@ -24,7 +24,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AppState } from 'app/comics';
+import { ComicModuleState } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import {
   COMIC_1,
@@ -81,7 +81,7 @@ describe('ComicDetailsEditorComponent', () => {
 
   let component: ComicDetailsEditorComponent;
   let fixture: ComponentFixture<ComicDetailsEditorComponent>;
-  let store: Store<AppState>;
+  let store: Store<ComicModuleState>;
   let authenticationAdaptor: AuthenticationAdaptor;
   let translateService: TranslateService;
   let comicAdaptor: ComicAdaptor;

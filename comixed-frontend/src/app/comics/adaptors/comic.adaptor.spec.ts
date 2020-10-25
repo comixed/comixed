@@ -21,7 +21,7 @@ import { TestBed } from '@angular/core/testing';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { AppState } from 'app/comics';
+import { ComicModuleState } from 'app/comics';
 import {
   ComicClearMetadata,
   ComicDelete,
@@ -64,7 +64,7 @@ describe('ComicAdaptor', () => {
   const PAGE_TYPE = FRONT_COVER;
 
   let adaptor: ComicAdaptor;
-  let store: Store<AppState>;
+  let store: Store<ComicModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

@@ -48,7 +48,7 @@ interface RouterStateUrl {
   queryParams: Params;
 }
 
-export interface AppState {
+export interface BackendStatusState {
   router: fromRouter.RouterReducerState<RouterStateUrl>;
   [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
   [LOAD_TASK_AUDIT_LOG_FEATURE_KEY]: LoadTaskAuditLogState;
@@ -56,9 +56,9 @@ export interface AppState {
   [LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY]: LoadRestAuditLogEntriesState;
 }
 
-export type State = AppState;
+export type State = BackendStatusState;
 
-export const reducers: ActionReducerMap<AppState> = {
+export const reducers: ActionReducerMap<BackendStatusState> = {
   router: fromRouter.routerReducer,
   [BUILD_DETAILS_FEATURE_KEY]: fromBuildDetails.reducer,
   [LOAD_TASK_AUDIT_LOG_FEATURE_KEY]: fromLoadTaskAuditLog.reducer,
@@ -66,6 +66,6 @@ export const reducers: ActionReducerMap<AppState> = {
   [LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY]: fromLoadRestAuditLog.reducer
 };
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production
-  ? []
-  : [];
+export const metaReducers: MetaReducer<
+  BackendStatusState
+>[] = !environment.production ? [] : [];

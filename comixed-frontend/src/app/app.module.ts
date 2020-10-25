@@ -33,7 +33,6 @@ import {
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
 import { AppComponent } from 'app/app.component';
 import { AppRouting } from 'app/app.routing';
 import { BackendStatusModule } from 'app/backend-status/backend-status.module';
@@ -157,7 +156,6 @@ import { reducers } from 'app/app-state';
     MenuModule
   ],
   providers: [
-    BreadcrumbAdaptor,
     UserService,
     MessageService,
     [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }],

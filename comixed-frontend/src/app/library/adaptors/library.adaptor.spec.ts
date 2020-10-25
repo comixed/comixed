@@ -32,7 +32,7 @@ import {
   COMIC_4,
   COMIC_5
 } from 'app/comics/comics.fixtures';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { LibraryEffects } from 'app/library/effects/library.effects';
 import { COMIC_1_LAST_READ_DATE } from 'app/library/models/last-read-date.fixtures';
 import {
@@ -81,7 +81,7 @@ describe('LibraryAdaptor', () => {
   const DELETE_ORIGINAL_COMIC = Math.random() * 100 > 50;
 
   let adaptor: LibraryAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

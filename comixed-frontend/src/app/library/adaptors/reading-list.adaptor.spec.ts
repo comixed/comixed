@@ -44,7 +44,7 @@ import {
   ReadingListSaveFailed,
   ReadingListToggleSelectDialog
 } from 'app/library/actions/reading-list.actions';
-import { AppState } from 'app/library';
+import { LibraryModuleState } from 'app/library';
 import { NEW_READING_LIST } from 'app/library/library.constants';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
 import { ReadingList } from 'app/comics/models/reading-list';
@@ -59,7 +59,7 @@ describe('ReadingListAdaptor', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
 
   let adaptor: ReadingListAdaptor;
-  let store: Store<AppState>;
+  let store: Store<LibraryModuleState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

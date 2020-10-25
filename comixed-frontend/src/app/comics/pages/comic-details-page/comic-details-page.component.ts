@@ -20,17 +20,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbAdaptor } from 'app/adaptors/breadcrumb.adaptor';
-import { AppState, Comic } from 'app/comics';
+import { Comic, ComicModuleState } from 'app/comics';
 import { ComicAdaptor } from 'app/comics/adaptors/comic.adaptor';
 import { AuthenticationAdaptor } from 'app/user';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { filter } from 'rxjs/operators';
 import { SeriesCollectionNamePipe } from 'app/comics/pipes/series-collection-name.pipe';
 import { Store } from '@ngrx/store';
 import { selectScrapeComicSuccess } from 'app/comics/selectors/scrape-comic.selectors';
+import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
+import { BreadcrumbEntry } from 'app/models/ui/breadcrumb-entry';
 
 export const PAGE_SIZE_PARAMETER = 'pagesize';
 export const CURRENT_PAGE_PARAMETER = 'page';
@@ -64,16 +65,15 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
   protected currentPage: number;
 
   constructor(
+    private store: Store<ComicModuleState>,
     private logger: LoggerService,
     private titleService: Title,
     private translateService: TranslateService,
     private messageService: MessageService,
     private authenticationAdaptor: AuthenticationAdaptor,
     private comicAdaptor: ComicAdaptor,
-    private breadcrumbAdaptor: BreadcrumbAdaptor,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<AppState>
+    private router: Router
   ) {
     this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
@@ -224,10 +224,10 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const entries: MenuItem[] = [
+    const entries: BreadcrumbEntry[] = [
       {
         label: this.translateService.instant('breadcrumb.entry.library-page'),
-        routerLink: ['/comics']
+        link: ['/comics']
       }
     ];
 
@@ -237,7 +237,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.publisher',
           { name: this.comic.imprint }
         ),
-        routerLink: ['/comics/publishers', this.comic.imprint]
+        link: ['/comics/publishers', this.comic.imprint]
       });
     } else if (this.comic.publisher) {
       entries.push({
@@ -245,7 +245,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.publisher',
           { name: this.comic.publisher }
         ),
-        routerLink: ['/comics/publishers', this.comic.publisher]
+        link: ['/comics/publishers', this.comic.publisher]
       });
     } else {
       entries.push({ label: '?' });
@@ -256,7 +256,7 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
           'breadcrumb.entry.comic-details-page.series',
           { name: this.comic.series }
         ),
-        routerLink: [
+        link: [
           '/comics/series',
           new SeriesCollectionNamePipe().transform(this.comic)
         ]
@@ -285,6 +285,6 @@ export class ComicDetailsPageComponent implements OnInit, OnDestroy {
       entries.push({ label: '?' });
     }
 
-    this.breadcrumbAdaptor.loadEntries(entries);
+    this.store.dispatch(setBreadcrumbs({ entries }));
   }
 }
