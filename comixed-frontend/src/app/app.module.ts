@@ -82,6 +82,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { LoggerModule } from '@angular-ru/logger';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { reducers } from 'app/app-state';
 
 @NgModule({
   declarations: [
@@ -100,17 +101,14 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
     BrowserAnimationsModule,
     AppRouting,
     HttpClientModule,
-    StoreModule.forRoot(
-      {},
-      {
-        runtimeChecks: {
-          strictStateSerializability: false,
-          strictActionSerializability: false,
-          strictStateImmutability: false,
-          strictActionImmutability: false
-        }
+    StoreModule.forRoot(reducers, {
+      runtimeChecks: {
+        strictStateSerializability: false,
+        strictActionSerializability: false,
+        strictStateImmutability: false,
+        strictActionImmutability: false
       }
-    ),
+    }),
     EffectsModule.forRoot([]),
     MenubarModule,
     SidebarModule,
