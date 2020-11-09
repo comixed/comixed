@@ -165,6 +165,14 @@
       "error": {
         "detail": "Échec de l'ajout des bandes dessinées à la liste de lecture."
       }
+    },
+    "remove-comics": {
+      "success": {
+        "detail": "Removed {removeCount, plural, =1{one comic} other{# comics}} from reading list."
+      },
+      "error": {
+        "detail": "Failed to remove comics from reading list."
+      }
     }
   },
   "library-page": {
