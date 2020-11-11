@@ -16,21 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpInterceptor } from '@app/interceptors/http.interceptor';
-import { HomeComponent } from './pages/home/home.component';
+import { Component, OnInit } from '@angular/core';
 
-@NgModule({
-  declarations: [AppComponent, HomeComponent],
-  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
-  providers: [
-    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
-  ],
-  bootstrap: [AppComponent]
+@Component({
+  selector: 'cx-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class AppModule {}
+export class HomeComponent implements OnInit {
+  constructor() {}
+
+  ngOnInit(): void {}
+}
