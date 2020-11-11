@@ -1,6 +1,12 @@
 # ComiXed
 An application for managing digital comics.
 
+## NOTICE ABOUT THE USER INTERFACE
+
+The project is in the process of migrating from PrimeNG to Angular Material as the user interface toolkit.
+As a result the **DEVELOPMENT** builds will now run with the new interface, which is currently early in its
+development.
+
 ## Project Roadmap And Vision Statement
 The goals for this project are simple. It seeks to be the ultimate management tool for digital comic books.
 
