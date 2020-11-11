@@ -20,7 +20,7 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-frontend</artifactId>
+      <artifactId>comixed-web</artifactId>
       <version>${comixed.version}</version>
     </dependency>
     <dependency>
