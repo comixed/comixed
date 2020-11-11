@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.SaveUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
@@ -137,8 +138,11 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testGetCurrentUserWhenNotAuthented() throws ComiXedUserException {
-    assertNull(controller.getCurrentUser(null));
+  public void testGetCurrentUserWhenNotAuthenticated() throws ComiXedUserException {
+    final ApiResponse<ComiXedUser> response = controller.getCurrentUser(null);
+
+    assertNotNull(response);
+    assertNull(response.getResult());
   }
 
   @Test(expected = ComiXedUserException.class)
@@ -161,7 +165,11 @@ public class UserControllerTest {
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.doNothing().when(user).setAuthenticated(Mockito.anyBoolean());
 
-    assertNotNull(controller.getCurrentUser(authentication));
+    final ApiResponse<ComiXedUser> response = controller.getCurrentUser(authentication);
+
+    assertNotNull(response);
+    assertNotNull(response.getResult());
+    assertSame(user, response.getResult());
 
     Mockito.verify(authentication, Mockito.atLeast(1)).getName();
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);

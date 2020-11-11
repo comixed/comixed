@@ -1,0 +1,10 @@
+{
+  "user": {
+    "load-current-user": {
+      "effect-failure-detail": "Failed to load the current user."
+    },
+    "login-user": {
+      "effect-failure-detail": "Email or password is invalid."
+    }
+  }
+}

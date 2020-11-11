@@ -19,12 +19,13 @@
 package org.comixedproject.controller.user;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.authentication.AuthToken;
 import org.comixedproject.authentication.JwtTokenUtil;
+import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,13 +41,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class ComiXedAuthenticationController {
   @Autowired private AuthenticationManager authenticationManager;
-
   @Autowired private JwtTokenUtil jwtTokenUtil;
-
   @Autowired private ComiXedUserRepository userRepository;
 
+  /**
+   * Authenticated the supplied credentials and generates an authentication token is they are
+   * correct.
+   *
+   * @param email the email
+   * @param password the password
+   * @return the response
+   * @throws AuthenticationException if an error occurs
+   */
   @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
-  public ResponseEntity<AuthToken> register(
+  @AuditableEndpoint
+  public ApiResponse<AuthToken> generateToken(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {
     log.debug("Attemping to authenticate user: {}", email);
@@ -57,6 +66,6 @@ public class ComiXedAuthenticationController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     final ComiXedUser user = userRepository.findByEmail(email);
     final String token = jwtTokenUtil.generateToken(user);
-    return ResponseEntity.ok(new AuthToken(token, user.getEmail()));
+    return new ApiResponse<>(new AuthToken(token, user.getEmail()));
   }
 }

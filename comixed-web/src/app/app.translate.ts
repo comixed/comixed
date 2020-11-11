@@ -21,6 +21,8 @@ import { HttpClient } from '@angular/common/http';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/core.json' }
+    { prefix: './assets/i18n/', suffix: '/app.json' },
+    { prefix: './assets/i18n/', suffix: '/core.json' },
+    { prefix: './assets/i18n/', suffix: '/user.json' }
   ]);
 }
