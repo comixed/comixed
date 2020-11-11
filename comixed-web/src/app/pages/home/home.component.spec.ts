@@ -16,21 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpInterceptor } from '@app/interceptors/http.interceptor';
-import { HomeComponent } from './pages/home/home.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HomeComponent } from '@app/pages/home/home.component';
 
-@NgModule({
-  declarations: [AppComponent, HomeComponent],
-  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
-  providers: [
-    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
-  ],
-  bootstrap: [AppComponent]
-})
-export class AppModule {}
+describe('HomeComponent', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [HomeComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(HomeComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
