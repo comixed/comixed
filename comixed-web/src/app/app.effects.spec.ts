@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.authentication;
+import { TestBed } from '@angular/core/testing';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Observable } from 'rxjs';
+import { AppEffects } from './app.effects';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+describe('AppEffects', () => {
+  let actions$: Observable<any>;
+  let effects: AppEffects;
 
-/**
- * <code>AuthToken</code> represents the token used by authentication.
- *
- * @author Darryl L. Pierce
- */
-@AllArgsConstructor
-public class AuthToken {
-  @JsonProperty("token")
-  @Getter
-  @Setter
-  private String token;
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [AppEffects, provideMockActions(() => actions$)]
+    });
 
-  @JsonProperty("email")
-  @Getter
-  @Setter
-  private String email;
-}
+    effects = TestBed.inject(AppEffects);
+  });
+
+  it('should be created', () => {
+    expect(effects).toBeTruthy();
+  });
+});
