@@ -1,0 +1,6 @@
+{
+  "alert": {
+    "info-action": "INFO",
+    "error-action": "ERROR"
+  }
+}
