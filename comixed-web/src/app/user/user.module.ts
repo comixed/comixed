@@ -25,13 +25,35 @@ import {
 } from './reducers/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
+import { LoginComponent } from './pages/login/login.component';
+import { UserRoutingModule } from './user-routing.module';
+import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from '@app/core/core.module';
+import { MatCardModule } from '@angular/material/card';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [],
+  declarations: [LoginComponent],
   imports: [
     CommonModule,
+    CoreModule,
+    UserRoutingModule,
+    HttpClientModule,
+    TranslateModule.forRoot(),
     StoreModule.forFeature(USER_FEATURE_KEY, userReducer),
-    EffectsModule.forFeature([UserEffects])
-  ]
+    EffectsModule.forFeature([UserEffects]),
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule
+  ],
+  exports: []
 })
 export class UserModule {}

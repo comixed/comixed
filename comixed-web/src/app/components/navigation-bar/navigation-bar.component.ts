@@ -16,15 +16,48 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { User } from '@app/user/models/user';
+import { LoggerService } from '@angular-ru/logger';
+import { Router } from '@angular/router';
+import { ConfirmationService } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
+import { logoutUser } from '@app/user/actions/user.actions';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'cx-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss']
 })
-export class NavigationBarComponent implements OnInit {
-  constructor() {}
+export class NavigationBarComponent {
+  @Input() user: User;
 
-  ngOnInit(): void {}
+  constructor(
+    private logger: LoggerService,
+    private router: Router,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
+  ) {}
+
+  onLogin(): void {
+    this.logger.trace('Navigating to the login page');
+    this.router.navigate(['login']);
+  }
+
+  onLogout(): void {
+    this.logger.trace('Logout button clicked');
+    this.confirmationService.confirm({
+      title: this.translateService.instant('user.logout.confirmation-title'),
+      message: this.translateService.instant(
+        'user.logout.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('User logged out');
+        this.store.dispatch(logoutUser());
+        this.router.navigate(['login']);
+      }
+    });
+  }
 }

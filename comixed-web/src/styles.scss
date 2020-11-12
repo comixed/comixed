@@ -7,3 +7,20 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+// component sizes
+.cx-width-50 {
+  width: 50%;
+}
+
+.cx-width-100 {
+  width: 100%;
+}
+
+// component position
+.cx-centered {
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

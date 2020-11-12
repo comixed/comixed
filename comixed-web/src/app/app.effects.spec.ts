@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
-import { AppEffects } from './app.effects';
+import {TestBed} from '@angular/core/testing';
+import {provideMockActions} from '@ngrx/effects/testing';
+import {Observable} from 'rxjs';
+import {AppEffects} from './app.effects';
 
 describe('AppEffects', () => {
-  let actions$: Observable<any>;
+  const actions$: Observable<any> = null;
   let effects: AppEffects;
 
   beforeEach(() => {

@@ -43,7 +43,7 @@ public class View {
   /** Show minimal information for more than one page. */
   public interface PageList {}
 
-  public interface UserList {}
+  public interface UserList extends ApiResponse {}
 
   /** Show full details on a user. */
   public interface UserDetails extends UserList {}

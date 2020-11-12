@@ -19,7 +19,7 @@
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { HttpClient } from '@angular/common/http';
 
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
   return new MultiTranslateHttpLoader(http, [
     { prefix: './assets/i18n/', suffix: '/app.json' },
     { prefix: './assets/i18n/', suffix: '/core.json' },
