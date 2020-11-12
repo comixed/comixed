@@ -71,4 +71,7 @@ public class View {
 
   /** Used when viewing a list of comic files. */
   public interface ComicFileList extends ApiResponse {}
+
+  /** Used when retrieving a session update. */
+  public interface SessionUpdateView extends ApiResponse {}
 }
