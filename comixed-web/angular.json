@@ -64,7 +64,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "comixed-web:build"
+            "browserTarget": "comixed-web:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {

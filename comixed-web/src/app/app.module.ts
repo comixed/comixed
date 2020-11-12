@@ -38,10 +38,16 @@ import {
 } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '@app/app.translate';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { UserModule } from '@app/user/user.module';
+import { LoggerLevel, LoggerModule } from '@angular-ru/logger';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavigationBarComponent],
   imports: [
+    UserModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -50,6 +56,7 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([AppEffects]),
     StoreRouterConnectingModule.forRoot(),
+    LoggerModule.forRoot({ minLevel: LoggerLevel.TRACE }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -59,8 +66,12 @@ import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-comp
       compiler: {
         provide: TranslateCompiler,
         useClass: TranslateMessageFormatCompiler
-      }
-    })
+      },
+      defaultLanguage: 'en'
+    }),
+    MatButtonModule,
+    MatFormFieldModule,
+    MatTooltipModule
   ],
   providers: [
     [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]

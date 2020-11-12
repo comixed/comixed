@@ -1,6 +1,22 @@
-<mat-toolbar>
+<mat-toolbar class="cx-width-100">
   <button mat-icon-button>
     <mat-icon>menu</mat-icon>
   </button>
   <span class="spacer">ComiXed</span>
+  <span *ngIf="!!user">
+    {{"app.logged-in"|translate:{email:user.email} }}
+    <button mat-icon-button
+            color="warn"
+            [matTooltip]="'user.login-user.logout-tooltip'|translate"
+            (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+  </span>
+  <button *ngIf="!user"
+          mat-icon-button
+          color="primary"
+          [matTooltip]="'user.login-user.login-tooltip'|translate"
+          (click)="onLogin()">
+    <mat-icon>login</mat-icon>
+  </button>
 </mat-toolbar>

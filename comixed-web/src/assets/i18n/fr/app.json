@@ -1,5 +1,13 @@
 {
   "app": {
+    "logged-in": "Logged in: {email}",
     "general-effect-failure-detail": "A general error has occurred."
+  },
+  "button": {
+    "login": "Login",
+    "logout": "Logout",
+    "no": "No",
+    "submit": "Submit",
+    "yes": "Yes"
   }
 }

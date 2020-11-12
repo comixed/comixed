@@ -7,9 +7,16 @@
 </div>
 
 <div mat-dialog-actions>
-  <button mat-button
-          (click)="onDecline()">{{noButton}}</button>
-  <button mat-raised-button
+  <button mat-icon-button
+          color="accent"
+          (click)="onDecline()">
+    <mat-icon>cancel</mat-icon>
+    <mat-label>{{noButton}}</mat-label>
+  </button>
+  <button mat-icon-button
           color="primary"
-          (click)="onConfirm()">{{yesButton}}</button>
+          (click)="onConfirm()">
+    <mat-icon>check</mat-icon>
+    <mat-label>{{yesButton}}</mat-label>
+  </button>
 </div>
