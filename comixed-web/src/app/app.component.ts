@@ -16,13 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { LoggerService } from '@angular-ru/logger';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { User } from '@app/user/models/user';
+import { loadCurrentUser } from '@app/user/actions/user.actions';
 
 @Component({
-  selector: 'app-root',
+  selector: 'cx-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'comixed-web';
+export class AppComponent implements OnInit {
+  user: User = null;
+
+  constructor(private logger: LoggerService, private store: Store<any>) {
+    this.logger.trace('Subscribing to user changes');
+    this.store.select(selectUser).subscribe(user => {
+      this.logger.debug('User updated:', user);
+      this.user = user;
+    });
+  }
+
+  ngOnInit(): void {
+    this.logger.debug('Loading current user');
+    this.store.dispatch(loadCurrentUser());
+  }
 }

@@ -4,7 +4,16 @@
       "effect-failure-detail": "Failed to load the current user."
     },
     "login-user": {
-      "effect-failure-detail": "Email or password is invalid."
+      "page-title": "Please Enter Your User Details",
+      "email-placeholder": "Your email address",
+      "password-placeholder": "Your password",
+      "effect-failure-detail": "Email or password is invalid.",
+      "login-tooltip": "Go to the login page...",
+      "logout-tooltip": "Log out..."
+    },
+    "logout": {
+      "confirmation-title": "Logout",
+      "confirmation-message": "Are you sure you want to logout?"
     }
   }
 }

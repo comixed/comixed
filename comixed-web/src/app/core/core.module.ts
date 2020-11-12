@@ -20,11 +20,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [ConfirmationComponent],
-  imports: [CommonModule, MatSnackBarModule],
-  exports: [MatSnackBarModule],
+  imports: [
+    CommonModule,
+    MatSnackBarModule,
+    MatDialogModule,
+    MatIconModule,
+    MatFormFieldModule
+  ],
+  exports: [
+    MatSnackBarModule,
+    MatDialogModule,
+    MatIconModule,
+    MatFormFieldModule
+  ],
   providers: []
 })
 export class CoreModule {}

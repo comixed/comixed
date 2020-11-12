@@ -22,7 +22,7 @@ export const API_ROOT_URL = '/api';
 
 /** Interpolates the given values into the provided string. */
 export function interpolate(template: string, values: any = {}): string {
-  _.merge(values, { API_ROOT_URL: API_ROOT_URL });
+  _.merge(values, { API_ROOT_URL });
   _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
   const compiled = _.template(template);
   const result = compiled(values);

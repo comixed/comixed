@@ -31,6 +31,7 @@ import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.utils.Utils;
+import org.comixedproject.views.View;
 import org.comixedproject.views.View.UserDetails;
 import org.comixedproject.views.View.UserList;
 import org.springframework.beans.factory.InitializingBean;
@@ -104,6 +105,7 @@ public class UserController implements InitializingBean {
   }
 
   @RequestMapping(value = "/user/preferences", method = RequestMethod.GET)
+  @JsonView(View.UserDetails.class)
   public List<Preference> getUserPreferences(Authentication authentication)
       throws ComiXedUserException {
     log.debug("Getting user preferences");

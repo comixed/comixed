@@ -19,19 +19,29 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
 describe('AppComponent', () => {
+  const initialState = { [USER_FEATURE_KEY]: initialUserState };
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [AppComponent]
+      imports: [RouterTestingModule, LoggerModule.forRoot()],
+      declarations: [AppComponent],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   }));
 

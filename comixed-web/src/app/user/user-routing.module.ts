@@ -16,7 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './pages/login/login.component';
+import { NgModule } from '@angular/core';
 
-export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
-export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate-token`;
+const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class UserRoutingModule {}

@@ -48,7 +48,6 @@ class TestService {
 }
 
 describe('HttpInterceptor', () => {
-  let interceptor: HttpInterceptor;
   let tokenService: jasmine.SpyObj<TokenService>;
   let httpMock: HttpTestingController;
   let testService: TestService;
