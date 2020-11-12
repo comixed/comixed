@@ -16,14 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
+import { HttpClient } from '@angular/common/http';
 
-@NgModule({
-  declarations: [],
-  imports: [CommonModule, MatSnackBarModule],
-  exports: [MatSnackBarModule],
-  providers: []
-})
-export class CoreModule {}
+export function HttpLoaderFactory(http: HttpClient) {
+  return new MultiTranslateHttpLoader(http, [
+    { prefix: './assets/i18n/', suffix: '/core.json' }
+  ]);
+}

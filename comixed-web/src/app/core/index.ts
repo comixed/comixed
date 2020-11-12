@@ -17,3 +17,4 @@
  */
 
 export { TokenService } from '@app/core/services/token.service';
+export { AlertService } from '@app/core/services/alert.service';
