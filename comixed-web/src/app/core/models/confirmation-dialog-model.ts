@@ -16,8 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { TokenService } from '@app/core/services/token.service';
-export { AlertService } from '@app/core/services/alert.service';
-export { ConfirmationService } from '@app/core/services/confirmation.service';
-export { ApiResponse } from '@app/core/models/api-response';
-export * from '@app/core/core.functions';
+/** ConfirmationDialogModel defines the content to be displayed in a confirmation dialog. */
+export interface ConfirmationDialogModel {
+  title: string;
+  message: string;
+  yesButton?: string;
+  noButton?: string;
+}
