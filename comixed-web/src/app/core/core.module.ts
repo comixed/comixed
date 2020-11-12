@@ -19,9 +19,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [ConfirmationComponent],
   imports: [CommonModule, MatSnackBarModule],
   exports: [MatSnackBarModule],
   providers: []
