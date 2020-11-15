@@ -16,25 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import * as _ from 'lodash';
+import { compare } from '@app/core/core.functions';
 
-export const API_ROOT_URL = '/api';
+describe('Core functions', () => {
+  describe('comparing elements', () => {
+    it('can sort ascending', () => {
+      const result = compare(2, 3, true);
+      expect(result).toEqual(-1);
+    });
 
-/** Interpolates the given values into the provided string. */
-export function interpolate(template: string, values: any = {}): string {
-  _.merge(values, { API_ROOT_URL });
-  _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
-  const compiled = _.template(template);
-  const result = compiled(values);
-
-  return result;
-}
-
-/** Compare two values for sorting purposes. */
-export function compare(
-  a: number | string,
-  b: number | string,
-  ascending: boolean
-): number {
-  return (a < b ? -1 : 1) * (ascending ? 1 : -1);
-}
+    it('can sort descending', () => {
+      const result = compare(2, 3, false);
+      expect(result).toEqual(1);
+    });
+  });
+});

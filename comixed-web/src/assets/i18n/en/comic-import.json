@@ -11,6 +11,13 @@
       "1000-files": "1000 files"
     }
   },
+  "import-comic-files": {
+    "header": {
+      "cover": "Cover Image",
+      "filename": "Filename",
+      "size": "File Size (kb)"
+    },
+  },
   "send-comic-files": {
     "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
     "effect-failure-detail": "Failed to send comic files for import."
