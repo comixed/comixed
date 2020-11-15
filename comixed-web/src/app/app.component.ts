@@ -22,6 +22,7 @@ import { LoggerService } from '@angular-ru/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { User } from '@app/user/models/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
+import { selectBusyState } from '@app/core/selectors/busy.selectors';
 
 @Component({
   selector: 'cx-root',
@@ -30,6 +31,7 @@ import { loadCurrentUser } from '@app/user/actions/user.actions';
 })
 export class AppComponent implements OnInit {
   user: User = null;
+  busy = false;
 
   constructor(private logger: LoggerService, private store: Store<any>) {
     this.logger.trace('Subscribing to user changes');
@@ -37,6 +39,9 @@ export class AppComponent implements OnInit {
       this.logger.debug('User updated:', user);
       this.user = user;
     });
+    this.store
+      .select(selectBusyState)
+      .subscribe(state => (this.busy = state.enabled));
   }
 
   ngOnInit(): void {

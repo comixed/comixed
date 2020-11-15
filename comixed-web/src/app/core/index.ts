@@ -16,8 +16,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { Params } from '@angular/router';
+import { routerReducer, RouterReducerState } from '@ngrx/router-store';
+import { ActionReducerMap } from '@ngrx/store';
+import {
+  BUSY_FEATURE_KEY,
+  BusyState,
+  reducer as busyReducer
+} from '@app/core/reducers/busy.reducer';
+
 export { TokenService } from '@app/core/services/token.service';
 export { AlertService } from '@app/core/services/alert.service';
 export { ConfirmationService } from '@app/core/services/confirmation.service';
+
 export { ApiResponse } from '@app/core/models/api-response';
 export * from '@app/core/core.functions';
+export { PageClickEvent } from '@app/core/models/event/page-click-event';
+
+interface RouterStateUrl {
+  url: string;
+  params: Params;
+  queryParams: Params;
+}
+
+export interface CoreModuleState {
+  router: RouterReducerState<RouterStateUrl>;
+  [BUSY_FEATURE_KEY]: BusyState;
+}
+
+export type ModuleState = CoreModuleState;
+
+export const reducers: ActionReducerMap<CoreModuleState> = {
+  router: routerReducer,
+  [BUSY_FEATURE_KEY]: busyReducer
+};
