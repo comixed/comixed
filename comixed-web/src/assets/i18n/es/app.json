@@ -4,9 +4,11 @@
     "general-effect-failure-detail": "A general error has occurred."
   },
   "button": {
+    "deselect": "Deselect",
     "login": "Login",
     "logout": "Logout",
     "no": "No",
+    "select": "Select",
     "submit": "Submit",
     "yes": "Yes"
   }
