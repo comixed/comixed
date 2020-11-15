@@ -15,15 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+import { Params } from '@angular/router';
+import { routerReducer, RouterReducerState } from '@ngrx/router-store';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  ComicImportState,
+  reducer as comicImportReducer
+} from './reducers/comic-import.reducer';
+import { ActionReducerMap } from '@ngrx/store';
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
-
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/comic-import.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
+interface RouterStateUrl {
+  url: string;
+  params: Params;
+  queryParams: Params;
 }
+
+export interface UserModuleState {
+  router: RouterReducerState<RouterStateUrl>;
+  [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
+}
+
+export type ModuleState = UserModuleState;
+
+export const reducers: ActionReducerMap<UserModuleState> = {
+  router: routerReducer,
+  [COMIC_IMPORT_FEATURE_KEY]: comicImportReducer
+};
