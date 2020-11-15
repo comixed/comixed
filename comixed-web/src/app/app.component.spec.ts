@@ -23,17 +23,18 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialUserState,
-  USER_FEATURE_KEY,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import {
   BUSY_FEATURE_KEY,
-  initialState as initialBusyState,
+  initialState as initialBusyState
 } from '@app/core/reducers/busy.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AppComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
-    [BUSY_FEATURE_KEY]: initialBusyState,
+    [BUSY_FEATURE_KEY]: initialBusyState
   };
 
   let component: AppComponent;
@@ -42,9 +43,13 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, LoggerModule.forRoot()],
+      imports: [
+        RouterTestingModule,
+        TranslateModule.forRoot(),
+        LoggerModule.forRoot()
+      ],
       declarations: [AppComponent],
-      providers: [provideMockStore({ initialState })],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);

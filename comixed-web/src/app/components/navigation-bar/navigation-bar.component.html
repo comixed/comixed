@@ -1,10 +1,11 @@
 <mat-toolbar class="cx-width-100">
-  <button mat-icon-button>
-    <mat-icon>menu</mat-icon>
+  <button mat-icon-button
+          [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
   </button>
   <span class="spacer">ComiXed</span>
   <span *ngIf="!!user">
-    {{"app.logged-in"|translate:{email:user.email} }}
+    {{"app.logged-in"|translate:{email: user.email} }}
     <button mat-icon-button
             color="warn"
             [matTooltip]="'user.login-user.logout-tooltip'|translate"
@@ -20,3 +21,20 @@
     <mat-icon>login</mat-icon>
   </button>
 </mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button *ngIf="!isAdmin"
+          mat-menu-item
+          [matMenuTriggerFor]="adminMenu">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <span>{{"menu.admin-menu.root"|translate}}</span>
+  </button>
+</mat-menu>
+
+<mat-menu #adminMenu="matMenu">
+  <button mat-menu-item
+          [routerLink]="['admin', 'import']">
+    <mat-icon>import_export</mat-icon>
+    <span>{{"menu.admin-menu.import-comic-files"|translate}}</span>
+  </button>
+</mat-menu>

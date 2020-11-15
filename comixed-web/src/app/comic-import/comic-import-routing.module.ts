@@ -16,31 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import { Params } from '@angular/router';
-import { ActionReducerMap } from '@ngrx/store';
-import {
-  reducer as userReducer,
-  USER_FEATURE_KEY,
-  UserState
-} from './reducers/user.reducer';
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
 
-export * from '@app/user/user.functions';
+const routes: Routes = [
+  {
+    path: 'admin/import',
+    component: ImportComicsComponent
+  }
+];
 
-interface RouterStateUrl {
-  url: string;
-  params: Params;
-  queryParams: Params;
-}
-
-export interface UserModuleState {
-  router: RouterReducerState<RouterStateUrl>;
-  [USER_FEATURE_KEY]: UserState;
-}
-
-export type ModuleState = UserModuleState;
-
-export const reducers: ActionReducerMap<UserModuleState> = {
-  router: routerReducer,
-  [USER_FEATURE_KEY]: userReducer
-};
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class ComicImportRoutingModule {}

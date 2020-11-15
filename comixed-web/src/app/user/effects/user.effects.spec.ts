@@ -28,16 +28,18 @@ import {
   loadCurrentUser,
   loadCurrentUserFailed,
   loginUser,
-  loginUserFailed, logoutUser,
-  userLoggedIn, userLoggedOut
+  loginUserFailed,
+  logoutUser,
+  userLoggedIn,
+  userLoggedOut,
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/logger';
 import { AlertService, ApiResponse, TokenService } from '@app/core';
-import { CoreModule } from '@app/core/core.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('UserEffects', () => {
   const USER = USER_READER;
@@ -52,7 +54,11 @@ describe('UserEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, LoggerModule.forRoot(), TranslateModule.forRoot()],
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatSnackBarModule,
+      ],
       providers: [
         UserEffects,
         provideMockActions(() => actions$),
@@ -60,10 +66,10 @@ describe('UserEffects', () => {
           provide: UserService,
           useValue: {
             loadCurrentUser: jasmine.createSpy('UserService.loadCurrentUser()'),
-            loginUser: jasmine.createSpy('userService.loginUser()')
-          }
-        }
-      ]
+            loginUser: jasmine.createSpy('userService.loginUser()'),
+          },
+        },
+      ],
     });
 
     effects = TestBed.inject(UserEffects);
@@ -83,7 +89,7 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse: ApiResponse<User> = {
         success: true,
-        result: USER
+        result: USER,
       };
       const action = loadCurrentUser();
       const outcome = currentUserLoaded({ user: USER });
@@ -97,7 +103,7 @@ describe('UserEffects', () => {
 
     it('fires an action on failure', () => {
       const serviceResponse: ApiResponse<User> = {
-        success: false
+        success: false,
       };
       const action = loadCurrentUser();
       const outcome = loadCurrentUserFailed();
@@ -139,7 +145,7 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
         success: true,
-        result: { email: USER.email, token: AUTH_TOKEN }
+        result: { email: USER.email, token: AUTH_TOKEN },
       } as ApiResponse<LoginResponse>;
       const action = loginUser({ email: USER.email, password: PASSWORD });
       const outcome1 = userLoggedIn({ token: AUTH_TOKEN });
@@ -199,9 +205,9 @@ describe('UserEffects', () => {
       const action = logoutUser();
       const outcome = userLoggedOut();
 
-      actions$ = hot('-a', {a: action});
+      actions$ = hot('-a', { a: action });
 
-      const expected = hot('-b', {b: outcome});
+      const expected = hot('-b', { b: outcome });
       expect(effects.logoutUser$).toBeObservable(expected);
       expect(tokenService.clearAuthToken).toHaveBeenCalled();
     });

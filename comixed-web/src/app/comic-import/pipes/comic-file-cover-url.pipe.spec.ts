@@ -21,7 +21,7 @@ import { COMIC_FILE_1 } from '@app/comic-import/comic-import.fixtures';
 import { API_ROOT_URL } from '@app/core';
 
 describe('ComicFileCoverUrlPipe', () => {
-  let pipe = new ComicFileCoverUrlPipe();
+  const pipe = new ComicFileCoverUrlPipe();
 
   it('returns the url for given page', () => {
     expect(pipe.transform(COMIC_FILE_1)).toEqual(

@@ -23,12 +23,22 @@ import { LoggerModule } from '@angular-ru/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { CoreModule } from '@app/core/core.module';
 import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser } from '@app/user/actions/user.actions';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY,
+} from '@app/user/reducers/user.reducer';
+import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('NavigationBarComponent', () => {
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
+  };
+
   let component: NavigationBarComponent;
   let fixture: ComponentFixture<NavigationBarComponent>;
   let store: MockStore<any>;
@@ -38,13 +48,14 @@ describe('NavigationBarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        CoreModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
-        LoggerModule.forRoot()
+        LoggerModule.forRoot(),
+        MatDialogModule,
+        MatMenuModule,
       ],
       declarations: [NavigationBarComponent],
-      providers: [provideMockStore({})]
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationBarComponent);
@@ -73,9 +84,10 @@ describe('NavigationBarComponent', () => {
 
   describe('on logout clicked', () => {
     beforeEach(() => {
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirm: Confirmation) => confirm.confirm()
-      );
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.confirm());
       component.onLogout();
     });
 
@@ -85,6 +97,28 @@ describe('NavigationBarComponent', () => {
 
     it('sends the user to the login page', () => {
       expect(router.navigate).toHaveBeenCalledWith(['login']);
+    });
+  });
+
+  describe('when an admin user is logged in', () => {
+    beforeEach(() => {
+      component.isAdmin = false;
+      component.user = USER_ADMIN;
+    });
+
+    it('sets the admin flag', () => {
+      expect(component.isAdmin).toBeTruthy();
+    });
+  });
+
+  describe('when an admin reader is logged in', () => {
+    beforeEach(() => {
+      component.isAdmin = true;
+      component.user = USER_READER;
+    });
+
+    it('clears the admin flag', () => {
+      expect(component.isAdmin).toBeFalsy();
     });
   });
 });

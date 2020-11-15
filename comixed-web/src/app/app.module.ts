@@ -34,7 +34,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import {
   TranslateCompiler,
   TranslateLoader,
-  TranslateModule
+  TranslateModule,
 } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '@app/app.translate';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
@@ -43,11 +43,18 @@ import { LoggerLevel, LoggerModule } from '@angular-ru/logger';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ComicImportModule } from '@app/comic-import/comic-import.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  _MatMenuDirectivesModule,
+  MatMenuModule,
+} from '@angular/material/menu';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavigationBarComponent],
   imports: [
     UserModule,
+    ComicImportModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -61,21 +68,24 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        deps: [HttpClient],
       },
       compiler: {
         provide: TranslateCompiler,
-        useClass: TranslateMessageFormatCompiler
+        useClass: TranslateMessageFormatCompiler,
       },
-      defaultLanguage: 'en'
+      defaultLanguage: 'en',
     }),
     MatButtonModule,
     MatFormFieldModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    _MatMenuDirectivesModule,
+    MatMenuModule,
   ],
   providers: [
-    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
+    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }],
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

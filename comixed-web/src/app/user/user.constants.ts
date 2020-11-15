@@ -18,5 +18,17 @@
 
 import { API_ROOT_URL } from '@app/core';
 
+export const ROLE_NAME_READER = 'reader';
+export const ROLE_NAME_ADMIN = 'admin';
+
 export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
 export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate-token`;
+
+// user preferences
+export const USER_PREFERENCE_IMPORT_ROOT_DIRECTORY =
+  'comic-files.import.root-directory';
+export const USER_PREFERENCE_IMPORT_MAXIMUM = 'comic-files.import.maximum';
+export const USER_PREFERENCE_IGNORE_METADATA =
+  'comic-files.import.ignore-metadata';
+export const USER_PREFERENCE_DELETE_BLOCKED_PAGES =
+  'comic-files.import.delete-blocked-pages';
