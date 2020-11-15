@@ -1,2 +1,10 @@
+<div *ngIf="busy"
+     class="cx-busy-overlay cx-width-100 cx-height-100">
+  <div class="cx-centered">
+    <mat-progress-spinner diameter="100"
+                          mode="indeterminate"
+                          color="accent"></mat-progress-spinner>
+  </div>
+</div>
 <cx-navigation-bar [user]="user"></cx-navigation-bar>
 <router-outlet></router-outlet>
