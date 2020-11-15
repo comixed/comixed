@@ -1,0 +1,28 @@
+<mat-card *ngIf="file">
+  <mat-card-title class="cx-text-nowrap"
+                  [matTooltip]="file.baseFilename">{{file.baseFilename}}</mat-card-title>
+  <mat-card-content>
+    <cx-comic-page [imageUrl]="file|comicFileCoverUrl"></cx-comic-page>
+  </mat-card-content>
+  <mat-card-footer>
+    <p>{{file.filename}}</p>
+    <p>{{"import-comic-files.text.file-size"|translate:{size: file.size} }}</p>
+    <p *ngIf="selected">{{"import-comic-files.text.selected-for-import"|translate}}</p>
+  </mat-card-footer>
+  <mat-card-actions>
+    <button *ngIf="selected"
+            mat-icon-button
+            color="warn"
+            (click)="onSelectFile(false)">
+      <mat-icon>remove</mat-icon>
+      <span>{{"button.deselect"|translate}}</span>
+    </button>
+    <button *ngIf="!selected"
+            mat-icon-button
+            color="primary"
+            (click)="onSelectFile(true)">
+      <mat-icon>add_box</mat-icon>
+      <span>{{"button.select"|translate}}</span>
+    </button>
+  </mat-card-actions>
+</mat-card>
