@@ -1,0 +1,10 @@
+{
+  "load-comic-files": {
+    "effect-success-detail": "Found {count, plural, =1{one comic file} other{# comic files}}.",
+    "effect-failure-detail": "Failed to find any comic files.",
+  },
+  "send-comic-files": {
+    "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
+    "effect-failure-detail": "Failed to send comic files for import."
+  }
+}
