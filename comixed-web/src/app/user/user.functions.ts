@@ -16,31 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import { Params } from '@angular/router';
-import { ActionReducerMap } from '@ngrx/store';
-import {
-  reducer as userReducer,
-  USER_FEATURE_KEY,
-  UserState
-} from './reducers/user.reducer';
+import { Preference } from '@app/user/models/preference';
 
-export * from '@app/user/user.functions';
-
-interface RouterStateUrl {
-  url: string;
-  params: Params;
-  queryParams: Params;
+/** Find a specific user preference. */
+export function getUserPreference(
+  preferences: Preference[],
+  name: string,
+  defaultValue: string
+): string {
+  const found = preferences.find(preference => preference.name === name);
+  if (!found) {
+    return defaultValue;
+  }
+  return found.value;
 }
-
-export interface UserModuleState {
-  router: RouterReducerState<RouterStateUrl>;
-  [USER_FEATURE_KEY]: UserState;
-}
-
-export type ModuleState = UserModuleState;
-
-export const reducers: ActionReducerMap<UserModuleState> = {
-  router: routerReducer,
-  [USER_FEATURE_KEY]: userReducer
-};

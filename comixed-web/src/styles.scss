@@ -1,3 +1,5 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 html,
 body {
   height: 100%;
@@ -9,15 +11,52 @@ body {
 }
 
 // component sizes
+.cx-width-20 {
+  width: 20%;
+}
+
 .cx-width-50 {
   width: 50%;
+}
+
+.cx-width-80 {
+  width: 80%;
 }
 
 .cx-width-100 {
   width: 100%;
 }
 
+.cx-height-100 {
+  height: 100vh;
+}
+
+// padding
+
+.cx-padding-left-5 {
+  padding-left: 5px;
+}
+
+.cx-padding-right-15 {
+  padding-right: 15px;
+}
+
+// table column widths
+
+$cx-column-small: 50px;
+$cx-column-medium: 150px;
+$cx-column-large: 325px;
+
+// text layout
+
+.cx-text-nowrap {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 // component position
+
 .cx-centered {
   position: absolute !important;
   top: 50%;

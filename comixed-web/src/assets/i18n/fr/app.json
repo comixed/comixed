@@ -5,11 +5,19 @@
   },
   "button": {
     "deselect": "Deselect",
+    "load": "Load",
     "login": "Login",
     "logout": "Logout",
     "no": "No",
     "select": "Select",
+    "start": "Start",
     "submit": "Submit",
     "yes": "Yes"
+  },
+  "menu": {
+    "admin-menu": {
+      "root": "Admin",
+      "import-comic-files": "Import Comics"
+    }
   }
 }

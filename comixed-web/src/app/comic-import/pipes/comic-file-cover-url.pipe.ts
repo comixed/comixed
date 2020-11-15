@@ -24,9 +24,9 @@ import { API_ROOT_URL } from '@app/core';
   name: 'comicFileCoverUrl',
 })
 export class ComicFileCoverUrlPipe implements PipeTransform {
-  transform(comic_file: ComicFile): string {
+  transform(comicFile: ComicFile): string {
     return `${API_ROOT_URL}/files/import/cover?filename=${encodeURIComponent(
-      comic_file.filename
+      comicFile.filename
     )}`;
   }
 }

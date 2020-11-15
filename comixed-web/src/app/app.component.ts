@@ -23,6 +23,7 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { User } from '@app/user/models/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-root',
@@ -33,7 +34,12 @@ export class AppComponent implements OnInit {
   user: User = null;
   busy = false;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  constructor(
+    private logger: LoggerService,
+    private translateService: TranslateService,
+    private store: Store<any>
+  ) {
+    this.translateService.use('en');
     this.logger.trace('Subscribing to user changes');
     this.store.select(selectUser).subscribe(user => {
       this.logger.debug('User updated:', user);
