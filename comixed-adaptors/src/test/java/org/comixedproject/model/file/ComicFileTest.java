@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class FileDetailsTest {
+public class ComicFileTest {
   private static final long TEST_FILE_SIZE = 32767L;
   private static final String TEST_WINDOWS_FILENAME =
       "C:\\Users\\comixeduser\\Downloads\\MyComicFile.cbz";
@@ -34,19 +34,19 @@ public class FileDetailsTest {
   @Test
   public void testCreateInstanceConvertsWindowsFilenames()
       throws IllegalArgumentException, IllegalAccessException {
-    FileDetails fileDetails = new FileDetails(TEST_WINDOWS_FILENAME, TEST_FILE_SIZE);
+    ComicFile comicFile = new ComicFile(TEST_WINDOWS_FILENAME, TEST_FILE_SIZE);
 
-    assertEquals(TEST_ENCODED_WINDOWS_FILENAME, fileDetails.getFilename());
-    assertEquals(TEST_FILE_SIZE, fileDetails.getSize());
-    assertEquals(TEST_BASE_FILENAME, fileDetails.getBaseFilename());
+    assertEquals(TEST_ENCODED_WINDOWS_FILENAME, comicFile.getFilename());
+    assertEquals(TEST_FILE_SIZE, comicFile.getSize());
+    assertEquals(TEST_BASE_FILENAME, comicFile.getBaseFilename());
   }
 
   @Test
   public void testCreateInstance() throws IllegalArgumentException, IllegalAccessException {
-    FileDetails fileDetails = new FileDetails(TEST_FILENAME, TEST_FILE_SIZE);
+    ComicFile comicFile = new ComicFile(TEST_FILENAME, TEST_FILE_SIZE);
 
-    assertEquals(TEST_FILENAME, fileDetails.getFilename());
-    assertEquals(TEST_FILE_SIZE, fileDetails.getSize());
-    assertEquals(TEST_BASE_FILENAME, fileDetails.getBaseFilename());
+    assertEquals(TEST_FILENAME, comicFile.getFilename());
+    assertEquals(TEST_FILE_SIZE, comicFile.getSize());
+    assertEquals(TEST_BASE_FILENAME, comicFile.getBaseFilename());
   }
 }
