@@ -2,6 +2,14 @@
   "load-comic-files": {
     "effect-success-detail": "Found {count, plural, =1{one comic file} other{# comic files}}.",
     "effect-failure-detail": "Failed to find any comic files.",
+    "directory-placeholder": "Root Directory To Search...",
+    "maximum": {
+      "all-files": "All files",
+      "10-files": "10 files",
+      "50-files": "50 files",
+      "100-files": "100 files",
+      "1000-files": "1000 files"
+    }
   },
   "send-comic-files": {
     "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
