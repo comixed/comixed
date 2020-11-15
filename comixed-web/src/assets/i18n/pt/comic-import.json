@@ -17,6 +17,10 @@
       "filename": "Filename",
       "size": "File Size (kb)"
     },
+    "text": {
+      "selected-for-import": "This file will be imported.",
+      "file-size": "{size} bytes"
+    },
   },
   "send-comic-files": {
     "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
