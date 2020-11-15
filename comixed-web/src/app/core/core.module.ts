@@ -23,6 +23,7 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { CoverImageComponent } from './components/comic-page/comic-page.component';
 import { StoreModule } from '@ngrx/store';
 import {
   BUSY_FEATURE_KEY,
@@ -31,7 +32,7 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
-  declarations: [ConfirmationComponent],
+  declarations: [ConfirmationComponent, CoverImageComponent],
   imports: [
     CommonModule,
     StoreModule.forFeature(BUSY_FEATURE_KEY, busyReducer),
@@ -45,7 +46,8 @@ import { EffectsModule } from '@ngrx/effects';
     MatSnackBarModule,
     MatDialogModule,
     MatIconModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    CoverImageComponent
   ],
   providers: []
 })
