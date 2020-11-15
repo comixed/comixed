@@ -24,14 +24,17 @@ import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
+import { ROLE_NAME_ADMIN } from '@app/user/user.constants';
 
 @Component({
   selector: 'cx-navigation-bar',
   templateUrl: './navigation-bar.component.html',
-  styleUrls: ['./navigation-bar.component.scss']
+  styleUrls: ['./navigation-bar.component.scss'],
 })
 export class NavigationBarComponent {
-  @Input() user: User;
+  private _user: User;
+
+  isAdmin = false;
 
   constructor(
     private logger: LoggerService,
@@ -40,6 +43,17 @@ export class NavigationBarComponent {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {}
+
+  @Input()
+  set user(user: User) {
+    this._user = user;
+    this.isAdmin =
+      !!user && user.roles.some((role) => role.name === ROLE_NAME_ADMIN);
+  }
+
+  get user(): User {
+    return this._user;
+  }
 
   onLogin(): void {
     this.logger.trace('Navigating to the login page');
@@ -57,7 +71,7 @@ export class NavigationBarComponent {
         this.logger.debug('User logged out');
         this.store.dispatch(logoutUser());
         this.router.navigate(['login']);
-      }
+      },
     });
   }
 }

@@ -12,6 +12,8 @@
     }
   },
   "import-comic-files": {
+    "tab-title": "Import Comics",
+    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
     "header": {
       "cover": "Cover Image",
       "filename": "Filename",
@@ -21,6 +23,12 @@
       "selected-for-import": "This file will be imported.",
       "file-size": "{size} bytes"
     },
+    "label": {
+      "ignore-metadata": "Ignore any metadata",
+      "delete-blocked-pages": "Mark blocked pages as delete"
+    },
+    "confirm-start-title": "Import Comic Files?",
+    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
   },
   "send-comic-files": {
     "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",

@@ -18,13 +18,14 @@
 
 import { User } from './models/user';
 import { Role } from '@app/user/models/role';
+import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
 
 export const ROLE_READER: Role = {
-  name: 'READER'
+  name: ROLE_NAME_READER,
 };
 
 export const ROLE_ADMIN: Role = {
-  name: 'ADMIN'
+  name: ROLE_NAME_ADMIN,
 };
 
 export const USER_READER: User = {
@@ -35,7 +36,7 @@ export const USER_READER: User = {
   ).getTime(),
   last_login_date: new Date().getTime(),
   roles: [ROLE_READER],
-  preferences: []
+  preferences: [],
 };
 
 export const USER_ADMIN: User = {
@@ -46,7 +47,7 @@ export const USER_ADMIN: User = {
   ).getTime(),
   last_login_date: new Date().getTime(),
   roles: [ROLE_ADMIN],
-  preferences: []
+  preferences: [],
 };
 
 export const USER_BLOCKED: User = {
@@ -57,5 +58,5 @@ export const USER_BLOCKED: User = {
   ).getTime(),
   last_login_date: new Date().getTime(),
   roles: [],
-  preferences: []
+  preferences: [],
 };
