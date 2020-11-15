@@ -23,11 +23,19 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { StoreModule } from '@ngrx/store';
+import {
+  BUSY_FEATURE_KEY,
+  reducer as busyReducer
+} from '@app/core/reducers/busy.reducer';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [ConfirmationComponent],
   imports: [
     CommonModule,
+    StoreModule.forFeature(BUSY_FEATURE_KEY, busyReducer),
+    EffectsModule.forFeature([]),
     MatSnackBarModule,
     MatDialogModule,
     MatIconModule,
