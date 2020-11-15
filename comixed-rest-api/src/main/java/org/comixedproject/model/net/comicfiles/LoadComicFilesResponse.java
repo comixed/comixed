@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,40 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.file;
+package org.comixedproject.model.net.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import liquibase.util.file.FilenameUtils;
+import com.fasterxml.jackson.annotation.JsonView;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import org.comixedproject.model.file.ComicFile;
+import org.comixedproject.views.View;
 
-/**
- * <code>FileDetails</code> contains the basic information for a comic file during the import
- * process.
- *
- * @author Darryl L. Pierce
- */
-public class FileDetails {
-  private static int count = 0;
-
-  @JsonProperty("id")
+@AllArgsConstructor
+public class LoadComicFilesResponse {
+  @JsonProperty("files")
   @Getter
-  private int id = ++count;
-
-  @JsonProperty("filename")
-  @Getter
-  private String filename;
-
-  @JsonProperty("baseFilename")
-  @Getter
-  private String baseFilename;
-
-  @JsonProperty("size")
-  @Getter
-  private long size;
-
-  public FileDetails(final String filename, final long size) {
-    this.filename = filename.replace("\\", "/");
-    this.baseFilename = FilenameUtils.getName(this.filename);
-    this.size = size;
-  }
+  @Setter
+  @JsonView(View.ComicFileList.class)
+  private List<ComicFile> files = new ArrayList<>();
 }

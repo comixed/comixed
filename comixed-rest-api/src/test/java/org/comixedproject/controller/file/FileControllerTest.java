@@ -27,10 +27,11 @@ import java.util.List;
 import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandlerException;
-import org.comixedproject.model.file.FileDetails;
+import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
+import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.QueueComicsWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
@@ -68,7 +69,7 @@ public class FileControllerTest {
 
   @InjectMocks private FileController controller;
   @Mock private FileService fileService;
-  @Mock private List<FileDetails> fileDetailsList;
+  @Mock private List<ComicFile> comicFileList;
   @Mock private ObjectFactory<QueueComicsWorkerTask> queueComicsWorkerTaskObjectFactory;
   @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
   @Mock private TaskManager taskManager;
@@ -88,13 +89,13 @@ public class FileControllerTest {
   @Test
   public void testGetAllComicsUnderNoLimit() throws IOException, JSONException {
     Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
-        .thenReturn(fileDetailsList);
+        .thenReturn(comicFileList);
 
-    final ApiResponse<List<FileDetails>> response =
-        controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_NO_LIMIT));
+    final ApiResponse<LoadComicFilesResponse> response =
+        controller.loadComicFiles(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_NO_LIMIT));
 
     assertNotNull(response);
-    assertSame(fileDetailsList, response.getResult());
+    assertSame(comicFileList, response.getResult().getFiles());
 
     Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_NO_LIMIT);
   }
@@ -102,13 +103,13 @@ public class FileControllerTest {
   @Test
   public void testGetAllComicsUnder() throws IOException, JSONException {
     Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
-        .thenReturn(fileDetailsList);
+        .thenReturn(comicFileList);
 
-    final ApiResponse<List<FileDetails>> response =
-        controller.getAllComicsUnder(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_LIMIT));
+    final ApiResponse<LoadComicFilesResponse> response =
+        controller.loadComicFiles(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_LIMIT));
 
     assertNotNull(response);
-    assertSame(fileDetailsList, response.getResult());
+    assertSame(comicFileList, response.getResult().getFiles());
 
     Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_LIMIT);
   }

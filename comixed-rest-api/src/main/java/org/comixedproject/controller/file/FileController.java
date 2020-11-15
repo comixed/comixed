@@ -18,6 +18,7 @@
 
 package org.comixedproject.controller.file;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -27,16 +28,17 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.controller.comic.ComicController;
 import org.comixedproject.handlers.ComicFileHandlerException;
-import org.comixedproject.model.file.FileDetails;
+import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
+import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.QueueComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.ComicFileUtils;
-import org.json.JSONException;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -73,8 +75,9 @@ public class FileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.ComicFileList.class)
   @AuditableEndpoint
-  public ApiResponse<List<FileDetails>> getAllComicsUnder(
+  public ApiResponse<LoadComicFilesResponse> loadComicFiles(
       @RequestBody() final GetAllComicsUnderRequest request) throws IOException {
     String directory = request.getDirectory();
     Integer maximum = request.getMaximum();
@@ -84,11 +87,11 @@ public class FileController {
         directory,
         maximum > 0 ? maximum : "UNLIMITED");
 
-    return new ApiResponse<List<FileDetails>>(
-        this.fileService.getAllComicsUnder(directory, maximum));
+    return new ApiResponse<>(
+        new LoadComicFilesResponse(this.fileService.getAllComicsUnder(directory, maximum)));
   }
 
-  private void getAllFilesUnder(File root, List<FileDetails> result) throws IOException {
+  private void getAllFilesUnder(File root, List<ComicFile> result) throws IOException {
     for (File file : root.listFiles()) {
       if (file.isDirectory()) {
         log.debug("Searching directory: " + file.getAbsolutePath());
@@ -98,7 +101,7 @@ public class FileController {
         if (ComicFileUtils.isComicFile(file)
             && (this.comicService.findByFilename(file.getCanonicalPath()) == null)) {
           log.debug("Adding file: " + file.getCanonicalPath());
-          result.add(new FileDetails(file.getCanonicalPath(), file.length()));
+          result.add(new ComicFile(file.getCanonicalPath(), file.length()));
         }
       }
     }

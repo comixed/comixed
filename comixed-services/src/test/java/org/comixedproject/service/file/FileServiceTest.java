@@ -28,7 +28,7 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.file.FileDetails;
+import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,7 +103,7 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnderInvalidDirectory() throws IOException {
-    final List<FileDetails> result =
+    final List<ComicFile> result =
         service.getAllComicsUnder(TEST_ROOT_DIRECTORY + "/nonexistent", TEST_LIMIT);
 
     assertNotNull(result);
@@ -112,7 +112,7 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnderWithFileSupplied() throws IOException {
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_COMIC_ARCHIVE, TEST_LIMIT);
+    final List<ComicFile> result = service.getAllComicsUnder(TEST_COMIC_ARCHIVE, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -122,7 +122,7 @@ public class FileServiceTest {
   public void testGetAllComicsAlreadyImported() throws IOException {
     Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(comic);
 
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
+    final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -133,7 +133,7 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnderWithLimit() throws IOException {
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
+    final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -142,7 +142,7 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnder() throws IOException {
-    final List<FileDetails> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
+    final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

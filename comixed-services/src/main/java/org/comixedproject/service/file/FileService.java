@@ -28,7 +28,7 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.file.FileDetails;
+import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.service.task.TaskService;
@@ -70,12 +70,12 @@ public class FileService {
     return result;
   }
 
-  public List<FileDetails> getAllComicsUnder(final String rootDirectory, final Integer maximum)
+  public List<ComicFile> getAllComicsUnder(final String rootDirectory, final Integer maximum)
       throws IOException {
     log.debug("Getting comics below root: {}", rootDirectory);
 
     final File rootFile = new File(rootDirectory);
-    final List<FileDetails> result = new ArrayList<>();
+    final List<ComicFile> result = new ArrayList<>();
 
     if (rootFile.exists()) {
       if (rootFile.isDirectory()) {
@@ -91,8 +91,7 @@ public class FileService {
   }
 
   private void loadFilesUnder(
-      final List<FileDetails> files, final File directory, final Integer maximum)
-      throws IOException {
+      final List<ComicFile> files, final File directory, final Integer maximum) throws IOException {
     log.debug("Loading files in directory: {}", directory);
     if (directory.listFiles() != null) {
       for (File file : directory.listFiles()) {
@@ -109,7 +108,7 @@ public class FileService {
 
             log.debug("Adding file: {} ({} bytes)", file.getAbsolutePath(), file.length());
 
-            files.add(new FileDetails(filePath, fileSize));
+            files.add(new ComicFile(filePath, fileSize));
           }
         }
       }
