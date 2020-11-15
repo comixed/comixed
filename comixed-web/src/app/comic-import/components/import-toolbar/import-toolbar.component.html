@@ -1,0 +1,25 @@
+<div class="cx-width-100">
+  <form [formGroup]="loadFilesForm">
+    <div class="cx-width-80">
+      <input id="directory"
+             matInput
+             formControlName="directory"
+             [placeholder]="'load-comic-files.directory-placeholder'|translate"
+             required>
+    </div>
+    <div class="cx-width-10">
+      <mat-select formControlName="maximum">
+        <mat-option *ngFor="let option of maximumOptions"
+                    [value]="option.value">{{option.label|translate}}</mat-option>
+      </mat-select>
+    </div>
+
+    <button mat-icon-button
+            color="primary"
+            [disabled]="!loadFilesForm.valid"
+            (click)="onLoadFiles()">
+      <mat-icon>search</mat-icon>
+      <span>{{"button.load"|translate}}</span></button>
+
+  </form>
+</div>
