@@ -48,6 +48,7 @@
     "messageformat": "^2.3.0",
     "ngx-translate-messageformat-compiler": "^4.8.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
+    "object-path": "^0.11.5",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "webpack": "5.4.0",
