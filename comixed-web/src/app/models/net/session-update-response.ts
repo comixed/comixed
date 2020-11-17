@@ -16,12 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+import { SessionUpdate } from '../session-update';
 
-export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
-export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
-export const HTTP_XML_REQUEST = 'XMLHttpRequest';
-
-export const SESSION_TIMEOUT = 5 * 60 * 60 * 1000;
-
-export const LOAD_SESSION_UPDATE_URL = `${API_ROOT_URL}/session/updates`;
+export interface SessionUpdateResponse {
+  update: SessionUpdate;
+}

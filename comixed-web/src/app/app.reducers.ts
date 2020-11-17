@@ -16,12 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+import { ActionReducerMap } from '@ngrx/store';
+import {
+  reducer as sessionReducer,
+  SESSION_FEATURE_KEY,
+  SessionState
+} from '@app/reducers/session.reducer';
 
-export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
-export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
-export const HTTP_XML_REQUEST = 'XMLHttpRequest';
+export interface AppState {
+  [SESSION_FEATURE_KEY]: SessionState;
+}
 
-export const SESSION_TIMEOUT = 5 * 60 * 60 * 1000;
+export type State = AppState;
 
-export const LOAD_SESSION_UPDATE_URL = `${API_ROOT_URL}/session/updates`;
+export const APP_REDUCERS: ActionReducerMap<State> = {
+  [SESSION_FEATURE_KEY]: sessionReducer
+};

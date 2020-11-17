@@ -34,7 +34,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import {
   TranslateCompiler,
   TranslateLoader,
-  TranslateModule,
+  TranslateModule
 } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '@app/app.translate';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
@@ -47,8 +47,10 @@ import { ComicImportModule } from '@app/comic-import/comic-import.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   _MatMenuDirectivesModule,
-  MatMenuModule,
+  MatMenuModule
 } from '@angular/material/menu';
+import { APP_REDUCERS } from '@app/app.reducers';
+import { SessionEffects } from '@app/effects/session.effects';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavigationBarComponent],
@@ -60,32 +62,32 @@ import {
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,
-    StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([AppEffects]),
+    StoreModule.forRoot(APP_REDUCERS, {}),
+    EffectsModule.forRoot([AppEffects, SessionEffects]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ minLevel: LoggerLevel.TRACE }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
+        deps: [HttpClient]
       },
       compiler: {
         provide: TranslateCompiler,
-        useClass: TranslateMessageFormatCompiler,
+        useClass: TranslateMessageFormatCompiler
       },
-      defaultLanguage: 'en',
+      defaultLanguage: 'en'
     }),
     MatButtonModule,
     MatFormFieldModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
     _MatMenuDirectivesModule,
-    MatMenuModule,
+    MatMenuModule
   ],
   providers: [
-    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }],
+    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

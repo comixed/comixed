@@ -19,5 +19,8 @@
       "root": "Admin",
       "import-comic-files": "Import Comics"
     }
+  },
+  "session": {
+    "load-effect-failure": "Unable to load user session"
   }
 }

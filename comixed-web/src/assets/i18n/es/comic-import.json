@@ -14,6 +14,7 @@
   "import-comic-files": {
     "tab-title": "Import Comics",
     "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
+    "busy-title": "There Are Comics Importing Now",
     "header": {
       "cover": "Cover Image",
       "filename": "Filename",

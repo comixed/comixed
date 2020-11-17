@@ -56,7 +56,7 @@ public class SessionController {
       final HttpSession httpSession, @RequestBody() final SessionUpdateRequest request) {
     UserSession userSession = null;
 
-    if (request.getReset()) {
+    if (Boolean.TRUE.equals(request.getReset())) {
       log.info("Resetting the user server-side session");
       userSession = new UserSession();
     } else {
