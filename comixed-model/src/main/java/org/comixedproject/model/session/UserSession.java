@@ -18,9 +18,19 @@
 
 package org.comixedproject.model.session;
 
+import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * <code>UserSession</code> represents the server-side details for a user's session.
  *
  * @author Darryl L. Pierce
  */
-public class UserSession {}
+public class UserSession implements Serializable {
+  @Getter @Setter private Integer importCount;
+
+  public void copyValues(final SessionUpdate sessionUpdate) {
+    this.importCount = sessionUpdate.getImportCount();
+  }
+}

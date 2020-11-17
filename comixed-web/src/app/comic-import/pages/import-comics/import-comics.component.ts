@@ -24,7 +24,7 @@ import { Store } from '@ngrx/store';
 import {
   selectComicFiles,
   selectComicFileSelections,
-  selectComicImportState,
+  selectComicImportState
 } from '@app/comic-import/selectors/comic-import.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@app/core';
@@ -35,14 +35,14 @@ import { filter } from 'rxjs/operators';
 import { getUserPreference } from '@app/user';
 import {
   USER_PREFERENCE_DELETE_BLOCKED_PAGES,
-  USER_PREFERENCE_IGNORE_METADATA,
+  USER_PREFERENCE_IGNORE_METADATA
 } from '@app/user/user.constants';
 import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'cx-import-comics',
   templateUrl: './import-comics.component.html',
-  styleUrls: ['./import-comics.component.scss'],
+  styleUrls: ['./import-comics.component.scss']
 })
 export class ImportComicsComponent implements OnInit, OnDestroy {
   filesSubscription: Subscription;
@@ -57,6 +57,7 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
   busy = false;
   ignoreMetadata = false;
   deleteBlockedPages = false;
+  importing = false;
 
   constructor(
     private logger: LoggerService,
@@ -70,8 +71,8 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
     );
     this.userSubscription = this.store
       .select(selectUser)
-      .pipe(filter((user) => !!user))
-      .subscribe((user) => {
+      .pipe(filter(user => !!user))
+      .subscribe(user => {
         this.ignoreMetadata =
           getUserPreference(
             user.preferences,
@@ -87,23 +88,24 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
       });
     this.filesSubscription = this.store
       .select(selectComicFiles)
-      .subscribe((files) => (this.files = files));
+      .subscribe(files => (this.files = files));
     this.selectedFilesSubscription = this.store
       .select(selectComicFileSelections)
-      .subscribe((selectedFiles) => {
+      .subscribe(selectedFiles => {
         this.selectedFiles = selectedFiles;
         this.currentFileSelected =
           !!this.currentFile && this.selectedFiles.includes(this.currentFile);
       });
     this.comicImportStateSubscription = this.store
       .select(selectComicImportState)
-      .subscribe((state) => {
+      .subscribe(state => {
         const busy = state.sending || state.loading;
         if (this.busy !== busy) {
           this.logger.debug('Setting busy state:', busy);
           this.busy = busy;
           this.store.dispatch(setBusyState({ enabled: busy }));
         }
+        this.importing = state.importing;
       });
   }
 
@@ -141,10 +143,10 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
           sendComicFiles({
             files: this.selectedFiles,
             ignoreMetadata: this.ignoreMetadata,
-            deleteBlockedPages: this.deleteBlockedPages,
+            deleteBlockedPages: this.deleteBlockedPages
           })
         );
-      },
+      }
     });
   }
 

@@ -19,26 +19,38 @@
 package org.comixedproject.service.user;
 
 import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 
 import org.comixedproject.model.session.SessionUpdate;
 import org.comixedproject.model.session.UserSession;
+import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.service.task.TaskService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SessionServiceTest {
   private static final Long TEST_TIMEOUT = 717L;
+  private static final Integer TEST_TASK_COUNT = 213;
 
   @InjectMocks private SessionService sessionService;
   @Mock private UserSession userSession;
+  @Mock private TaskService taskService;
 
   @Test
   public void testGetSessionUpdate() {
+    Mockito.when(taskService.getTaskCount(Mockito.any())).thenReturn(TEST_TASK_COUNT);
+
     final SessionUpdate result = sessionService.getSessionUpdate(userSession, TEST_TIMEOUT);
 
     assertNotNull(result);
+    assertTrue(result.getImportCount() > 0);
+
+    Mockito.verify(taskService, Mockito.times(1)).getTaskCount(TaskType.PROCESS_COMIC);
+    Mockito.verify(taskService, Mockito.times(1)).getTaskCount(TaskType.ADD_COMIC);
   }
 }

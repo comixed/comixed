@@ -19,7 +19,9 @@
 package org.comixedproject.service.task;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
@@ -46,16 +48,22 @@ public class TaskService {
   @Autowired private TaskRepository taskRepository;
   @Autowired private TaskAuditLogRepository taskAuditLogRepository;
 
+  private Map<Long, TaskType> runningTasks = new HashMap<>();
+
   /**
    * Returns the current number of records with the given task type.
    *
-   * @param taskType the task type
+   * @param targetTaskType the task type
    * @return the record count
    */
-  public int getTaskCount(final TaskType taskType) {
-    final int result = this.taskRepository.getTaskCount(taskType);
-    log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", taskType);
-    return result;
+  public int getTaskCount(final TaskType targetTaskType) {
+    final long result =
+        this.taskRepository.getTaskCount(targetTaskType)
+            + this.runningTasks.values().stream()
+                .filter(taskType -> taskType == targetTaskType)
+                .count();
+    log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", targetTaskType);
+    return (int) result;
   }
 
   /**
@@ -67,7 +75,7 @@ public class TaskService {
    */
   public List<TaskAuditLogEntry> getAuditLogEntriesAfter(final Date cutoff)
       throws ComiXedServiceException {
-    log.debug("Finding task audit log entries aftrr date: {}", cutoff);
+    log.debug("Finding task audit log entries after date: {}", cutoff);
 
     List<TaskAuditLogEntry> result = null;
     boolean done = false;
@@ -144,5 +152,9 @@ public class TaskService {
   public void clearTaskAuditLog() {
     log.debug("Clearing task audit log");
     this.taskAuditLogRepository.deleteAll();
+  }
+
+  public Map<Long, TaskType> getRunningTasks() {
+    return this.runningTasks;
   }
 }

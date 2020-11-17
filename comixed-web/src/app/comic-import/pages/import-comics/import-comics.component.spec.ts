@@ -20,25 +20,25 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportComicsComponent } from './import-comics.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   COMIC_IMPORT_FEATURE_KEY,
-  initialState as initialComicImportState,
+  initialState as initialComicImportState
 } from '@app/comic-import/reducers/comic-import.reducer';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   initialState as initialUserState,
-  USER_FEATURE_KEY,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  COMIC_FILE_4,
+  COMIC_FILE_4
 } from '@app/comic-import/comic-import.fixtures';
 import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
@@ -47,7 +47,7 @@ import { USER_ADMIN } from '@app/user/user.fixtures';
 import { User } from '@app/user/models/user';
 import {
   USER_PREFERENCE_DELETE_BLOCKED_PAGES,
-  USER_PREFERENCE_IGNORE_METADATA,
+  USER_PREFERENCE_IGNORE_METADATA
 } from '@app/user/user.constants';
 import { MatIconModule } from '@angular/material/icon';
 import { ImportToolbarComponent } from '@app/comic-import/components/import-toolbar/import-toolbar.component';
@@ -57,11 +57,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/comic-import/pipes/comic-file-cover-url.pipe';
+import { Title } from '@angular/platform-browser';
 
 describe('ImportComicsComponent', () => {
   const initialState = {
     [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState,
-    [USER_FEATURE_KEY]: initialUserState,
+    [USER_FEATURE_KEY]: initialUserState
   };
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
   const FILE = COMIC_FILE_3;
@@ -70,6 +71,8 @@ describe('ImportComicsComponent', () => {
   let fixture: ComponentFixture<ImportComicsComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
+  let title: Title;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -84,16 +87,16 @@ describe('ImportComicsComponent', () => {
         MatIconModule,
         MatInputModule,
         MatSelectModule,
-        MatTableModule,
+        MatTableModule
       ],
       declarations: [
         ImportComicsComponent,
         ImportToolbarComponent,
         ComicFileListComponent,
         ComicFileDetailsComponent,
-        ComicFileCoverUrlPipe,
+        ComicFileCoverUrlPipe
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportComicsComponent);
@@ -101,11 +104,24 @@ describe('ImportComicsComponent', () => {
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
+    title = TestBed.inject(Title);
+    spyOn(title, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('sets the page title', () => {
+      expect(title.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('loading user preferences', () => {
@@ -118,20 +134,20 @@ describe('ImportComicsComponent', () => {
         preferences: [
           {
             name: USER_PREFERENCE_IGNORE_METADATA,
-            value: `${IGNORE_METADATA}`,
+            value: `${IGNORE_METADATA}`
           },
           {
             name: USER_PREFERENCE_DELETE_BLOCKED_PAGES,
-            value: `${DELETE_BLOCKED_PAGES}`,
-          },
-        ],
+            value: `${DELETE_BLOCKED_PAGES}`
+          }
+        ]
       } as User;
       store.setState({
         ...initialState,
         [USER_FEATURE_KEY]: {
           ...initialUserState,
-          user,
-        },
+          user
+        }
       });
     });
 
@@ -152,8 +168,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            loading: true,
-          },
+            loading: true
+          }
         });
       });
 
@@ -175,8 +191,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            loading: false,
-          },
+            loading: false
+          }
         });
       });
 
@@ -200,8 +216,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            sending: true,
-          },
+            sending: true
+          }
         });
       });
 
@@ -223,8 +239,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            sending: false,
-          },
+            sending: false
+          }
         });
       });
 
@@ -289,8 +305,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            selections: [SELECTED_FILE],
-          },
+            selections: [SELECTED_FILE]
+          }
         });
         fixture.detectChanges();
       });
@@ -308,8 +324,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            selections: [SELECTED_FILE],
-          },
+            selections: [SELECTED_FILE]
+          }
         });
         fixture.detectChanges();
       });
@@ -327,8 +343,8 @@ describe('ImportComicsComponent', () => {
           ...initialState,
           [COMIC_IMPORT_FEATURE_KEY]: {
             ...initialComicImportState,
-            selections: [SELECTED_FILE],
-          },
+            selections: [SELECTED_FILE]
+          }
         });
         fixture.detectChanges();
       });
@@ -365,7 +381,7 @@ describe('ImportComicsComponent', () => {
         sendComicFiles({
           files: FILES,
           ignoreMetadata: IGNORE_METADATA,
-          deleteBlockedPages: DELETE_BLOCKED_PAGES,
+          deleteBlockedPages: DELETE_BLOCKED_PAGES
         })
       );
     });

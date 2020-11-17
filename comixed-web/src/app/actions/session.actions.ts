@@ -16,12 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+import { createAction, props } from '@ngrx/store';
+import { SessionUpdate } from '@app/models/session-update';
 
-export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
-export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
-export const HTTP_XML_REQUEST = 'XMLHttpRequest';
-
-export const SESSION_TIMEOUT = 5 * 60 * 60 * 1000;
-
-export const LOAD_SESSION_UPDATE_URL = `${API_ROOT_URL}/session/updates`;
+export const loadSessionUpdate = createAction(
+  '[Session] Load updates to the session',
+  props<{ reset: boolean; timeout: number }>()
+);
+export const sessionUpdateLoaded = createAction(
+  '[Session] Received the session update',
+  props<{ update: SessionUpdate }>()
+);
+export const loadSessionUpdateFailed = createAction(
+  '[Session] Failed to load the session update'
+);

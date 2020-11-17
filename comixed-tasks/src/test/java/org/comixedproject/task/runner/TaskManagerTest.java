@@ -20,8 +20,11 @@ package org.comixedproject.task.runner;
 
 import static junit.framework.TestCase.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
+import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.model.AbstractWorkerTask;
 import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
@@ -38,6 +41,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class TaskManagerTest {
   private static final String TEST_DESCRIPTION = "The task description";
   private static final Long TEST_PERSISTED_TASK_ID = 237L;
+  private static final TaskType TEST_PERSISTED_TASK_TYPE = TaskType.ADD_COMIC;
 
   @InjectMocks private TaskManager taskManager;
   @Mock private ThreadPoolTaskExecutor taskExecutor;
@@ -49,10 +53,15 @@ public class TaskManagerTest {
   @Mock private TaskAuditLogEntry logEntryRecord;
   @Mock private MonitorTaskQueueWorkerTask monitorTaskQueueWorkerTask;
 
+  private Map<Long, TaskType> runningTasks = new HashMap<>();
+
   @Before
   public void setUp() {
     Mockito.when(persistedTask.getId()).thenReturn(TEST_PERSISTED_TASK_ID);
-    taskManager.runningTasks.clear();
+    Mockito.when(persistedTask.getTaskType()).thenReturn(TEST_PERSISTED_TASK_TYPE);
+    Mockito.when(taskService.getRunningTasks()).thenReturn(runningTasks);
+
+    runningTasks.clear();
   }
 
   @Test
@@ -64,7 +73,9 @@ public class TaskManagerTest {
         new AbstractWorkerTask() {
           @Override
           public void startTask() throws WorkerTaskException {
-            assertFalse(taskManager.runningTasks.isEmpty());
+            assertTrue(runningTasks.containsKey(TEST_PERSISTED_TASK_ID));
+            assertTrue(runningTasks.containsValue(TEST_PERSISTED_TASK_TYPE));
+            Mockito.verify(taskService, Mockito.times(2)).getRunningTasks();
           }
 
           @Override
@@ -93,7 +104,7 @@ public class TaskManagerTest {
 
   @Test
   public void testRunTaskWithPersistedTaskAlreadyRunning() throws WorkerTaskException {
-    taskManager.runningTasks.add(TEST_PERSISTED_TASK_ID);
+    runningTasks.put(TEST_PERSISTED_TASK_ID, TEST_PERSISTED_TASK_TYPE);
 
     taskManager.runTask(workerTask, persistedTask);
 
@@ -124,7 +135,7 @@ public class TaskManagerTest {
     assertNotNull(logEntry.getEndTime());
     assertTrue(logEntry.getSuccessful());
     assertEquals(TEST_DESCRIPTION, logEntry.getDescription());
-    assertTrue(taskManager.runningTasks.isEmpty());
+    assertTrue(runningTasks.isEmpty());
 
     Mockito.verify(taskService, Mockito.times(1)).saveAuditLogEntry(logEntry);
   }
