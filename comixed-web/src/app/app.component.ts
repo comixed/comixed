@@ -24,6 +24,10 @@ import { User } from '@app/user/models/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
+import { loadSessionUpdate } from '@app/actions/session.actions';
+import { SESSION_TIMEOUT } from '@app/app.constants';
+import { selectUserSessionState } from '@app/selectors/session.selectors';
+import { setImportingComicsState } from '@app/comic-import/actions/comic-import.actions';
 
 @Component({
   selector: 'cx-root',
@@ -33,6 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit {
   user: User = null;
   busy = false;
+  sessionActive = false;
 
   constructor(
     private logger: LoggerService,
@@ -44,10 +49,33 @@ export class AppComponent implements OnInit {
     this.store.select(selectUser).subscribe(user => {
       this.logger.debug('User updated:', user);
       this.user = user;
+      if (!!this.user && !this.sessionActive) {
+        this.logger.debug('Getting first session update');
+        this.sessionActive = true;
+        this.store.dispatch(
+          loadSessionUpdate({ reset: true, timeout: SESSION_TIMEOUT })
+        );
+      } else if (!this.user && this.sessionActive) {
+        this.sessionActive = false;
+      }
     });
     this.store
       .select(selectBusyState)
       .subscribe(state => (this.busy = state.enabled));
+    this.store.select(selectUserSessionState).subscribe(state => {
+      if (!state.loading && state.initialized) {
+        this.logger.debug('Session state updated:', state);
+        this.store.dispatch(
+          setImportingComicsState({ importing: state.importCount !== 0 })
+        );
+        if (this.sessionActive) {
+          this.logger.debug('Getting next session update');
+          this.store.dispatch(
+            loadSessionUpdate({ reset: false, timeout: SESSION_TIMEOUT })
+          );
+        }
+      }
+    });
   }
 
   ngOnInit(): void {

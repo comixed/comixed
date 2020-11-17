@@ -1,4 +1,6 @@
-<div fxLayout="column">
+<h2 *ngIf="importing">{{"import-comic-files.busy-title"|translate}}</h2>
+<div *ngIf="!importing"
+     fxLayout="column">
   <div>
     <cx-import-toolbar></cx-import-toolbar>
   </div>

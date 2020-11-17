@@ -18,6 +18,7 @@
 
 package org.comixedproject.task.encoders;
 
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.task.model.AddComicWorkerTask;
@@ -43,9 +44,9 @@ public class AddComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<AddComi
 
   @Autowired private ObjectFactory<AddComicWorkerTask> addComicWorkerTaskObjectFactory;
 
-  private String comicFilename;
-  private boolean deleteBlockedPages;
-  private boolean ignoreMetadata;
+  @Setter private String comicFilename;
+  @Setter private boolean deleteBlockedPages;
+  @Setter private boolean ignoreMetadata;
 
   @Override
   public Task encode() {
@@ -75,17 +76,5 @@ public class AddComicWorkerTaskEncoder extends AbstractWorkerTaskEncoder<AddComi
     result.setIgnoreMetadata(Boolean.valueOf(task.getProperty(IGNORE_METADATA)));
 
     return result;
-  }
-
-  public void setComicFilename(final String comicFilename) {
-    this.comicFilename = comicFilename;
-  }
-
-  public void setDeleteBlockedPages(final boolean deleteBlockedPages) {
-    this.deleteBlockedPages = deleteBlockedPages;
-  }
-
-  public void setIgnoreMetadata(final boolean ignoreMetadata) {
-    this.ignoreMetadata = ignoreMetadata;
   }
 }
