@@ -74,6 +74,7 @@ public class ComicVineGetIssueDetailsAction
     result.setVolume(volumeDetails.getStartYear());
     result.setIssueNumber(issueDetails.getIssueNumber());
     result.setCoverDate(issueDetails.getCoverDate());
+    result.setTitle(issueDetails.getTitle());
     result.setDescription(issueDetails.getDescription());
 
     for (ComicVineCharacter character : issueDetails.getCharacters())

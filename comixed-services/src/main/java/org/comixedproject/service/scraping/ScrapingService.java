@@ -232,6 +232,7 @@ public class ScrapingService {
       comic.setVolume(issueDetails.getVolume());
       comic.setIssueNumber(issueDetails.getIssueNumber());
       comic.setCoverDate(issueDetails.getCoverDate());
+      comic.setTitle(issueDetails.getTitle());
       comic.setDescription(issueDetails.getDescription());
       comic.getCharacters().clear();
       issueDetails.getCharacters().forEach(character -> comic.getCharacters().add(character));
