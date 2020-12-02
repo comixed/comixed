@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetRestAuditLogResponse;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
@@ -68,13 +67,12 @@ public class AuditLogControllerTest {
     Mockito.when(taskService.getAuditLogEntriesAfter(Mockito.any(Date.class)))
         .thenReturn(auditLogEntries);
 
-    final ApiResponse<GetTaskAuditLogResponse> result =
+    final GetTaskAuditLogResponse result =
         auditLogController.getAllTaskEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertSame(auditLogEntries, result.getResult().getEntries());
-    assertEquals(TEST_LAST_UPDATED_DATE, result.getResult().getLatest());
+    assertSame(auditLogEntries, result.getEntries());
+    assertEquals(TEST_LAST_UPDATED_DATE, result.getLatest());
 
     Mockito.verify(taskService, Mockito.times(1)).getAuditLogEntriesAfter(TEST_LAST_UPDATED_DATE);
   }
@@ -83,10 +81,9 @@ public class AuditLogControllerTest {
   public void testClearTaskLog() {
     Mockito.doNothing().when(taskService).clearTaskAuditLog();
 
-    final ApiResponse<Void> result = auditLogController.clearTaskAuditLog();
+    auditLogController.clearTaskAuditLog();
 
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
+    Mockito.verify(taskService, Mockito.times(1)).clearTaskAuditLog();
   }
 
   @Test
@@ -94,15 +91,13 @@ public class AuditLogControllerTest {
     Mockito.when(restAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
         .thenReturn(restAuditLogEntries);
 
-    ApiResponse<GetRestAuditLogResponse> result =
+    GetRestAuditLogResponse result =
         auditLogController.getAllRestEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertNotNull(result.getResult());
-    assertSame(restAuditLogEntries, result.getResult().getEntries());
-    assertNotNull(result.getResult().getLatest());
-    assertEquals(TEST_LAST_UPDATED_DATE, result.getResult().getLatest());
+    assertSame(restAuditLogEntries, result.getEntries());
+    assertNotNull(result.getLatest());
+    assertEquals(TEST_LAST_UPDATED_DATE, result.getLatest());
 
     Mockito.verify(restAuditLogService, Mockito.times(1))
         .getEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
@@ -115,14 +110,12 @@ public class AuditLogControllerTest {
     Mockito.when(restAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
         .thenReturn(restAuditLogEntries);
 
-    ApiResponse<GetRestAuditLogResponse> result =
+    GetRestAuditLogResponse result =
         auditLogController.getAllRestEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertNotNull(result.getResult());
-    assertSame(restAuditLogEntries, result.getResult().getEntries());
-    assertNotNull(result.getResult().getLatest());
+    assertSame(restAuditLogEntries, result.getEntries());
+    assertNotNull(result.getLatest());
 
     Mockito.verify(restAuditLogService, Mockito.times(1))
         .getEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());

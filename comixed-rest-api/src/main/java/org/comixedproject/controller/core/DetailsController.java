@@ -22,7 +22,6 @@ import java.text.ParseException;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.core.BuildDetails;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.core.DetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,8 +47,8 @@ public class DetailsController {
    */
   @GetMapping("/build-details")
   @AuditableEndpoint
-  public ApiResponse<BuildDetails> getBuildDetails() throws ParseException {
+  public BuildDetails getBuildDetails() throws ParseException {
     log.info("Getting application build details");
-    return new ApiResponse<BuildDetails>(this.detailsService.getBuildDetails());
+    return this.detailsService.getBuildDetails();
   }
 }

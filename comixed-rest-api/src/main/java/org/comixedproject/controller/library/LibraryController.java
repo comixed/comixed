@@ -193,7 +193,6 @@ public class LibraryController {
    * given naming rules. Will delete comics marked for deletion as well.
    *
    * @param request the request body
-   * @return the response body
    */
   @PostMapping(
       value = "/library/move",
@@ -201,7 +200,7 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public ApiResponse<Void> moveComics(@RequestBody() MoveComicsRequest request) {
+  public void moveComics(@RequestBody() MoveComicsRequest request) {
     String targetDirectory = request.getTargetDirectory();
     String renamingRule = request.getRenamingRule();
     Boolean deletePhysicalFiles = request.getDeletePhysicalFiles();
@@ -214,7 +213,5 @@ public class LibraryController {
     task.setRenamingRule(renamingRule);
 
     this.taskManager.runTask(task);
-
-    return new ApiResponse<Void>(null);
   }
 }

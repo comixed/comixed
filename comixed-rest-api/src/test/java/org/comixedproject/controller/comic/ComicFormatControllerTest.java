@@ -18,11 +18,11 @@
 
 package org.comixedproject.controller.comic;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
 import org.comixedproject.model.comic.ComicFormat;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.comic.ComicFormatService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +41,10 @@ public class ComicFormatControllerTest {
   public void testGetAll() {
     Mockito.when(comicFormatService.getAll()).thenReturn(comicFormatList);
 
-    final ApiResponse<List<ComicFormat>> result = controller.getAll();
+    final List<ComicFormat> result = controller.getAll();
 
     assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertSame(comicFormatList, result.getResult());
+    assertSame(comicFormatList, result);
 
     Mockito.verify(comicFormatService, Mockito.times(1)).getAll();
   }

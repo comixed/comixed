@@ -18,11 +18,9 @@
 
 package org.comixedproject.auditlog;
 
-import org.comixedproject.model.net.ApiResponse;
-
 /**
  * <code>AuditableEndpoint</code> is used to indicate that a method is to be audited whenever it's
- * invoked. The method <b>must</b> return a {@link ApiResponse} object.
+ * invoked.
  *
  * @author Darryl L. Pierce
  */

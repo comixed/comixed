@@ -22,7 +22,6 @@ import static junit.framework.TestCase.*;
 import static org.comixedproject.controller.user.SessionController.SESSION_ENTRY_KEY;
 
 import javax.servlet.http.HttpSession;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.model.session.SessionUpdate;
@@ -54,13 +53,11 @@ public class SessionControllerTest {
             sessionService.getSessionUpdate(userSessionArgumentCaptor.capture(), Mockito.anyLong()))
         .thenReturn(sessionUpdate);
 
-    final ApiResponse<SessionUpdateResponse> response =
+    SessionUpdateResponse response =
         sessionController.getSessionUpdate(httpSession, sessionUpdateRequest);
 
     assertNotNull(response);
-    assertTrue(response.isSuccess());
-    assertNotNull(response.getResult());
-    assertSame(sessionUpdate, response.getResult().getUpdate());
+    assertSame(sessionUpdate, response.getUpdate());
     assertNotNull(userSessionArgumentCaptor.getValue());
 
     Mockito.verify(sessionService, Mockito.times(1))
@@ -77,13 +74,11 @@ public class SessionControllerTest {
             sessionService.getSessionUpdate(userSessionArgumentCaptor.capture(), Mockito.anyLong()))
         .thenReturn(sessionUpdate);
 
-    final ApiResponse<SessionUpdateResponse> response =
+    final SessionUpdateResponse response =
         sessionController.getSessionUpdate(httpSession, sessionUpdateRequest);
 
     assertNotNull(response);
-    assertTrue(response.isSuccess());
-    assertNotNull(response.getResult());
-    assertSame(sessionUpdate, response.getResult().getUpdate());
+    assertSame(sessionUpdate, response.getUpdate());
     assertNotNull(userSessionArgumentCaptor.getValue());
 
     Mockito.verify(sessionService, Mockito.times(1))
@@ -100,13 +95,11 @@ public class SessionControllerTest {
     Mockito.when(sessionService.getSessionUpdate(Mockito.any(UserSession.class), Mockito.anyLong()))
         .thenReturn(sessionUpdate);
 
-    final ApiResponse<SessionUpdateResponse> response =
+    final SessionUpdateResponse response =
         sessionController.getSessionUpdate(httpSession, sessionUpdateRequest);
 
     assertNotNull(response);
-    assertTrue(response.isSuccess());
-    assertNotNull(response.getResult());
-    assertSame(sessionUpdate, response.getResult().getUpdate());
+    assertSame(sessionUpdate, response.getUpdate());
 
     Mockito.verify(sessionService, Mockito.times(1)).getSessionUpdate(userSession, TEST_TIMEOUT);
     Mockito.verify(httpSession, Mockito.times(1)).setAttribute(SESSION_ENTRY_KEY, userSession);

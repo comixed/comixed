@@ -23,7 +23,6 @@ import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.SaveUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Preference;
@@ -80,28 +79,29 @@ public class UserController implements InitializingBean {
    *
    * @param principal the principal
    * @return the user, or <code>null</code> if no user is authenticated
-   * @throws ComiXedUserException
+   * @throws ComiXedUserException if an error occurs
    */
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   @JsonView(UserDetails.class)
   @AuditableEndpoint
-  public ApiResponse<ComiXedUser> getCurrentUser(Principal principal) throws ComiXedUserException {
+  public ComiXedUser getCurrentUser(Principal principal) throws ComiXedUserException {
     log.debug("Returning current user");
     ComiXedUser comixedUser = null;
 
     if (principal == null) {
       log.debug("Not authenticated");
-    } else {
-      log.debug("Loading user: {}", principal.getName());
-      comixedUser = this.userService.findByEmail(principal.getName());
-
-      if (comixedUser != null) {
-        log.debug("Setting authenticated flag");
-        comixedUser.setAuthenticated(true);
-      }
+      return null;
     }
 
-    return new ApiResponse<>(comixedUser);
+    log.debug("Loading user: {}", principal.getName());
+    comixedUser = this.userService.findByEmail(principal.getName());
+
+    if (comixedUser != null) {
+      log.debug("Setting authenticated flag");
+      comixedUser.setAuthenticated(true);
+    }
+
+    return comixedUser;
   }
 
   @RequestMapping(value = "/user/preferences", method = RequestMethod.GET)
