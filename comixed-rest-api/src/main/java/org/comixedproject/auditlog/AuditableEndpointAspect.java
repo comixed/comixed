@@ -28,7 +28,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.auditlog.RestAuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -84,12 +83,9 @@ public class AuditableEndpointAspect {
     entry.setRequestContent(
         new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
 
-    if (response instanceof ApiResponse<?>) {
-      final ApiResponse<?> apiResponse = (ApiResponse<?>) response;
-      entry.setSuccessful(apiResponse.isSuccess());
-      if (apiResponse.getResult() != null) {
-        entry.setResponseContent(this.objectMapper.writeValueAsString(apiResponse.getResult()));
-      }
+    if (response != null) {
+      log.debug("Storing response content");
+      entry.setResponseContent(this.objectMapper.writeValueAsString(response));
     }
 
     if (error != null) {

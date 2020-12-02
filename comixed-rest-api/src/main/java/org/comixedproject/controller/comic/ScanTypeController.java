@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.ScanType;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.comic.ScanTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -47,8 +46,8 @@ public class ScanTypeController {
    */
   @GetMapping(value = "/api/comics/scantypes", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public ApiResponse<List<ScanType>> getScanTypes() {
+  public List<ScanType> getScanTypes() {
     log.info("Getting all scan types");
-    return new ApiResponse<>(this.scanTypeService.getAll());
+    return this.scanTypeService.getAll();
   }
 }

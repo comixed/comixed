@@ -18,11 +18,11 @@
 
 package org.comixedproject.controller.comic;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
 import org.comixedproject.model.comic.ScanType;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.comic.ScanTypeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +41,10 @@ public class ScanTypeControllerTest {
   public void testGetScanTypes() {
     Mockito.when(scanTypeService.getAll()).thenReturn(scanTypeList);
 
-    final ApiResponse<List<ScanType>> result = controller.getScanTypes();
+    final List<ScanType> result = controller.getScanTypes();
 
     assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertSame(scanTypeList, result.getResult());
+    assertSame(scanTypeList, result);
 
     Mockito.verify(scanTypeService, Mockito.times(1)).getAll();
   }

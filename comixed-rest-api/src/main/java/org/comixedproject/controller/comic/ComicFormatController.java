@@ -22,7 +22,6 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.ComicFormat;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.comic.ComicFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -47,8 +46,8 @@ public class ComicFormatController {
    */
   @GetMapping(value = "/api/comics/formats", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public ApiResponse<List<ComicFormat>> getAll() {
+  public List<ComicFormat> getAll() {
     log.info("Retrieving the list of comic formats");
-    return new ApiResponse<>(this.comicFormatService.getAll());
+    return this.comicFormatService.getAll();
   }
 }

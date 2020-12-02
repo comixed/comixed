@@ -22,7 +22,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.authentication.AuthToken;
 import org.comixedproject.authentication.JwtTokenUtil;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +49,12 @@ public class ComiXedAuthenticationController {
    *
    * @param email the email
    * @param password the password
-   * @return the response
+   * @return the authentication token
    * @throws AuthenticationException if an error occurs
    */
   @RequestMapping(value = "/generate-token", method = RequestMethod.POST)
   @AuditableEndpoint
-  public ApiResponse<AuthToken> generateToken(
+  public AuthToken generateToken(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {
     log.debug("Attemping to authenticate user: {}", email);
@@ -66,6 +65,6 @@ public class ComiXedAuthenticationController {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     final ComiXedUser user = userRepository.findByEmail(email);
     final String token = jwtTokenUtil.generateToken(user);
-    return new ApiResponse<>(new AuthToken(token, user.getEmail()));
+    return new AuthToken(token, user.getEmail());
   }
 }

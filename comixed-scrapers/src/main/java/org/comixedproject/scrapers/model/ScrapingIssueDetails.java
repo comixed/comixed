@@ -94,7 +94,7 @@ public class ScrapingIssueDetails {
 
   @AllArgsConstructor
   public static class CreditEntry {
-    @Getter @Setter private final String name;
-    @Getter @Setter private final String role;
+    @Getter private final String name;
+    @Getter private final String role;
   }
 }

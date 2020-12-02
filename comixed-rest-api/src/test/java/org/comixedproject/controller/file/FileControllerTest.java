@@ -28,7 +28,6 @@ import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.file.ComicFile;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
@@ -91,11 +90,11 @@ public class FileControllerTest {
     Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileList);
 
-    final ApiResponse<LoadComicFilesResponse> response =
+    final LoadComicFilesResponse response =
         controller.loadComicFiles(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_NO_LIMIT));
 
     assertNotNull(response);
-    assertSame(comicFileList, response.getResult().getFiles());
+    assertSame(comicFileList, response.getFiles());
 
     Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_NO_LIMIT);
   }
@@ -105,11 +104,11 @@ public class FileControllerTest {
     Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileList);
 
-    final ApiResponse<LoadComicFilesResponse> response =
+    final LoadComicFilesResponse response =
         controller.loadComicFiles(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_LIMIT));
 
     assertNotNull(response);
-    assertSame(comicFileList, response.getResult().getFiles());
+    assertSame(comicFileList, response.getFiles());
 
     Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_LIMIT);
   }
@@ -119,13 +118,9 @@ public class FileControllerTest {
     Mockito.when(queueComicsWorkerTaskObjectFactory.getObject()).thenReturn(queueComicsWorkerTask);
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    final ApiResponse<Void> response =
-        controller.importComicFiles(
-            new ImportComicFilesRequest(
-                TEST_FILENAMES, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
-
-    assertNotNull(response);
-    assertTrue(response.isSuccess());
+    controller.importComicFiles(
+        new ImportComicFilesRequest(
+            TEST_FILENAMES, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
 
     Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
     Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setFilenames(TEST_FILENAMES);

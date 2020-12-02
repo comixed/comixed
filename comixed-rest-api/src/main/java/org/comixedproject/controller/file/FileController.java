@@ -29,7 +29,6 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.controller.comic.ComicController;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.file.ComicFile;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
@@ -77,7 +76,7 @@ public class FileController {
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicFileList.class)
   @AuditableEndpoint
-  public ApiResponse<LoadComicFilesResponse> loadComicFiles(
+  public LoadComicFilesResponse loadComicFiles(
       @RequestBody() final GetAllComicsUnderRequest request) throws IOException {
     String directory = request.getDirectory();
     Integer maximum = request.getMaximum();
@@ -87,8 +86,7 @@ public class FileController {
         directory,
         maximum > 0 ? maximum : "UNLIMITED");
 
-    return new ApiResponse<>(
-        new LoadComicFilesResponse(this.fileService.getAllComicsUnder(directory, maximum)));
+    return new LoadComicFilesResponse(this.fileService.getAllComicsUnder(directory, maximum));
   }
 
   private void getAllFilesUnder(File root, List<ComicFile> result) throws IOException {
@@ -145,7 +143,6 @@ public class FileController {
    * Begins the process of enqueueing comic files for import
    *
    * @param request the request body
-   * @return the response
    */
   @PostMapping(
       value = "/import",
@@ -153,7 +150,7 @@ public class FileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public ApiResponse<Void> importComicFiles(@RequestBody() ImportComicFilesRequest request) {
+  public void importComicFiles(@RequestBody() ImportComicFilesRequest request) {
     final List<String> filenames = request.getFilenames();
     final boolean deleteBlockedPages = request.isDeleteBlockedPages();
     final boolean ignoreMetadata = request.isIgnoreMetadata();
@@ -174,7 +171,5 @@ public class FileController {
 
     log.debug("Notifying waiting processes");
     ComicController.stopWaitingForStatus();
-
-    return new ApiResponse<Void>(null);
   }
 }
