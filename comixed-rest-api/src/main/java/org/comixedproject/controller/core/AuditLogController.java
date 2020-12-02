@@ -24,7 +24,6 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.GetRestAuditLogResponse;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
@@ -62,7 +61,7 @@ public class AuditLogController {
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.AuditLogEntryList.class)
   @AuditableEndpoint
-  public ApiResponse<GetTaskAuditLogResponse> getAllTaskEntriesAfterDate(
+  public GetTaskAuditLogResponse getAllTaskEntriesAfterDate(
       @PathVariable("cutoff") final Long timestamp) throws ComiXedServiceException {
     final Date cutoff = new Date(timestamp);
     log.debug("Getting all task audit log entries after: {}", cutoff);
@@ -71,22 +70,17 @@ public class AuditLogController {
     final Date latest =
         entries.isEmpty() ? new Date() : entries.get(entries.size() - 1).getStartTime();
 
-    return new ApiResponse<GetTaskAuditLogResponse>(new GetTaskAuditLogResponse(entries, latest));
+    return new GetTaskAuditLogResponse(entries, latest);
   }
 
-  /**
-   * Endpoint for clearing the task log.
-   *
-   * @return the success of the operation
-   */
+  /** Endpoint for clearing the task log. */
   @DeleteMapping(value = "/api/tasks/entries", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ApiResponse.class)
   @AuditableEndpoint
-  public ApiResponse<Void> clearTaskAuditLog() {
+  public void clearTaskAuditLog() {
     log.debug("Clearing task audit log");
     this.taskService.clearTaskAuditLog();
-    return new ApiResponse<Void>(null);
   }
 
   /**
@@ -103,12 +97,12 @@ public class AuditLogController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.AuditLogEntryList.class)
-  public ApiResponse<GetRestAuditLogResponse> getAllRestEntriesAfterDate(
+  public GetRestAuditLogResponse getAllRestEntriesAfterDate(
       @PathVariable("cutoff") final Long cutoff) {
     log.info("Getting all REST audit entries since {}", cutoff);
     final List<RestAuditLogEntry> entries = this.restAuditLogService.getEntriesAfterDate(cutoff);
     final Date latest =
         entries.isEmpty() ? new Date() : entries.get(entries.size() - 1).getEndTime();
-    return new ApiResponse<GetRestAuditLogResponse>(new GetRestAuditLogResponse(entries, latest));
+    return new GetRestAuditLogResponse(entries, latest);
   }
 }

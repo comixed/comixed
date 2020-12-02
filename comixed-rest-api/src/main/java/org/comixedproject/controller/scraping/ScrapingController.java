@@ -23,7 +23,6 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.ComicScrapeRequest;
 import org.comixedproject.model.net.GetScrapingIssueRequest;
 import org.comixedproject.model.net.GetVolumesRequest;
@@ -60,7 +59,7 @@ public class ScrapingController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public ApiResponse<ScrapingIssue> queryForIssue(
+  public ScrapingIssue queryForIssue(
       @PathVariable("volume") final Integer volume,
       @RequestBody() final GetScrapingIssueRequest request)
       throws ScrapingException {
@@ -71,8 +70,7 @@ public class ScrapingController {
     log.info(
         "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
 
-    return new ApiResponse<ScrapingIssue>(
-        this.scrapingService.getIssue(apiKey, volume, issue, skipCache));
+    return this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
   }
 
   /**
@@ -87,8 +85,8 @@ public class ScrapingController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public ApiResponse<List<ScrapingVolume>> queryForVolumes(
-      @RequestBody() final GetVolumesRequest request) throws ScrapingException {
+  public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
+      throws ScrapingException {
     String apiKey = request.getApiKey();
     boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
@@ -100,8 +98,7 @@ public class ScrapingController {
         maxRecords,
         skipCache ? "(Skipping cache)" : "");
 
-    return new ApiResponse<List<ScrapingVolume>>(
-        this.scrapingService.getVolumes(apiKey, series, maxRecords, skipCache));
+    return this.scrapingService.getVolumes(apiKey, series, maxRecords, skipCache);
   }
 
   /**
@@ -118,7 +115,7 @@ public class ScrapingController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetails.class)
-  public ApiResponse<Comic> scrapeAndSaveComicDetails(
+  public Comic scrapeAndSaveComicDetails(
       @PathVariable("comicId") final Long comicId,
       @PathVariable("issueId") final Integer issueId,
       @RequestBody() final ComicScrapeRequest request)
@@ -129,7 +126,6 @@ public class ScrapingController {
     log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
 
     log.debug("Scraping comic details");
-    return new ApiResponse<Comic>(
-        this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache));
+    return this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache);
   }
 }

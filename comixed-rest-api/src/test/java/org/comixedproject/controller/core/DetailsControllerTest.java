@@ -18,11 +18,11 @@
 
 package org.comixedproject.controller.core;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.text.ParseException;
 import org.comixedproject.model.core.BuildDetails;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.core.DetailsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,11 +56,10 @@ public class DetailsControllerTest {
   public void testGetBuildDetails() throws ParseException {
     Mockito.when(detailsService.getBuildDetails()).thenReturn(buildDetails);
 
-    final ApiResponse<BuildDetails> result = detailsController.getBuildDetails();
+    final BuildDetails result = detailsController.getBuildDetails();
 
     assertNotNull(result);
-    assertTrue(result.isSuccess());
-    assertSame(buildDetails, result.getResult());
+    assertSame(buildDetails, result);
 
     Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
   }

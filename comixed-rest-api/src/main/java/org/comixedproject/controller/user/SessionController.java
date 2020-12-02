@@ -21,7 +21,6 @@ package org.comixedproject.controller.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.model.session.SessionUpdate;
@@ -44,6 +43,7 @@ public class SessionController {
   /**
    * Retrieves a session update. Waits a given period of time before returning an empty update.
    *
+   * @param httpSession the HTTP session
    * @param request the request body
    * @return the session update
    */
@@ -52,7 +52,7 @@ public class SessionController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.SessionUpdateView.class)
-  public ApiResponse<SessionUpdateResponse> getSessionUpdate(
+  public SessionUpdateResponse getSessionUpdate(
       final HttpSession httpSession, @RequestBody() final SessionUpdateRequest request) {
     UserSession userSession = null;
 
@@ -76,6 +76,6 @@ public class SessionController {
     httpSession.setAttribute(SESSION_ENTRY_KEY, userSession);
 
     log.info("Returning session update");
-    return new ApiResponse<>(new SessionUpdateResponse(sessionUpdate));
+    return new SessionUpdateResponse(sessionUpdate);
   }
 }

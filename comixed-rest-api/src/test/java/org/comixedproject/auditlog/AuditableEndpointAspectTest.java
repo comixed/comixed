@@ -24,7 +24,6 @@ import static junit.framework.TestCase.assertSame;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.model.net.ApiResponse;
 import org.comixedproject.service.auditlog.RestAuditLogService;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +41,7 @@ public class AuditableEndpointAspectTest {
   @InjectMocks private AuditableEndpointAspect auditableEndpointAspect;
   @Mock private RestAuditLogService restAuditLogService;
   @Mock private ProceedingJoinPoint proceedingJoinPoint;
-  @Mock private ApiResponse<?> apiResponse;
+  @Mock private Object response;
   @Captor private ArgumentCaptor<RestAuditLogEntry> restAuditLogEntryArgumentCaptor;
   @Mock private RestAuditLogEntry savedEntry;
   @Mock private ObjectMapper objectMapper;
@@ -58,12 +57,12 @@ public class AuditableEndpointAspectTest {
   public void testAround() throws Throwable {
     Mockito.when(restAuditLogService.save(restAuditLogEntryArgumentCaptor.capture()))
         .thenReturn(savedEntry);
-    Mockito.when(proceedingJoinPoint.proceed()).thenReturn(apiResponse);
+    Mockito.when(proceedingJoinPoint.proceed()).thenReturn(response);
 
     final Object result = auditableEndpointAspect.around(proceedingJoinPoint);
 
     assertNotNull(result);
-    assertSame(apiResponse, result);
+    assertSame(response, result);
 
     Mockito.verify(restAuditLogService, Mockito.times(1))
         .save(restAuditLogEntryArgumentCaptor.getValue());

@@ -290,13 +290,9 @@ public class LibraryControllerTest {
     Mockito.when(moveComicsWorkerTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
 
-    final ApiResponse<Void> result =
-        libraryController.moveComics(
-            new MoveComicsRequest(
-                TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE));
-
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
+    libraryController.moveComics(
+        new MoveComicsRequest(
+            TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE));
 
     Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setDirectory(TEST_DESTINATION_DIRECTORY);
     Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULE);
