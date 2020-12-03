@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { SessionEffects } from './session.effects';
-import { AlertService, ApiResponse } from '@app/core';
+import { AlertService } from '@app/core';
 import { SessionUpdateResponse } from '@app/models/net/session-update-response';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -78,26 +78,9 @@ describe('SessionEffects', () => {
 
   describe('loading a user session update', () => {
     it('fires an action on success', () => {
-      const serviceResponse = {
-        success: true,
-        result: { update: UPDATE }
-      } as ApiResponse<SessionUpdateResponse>;
+      const serviceResponse = { update: UPDATE } as SessionUpdateResponse;
       const action = loadSessionUpdate({ reset: false, timeout: 100 });
       const outcome = sessionUpdateLoaded({ update: UPDATE });
-
-      actions$ = hot('-a', { a: action });
-      sessionService.loadSessionUpdate.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.loadSessionUpdate$).toBeObservable(expected);
-    });
-
-    it('fires an action on failure', () => {
-      const serviceResponse = { success: false } as ApiResponse<
-        SessionUpdateResponse
-      >;
-      const action = loadSessionUpdate({ reset: false, timeout: 100 });
-      const outcome = loadSessionUpdateFailed();
 
       actions$ = hot('-a', { a: action });
       sessionService.loadSessionUpdate.and.returnValue(of(serviceResponse));

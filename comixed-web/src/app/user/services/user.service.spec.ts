@@ -23,14 +23,14 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { ApiResponse, interpolate } from '@app/core';
-import { User } from '@app/user/models/user';
+import { interpolate } from '@app/core';
 import {
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL
 } from '@app/user/user.constants';
 import { LoggerModule } from '@angular-ru/logger';
 import { LoginResponse } from '@app/user/models/net/login-response';
+import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 
 describe('UserService', () => {
   const USER = USER_READER;
@@ -53,7 +53,7 @@ describe('UserService', () => {
   });
 
   it('can load the current user', () => {
-    const serviceResponse = { success: true } as ApiResponse<User>;
+    const serviceResponse = USER;
     service
       .loadCurrentUser()
       .subscribe(response => expect(response).toEqual(serviceResponse));
@@ -64,7 +64,10 @@ describe('UserService', () => {
   });
 
   it('can send the user credentials', () => {
-    const serviceResponse = { success: true } as ApiResponse<LoginResponse>;
+    const serviceResponse = {
+      email: USER.email,
+      token: AUTHENTICATION_TOKEN
+    } as LoginResponse;
     service
       .loginUser({ email: USER.email, password: PASSWORD })
       .subscribe(response => expect(response).toEqual(serviceResponse));

@@ -24,20 +24,21 @@ import {
   COMIC_FILE_2,
   COMIC_FILE_3,
   COMIC_FILE_4,
-  ROOT_DIRECTORY,
+  ROOT_DIRECTORY
 } from '@app/comic-import/comic-import.fixtures';
-import { ApiResponse, interpolate } from '@app/core';
+import { interpolate } from '@app/core';
 import { LoadComicFilesResponse } from '@app/comic-import/models/net/load-comic-files-response';
 import {
   HttpClientTestingModule,
-  HttpTestingController,
+  HttpTestingController
 } from '@angular/common/http/testing';
 import {
   LOAD_COMIC_FILES_URL,
-  SEND_COMIC_FILES_URL,
+  SEND_COMIC_FILES_URL
 } from '@app/comic-import/comic-import.constants';
 import { LoadComicFilesRequest } from '@app/comic-import/models/net/load-comic-files-request';
 import { SendComicFilesRequest } from '@app/comic-import/models/net/send-comic-files-request';
+import { HttpResponse } from '@angular/common/http';
 
 describe('ComicImportService', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -50,7 +51,7 @@ describe('ComicImportService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
     });
 
     service = TestBed.inject(ComicImportService);
@@ -63,38 +64,37 @@ describe('ComicImportService', () => {
 
   it('can load comic files', () => {
     const serviceResponse = {
-      success: true,
-      result: { files: FILES },
-    } as ApiResponse<LoadComicFilesResponse>;
+      files: FILES
+    } as LoadComicFilesResponse;
     service
       .loadComicFiles({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
-      .subscribe((response) => expect(response).toEqual(serviceResponse));
+      .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(LOAD_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
       directory: ROOT_DIRECTORY,
-      maximum: MAXIMUM,
+      maximum: MAXIMUM
     } as LoadComicFilesRequest);
     req.flush(serviceResponse);
   });
 
   it('can send comic files', () => {
-    const serviceResponse = { success: true } as ApiResponse<void>;
+    const serviceResponse = new HttpResponse({ status: 200 });
     service
       .sendComicFiles({
         files: FILES,
         ignoreMetadata: IGNORE_METADATA,
-        deleteBlockedPages: DELETE_BLOCKED_PAGES,
+        deleteBlockedPages: DELETE_BLOCKED_PAGES
       })
-      .subscribe((response) => expect(response).toEqual(serviceResponse));
+      .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(SEND_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      filenames: FILES.map((file) => file.filename),
+      filenames: FILES.map(file => file.filename),
       ignoreMetadata: IGNORE_METADATA,
-      deleteBlockedPages: DELETE_BLOCKED_PAGES,
+      deleteBlockedPages: DELETE_BLOCKED_PAGES
     } as SendComicFilesRequest);
     req.flush(serviceResponse);
   });

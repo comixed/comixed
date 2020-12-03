@@ -16,20 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {AlertService, ApiResponse} from '@app/core';
-import {SessionUpdateResponse} from '@app/models/net/session-update-response';
-import {of} from 'rxjs';
-import {LoggerService} from '@angular-ru/logger';
-import {TranslateService} from '@ngx-translate/core';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { AlertService } from '@app/core';
+import { SessionUpdateResponse } from '@app/models/net/session-update-response';
+import { of } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
+import { TranslateService } from '@ngx-translate/core';
 import {
   loadSessionUpdate,
   loadSessionUpdateFailed,
   sessionUpdateLoaded
 } from '@app/actions/session.actions';
-import {SessionService} from '@app/services/session.service';
+import { SessionService } from '@app/services/session.service';
 
 @Injectable()
 export class SessionEffects {
@@ -39,8 +39,7 @@ export class SessionEffects {
     private sessionService: SessionService,
     private alertService: AlertService,
     private translateService: TranslateService
-  ) {
-  }
+  ) {}
 
   loadSessionUpdate$ = createEffect(() => {
     return this.actions$.pipe(
@@ -48,13 +47,11 @@ export class SessionEffects {
       tap(action => this.logger.debug('Effect: load session update:', action)),
       switchMap(action =>
         this.sessionService
-          .loadSessionUpdate({reset: action.reset, timeout: action.timeout})
+          .loadSessionUpdate({ reset: action.reset, timeout: action.timeout })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: ApiResponse<SessionUpdateResponse>) =>
-              response.success
-                ? sessionUpdateLoaded({update: response.result.update})
-                : loadSessionUpdateFailed()
+            map((response: SessionUpdateResponse) =>
+              sessionUpdateLoaded({ update: response.update })
             ),
             catchError(error => {
               this.logger.error('Service failure:', error);
