@@ -18,8 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { SessionService } from './session.service';
-import { ApiResponse, interpolate } from '@app/core';
-import { SessionUpdateResponse } from '@app/models/net/session-update-response';
+import { interpolate } from '@app/core';
 import { SessionUpdateRequest } from '@app/models/net/session-update-request';
 import { LOAD_SESSION_UPDATE_URL } from '@app/app.constants';
 import {
@@ -27,6 +26,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
+import { HttpResponse } from '@angular/common/http';
 
 describe('SessionService', () => {
   let service: SessionService;
@@ -46,9 +46,7 @@ describe('SessionService', () => {
   });
 
   it('can load user session updates', () => {
-    const serviceResponse = { success: true } as ApiResponse<
-      SessionUpdateResponse
-    >;
+    const serviceResponse = new HttpResponse({ status: 200 });
     service
       .loadSessionUpdate({ reset: false, timeout: 1000 })
       .subscribe(response => expect(response).toEqual(serviceResponse));

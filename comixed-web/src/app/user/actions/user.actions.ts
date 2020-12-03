@@ -31,10 +31,7 @@ export const loginUser = createAction(
   '[User] Submit the login credentials',
   props<{ email: string; password: string }>()
 );
-export const userLoggedIn = createAction(
-  '[User] User login successful',
-  props<{ token: string }>()
-);
+export const userLoggedIn = createAction('[User] User login successful');
 export const loginUserFailed = createAction('[User] User login failed');
 export const logoutUser = createAction('[User] Log out current user');
 export const userLoggedOut = createAction('[User] Current user logged out');

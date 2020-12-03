@@ -21,7 +21,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { UserEffects } from './user.effects';
 import { UserService } from '@app/user/services/user.service';
-import { User } from '@app/user/models/user';
 import { USER_READER } from '@app/user/user.fixtures';
 import {
   currentUserLoaded,
@@ -31,11 +30,11 @@ import {
   loginUserFailed,
   logoutUser,
   userLoggedIn,
-  userLoggedOut,
+  userLoggedOut
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/logger';
-import { AlertService, ApiResponse, TokenService } from '@app/core';
+import { AlertService, TokenService } from '@app/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
@@ -57,7 +56,7 @@ describe('UserEffects', () => {
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatSnackBarModule,
+        MatSnackBarModule
       ],
       providers: [
         UserEffects,
@@ -66,10 +65,10 @@ describe('UserEffects', () => {
           provide: UserService,
           useValue: {
             loadCurrentUser: jasmine.createSpy('UserService.loadCurrentUser()'),
-            loginUser: jasmine.createSpy('userService.loginUser()'),
-          },
-        },
-      ],
+            loginUser: jasmine.createSpy('userService.loginUser()')
+          }
+        }
+      ]
     });
 
     effects = TestBed.inject(UserEffects);
@@ -87,26 +86,9 @@ describe('UserEffects', () => {
 
   describe('loading the current user', () => {
     it('fires an action on success', () => {
-      const serviceResponse: ApiResponse<User> = {
-        success: true,
-        result: USER,
-      };
+      const serviceResponse = USER;
       const action = loadCurrentUser();
       const outcome = currentUserLoaded({ user: USER });
-
-      actions$ = hot('-a', { a: action });
-      userService.loadCurrentUser.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.loadCurrentUser$).toBeObservable(expected);
-    });
-
-    it('fires an action on failure', () => {
-      const serviceResponse: ApiResponse<User> = {
-        success: false,
-      };
-      const action = loadCurrentUser();
-      const outcome = loadCurrentUserFailed();
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(of(serviceResponse));
@@ -144,11 +126,11 @@ describe('UserEffects', () => {
   describe('user login', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
-        success: true,
-        result: { email: USER.email, token: AUTH_TOKEN },
-      } as ApiResponse<LoginResponse>;
+        email: USER.email,
+        token: AUTH_TOKEN
+      } as LoginResponse;
       const action = loginUser({ email: USER.email, password: PASSWORD });
-      const outcome1 = userLoggedIn({ token: AUTH_TOKEN });
+      const outcome1 = userLoggedIn();
       const outcome2 = loadCurrentUser();
 
       actions$ = hot('-a', { a: action });
@@ -157,19 +139,6 @@ describe('UserEffects', () => {
       const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loginUser$).toBeObservable(expected);
       expect(tokenService.setAuthToken).toHaveBeenCalledWith(AUTH_TOKEN);
-    });
-
-    it('fires an action on failure', () => {
-      const serviceResponse = { success: false } as ApiResponse<LoginResponse>;
-      const action = loginUser({ email: USER.email, password: PASSWORD });
-      const outcome = loginUserFailed();
-
-      actions$ = hot('-a', { a: action });
-      userService.loginUser.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-(b)', { b: outcome });
-      expect(effects.loginUser$).toBeObservable(expected);
-      expect(tokenService.clearAuthToken).toHaveBeenCalled();
     });
 
     it('fires an action on service failure', () => {

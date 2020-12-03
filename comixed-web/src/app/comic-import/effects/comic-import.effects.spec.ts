@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { ComicImportEffects } from './comic-import.effects';
 import { ComicImportService } from '@app/comic-import/services/comic-import.service';
-import { AlertService, ApiResponse } from '@app/core';
+import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -29,7 +29,7 @@ import {
   COMIC_FILE_2,
   COMIC_FILE_3,
   COMIC_FILE_4,
-  ROOT_DIRECTORY,
+  ROOT_DIRECTORY
 } from '@app/comic-import/comic-import.fixtures';
 import { LoadComicFilesResponse } from '@app/comic-import/models/net/load-comic-files-response';
 import {
@@ -38,10 +38,10 @@ import {
   loadComicFiles,
   loadComicFilesFailed,
   sendComicFiles,
-  sendComicFilesFailed,
+  sendComicFilesFailed
 } from '@app/comic-import/actions/comic-import.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('ComicImportEffects', () => {
@@ -57,7 +57,7 @@ describe('ComicImportEffects', () => {
       imports: [
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
-        MatSnackBarModule,
+        MatSnackBarModule
       ],
       providers: [
         ComicImportEffects,
@@ -70,10 +70,10 @@ describe('ComicImportEffects', () => {
             ),
             sendComicFiles: jasmine.createSpy(
               'ComicFileService.sendComicFiles()'
-            ),
-          },
-        },
-      ],
+            )
+          }
+        }
+      ]
     });
 
     effects = TestBed.inject(ComicImportEffects);
@@ -91,13 +91,10 @@ describe('ComicImportEffects', () => {
 
   describe('loading comic files', () => {
     it('fires an action on success', () => {
-      const serviceResponse = {
-        success: true,
-        result: { files: FILES },
-      } as ApiResponse<LoadComicFilesResponse>;
+      const serviceResponse = { files: FILES } as LoadComicFilesResponse;
       const action = loadComicFiles({
         directory: ROOT_DIRECTORY,
-        maximum: 100,
+        maximum: 100
       });
       const outcome = comicFilesLoaded({ files: FILES });
 
@@ -109,29 +106,11 @@ describe('ComicImportEffects', () => {
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('fires an action on failure', () => {
-      const serviceResponse = { success: false } as ApiResponse<
-        LoadComicFilesResponse
-      >;
-      const action = loadComicFiles({
-        directory: ROOT_DIRECTORY,
-        maximum: 100,
-      });
-      const outcome = loadComicFilesFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicImportService.loadComicFiles.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.loadComicFiles$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadComicFiles({
         directory: ROOT_DIRECTORY,
-        maximum: 100,
+        maximum: 100
       });
       const outcome = loadComicFilesFailed();
 
@@ -148,7 +127,7 @@ describe('ComicImportEffects', () => {
     it('fires an action on general failure', () => {
       const action = loadComicFiles({
         directory: ROOT_DIRECTORY,
-        maximum: 100,
+        maximum: 100
       });
       const outcome = loadComicFilesFailed();
 
@@ -163,11 +142,11 @@ describe('ComicImportEffects', () => {
 
   describe('sending comic files', () => {
     it('fires an action on success', () => {
-      const serviceResponse = { success: true } as ApiResponse<void>;
+      const serviceResponse = new HttpResponse({ status: 200 });
       const action = sendComicFiles({
         files: FILES,
         ignoreMetadata: false,
-        deleteBlockedPages: true,
+        deleteBlockedPages: true
       });
       const outcome = comicFilesSent();
 
@@ -179,29 +158,12 @@ describe('ComicImportEffects', () => {
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    it('fires an action on failure', () => {
-      const serviceResponse = { success: false } as ApiResponse<void>;
-      const action = sendComicFiles({
-        files: FILES,
-        ignoreMetadata: false,
-        deleteBlockedPages: true,
-      });
-      const outcome = sendComicFilesFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.sendComicFiles$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = sendComicFiles({
         files: FILES,
         ignoreMetadata: false,
-        deleteBlockedPages: true,
+        deleteBlockedPages: true
       });
       const outcome = sendComicFilesFailed();
 
@@ -219,7 +181,7 @@ describe('ComicImportEffects', () => {
       const action = sendComicFiles({
         files: FILES,
         ignoreMetadata: false,
-        deleteBlockedPages: true,
+        deleteBlockedPages: true
       });
       const outcome = sendComicFilesFailed();
 

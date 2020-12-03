@@ -156,7 +156,7 @@ describe('User Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, authenticating: true, authenticated: false, user: null },
-        userLoggedIn({ token: AUTH_TOKEN })
+        userLoggedIn()
       );
     });
 

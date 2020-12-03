@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
 import { ComicImportService } from '@app/comic-import/services/comic-import.service';
-import { AlertService, ApiResponse } from '@app/core';
+import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   comicFilesLoaded,
@@ -56,24 +56,16 @@ export class ComicImportEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            tap((response: ApiResponse<LoadComicFilesResponse>) =>
-              response.success
-                ? this.alertService.info(
-                    this.translateService.instant(
-                      'load-comic-files.effect-success-detail',
-                      { count: response.result.files.length }
-                    )
-                  )
-                : this.alertService.error(
-                    this.translateService.instant(
-                      'load-comic-files.effect-failure-detail'
-                    )
-                  )
+            tap((response: LoadComicFilesResponse) =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'load-comic-files.effect-success-detail',
+                  { count: response.files.length }
+                )
+              )
             ),
-            map((response: ApiResponse<LoadComicFilesResponse>) =>
-              response.success
-                ? comicFilesLoaded({ files: response.result.files })
-                : loadComicFilesFailed()
+            map((response: LoadComicFilesResponse) =>
+              comicFilesLoaded({ files: response.files })
             ),
             catchError(error => {
               this.logger.error('Service failure:', error);
@@ -109,23 +101,15 @@ export class ComicImportEffects {
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            tap((response: ApiResponse<void>) =>
-              response.success
-                ? this.alertService.info(
-                    this.translateService.instant(
-                      'send-comic-files.effect-success-detail',
-                      { count: action.files.length }
-                    )
-                  )
-                : this.alertService.error(
-                    this.translateService.instant(
-                      'send-comic-files.effect-failure-detail'
-                    )
-                  )
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'send-comic-files.effect-success-detail',
+                  { count: action.files.length }
+                )
+              )
             ),
-            map((response: ApiResponse<void>) =>
-              response.success ? comicFilesSent() : sendComicFilesFailed()
-            ),
+            map(() => comicFilesSent()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
