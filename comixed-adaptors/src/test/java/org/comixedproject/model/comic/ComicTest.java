@@ -40,16 +40,10 @@ public class ComicTest {
   private static final String TEST_ISSUE_NUMBER = "23.1";
   private static final String TEST_TITLE = "Test title";
   private static final Date TEST_DATE = new Date();
-  private static final String TEST_STORY_ARC_NAME = "First story arc name";
   private static final String TEST_COMIC_VINE_ID = "206568";
   private static final String TEST_DESCRIPTION = "Simple comic description";
-  private static final String TEST_SUMMARY = "A test summary of a comic";
-  private static final String TEST_TEAM = "Super test team";
-  private static final String TEST_CHARACTER = "Test Man";
-  private static final String TEST_LOCATION = "Test Location";
   private static final String TEST_FILENAME = "src/test/resources/example.cbz";
   private static final String TEST_NOTES = "Some sample notes";
-  private static final String TEST_FILENAME_WITHOUT_EXTENSION = "src/test/resources/example";
   private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
   private static final String TEST_BASE_FILENAME = "example.cbz";
   private static final String TEST_COMIC_VINE_URL = "http://comicvine.gamespot.com/blah/blah/blah";
@@ -203,19 +197,6 @@ public class ComicTest {
   public void testSeries() {
     this.comic.setSeries(TEST_SERIES);
     assertEquals(TEST_SERIES, this.comic.getSeries());
-  }
-
-  @Test
-  public void testSummary() {
-    this.comic.setSummary(TEST_SUMMARY);
-    assertNotNull(this.comic.getSummary());
-    assertEquals(TEST_SUMMARY, this.comic.getSummary());
-  }
-
-  @Test
-  public void testSummaryCanBeNull() {
-    this.comic.setSummary(null);
-    assertNull(this.comic.getSummary());
   }
 
   @Test

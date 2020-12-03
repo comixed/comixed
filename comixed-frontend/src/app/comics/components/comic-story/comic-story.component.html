@@ -1,11 +1,6 @@
 <div *ngIf='comic'
      class='ui-g'>
     <div class='ui-g-12 ui-sm-12'>
-        <p-panel header='{{"comic-story.label.summary"|translate}}'
-                 [toggleable]='true'
-                 [collapsed]='true'>
-            <div [innerHTML]='comic.summary||"comic-story.text.no-summary"|translate'></div>
-        </p-panel>
         <p-panel header='{{"comic-story.label.description"|translate}}'
                  [toggleable]='true'
                  [collapsed]='true'>
