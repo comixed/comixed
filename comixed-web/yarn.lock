@@ -1115,6 +1115,13 @@
   dependencies:
     "@angular/core" "^10.0.0"
 
+"@ngrx/store-devtools@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/store-devtools/-/store-devtools-10.1.0.tgz#bb0b90efe1840e0d4142dbeb4f5338d36bf1fdee"
+  integrity sha512-XkKyN/GFom/LcH0EFUofXbJF+SUnWn7nglVfWpVqe8pe7RdYw8yQQBbjHxgcE4HBnlQnl2gY4uTeyeDicVPbvA==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngrx/store@^10.0.1":
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-10.0.1.tgz#74c3bb383cc507f927ba63710cc6622f2f2859db"

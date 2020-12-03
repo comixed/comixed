@@ -39,7 +39,7 @@ import {
 } from 'rxjs/operators';
 import { UserService } from '@app/user/services/user.service';
 import { User } from '@app/user/models/user';
-import { AlertService, ApiResponse, TokenService } from '@app/core';
+import { AlertService, TokenService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LoginResponse } from '@app/user/models/net/login-response';
@@ -62,11 +62,7 @@ export class UserEffects {
       switchMap(action =>
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
-          map((response: ApiResponse<User>) =>
-            response.success
-              ? currentUserLoaded({ user: response.result })
-              : loadCurrentUserFailed()
-          ),
+          map((response: User) => currentUserLoaded({ user: response })),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -97,19 +93,13 @@ export class UserEffects {
           .loginUser({ email: action.email, password: action.password })
           .pipe(
             tap(response => this.logger.debug('Received response:', response)),
-            tap((response: ApiResponse<LoginResponse>) =>
-              response.success
-                ? this.tokenService.setAuthToken(response.result.token)
-                : this.tokenService.clearAuthToken()
+            tap((response: LoginResponse) =>
+              this.tokenService.setAuthToken(response.token)
             ),
-            mergeMap((response: ApiResponse<LoginResponse>) =>
-              response.success
-                ? [
-                    userLoggedIn({ token: response.result.token }),
-                    loadCurrentUser()
-                  ]
-                : [loginUserFailed()]
-            ),
+            mergeMap((response: LoginResponse) => [
+              userLoggedIn(),
+              loadCurrentUser()
+            ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.tokenService.clearAuthToken();
