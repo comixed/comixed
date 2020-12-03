@@ -60,7 +60,6 @@ export interface Comic {
   deletedPageCount: number;
   description?: string;
   notes?: string;
-  summary?: string;
   comicVineURL?: string;
   pages?: Page[];
   duplicateCount?: number;

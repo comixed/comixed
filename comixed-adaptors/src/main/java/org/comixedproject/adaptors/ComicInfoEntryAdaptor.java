@@ -86,7 +86,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
             comic.setIssueNumber(xmlInputReader.getElementText());
             break;
           case "Summary":
-            comic.setSummary(xmlInputReader.getElementText());
+            comic.setDescription(xmlInputReader.getElementText());
             break;
           case "Notes":
             comic.setNotes(xmlInputReader.getElementText());
@@ -185,7 +185,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
     this.writeEntry(writer, "Volume", comic.getVolume());
     this.writeEntry(writer, "Number", comic.getIssueNumber());
     this.writeEntry(writer, "Title", comic.getTitle());
-    this.writeEntry(writer, "Summary", comic.getSummary());
+    this.writeEntry(writer, "Summary", comic.getDescription());
     this.writeEntry(writer, "Notes", comic.getNotes());
 
     if (comic.getCoverDate() != null) {

@@ -266,14 +266,6 @@ public class Comic {
   @Setter
   private String notes;
 
-  @Column(name = "summary")
-  @Lob
-  @JsonProperty("summary")
-  @JsonView({View.ComicDetails.class})
-  @Getter
-  @Setter
-  private String summary;
-
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
   @CollectionTable(name = "comic_characters", joinColumns = @JoinColumn(name = "comic_id"))

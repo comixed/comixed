@@ -12,5 +12,6 @@
   <include file="/db/migrations/0.7.0/004_issue-204_add_task_audit_log.xml"/>
   <include file="/db/migrations/0.7.0/005_issue-471_add_exception_field_to_task_audit_log.xml"/>
   <include file="/db/migrations/0.7.0/006_issue-474_add_rest_audit_log.xml"/>
+  <include file="/db/migrations/0.7.0/007_issue-544_remove_summary_column.xml"/>
 
 </databaseChangeLog>

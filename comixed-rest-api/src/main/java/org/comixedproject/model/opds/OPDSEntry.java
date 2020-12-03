@@ -66,8 +66,8 @@ public class OPDSEntry {
       comicContent.append(comic.getTitle());
       comicContent.append(" - ");
     }
-    if (StringUtils.isNotEmpty(comic.getSummary())) {
-      comicContent.append(comic.getSummary());
+    if (StringUtils.isNotEmpty(comic.getDescription())) {
+      comicContent.append(comic.getDescription());
     }
     this.content = new OPDSContent(comicContent.toString());
 
