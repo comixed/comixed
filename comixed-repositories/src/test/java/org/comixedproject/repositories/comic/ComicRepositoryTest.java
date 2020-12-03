@@ -252,29 +252,6 @@ public class ComicRepositoryTest {
   }
 
   @Test
-  public void testSummaryCanBeNull() {
-    comic.setSummary(null);
-
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertNull(result.getSummary());
-  }
-
-  @Test
-  public void testSummaryCanBeUpdated() {
-    String summary = comic.getSummary().substring(1);
-    comic.setSummary(summary);
-
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertEquals(summary, result.getSummary());
-  }
-
-  @Test
   public void testStoryArcs() {
     assertEquals(1, comic.getStoryArcs().size());
   }
