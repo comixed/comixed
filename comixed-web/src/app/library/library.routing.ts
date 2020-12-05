@@ -16,14 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
-}
+const routes: Routes = [
+  {
+    path: 'admin/import',
+    component: ImportComicsComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class LibraryRouting {}
