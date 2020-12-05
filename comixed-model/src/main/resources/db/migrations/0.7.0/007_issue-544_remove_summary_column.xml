@@ -9,5 +9,13 @@
     <dropColumn tableName="comics"
                 columnName="summary"/>
 
+    <renameTable oldTableName="user_bookmarks"
+                 newTableName="bookmarks"/>
+
+    <renameColumn tableName="bookmarks"
+                  oldColumnName="book"
+                  newColumnName="comic_id"
+                  columnDataType="bigint"/>
+
   </changeSet>
 </databaseChangeLog>
