@@ -1,555 +1,75 @@
 {
-  "library": {
-    "move-comics": {
-      "title": "Organizar a biblioteca",
-      "label": {
-        "delete-physical-files": "Apagar os ficheiros (ATTENÇÃO: Faça uma cópia de segurança da sua biblioteca primeiro)",
-        "target-directory": "Nova pasta principal da biblioteca",
-        "renaming-rule": "Regra de renomeção de ficheiro (ver notas em baixo)",
-        "variable-name": "Nome da variavel",
-        "variable-description": "Descrição"
-      },
-      "button": {
-        "start": "Organizar a biblioteca"
-      },
-      "warning-text": "A organização da biblioteca não pode ser interrompida um vez que tenha começado.",
-      "effects": {
-        "success-detail": "Consolidação da biblioteca começou...",
-        "error-detail": "Erro ao começar a consulidação da biblioteca..."
-      },
-      "variables-note": "Esta lista mostra a variaveis que podes ser usadas nas regras de renomeação.",
-      "variables-example": "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)",
-      "variables-example-note": "Este exemplo organiza a biblioteca por editora, series, volume e um nome de ficheiro detalhado. Nota, NÃO precisade a extensão: isso é adicionado automaticamente.",
-      "variable": {
-        "PUBLISHER": "O nome da editora do comic",
-        "SERIES": "O nome da serie do comic",
-        "VOLUME": "O primeiro ano que o volume deste comic foi publicado",
-        "ISSUE": "O número deste comic",
-        "COVERDATE": "A data da capa desta edição"
-      },
-      "delete-files-warning-header": "Apagar os ficheiros",
-      "delete-files-warning-message": "Apagar os ficheiros não pode ser desfeito. Tem a CERTEZA que quer fazer isto?",
-      "confirmation-header": "Organizar a biblioteca",
-      "confirmation-message": "Tem a certeza que quer {deletePhysicalFiles, select, true{apagar ficheiros marcados para apagar e} other{}} organizar a biblioteca?"
+  "load-comic-files": {
+    "effect-success-detail": "Found {count, plural, =1{one comic file} other{# comic files}}.",
+    "effect-failure-detail": "Failed to find any comic files.",
+    "directory-placeholder": "Root Directory To Search...",
+    "maximum": {
+      "all-files": "All files",
+      "10-files": "10 files",
+      "50-files": "50 files",
+      "100-files": "100 files",
+      "1000-files": "1000 files"
     }
   },
-  "library-effects": {
-    "get-scan-types": {
-      "error": {
-        "detail": "Erro ao obter a lista dos tipos de digitalização."
-      }
-    },
-    "get-formats": {
-      "error": {
-        "detail": "Erro ao obter a lista de formatos de comics."
-      }
-    },
-    "get-updates": {
-      "error": {
-        "detail": "Erro ao obter actualizações dos comics."
-      }
-    },
-    "start-rescan": {
-      "success": {
-        "detail": "Começou a re-importação da biblioteca..."
-      },
-      "error": {
-        "detail": "Erro ao começar a re-importação da biblioteca."
-      }
-    },
-    "update-comic": {
-      "success": {
-        "detail": "Comic actualizado com sucesso."
-      },
-      "error": {
-        "detail": "Erro a actualizar o comic."
-      }
-    },
-    "clear-metadata": {
-      "success": {
-        "detail": "Metadados limpos com sucesso."
-      },
-      "error": {
-        "detail": "Erro ao limpar os metadados do comic."
-      }
-    },
-    "blocked-page-hash": {
-      "success": {
-        "blocked-detail": "Bloquear todas a páginas com uma hash de {hash}.",
-        "unblocked-detail": "Desbloquear todas as páginas com uma hash de {hash}."
-      },
-      "error": {
-        "detail": "Erro ao mudar o bloqueio de página."
-      }
-    },
-    "delete-multiple-comics": {
-      "success": {
-        "detail": "Marcados {count, plural, =1{um comic} other{# comics}} para serem apagados."
-      },
-      "error": {
-        "detail": "Erro a apagar multiplos comics."
-      }
-    },
-    "restore-multiple-comics": {
-      "success": {
-        "detail": "Repor comics."
-      },
-      "error": {
-        "detail": "Erro ao repor multiplos comics."
-      }
-    },
-    "convert-comics": {
-      "success": {
-        "detail": "Comics estão a ser convertidos."
-      },
-      "error": {
-        "detail": "Erro a converter comics."
-      }
-    },
-    "clear-image-cache": {
-      "success": {
-        "detail": "Cache da imagem apagada {success, select, true{com} other{sem}} sucesso..."
-      },
-      "error": {
-        "detail": "Erro a limpar a cache da imagem..."
-      }
-    }
-  },
-  "import-effects": {
-    "get-comic-files": {
-      "success": {
-        "detail": "Encontrados {count, plural, =1{ficheiro de comic} other{# ficheiros de comics}}."
-      },
-      "error": {
-        "detail": "Erro a obter ficheiros de comics para importar."
-      }
-    },
-    "import-comic-files": {
-      "success": {
-        "detail": "Importando {comic_count, plural, =1{one ficheiro de comic} other{# ficheiros de comics}}."
-      },
-      "error": {
-        "detail": "Erro ao começar a importar ficheiros de comics."
-      }
-    }
-  },
-  "reading-list-effects": {
-    "get-all": {
-      "success": {
-        "detail": "Obtidas {count, plural, =1{uma lista} other{# listas de leitura}}."
-      },
-      "error": {
-        "detail": "Erro ao obter todas as listas de leitura."
-      }
-    },
-    "get-reading-list": {
-      "success": {
-        "detail": "Carregada \"{name}\"."
-      },
-      "error": {
-        "detail": "Erro ao carregar lista de leitura."
-      }
-    },
-    "save": {
-      "success": {
-        "detail": "Lista de leitura \"{name}\" gravada."
-      },
-      "error": {
-        "detail": "Erro ao gravar lista de leitura"
-      }
-    },
-    "add-comics": {
-      "success": {
-        "detail": "Adicionado com sucesso {addedCount, plural, =1{um comic} other{# comics}} à lista de leitura."
-      },
-      "error": {
-        "detail": "Falha ao adicionar quadrinhos à lista de leitura."
-      }
-    },
-    "remove-comics": {
-      "success": {
-        "detail": "Removidos {removeCount, plural, =1{um quadrinho} other{# quadrinhos}} da lista de leitura."
-      },
-      "error": {
-        "detail": "Falha ao remover quadrinhos da lista de leitura."
-      }
-    }
-  },
-  "library-page": {
-    "title": {
-      "publishers": "Editoras : {name}",
-      "series": "Series : {name}",
-      "characters": "Personagens : {name}",
-      "teams": "Equipas : {name}",
-      "locations": "Localizações : {name}",
-      "stories": "Historias : {name}",
-      "reading-list": "Lista de leitura: {name}",
-      "all-comics": "Biblioteca"
-    },
-    "title-no-collection": "Todos os comics - {count, plural, =1{Um comic} other{# comics}}",
-    "title-for-collection": "{name} [{type, select, publishers{Editora} series{Serie} characters{Personagem} teams{Equipa} locations{Localização} stories{Historia} lists{Lista de leitura} other{Desconhecido}}] - {count, plural, =1{Um comic} other{# comics}}",
-    "error": {
-      "no-such-type": "Não existe este tipo de coleção: {type}"
-    },
-    "remove-comics-from-reading-list": {
-      "header": "Remover os comics selecionados de {name}",
-      "message": "Tem a certeza que quer remover {count, plural, =1{um comic} other{# comics}} desta lista de leitura?"
-    }
-  },
-  "reading-lists-page": {
-    "title": "ComiXed: Listas de leitura - {count, plural, =1{Uma lista} other{# listas}}"
-  },
-  "reading-list-page": {
-    "title": "ComiXed: Lista de leitura - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "publishers-page": {
-    "title": "ComiXed: Lista de editoras ({count})"
-  },
-  "publisher-details-page": {
-    "title": "ComiXed: Editora - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "series-page": {
-    "title": "ComiXed: Lista de series ({count})"
-  },
-  "series-details-page": {
-    "title": "ComiXed: Serie - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "characters-page": {
-    "title": "ComiXed: Personagems ({count})"
-  },
-  "character-details-page": {
-    "title": "ComiXed: Personagem - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "teams-page": {
-    "title": "ComiXed: Equipas ({count})"
-  },
-  "team-details-page": {
-    "title": "ComiXed: Equipa - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "locations-page": {
-    "title": "ComiXed: Localizações ({count})"
-  },
-  "location-details-page": {
-    "title": "ComiXed: Localização - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "story-arcs-page": {
-    "title": "ComiXed: Arcos da historias ({count})"
-  },
-  "story-arc-details-page": {
-    "title": "ComiXed: Arco da historia - {name} ({count, plural, =1{Um comic} other{# comics}})"
-  },
-  "duplicates-page": {
-    "title": "{pageCount} {pageCount, plural, =1{Página} other{Páginas}} duplicadas",
-    "text": {
-      "page-summary": "Esta página aparece em {comicCount, plural, =1{um comic} other{# comics}}."
-    },
-    "options": {
-      "page-count": {
-        "10-pages": "10 Páginas",
-        "25-pages": "25 Páginas",
-        "50-pages": "50 Páginas",
-        "100-pages": "100 Páginas"
-      }
-    }
-  },
-  "missing-comics-page": {
-    "title": "ComiXed: Comics em falta - {count, plural, =1{Um comic} other{# comics}}"
-  },
-  "comic-details-page": {
-    "title": "ComiXed: ({id}) - {series} #{issue_number} ({volume})",
-    "button": {
-      "prev-comic": "Número anterior",
-      "next-comic": "Proximo número"
-    }
-  },
-  "comic-list": {
+  "import-comic-files": {
+    "tab-title": "Import Comics",
+    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
+    "busy-title": "There Are Comics Importing Now",
     "header": {
-      "convert-comics": "Converter comics selecionados"
-    },
-    "label": {
-      "series": "Serie",
-      "volume": "Volume",
-      "issue-number": "Número #"
+      "cover": "Cover Image",
+      "filename": "Filename",
+      "size": "File Size (kb)"
     },
     "text": {
-      "no-comics-to-scrape": "Sem comics para obter metadados..."
-    },
-    "popup": {
-      "open-comic": "Abrir comic...",
-      "select-all": "Selecionar todos",
-      "deselect-all": "Deselecionar todos",
-      "scrape-comics": "Obter metadados...",
-      "delete-comics": "Apagar comics...",
-      "reading-lists": "Lists de leitura"
-    },
-    "context-menu": {
-      "select-all": "Selecionar todos",
-      "deselect-all": "Deselecionar todos",
-      "delete-selected": "Apagar seleções...",
-      "restore-selected": "Repor seleções...",
-      "scrape-selected": "Obter metadados das seleções",
-      "convert-comic": "Converter comic...",
-      "add-to-reading-list": "Adicionar à lista...",
-      "remove-from-reading-list": "Remover da lista..."
-    },
-    "start-scraping": {
-      "header": "Obter metadados do comic selecionado",
-      "message": "Tem a certeza que quer obter os metadados de {count, plural, =1{um comic} other{# comics}}?"
-    },
-    "delete-comics": {
-      "header": "Apagar {count} Comics",
-      "message": "Tem a certeza que quer apagar estes comics?"
-    },
-    "restore-comics": {
-      "header": "Recuperar {count} Comics",
-      "message": "Tem a certeza que quer recuperar estes comics?"
-    },
-    "remove-from-reading-list": {
-      "header": "Remover da lista de leitura",
-      "message": "Tem a certeza que quer remover estes comics da '{reading_list_name}?"
-    }
-  },
-  "comic-list-toolbar": {
-    "tooltip": {
-      "show-filters": "Mostrar filtros da biblioteca.",
-      "list-layout": "Mostrar comics numa lista.",
-      "grid-layout": "Mostrar comics numa grelha.",
-      "show-navigation-tree": "Mostrar o conteúdo da biblioteca...",
-      "select-all": "Selecionar todos os comics",
-      "deselect-all": "Deselecionar todos os comics",
-      "scrape": "Obter metadados do comics selecionados",
-      "delete": "Apagar os comics selecionados",
-      "show-details": "Mostrar detalhes.",
-      "create-reading-list": "Criar uma lista de leitura..."
-    },
-    "options": {
-      "rows": {
-        "10-comics": "Mostrar 10 comics",
-        "25-comics": "Mostrar 25 comics",
-        "50-comics": "Mostrar 50 comics",
-        "100-comics": "Mostrar 100 comics"
-      },
-      "same-height": {
-        "tooltip": "Ajustar o tamanho da imagem da capa.",
-        "label": "Usar como altura da capa"
-      },
-      "cover-size": {
-        "tooltip": "Definir tamanho da capa."
-      }
-    },
-    "delete-comics": {
-      "header": "Apagar comics selecionados",
-      "message": "Tema certeza que quer apagar {count, plural, =1{o comic selecionado} other{# comics selecionados}}?"
-    }
-  },
-  "library-filter": {
-    "title": "Filtros da biblioteca",
-    "option": {
-      "select-all-publishers": "Todas as editoras...",
-      "select-all-series": "Todas as series..."
+      "selected-for-import": "This file will be imported.",
+      "file-size": "{size} bytes"
     },
     "label": {
-      "publisher": "Editora",
-      "series": "Serie",
-      "show-deleted": "Mostrar comics marcados para serem apagados"
+      "ignore-metadata": "Ignore any metadata",
+      "delete-blocked-pages": "Mark blocked pages as delete"
     },
-    "button": {
-      "reset-filters": "Limpar filtros"
-    }
+    "confirm-start-title": "Import Comic Files?",
+    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
   },
-  "duplicate-pages-effects": {
-    "get-all": {
-      "error": {
-        "detail": "Erro a obter todas a páginas duplicadas."
-      }
-    },
-    "set-blocking": {
-      "success": {
-        "detail": "Marcadas as páginas selecionadas como {blocked, select, true{bloqueadas} other{desbloqueadas}} com sucesso."
-      },
-      "error": {
-        "detail": "Erro a bloquear hashs da página."
-      }
-    },
-    "set-deleted": {
-      "success": {
-        "detail": "Páginas selecionadas {deleted, select, true{marcadas} other{desmarcadas}} com sucesso."
-      },
-      "error": {
-        "detail": "Erro a {deleted, select, true{marcar} other{desmarcar}} páginas para serem apagadas."
-      }
-    }
+  "send-comic-files": {
+    "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
+    "effect-failure-detail": "Failed to send comic files for import."
   },
-  "duplicates-page-toolbar": {
-    "options": {
-      "blocking": {
-        "turn-on": "Bloquear",
-        "turn-off": "Desbloquear"
-      },
-      "deleting": {
-        "mark": "Marcar",
-        "unmark": "Desmarcar"
-      }
-    },
-    "button": {
-      "blocking-options": "Bloqueando",
-      "deleting-options": "Apagando"
-    },
-    "set-blocking": {
-      "header": "Definir estado de bloqueio para as páginas",
-      "message": "Tem a certeza que quer {blocking, select, true{bloquear} other{desbloquear}} a página selecionada?"
-    },
-    "set-deleted": {
-      "header": "Marcar páginas para serem apagadas",
-      "message": "Tem a certeza que quer {deleted, select, true{marcar} other{desmarcar}} as páginas selecionadas?"
-    }
+  "load-comic": {
+    "effect-failure-detail": "Failed to load the comic."
   },
-  "duplicate-page-grid-item": {
-    "tooltip": "Esta página está {blocked, select, true{bloqueada} other{desbloqueada}}, e {deletedCount, plural, =0{nenhuma está} =1{# está} other{# estão}} marcadas para serem apagadas.",
-    "caption": "Encontradas {count, plural, =1{uma copia} other{# copias}}."
-  },
-  "duplicate-page-list-item": {
-    "title": "Encontradas {count, plural, =1{uma copia} other{# copias}}.",
-    "subtitle": "Esta página está {blocked, select, true{bloqueada} other{desbloqueada}}, e {deletedCount, plural, =0{nenhuma está} =1{# está} other{# estão}} marcadas para serem apagadas."
-  },
-  "collection-effects": {
-    "get-entries": {
-      "error": {
-        "detail": "Erro a obter entradas para {collectionType}."
-      }
-    },
-    "get-page-for-entry": {
-      "error": {
-        "details": "Erro a carregar comics."
-      }
-    }
-  },
-  "multi-comic-scraping-page": {
-    "title": "Procurar metadados de {count, plural, =1{um Comic} other{# comics}}"
-  },
-  "convert-comics-settings": {
+  "comic": {
     "label": {
-      "archive-type": "Tipo de ficheiro",
-      "rename-pages": "Renomear páginas",
-      "delete-pages": "Remover páginas apagadas e bloqueadas",
-      "delete-original": "Apagar comic original"
+      "comic-overview": "Overview",
+      "comic-story": "Story",
+      "comic-pages": "Pages",
+      "comic-edit": "Edit Details",
+      "issue-details": "Issue Details",
+      "publisher": "Publisher",
+      "series": "Series Name",
+      "volume": "Volume",
+      "issue-number": "Issue #",
+      "cover-date": "Cover Date",
+      "file-details": "Comic File Details",
+      "filename": "Filename",
+      "filesize": "Filesize",
+      "archive-type": "File Encoded As",
+      "file-entries": "File Entries",
+      "added-date": "Added To Library",
+      "other-details": "Other Comic Details",
+      "scan-type": "Scan Type",
+      "comic-format": "Comic Format",
+      "imprint": "Imprint",
+      "sort-name": "Sort Name"
     },
-    "option": {
-      "cbz": "CBZ (Zip)",
-      "cb7": "CB7 (7Zip)"
-    },
-    "button": {
-      "start": "Converter",
-      "cancel": "Cancelar"
-    },
-    "start-conversion": {
-      "header": "Converter Comics",
-      "message": "Tem a certeza que quer converter {count, plural, =1{um comic} other{# comics}} para {archiveType}?"
-    }
-  },
-  "publisher-effects": {
-    "get-publisher-by-name": {
-      "error": {
-        "detail": "Não foi posivel encontrar a editora {name}"
-      }
-    }
-  },
-  "library-admin-page": {
-    "title": "ComiXed: Administração da biblioteca",
-    "rescan": {
-      "header": "Re-importar a bliblioteca",
-      "paragraph1": "<p>Utilize este botão para forçar a re-importação completa da sua biblioteca.</p>",
-      "paragraph2": "<p>O servidor irá reavaliar cada comic na biblioteca, actualizando o que sabe sobre cada ficheiro.</p>",
-      "paragraph3": "<p><em>NOTA:</em> Enquanto a biblioteca está a ser re-importada, não será possivel importar novos comics.</p>",
-      "already-running": "<p>Uma re-importação estar a decorrer no servidor...</p>",
-      "buttons": {
-        "rescan-library": "Rescan Library"
-      }
-    },
-    "backup": {
-      "header": "Cópia de segurança/Respor biblioteca",
-      "paragraph1": "<p>Utilize esta secção para descarregar e repor snapshots da base de dados da sua biblioteca.</p>",
-      "paragraph2": "<p>Para descarregar a base de dados actual, carregue no botão <strong>Exportar biblioteca</strong>.</p>",
-      "buttons": {
-        "export-library": "Exportar biblioteca"
-      }
-    }
-  },
-  "account-preferences": {
-    "label": {
-      "preference-name": "Nome",
-      "preference-value": "Valor"
-    }
-  },
-  "library-navigation-tree": {
-    "title": "Conteúdo da biblioteca",
-    "label": {
-      "unnamed-entry": "Sem nome",
-      "all-comics": "Todos os comics ({count})",
-      "all-comics-title": "Todos os comics",
-      "publishers": "Editoras ({count})",
-      "series": "Series ({count})",
-      "characters": "Personagens ({count})",
-      "teams": "Equipas ({count})",
-      "locations": "Localizações ({count})",
-      "stories": "Historias ({count})",
-      "reading-lists": "Lista de leitura ({count})",
-      "reading-list": "{name} ({count})",
-      "leaf-entry": "{name} ({count})"
-    },
-    "popup-menu": {
-      "create-reading-list": "Nova lista de leitura...",
-      "edit-reading-list": "Editar {name}..."
-    }
-  },
-  "duplicate-comics-page": {
-    "title": "Comics duplicados ({count})"
-  },
-  "reading-list-edit": {
-    "title": "Detalhes da Lista de leitura",
-    "label": {
-      "reading-list-name": "Nome",
-      "reading-list-summary": "Resumo"
-    },
-    "save": {
-      "header": "Gravar lista de leitura",
-      "message": "Gravar altarações para \"{name}\"?"
-    }
-  },
-  "add-comics-to-reading-list": {
-    "title": "Adicionar {count, plural, =1{um Comic} other{# comics}} à lista de leitura",
-    "label": {
-      "select-reading-list": "Escolha a lista de leitura"
-    }
-  },
-  "plugins-page": {
-    "title": "Plugins",
-    "table": {
-      "header": {
-        "name": "Nome",
-        "language": "Linguagem",
-        "version": "Versão",
-        "author": "Autor",
-        "description": "Descrição"
-      }
+    "text": {
+      "filesize": "{size, plural, =1{One byte} other{# bytes}}",
+      "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive."
     },
     "tooltip": {
-      "reload-plugins": "Re-carregar plugins"
-    }
-  },
-  "plugin-effects": {
-    "get-all": {
-      "error": {
-        "detail": "Erro ao carregar plugins..."
-      }
-    },
-    "reload-plugins": {
-      "success": {
-        "detail": "Carregado(s) {count, plural, =1{um plugin} other{# plugins}}..."
-      },
-      "error": {
-        "detail": "Erro ao carregar plugins..."
-      }
+      "download-comic": "Download this comic...",
+      "go-to-next-comic": "Go to the next comic in this series...",
+      "go-to-previous-comic": "Go to the previous comic in this series..."
     }
   }
 }

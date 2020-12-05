@@ -1,5 +1,10 @@
-<img [src]="imageUrl"
-     [alt]="imageUrl"
-     width="100%"
-     height="auto"
-     (click)="onClick()"/>
+<mat-card>
+  <mat-card-title>{{imageTitle}}</mat-card-title>
+  <mat-card-content>
+    <img [src]="imageUrl"
+         [alt]="imageUrl"
+         [style.height]="height"
+         [style.width]="width"
+         (click)="onClick()"/>
+  </mat-card-content>
+</mat-card>

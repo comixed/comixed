@@ -16,34 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
-import { PageClickEvent } from '@app/core';
+import { Comic } from '@app/library';
 
-/** Displays a page from a comic. Provides events for when the page is clicked. */
 @Component({
-  selector: 'cx-comic-page',
-  templateUrl: './comic-page.component.html',
-  styleUrls: ['./comic-page.component.scss']
+  selector: 'cx-comic-overview',
+  templateUrl: './comic-overview.component.html',
+  styleUrls: ['./comic-overview.component.scss']
 })
-export class CoverImageComponent {
-  @Input() imageTitle: string;
-  @Input() source: any;
-  @Input() imageUrl: string;
-  @Input() selected: boolean;
-  @Input() width = '100%';
-  @Input() height = 'auto';
-
-  @Output() pageClicked = new EventEmitter<PageClickEvent>();
+export class ComicOverviewComponent implements OnInit {
+  @Input() comic: Comic;
 
   constructor(private logger: LoggerService) {}
 
-  /** Invoked when the cover is clicked. */
-  onClick(): void {
-    this.logger.trace('Cover clicked:', this.source, this.selected);
-    this.pageClicked.emit({
-      source: this.source,
-      selected: !this.selected
-    } as PageClickEvent);
-  }
+  ngOnInit(): void {}
 }

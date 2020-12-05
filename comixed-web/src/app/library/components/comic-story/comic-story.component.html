@@ -1,0 +1,66 @@
+<mat-accordion multi>
+  <mat-expansion-panel [disabled]="!comic.description || comic.description.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{"comic.label.description"|translate}}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div [innerHTML]="comic.description"></div>
+  </mat-expansion-panel>
+  <mat-expansion-panel [disabled]="comic.credits.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{"comic.label.credits"|translate:{count: comic.credits.length} }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="cx-comic-detail-card-container cx-width-100">
+      <cx-comic-detail-card *ngFor="let credit of comic.credits"
+                            [title]="credit.name"
+                            [description]="credit.role"></cx-comic-detail-card>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel [disabled]="comic.characters.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{"comic.label.characters"|translate:{count: comic.characters.length} }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="cx-comic-detail-card-container cx-width-100">
+      <cx-comic-detail-card *ngFor="let character of comic.characters"
+                            [title]="character"></cx-comic-detail-card>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel [disabled]="comic.teams.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{"comic.label.teams"|translate:{count: comic.teams.length} }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="cx-comic-detail-card-container cx-width-100">
+      <cx-comic-detail-card *ngFor="let team of comic.teams"
+                            [title]="team"></cx-comic-detail-card>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel [disabled]="comic.locations.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{"comic.label.locations"|translate:{count: comic.locations.length} }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="cx-comic-detail-card-container cx-width-100">
+      <cx-comic-detail-card *ngFor="let location of comic.locations"
+                            [title]="location"></cx-comic-detail-card>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel [disabled]="comic.storyArcs.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{"comic.label.stories"|translate:{count: comic.storyArcs.length} }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="cx-comic-detail-card-container cx-width-100">
+      <cx-comic-detail-card *ngFor="let story of comic.storyArcs"
+                            [title]="story"></cx-comic-detail-card>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

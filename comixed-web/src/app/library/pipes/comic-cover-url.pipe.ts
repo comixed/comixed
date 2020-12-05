@@ -16,27 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { Pipe, PipeTransform } from '@angular/core';
+import {
+  GET_COMIC_COVER_URL,
+  MISSING_COMIC_IMAGE_URL
+} from '@app/library/library.constants';
+import { interpolate } from '@app/core';
+import { Comic } from '@app/library';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+@Pipe({
+  name: 'comicCoverUrl'
 })
-export class LibraryRouting {}
+export class ComicCoverUrlPipe implements PipeTransform {
+  transform(comic: Comic): string {
+    if (!!comic && !comic.missing) {
+      return interpolate(GET_COMIC_COVER_URL, { id: comic.id });
+    }
+    return MISSING_COMIC_IMAGE_URL;
+  }
+}
