@@ -16,27 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComicDetailCardComponent } from './comic-detail-card.component';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
+describe('ComicDetailCardComponent', () => {
+  let component: ComicDetailCardComponent;
+  let fixture: ComponentFixture<ComicDetailCardComponent>;
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class LibraryRouting {}
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComicDetailCardComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ComicDetailCardComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

@@ -5,10 +5,16 @@
   },
   "button": {
     "deselect": "Deselect",
+    "download": "Download",
     "load": "Load",
     "login": "Login",
     "logout": "Logout",
+    "next": "Next",
     "no": "No",
+    "previous": "Previous",
+    "reset": "Reset",
+    "save": "Save",
+    "scrape": "Scrape",
     "select": "Select",
     "start": "Start",
     "submit": "Submit",
@@ -22,5 +28,12 @@
   },
   "session": {
     "load-effect-failure": "Unable to load user session"
+  },
+  "text": {
+    "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
+    "view-details": "View Details"
+  },
+  "validation": {
+    "field-required": "This field is required"
   }
 }

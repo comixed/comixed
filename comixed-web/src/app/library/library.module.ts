@@ -38,7 +38,6 @@ import { ComicFileListComponent } from './components/comic-file-list/comic-file-
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
 import { ComicFileDetailsComponent } from './components/comic-file-details/comic-file-details.component';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexModule } from '@angular/flex-layout';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
@@ -49,6 +48,17 @@ import {
   reducer as comicReducer
 } from '@app/library/reducers/comic.reducer';
 import { ComicEffects } from '@app/library/effects/comic.effects';
+import { ComicDetailsComponent } from './pages/comic-details/comic-details.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
+import { ComicStoryComponent } from './components/comic-story/comic-story.component';
+import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
+import { ComicEditComponent } from './components/comic-edit/comic-edit.component';
+import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { ComicTitlePipe } from './pipes/comic-title.pipe';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
 
 @NgModule({
   declarations: [
@@ -56,7 +66,15 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     ImportToolbarComponent,
     ComicFileListComponent,
     ComicFileCoverUrlPipe,
-    ComicFileDetailsComponent
+    ComicFileDetailsComponent,
+    ComicDetailsComponent,
+    ComicOverviewComponent,
+    ComicStoryComponent,
+    ComicPagesComponent,
+    ComicEditComponent,
+    ComicCoverUrlPipe,
+    ComicTitlePipe,
+    ComicPageUrlPipe
   ],
   imports: [
     CommonModule,
@@ -71,13 +89,15 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     MatSelectModule,
     MatButtonModule,
     MatTableModule,
-    MatGridListModule,
     FlexModule,
     MatCheckboxModule,
     MatSortModule,
     MatCardModule,
     MatTooltipModule,
-    FormsModule
+    FormsModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatExpansionModule
   ],
   exports: [CommonModule, CoreModule]
 })

@@ -16,27 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { ComicCoverUrlPipe } from './comic-cover-url.pipe';
+import { API_ROOT_URL } from '@app/core';
+import { COMIC_1, COMIC_4 } from '@app/library/library.fixtures';
+import { MISSING_COMIC_IMAGE_URL } from '@app/library/library.constants';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
+describe('ComicCoverUrlPipe', () => {
+  const pipe = new ComicCoverUrlPipe();
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class LibraryRouting {}
+  it('returns the missing page URL if the comic is missing', () => {
+    expect(pipe.transform({ ...COMIC_4, missing: true })).toEqual(
+      MISSING_COMIC_IMAGE_URL
+    );
+  });
+
+  it('returns the URL for the comic cover image', () => {
+    expect(pipe.transform(COMIC_1)).toEqual(
+      `${API_ROOT_URL}/comics/${COMIC_1.id}/cover/content`
+    );
+  });
+});

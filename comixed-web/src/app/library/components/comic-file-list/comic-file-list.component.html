@@ -1,6 +1,5 @@
-<table aria-label="Comic files available for import"
+<mat-table aria-label="Comic files available for import"
        matSort
-       mat-table
        [dataSource]="dataSource"
        (matSortChange)="onSortChanged($event)">
   <ng-container matColumnDef="selected">
@@ -35,4 +34,4 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"
            (click)="onRowSelected(row)"></mat-row>
-</table>
+</mat-table>
