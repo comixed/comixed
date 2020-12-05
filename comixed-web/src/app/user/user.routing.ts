@@ -16,14 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './pages/login/login.component';
+import { NgModule } from '@angular/core';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
-}
+const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class UserRouting {}

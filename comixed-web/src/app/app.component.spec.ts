@@ -37,7 +37,7 @@ import {
 import {USER_READER} from '@app/user/user.fixtures';
 import {loadSessionUpdate} from '@app/actions/session.actions';
 import {SESSION_TIMEOUT} from '@app/app.constants';
-import {setImportingComicsState} from '@app/comic-import/actions/comic-import.actions';
+import {setImportingComicsState} from '@app/library/actions/comic-import.actions';
 
 describe('AppComponent', () => {
   const USER = USER_READER;

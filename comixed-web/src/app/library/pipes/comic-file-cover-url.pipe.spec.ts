@@ -16,14 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { ComicFileCoverUrlPipe } from './comic-file-cover-url.pipe';
+import { COMIC_FILE_1 } from '@app/library/library.fixtures';
+import { API_ROOT_URL } from '@app/core';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
-}
+describe('ComicFileCoverUrlPipe', () => {
+  const pipe = new ComicFileCoverUrlPipe();
+
+  it('returns the url for given page', () => {
+    expect(pipe.transform(COMIC_FILE_1)).toEqual(
+      `${API_ROOT_URL}/files/import/cover?filename=${encodeURIComponent(
+        COMIC_FILE_1.filename
+      )}`
+    );
+  });
+});

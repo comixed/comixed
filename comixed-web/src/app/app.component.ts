@@ -27,7 +27,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { loadSessionUpdate } from '@app/actions/session.actions';
 import { SESSION_TIMEOUT } from '@app/app.constants';
 import { selectUserSessionState } from '@app/selectors/session.selectors';
-import { setImportingComicsState } from '@app/comic-import/actions/comic-import.actions';
+import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
 
 @Component({
   selector: 'cx-root',

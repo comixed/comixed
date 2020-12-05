@@ -26,7 +26,7 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
 import { LoginComponent } from './pages/login/login.component';
-import { UserRoutingModule } from './user-routing.module';
+import { UserRouting } from './user.routing';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from '@app/core/core.module';
 import { MatCardModule } from '@angular/material/card';
@@ -42,7 +42,7 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     CommonModule,
     CoreModule,
-    UserRoutingModule,
+    UserRouting,
     HttpClientModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(USER_FEATURE_KEY, userReducer),
