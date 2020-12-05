@@ -16,14 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { Pipe, PipeTransform } from '@angular/core';
+import { ComicFile } from '@app/library/models/comic-file';
+import { API_ROOT_URL } from '@app/core';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
+@Pipe({
+  name: 'comicFileCoverUrl',
+})
+export class ComicFileCoverUrlPipe implements PipeTransform {
+  transform(comicFile: ComicFile): string {
+    return `${API_ROOT_URL}/files/import/cover?filename=${encodeURIComponent(
+      comicFile.filename
+    )}`;
+  }
 }

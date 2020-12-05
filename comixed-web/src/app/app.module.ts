@@ -18,7 +18,7 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRouting } from './app.routing';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
@@ -43,7 +43,7 @@ import { LoggerLevel, LoggerModule } from '@angular-ru/logger';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ComicImportModule } from '@app/comic-import/comic-import.module';
+import { LibraryModule } from '@app/library/library.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   _MatMenuDirectivesModule,
@@ -56,9 +56,9 @@ import { SessionEffects } from '@app/effects/session.effects';
   declarations: [AppComponent, HomeComponent, NavigationBarComponent],
   imports: [
     UserModule,
-    ComicImportModule,
+    LibraryModule,
     BrowserModule,
-    AppRoutingModule,
+    AppRouting,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,
