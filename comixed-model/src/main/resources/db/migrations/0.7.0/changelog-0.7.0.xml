@@ -13,5 +13,8 @@
   <include file="/db/migrations/0.7.0/005_issue-471_add_exception_field_to_task_audit_log.xml"/>
   <include file="/db/migrations/0.7.0/006_issue-474_add_rest_audit_log.xml"/>
   <include file="/db/migrations/0.7.0/007_issue-544_remove_summary_column.xml"/>
+  <include file="/db/migrations/0.7.0/008_issue-544_fix_page_number.xml"/>
+  <include file="/db/migrations/0.7.0/009_issue-544_fix_user_bookmarks_table.xml"/>
+  <include file="/db/migrations/0.7.0/010_issue-544_create_bookmarks_table.xml"/>
 
 </databaseChangeLog>
