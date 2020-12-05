@@ -3,11 +3,13 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-  <changeSet id="007_issue-544_remove_summary_column.xml"
+  <changeSet id="009_issue-544_fix_user_bookmarks_table.xml"
              author="mcpierce">
 
-    <dropColumn tableName="comics"
-                columnName="summary"/>
+    <preConditions onFail="MARK_RAN">
+      <tableExists tableName="user_bookmarks"/>
+    </preConditions>
 
+    <dropTable tableName="user_bookmarks"/>
   </changeSet>
 </databaseChangeLog>
