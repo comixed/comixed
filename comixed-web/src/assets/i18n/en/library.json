@@ -37,5 +37,58 @@
   },
   "load-comic": {
     "effect-failure-detail": "Failed to load the comic."
+  },
+  "comic": {
+    "undo-changes": {
+      "title": "Undo Changes",
+      "message": "Are you sure you want to undo changes to this comic?"
+    },
+    "hint": {
+      "required-for-scraping": "This value is required for scraping..."
+    },
+    "label": {
+      "added-date": "Added To Library",
+      "archive-type": "File Encoded As",
+      "characters": "Characters In This Issue ({count})",
+      "comic-edit": "Edit Details",
+      "comic-format": "Comic Format",
+      "comic-overview": "Overview",
+      "comic-pages": "Pages",
+      "comic-story": "Story",
+      "cover-date": "Cover Date",
+      "credits": "Creative Team ({count})",
+      "description": "Issue Description",
+      "file-details": "Comic File Details",
+      "file-entries": "File Entries",
+      "filename": "Filename",
+      "filesize": "Filesize",
+      "imprint": "Imprint",
+      "issue-details": "Issue Details",
+      "issue-number": "Issue #",
+      "locations": "Locations In This Issue ({count})",
+      "other-details": "Other Comic Details",
+      "publisher": "Publisher",
+      "scan-type": "Scan Type",
+      "series": "Series Name",
+      "sort-name": "Sort Name",
+      "stories": "Story Arcs In This Issue ({count})",
+      "teams": "Teams In This Issue ({count})",
+      "volume": "Volume"
+    },
+    "placeholder": {
+      "issue-number": "The issue number...",
+      "publisher": "The publisher...",
+      "series": "The series name...",
+      "volume": "The volume..."
+    },
+    "text": {
+      "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
+      "filesize": "{size, plural, =1{One byte} other{# bytes}}"
+    },
+    "tooltip": {
+      "download-comic": "Download this comic...",
+      "go-to-next-comic": "Go to the next comic in this series...",
+      "go-to-previous-comic": "Go to the previous comic in this series..."
+    }
   }
 }

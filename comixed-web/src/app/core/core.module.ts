@@ -30,24 +30,36 @@ import {
   reducer as busyReducer
 } from '@app/core/reducers/busy.reducer';
 import { EffectsModule } from '@ngrx/effects';
+import { ComicDetailCardComponent } from './components/comic-detail-card/comic-detail-card.component';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [ConfirmationComponent, CoverImageComponent],
+  declarations: [
+    ConfirmationComponent,
+    CoverImageComponent,
+    ComicDetailCardComponent
+  ],
   imports: [
     CommonModule,
+    TranslateModule.forRoot(),
     StoreModule.forFeature(BUSY_FEATURE_KEY, busyReducer),
     EffectsModule.forFeature([]),
     MatSnackBarModule,
     MatDialogModule,
     MatIconModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCardModule,
+    RouterModule
   ],
   exports: [
     MatSnackBarModule,
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
-    CoverImageComponent
+    CoverImageComponent,
+    ComicDetailCardComponent
   ],
   providers: []
 })

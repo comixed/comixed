@@ -18,6 +18,14 @@
 
 import { API_ROOT_URL } from '../core';
 
+export const QUERY_PARAM_TAB = 'tab';
+
+export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
+
+export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
+export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
+export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
+
 export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 

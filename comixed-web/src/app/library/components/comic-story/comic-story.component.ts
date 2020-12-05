@@ -16,27 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Comic } from '@app/library';
+import { MatAccordion } from '@angular/material/expansion';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+@Component({
+  selector: 'cx-comic-story',
+  templateUrl: './comic-story.component.html',
+  styleUrls: ['./comic-story.component.scss']
 })
-export class LibraryRouting {}
+export class ComicStoryComponent implements OnInit {
+  @ViewChild(MatAccordion) accordion: MatAccordion;
+
+  @Input() comic: Comic;
+
+  constructor() {}
+
+  ngOnInit(): void {}
+}

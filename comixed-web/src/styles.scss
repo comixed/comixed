@@ -1,4 +1,4 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 html,
 body {
@@ -8,6 +8,13 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+// header
+h1,
+h2,
+h3 {
+  text-transform: uppercase;
 }
 
 // component sizes
@@ -37,8 +44,18 @@ body {
   padding-left: 5px;
 }
 
+.cx-padding-right-5 {
+  padding-right: 5px;
+}
+
 .cx-padding-right-15 {
-  padding-right: 15px;
+  padding-right: 15px !important;
+}
+
+// margins
+
+.cx-margin-left-5 {
+  margin-left: 5px;
 }
 
 // table column widths
@@ -62,4 +79,30 @@ $cx-column-large: 325px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+// content display
+
+.cx-detail-label {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.cx-float-left {
+  float: left;
+}
+
+.cx-align-text-right {
+  text-align: right;
+}
+
+.cx-comic-detail-card-container {
+  display: flex;
+  flex-direction: row;
+}
+
+// buttons
+
+.cx-action-button {
+  min-width: 200px;
 }

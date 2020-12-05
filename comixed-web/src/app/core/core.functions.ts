@@ -17,8 +17,8 @@
  */
 
 import * as _ from 'lodash';
-
-export const API_ROOT_URL = '/api';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { API_ROOT_URL } from '@app/core/index';
 
 /** Interpolates the given values into the provided string. */
 export function interpolate(template: string, values: any = {}): string {
@@ -37,4 +37,22 @@ export function compare(
   ascending: boolean
 ): number {
   return (a < b ? -1 : 1) * (ascending ? 1 : -1);
+}
+
+/** Updates a parameter in the browser's URL. */
+export function updateQueryParam(
+  activatedRoute: ActivatedRoute,
+  router: Router,
+  paramName: string,
+  paramValue: string
+): void {
+  const queryParams: Params = Object.assign(
+    {},
+    activatedRoute.snapshot.queryParams
+  );
+  queryParams[paramName] = paramValue;
+  router.navigate([], {
+    relativeTo: activatedRoute,
+    queryParams
+  });
 }

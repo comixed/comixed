@@ -1,0 +1,8 @@
+<div id="comic-pages"
+     class="cx-comic-detail-card-container cx-width-100">
+  <cx-comic-page *ngFor="let page of comic.pages; let i = index"
+                 [imageUrl]="page|comicPageUrl"
+                 [title]="page.filename"
+                 [imageTitle]="page.filename"
+                 [width]="'200px'"></cx-comic-page>
+</div>
