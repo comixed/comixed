@@ -25,11 +25,17 @@ import {
   reducer as busyReducer
 } from '@app/core/reducers/busy.reducer';
 
+export const API_ROOT_URL = '/api';
+
 export { TokenService } from '@app/core/services/token.service';
 export { AlertService } from '@app/core/services/alert.service';
 export { ConfirmationService } from '@app/core/services/confirmation.service';
 
-export * from '@app/core/core.functions';
+export {
+  interpolate,
+  compare,
+  updateQueryParam
+} from '@app/core/core.functions';
 export { PageClickEvent } from '@app/core/models/event/page-click-event';
 
 interface RouterStateUrl {

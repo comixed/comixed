@@ -1,0 +1,36 @@
+<h3>{{"comic.label.issue-details"|translate}}</h3>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.publisher'|translate}}</span>{{comic.publisher}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.series'|translate}}</span>{{comic.series}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.volume'|translate}}</span>{{comic.volume}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.issue-number'|translate}}</span>{{comic.issueNumber}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.cover-date'|translate}}</span>{{comic.coverDate|date:'MM/dd/yyyy'}}</span>
+<br/>
+<h3>{{"comic.label.file-details"|translate}}</h3>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.filename'|translate}}</span>{{comic.filename}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.filesize'|translate}}</span>{{"comic.text.filesize"|translate:{size: 0} }}</span>
+<br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.file-entries'|translate}}</span>{{"comic.text.file-entries"|translate:{count: comic.fileEntries.length} }}</span>
+<br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.archive-type'|translate}}</span>{{"text.archive-type"|translate:{type: comic.archiveType} }}</span>
+<br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.added-date'|translate}}</span>{{comic.addedDate|date:'medium'}}</span>
+<br/>
+<h3>{{"comic.label.other-details"|translate}}</h3>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.sort-name'|translate}}</span>{{comic.sortName}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.scan-type'|translate}}</span>{{comic.scanType}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.comic-format'|translate}}</span>{{comic.format}}</span><br/>
+<span><span class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+            [style.width]="'200px'">{{'comic.label.imprint'|translate}}</span>{{comic.imprint}}</span><br/>

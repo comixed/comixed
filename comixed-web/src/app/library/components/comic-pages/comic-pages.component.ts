@@ -16,27 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { Component, Input, OnInit } from '@angular/core';
+import { Comic } from '@app/library';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+@Component({
+  selector: 'cx-comic-pages',
+  templateUrl: './comic-pages.component.html',
+  styleUrls: ['./comic-pages.component.scss']
 })
-export class LibraryRouting {}
+export class ComicPagesComponent implements OnInit {
+  @Input() comic: Comic;
+
+  constructor() {}
+
+  ngOnInit(): void {}
+}

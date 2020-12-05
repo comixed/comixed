@@ -1,0 +1,12 @@
+<mat-card>
+  <mat-card-title>{{title}}</mat-card-title>
+  <mat-card-subtitle *ngIf="detailLink"><a [routerLink]="detailLink">{{"text.view-details"|translate}}</a>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <img *ngIf="!!imageUrl"
+         [src]="imageUrl"
+         [alt]="title"/>
+    <div *ngIf="!!description"
+         [innerHTML]="description"></div>
+  </mat-card-content>
+</mat-card>

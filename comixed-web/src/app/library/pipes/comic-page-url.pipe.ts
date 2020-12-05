@@ -16,27 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { Pipe, PipeTransform } from '@angular/core';
+import { interpolate } from '@app/core';
+import { Page } from '@app/library';
+import { GET_PAGE_CONTENT_URL } from '@app/library/library.constants';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+@Pipe({
+  name: 'comicPageUrl'
 })
-export class LibraryRouting {}
+export class ComicPageUrlPipe implements PipeTransform {
+  transform(page: Page): string {
+    return interpolate(GET_PAGE_CONTENT_URL, { id: page.id });
+  }
+}

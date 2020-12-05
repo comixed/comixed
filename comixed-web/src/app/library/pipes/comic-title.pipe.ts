@@ -16,27 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
-import { AdminGuard, ReaderGuard } from '@app/user';
+import { Pipe, PipeTransform } from '@angular/core';
+import { Comic } from '@app/library';
+import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
 
-const routes: Routes = [
-  {
-    path: 'admin/import',
-    component: ImportComicsComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'library/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  }
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+@Pipe({
+  name: 'comicTitle'
 })
-export class LibraryRouting {}
+export class ComicTitlePipe implements PipeTransform {
+  transform(comic: Comic): string {
+    return `${!!comic.series ? comic.series : UNKNOWN_VALUE_PLACEHOLDER} (${
+      !!comic.volume ? comic.volume : '????'
+    }) #${!!comic.issueNumber ? comic.issueNumber : '??'}`;
+  }
+}
