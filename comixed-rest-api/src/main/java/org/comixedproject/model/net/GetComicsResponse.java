@@ -28,19 +28,19 @@ import org.comixedproject.views.View;
 
 public class GetComicsResponse {
   @JsonProperty("comics")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.ComicListView.class)
   private List<Comic> comics;
 
   @JsonProperty("lastReadDates")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.ComicListView.class)
   private List<LastReadDate> lastReadDates;
 
   @JsonProperty("lastUpdatedDate")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.ComicListView.class)
   private Date latestUpdatedDate;
 
   @JsonProperty("comicCount")
-  @JsonView(View.ComicList.class)
+  @JsonView(View.ComicListView.class)
   private long comicCount;
 
   public GetComicsResponse() {}

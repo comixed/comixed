@@ -66,7 +66,12 @@ public class PageTest {
 
   @Before
   public void setUp() throws IOException {
-    page = new Page(TEST_JPG_FILE, new PageType(), TEST_HASH, TEST_WIDTH, TEST_HEIGHT);
+    page = new Page();
+    page.setFilename(TEST_JPG_FILE);
+    page.setPageType(new PageType());
+    page.setHash(TEST_HASH);
+    page.setWidth(TEST_WIDTH);
+    page.setHeight(TEST_HEIGHT);
   }
 
   @Test

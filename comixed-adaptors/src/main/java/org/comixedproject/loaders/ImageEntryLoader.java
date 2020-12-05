@@ -58,8 +58,12 @@ public class ImageEntryLoader extends AbstractEntryLoader {
         final BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));
         final int width = bimage.getWidth();
         final int height = bimage.getHeight();
-        Page page =
-            new Page(filename, this.pageTypeRepository.getDefaultPageType(), hash, width, height);
+        Page page = new Page();
+        page.setFilename(filename);
+        page.setPageType(this.pageTypeRepository.getDefaultPageType());
+        page.setHash(hash);
+        page.setWidth(width);
+        page.setHeight(height);
         page.setContent(content);
         page.setComic(comic);
         comic.getPages().add(page);

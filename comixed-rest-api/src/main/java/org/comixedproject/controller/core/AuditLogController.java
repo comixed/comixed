@@ -76,7 +76,6 @@ public class AuditLogController {
   /** Endpoint for clearing the task log. */
   @DeleteMapping(value = "/api/tasks/entries", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ApiResponse.class)
   @AuditableEndpoint
   public void clearTaskAuditLog() {
     log.debug("Clearing task audit log");

@@ -74,7 +74,12 @@ public class ComicTest {
   @Before
   public void setUp() throws Exception {
     this.comic = new Comic();
-    this.page = new Page(TEST_PAGE_FILENAME, pageType, TEST_HASH, TEST_WIDTH, TEST_HEIGHT);
+    this.page = new Page();
+    page.setFilename(TEST_PAGE_FILENAME);
+    page.setPageType(pageType);
+    page.setHash(TEST_HASH);
+    page.setWidth(TEST_WIDTH);
+    page.setHeight(TEST_HEIGHT);
   }
 
   @Test

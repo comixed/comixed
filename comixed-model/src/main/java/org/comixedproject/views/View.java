@@ -25,14 +25,11 @@ package org.comixedproject.views;
  * @author Darryl L. Pierce
  */
 public class View {
-  /** The parent type for all views. */
-  public interface ApiResponse {}
+  /** Show minimal details for more than one comic. */
+  public interface ComicListView {}
 
   /** Show full details on a single comic. */
-  public interface ComicDetails extends ComicList {}
-
-  /** Show minimal details for more than one comic. */
-  public interface ComicList extends ApiResponse {}
+  public interface ComicDetailsView extends ComicListView {}
 
   /** Used when deleting comics. */
   public interface DeletedComicList {}
@@ -43,7 +40,7 @@ public class View {
   /** Show minimal information for more than one page. */
   public interface PageList {}
 
-  public interface UserList extends ApiResponse {}
+  public interface UserList {}
 
   /** Show full details on a user. */
   public interface UserDetails extends UserList {}
@@ -67,11 +64,11 @@ public class View {
   public interface PluginList {}
 
   /** Used when viewing a list of audit log entries. */
-  public interface AuditLogEntryList extends ApiResponse {}
+  public interface AuditLogEntryList {}
 
   /** Used when viewing a list of comic files. */
-  public interface ComicFileList extends ApiResponse {}
+  public interface ComicFileList {}
 
   /** Used when retrieving a session update. */
-  public interface SessionUpdateView extends ApiResponse {}
+  public interface SessionUpdateView {}
 }

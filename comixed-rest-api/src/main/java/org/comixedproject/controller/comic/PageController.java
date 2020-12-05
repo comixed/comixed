@@ -59,7 +59,7 @@ public class PageController {
       value = "/pages/{id}/block/{hash}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   public Comic addBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
       throws PageException {
@@ -83,7 +83,7 @@ public class PageController {
    */
   @DeleteMapping(value = "/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   public Comic deletePage(@PathVariable("id") long id) {
     log.info("Deleting page: id={}", id);
 
@@ -185,7 +185,7 @@ public class PageController {
   }
 
   @DeleteMapping(value = "/pages/{id}/unblock/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   public Comic removeBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
       throws PageException {
@@ -209,7 +209,7 @@ public class PageController {
    */
   @PostMapping(value = "/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   public Comic undeletePage(@PathVariable("id") long id) {
     log.info("Undeleting page: id={}", id);
 

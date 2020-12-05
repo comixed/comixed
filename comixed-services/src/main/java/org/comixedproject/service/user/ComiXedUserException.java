@@ -1,6 +1,12 @@
 package org.comixedproject.service.user;
 
-public class ComiXedUserException extends Throwable {
+/**
+ * <code>ComiXedUserException</code> is raised if an error occurs while working with an instance of
+ * {@link org.comixedproject.model.user.ComiXedUser}.
+ *
+ * @author Darryl L. Pierce
+ */
+public class ComiXedUserException extends Exception {
   public ComiXedUserException(final String message) {
     super(message);
   }

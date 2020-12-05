@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.controller.comic.ComicController;
+import org.comixedproject.controller.library.ComicController;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;

@@ -21,9 +21,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.views.View.ComicList;
+import org.comixedproject.views.View.ComicListView;
 import org.comixedproject.views.View.DatabaseBackup;
 import org.comixedproject.views.View.DuplicatePageList;
 import org.comixedproject.views.View.PageList;
@@ -37,15 +38,18 @@ import org.hibernate.annotations.Formula;
 @Entity
 @Table(name = "pages")
 @Log4j2
+@NoArgsConstructor
 public class Page {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonProperty("id")
+  @JsonView({ComicListView.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
   @Getter
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "comic_id")
+  @JsonProperty("comic")
   @JsonView({PageList.class, DuplicatePageList.class})
   @Getter
   @Setter
@@ -53,86 +57,62 @@ public class Page {
 
   @ManyToOne
   @JoinColumn(name = "type_id", nullable = false)
-  @JsonProperty("page_type")
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonProperty("pageType")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
   @Getter
   @Setter
   private PageType pageType;
 
   @Column(name = "filename", length = 128, updatable = true, nullable = false)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonProperty("filename")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
   @Getter
   @Setter
   private String filename;
 
   @Column(name = "hash", length = 32, updatable = true, nullable = false)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonProperty("hash")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
   @Getter
   @Setter
   private String hash;
 
   @Column(name = "page_number", nullable = false, updatable = true)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonProperty("pageNumber")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
   @Getter
   @Setter
   private Integer pageNumber;
 
   @Column(name = "deleted", updatable = true, nullable = false)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class, DuplicatePageList.class})
+  @JsonProperty("deleted")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class, DuplicatePageList.class})
   @Getter
   @Setter
   private boolean deleted = false;
 
   @Column(name = "width", updatable = true)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonProperty("width")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
   @Getter
   @Setter
   private Integer width = -1;
 
   @Column(name = "height", updatable = true)
-  @JsonView({ComicList.class, PageList.class, DatabaseBackup.class})
+  @JsonProperty("height")
+  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
   @Getter
   @Setter
   private Integer height = -1;
 
   @Formula(
       "(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
-  @JsonView({ComicList.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonProperty("blocked")
+  @JsonView({ComicListView.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
   @Getter
   private boolean blocked;
 
   @Transient @Getter @Setter private byte[] content;
-
-  /** Default constructor. */
-  public Page() {}
-
-  /**
-   * Creates a new instance with the given filename and image content.
-   *
-   * @param filename the filename
-   * @param pageType the offset type
-   * @param hash the page hash
-   * @param width the image width
-   * @param height the image height
-   */
-  public Page(
-      String filename,
-      PageType pageType,
-      final String hash,
-      final Integer width,
-      final Integer height) {
-    this.filename = filename;
-    this.pageType = pageType;
-    this.hash = hash;
-    this.width = width;
-    this.height = height;
-  }
-
-  @JsonProperty(value = "comic_id")
-  @JsonView(PageList.class)
-  public Long getComicId() {
-    return this.comic != null ? this.comic.getId() : null;
-  }
 
   /**
    * Returns the offset's index within the comic.
@@ -140,8 +120,8 @@ public class Page {
    * @return the offset index
    */
   @Transient
-  @JsonView({ComicList.class, PageList.class})
-  @JsonProperty(value = "index")
+  @JsonProperty("index")
+  @JsonView({ComicListView.class, PageList.class})
   public int getIndex() {
     return this.comic.getIndexFor(this);
   }

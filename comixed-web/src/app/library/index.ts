@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+
 import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import {
@@ -23,6 +24,22 @@ import {
   reducer as comicImportReducer
 } from './reducers/comic-import.reducer';
 import { ActionReducerMap } from '@ngrx/store';
+import {
+  COMIC_FEATURE_KEY,
+  ComicState,
+  reducer as comicReducer
+} from './reducers/comic.reducer';
+
+export { Comic } from '@app/library/models/comic';
+export { ComicCredit } from '@app/library/models/comic-credit';
+export { ComicFile } from '@app/library/models/comic-file';
+export { ComicFormat } from '@app/library/models/comic-format';
+export { ComicFileEntry } from '@app/library/models/comic-file-entry';
+export { FileDetails } from '@app/library/models/file-details';
+export { Page } from '@app/library/models/page';
+export { PageType } from '@app/library/models/page-type';
+export { ReadingList } from '@app/library/models/reading-list';
+export { ScanType } from '@app/library/models/scan-type';
 
 interface RouterStateUrl {
   url: string;
@@ -33,11 +50,13 @@ interface RouterStateUrl {
 export interface UserModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
+  [COMIC_FEATURE_KEY]: ComicState;
 }
 
 export type ModuleState = UserModuleState;
 
 export const reducers: ActionReducerMap<UserModuleState> = {
   router: routerReducer,
-  [COMIC_IMPORT_FEATURE_KEY]: comicImportReducer
+  [COMIC_IMPORT_FEATURE_KEY]: comicImportReducer,
+  [COMIC_FEATURE_KEY]: comicReducer
 };

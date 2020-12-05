@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixedproject.views.View.ComicDetails;
-import org.comixedproject.views.View.ComicList;
+import org.comixedproject.views.View.ComicDetailsView;
+import org.comixedproject.views.View.ComicListView;
 
 /**
  * <code>ComicFileDetails</code> holds the physical details of the comic file.
@@ -37,7 +37,7 @@ public class ComicFileDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({ComicList.class, ComicDetails.class})
+  @JsonView({ComicListView.class, ComicDetailsView.class})
   @Getter
   private Long id;
 
@@ -49,7 +49,7 @@ public class ComicFileDetails {
 
   @Column(name = "file_hash", length = 32, nullable = false, updatable = true)
   @JsonProperty("hash")
-  @JsonView({ComicList.class, ComicDetails.class})
+  @JsonView({ComicListView.class, ComicDetailsView.class})
   @Getter
   @Setter
   private String hash;
