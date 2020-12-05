@@ -25,7 +25,9 @@ import {
   UserState
 } from './reducers/user.reducer';
 
-export * from '@app/user/user.functions';
+export { getUserPreference } from '@app/user/user.functions';
+export { AdminGuard } from '@app/user/guards/admin.guard';
+export { ReaderGuard } from '@app/user/guards/reader.guard';
 
 interface RouterStateUrl {
   url: string;

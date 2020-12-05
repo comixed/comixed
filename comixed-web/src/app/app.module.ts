@@ -51,6 +51,8 @@ import {
 } from '@angular/material/menu';
 import { APP_REDUCERS } from '@app/app.reducers';
 import { SessionEffects } from '@app/effects/session.effects';
+import { environment } from '../environments/environment';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavigationBarComponent],
@@ -77,6 +79,11 @@ import { SessionEffects } from '@app/effects/session.effects';
         useClass: TranslateMessageFormatCompiler
       },
       defaultLanguage: 'en'
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+
+      logOnly: environment.production
     }),
     MatButtonModule,
     MatFormFieldModule,

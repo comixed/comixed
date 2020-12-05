@@ -24,12 +24,12 @@ import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
-import { ROLE_NAME_ADMIN } from '@app/user/user.constants';
+import { isAdmin } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-navigation-bar',
   templateUrl: './navigation-bar.component.html',
-  styleUrls: ['./navigation-bar.component.scss'],
+  styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
   private _user: User;
@@ -47,8 +47,7 @@ export class NavigationBarComponent {
   @Input()
   set user(user: User) {
     this._user = user;
-    this.isAdmin =
-      !!user && user.roles.some((role) => role.name === ROLE_NAME_ADMIN);
+    this.isAdmin = isAdmin(user);
   }
 
   get user(): User {
@@ -71,7 +70,7 @@ export class NavigationBarComponent {
         this.logger.debug('User logged out');
         this.store.dispatch(logoutUser());
         this.router.navigate(['login']);
-      },
+      }
     });
   }
 }

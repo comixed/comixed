@@ -23,7 +23,7 @@
 </mat-toolbar>
 
 <mat-menu #menu="matMenu">
-  <button *ngIf="!isAdmin"
+  <button *ngIf="isAdmin"
           mat-menu-item
           [matMenuTriggerFor]="adminMenu">
     <mat-icon>admin_panel_settings</mat-icon>
