@@ -16,9 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
+import { HttpClient } from '@angular/common/http';
+import { interpolate } from '@app/core';
+import { LOAD_COMIC_URL } from '@app/library/library.constants';
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
+@Injectable({
+  providedIn: 'root'
+})
+export class ComicService {
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+  /**
+   * Loads a single comic.
+   * @param args.id the comic id
+   */
+  loadComic(args: { id: number }): Observable<any> {
+    this.logger.debug('Service: load a comic:', args);
+    return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
+  }
+}

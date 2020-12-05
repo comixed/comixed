@@ -23,23 +23,23 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.user.LastReadDate;
-import org.comixedproject.views.View.ComicList;
+import org.comixedproject.views.View.ComicListView;
 
 public class GetLibraryUpdatesResponse {
   @JsonProperty("comics")
-  @JsonView(ComicList.class)
+  @JsonView(ComicListView.class)
   private List<Comic> comics;
 
   @JsonProperty("rescanCount")
-  @JsonView(ComicList.class)
+  @JsonView(ComicListView.class)
   private int rescanCount;
 
   @JsonProperty("processingCount")
-  @JsonView(ComicList.class)
+  @JsonView(ComicListView.class)
   private long processingCount;
 
   @JsonProperty("lastReadDates")
-  @JsonView(ComicList.class)
+  @JsonView(ComicListView.class)
   private List<LastReadDate> lastReadDates;
 
   public GetLibraryUpdatesResponse(

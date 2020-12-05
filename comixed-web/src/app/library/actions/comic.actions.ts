@@ -16,9 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '@app/library';
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
-
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export const loadComic = createAction(
+  '[Comic] Load a comic',
+  props<{ id: number }>()
+);
+export const comicLoaded = createAction(
+  '[Comic] Loaded a comic',
+  props<{ comic: Comic }>()
+);
+export const loadComicFailed = createAction('[Comic] Failed to load a comic');

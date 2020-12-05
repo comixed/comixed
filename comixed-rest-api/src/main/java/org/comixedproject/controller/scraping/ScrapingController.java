@@ -114,7 +114,7 @@ public class ScrapingController {
       value = "/comics/{comicId}/issue/{issueId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   public Comic scrapeAndSaveComicDetails(
       @PathVariable("comicId") final Long comicId,
       @PathVariable("issueId") final Integer issueId,

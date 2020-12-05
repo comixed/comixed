@@ -16,9 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createReducer, on } from '@ngrx/store';
+import {
+  comicLoaded,
+  loadComic,
+  loadComicFailed
+} from '../actions/comic.actions';
+import { Comic } from '@app/library';
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
+export const COMIC_FEATURE_KEY = 'comic_state';
 
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export interface ComicState {
+  loading: boolean;
+  comic: Comic;
+}
+
+export const initialState: ComicState = {
+  loading: false,
+  comic: null
+};
+
+export const reducer = createReducer(
+  initialState,
+
+  on(loadComic, state => ({ ...state, loading: true })),
+  on(comicLoaded, (state, action) => ({
+    ...state,
+    loading: false,
+    comic: action.comic
+  })),
+  on(loadComicFailed, state => ({ ...state, loading: false }))
+);

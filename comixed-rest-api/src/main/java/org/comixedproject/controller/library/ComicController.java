@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.comic;
+package org.comixedproject.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
@@ -47,13 +47,14 @@ import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
+import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.model.DeleteComicsWorkerTask;
 import org.comixedproject.task.model.RescanComicsWorkerTask;
 import org.comixedproject.task.model.UndeleteComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.comixedproject.views.View;
-import org.comixedproject.views.View.ComicDetails;
+import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -61,6 +62,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * <code>ComicController</code> provides REST endpoints for instances of {@link Comic}.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
 @RequestMapping(value = "/api/comics")
 @Log4j2
@@ -80,8 +86,24 @@ public class ComicController {
   @Autowired private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
 
+  /**
+   * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
+   *
+   * @param principal the user principal
+   * @param id the comic id
+   * @return the comic
+   * @throws ComicException if an error occurs
+   */
+  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(ComicDetailsView.class)
+  public Comic getComic(Principal principal, @PathVariable("id") long id) throws ComicException {
+    String email = principal.getName();
+    log.info("Getting comic for user: id={} user={}", id, email);
+    return this.comicService.getComic(id, email);
+  }
+
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView({View.ComicDetails.class})
+  @JsonView({ComicDetailsView.class})
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
     log.info("Marking comic for deletion: id={}", id);
 
@@ -89,7 +111,7 @@ public class ComicController {
   }
 
   @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(ComicDetails.class)
+  @JsonView(ComicDetailsView.class)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     log.debug("Updating comic: id={}", id);
 
@@ -154,31 +176,16 @@ public class ComicController {
         .body(new InputStreamResource(new ByteArrayInputStream(content)));
   }
 
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(ComicDetails.class)
-  public Comic getComic(Principal principal, @PathVariable("id") long id) throws ComicException {
-    String email = principal.getName();
-    log.info("Getting comic for user: id={} user={}", id, email);
-
-    final Comic result = this.comicService.getComic(id, email);
-
-    if (result == null) {
-      log.error("No such comic");
-    }
-
-    return result;
-  }
-
   @PostMapping(
       value = "/since/{timestamp}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicList.class)
+  @JsonView(View.ComicListView.class)
   public GetLibraryUpdatesResponse getComicsUpdatedSince(
       Principal principal,
       @PathVariable("timestamp") long timestamp,
       @RequestBody() GetLibraryUpdatesRequest request)
-      throws InterruptedException {
+      throws InterruptedException, ComiXedUserException {
     final String email = principal.getName();
     final Date lastUpdated = new Date(timestamp);
     final long timeout = request.getTimeout();
@@ -307,7 +314,7 @@ public class ComicController {
       value = "/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicDetails.class)
+  @JsonView(ComicDetailsView.class)
   public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic) {
     log.info("Updating comic: id={}", id, comic);
 
@@ -371,7 +378,7 @@ public class ComicController {
       value = "/{id}/restore",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicDetails.class)
+  @JsonView(ComicDetailsView.class)
   public Comic restoreComic(@PathVariable("id") final long id) throws ComicException {
     log.info("Restoring comic: id={}", id);
 
@@ -384,7 +391,7 @@ public class ComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetails.class)
   public LastReadDate markAsRead(Principal principal, @PathVariable("id") Long id)
-      throws ComicException {
+      throws ComicException, ComiXedUserException {
     String email = principal.getName();
     if (email == null) throw new ComicException("not authenticated");
     log.info("Marking comic as read for {}: id={}", email, id);
@@ -394,7 +401,7 @@ public class ComicController {
 
   @DeleteMapping(value = "/{id}/read", produces = MediaType.APPLICATION_JSON_VALUE)
   public boolean markAsUnread(Principal principal, @PathVariable("id") Long id)
-      throws ComicException {
+      throws ComicException, ComiXedUserException {
     String email = principal.getName();
     if (email == null) throw new ComicException("not authenticated");
     log.info("Marking comic as unread for {}: id={}", email, id);

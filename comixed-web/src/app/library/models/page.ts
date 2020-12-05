@@ -16,9 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { Comic, PageType } from '@app/library';
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
-
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export interface Page {
+  id: number;
+  comic?: Comic;
+  pageType: PageType;
+  filename: string;
+  hash: string;
+  pageNumber: number;
+  deleted: boolean;
+  width: number;
+  height: number;
+  blocked: boolean;
+  index: number;
+}

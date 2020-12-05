@@ -16,9 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
-
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+/** Selects the feature state. */
+export const selectComicState = createFeatureSelector<ComicState>(
+  COMIC_FEATURE_KEY
+);
+/** Selects the comic. */
+export const selectComic = createSelector(
+  selectComicState,
+  state => state.comic
+);
+/** Selects if the feature is current busy. */
+export const selectComicBusy = createSelector(
+  selectComicState,
+  state => state.loading
+);

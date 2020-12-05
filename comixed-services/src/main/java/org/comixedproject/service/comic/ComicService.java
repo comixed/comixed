@@ -30,22 +30,55 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
-import org.comixedproject.repositories.ComiXedUserRepository;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.repositories.library.LastReadDatesRepository;
 import org.comixedproject.service.task.TaskService;
+import org.comixedproject.service.user.ComiXedUserException;
+import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>ComicService</code> provides business rules for instances of {@link Comic}.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
 public class ComicService {
   @Autowired private ComicRepository comicRepository;
   @Autowired private LastReadDatesRepository lastReadDatesRepository;
   @Autowired private TaskService taskService;
-  @Autowired private ComiXedUserRepository userRepository;
+  @Autowired private UserService userService;
+
+  /**
+   * Retrieves a single comic by id. Sets user-specific values for the provider user.
+   *
+   * @param id the comic record id
+   * @param email the user's email address
+   * @return the comic
+   * @throws ComicException if the comic is not found
+   */
+  public Comic getComic(final long id, final String email) throws ComicException {
+    ComiXedUser user = null;
+    try {
+      user = this.userService.findByEmail(email);
+    } catch (ComiXedUserException error) {
+      throw new ComicException("No such user: " + email, error);
+    }
+
+    Comic result = this.getComic(id);
+    log.debug("Loading last read date for comic: user id={}", user.getId());
+    LastReadDate lastRead = this.lastReadDatesRepository.getForComicAndUser(result, user);
+    if (lastRead != null) {
+      log.debug("Last read on {}", lastRead.getLastRead());
+      result.setLastRead(lastRead.getLastRead());
+    }
+
+    return result;
+  }
 
   public List<Comic> getComicsUpdatedSince(final long timestamp, final int maximumResults) {
     final Date lastUpdated = new Date(timestamp);
@@ -147,10 +180,11 @@ public class ComicService {
     return this.taskService.getTaskCount(TaskType.RESCAN_COMIC);
   }
 
-  public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp) {
+  public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp)
+      throws ComiXedUserException {
     log.debug("Getting last read dates for user: email={}", email);
 
-    final ComiXedUser user = this.userRepository.findByEmail(email);
+    final ComiXedUser user = this.userService.findByEmail(email);
 
     return this.lastReadDatesRepository.findAllForUser(user.getId(), new Date(timestamp));
   }
@@ -280,12 +314,13 @@ public class ComicService {
   }
 
   @Transactional
-  public LastReadDate markAsRead(String email, long id) throws ComicException {
+  public LastReadDate markAsRead(String email, long id)
+      throws ComicException, ComiXedUserException {
     log.debug("Marking comic as read by {}: id={}", email, id);
     Comic comic = this.comicRepository.getById(id);
     if (comic == null) throw new ComicException("no such comic: id=" + id);
 
-    ComiXedUser user = this.userRepository.findByEmail(email);
+    ComiXedUser user = this.userService.findByEmail(email);
     LastReadDate lastReadDate = this.lastReadDatesRepository.getForComicAndUser(comic, user);
 
     if (lastReadDate == null) {
@@ -306,12 +341,12 @@ public class ComicService {
   }
 
   @Transactional
-  public boolean markAsUnread(String email, long id) throws ComicException {
+  public boolean markAsUnread(String email, long id) throws ComicException, ComiXedUserException {
     log.debug("Marking comic as not read by {}: id={}", email, id);
     Comic comic = this.comicRepository.getById(id);
     if (comic == null) throw new ComicException("no such comic: id=" + id);
 
-    ComiXedUser user = this.userRepository.findByEmail(email);
+    ComiXedUser user = this.userService.findByEmail(email);
     LastReadDate lastReadDate = this.lastReadDatesRepository.getForComicAndUser(comic, user);
 
     if (lastReadDate != null) {
@@ -324,24 +359,6 @@ public class ComicService {
 
     log.debug("Returning success");
     return true;
-  }
-
-  public Comic getComic(long comicId, String email) throws ComicException {
-    Comic result = this.getComic(comicId);
-    ComiXedUser user = this.userRepository.findByEmail(email);
-
-    if (user == null) {
-      throw new ComicException("could not load last read date for non-existent user: " + email);
-    }
-
-    log.debug("Loading last read date for comic: user id={}", user.getId());
-    LastReadDate lastRead = this.lastReadDatesRepository.getForComicAndUser(result, user);
-    if (lastRead != null) {
-      log.debug("Last read on {}", lastRead.getLastRead());
-      result.setLastRead(lastRead.getLastRead());
-    }
-
-    return result;
   }
 
   /**
