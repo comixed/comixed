@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.comic;
+package org.comixedproject.controller.library;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -37,14 +36,12 @@ import org.comixedproject.model.net.GetLibraryUpdatesRequest;
 import org.comixedproject.model.net.GetLibraryUpdatesResponse;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
-import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
-import org.comixedproject.repositories.ComiXedUserRepository;
-import org.comixedproject.repositories.library.LastReadDatesRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
+import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.model.DeleteComicsWorkerTask;
 import org.comixedproject.task.model.RescanComicsWorkerTask;
 import org.comixedproject.task.model.UndeleteComicsWorkerTask;
@@ -81,13 +78,10 @@ public class ComicControllerTest {
   @InjectMocks private ComicController controller;
   @Mock private ComicService comicService;
   @Mock private PageCacheService pageCacheService;
-  @Mock private LastReadDatesRepository lastReadRepository;
   @Mock private TaskManager taskManager;
   @Mock private List<Comic> comicList;
   @Mock private Comic comic;
   @Mock private Principal principal;
-  @Mock private ComiXedUserRepository userRepository;
-  @Mock private ComiXedUser user;
   @Mock private List<LastReadDate> lastReadList;
   @Mock private ObjectFactory<DeleteComicsWorkerTask> deleteComicsTaskFactory;
   @Mock private DeleteComicsWorkerTask deleteComicsTask;
@@ -104,10 +98,34 @@ public class ComicControllerTest {
   @Mock private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
   @Mock private RescanComicsWorkerTask rescanComicsWorkerTask;
 
-  private final List<Comic> emptyComicList = new ArrayList<>();
+  @Test
+  public void testGetComicForNonexistentComic() throws ComicException {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(null);
+
+    Comic result = controller.getComic(principal, TEST_COMIC_ID);
+
+    assertNull(result);
+
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
+  }
 
   @Test
-  public void testGetComicsAddedSinceWithComicUpdate() throws ParseException, InterruptedException {
+  public void testGetComic() throws ComicException {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
+    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(comic);
+
+    Comic result = controller.getComic(principal, TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
+  }
+
+  @Test
+  public void testGetComicsAddedSinceWithComicUpdate()
+      throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicList);
@@ -139,7 +157,7 @@ public class ComicControllerTest {
 
   @Test
   public void testGetComicsAddedSinceWithLastReadUpdate()
-      throws ParseException, InterruptedException {
+      throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicList);
@@ -174,7 +192,8 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testGetComicsAddedSinceWithRescans() throws ParseException, InterruptedException {
+  public void testGetComicsAddedSinceWithRescans()
+      throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicList);
@@ -209,7 +228,8 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testGetComicsAddedSinceWithImports() throws ParseException, InterruptedException {
+  public void testGetComicsAddedSinceWithImports()
+      throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicList);
@@ -244,7 +264,8 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testGetComicsAddedSinceNoUpdates() throws ParseException, InterruptedException {
+  public void testGetComicsAddedSinceNoUpdates()
+      throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicList);
@@ -418,31 +439,6 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testGetComicForNonexistentComic() throws ComicException {
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(null);
-
-    Comic result = controller.getComic(principal, TEST_COMIC_ID);
-
-    assertNull(result);
-
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
-  }
-
-  @Test
-  public void testGetComic() throws ComicException {
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(comic);
-
-    Comic result = controller.getComic(principal, TEST_COMIC_ID);
-
-    assertNotNull(result);
-    assertSame(comic, result);
-
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
-  }
-
-  @Test
   public void testUpdateComic() {
     Mockito.when(comicService.updateComic(Mockito.anyLong(), Mockito.any(Comic.class)))
         .thenReturn(comic);
@@ -587,7 +583,7 @@ public class ComicControllerTest {
   }
 
   @Test(expected = ComicException.class)
-  public void testMarkAsReadNotAuthenticated() throws ComicException {
+  public void testMarkAsReadNotAuthenticated() throws ComicException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(null);
 
     try {
@@ -598,7 +594,7 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testMarkAsRead() throws ComicException {
+  public void testMarkAsRead() throws ComicException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.markAsRead(Mockito.anyString(), Mockito.anyLong()))
         .thenReturn(lastReadDate);
@@ -613,7 +609,7 @@ public class ComicControllerTest {
   }
 
   @Test(expected = ComicException.class)
-  public void testMarkAsUnreadNotAuthenticated() throws ComicException {
+  public void testMarkAsUnreadNotAuthenticated() throws ComicException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(null);
 
     try {
@@ -624,7 +620,7 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testMarkAsUnread() throws ComicException {
+  public void testMarkAsUnread() throws ComicException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
     Mockito.when(comicService.markAsUnread(Mockito.anyString(), Mockito.anyLong()))
         .thenReturn(true);

@@ -18,8 +18,18 @@
 
 package org.comixedproject.service.comic;
 
+import org.comixedproject.model.comic.Comic;
+
+/**
+ * <code>ComicException</code> is raised if an error occurs while working with instances of {@link
+ * Comic}.
+ *
+ * @author Darryl L. Pierce
+ */
 public class ComicException extends Exception {
   public ComicException(final String message) {
     super(message);
   }
+
+  public ComicException(final String message, final Exception error) {}
 }

@@ -46,28 +46,28 @@ public class ComicFileEntry {
 
   @Column(name = "file_number", nullable = false, updatable = true)
   @JsonProperty("fileNumber")
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private Integer fileNumber;
 
   @Column(name = "file_name", nullable = false, length = 1024)
   @JsonProperty("fileName")
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private String fileName;
 
   @Column(name = "file_size", nullable = false)
   @JsonProperty("fileSize")
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private Integer fileSize;
 
   @Column(name = "file_type", nullable = false, length = 256)
   @JsonProperty("fileType")
-  @JsonView(View.ComicDetails.class)
+  @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private String fileType;

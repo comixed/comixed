@@ -16,9 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { Comic } from '@app/library';
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
-
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export interface ReadingList {
+  id: number;
+  name: string;
+  summary: string;
+  lastUpdated: Date;
+  comics?: Comic[];
+}

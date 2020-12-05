@@ -30,7 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { StoreModule } from '@ngrx/store';
 import {
   COMIC_IMPORT_FEATURE_KEY,
-  reducer as comicImportReducer,
+  reducer as comicImportReducer
 } from '@app/library/reducers/comic-import.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ComicImportEffects } from '@app/library/effects/comic-import.effects';
@@ -44,6 +44,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  COMIC_FEATURE_KEY,
+  reducer as comicReducer
+} from '@app/library/reducers/comic.reducer';
+import { ComicEffects } from '@app/library/effects/comic.effects';
 
 @NgModule({
   declarations: [
@@ -51,7 +56,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ImportToolbarComponent,
     ComicFileListComponent,
     ComicFileCoverUrlPipe,
-    ComicFileDetailsComponent,
+    ComicFileDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +65,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
-    EffectsModule.forFeature([ComicImportEffects]),
+    StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
+    EffectsModule.forFeature([ComicImportEffects, ComicEffects]),
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
@@ -71,8 +77,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSortModule,
     MatCardModule,
     MatTooltipModule,
-    FormsModule,
+    FormsModule
   ],
-  exports: [CommonModule, CoreModule],
+  exports: [CommonModule, CoreModule]
 })
 export class LibraryModule {}
