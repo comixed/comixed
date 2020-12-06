@@ -25,13 +25,13 @@ jobs:
         with:
           java-version: 12
       - name: Create the release artifact
-        run: mvn package -DskipTests -Pci -Dassembly.name=RELEASE
+        run: mvn package -Pci -Dassembly.name=RELEASE
       - name: Create pre-release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 0.7.1-2.1
+          title: Changes For 0.8.0-SNAPSHOT
           files: |
-            release/comixed-release-0.7.1-2.1-RELEASE.zip
+            release/comixed-release-0.8.0-SNAPSHOT-RELEASE.zip
