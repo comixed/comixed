@@ -1,0 +1,37 @@
+# GOAL: Create pre-releases when changes are pushed to a release branch. On success it creates a tag for the build.
+#       Such a release can then be promoted to a full release.
+
+name: "Publish release branch changes"
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache Maven artifacts
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      - name: Setup build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12
+      - name: Create the release artifact
+        run: mvn package -Pci -Dassembly.name=RELEASE
+      - name: Create pre-release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: false
+          prerelease: true
+          title: Changes For 0.8.0-SNAPSHOT
+          files: |
+            release/comixed-release-0.8.0-SNAPSHOT-RELEASE.zip
