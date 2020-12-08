@@ -18,12 +18,13 @@
 
 package org.comixedproject;
 
-import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @SpringBootApplication
+@EnableJdbcHttpSession
 public class ComiXedApp implements CommandLineRunner {
   private static final int VERSION_MAJOR = 0;
   private static final int VERSION_MINOR = 1;
@@ -34,8 +35,6 @@ public class ComiXedApp implements CommandLineRunner {
 
   public static void main(String[] args) {
     SpringApplication app = new SpringApplication(ComiXedApp.class);
-
-    app.setBannerMode(Banner.Mode.OFF);
     app.run(args);
   }
 
