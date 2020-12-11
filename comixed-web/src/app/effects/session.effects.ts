@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { AlertService } from '@app/core';
 import { SessionUpdateResponse } from '@app/models/net/session-update-response';
 import { of } from 'rxjs';
@@ -30,6 +30,7 @@ import {
   sessionUpdateLoaded
 } from '@app/actions/session.actions';
 import { SessionService } from '@app/services/session.service';
+import { updateComics } from '@app/library';
 
 @Injectable()
 export class SessionEffects {
@@ -47,12 +48,23 @@ export class SessionEffects {
       tap(action => this.logger.debug('Effect: load session update:', action)),
       switchMap(action =>
         this.sessionService
-          .loadSessionUpdate({ reset: action.reset, timeout: action.timeout })
+          .loadSessionUpdate({
+            timestamp: action.timestamp,
+            maximumRecords: action.maximumRecords,
+            timeout: action.timeout
+          })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: SessionUpdateResponse) =>
-              sessionUpdateLoaded({ update: response.update })
-            ),
+            mergeMap((response: SessionUpdateResponse) => [
+              updateComics({
+                updated: response.update.updatedComics,
+                removed: response.update.removedComicIds
+              }),
+              sessionUpdateLoaded({
+                importCount: response.update.importCount,
+                latest: response.update.latest
+              })
+            ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

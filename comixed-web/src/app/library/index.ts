@@ -27,7 +27,7 @@ import { ActionReducerMap } from '@ngrx/store';
 import {
   LIBRARY_FEATURE_KEY,
   LibraryState,
-  reducer as comicReducer
+  reducer as libraryReducer
 } from './reducers/library.reducer';
 
 export { Comic } from '@app/library/models/comic';
@@ -41,22 +41,24 @@ export { PageType } from '@app/library/models/page-type';
 export { ReadingList } from '@app/library/models/reading-list';
 export { ScanType } from '@app/library/models/scan-type';
 
+export { updateComics } from '@app/library/actions/library.actions';
+
 interface RouterStateUrl {
   url: string;
   params: Params;
   queryParams: Params;
 }
 
-export interface UserModuleState {
+export interface LibraryModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
 }
 
-export type ModuleState = UserModuleState;
+export type ModuleState = LibraryModuleState;
 
-export const reducers: ActionReducerMap<UserModuleState> = {
+export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: routerReducer,
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
-  [LIBRARY_FEATURE_KEY]: comicReducer
+  [LIBRARY_FEATURE_KEY]: libraryReducer
 };

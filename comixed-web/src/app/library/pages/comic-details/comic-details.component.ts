@@ -26,7 +26,7 @@ import { loadComic } from '@app/library/actions/library.actions';
 import {
   selectComic,
   selectLibraryBusy
-} from '@app/library/selectors/comic.selectors';
+} from '@app/library/selectors/library.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';

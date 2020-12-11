@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AppComponent} from './app.component';
-import {LoggerModule} from '@angular-ru/logger';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppComponent } from './app.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -29,18 +29,20 @@ import {
   BUSY_FEATURE_KEY,
   initialState as initialBusyState
 } from '@app/core/reducers/busy.reducer';
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   initialState as initialSessionState,
   SESSION_FEATURE_KEY
 } from '@app/reducers/session.reducer';
-import {USER_READER} from '@app/user/user.fixtures';
-import {loadSessionUpdate} from '@app/actions/session.actions';
-import {SESSION_TIMEOUT} from '@app/app.constants';
-import {setImportingComicsState} from '@app/library/actions/comic-import.actions';
+import { USER_READER } from '@app/user/user.fixtures';
+import { loadSessionUpdate } from '@app/actions/session.actions';
+import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
+  const TIMESTAMP = new Date().getTime();
+  const MAXIMUM_RECORDS = 100;
+  const TIMEOUT = 300;
 
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
@@ -60,7 +62,7 @@ describe('AppComponent', () => {
         LoggerModule.forRoot()
       ],
       declarations: [AppComponent],
-      providers: [provideMockStore({initialState})]
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -79,7 +81,7 @@ describe('AppComponent', () => {
       component.sessionActive = false;
       store.setState({
         ...initialState,
-        [USER_FEATURE_KEY]: {...initialUserState, user: USER}
+        [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
       });
     });
 
@@ -89,7 +91,11 @@ describe('AppComponent', () => {
 
     it('fires an action to load the session update', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadSessionUpdate({reset: true, timeout: SESSION_TIMEOUT})
+        loadSessionUpdate({
+          timestamp: 0,
+          maximumRecords: MAXIMUM_RECORDS,
+          timeout: TIMEOUT
+        })
       );
     });
 
@@ -97,7 +103,7 @@ describe('AppComponent', () => {
       beforeEach(() => {
         store.setState({
           ...initialState,
-          [USER_FEATURE_KEY]: {...initialUserState, user: null}
+          [USER_FEATURE_KEY]: { ...initialUserState, user: null }
         });
       });
 
@@ -118,20 +124,25 @@ describe('AppComponent', () => {
           ...initialSessionState,
           loading: false,
           initialized: true,
-          importCount: IMPORT_COUNT
+          importCount: IMPORT_COUNT,
+          latest: TIMESTAMP
         }
       });
     });
 
     it('updates the importing state', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setImportingComicsState({importing: IMPORT_COUNT !== 0})
+        setImportingComicsState({ importing: IMPORT_COUNT !== 0 })
       );
     });
 
     it('gets the next session update', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadSessionUpdate({reset: false, timeout: SESSION_TIMEOUT})
+        loadSessionUpdate({
+          timestamp: TIMESTAMP,
+          maximumRecords: MAXIMUM_RECORDS,
+          timeout: TIMEOUT
+        })
       );
     });
   });
@@ -152,8 +163,9 @@ describe('AppComponent', () => {
     it('does not get the next session update', () => {
       expect(store.dispatch).not.toHaveBeenCalledWith(
         loadSessionUpdate({
-          reset: false,
-          timeout: SESSION_TIMEOUT
+          timestamp: TIMESTAMP,
+          maximumRecords: MAXIMUM_RECORDS,
+          timeout: TIMEOUT
         })
       );
     });
