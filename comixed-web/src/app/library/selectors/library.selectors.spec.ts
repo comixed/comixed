@@ -16,18 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
+import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import {
   selectComic,
-  selectComicBusy,
-  selectComicState
+  selectLibraryBusy,
+  selectLibraryState
 } from './comic.selectors';
 import { COMIC_1 } from '@app/library/library.fixtures';
 
-describe('Comic Selectors', () => {
+describe('Library Selectors', () => {
   const COMIC = COMIC_1;
 
-  let state: ComicState;
+  let state: LibraryState;
 
   beforeEach(() => {
     state = { loading: Math.random() > 0.5, comic: COMIC };
@@ -35,8 +35,8 @@ describe('Comic Selectors', () => {
 
   it('selects the feature state', () => {
     expect(
-      selectComicState({
-        [COMIC_FEATURE_KEY]: state
+      selectLibraryState({
+        [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state);
   });
@@ -44,15 +44,15 @@ describe('Comic Selectors', () => {
   it('selects the comic', () => {
     expect(
       selectComic({
-        [COMIC_FEATURE_KEY]: state
+        [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state.comic);
   });
 
   it('selects the busy state', () => {
     expect(
-      selectComicBusy({
-        [COMIC_FEATURE_KEY]: state
+      selectLibraryBusy({
+        [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state.loading);
   });

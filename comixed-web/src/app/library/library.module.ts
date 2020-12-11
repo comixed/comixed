@@ -44,10 +44,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
-  COMIC_FEATURE_KEY,
-  reducer as comicReducer
-} from '@app/library/reducers/comic.reducer';
-import { ComicEffects } from '@app/library/effects/comic.effects';
+  LIBRARY_FEATURE_KEY,
+  reducer as libraryReducer
+} from '@app/library/reducers/library.reducer';
+import { LibraryEffects } from '@app/library/effects/library.effects';
 import { ComicDetailsComponent } from './pages/comic-details/comic-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
@@ -83,8 +83,8 @@ import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
     ReactiveFormsModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
-    StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
-    EffectsModule.forFeature([ComicImportEffects, ComicEffects]),
+    StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
+    EffectsModule.forFeature([ComicImportEffects, LibraryEffects]),
     MatInputModule,
     MatSelectModule,
     MatButtonModule,

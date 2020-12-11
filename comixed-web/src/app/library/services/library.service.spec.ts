@@ -17,7 +17,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { ComicService } from './comic.service';
+import { LibraryService } from './library.service';
 import { COMIC_1 } from '@app/library/library.fixtures';
 import {
   HttpClientTestingModule,
@@ -27,10 +27,10 @@ import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
 import { LOAD_COMIC_URL } from '@app/library/library.constants';
 
-describe('ComicService', () => {
+describe('LibraryService', () => {
   const COMIC = COMIC_1;
 
-  let service: ComicService;
+  let service: LibraryService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('ComicService', () => {
       imports: [HttpClientTestingModule, LoggerModule.forRoot()]
     });
 
-    service = TestBed.inject(ComicService);
+    service = TestBed.inject(LibraryService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 

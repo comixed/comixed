@@ -16,25 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
-import { HttpClient } from '@angular/common/http';
-import { interpolate } from '@app/core';
-import { LOAD_COMIC_URL } from '@app/library/library.constants';
+import { createReducer, on } from '@ngrx/store';
+import {
+  comicLoaded,
+  loadComic,
+  loadComicFailed
+} from '../actions/library.actions';
+import { Comic } from '@app/library';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ComicService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+export const LIBRARY_FEATURE_KEY = 'library_state';
 
-  /**
-   * Loads a single comic.
-   * @param args.id the comic id
-   */
-  loadComic(args: { id: number }): Observable<any> {
-    this.logger.debug('Service: load a comic:', args);
-    return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
-  }
+export interface LibraryState {
+  loading: boolean;
+  comic: Comic;
 }
+
+export const initialState: LibraryState = {
+  loading: false,
+  comic: null
+};
+
+export const reducer = createReducer(
+  initialState,
+
+  on(loadComic, state => ({ ...state, loading: true })),
+  on(comicLoaded, (state, action) => ({
+    ...state,
+    loading: false,
+    comic: action.comic
+  })),
+  on(loadComicFailed, state => ({ ...state, loading: false }))
+);

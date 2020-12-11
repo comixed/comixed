@@ -16,20 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
+import { HttpClient } from '@angular/common/http';
+import { interpolate } from '@app/core';
+import { LOAD_COMIC_URL } from '@app/library/library.constants';
 
-/** Selects the feature state. */
-export const selectComicState = createFeatureSelector<ComicState>(
-  COMIC_FEATURE_KEY
-);
-/** Selects the comic. */
-export const selectComic = createSelector(
-  selectComicState,
-  state => state.comic
-);
-/** Selects if the feature is current busy. */
-export const selectComicBusy = createSelector(
-  selectComicState,
-  state => state.loading
-);
+@Injectable({
+  providedIn: 'root'
+})
+export class LibraryService {
+  constructor(private logger: LoggerService, private http: HttpClient) {}
+
+  /**
+   * Loads a single comic.
+   * @param args.id the comic id
+   */
+  loadComic(args: { id: number }): Observable<any> {
+    this.logger.debug('Service: load a comic:', args);
+    return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
+  }
+}
