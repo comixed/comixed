@@ -27,8 +27,17 @@ import {
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { HttpResponse } from '@angular/common/http';
+import { SessionUpdateResponse } from '@app/models/net/session-update-response';
+import { COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
 
 describe('SessionService', () => {
+  const TIMESTAMP = new Date().getTime();
+  const MAXIMUM_RECORDS = 100;
+  const TIMEOUT = 300;
+  const IMPORT_COUNT = 717;
+  const UPDATED_COMICS = [COMIC_2];
+  const REMOVED_COMICS = [COMIC_3];
+
   let service: SessionService;
   let httpMock: HttpTestingController;
 
@@ -46,16 +55,27 @@ describe('SessionService', () => {
   });
 
   it('can load user session updates', () => {
-    const serviceResponse = new HttpResponse({ status: 200 });
+    const serviceResponse = {
+      update: {
+        importCount: IMPORT_COUNT,
+        updatedComics: UPDATED_COMICS,
+        removedComicIds: REMOVED_COMICS.map(comic => comic.id)
+      }
+    } as SessionUpdateResponse;
     service
-      .loadSessionUpdate({ reset: false, timeout: 1000 })
+      .loadSessionUpdate({
+        timestamp: TIMESTAMP,
+        maximumRecords: MAXIMUM_RECORDS,
+        timeout: TIMEOUT
+      })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(LOAD_SESSION_UPDATE_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      reset: false,
-      timeout: 1000
+      timestamp: TIMESTAMP,
+      maximumRecords: MAXIMUM_RECORDS,
+      timeout: TIMEOUT
     } as SessionUpdateRequest);
     req.flush(serviceResponse);
   });

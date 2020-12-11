@@ -18,7 +18,7 @@
 
 import * as _ from 'lodash';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { API_ROOT_URL } from '@app/core/index';
+import { API_ROOT_URL } from '@app/core/core.constants';
 
 /** Interpolates the given values into the provided string. */
 export function interpolate(template: string, values: any = {}): string {

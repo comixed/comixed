@@ -18,10 +18,15 @@
 
 package org.comixedproject.service.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.auditlog.AuditEvent;
+import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.ComicAuditor;
 import org.comixedproject.model.session.SessionUpdate;
-import org.comixedproject.model.session.UserSession;
 import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,19 +40,36 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class SessionService {
   @Autowired private TaskService taskService;
+  @Autowired private ComicService comicService;
+  @Autowired private ComicAuditor comicAuditor;
 
-  public SessionUpdate getSessionUpdate(final UserSession userSession, final long timeout) {
-    final SessionUpdate result = new SessionUpdate();
+  /**
+   * Retrieves a session update with the specific timeout period. Only returns events that occurred
+   * after the specified timestamp. For each type, returns only up to the specific maximum record
+   * count.
+   *
+   * @param timestamp the timestamp
+   * @param maximumRecords the maximum records
+   * @param timeout the timeout period
+   * @return the session update
+   */
+  public SessionUpdate getSessionUpdate(
+      final long timestamp, final int maximumRecords, final long timeout) {
     log.debug("Getting session update");
 
-    Long cutoff = System.currentTimeMillis() + timeout;
+    Long cutoff = System.currentTimeMillis() + (timeout * 1000L);
     boolean done = false;
+    List<Comic> comicsUpdated = null;
+    List<AuditEvent<Long>> comicIdsRemoved = null;
+    int importCount = 0;
 
     while (!done) {
-      result.setImportCount(
+      comicsUpdated = this.comicService.getComicsUpdatedSince(timestamp, maximumRecords);
+      comicIdsRemoved = this.comicAuditor.getEntriesSinceTimestamp(timestamp, maximumRecords);
+      importCount =
           this.taskService.getTaskCount(TaskType.ADD_COMIC)
-              + this.taskService.getTaskCount(TaskType.PROCESS_COMIC));
-      done = this.canReturn(result, userSession);
+              + this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
+      done = !comicsUpdated.isEmpty() || !comicIdsRemoved.isEmpty();
       if (!done) {
         try {
           log.debug("Sleeping 1000ms waiting for session update");
@@ -60,13 +82,48 @@ public class SessionService {
       }
     }
 
-    // copy returned values into the session value
-    userSession.copyValues(result);
-    return result;
+    return createSessionUpdate(
+        timestamp, maximumRecords, importCount, comicsUpdated, comicIdsRemoved);
   }
 
-  private boolean canReturn(final SessionUpdate sessionUpdate, final UserSession userSession) {
-    // if any of the session stats have changed then we can return
-    return !sessionUpdate.getImportCount().equals(userSession.getImportCount());
+  private SessionUpdate createSessionUpdate(
+      final long timestamp,
+      final int maximumRecords,
+      final int importCount,
+      final List<Comic> comicsUpdated,
+      final List<AuditEvent<Long>> comicIdsRemoved) {
+    final List<Comic> updated = new ArrayList<>();
+    final List<Long> removed = new ArrayList<>();
+    int updatedIndex = 0;
+    int removedIndex = 0;
+    long latest = timestamp;
+    final int count = 0;
+    boolean done = false;
+
+    log.debug("Reducing response to maximum records: {}", maximumRecords);
+    while (!done) {
+      final long updateTimestamp =
+          updatedIndex < comicsUpdated.size()
+              ? comicsUpdated.get(updatedIndex).getDateLastUpdated().getTime()
+              : 0L;
+      final long removeTimestamp =
+          removedIndex < comicIdsRemoved.size()
+              ? comicIdsRemoved.get(removedIndex).getOccurred().getTime()
+              : 0L;
+      if (updateTimestamp > removeTimestamp) {
+        updated.add(comicsUpdated.get(updatedIndex));
+        latest = comicsUpdated.get(updatedIndex).getDateLastUpdated().getTime();
+        updatedIndex++;
+      } else {
+        removed.add(comicIdsRemoved.get(removedIndex).getValue());
+        latest = comicIdsRemoved.get(removedIndex).getOccurred().getTime();
+        removedIndex++;
+      }
+      done =
+          updatedIndex == comicsUpdated.size() && removedIndex == comicIdsRemoved.size()
+              || count == maximumRecords;
+    }
+
+    return new SessionUpdate(updated, removed, importCount, latest);
   }
 }
