@@ -28,6 +28,10 @@ export class ComicDetailCardComponent implements OnInit {
   @Input() imageUrl: string;
   @Input() description: string;
   @Input() detailLink: string;
+  @Input() imageWidth = 'auto';
+  @Input() imageHeight = '100%';
+  @Input() busy = false;
+  @Input() blurred = false;
 
   constructor() {}
 

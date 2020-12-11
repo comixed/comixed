@@ -98,6 +98,7 @@ $cx-column-large: 325px;
 
 .cx-comic-detail-card-container {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
 }
 

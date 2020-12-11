@@ -4,9 +4,17 @@
   </mat-card-subtitle>
   <mat-card-content>
     <img *ngIf="!!imageUrl"
+         [class.comic-detail-card-blurred]="blurred"
          [src]="imageUrl"
-         [alt]="title"/>
+         [alt]="title"
+         [style.width]="imageWidth"
+         [style.height]="imageHeight"/>
     <div *ngIf="!!description"
          [innerHTML]="description"></div>
+    <mat-progress-spinner *ngIf="busy"
+                          class="comic-detail-card-busy-indicator"
+                          diameter="100"
+                          mode="indeterminate"
+                          color="accent"></mat-progress-spinner>
   </mat-card-content>
 </mat-card>
