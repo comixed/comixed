@@ -24,10 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.views.View.ComicListView;
-import org.comixedproject.views.View.DatabaseBackup;
-import org.comixedproject.views.View.DuplicatePageList;
-import org.comixedproject.views.View.PageList;
+import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
 /**
@@ -43,14 +40,13 @@ public class Page {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({ComicListView.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "comic_id")
   @JsonProperty("comic")
-  @JsonView({PageList.class, DuplicatePageList.class})
   @Getter
   @Setter
   private Comic comic;
@@ -58,49 +54,49 @@ public class Page {
   @ManyToOne
   @JoinColumn(name = "type_id", nullable = false)
   @JsonProperty("pageType")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private PageType pageType;
 
   @Column(name = "filename", length = 128, updatable = true, nullable = false)
   @JsonProperty("filename")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private String filename;
 
   @Column(name = "hash", length = 32, updatable = true, nullable = false)
   @JsonProperty("hash")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private String hash;
 
   @Column(name = "page_number", nullable = false, updatable = true)
   @JsonProperty("pageNumber")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer pageNumber;
 
   @Column(name = "deleted", updatable = true, nullable = false)
   @JsonProperty("deleted")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class, DuplicatePageList.class})
+  @JsonView({View.SessionUpdateView.class, View.ComicDetailsView.class})
   @Getter
   @Setter
   private boolean deleted = false;
 
   @Column(name = "width", updatable = true)
   @JsonProperty("width")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer width = -1;
 
   @Column(name = "height", updatable = true)
   @JsonProperty("height")
-  @JsonView({ComicListView.class, PageList.class, DatabaseBackup.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer height = -1;
@@ -108,7 +104,7 @@ public class Page {
   @Formula(
       "(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
   @JsonProperty("blocked")
-  @JsonView({ComicListView.class, PageList.class, DuplicatePageList.class, DatabaseBackup.class})
+  @JsonView({View.SessionUpdateView.class, View.ComicDetailsView.class})
   @Getter
   private boolean blocked;
 
@@ -121,7 +117,7 @@ public class Page {
    */
   @Transient
   @JsonProperty("index")
-  @JsonView({ComicListView.class, PageList.class})
+  @JsonView({View.ComicDetailsView.class})
   public int getIndex() {
     return this.comic.getIndexFor(this);
   }

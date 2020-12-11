@@ -18,19 +18,21 @@
 
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import {
+  selectAllComics,
   selectComic,
   selectLibraryBusy,
   selectLibraryState
-} from './comic.selectors';
-import { COMIC_1 } from '@app/library/library.fixtures';
+} from './library.selectors';
+import { COMIC_1, COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
 
 describe('Library Selectors', () => {
   const COMIC = COMIC_1;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
 
   let state: LibraryState;
 
   beforeEach(() => {
-    state = { loading: Math.random() > 0.5, comic: COMIC };
+    state = { loading: Math.random() > 0.5, comic: COMIC, comics: COMICS };
   });
 
   it('selects the feature state', () => {
@@ -55,5 +57,11 @@ describe('Library Selectors', () => {
         [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state.loading);
+  });
+
+  it('selects all comics', () => {
+    expect(selectAllComics({ [LIBRARY_FEATURE_KEY]: state })).toEqual(
+      state.comics
+    );
   });
 });

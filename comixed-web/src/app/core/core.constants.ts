@@ -16,10 +16,4 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
-
-export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
-export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
-export const HTTP_XML_REQUEST = 'XMLHttpRequest';
-
-export const LOAD_SESSION_UPDATE_URL = `${API_ROOT_URL}/session/updates`;
+export const API_ROOT_URL = '/api';

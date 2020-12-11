@@ -19,12 +19,12 @@
 package org.comixedproject.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Date;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.model.session.SessionUpdate;
-import org.comixedproject.model.session.UserSession;
 import org.comixedproject.service.user.SessionService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,26 +54,17 @@ public class SessionController {
   @JsonView(View.SessionUpdateView.class)
   public SessionUpdateResponse getSessionUpdate(
       final HttpSession httpSession, @RequestBody() final SessionUpdateRequest request) {
-    UserSession userSession = null;
+    final long timestamp = request.getTimestamp();
+    final int maximumRecords = request.getMaximumRecords();
+    final long timeout = request.getTimeout();
 
-    if (Boolean.TRUE.equals(request.getReset())) {
-      log.info("Resetting the user server-side session");
-      userSession = new UserSession();
-    } else {
-      log.info("Retrieving the user server-side session");
-      userSession = (UserSession) httpSession.getAttribute(SESSION_ENTRY_KEY);
-      if (userSession == null) {
-        log.info("Creating a new server-side session");
-        userSession = new UserSession();
-      }
-    }
-
-    final Long timeout = request.getTimeout();
-    log.info("Getting session update: timeout={}", timeout);
-    final SessionUpdate sessionUpdate = this.sessionService.getSessionUpdate(userSession, timeout);
-
-    this.log.info("Saving server-side session");
-    httpSession.setAttribute(SESSION_ENTRY_KEY, userSession);
+    log.info(
+        "Getting session update: timestamp={} maximum records={} timeout={}",
+        new Date(timestamp),
+        maximumRecords,
+        timeout);
+    final SessionUpdate sessionUpdate =
+        this.sessionService.getSessionUpdate(timestamp, maximumRecords, timeout);
 
     log.info("Returning session update");
     return new SessionUpdateResponse(sessionUpdate);

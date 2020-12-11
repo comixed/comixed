@@ -33,16 +33,19 @@ export class SessionService {
   /**
    * Loads a server-side session update for the user.
    *
-   * @param args.reset the reset session flag
+   * @param args.timestamp the timestamp of the latest previous update
+   * @param args.maximumRecords the maximum records to return
    * @param args.timeout the time (in ms) to wait for an update
    */
   loadSessionUpdate(args: {
-    reset: boolean;
+    timestamp: number;
+    maximumRecords: number;
     timeout: number;
   }): Observable<any> {
     this.logger.trace('Service: loading session update:', args);
     return this.http.post(interpolate(LOAD_SESSION_UPDATE_URL), {
-      reset: args.reset,
+      timestamp: args.timestamp,
+      maximumRecords: args.maximumRecords,
       timeout: args.timeout
     } as SessionUpdateRequest);
   }

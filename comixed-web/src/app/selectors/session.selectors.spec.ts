@@ -26,7 +26,8 @@ describe('UserSession Selectors', () => {
     state = {
       initialized: Math.random() > 0.5,
       loading: Math.random() > 0.5,
-      importCount: 717
+      importCount: 717,
+      latest: new Date().getTime()
     };
   });
 

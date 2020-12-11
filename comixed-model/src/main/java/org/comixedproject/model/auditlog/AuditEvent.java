@@ -16,34 +16,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.session;
+package org.comixedproject.model.auditlog;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Date;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.comixedproject.views.View;
 
 /**
- * <code>SessionUpdateRequest</code> contains the body for a session update request.
+ * <code>AuditEvent</code> represents a single auditing event.
  *
+ * @param <T> the audited type
  * @author Darryl L. Pierce
  */
-@AllArgsConstructor
-@NoArgsConstructor
-public class SessionUpdateRequest {
-  @JsonProperty("timestamp")
+@RequiredArgsConstructor
+public class AuditEvent<T> {
+  @JsonProperty("value")
+  @JsonView(View.SessionUpdateView.class)
   @Getter
-  @Setter
-  private Long timestamp;
+  @NonNull
+  private T value;
 
-  @JsonProperty("maximumRecords")
+  @JsonProperty("eventType")
+  @JsonView(View.SessionUpdateView.class)
   @Getter
-  @Setter
-  private Integer maximumRecords;
+  @NonNull
+  private AuditEventType eventType;
 
-  @JsonProperty("timeout")
+  @JsonProperty("occurred")
+  @JsonView(View.SessionUpdateView.class)
   @Getter
-  @Setter
-  private Long timeout;
+  private Date occurred = new Date();
 }

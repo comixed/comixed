@@ -33,3 +33,8 @@ export const selectLibraryBusy = createSelector(
   selectLibraryState,
   state => state.loading
 );
+/** Selects all comics. */
+export const selectAllComics = createSelector(
+  selectLibraryState,
+  state => state.comics
+);
