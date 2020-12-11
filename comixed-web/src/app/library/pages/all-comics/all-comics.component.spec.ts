@@ -17,21 +17,31 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicDetailCardComponent } from './comic-detail-card.component';
-import { MatCardModule } from '@angular/material/card';
+import { AllComicsComponent } from './all-comics.component';
+import { LoggerModule } from '@angular-ru/logger';
+import {
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/library.reducer';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
-fdescribe('ComicDetailCardComponent', () => {
-  let component: ComicDetailCardComponent;
-  let fixture: ComponentFixture<ComicDetailCardComponent>;
+describe('AllComicsComponent', () => {
+  const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
+
+  let component: AllComicsComponent;
+  let fixture: ComponentFixture<AllComicsComponent>;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicDetailCardComponent],
-      imports: [MatCardModule]
+      declarations: [AllComicsComponent],
+      imports: [LoggerModule.forRoot()],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicDetailCardComponent);
+    fixture = TestBed.createComponent(AllComicsComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   }));
 

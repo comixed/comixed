@@ -21,6 +21,7 @@ import { NgModule } from '@angular/core';
 import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
 import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
 import { AdminGuard, ReaderGuard } from '@app/user';
+import { AllComicsComponent } from '@app/library/pages/all-comics/all-comics.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,11 @@ const routes: Routes = [
   {
     path: 'library/:comicId',
     component: ComicDetailsComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library',
+    component: AllComicsComponent,
     canActivate: [ReaderGuard]
   }
 ];

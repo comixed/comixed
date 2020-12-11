@@ -21,6 +21,10 @@
     "yes": "Yes"
   },
   "menu": {
+    "library-menu": {
+      "root": "Library",
+      "all-comics": "All Comics"
+    },
     "admin-menu": {
       "root": "Admin",
       "import-comic-files": "Import Comics"
