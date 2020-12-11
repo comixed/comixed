@@ -22,10 +22,10 @@ import { Comic } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { loadComic } from '@app/library/actions/comic.actions';
+import { loadComic } from '@app/library/actions/library.actions';
 import {
   selectComic,
-  selectComicBusy
+  selectLibraryBusy
 } from '@app/library/selectors/comic.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -68,7 +68,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       }
     );
     this.comicBusySubscription = this.store
-      .select(selectComicBusy)
+      .select(selectLibraryBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.comicSubscription = this.store
       .select(selectComic)

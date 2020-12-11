@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ComicService } from '@app/library/services/comic.service';
+import { LibraryService } from '@app/library/services/library.service';
 import { LoggerService } from '@angular-ru/logger';
 import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,17 +26,17 @@ import {
   comicLoaded,
   loadComic,
   loadComicFailed
-} from '@app/library/actions/comic.actions';
+} from '@app/library/actions/library.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Comic } from '@app/library';
 import { of } from 'rxjs';
 
 @Injectable()
-export class ComicEffects {
+export class LibraryEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private comicService: ComicService,
+    private comicService: LibraryService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}
