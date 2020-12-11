@@ -33,10 +33,16 @@ import {
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SessionUpdate } from '@app/models/session-update';
+import { COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
+import { updateComics } from '@app/library/actions/library.actions';
 
 describe('SessionEffects', () => {
-  const UPDATE = { importCount: 717 } as SessionUpdate;
+  const TIMESTAMP = new Date().getTime();
+  const MAXIMUM_RECORDS = 100;
+  const TIMEOUT = 300;
+  const IMPORT_COUNT = 717;
+  const UPDATED_COMICS = [COMIC_2];
+  const REMOVED_COMICS = [COMIC_3];
 
   let actions$: Observable<any>;
   let effects: SessionEffects;
@@ -78,20 +84,42 @@ describe('SessionEffects', () => {
 
   describe('loading a user session update', () => {
     it('fires an action on success', () => {
-      const serviceResponse = { update: UPDATE } as SessionUpdateResponse;
-      const action = loadSessionUpdate({ reset: false, timeout: 100 });
-      const outcome = sessionUpdateLoaded({ update: UPDATE });
+      const serviceResponse = {
+        update: {
+          importCount: IMPORT_COUNT,
+          updatedComics: UPDATED_COMICS,
+          removedComicIds: REMOVED_COMICS.map(comic => comic.id),
+          latest: TIMESTAMP
+        }
+      } as SessionUpdateResponse;
+      const action = loadSessionUpdate({
+        timestamp: TIMESTAMP,
+        maximumRecords: MAXIMUM_RECORDS,
+        timeout: TIMEOUT
+      });
+      const outcome1 = updateComics({
+        updated: UPDATED_COMICS,
+        removed: REMOVED_COMICS.map(comic => comic.id)
+      });
+      const outcome2 = sessionUpdateLoaded({
+        importCount: IMPORT_COUNT,
+        latest: TIMESTAMP
+      });
 
       actions$ = hot('-a', { a: action });
       sessionService.loadSessionUpdate.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadSessionUpdate$).toBeObservable(expected);
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadSessionUpdate({ reset: false, timeout: 100 });
+      const action = loadSessionUpdate({
+        timestamp: TIMESTAMP,
+        maximumRecords: MAXIMUM_RECORDS,
+        timeout: TIMEOUT
+      });
       const outcome = loadSessionUpdateFailed();
 
       actions$ = hot('-a', { a: action });
@@ -105,7 +133,11 @@ describe('SessionEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = loadSessionUpdate({ reset: false, timeout: 100 });
+      const action = loadSessionUpdate({
+        timestamp: TIMESTAMP,
+        maximumRecords: MAXIMUM_RECORDS,
+        timeout: TIMEOUT
+      });
       const outcome = loadSessionUpdateFailed();
 
       actions$ = hot('-a', { a: action });

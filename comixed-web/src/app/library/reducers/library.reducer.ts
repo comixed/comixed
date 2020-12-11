@@ -20,7 +20,8 @@ import { createReducer, on } from '@ngrx/store';
 import {
   comicLoaded,
   loadComic,
-  loadComicFailed
+  loadComicFailed,
+  updateComics
 } from '../actions/library.actions';
 import { Comic } from '@app/library';
 
@@ -29,11 +30,13 @@ export const LIBRARY_FEATURE_KEY = 'library_state';
 export interface LibraryState {
   loading: boolean;
   comic: Comic;
+  comics: Comic[];
 }
 
 export const initialState: LibraryState = {
   loading: false,
-  comic: null
+  comic: null,
+  comics: []
 };
 
 export const reducer = createReducer(
@@ -45,5 +48,25 @@ export const reducer = createReducer(
     loading: false,
     comic: action.comic
   })),
-  on(loadComicFailed, state => ({ ...state, loading: false }))
+  on(loadComicFailed, state => ({ ...state, loading: false })),
+  on(updateComics, (state, action) => {
+    console.log('*** state:', state);
+    console.log('*** action:', action);
+    console.log('*** preparing to update');
+    // removed from the local state the old version of incoming comic updates
+    let comics = state.comics.filter(comic => {
+      return action.updated.some(entry => entry.id === comic.id) === false;
+    });
+    console.log('*** after removing incoming comics:', comics);
+    // add the updates
+    comics = comics.concat(action.updated);
+    console.log('*** after adding incoming comics:', comics);
+    // now filter out any removed comics
+    comics = comics.filter(
+      comic => action.removed.includes(comic.id) === false
+    );
+    console.log('*** after filtering removed comics:', comics);
+
+    return { ...state, comics };
+  })
 );

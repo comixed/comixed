@@ -18,8 +18,8 @@
 
 package org.comixedproject.controller.user;
 
-import static junit.framework.TestCase.*;
-import static org.comixedproject.controller.user.SessionController.SESSION_ENTRY_KEY;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import javax.servlet.http.HttpSession;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
@@ -34,6 +34,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SessionControllerTest {
+  private static final Long TEST_TIMESTAMP = System.currentTimeMillis();
+  private static final Integer TEST_MAXIMUM_RECORDS = 100;
   private static final Long TEST_TIMEOUT = 717L;
 
   @InjectMocks private SessionController sessionController;
@@ -45,63 +47,20 @@ public class SessionControllerTest {
   @Mock private SessionUpdate sessionUpdate;
 
   @Test
-  public void testGetSessionUpdateNoExistingSession() {
-    Mockito.when(sessionUpdateRequest.getReset()).thenReturn(Boolean.FALSE);
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(null);
-    Mockito.when(sessionUpdateRequest.getTimeout()).thenReturn(TEST_TIMEOUT);
-    Mockito.when(
-            sessionService.getSessionUpdate(userSessionArgumentCaptor.capture(), Mockito.anyLong()))
-        .thenReturn(sessionUpdate);
-
-    SessionUpdateResponse response =
-        sessionController.getSessionUpdate(httpSession, sessionUpdateRequest);
-
-    assertNotNull(response);
-    assertSame(sessionUpdate, response.getUpdate());
-    assertNotNull(userSessionArgumentCaptor.getValue());
-
-    Mockito.verify(sessionService, Mockito.times(1))
-        .getSessionUpdate(userSessionArgumentCaptor.getValue(), TEST_TIMEOUT);
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(SESSION_ENTRY_KEY, userSessionArgumentCaptor.getValue());
-  }
-
-  @Test
-  public void testGetSessionUpdateBrowserInitiateReset() {
-    Mockito.when(sessionUpdateRequest.getReset()).thenReturn(Boolean.TRUE);
-    Mockito.when(sessionUpdateRequest.getTimeout()).thenReturn(TEST_TIMEOUT);
-    Mockito.when(
-            sessionService.getSessionUpdate(userSessionArgumentCaptor.capture(), Mockito.anyLong()))
-        .thenReturn(sessionUpdate);
-
-    final SessionUpdateResponse response =
-        sessionController.getSessionUpdate(httpSession, sessionUpdateRequest);
-
-    assertNotNull(response);
-    assertSame(sessionUpdate, response.getUpdate());
-    assertNotNull(userSessionArgumentCaptor.getValue());
-
-    Mockito.verify(sessionService, Mockito.times(1))
-        .getSessionUpdate(userSessionArgumentCaptor.getValue(), TEST_TIMEOUT);
-    Mockito.verify(httpSession, Mockito.times(1))
-        .setAttribute(SESSION_ENTRY_KEY, userSessionArgumentCaptor.getValue());
-  }
-
-  @Test
   public void testGetSessionUpdate() {
-    Mockito.when(sessionUpdateRequest.getReset()).thenReturn(Boolean.FALSE);
-    Mockito.when(httpSession.getAttribute(Mockito.anyString())).thenReturn(userSession);
-    Mockito.when(sessionUpdateRequest.getTimeout()).thenReturn(TEST_TIMEOUT);
-    Mockito.when(sessionService.getSessionUpdate(Mockito.any(UserSession.class), Mockito.anyLong()))
+    Mockito.when(
+            sessionService.getSessionUpdate(Mockito.anyLong(), Mockito.anyInt(), Mockito.anyLong()))
         .thenReturn(sessionUpdate);
 
     final SessionUpdateResponse response =
-        sessionController.getSessionUpdate(httpSession, sessionUpdateRequest);
+        sessionController.getSessionUpdate(
+            httpSession,
+            new SessionUpdateRequest(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT));
 
     assertNotNull(response);
     assertSame(sessionUpdate, response.getUpdate());
 
-    Mockito.verify(sessionService, Mockito.times(1)).getSessionUpdate(userSession, TEST_TIMEOUT);
-    Mockito.verify(httpSession, Mockito.times(1)).setAttribute(SESSION_ENTRY_KEY, userSession);
+    Mockito.verify(sessionService, Mockito.times(1))
+        .getSessionUpdate(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT);
   }
 }

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {createReducer, on} from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import {
   loadSessionUpdate,
   loadSessionUpdateFailed,
@@ -29,23 +29,26 @@ export interface SessionState {
   initialized: boolean;
   loading: boolean;
   importCount: number;
+  latest: number;
 }
 
 export const initialState: SessionState = {
   initialized: false,
   loading: false,
-  importCount: 0
+  importCount: 0,
+  latest: 0
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(loadSessionUpdate, state => ({...state, loading: true})),
+  on(loadSessionUpdate, state => ({ ...state, loading: true })),
   on(sessionUpdateLoaded, (state, action) => ({
     ...state,
     loading: false,
     initialized: true,
-    importCount: action.update.importCount
+    importCount: action.importCount,
+    latest: action.latest
   })),
   on(loadSessionUpdateFailed, state => ({
     ...state,

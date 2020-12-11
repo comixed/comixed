@@ -25,7 +25,6 @@ import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { loadSessionUpdate } from '@app/actions/session.actions';
-import { SESSION_TIMEOUT } from '@app/app.constants';
 import { selectUserSessionState } from '@app/selectors/session.selectors';
 import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
 
@@ -53,9 +52,10 @@ export class AppComponent implements OnInit {
         this.logger.debug('Getting first session update');
         this.sessionActive = true;
         this.store.dispatch(
-          loadSessionUpdate({ reset: true, timeout: SESSION_TIMEOUT })
+          loadSessionUpdate({ timestamp: 0, maximumRecords: 100, timeout: 300 })
         );
       } else if (!this.user && this.sessionActive) {
+        this.logger.debug('Stopping user session updates');
         this.sessionActive = false;
       }
     });
@@ -71,7 +71,11 @@ export class AppComponent implements OnInit {
         if (this.sessionActive) {
           this.logger.debug('Getting next session update');
           this.store.dispatch(
-            loadSessionUpdate({ reset: false, timeout: SESSION_TIMEOUT })
+            loadSessionUpdate({
+              timestamp: state.latest,
+              maximumRecords: 100,
+              timeout: 300
+            })
           );
         }
       }

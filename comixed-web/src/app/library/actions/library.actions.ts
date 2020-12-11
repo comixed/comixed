@@ -28,3 +28,7 @@ export const comicLoaded = createAction(
   props<{ comic: Comic }>()
 );
 export const loadComicFailed = createAction('[Library] Failed to load a comic');
+export const updateComics = createAction(
+  '[Library] Library updates received',
+  props<{ updated: Comic[]; removed: number[] }>()
+);

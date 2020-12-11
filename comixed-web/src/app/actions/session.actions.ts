@@ -17,15 +17,17 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { SessionUpdate } from '@app/models/session-update';
 
 export const loadSessionUpdate = createAction(
   '[Session] Load updates to the session',
-  props<{ reset: boolean; timeout: number }>()
+  props<{ timestamp: number; maximumRecords: number; timeout: number }>()
 );
 export const sessionUpdateLoaded = createAction(
   '[Session] Received the session update',
-  props<{ update: SessionUpdate }>()
+  props<{
+    importCount: number;
+    latest: number;
+  }>()
 );
 export const loadSessionUpdateFailed = createAction(
   '[Session] Failed to load the session update'

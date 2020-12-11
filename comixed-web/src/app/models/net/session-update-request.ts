@@ -18,6 +18,7 @@
 
 /** The payload for a session update request. */
 export interface SessionUpdateRequest {
-  reset: boolean;
+  timestamp: number;
+  maximumRecords: number;
   timeout: number;
 }
