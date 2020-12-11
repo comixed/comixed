@@ -1,0 +1,11 @@
+<div id="cx-all-comics"
+     class="cx-comic-detail-card-container">
+  <cx-comic-detail-card *ngFor="let comic of comics"
+                        [title]="comic|comicTitle"
+                        [imageUrl]="comic|comicCoverUrl"
+                        [detailLink]="[comic.id]"
+                        [imageWidth]="'400px'"
+                        [imageHeight]="'auto'"
+                        [blurred]="!comic.fileDetails"
+                        [busy]="!comic.fileDetails"></cx-comic-detail-card>
+</div>
