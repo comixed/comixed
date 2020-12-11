@@ -16,34 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
-import {
-  comicLoaded,
-  loadComic,
-  loadComicFailed
-} from '../actions/comic.actions';
+import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/library';
 
-export const COMIC_FEATURE_KEY = 'comic_state';
-
-export interface ComicState {
-  loading: boolean;
-  comic: Comic;
-}
-
-export const initialState: ComicState = {
-  loading: false,
-  comic: null
-};
-
-export const reducer = createReducer(
-  initialState,
-
-  on(loadComic, state => ({ ...state, loading: true })),
-  on(comicLoaded, (state, action) => ({
-    ...state,
-    loading: false,
-    comic: action.comic
-  })),
-  on(loadComicFailed, state => ({ ...state, loading: false }))
+export const loadComic = createAction(
+  '[Library] Load a comic',
+  props<{ id: number }>()
 );
+export const comicLoaded = createAction(
+  '[Library] Loaded a comic',
+  props<{ comic: Comic }>()
+);
+export const loadComicFailed = createAction('[Library] Failed to load a comic');

@@ -21,14 +21,14 @@ import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import {
   COMIC_IMPORT_FEATURE_KEY,
   ComicImportState,
-  reducer as comicImportReducer
+  reducer as libraryImportReducer
 } from './reducers/comic-import.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  COMIC_FEATURE_KEY,
-  ComicState,
+  LIBRARY_FEATURE_KEY,
+  LibraryState,
   reducer as comicReducer
-} from './reducers/comic.reducer';
+} from './reducers/library.reducer';
 
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
@@ -50,13 +50,13 @@ interface RouterStateUrl {
 export interface UserModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
-  [COMIC_FEATURE_KEY]: ComicState;
+  [LIBRARY_FEATURE_KEY]: LibraryState;
 }
 
 export type ModuleState = UserModuleState;
 
 export const reducers: ActionReducerMap<UserModuleState> = {
   router: routerReducer,
-  [COMIC_IMPORT_FEATURE_KEY]: comicImportReducer,
-  [COMIC_FEATURE_KEY]: comicReducer
+  [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
+  [LIBRARY_FEATURE_KEY]: comicReducer
 };

@@ -19,9 +19,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-import { ComicEffects } from './comic.effects';
+import { LibraryEffects } from './library.effects';
 import { COMIC_1 } from '@app/library/library.fixtures';
-import { ComicService } from '@app/library/services/comic.service';
+import { LibraryService } from '@app/library/services/library.service';
 import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
@@ -29,17 +29,17 @@ import {
   comicLoaded,
   loadComic,
   loadComicFailed
-} from '@app/library/actions/comic.actions';
+} from '@app/library/actions/library.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-describe('ComicEffects', () => {
+describe('LibraryEffects', () => {
   const COMIC = COMIC_1;
 
   let actions$: Observable<any>;
-  let effects: ComicEffects;
-  let comicService: jasmine.SpyObj<ComicService>;
+  let effects: LibraryEffects;
+  let comicService: jasmine.SpyObj<LibraryService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -50,19 +50,19 @@ describe('ComicEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        ComicEffects,
+        LibraryEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicService,
+          provide: LibraryService,
           useValue: {
-            loadComic: jasmine.createSpy('ComicService.loadComic()')
+            loadComic: jasmine.createSpy('LibraryService.loadComic()')
           }
         }
       ]
     });
 
-    effects = TestBed.inject(ComicEffects);
-    comicService = TestBed.inject(ComicService) as jasmine.SpyObj<ComicService>;
+    effects = TestBed.inject(LibraryEffects);
+    comicService = TestBed.inject(LibraryService) as jasmine.SpyObj<LibraryService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
   });
