@@ -34,6 +34,7 @@ import { ComicDetailCardComponent } from './components/comic-detail-card/comic-d
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { TranslateModule } from '@ngx-translate/core';
     MatIconModule,
     MatFormFieldModule,
     MatCardModule,
-    RouterModule
+    RouterModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatSnackBarModule,

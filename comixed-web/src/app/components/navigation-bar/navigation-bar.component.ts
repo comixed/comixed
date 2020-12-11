@@ -24,7 +24,7 @@ import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
-import { isAdmin } from '@app/user/user.functions';
+import { isAdmin, isReader } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -34,6 +34,7 @@ import { isAdmin } from '@app/user/user.functions';
 export class NavigationBarComponent {
   private _user: User;
 
+  isReader = false;
   isAdmin = false;
 
   constructor(
@@ -47,6 +48,7 @@ export class NavigationBarComponent {
   @Input()
   set user(user: User) {
     this._user = user;
+    this.isReader = isReader(user);
     this.isAdmin = isAdmin(user);
   }
 

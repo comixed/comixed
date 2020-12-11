@@ -59,6 +59,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
+import { AllComicsComponent } from './pages/all-comics/all-comics.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
     ComicEditComponent,
     ComicCoverUrlPipe,
     ComicTitlePipe,
-    ComicPageUrlPipe
+    ComicPageUrlPipe,
+    AllComicsComponent
   ],
   imports: [
     CommonModule,
