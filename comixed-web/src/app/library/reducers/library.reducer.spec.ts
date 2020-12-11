@@ -16,18 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicState, initialState, reducer } from './comic.reducer';
+import { LibraryState, initialState, reducer } from './library.reducer';
 import { COMIC_1 } from '@app/library/library.fixtures';
 import {
   comicLoaded,
   loadComic,
   loadComicFailed
-} from '@app/library/actions/comic.actions';
+} from '@app/library/actions/library.actions';
 
-describe('Comic Reducer', () => {
+describe('Library Reducer', () => {
   const COMIC = COMIC_1;
 
-  let state: ComicState;
+  let state: LibraryState;
 
   beforeEach(() => {
     state = { ...initialState };

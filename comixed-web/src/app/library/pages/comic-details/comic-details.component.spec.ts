@@ -20,9 +20,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicDetailsComponent } from './comic-details.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
-  COMIC_FEATURE_KEY,
-  initialState as initialComicState
-} from '@app/library/reducers/comic.reducer';
+  LIBRARY_FEATURE_KEY,
+  initialState as initialLibraryState
+} from '@app/library/reducers/library.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
@@ -48,7 +48,7 @@ describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
   const OTHER_COMIC = COMIC_2;
   const initialState = {
-    [COMIC_FEATURE_KEY]: initialComicState,
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: initialUserState
   };
 

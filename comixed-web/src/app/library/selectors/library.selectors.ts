@@ -16,15 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/library';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 
-export const loadComic = createAction(
-  '[Comic] Load a comic',
-  props<{ id: number }>()
+/** Selects the feature state. */
+export const selectLibraryState = createFeatureSelector<LibraryState>(
+  LIBRARY_FEATURE_KEY
 );
-export const comicLoaded = createAction(
-  '[Comic] Loaded a comic',
-  props<{ comic: Comic }>()
+/** Selects the comic. */
+export const selectComic = createSelector(
+  selectLibraryState,
+  state => state.comic
 );
-export const loadComicFailed = createAction('[Comic] Failed to load a comic');
+/** Selects if the feature is current busy. */
+export const selectLibraryBusy = createSelector(
+  selectLibraryState,
+  state => state.loading
+);
