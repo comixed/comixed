@@ -10,7 +10,7 @@
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-web</artifactId>
-  <name>comixed-frontend</name>
+  <name>comixed-web</name>
   <url>http://www.comixedproject.org</url>
   <build>
     <resources>
