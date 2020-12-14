@@ -29,8 +29,11 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveUserPreference,
+  saveUserPreferenceFailed,
   userLoggedIn,
-  userLoggedOut
+  userLoggedOut,
+  userPreferenceSaved
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/logger';
@@ -39,11 +42,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
+import { resetDisplayOptions } from '@app/library/actions/display.actions';
 
 describe('UserEffects', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
   const AUTH_TOKEN = 'my!token';
+  const PREFERENCE_NAME = 'user.preference';
+  const PREFERENCE_VALUE = 'preference.value';
 
   let actions$: Observable<any>;
   let effects: UserEffects;
@@ -65,7 +72,10 @@ describe('UserEffects', () => {
           provide: UserService,
           useValue: {
             loadCurrentUser: jasmine.createSpy('UserService.loadCurrentUser()'),
-            loginUser: jasmine.createSpy('userService.loginUser()')
+            loginUser: jasmine.createSpy('UserService.loginUser()'),
+            saveUserPreference: jasmine.createSpy(
+              'UserService.saveUserPreference()'
+            )
           }
         }
       ]
@@ -88,12 +98,13 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = USER;
       const action = loadCurrentUser();
-      const outcome = currentUserLoaded({ user: USER });
+      const outcome1 = currentUserLoaded({ user: USER });
+      const outcome2 = resetDisplayOptions({ user: USER });
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.loadCurrentUser$).toBeObservable(expected);
     });
 
@@ -172,13 +183,62 @@ describe('UserEffects', () => {
   describe('user logout', () => {
     it('fires an action on success', () => {
       const action = logoutUser();
-      const outcome = userLoggedOut();
+      const outcome1 = userLoggedOut();
+      const outcome2 = resetDisplayOptions({});
 
       actions$ = hot('-a', { a: action });
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.logoutUser$).toBeObservable(expected);
       expect(tokenService.clearAuthToken).toHaveBeenCalled();
+    });
+  });
+
+  describe('saving a user preference', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = { user: USER } as SaveUserPreferenceResponse;
+      const action = saveUserPreference({
+        name: PREFERENCE_NAME,
+        value: PREFERENCE_VALUE
+      });
+      const outcome = userPreferenceSaved({ user: USER });
+
+      actions$ = hot('-a', { a: action });
+      userService.saveUserPreference.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.saveUserPreference$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = saveUserPreference({
+        name: PREFERENCE_NAME,
+        value: PREFERENCE_VALUE
+      });
+      const outcome = saveUserPreferenceFailed();
+
+      actions$ = hot('-a', { a: action });
+      userService.saveUserPreference.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.saveUserPreference$).toBeObservable(expected);
+    });
+
+    it('fires an action on general failure', () => {
+      const action = saveUserPreference({
+        name: PREFERENCE_NAME,
+        value: PREFERENCE_VALUE
+      });
+      const outcome = saveUserPreferenceFailed();
+
+      actions$ = hot('-a', { a: action });
+      userService.saveUserPreference.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.saveUserPreference$).toBeObservable(expected);
     });
   });
 });

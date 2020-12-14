@@ -24,8 +24,11 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveUserPreference,
+  saveUserPreferenceFailed,
   userLoggedIn,
-  userLoggedOut
+  userLoggedOut,
+  userPreferenceSaved
 } from '../actions/user.actions';
 import { User } from '@app/user/models/user';
 
@@ -37,6 +40,7 @@ export interface UserState {
   authenticating: boolean;
   authenticated: boolean;
   user: User;
+  saving: boolean;
 }
 
 export const initialState: UserState = {
@@ -44,7 +48,8 @@ export const initialState: UserState = {
   loading: false,
   authenticating: false,
   authenticated: false,
-  user: null
+  user: null,
+  saving: false
 };
 
 export const reducer = createReducer(
@@ -86,5 +91,12 @@ export const reducer = createReducer(
     authenticating: false,
     authenticated: false,
     user: null
-  }))
+  })),
+  on(saveUserPreference, state => ({ ...state, saving: true })),
+  on(userPreferenceSaved, (state, action) => ({
+    ...state,
+    saving: false,
+    user: action.user
+  })),
+  on(saveUserPreferenceFailed, state => ({ ...state, saving: false }))
 );

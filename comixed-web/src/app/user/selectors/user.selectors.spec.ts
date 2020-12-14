@@ -31,7 +31,8 @@ describe('User Selectors', () => {
       loading: Math.random() > 0.5,
       authenticating: Math.random() > 0.5,
       authenticated: Math.random() > 0.5,
-      user: USER
+      user: USER,
+      saving: Math.random() > 0.5
     };
   });
 

@@ -25,14 +25,18 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveUserPreference,
+  saveUserPreferenceFailed,
   userLoggedIn,
-  userLoggedOut
+  userLoggedOut,
+  userPreferenceSaved
 } from '@app/user/actions/user.actions';
 
 describe('User Reducer', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
-  const AUTH_TOKEN = 'my!token';
+  const PREFERENCE_NAME = 'user.preference';
+  const PREFERENCE_VALUE = 'preference.value';
 
   let state: UserState;
 
@@ -63,6 +67,10 @@ describe('User Reducer', () => {
 
     it('has no user', () => {
       expect(state.user).toBeNull();
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalsy();
     });
   });
 
@@ -207,6 +215,46 @@ describe('User Reducer', () => {
 
     it('clears the user', () => {
       expect(state.user).toBeNull();
+    });
+  });
+
+  describe('saving a user preference', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, saving: false },
+        saveUserPreference({ name: PREFERENCE_NAME, value: PREFERENCE_VALUE })
+      );
+    });
+
+    it('sets the saving flag', () => {
+      expect(state.saving).toBeTruthy();
+    });
+  });
+
+  describe('when a preference is saved', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, user: null, saving: true },
+        userPreferenceSaved({ user: USER })
+      );
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalsy();
+    });
+
+    it('updates the user', () => {
+      expect(state.user).toEqual(USER);
+    });
+  });
+
+  describe('failure to save a user preference', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, saveUserPreferenceFailed());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalsy();
     });
   });
 });

@@ -39,16 +39,13 @@ import {
 import { HttpLoaderFactory } from '@app/app.translate';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { UserModule } from '@app/user/user.module';
-import { LoggerLevel, LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/logger';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LibraryModule } from '@app/library/library.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {
-  _MatMenuDirectivesModule,
-  MatMenuModule
-} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { APP_REDUCERS } from '@app/app.reducers';
 import { SessionEffects } from '@app/effects/session.effects';
 import { environment } from '../environments/environment';
@@ -67,7 +64,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     StoreModule.forRoot(APP_REDUCERS, {}),
     EffectsModule.forRoot([AppEffects, SessionEffects]),
     StoreRouterConnectingModule.forRoot(),
-    LoggerModule.forRoot({ minLevel: LoggerLevel.TRACE }),
+    LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -89,7 +86,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     MatFormFieldModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    _MatMenuDirectivesModule,
     MatMenuModule
   ],
   providers: [

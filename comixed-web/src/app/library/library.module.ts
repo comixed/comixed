@@ -60,6 +60,13 @@ import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
 import { AllComicsComponent } from './pages/all-comics/all-comics.component';
+import {
+  DISPLAY_FEATURE_KEY,
+  reducer as displayReducer
+} from '@app/library/reducers/display.reducer';
+import { DisplayEffects } from '@app/library/effects/display.effects';
+import { ComicDisplayOptionsComponent } from './components/comic-display-options/comic-display-options.component';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -76,7 +83,8 @@ import { AllComicsComponent } from './pages/all-comics/all-comics.component';
     ComicCoverUrlPipe,
     ComicTitlePipe,
     ComicPageUrlPipe,
-    AllComicsComponent
+    AllComicsComponent,
+    ComicDisplayOptionsComponent
   ],
   imports: [
     CommonModule,
@@ -84,9 +92,14 @@ import { AllComicsComponent } from './pages/all-comics/all-comics.component';
     LibraryRouting,
     ReactiveFormsModule,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
-    EffectsModule.forFeature([ComicImportEffects, LibraryEffects]),
+    EffectsModule.forFeature([
+      DisplayEffects,
+      ComicImportEffects,
+      LibraryEffects
+    ]),
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
@@ -99,7 +112,8 @@ import { AllComicsComponent } from './pages/all-comics/all-comics.component';
     FormsModule,
     MatTabsModule,
     MatToolbarModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSliderModule
   ],
   exports: [CommonModule, CoreModule]
 })

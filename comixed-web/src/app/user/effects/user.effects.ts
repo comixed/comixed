@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { LoggerService } from '@angular-ru/logger';
+import {Injectable} from '@angular/core';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {LoggerService} from '@angular-ru/logger';
 import {
   currentUserLoaded,
   loadCurrentUser,
@@ -26,23 +26,21 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveUserPreference,
+  saveUserPreferenceFailed,
   userLoggedIn,
-  userLoggedOut
+  userLoggedOut,
+  userPreferenceSaved
 } from '@app/user/actions/user.actions';
-import {
-  catchError,
-  flatMap,
-  map,
-  mergeMap,
-  switchMap,
-  tap
-} from 'rxjs/operators';
-import { UserService } from '@app/user/services/user.service';
-import { User } from '@app/user/models/user';
-import { AlertService, TokenService } from '@app/core';
-import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
-import { LoginResponse } from '@app/user/models/net/login-response';
+import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {UserService} from '@app/user/services/user.service';
+import {User} from '@app/user/models/user';
+import {AlertService, TokenService} from '@app/core';
+import {TranslateService} from '@ngx-translate/core';
+import {of} from 'rxjs';
+import {LoginResponse} from '@app/user/models/net/login-response';
+import {SaveUserPreferenceResponse} from '@app/user/models/net/save-user-preference-response';
+import {resetDisplayOptions} from '@app/library/actions/display.actions';
 
 @Injectable()
 export class UserEffects {
@@ -53,7 +51,8 @@ export class UserEffects {
     private alertService: AlertService,
     private translateService: TranslateService,
     private tokenService: TokenService
-  ) {}
+  ) {
+  }
 
   loadCurrentUser$ = createEffect(() => {
     return this.actions$.pipe(
@@ -62,7 +61,10 @@ export class UserEffects {
       switchMap(action =>
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
-          map((response: User) => currentUserLoaded({ user: response })),
+          mergeMap((response: User) => [
+            currentUserLoaded({user: response}),
+            resetDisplayOptions({user: response})
+          ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
@@ -90,7 +92,7 @@ export class UserEffects {
       tap(action => this.logger.debug('Effect: logging in user:', action)),
       switchMap(action =>
         this.userService
-          .loginUser({ email: action.email, password: action.password })
+          .loginUser({email: action.email, password: action.password})
           .pipe(
             tap(response => this.logger.debug('Received response:', response)),
             tap((response: LoginResponse) =>
@@ -127,9 +129,34 @@ export class UserEffects {
     return this.actions$.pipe(
       ofType(logoutUser),
       tap(action => this.logger.debug('Effect: logout out user:', action)),
-      flatMap(() => {
+      mergeMap(() => {
         this.tokenService.clearAuthToken();
-        return of(userLoggedOut());
+        return [userLoggedOut(), resetDisplayOptions({})];
+      })
+    );
+  });
+
+  saveUserPreference$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(saveUserPreference),
+      tap(action => this.logger.debug('Effect: save user preference:', action)),
+      mergeMap(action =>
+        this.userService
+          .saveUserPreference({name: action.name, value: action.value})
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: SaveUserPreferenceResponse) =>
+              userPreferenceSaved({user: response.user})
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              return of(saveUserPreferenceFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        return of(saveUserPreferenceFailed());
       })
     );
   });

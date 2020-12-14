@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { User } from '@app/user/models/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
@@ -27,6 +27,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { loadSessionUpdate } from '@app/actions/session.actions';
 import { selectUserSessionState } from '@app/selectors/session.selectors';
 import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
+import { setPageSize } from '@app/library/actions/display.actions';
+import { getUserPreference } from '@app/user';
+import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-root',
@@ -43,6 +49,7 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private store: Store<any>
   ) {
+    this.logger.level = LoggerLevel.TRACE;
     this.translateService.use('en');
     this.logger.trace('Subscribing to user changes');
     this.store.select(selectUser).subscribe(user => {
@@ -57,6 +64,21 @@ export class AppComponent implements OnInit {
       } else if (!this.user && this.sessionActive) {
         this.logger.debug('Stopping user session updates');
         this.sessionActive = false;
+      }
+      if (!!this.user) {
+        this.store.dispatch(
+          setPageSize({
+            size: parseInt(
+              getUserPreference(
+                this.user.preferences,
+                PAGE_SIZE_PREFERENCE,
+                `${DEFAULT_PAGE_SIZE}`
+              ),
+              10
+            ),
+            save: false
+          })
+        );
       }
     });
     this.store
