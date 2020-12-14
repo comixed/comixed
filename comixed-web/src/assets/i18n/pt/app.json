@@ -4,6 +4,7 @@
     "general-effect-failure-detail": "A general error has occurred."
   },
   "button": {
+    "cancel": "Cancel",
     "deselect": "Deselect",
     "download": "Download",
     "load": "Load",
@@ -28,6 +29,10 @@
     "admin-menu": {
       "root": "Admin",
       "import-comic-files": "Import Comics"
+    },
+    "options-menu": {
+      "root": "Options",
+      "show-options-panel": "Set User Options..."
     }
   },
   "session": {
@@ -39,5 +44,11 @@
   },
   "validation": {
     "field-required": "This field is required"
+  },
+  "display-options": {
+    "title": "Display Options",
+    "label": {
+      "page-size": "Page Size"
+    }
   }
 }

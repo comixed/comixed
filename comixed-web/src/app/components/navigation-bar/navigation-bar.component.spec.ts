@@ -31,7 +31,11 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
-import { MatDialogModule } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -47,6 +51,8 @@ describe('NavigationBarComponent', () => {
   let store: MockStore<any>;
   let router: Router;
   let confirmationService: ConfirmationService;
+  let dialog: MatDialog;
+  let dialogRef: jasmine.SpyObj<MatDialogRef<any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -61,7 +67,15 @@ describe('NavigationBarComponent', () => {
         MatToolbarModule,
         MatTooltipModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: MatDialogRef,
+          useValue: {
+            afterClosed: jasmine.createSpy('MatDialogRef.afterClosed()')
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationBarComponent);
@@ -71,6 +85,10 @@ describe('NavigationBarComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     confirmationService = TestBed.inject(ConfirmationService);
+    dialog = TestBed.inject(MatDialog);
+    dialogRef = TestBed.inject(MatDialogRef) as jasmine.SpyObj<
+      MatDialogRef<any>
+    >;
     fixture.detectChanges();
   }));
 
@@ -125,6 +143,17 @@ describe('NavigationBarComponent', () => {
 
     it('clears the admin flag', () => {
       expect(component.isAdmin).toBeFalsy();
+    });
+  });
+
+  describe('when the display options menu item is selected', () => {
+    beforeEach(() => {
+      spyOn(dialog, 'open').and.returnValue(dialogRef);
+      component.onShowDisplayOptions();
+    });
+
+    it('invokes the confirm callback', () => {
+      expect(dialog.open).toHaveBeenCalled();
     });
   });
 });

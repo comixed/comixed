@@ -22,8 +22,9 @@ import static org.junit.Assert.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 import org.comixedproject.model.net.SaveUserRequest;
+import org.comixedproject.model.net.user.SaveUserPreferenceRequest;
+import org.comixedproject.model.net.user.SaveUserPreferenceResponse;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -35,7 +36,6 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.Authentication;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -57,12 +57,9 @@ public class UserControllerTest {
   @Mock private ComiXedUser user;
   @Captor private ArgumentCaptor<ComiXedUser> userCaptor;
   @Mock private List<ComiXedUser> userList;
-  @Mock private Authentication authentication;
   @Mock private Utils utils;
   @Mock private Principal principal;
   @Mock private ComiXedUser adminUser;
-
-  private Optional<ComiXedUser> queryResultUser;
 
   @Before
   public void setUp() {
@@ -86,51 +83,54 @@ public class UserControllerTest {
 
   @Test
   public void testSetUserProperty() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(
             userService.setUserProperty(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
 
-    ComiXedUser result =
-        controller.setUserProperty(authentication, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+    final SaveUserPreferenceResponse response =
+        controller.setUserProperty(
+            principal, TEST_PROPERTY_NAME, new SaveUserPreferenceRequest(TEST_PROPERTY_VALUE));
 
-    assertNotNull(result);
-    assertSame(user, result);
+    assertNotNull(response);
+    assertSame(user, response.getUser());
 
-    Mockito.verify(authentication, Mockito.times(1)).getName();
+    Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(userService, Mockito.times(1))
         .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
   }
 
   @Test
   public void testDeleteUserProperty() {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.deleteUserProperty(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
 
-    final ComiXedUser result = controller.deleteUserProperty(authentication, TEST_PROPERTY_NAME);
+    final SaveUserPreferenceResponse response =
+        controller.deleteUserProperty(principal, TEST_PROPERTY_NAME);
 
-    assertNotNull(result);
-    assertSame(user, result);
+    assertNotNull(response);
+    assertSame(user, response.getUser());
 
-    Mockito.verify(authentication, Mockito.times(1)).getName();
+    Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(userService, Mockito.times(1))
         .deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
   }
 
   @Test(expected = ComiXedUserException.class)
   public void testSetUserPropertyForInvalidUser() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(
             userService.setUserProperty(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
     try {
-      controller.setUserProperty(authentication, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+      controller.setUserProperty(
+          principal, TEST_PROPERTY_NAME, new SaveUserPreferenceRequest(TEST_PROPERTY_VALUE));
     } finally {
-      Mockito.verify(authentication, Mockito.times(1)).getName();
+      Mockito.verify(principal, Mockito.times(1)).getName();
       Mockito.verify(userService, Mockito.times(1))
           .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
     }
@@ -145,69 +145,69 @@ public class UserControllerTest {
 
   @Test(expected = ComiXedUserException.class)
   public void testGetCurrentUserForMissingName() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(INVALID_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(INVALID_EMAIL);
     Mockito.when(userService.findByEmail(Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
     try {
-      controller.getCurrentUser(authentication);
+      controller.getCurrentUser(principal);
     } finally {
-      Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+      Mockito.verify(principal, Mockito.atLeast(1)).getName();
       Mockito.verify(userService, Mockito.times(1)).findByEmail(INVALID_EMAIL);
     }
   }
 
   @Test
   public void testGetCurrentUser() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.doNothing().when(user).setAuthenticated(Mockito.anyBoolean());
 
-    final ComiXedUser response = controller.getCurrentUser(authentication);
+    final ComiXedUser response = controller.getCurrentUser(principal);
 
     assertNotNull(response);
     assertSame(user, response);
 
-    Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+    Mockito.verify(principal, Mockito.atLeast(1)).getName();
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).setAuthenticated(true);
   }
 
   @Test
   public void testUpdatePassword() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.setUserPassword(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
 
-    final ComiXedUser result = controller.updatePassword(authentication, TEST_PASSWORD);
+    final ComiXedUser result = controller.updatePassword(principal, TEST_PASSWORD);
 
-    Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+    Mockito.verify(principal, Mockito.atLeast(1)).getName();
     Mockito.verify(userService, Mockito.times(1)).setUserPassword(TEST_EMAIL, TEST_PASSWORD);
   }
 
   @Test(expected = ComiXedUserException.class)
   public void testSetUserEmailInvalidUser() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.setUserEmail(Mockito.anyString(), Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
     try {
-      controller.setUserEmail(authentication, TEST_EMAIL);
+      controller.setUserEmail(principal, TEST_EMAIL);
     } finally {
-      Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+      Mockito.verify(principal, Mockito.atLeast(1)).getName();
       Mockito.verify(userService, Mockito.times(1)).setUserEmail(TEST_EMAIL, TEST_EMAIL);
     }
   }
 
   @Test
   public void testSetUserEmail() throws ComiXedUserException {
-    Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(userService.setUserEmail(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
 
-    final ComiXedUser result = controller.setUserEmail(authentication, TEST_EMAIL);
+    final ComiXedUser result = controller.setUserEmail(principal, TEST_EMAIL);
 
-    Mockito.verify(authentication, Mockito.atLeast(1)).getName();
+    Mockito.verify(principal, Mockito.atLeast(1)).getName();
     Mockito.verify(userService, Mockito.times(1)).setUserEmail(TEST_EMAIL, TEST_EMAIL);
   }
 

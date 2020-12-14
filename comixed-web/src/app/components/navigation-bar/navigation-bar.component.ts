@@ -25,6 +25,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { logoutUser } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
 import { isAdmin, isReader } from '@app/user/user.functions';
+import { MatDialog } from '@angular/material/dialog';
+import { ComicDisplayOptionsComponent } from '@app/library/components/comic-display-options/comic-display-options.component';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -42,7 +44,8 @@ export class NavigationBarComponent {
     private router: Router,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog
   ) {}
 
   @Input()
@@ -74,5 +77,10 @@ export class NavigationBarComponent {
         this.router.navigate(['login']);
       }
     });
+  }
+
+  onShowDisplayOptions(): void {
+    this.logger.trace('Showing comic display options dialog');
+    this.dialog.open(ComicDisplayOptionsComponent, {});
   }
 }

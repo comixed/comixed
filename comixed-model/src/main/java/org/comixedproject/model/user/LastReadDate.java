@@ -38,7 +38,7 @@ import org.comixedproject.views.View;
 public class LastReadDate {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView(View.UserDetails.class)
+  @JsonView(View.UserDetailsView.class)
   @Getter
   private Long id;
 
@@ -58,7 +58,7 @@ public class LastReadDate {
   @Column(name = "last_read", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
+  @JsonView({View.UserDetailsView.class, View.LibraryUpdate.class})
   @Getter
   @Setter
   private Date lastRead = new Date();
@@ -66,13 +66,13 @@ public class LastReadDate {
   @Column(name = "last_updated", nullable = false, updatable = true)
   @JsonProperty("lastUpdated")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
+  @JsonView({View.UserDetailsView.class, View.LibraryUpdate.class})
   @Getter
   @Setter
   private Date lastUpdated = new Date();
 
   @JsonProperty("comicId")
-  @JsonView({View.UserDetails.class, View.LibraryUpdate.class})
+  @JsonView({View.UserDetailsView.class, View.LibraryUpdate.class})
   @Transient
   public Long getComicId() {
     return this.comic.getId();

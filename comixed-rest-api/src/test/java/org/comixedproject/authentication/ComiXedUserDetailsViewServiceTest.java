@@ -38,7 +38,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComiXedUserDetailsServiceTest {
+public class ComiXedUserDetailsViewServiceTest {
   private static final String TEST_PASSWORD_HASH = "the password hash";
   private static final String TEST_USER_EMAIL = "reader@comixedproject.org";
 

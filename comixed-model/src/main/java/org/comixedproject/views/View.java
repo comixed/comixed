@@ -43,7 +43,7 @@ public class View {
   public interface UserList {}
 
   /** Show full details on a user. */
-  public interface UserDetails extends UserList {}
+  public interface UserDetailsView extends UserList {}
 
   /** Used when doing a database backup. */
   public interface DatabaseBackup {}

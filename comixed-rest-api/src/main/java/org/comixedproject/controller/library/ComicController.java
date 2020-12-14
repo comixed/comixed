@@ -389,7 +389,7 @@ public class ComicController {
       value = "/{id}/read",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.UserDetails.class)
+  @JsonView(View.UserDetailsView.class)
   public LastReadDate markAsRead(Principal principal, @PathVariable("id") Long id)
       throws ComicException, ComiXedUserException {
     String email = principal.getName();
