@@ -25,16 +25,22 @@ import {
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
+  DELETE_USER_PREFERENCE_URL,
   LOAD_CURRENT_USER_URL,
-  LOGIN_USER_URL
+  LOGIN_USER_URL,
+  SAVE_USER_PREFERENCE_URL
 } from '@app/user/user.constants';
 import { LoggerModule } from '@angular-ru/logger';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
+import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
+import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
 
 describe('UserService', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
+  const PREFERENCE_NAME = 'user.preference';
+  const PREFERENCE_VALUE = 'preference.value';
 
   let service: UserService;
   let httpMock: HttpTestingController;
@@ -77,5 +83,36 @@ describe('UserService', () => {
     expect(req.request.body.get('email')).toEqual(USER.email);
     expect(req.request.body.get('password')).toEqual(PASSWORD);
     req.flush(serviceResponse);
+  });
+
+  it('can save a user preferences', () => {
+    service
+      .saveUserPreference({ name: PREFERENCE_NAME, value: PREFERENCE_VALUE })
+      .subscribe(response =>
+        expect(response).toEqual({ user: USER } as SaveUserPreferenceResponse)
+      );
+
+    const req = httpMock.expectOne(
+      interpolate(SAVE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      value: PREFERENCE_VALUE
+    } as SaveUserPreferenceRequest);
+    req.flush({ user: USER } as SaveUserPreferenceResponse);
+  });
+
+  it('can delete a user preferences', () => {
+    service
+      .saveUserPreference({ name: PREFERENCE_NAME, value: null })
+      .subscribe(response =>
+        expect(response).toEqual({ user: USER } as SaveUserPreferenceResponse)
+      );
+
+    const req = httpMock.expectOne(
+      interpolate(DELETE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush({ user: USER } as SaveUserPreferenceResponse);
   });
 });

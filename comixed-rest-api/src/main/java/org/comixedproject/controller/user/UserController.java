@@ -24,23 +24,22 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.net.SaveUserRequest;
+import org.comixedproject.model.net.user.SaveUserPreferenceRequest;
+import org.comixedproject.model.net.user.SaveUserPreferenceResponse;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Preference;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.utils.Utils;
-import org.comixedproject.views.View;
-import org.comixedproject.views.View.UserDetails;
+import org.comixedproject.views.View.UserDetailsView;
 import org.comixedproject.views.View.UserList;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api")
 @Log4j2
 public class UserController implements InitializingBean {
   Role readerRole;
@@ -81,8 +80,8 @@ public class UserController implements InitializingBean {
    * @return the user, or <code>null</code> if no user is authenticated
    * @throws ComiXedUserException if an error occurs
    */
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
-  @JsonView(UserDetails.class)
+  @GetMapping(value = "/api/user")
+  @JsonView(UserDetailsView.class)
   @AuditableEndpoint
   public ComiXedUser getCurrentUser(Principal principal) throws ComiXedUserException {
     log.debug("Returning current user");
@@ -104,18 +103,17 @@ public class UserController implements InitializingBean {
     return comixedUser;
   }
 
-  @RequestMapping(value = "/user/preferences", method = RequestMethod.GET)
-  @JsonView(View.UserDetails.class)
-  public List<Preference> getUserPreferences(Authentication authentication)
-      throws ComiXedUserException {
+  @GetMapping(value = "/api/user/preferences")
+  @JsonView(UserDetailsView.class)
+  public List<Preference> getUserPreferences(Principal principal) throws ComiXedUserException {
     log.debug("Getting user preferences");
 
-    if (authentication == null) {
+    if (principal == null) {
       log.debug("User is not authenticated");
       return null;
     }
 
-    String email = authentication.getName();
+    String email = principal.getName();
 
     log.debug("Loading user: email={}", email);
     ComiXedUser user = this.userService.findByEmail(email);
@@ -143,33 +141,64 @@ public class UserController implements InitializingBean {
         request.getEmail(), request.getPassword(), request.getIsAdmin());
   }
 
-  @RequestMapping(value = "/user/preferences/{name}", method = RequestMethod.PUT)
-  public ComiXedUser setUserProperty(
-      Authentication authentication, @PathVariable("name") String name, @RequestBody() String value)
+  /**
+   * Sets a user preference.
+   *
+   * @param principal the user principal
+   * @param name the preference name
+   * @param request the request body
+   * @return the response body
+   * @throws ComiXedUserException if an error occurs
+   */
+  @PutMapping(
+      value = "/api/user/preferences/{name}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  public SaveUserPreferenceResponse setUserProperty(
+      Principal principal,
+      @PathVariable("name") String name,
+      @RequestBody() SaveUserPreferenceRequest request)
       throws ComiXedUserException {
-    final String email = authentication.getName();
+    final String email = principal.getName();
+    final String value = request.getValue();
 
     log.info("Setting user property: email={} property[{}]={}", email, name, value);
-
-    return this.userService.setUserProperty(email, name, value);
+    return new SaveUserPreferenceResponse(this.userService.setUserProperty(email, name, value));
   }
 
-  @RequestMapping(value = "/user/email", method = RequestMethod.POST)
-  public ComiXedUser setUserEmail(
-      Authentication authentication, @RequestParam("username") String username)
+  /**
+   * Deletes a user preference.
+   *
+   * @param principal the user principal
+   * @param name the preference name
+   * @return the response body
+   */
+  @DeleteMapping(
+      value = "/api/user/preferences/{name}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public SaveUserPreferenceResponse deleteUserProperty(
+      final Principal principal, @PathVariable("name") final String name) {
+    final String email = principal.getName();
+
+    log.info("Deleting user property: email={} property={}", email, name);
+    return new SaveUserPreferenceResponse(this.userService.deleteUserProperty(email, name));
+  }
+
+  @PostMapping(value = "/api/user/email")
+  public ComiXedUser setUserEmail(Principal principal, @RequestParam("username") String username)
       throws ComiXedUserException {
-    final String email = authentication.getName();
+    final String email = principal.getName();
 
     log.info("Updating email address for: email={} new={}", email, username);
 
     return this.userService.setUserEmail(email, username);
   }
 
-  @RequestMapping(value = "/user/password", method = RequestMethod.POST)
-  public ComiXedUser updatePassword(
-      Authentication authentication, @RequestParam("password") String password)
+  @PostMapping(value = "/api/user/password")
+  public ComiXedUser updatePassword(Principal principal, @RequestParam("password") String password)
       throws ComiXedUserException {
-    final String email = authentication.getName();
+    final String email = principal.getName();
 
     log.info("Updating password for: email={}", email);
 
@@ -228,14 +257,5 @@ public class UserController implements InitializingBean {
 
   void setAdminRole(final Role role) {
     this.adminRole = role;
-  }
-
-  @RequestMapping(value = "/user/preferences/{name}", method = RequestMethod.DELETE)
-  public ComiXedUser deleteUserProperty(
-      final Authentication authentication, @PathVariable("name") final String propertyName) {
-
-    final String email = authentication.getName();
-    log.info("Deleting user property: email={} property={}", email, propertyName);
-    return this.userService.deleteUserProperty(email, propertyName);
   }
 }

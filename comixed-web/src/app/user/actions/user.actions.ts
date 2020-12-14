@@ -35,3 +35,14 @@ export const userLoggedIn = createAction('[User] User login successful');
 export const loginUserFailed = createAction('[User] User login failed');
 export const logoutUser = createAction('[User] Log out current user');
 export const userLoggedOut = createAction('[User] Current user logged out');
+export const saveUserPreference = createAction(
+  '[User] Save a user preference',
+  props<{ name: string; value: string }>()
+);
+export const userPreferenceSaved = createAction(
+  '[User] User preference saved',
+  props<{ user: User }>()
+);
+export const saveUserPreferenceFailed = createAction(
+  '[User] Failed to save a user preference'
+);

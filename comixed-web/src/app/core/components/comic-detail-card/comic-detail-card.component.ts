@@ -16,14 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectDisplayState } from '@app/library/selectors/display.selectors';
+import { filter } from 'rxjs/operators';
+import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'cx-comic-detail-card',
   templateUrl: './comic-detail-card.component.html',
   styleUrls: ['./comic-detail-card.component.scss']
 })
-export class ComicDetailCardComponent implements OnInit {
+export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() title: string;
   @Input() imageUrl: string;
   @Input() description: string;
@@ -33,7 +38,20 @@ export class ComicDetailCardComponent implements OnInit {
   @Input() busy = false;
   @Input() blurred = false;
 
-  constructor() {}
+  displayOptionSubscription: Subscription;
+
+  constructor(private logger: LoggerService, private store: Store<any>) {
+    this.displayOptionSubscription = this.store
+      .select(selectDisplayState)
+      .pipe(filter(state => !!state))
+      .subscribe(state => {
+        this.imageWidth = `${state.pageSize}px`;
+      });
+  }
 
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.displayOptionSubscription.unsubscribe();
+  }
 }

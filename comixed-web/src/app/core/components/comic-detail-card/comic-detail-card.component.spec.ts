@@ -19,23 +19,51 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicDetailCardComponent } from './comic-detail-card.component';
 import { MatCardModule } from '@angular/material/card';
+import { LoggerModule } from '@angular-ru/logger';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
 
 describe('ComicDetailCardComponent', () => {
+  const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
+
   let component: ComicDetailCardComponent;
   let fixture: ComponentFixture<ComicDetailCardComponent>;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicDetailCardComponent],
-      imports: [MatCardModule]
+      imports: [LoggerModule.forRoot(), MatCardModule],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailCardComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('loading user preferences', () => {
+    const PAGE_SIZE = 400;
+
+    beforeEach(() => {
+      component.imageWidth = `100px`;
+      store.setState({
+        ...initialState,
+        [DISPLAY_FEATURE_KEY]: { ...initialDisplayState, pageSize: PAGE_SIZE }
+      });
+    });
+
+    it('sets the page size', () => {
+      expect(component.imageWidth).toEqual(`${PAGE_SIZE}px`);
+    });
   });
 });

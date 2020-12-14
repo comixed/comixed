@@ -16,21 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {API_ROOT_URL} from '../core';
+package org.comixedproject.model.net.user;
 
-export const QUERY_PARAM_TAB = 'tab';
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
-
-export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
-export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
-export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
-
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
-
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
-
-// display options
-export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
-export const DEFAULT_PAGE_SIZE = 400;
+/**
+ * <code>SaveUserPreferenceRequest</code> is the request body for setting a user preference.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class SaveUserPreferenceRequest {
+  @JsonProperty("value")
+  @Getter
+  private String value;
+}

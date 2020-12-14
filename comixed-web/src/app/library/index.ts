@@ -29,6 +29,11 @@ import {
   LibraryState,
   reducer as libraryReducer
 } from './reducers/library.reducer';
+import {
+  DISPLAY_FEATURE_KEY,
+  DisplayState,
+  reducer as displayReducer
+} from '@app/library/reducers/display.reducer';
 
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
@@ -51,6 +56,7 @@ interface RouterStateUrl {
 
 export interface LibraryModuleState {
   router: RouterReducerState<RouterStateUrl>;
+  [DISPLAY_FEATURE_KEY]: DisplayState;
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
 }
@@ -59,6 +65,7 @@ export type ModuleState = LibraryModuleState;
 
 export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: routerReducer,
+  [DISPLAY_FEATURE_KEY]: displayReducer,
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer
 };
