@@ -16,18 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {LoginComponent} from './login.component';
-import {LoggerModule} from '@angular-ru/logger';
-import {ReactiveFormsModule} from '@angular/forms';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {TranslateModule} from '@ngx-translate/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { LoginComponent } from './login.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import {USER_READER} from '@app/user/user.fixtures';
-import {loginUser} from '@app/user/actions/user.actions';
+import { USER_READER } from '@app/user/user.fixtures';
+import { loginUser } from '@app/user/actions/user.actions';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LoginComponent', () => {
   const USER = USER_READER;
@@ -43,13 +48,19 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [LoginComponent],
       imports: [
+        NoopAnimationsModule,
+        FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
-        LoggerModule.forRoot()
+        LoggerModule.forRoot(),
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule
       ],
-      declarations: [LoginComponent],
-      providers: [provideMockStore({initialState})]
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
@@ -67,7 +78,7 @@ describe('LoginComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [USER_FEATURE_KEY]: {initializing: true}
+        [USER_FEATURE_KEY]: { initializing: true }
       });
     });
 
@@ -80,7 +91,7 @@ describe('LoginComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [USER_FEATURE_KEY]: {authenticating: true}
+        [USER_FEATURE_KEY]: { authenticating: true }
       });
     });
 
@@ -98,7 +109,7 @@ describe('LoginComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loginUser({email: USER.email, password: PASSWORD })
+        loginUser({ email: USER.email, password: PASSWORD })
       );
     });
   });

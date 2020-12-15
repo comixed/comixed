@@ -34,17 +34,15 @@ describe('ComicFileDetailsComponent', () => {
     TestBed.configureTestingModule({
       imports: [LoggerModule.forRoot()],
       declarations: [ComicFileDetailsComponent],
-      providers: [provideMockStore({})],
+      providers: [provideMockStore({})]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComicFileDetailsComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

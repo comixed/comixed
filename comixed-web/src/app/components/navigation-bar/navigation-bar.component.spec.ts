@@ -28,15 +28,18 @@ import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser } from '@app/user/actions/user.actions';
 import {
   initialState as initialUserState,
-  USER_FEATURE_KEY,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('NavigationBarComponent', () => {
   const initialState = {
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
   };
 
   let component: NavigationBarComponent;
@@ -47,15 +50,18 @@ describe('NavigationBarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [NavigationBarComponent],
       imports: [
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         MatDialogModule,
         MatMenuModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatTooltipModule
       ],
-      declarations: [NavigationBarComponent],
-      providers: [provideMockStore({ initialState })],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationBarComponent);

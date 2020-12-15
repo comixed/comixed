@@ -21,6 +21,8 @@ import { ComicStoryComponent } from './comic-story.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_2 } from '@app/library/library.fixtures';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicStoryComponent', () => {
   const COMIC = COMIC_2;
@@ -31,7 +33,12 @@ describe('ComicStoryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicStoryComponent],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()]
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatExpansionModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryComponent);

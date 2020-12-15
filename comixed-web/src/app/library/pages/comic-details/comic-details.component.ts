@@ -57,7 +57,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.comicId = +params.comicId;
-      this.logger.debug('Found comic id parameter:', params.comicId);
+      this.logger.trace('Comic id parameter:', params.comicId);
       this.store.dispatch(loadComic({ id: this.comicId }));
     });
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(

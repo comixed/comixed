@@ -58,6 +58,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/library/pipes/comic-file-cover-url.pipe';
 import { Title } from '@angular/platform-browser';
+import { MatCardModule } from '@angular/material/card';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ImportComicsComponent', () => {
   const initialState = {
@@ -76,6 +79,14 @@ describe('ImportComicsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [
+        ImportComicsComponent,
+        ImportToolbarComponent,
+        ComicFileListComponent,
+        ComicFileDetailsComponent,
+        ComicFileCoverUrlPipe,
+        ComicPageComponent
+      ],
       imports: [
         ReactiveFormsModule,
         FormsModule,
@@ -87,14 +98,9 @@ describe('ImportComicsComponent', () => {
         MatIconModule,
         MatInputModule,
         MatSelectModule,
-        MatTableModule
-      ],
-      declarations: [
-        ImportComicsComponent,
-        ImportToolbarComponent,
-        ComicFileListComponent,
-        ComicFileDetailsComponent,
-        ComicFileCoverUrlPipe
+        MatTableModule,
+        MatCardModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

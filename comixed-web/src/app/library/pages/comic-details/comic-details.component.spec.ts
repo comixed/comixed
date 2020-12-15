@@ -20,8 +20,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicDetailsComponent } from './comic-details.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
-  LIBRARY_FEATURE_KEY,
-  initialState as initialLibraryState
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -43,6 +43,8 @@ import { ComicEditComponent } from '@app/library/components/comic-edit/comic-edi
 import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { ConfirmationService } from '@app/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
@@ -69,7 +71,9 @@ describe('ComicDetailsComponent', () => {
       imports: [
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        RouterTestingModule
+        RouterTestingModule,
+        MatCardModule,
+        MatToolbarModule
       ],
       providers: [
         provideMockStore({ initialState }),

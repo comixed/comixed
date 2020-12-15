@@ -23,7 +23,7 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CoverImageComponent } from './components/comic-page/comic-page.component';
+import { ComicPageComponent } from './components/comic-page/comic-page.component';
 import { StoreModule } from '@ngrx/store';
 import {
   BUSY_FEATURE_KEY,
@@ -39,7 +39,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [
     ConfirmationComponent,
-    CoverImageComponent,
+    ComicPageComponent,
     ComicDetailCardComponent
   ],
   imports: [
@@ -60,7 +60,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
-    CoverImageComponent,
+    ComicPageComponent,
     ComicDetailCardComponent
   ],
   providers: []
