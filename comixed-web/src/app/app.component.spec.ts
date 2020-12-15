@@ -37,6 +37,12 @@ import {
 import { USER_READER } from '@app/user/user.fixtures';
 import { loadSessionUpdate } from '@app/actions/session.actions';
 import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
+import { NavigationBarComponent } from '@app/components/navigation-bar/navigation-bar.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -56,12 +62,17 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [AppComponent, NavigationBarComponent],
       imports: [
         RouterTestingModule,
         TranslateModule.forRoot(),
-        LoggerModule.forRoot()
+        LoggerModule.forRoot(),
+        MatToolbarModule,
+        MatDialogModule,
+        MatMenuModule,
+        MatIconModule,
+        MatTooltipModule
       ],
-      declarations: [AppComponent],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 

@@ -17,22 +17,23 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CoverImageComponent } from './comic-page.component';
+import { ComicPageComponent } from './comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
+import { MatCardModule } from '@angular/material/card';
 
 describe('CoverImageComponent', () => {
   const SOURCE = {} as any;
 
-  let component: CoverImageComponent;
-  let fixture: ComponentFixture<CoverImageComponent>;
+  let component: ComicPageComponent;
+  let fixture: ComponentFixture<ComicPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerModule.forRoot()],
-      declarations: [CoverImageComponent],
+      declarations: [ComicPageComponent],
+      imports: [LoggerModule.forRoot(), MatCardModule]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CoverImageComponent);
+    fixture = TestBed.createComponent(ComicPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
@@ -52,13 +53,13 @@ describe('CoverImageComponent', () => {
     });
 
     it('sends the source of the event', () => {
-      component.pageClicked.subscribe((response) =>
+      component.pageClicked.subscribe(response =>
         expect(response.source).toEqual(SOURCE)
       );
     });
 
     it('sends a true selected value', () => {
-      component.pageClicked.subscribe((response) =>
+      component.pageClicked.subscribe(response =>
         expect(response.selected).toBeTruthy()
       );
     });
@@ -75,13 +76,13 @@ describe('CoverImageComponent', () => {
     });
 
     it('sends the source of the event', () => {
-      component.pageClicked.subscribe((response) =>
+      component.pageClicked.subscribe(response =>
         expect(response.source).toEqual(SOURCE)
       );
     });
 
     it('sends a false selected value', () => {
-      component.pageClicked.subscribe((response) =>
+      component.pageClicked.subscribe(response =>
         expect(response.selected).toBeFalsy()
       );
     });

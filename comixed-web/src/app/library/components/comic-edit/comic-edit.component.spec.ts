@@ -26,6 +26,11 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicEditComponent', () => {
   const COMIC = COMIC_2;
@@ -40,11 +45,16 @@ describe('ComicEditComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ComicEditComponent],
       imports: [
+        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         FormsModule,
         ReactiveFormsModule,
-        MatDialogModule
+        MatDialogModule,
+        MatFormFieldModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatInputModule
       ],
       providers: [provideMockStore({}), ConfirmationService]
     }).compileComponents();
