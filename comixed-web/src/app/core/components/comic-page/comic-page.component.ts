@@ -26,7 +26,7 @@ import { PageClickEvent } from '@app/core';
   templateUrl: './comic-page.component.html',
   styleUrls: ['./comic-page.component.scss']
 })
-export class CoverImageComponent {
+export class ComicPageComponent {
   @Input() imageTitle: string;
   @Input() source: any;
   @Input() imageUrl: string;

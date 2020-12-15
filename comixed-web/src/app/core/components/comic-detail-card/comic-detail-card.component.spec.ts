@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicDetailCardComponent } from './comic-detail-card.component';
 import { MatCardModule } from '@angular/material/card';
 
-fdescribe('ComicDetailCardComponent', () => {
+describe('ComicDetailCardComponent', () => {
   let component: ComicDetailCardComponent;
   let fixture: ComponentFixture<ComicDetailCardComponent>;
 
