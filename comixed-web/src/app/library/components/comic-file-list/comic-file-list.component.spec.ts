@@ -46,13 +46,13 @@ describe('ComicFileListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [ComicFileListComponent],
       imports: [
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         MatTableModule,
         MatCheckboxModule,
       ],
-      declarations: [ComicFileListComponent],
       providers: [provideMockStore({ initialState })],
     }).compileComponents();
 

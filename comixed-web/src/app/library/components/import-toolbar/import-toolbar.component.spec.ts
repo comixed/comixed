@@ -47,6 +47,7 @@ describe('ImportToolbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [ImportToolbarComponent],
       imports: [
         BrowserAnimationsModule,
         FormsModule,
@@ -58,7 +59,6 @@ describe('ImportToolbarComponent', () => {
         MatSelectModule,
         MatInputModule,
       ],
-      declarations: [ImportToolbarComponent],
       providers: [provideMockStore({ initialState })],
     }).compileComponents();
 

@@ -24,6 +24,8 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 describe('ConfirmationComponent', () => {
   let component: ConfirmationComponent;
@@ -32,8 +34,14 @@ describe('ConfirmationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule, MatButtonModule],
       declarations: [ConfirmationComponent],
+      imports: [
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatFormFieldModule
+      ],
       providers: [
         {
           provide: MatDialogRef,

@@ -20,6 +20,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
 import { COMIC_2 } from '@app/library/library.fixtures';
 import { ComicPageUrlPipe } from '@app/library/pipes/comic-page-url.pipe';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { MatCardModule } from '@angular/material/card';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;
@@ -29,7 +32,8 @@ describe('ComicPagesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicPagesComponent, ComicPageUrlPipe]
+      declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
+      imports: [LoggerModule.forRoot(), MatCardModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPagesComponent);
