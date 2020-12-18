@@ -163,15 +163,15 @@
         "detail": "Adicionado com sucesso {addedCount, plural, =1{um comic} other{# comics}} à lista de leitura."
       },
       "error": {
-        "detail": "Failed to add the comics to the reading list."
+        "detail": "Falha ao adicionar quadrinhos à lista de leitura."
       }
     },
     "remove-comics": {
       "success": {
-        "detail": "Removed {removeCount, plural, =1{one comic} other{# comics}} from reading list."
+        "detail": "Removidos {removeCount, plural, =1{um quadrinho} other{# quadrinhos}} da lista de leitura."
       },
       "error": {
-        "detail": "Failed to remove comics from reading list."
+        "detail": "Falha ao remover quadrinhos da lista de leitura."
       }
     }
   },
