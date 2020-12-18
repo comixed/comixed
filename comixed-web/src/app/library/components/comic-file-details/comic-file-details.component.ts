@@ -16,24 +16,71 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ComicFile } from '@app/library/models/comic-file';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { setComicFilesSelectedState } from '@app/library/actions/comic-import.actions';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ComicFileDetailsData } from '@app/library/models/ui/comic-file-details-data';
+import { Subscription } from 'rxjs';
+import {
+  selectComicFiles,
+  selectComicFileSelections
+} from '@app/library/selectors/comic-import.selectors';
+
+export const CARD_WIDTH_PADDING = 20;
 
 @Component({
   selector: 'cx-comic-file-details',
   templateUrl: './comic-file-details.component.html',
   styleUrls: ['./comic-file-details.component.scss']
 })
-export class ComicFileDetailsComponent implements OnInit {
-  @Input() file: ComicFile;
-  @Input() selected: boolean;
+export class ComicFileDetailsComponent implements OnInit, OnDestroy {
+  file: ComicFile = null;
+  pageSize: number;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {}
+  filesSubscription: Subscription;
+  files: ComicFile[];
+  selectedFilesSubscription: Subscription;
+  selectedFiles: ComicFile[];
+  selected = false;
+  noPreviousFile = true;
+  noNextFile = true;
+
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    public dialogRef: MatDialogRef<ComicFileDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ComicFileDetailsData
+  ) {
+    this.file = this.data.file;
+    this.pageSize = this.data.pageSize;
+
+    this.filesSubscription = this.store
+      .select(selectComicFiles)
+      .subscribe(files => {
+        this.files = files;
+        this.updateNavigationButtons();
+      });
+    this.selectedFilesSubscription = this.store
+      .select(selectComicFileSelections)
+      .subscribe(selectedFiles => {
+        this.selectedFiles = selectedFiles;
+        this.selected = this.selectedFiles.includes(this.file);
+      });
+  }
+
+  get cardWidth(): string {
+    return `${this.pageSize + CARD_WIDTH_PADDING}px`;
+  }
 
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.filesSubscription.unsubscribe();
+    this.selectedFilesSubscription.unsubscribe();
+  }
 
   onSelectFile(selected: boolean): void {
     this.logger.debug(
@@ -43,5 +90,25 @@ export class ComicFileDetailsComponent implements OnInit {
     this.store.dispatch(
       setComicFilesSelectedState({ files: [this.file], selected })
     );
+  }
+
+  onPreviousFile(): void {
+    const index = this.files.indexOf(this.file) - 1;
+    this.file = this.files[index];
+    this.selected = this.selectedFiles.includes(this.file);
+    this.updateNavigationButtons();
+  }
+
+  onNextFile(): void {
+    const index = this.files.indexOf(this.file) + 1;
+    this.file = this.files[index];
+    this.selected = this.selectedFiles.includes(this.file);
+    this.updateNavigationButtons();
+  }
+
+  updateNavigationButtons(): void {
+    const index = this.files.indexOf(this.file);
+    this.noPreviousFile = index === 0;
+    this.noNextFile = index === this.files.length - 1;
   }
 }

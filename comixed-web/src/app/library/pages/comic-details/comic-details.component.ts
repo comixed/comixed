@@ -31,7 +31,11 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { updateQueryParam } from '@app/core';
-import { QUERY_PARAM_TAB } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  QUERY_PARAM_TAB
+} from '@app/library/library.constants';
+import { selectDisplayState } from '@app/library/selectors/display.selectors';
 
 @Component({
   selector: 'cx-comic-details',
@@ -48,6 +52,8 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   comic: Comic;
   userSubscription: Subscription;
   isAdmin = false;
+  displaySubscription: Subscription;
+  pageSize = PAGE_SIZE_DEFAULT;
 
   constructor(
     private logger: LoggerService,
@@ -76,6 +82,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     this.userSubscription = this.store
       .select(selectUser)
       .subscribe(user => (this.isAdmin = isAdmin(user)));
+    this.displaySubscription = this.store
+      .select(selectDisplayState)
+      .subscribe(state => {
+        this.pageSize = state.pageSize;
+      });
   }
 
   ngOnInit(): void {}

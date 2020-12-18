@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { User } from '@app/user/models/user';
+import { User } from '@app/user';
 
 export interface SaveUserPreferenceResponse {
   user: User;

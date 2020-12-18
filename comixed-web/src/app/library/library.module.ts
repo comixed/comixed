@@ -20,7 +20,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../core/core.module';
 import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ImportToolbarComponent } from './components/import-toolbar/import-toolbar.component';
+import { ComicFileToolbarComponent } from './components/comic-file-toolbar/comic-file-toolbar.component';
 import { LibraryRouting } from '@app/library/library.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -67,11 +67,12 @@ import {
 import { DisplayEffects } from '@app/library/effects/display.effects';
 import { ComicDisplayOptionsComponent } from './components/comic-display-options/comic-display-options.component';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
     ImportComicsComponent,
-    ImportToolbarComponent,
+    ComicFileToolbarComponent,
     ComicFileListComponent,
     ComicFileCoverUrlPipe,
     ComicFileDetailsComponent,
@@ -113,7 +114,8 @@ import { MatSliderModule } from '@angular/material/slider';
     MatTabsModule,
     MatToolbarModule,
     MatExpansionModule,
-    MatSliderModule
+    MatSliderModule,
+    MatListModule
   ],
   exports: [CommonModule, CoreModule]
 })

@@ -23,7 +23,7 @@ import {
   setPageSize
 } from '../actions/display.actions';
 import {
-  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { getUserPreference } from '@app/user';
@@ -35,7 +35,7 @@ export interface DisplayState {
 }
 
 export const initialState: DisplayState = {
-  pageSize: DEFAULT_PAGE_SIZE
+  pageSize: PAGE_SIZE_DEFAULT
 };
 
 export const reducer = createReducer(
@@ -49,13 +49,13 @@ export const reducer = createReducer(
           getUserPreference(
             action.user.preferences,
             PAGE_SIZE_PREFERENCE,
-            `${DEFAULT_PAGE_SIZE}`
+            `${PAGE_SIZE_DEFAULT}`
           ),
           10
         )
       };
     } else {
-      return { ...state, pageSize: DEFAULT_PAGE_SIZE };
+      return { ...state, pageSize: PAGE_SIZE_DEFAULT };
     }
   }),
   on(setPageSize, (state, action) => ({ ...state, pageSize: action.size })),

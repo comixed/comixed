@@ -26,6 +26,7 @@ import { Comic } from '@app/library';
 })
 export class ComicPagesComponent implements OnInit {
   @Input() comic: Comic;
+  @Input() pageSize = -1;
 
   constructor() {}
 

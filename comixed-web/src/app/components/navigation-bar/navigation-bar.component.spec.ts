@@ -40,6 +40,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 describe('NavigationBarComponent', () => {
   const initialState = {
@@ -65,7 +66,8 @@ describe('NavigationBarComponent', () => {
         MatMenuModule,
         MatIconModule,
         MatToolbarModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatFormFieldModule
       ],
       providers: [
         provideMockStore({ initialState }),
