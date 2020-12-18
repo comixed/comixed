@@ -49,6 +49,7 @@ import { NEW_READING_LIST } from 'app/library/library.constants';
 import { READING_LIST_1 } from 'app/comics/models/reading-list.fixtures';
 import { ReadingList } from 'app/comics/models/reading-list';
 import { COMIC_1, COMIC_2, COMIC_3 } from 'app/comics/comics.fixtures';
+import { SelectRemoveAllComics } from 'app/library/actions/selection.actions';
 
 describe('ReadingListAdaptor', () => {
   const READING_LIST = READING_LIST_1;
@@ -310,6 +311,10 @@ describe('ReadingListAdaptor', () => {
           comics: COMICS
         })
       );
+    });
+
+    it('clears the selection list', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(new SelectRemoveAllComics());
     });
 
     it('provides updates on removing comics', () => {

@@ -38,6 +38,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ReadingList } from 'app/comics/models/reading-list';
 import { Comic } from 'app/comics';
+import { SelectRemoveAllComics } from 'app/library/actions/selection.actions';
 
 @Injectable()
 export class ReadingListAdaptor {
@@ -50,7 +51,10 @@ export class ReadingListAdaptor {
   private _showSelectionDialog$ = new BehaviorSubject<boolean>(false);
   private _removingComics$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<LibraryModuleState>, private logger: LoggerService) {
+  constructor(
+    private store: Store<LibraryModuleState>,
+    private logger: LoggerService
+  ) {
     this.store
       .select(READING_LIST_FEATURE_KEY)
       .pipe(filter(state => !!state))
@@ -164,6 +168,7 @@ export class ReadingListAdaptor {
     this.store.dispatch(
       new ReadingListRemoveComics({ readingList: readingList, comics: comics })
     );
+    this.store.dispatch(new SelectRemoveAllComics());
   }
 
   get removingComics$(): Observable<boolean> {
