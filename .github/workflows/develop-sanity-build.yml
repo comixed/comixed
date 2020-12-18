@@ -1,0 +1,25 @@
+name: "Run a sanity build whenever code is merged into develop."
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+    build:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v1
+        - name: Cache Maven artifacts
+          uses: actions/cache@v2
+          with:
+            path: ~/.m2/repository
+            key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        - name: Setup build environment
+          uses: actions/setup-java@v1
+          with:
+            java-version: 12
+        - name: Build code and run all unit tests
+          run: mvn test -Pci
