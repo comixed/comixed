@@ -30,9 +30,16 @@ import {
   sendComicFiles,
   sendComicFilesFailed
 } from '@app/library/actions/comic-import.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
 import { of } from 'rxjs';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  DELETE_BLOCKED_PAGES_PREFERENCE,
+  IGNORE_METADATA_PREFERENCE,
+  IMPORT_MAXIMUM_RESULTS_PREFERENCE,
+  IMPORT_ROOT_DIRECTORY_PREFERENCE
+} from '@app/library/library.constants';
 
 @Injectable()
 export class ComicImportEffects {
@@ -64,9 +71,17 @@ export class ComicImportEffects {
                 )
               )
             ),
-            map((response: LoadComicFilesResponse) =>
-              comicFilesLoaded({ files: response.files })
-            ),
+            mergeMap((response: LoadComicFilesResponse) => [
+              comicFilesLoaded({ files: response.files }),
+              saveUserPreference({
+                name: IMPORT_ROOT_DIRECTORY_PREFERENCE,
+                value: action.directory
+              }),
+              saveUserPreference({
+                name: IMPORT_MAXIMUM_RESULTS_PREFERENCE,
+                value: `${action.maximum}`
+              })
+            ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -109,7 +124,17 @@ export class ComicImportEffects {
                 )
               )
             ),
-            map(() => comicFilesSent()),
+            mergeMap(() => [
+              comicFilesSent(),
+              saveUserPreference({
+                name: IGNORE_METADATA_PREFERENCE,
+                value: `${action.ignoreMetadata}`
+              }),
+              saveUserPreference({
+                name: DELETE_BLOCKED_PAGES_PREFERENCE,
+                value: `${action.deleteBlockedPages}`
+              })
+            ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

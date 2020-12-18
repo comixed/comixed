@@ -43,6 +43,13 @@ import {
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  DELETE_BLOCKED_PAGES_PREFERENCE,
+  IGNORE_METADATA_PREFERENCE,
+  IMPORT_MAXIMUM_RESULTS_PREFERENCE,
+  IMPORT_ROOT_DIRECTORY_PREFERENCE
+} from '@app/library/library.constants';
 
 describe('ComicImportEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
@@ -90,18 +97,28 @@ describe('ComicImportEffects', () => {
   });
 
   describe('loading comic files', () => {
+    const MAXIMUM_RESULT = 100;
+
     it('fires an action on success', () => {
       const serviceResponse = { files: FILES } as LoadComicFilesResponse;
       const action = loadComicFiles({
         directory: ROOT_DIRECTORY,
-        maximum: 100
+        maximum: MAXIMUM_RESULT
       });
-      const outcome = comicFilesLoaded({ files: FILES });
+      const outcome1 = comicFilesLoaded({ files: FILES });
+      const outcome2 = saveUserPreference({
+        name: IMPORT_ROOT_DIRECTORY_PREFERENCE,
+        value: ROOT_DIRECTORY
+      });
+      const outcome3 = saveUserPreference({
+        name: IMPORT_MAXIMUM_RESULTS_PREFERENCE,
+        value: `${MAXIMUM_RESULT}`
+      });
 
       actions$ = hot('-a', { a: action });
       comicImportService.loadComicFiles.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
       expect(effects.loadComicFiles$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -141,19 +158,30 @@ describe('ComicImportEffects', () => {
   });
 
   describe('sending comic files', () => {
+    const IGNORE_METADATA = Math.random() > 0.5;
+    const DELETE_BLOCKED_PAGES = Math.random() > 0.5;
+
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = sendComicFiles({
         files: FILES,
-        ignoreMetadata: false,
-        deleteBlockedPages: true
+        ignoreMetadata: IGNORE_METADATA,
+        deleteBlockedPages: DELETE_BLOCKED_PAGES
       });
-      const outcome = comicFilesSent();
+      const outcome1 = comicFilesSent();
+      const outcome2 = saveUserPreference({
+        name: IGNORE_METADATA_PREFERENCE,
+        value: `${IGNORE_METADATA}`
+      });
+      const outcome3 = saveUserPreference({
+        name: DELETE_BLOCKED_PAGES_PREFERENCE,
+        value: `${DELETE_BLOCKED_PAGES}`
+      });
 
       actions$ = hot('-a', { a: action });
       comicImportService.sendComicFiles.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
       expect(effects.sendComicFiles$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

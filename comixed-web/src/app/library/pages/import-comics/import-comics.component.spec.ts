@@ -16,51 +16,51 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ImportComicsComponent } from './import-comics.component';
-import { LoggerModule } from '@angular-ru/logger';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ImportComicsComponent} from './import-comics.component';
+import {LoggerModule} from '@angular-ru/logger';
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   COMIC_IMPORT_FEATURE_KEY,
   initialState as initialComicImportState
 } from '@app/library/reducers/comic-import.reducer';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import { setBusyState } from '@app/core/actions/busy.actions';
+import {setBusyState} from '@app/core/actions/busy.actions';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/library/library.fixtures';
-import { ConfirmationService } from '@app/core';
-import { Confirmation } from '@app/core/models/confirmation';
-import { sendComicFiles } from '@app/library/actions/comic-import.actions';
-import { USER_ADMIN } from '@app/user/user.fixtures';
-import { User } from '@app/user/models/user';
+import {ConfirmationService} from '@app/core';
+import {Confirmation} from '@app/core/models/confirmation';
+import {sendComicFiles} from '@app/library/actions/comic-import.actions';
+import {USER_ADMIN} from '@app/user/user.fixtures';
+import {User} from '@app/user/models/user';
+import {MatIconModule} from '@angular/material/icon';
+import {ImportToolbarComponent} from '@app/library/components/import-toolbar/import-toolbar.component';
+import {ComicFileListComponent} from '@app/library/components/comic-file-list/comic-file-list.component';
+import {ComicFileDetailsComponent} from '@app/library/components/comic-file-details/comic-file-details.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTableModule} from '@angular/material/table';
+import {ComicFileCoverUrlPipe} from '@app/library/pipes/comic-file-cover-url.pipe';
+import {Title} from '@angular/platform-browser';
+import {MatCardModule} from '@angular/material/card';
+import {ComicPageComponent} from '@app/core/components/comic-page/comic-page.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {
-  USER_PREFERENCE_DELETE_BLOCKED_PAGES,
-  USER_PREFERENCE_IGNORE_METADATA
-} from '@app/user/user.constants';
-import { MatIconModule } from '@angular/material/icon';
-import { ImportToolbarComponent } from '@app/library/components/import-toolbar/import-toolbar.component';
-import { ComicFileListComponent } from '@app/library/components/comic-file-list/comic-file-list.component';
-import { ComicFileDetailsComponent } from '@app/library/components/comic-file-details/comic-file-details.component';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { ComicFileCoverUrlPipe } from '@app/library/pipes/comic-file-cover-url.pipe';
-import { Title } from '@angular/platform-browser';
-import { MatCardModule } from '@angular/material/card';
-import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
+  DELETE_BLOCKED_PAGES_PREFERENCE,
+  IGNORE_METADATA_PREFERENCE
+} from '@app/library/library.constants';
 
 describe('ImportComicsComponent', () => {
   const initialState = {
@@ -102,7 +102,7 @@ describe('ImportComicsComponent', () => {
         MatCardModule,
         MatTooltipModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [provideMockStore({initialState}), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportComicsComponent);
@@ -139,11 +139,11 @@ describe('ImportComicsComponent', () => {
         ...USER_ADMIN,
         preferences: [
           {
-            name: USER_PREFERENCE_IGNORE_METADATA,
+            name: IGNORE_METADATA_PREFERENCE,
             value: `${IGNORE_METADATA}`
           },
           {
-            name: USER_PREFERENCE_DELETE_BLOCKED_PAGES,
+            name: DELETE_BLOCKED_PAGES_PREFERENCE,
             value: `${DELETE_BLOCKED_PAGES}`
           }
         ]
@@ -185,7 +185,7 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: true })
+          setBusyState({enabled: true})
         );
       });
     });
@@ -208,7 +208,7 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: false })
+          setBusyState({enabled: false})
         );
       });
     });
@@ -233,7 +233,7 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: true })
+          setBusyState({enabled: true})
         );
       });
     });
@@ -256,7 +256,7 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({ enabled: false })
+          setBusyState({enabled: false})
         );
       });
     });

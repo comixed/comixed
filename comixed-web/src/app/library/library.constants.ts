@@ -31,6 +31,19 @@ export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 
+// import options
+export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
+  'preference.import.root-directory';
+export const DEFAULT_IMPORT_ROOT_DIRECTORY = '';
+export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
+  'preference.import.maximum-results';
+export const DEFAULT_IMPORT_MAXIMUM_RESULTS = 0;
+export const IGNORE_METADATA_PREFERENCE = 'preference.import.ignore-metadata';
+export const IGNORE_METADATA_DEFAULT = `${false}`;
+export const DELETE_BLOCKED_PAGES_PREFERENCE =
+  'preference.import.delete-blocked-pages';
+export const DELETE_BLOCKED_PAGES_DEFAULT = `${false}`;
+
 // display options
 export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
 export const DEFAULT_PAGE_SIZE = 400;

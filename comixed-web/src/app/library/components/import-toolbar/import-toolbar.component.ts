@@ -16,29 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
-import { LoggerService } from '@angular-ru/logger';
-import { Store } from '@ngrx/store';
-import { loadComicFiles } from '@app/library/actions/comic-import.actions';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { Subscription } from 'rxjs';
-import { getUserPreference } from '@app/user';
+import {LoggerService} from '@angular-ru/logger';
+import {Store} from '@ngrx/store';
+import {loadComicFiles} from '@app/library/actions/comic-import.actions';
+import {selectUser} from '@app/user/selectors/user.selectors';
+import {Subscription} from 'rxjs';
+import {getUserPreference} from '@app/user';
+import {filter} from 'rxjs/operators';
 import {
-  USER_PREFERENCE_IMPORT_MAXIMUM,
-  USER_PREFERENCE_IMPORT_ROOT_DIRECTORY,
-} from '@app/user/user.constants';
-import { filter } from 'rxjs/operators';
+  DEFAULT_IMPORT_MAXIMUM_RESULTS,
+  DEFAULT_IMPORT_ROOT_DIRECTORY,
+  IMPORT_MAXIMUM_RESULTS_PREFERENCE,
+  IMPORT_ROOT_DIRECTORY_PREFERENCE
+} from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-import-toolbar',
   templateUrl: './import-toolbar.component.html',
-  styleUrls: ['./import-toolbar.component.scss'],
+  styleUrls: ['./import-toolbar.component.scss']
 })
 export class ImportToolbarComponent implements OnInit {
   loadFilesForm: FormGroup;
@@ -46,11 +48,11 @@ export class ImportToolbarComponent implements OnInit {
 
   const;
   maximumOptions = [
-    { label: 'load-comic-files.maximum.all-files', value: 0 },
-    { label: 'load-comic-files.maximum.10-files', value: 10 },
-    { label: 'load-comic-files.maximum.50-files', value: 50 },
-    { label: 'load-comic-files.maximum.100-files', value: 100 },
-    { label: 'load-comic-files.maximum.1000-files', value: 1000 },
+    {label: 'load-comic-files.maximum.all-files', value: 0},
+    {label: 'load-comic-files.maximum.10-files', value: 10},
+    {label: 'load-comic-files.maximum.50-files', value: 50},
+    {label: 'load-comic-files.maximum.100-files', value: 100},
+    {label: 'load-comic-files.maximum.1000-files', value: 1000}
   ];
 
   constructor(
@@ -60,25 +62,25 @@ export class ImportToolbarComponent implements OnInit {
   ) {
     this.loadFilesForm = this.formBuilder.group({
       directory: ['', Validators.required],
-      maximum: ['', Validators.required],
+      maximum: ['', Validators.required]
     });
     this.userSubscription = this.store
       .select(selectUser)
-      .pipe(filter((user) => !!user))
-      .subscribe((user) => {
+      .pipe(filter(user => !!user))
+      .subscribe(user => {
         this.controls.directory.setValue(
           getUserPreference(
             user.preferences,
-            USER_PREFERENCE_IMPORT_ROOT_DIRECTORY,
-            ''
+            IMPORT_ROOT_DIRECTORY_PREFERENCE,
+            DEFAULT_IMPORT_ROOT_DIRECTORY
           )
         );
         this.controls.maximum.setValue(
           parseInt(
             getUserPreference(
               user.preferences,
-              USER_PREFERENCE_IMPORT_MAXIMUM,
-              '0'
+              IMPORT_MAXIMUM_RESULTS_PREFERENCE,
+              `${DEFAULT_IMPORT_MAXIMUM_RESULTS}`
             ),
             10
           )
@@ -86,7 +88,8 @@ export class ImportToolbarComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   get controls(): { [p: string]: AbstractControl } {
     return this.loadFilesForm.controls;
@@ -112,7 +115,7 @@ export class ImportToolbarComponent implements OnInit {
     this.store.dispatch(
       loadComicFiles({
         directory: this.directory,
-        maximum: this.maximum,
+        maximum: this.maximum
       })
     );
   }
