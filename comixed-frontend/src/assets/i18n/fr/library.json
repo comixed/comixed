@@ -168,10 +168,10 @@
     },
     "remove-comics": {
       "success": {
-        "detail": "Removed {removeCount, plural, =1{one comic} other{# comics}} from reading list."
+        "detail": "Suppression de {removeCount, plural, =1{d'une bande dessinée} other{# bandes dessinées}} de la liste de lecture."
       },
       "error": {
-        "detail": "Failed to remove comics from reading list."
+        "detail": "Échec de la suppression des bandes dessinées de la liste de lecture."
       }
     }
   },
