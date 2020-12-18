@@ -25,12 +25,3 @@ export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
 export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate-token`;
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 export const DELETE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
-
-// user preferences
-export const USER_PREFERENCE_IMPORT_ROOT_DIRECTORY =
-  'comic-files.import.root-directory';
-export const USER_PREFERENCE_IMPORT_MAXIMUM = 'comic-files.import.maximum';
-export const USER_PREFERENCE_IGNORE_METADATA =
-  'comic-files.import.ignore-metadata';
-export const USER_PREFERENCE_DELETE_BLOCKED_PAGES =
-  'comic-files.import.delete-blocked-pages';

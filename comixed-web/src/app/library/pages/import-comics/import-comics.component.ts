@@ -16,28 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ComicFile } from '@app/library/models/comic-file';
-import { LoggerService } from '@angular-ru/logger';
-import { Store } from '@ngrx/store';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {ComicFile} from '@app/library/models/comic-file';
+import {LoggerService} from '@angular-ru/logger';
+import {Store} from '@ngrx/store';
 import {
   selectComicFiles,
   selectComicFileSelections,
   selectComicImportState
 } from '@app/library/selectors/comic-import.selectors';
-import { setBusyState } from '@app/core/actions/busy.actions';
-import { ConfirmationService } from '@app/core';
-import { TranslateService } from '@ngx-translate/core';
-import { sendComicFiles } from '@app/library/actions/comic-import.actions';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { filter } from 'rxjs/operators';
-import { getUserPreference } from '@app/user';
+import {setBusyState} from '@app/core/actions/busy.actions';
+import {ConfirmationService} from '@app/core';
+import {TranslateService} from '@ngx-translate/core';
+import {sendComicFiles} from '@app/library/actions/comic-import.actions';
+import {selectUser} from '@app/user/selectors/user.selectors';
+import {filter} from 'rxjs/operators';
+import {getUserPreference} from '@app/user';
+import {Title} from '@angular/platform-browser';
 import {
-  USER_PREFERENCE_DELETE_BLOCKED_PAGES,
-  USER_PREFERENCE_IGNORE_METADATA
-} from '@app/user/user.constants';
-import { Title } from '@angular/platform-browser';
+  DELETE_BLOCKED_PAGES_DEFAULT,
+  DELETE_BLOCKED_PAGES_PREFERENCE,
+  IGNORE_METADATA_DEFAULT,
+  IGNORE_METADATA_PREFERENCE
+} from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-import-comics',
@@ -76,14 +78,14 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
         this.ignoreMetadata =
           getUserPreference(
             user.preferences,
-            USER_PREFERENCE_IGNORE_METADATA,
-            'false'
+            IGNORE_METADATA_PREFERENCE,
+            IGNORE_METADATA_DEFAULT
           ) === 'true';
         this.deleteBlockedPages =
           getUserPreference(
             user.preferences,
-            USER_PREFERENCE_DELETE_BLOCKED_PAGES,
-            'false'
+            DELETE_BLOCKED_PAGES_PREFERENCE,
+            DELETE_BLOCKED_PAGES_DEFAULT
           ) === 'true';
       });
     this.filesSubscription = this.store
@@ -103,7 +105,7 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
         if (this.busy !== busy) {
           this.logger.debug('Setting busy state:', busy);
           this.busy = busy;
-          this.store.dispatch(setBusyState({ enabled: busy }));
+          this.store.dispatch(setBusyState({enabled: busy}));
         }
         this.importing = state.importing;
       });
@@ -135,7 +137,7 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
       ),
       message: this.translateService.instant(
         'import-comic-files.confirm-start-message',
-        { count: this.selectedFiles.length }
+        {count: this.selectedFiles.length}
       ),
       confirm: () => {
         this.logger.debug('Starting import');
