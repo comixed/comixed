@@ -51,7 +51,10 @@ export class ReadingListAdaptor {
   private _showSelectionDialog$ = new BehaviorSubject<boolean>(false);
   private _removingComics$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private store: Store<LibraryModuleState>, private logger: LoggerService) {
+  constructor(
+    private store: Store<LibraryModuleState>,
+    private logger: LoggerService
+  ) {
     this.store
       .select(READING_LIST_FEATURE_KEY)
       .pipe(filter(state => !!state))
