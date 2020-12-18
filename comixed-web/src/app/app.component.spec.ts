@@ -43,6 +43,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -71,7 +72,8 @@ describe('AppComponent', () => {
         MatDialogModule,
         MatMenuModule,
         MatIconModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatFormFieldModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

@@ -23,6 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 
 describe('CoverImageComponent', () => {
   const SOURCE = {} as any;
+  const PAGE_SIZE = 400;
 
   let component: ComicPageComponent;
   let fixture: ComponentFixture<ComicPageComponent>;
@@ -40,6 +41,28 @@ describe('CoverImageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('getting the image width', () => {
+    describe('when not defined', () => {
+      beforeEach(() => {
+        component.pageSize = -1;
+      });
+
+      it('tells the browser to determine the width', () => {
+        expect(component.imageWidth).toEqual('auto');
+      });
+    });
+
+    describe('when defined', () => {
+      beforeEach(() => {
+        component.pageSize = PAGE_SIZE;
+      });
+
+      it('returns a definite size', () => {
+        expect(component.imageWidth).toEqual(`${PAGE_SIZE}px`);
+      });
+    });
   });
 
   describe('selecting a page', () => {

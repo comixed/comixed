@@ -45,13 +45,19 @@ import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { ConfirmationService } from '@app/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
+import { MatDialogRef } from '@angular/material/dialog';
 
 describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
   const OTHER_COMIC = COMIC_2;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [USER_FEATURE_KEY]: initialUserState
+    [USER_FEATURE_KEY]: { ...initialUserState },
+    [DISPLAY_FEATURE_KEY]: { ...initialDisplayState }
   };
 
   let component: ComicDetailsComponent;
@@ -84,6 +90,10 @@ describe('ComicDetailsComponent', () => {
             params: new BehaviorSubject<{}>({}),
             snapshot: {} as ActivatedRouteSnapshot
           }
+        },
+        {
+          provide: MatDialogRef,
+          useValue: {}
         },
         ConfirmationService
       ]

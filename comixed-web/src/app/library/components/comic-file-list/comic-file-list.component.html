@@ -1,14 +1,13 @@
 <mat-table aria-label="Comic files available for import"
-       matSort
-       [dataSource]="dataSource"
-       (matSortChange)="onSortChanged($event)">
+           matSort
+           [dataSource]="dataSource"
+           (matSortChange)="onSortChanged($event)">
   <ng-container matColumnDef="selected">
     <mat-header-cell mat-sort-header
                      *matHeaderCellDef>
       <mat-checkbox [checked]="allSelected"
                     [disabled]="this.files.length === 0"
-                    (change)="onSelectAll($event.checked)"
-      ></mat-checkbox>
+                    (change)="onSelectAll($event.checked)"></mat-checkbox>
     </mat-header-cell>
     <mat-cell *matCellDef="let file">
       <mat-checkbox

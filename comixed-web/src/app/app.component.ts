@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { User } from '@app/user/models/user';
+import { User } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,7 +30,7 @@ import { setImportingComicsState } from '@app/library/actions/comic-import.actio
 import { setPageSize } from '@app/library/actions/display.actions';
 import { getUserPreference } from '@app/user';
 import {
-  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
               getUserPreference(
                 this.user.preferences,
                 PAGE_SIZE_PREFERENCE,
-                `${DEFAULT_PAGE_SIZE}`
+                `${PAGE_SIZE_DEFAULT}`
               ),
               10
             ),

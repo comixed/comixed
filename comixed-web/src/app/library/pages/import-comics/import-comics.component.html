@@ -1,31 +1,16 @@
 <h2 *ngIf="importing">{{"import-comic-files.busy-title"|translate}}</h2>
-<div *ngIf="!importing"
-     fxLayout="column">
-  <div>
-    <cx-import-toolbar></cx-import-toolbar>
-  </div>
-  <div>
-    <h2>{{"import-comic-files.page-title"|translate:{count: files.length, selected: selectedFiles.length} }}</h2>
-  </div>
-  <div fxLayout="row">
-    <div fxFlex>
-      <cx-comic-file-list [files]="files"
-                          [selectedFiles]="selectedFiles"
-                          (currentFile)="onCurrentFile($event)"></cx-comic-file-list>
-    </div>
-    <div fxFlex="20">
-      <div fxLayout="column">
-        <mat-checkbox [(ngModel)]="ignoreMetadata">{{"import-comic-files.label.ignore-metadata"|translate}}</mat-checkbox>
-        <mat-checkbox [(ngModel)]="deleteBlockedPages">{{"import-comic-files.label.delete-blocked-pages"|translate}}</mat-checkbox>
-        <button mat-flat-button
-                [disabled]="selectedFiles.length === 0"
-                (click)="onStartImport()">
-          <mat-icon>start</mat-icon>
-          <span>{{"button.start"|translate}}</span>
-        </button>
-        <cx-comic-file-details [file]="currentFile"
-                               [selected]="currentFileSelected"></cx-comic-file-details>
-      </div>
-    </div>
-  </div>
+<div *ngIf="!importing">
+      <cx-comic-file-details *ngIf="currentFile"
+                             [file]="currentFile"
+                             [selected]="currentFileSelected"
+                             [pageSize]="pageSize"></cx-comic-file-details>
+      <cx-comic-file-toolbar [user]="user"
+                             [comicFiles]="files"
+                             [selectedComicFiles]="selectedFiles"
+                             [ignoreMetadata]="ignoreMetadata"
+                             [deleteBlockedPages]="deleteBlockedPages"></cx-comic-file-toolbar>
+      <h2>{{"import-comic-files.page-title"|translate:{count: files.length, selected: selectedFiles.length} }}</h2>
+          <cx-comic-file-list [files]="files"
+                              [selectedFiles]="selectedFiles"
+                              (currentFile)="onCurrentFile($event)"></cx-comic-file-list>
 </div>

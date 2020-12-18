@@ -16,15 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { User } from '@app/user';
+import { ComicFile } from '../../index';
 
-export const resetDisplayOptions = createAction(
-  '[Display] Reset the display option state',
-  props<{ user?: User }>()
-);
-export const setPageSize = createAction(
-  '[Display] Set the page size',
-  props<{ size: number; save: boolean }>()
-);
-export const pageSizeSet = createAction('[Display] The page size is set');
+export interface ComicFileDetailsData {
+  file: ComicFile;
+  pageSize: number;
+}

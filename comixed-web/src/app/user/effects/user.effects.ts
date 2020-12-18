@@ -34,7 +34,7 @@ import {
 } from '@app/user/actions/user.actions';
 import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {UserService} from '@app/user/services/user.service';
-import {User} from '@app/user/models/user';
+import {User} from '@app/user';
 import {AlertService, TokenService} from '@app/core';
 import {TranslateService} from '@ngx-translate/core';
 import {of} from 'rxjs';

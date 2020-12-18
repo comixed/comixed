@@ -31,12 +31,16 @@ export class ComicPageComponent {
   @Input() source: any;
   @Input() imageUrl: string;
   @Input() selected: boolean;
-  @Input() width = '100%';
-  @Input() height = 'auto';
+  @Input() pageSize = -1;
+  @Input() imageHeight = 'auto';
 
   @Output() pageClicked = new EventEmitter<PageClickEvent>();
 
   constructor(private logger: LoggerService) {}
+
+  get imageWidth(): string {
+    return this.pageSize === -1 ? 'auto' : `${this.pageSize}px`;
+  }
 
   /** Invoked when the cover is clicked. */
   onClick(): void {
