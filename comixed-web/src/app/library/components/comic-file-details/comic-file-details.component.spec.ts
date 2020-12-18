@@ -17,30 +17,58 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicFileDetailsComponent } from './comic-file-details.component';
+import {
+  CARD_WIDTH_PADDING,
+  ComicFileDetailsComponent
+} from './comic-file-details.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { COMIC_FILE_2 } from '@app/library/library.fixtures';
+import {
+  COMIC_FILE_1,
+  COMIC_FILE_2,
+  COMIC_FILE_3
+} from '@app/library/library.fixtures';
 import { setComicFilesSelectedState } from '@app/library/actions/comic-import.actions';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  initialState as initialImportState
+} from '@app/library/reducers/comic-import.reducer';
 
 describe('ComicFileDetailsComponent', () => {
   const FILE = COMIC_FILE_2;
+  const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
+  const initialState = { [COMIC_IMPORT_FEATURE_KEY]: initialImportState };
 
   let component: ComicFileDetailsComponent;
   let fixture: ComponentFixture<ComicFileDetailsComponent>;
   let store: MockStore<any>;
+  let dialog: jasmine.SpyObj<MatDialogRef<ComicFileDetailsComponent>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [LoggerModule.forRoot()],
       declarations: [ComicFileDetailsComponent],
-      providers: [provideMockStore({})]
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileDetailsComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    dialog = TestBed.inject(MatDialogRef) as jasmine.SpyObj<
+      MatDialogRef<ComicFileDetailsComponent>
+    >;
     fixture.detectChanges();
   }));
 
@@ -74,6 +102,74 @@ describe('ComicFileDetailsComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           setComicFilesSelectedState({ files: [FILE], selected: false })
         );
+      });
+    });
+  });
+
+  describe('the card width', () => {
+    const PAGE_SIZE = 400;
+
+    beforeEach(() => {
+      component.pageSize = PAGE_SIZE;
+    });
+
+    it('returns a padded card size', () => {
+      expect(component.cardWidth).toEqual(
+        `${PAGE_SIZE + CARD_WIDTH_PADDING}px`
+      );
+    });
+  });
+
+  describe('navigating the comic files', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [COMIC_IMPORT_FEATURE_KEY]: {
+          ...initialImportState,
+          files: COMIC_FILES
+        }
+      });
+    });
+
+    it('disables the previous button when on the first entry', () => {
+      component.file = COMIC_FILES[0];
+      component.updateNavigationButtons();
+      expect(component.noPreviousFile).toBeTrue();
+    });
+
+    it('disables the next button when on the last entry', () => {
+      component.file = COMIC_FILES[2];
+      component.updateNavigationButtons();
+      expect(component.noNextFile).toBeTrue();
+    });
+
+    describe('going to the previous comic', () => {
+      beforeEach(() => {
+        component.file = COMIC_FILES[2];
+        component.onPreviousFile();
+      });
+
+      it('updates the current comic file', () => {
+        expect(component.file).toEqual(COMIC_FILES[1]);
+      });
+
+      it('enables the previous button', () => {
+        expect(component.noPreviousFile).toBeFalse();
+      });
+    });
+
+    describe('going to the next comic', () => {
+      beforeEach(() => {
+        component.file = COMIC_FILES[0];
+        component.onNextFile();
+      });
+
+      it('updates the current comic file', () => {
+        expect(component.file).toEqual(COMIC_FILES[1]);
+      });
+
+      it('enables the next button', () => {
+        expect(component.noNextFile).toBeFalse();
       });
     });
   });

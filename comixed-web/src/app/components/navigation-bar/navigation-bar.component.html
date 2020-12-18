@@ -1,11 +1,9 @@
 <mat-toolbar class="cx-width-100">
-  <button
-    *ngIf="!user"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'user.login-user.login-tooltip' | translate"
-    (click)="onLogin()"
-  >
+  <button *ngIf="!user"
+          mat-icon-button
+          color="primary"
+          [matTooltip]="'user.login-user.login-tooltip' | translate"
+          (click)="onLogin()">
     <mat-icon>login</mat-icon>
   </button>
   <button *ngIf="!!user"
@@ -16,12 +14,10 @@
   <mat-label class="spacer">ComiXed</mat-label>
   <mat-label *ngIf="!!user">
     {{ 'app.logged-in' | translate: {email: user.email} }}
-    <button
-      mat-icon-button
-      color="warn"
-      [matTooltip]="'user.login-user.logout-tooltip' | translate"
-      (click)="onLogout()"
-    >
+    <button mat-icon-button
+            color="warn"
+            [matTooltip]="'user.login-user.logout-tooltip' | translate"
+            (click)="onLogout()">
       <mat-icon>logout</mat-icon>
     </button>
   </mat-label>

@@ -34,7 +34,7 @@
     <div class="cx-width-100 comic-details-container">
       <div class="cx-padding-left-5">
         <cx-comic-page [imageUrl]="comic|comicCoverUrl"
-                       [width]="'400px'"></cx-comic-page>
+                       [pageSize]="'400px'"></cx-comic-page>
       </div>
       <div class="cx-padding-left-5">
         <mat-tab-group [selectedIndex]="currentTab"
@@ -46,7 +46,8 @@
             <cx-comic-story [comic]="comic"></cx-comic-story>
           </mat-tab>
           <mat-tab [label]="'comic.label.comic-pages'|translate">
-            <cx-comic-pages [comic]="comic"></cx-comic-pages>
+            <cx-comic-pages [comic]="comic"
+                            [pageSize]="pageSize"></cx-comic-pages>
           </mat-tab>
           <mat-tab [disabled]="!isAdmin"
                    [label]="'comic.label.comic-edit'|translate">

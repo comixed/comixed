@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { User } from '@app/user/models/user';
+import { User } from '@app/user';
 import { LoggerService } from '@angular-ru/logger';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core';

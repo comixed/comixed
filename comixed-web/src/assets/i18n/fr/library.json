@@ -28,6 +28,15 @@
       "ignore-metadata": "Ignore any metadata",
       "delete-blocked-pages": "Mark blocked pages as delete"
     },
+    "tooltip": {
+      "ignore-metadata-on": "Will import any metadata in the comic files.",
+      "ignore-metadata-off": "Will not import any metadata in the comic files.",
+      "delete-blocked-pages-on": "Will mark blocked pages  for deletion.",
+      "delete-blocked-pages-off": "Will not mark blocked pages for deletion.",
+      "select-all": "Select all comic files for import.",
+      "deselect-all": "Clear the comic file selections.",
+      "start-import": "Start importing the selected comic files."
+    },
     "confirm-start-title": "Import Comic Files?",
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
   },

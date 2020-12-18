@@ -16,59 +16,63 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ImportComicsComponent} from './import-comics.component';
-import {LoggerModule} from '@angular-ru/logger';
-import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ImportComicsComponent } from './import-comics.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   COMIC_IMPORT_FEATURE_KEY,
   initialState as initialComicImportState
 } from '@app/library/reducers/comic-import.reducer';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import {setBusyState} from '@app/core/actions/busy.actions';
+import { setBusyState } from '@app/core/actions/busy.actions';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/library/library.fixtures';
-import {ConfirmationService} from '@app/core';
-import {Confirmation} from '@app/core/models/confirmation';
-import {sendComicFiles} from '@app/library/actions/comic-import.actions';
-import {USER_ADMIN} from '@app/user/user.fixtures';
-import {User} from '@app/user/models/user';
-import {MatIconModule} from '@angular/material/icon';
-import {ImportToolbarComponent} from '@app/library/components/import-toolbar/import-toolbar.component';
-import {ComicFileListComponent} from '@app/library/components/comic-file-list/comic-file-list.component';
-import {ComicFileDetailsComponent} from '@app/library/components/comic-file-details/comic-file-details.component';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {MatTableModule} from '@angular/material/table';
-import {ComicFileCoverUrlPipe} from '@app/library/pipes/comic-file-cover-url.pipe';
-import {Title} from '@angular/platform-browser';
-import {MatCardModule} from '@angular/material/card';
-import {ComicPageComponent} from '@app/core/components/comic-page/comic-page.component';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { ConfirmationService } from '@app/core';
+import { Confirmation } from '@app/core/models/confirmation';
+import { sendComicFiles } from '@app/library/actions/comic-import.actions';
+import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
+import { User } from '@app/user';
+import { MatIconModule } from '@angular/material/icon';
+import { ComicFileToolbarComponent } from '@app/library/components/comic-file-toolbar/comic-file-toolbar.component';
+import { ComicFileListComponent } from '@app/library/components/comic-file-list/comic-file-list.component';
+import { ComicFileDetailsComponent } from '@app/library/components/comic-file-details/comic-file-details.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { ComicFileCoverUrlPipe } from '@app/library/pipes/comic-file-cover-url.pipe';
+import { Title } from '@angular/platform-browser';
+import { MatCardModule } from '@angular/material/card';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   DELETE_BLOCKED_PAGES_PREFERENCE,
   IGNORE_METADATA_PREFERENCE
 } from '@app/library/library.constants';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 describe('ImportComicsComponent', () => {
-  const initialState = {
-    [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState,
-    [USER_FEATURE_KEY]: initialUserState
-  };
+  const USER = USER_READER;
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
   const FILE = COMIC_FILE_3;
+  const PAGE_SIZE = 400;
+  const initialState = {
+    [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState,
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+  };
 
   let component: ImportComicsComponent;
   let fixture: ComponentFixture<ImportComicsComponent>;
@@ -76,18 +80,20 @@ describe('ImportComicsComponent', () => {
   let confirmationService: ConfirmationService;
   let title: Title;
   let translateService: TranslateService;
+  let dialog: MatDialog;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         ImportComicsComponent,
-        ImportToolbarComponent,
+        ComicFileToolbarComponent,
         ComicFileListComponent,
         ComicFileDetailsComponent,
         ComicFileCoverUrlPipe,
         ComicPageComponent
       ],
       imports: [
+        NoopAnimationsModule,
         ReactiveFormsModule,
         FormsModule,
         LoggerModule.forRoot(),
@@ -100,9 +106,10 @@ describe('ImportComicsComponent', () => {
         MatSelectModule,
         MatTableModule,
         MatCardModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatToolbarModule
       ],
-      providers: [provideMockStore({initialState}), ConfirmationService]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportComicsComponent);
@@ -113,6 +120,8 @@ describe('ImportComicsComponent', () => {
     title = TestBed.inject(Title);
     spyOn(title, 'setTitle');
     translateService = TestBed.inject(TranslateService);
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
     fixture.detectChanges();
   }));
 
@@ -185,7 +194,7 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({enabled: true})
+          setBusyState({ enabled: true })
         );
       });
     });
@@ -208,8 +217,21 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({enabled: false})
+          setBusyState({ enabled: false })
         );
+      });
+    });
+  });
+
+  describe('when a file is selected', () => {
+    beforeEach(() => {
+      component.pageSize = PAGE_SIZE;
+      component.onCurrentFile(FILE);
+    });
+
+    it('opens a dialog', () => {
+      expect(dialog.open).toHaveBeenCalledWith(ComicFileDetailsComponent, {
+        data: { file: FILE, pageSize: PAGE_SIZE }
       });
     });
   });
@@ -233,7 +255,7 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({enabled: true})
+          setBusyState({ enabled: true })
         );
       });
     });
@@ -256,107 +278,8 @@ describe('ImportComicsComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setBusyState({enabled: false})
+          setBusyState({ enabled: false })
         );
-      });
-    });
-  });
-
-  describe('setting the current file', () => {
-    beforeEach(() => {
-      component.currentFile = null;
-      component.currentFileSelected = false;
-    });
-
-    describe('and the file is not selected', () => {
-      beforeEach(() => {
-        component.selectedFiles = [];
-        component.onCurrentFile(FILE);
-      });
-
-      it('sets the current file', () => {
-        expect(component.currentFile).toEqual(FILE);
-      });
-
-      it('clears the current file selected flag', () => {
-        expect(component.currentFileSelected).toBeFalsy();
-      });
-    });
-
-    describe('and the file is selected', () => {
-      beforeEach(() => {
-        component.selectedFiles = [FILE];
-        component.onCurrentFile(FILE);
-      });
-
-      it('sets the current file', () => {
-        expect(component.currentFile).toEqual(FILE);
-      });
-
-      it('sets the current file selected flag', () => {
-        expect(component.currentFileSelected).toBeTruthy();
-      });
-    });
-  });
-
-  describe('file selection updates', () => {
-    const SELECTED_FILE = COMIC_FILE_1;
-    const CURRENT_FILE = COMIC_FILE_2;
-
-    describe('when there is no current file', () => {
-      beforeEach(() => {
-        component.currentFile = null;
-        component.currentFileSelected = true;
-        store.setState({
-          ...initialState,
-          [COMIC_IMPORT_FEATURE_KEY]: {
-            ...initialComicImportState,
-            selections: [SELECTED_FILE]
-          }
-        });
-        fixture.detectChanges();
-      });
-
-      it('clears the current file selected flag', () => {
-        expect(component.currentFileSelected).toBeFalsy();
-      });
-    });
-
-    describe('when the current file is not selected', () => {
-      beforeEach(() => {
-        component.currentFile = CURRENT_FILE;
-        component.currentFileSelected = true;
-        store.setState({
-          ...initialState,
-          [COMIC_IMPORT_FEATURE_KEY]: {
-            ...initialComicImportState,
-            selections: [SELECTED_FILE]
-          }
-        });
-        fixture.detectChanges();
-      });
-
-      it('clears the current file selected flag', () => {
-        expect(component.currentFileSelected).toBeFalsy();
-      });
-    });
-
-    describe('when the current file is selected', () => {
-      beforeEach(() => {
-        component.currentFile = SELECTED_FILE;
-        component.currentFileSelected = false;
-        store.setState({
-          ...initialState,
-          [COMIC_IMPORT_FEATURE_KEY]: {
-            ...initialComicImportState,
-            selections: [SELECTED_FILE]
-          }
-        });
-        fixture.detectChanges();
-      });
-
-      it('clears the current file selected flag', () => {
-        expect(component.currentFileSelected).toBeTruthy();
       });
     });
   });

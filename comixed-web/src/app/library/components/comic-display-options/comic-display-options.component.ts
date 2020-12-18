@@ -32,7 +32,7 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { User } from '@app/user/models/user';
+import { User } from '@app/user';
 
 @Component({
   selector: 'cx-comic-display-options',

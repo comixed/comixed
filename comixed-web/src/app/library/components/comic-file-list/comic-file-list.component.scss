@@ -1,19 +1,10 @@
 @import '~styles';
 
-table {
-  width: 100%;
-}
-
-.mat-column-action {
+.mat-column-selected {
   width: $cx-column-small;
   max-width: $cx-column-small;
   resize: none;
 }
-
-.mat-column-cover * img {
-  overflow: hidden;
-}
-
 .mat-column-filename {
   max-width: 100%;
   resize: horizontal;
@@ -22,11 +13,5 @@ table {
 .mat-column-size {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
-  resize: none;
-}
-
-.mat-column-selected {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
   resize: none;
 }

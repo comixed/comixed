@@ -17,7 +17,7 @@
  */
 
 import { DisplayState, initialState, reducer } from './display.reducer';
-import { DEFAULT_PAGE_SIZE } from '@app/library/library.constants';
+import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
 import {
   pageSizeSet,
   resetDisplayOptions,
@@ -40,7 +40,7 @@ describe('Display Reducer', () => {
     });
 
     it('has a default page size', () => {
-      expect(state.pageSize).toEqual(DEFAULT_PAGE_SIZE);
+      expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
     });
   });
 
@@ -50,7 +50,7 @@ describe('Display Reducer', () => {
     });
 
     it('sets the default page size', () => {
-      expect(state.pageSize).toEqual(DEFAULT_PAGE_SIZE);
+      expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
     });
   });
 
@@ -63,7 +63,7 @@ describe('Display Reducer', () => {
     });
 
     it('sets the default page size', () => {
-      expect(state.pageSize).toEqual(DEFAULT_PAGE_SIZE);
+      expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
     });
   });
 
@@ -71,12 +71,12 @@ describe('Display Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, pageSize: 0 },
-        setPageSize({ size: DEFAULT_PAGE_SIZE, save: false })
+        setPageSize({ size: PAGE_SIZE_DEFAULT, save: false })
       );
     });
 
     it('sets the page size', () => {
-      expect(state.pageSize).toEqual(DEFAULT_PAGE_SIZE);
+      expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
     });
   });
 

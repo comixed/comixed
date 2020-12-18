@@ -6,6 +6,7 @@
   "button": {
     "cancel": "Cancel",
     "deselect": "Deselect",
+    "deselect-all": "Deselect All",
     "download": "Download",
     "load": "Load",
     "login": "Login",
@@ -17,6 +18,7 @@
     "save": "Save",
     "scrape": "Scrape",
     "select": "Select",
+    "select-all": "Select All",
     "start": "Start",
     "submit": "Submit",
     "yes": "Yes"

@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { User } from '@app/user/models/user';
+import { User } from '@app/user';
 
 export const loadCurrentUser = createAction('[User] Load the current user');
 export const currentUserLoaded = createAction(
