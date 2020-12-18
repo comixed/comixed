@@ -25,7 +25,7 @@ jobs:
         with:
           java-version: 12
       - name: Create the release artifact
-        run: mvn package -Pci -Dassembly.name=RELEASE
+        run: mvn package -DskipTests -Pci -Dassembly.name=RELEASE
       - name: Create pre-release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
