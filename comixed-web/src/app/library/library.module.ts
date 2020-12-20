@@ -68,7 +68,12 @@ import { DisplayEffects } from '@app/library/effects/display.effects';
 import { ComicDisplayOptionsComponent } from './components/comic-display-options/comic-display-options.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
-import { ComicScrapingDetailComponent } from './components/comic-scraping-detail/comic-scraping-detail.component';
+import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
+import {
+  reducer as scrapingReducer,
+  SCRAPING_FEATURE_KEY
+} from '@app/library/reducers/scraping.reducer';
+import { ScrapingEffects } from '@app/library/effects/scraping.effects';
 
 @NgModule({
   declarations: [
@@ -87,7 +92,7 @@ import { ComicScrapingDetailComponent } from './components/comic-scraping-detail
     ComicPageUrlPipe,
     AllComicsComponent,
     ComicDisplayOptionsComponent,
-    ComicScrapingDetailComponent
+    ComicScrapingComponent
   ],
   imports: [
     CommonModule,
@@ -98,10 +103,12 @@ import { ComicScrapingDetailComponent } from './components/comic-scraping-detail
     StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
+    StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       ComicImportEffects,
-      LibraryEffects
+      LibraryEffects,
+      ScrapingEffects
     ]),
     MatInputModule,
     MatSelectModule,

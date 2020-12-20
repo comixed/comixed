@@ -101,6 +101,15 @@
     }
   },
   "scraping": {
-    "load-volumes-effect-failure": "Failed to load any volumes..."
+    "load-scraping-volumes": {
+      "effect-failure": "Failed to load any volumes..."
+    },
+    "load-scraping-issue": {
+      "effect-failure": "Failed to load issue..."
+    },
+    "scrape-comic": {
+      "effect-success": "Comic successfully scraped!",
+      "effect-failure": "Failed to scrape comic."
+    }
   }
 }

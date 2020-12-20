@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,47 +16,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.scrapers.model;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * <code>ComicVolume</code> represents a comic volume.
+ * <code>LoadScrapingVolumesRequest</code> represents the payload for requesting a set of volumes
+ * for a given series.
  *
  * @author Darryl L. Pierce
  */
+@AllArgsConstructor
 @NoArgsConstructor
-public class ScrapingVolume {
-  @JsonProperty(value = "id")
+public class LoadScrapingVolumesRequest {
+  @JsonProperty("apiKey")
   @Getter
-  @Setter
-  private long id;
+  private String apiKey;
 
-  @JsonProperty(value = "name")
+  @JsonProperty("series")
   @Getter
-  @Setter
-  private String name;
+  private String series;
 
-  @JsonProperty(value = "issueCount")
+  @JsonProperty("maxRecords")
   @Getter
-  @Setter
-  private int issueCount;
+  private Integer maxRecords;
 
-  @JsonProperty(value = "imageUrl")
+  @JsonProperty("skipCache")
   @Getter
-  @Setter
-  private String imageURL;
-
-  @JsonProperty(value = "startYear")
-  @Getter
-  @Setter
-  private String startYear;
-
-  @JsonProperty(value = "publisher")
-  @Getter
-  @Setter
-  private String publisher;
+  private Boolean skipCache;
 }
