@@ -16,37 +16,46 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Comic } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { loadComic } from '@app/library/actions/library.actions';
-import {
-  selectComic,
-  selectLibraryBusy
-} from '@app/library/selectors/library.selectors';
+import { selectComic } from '@app/library/selectors/library.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { isAdmin } from '@app/user/user.functions';
+import { getUserPreference, isAdmin } from '@app/user/user.functions';
 import { updateQueryParam } from '@app/core';
 import {
+  API_KEY_PREFERENCE,
+  MAXIMUM_RECORDS_PREFERENCE,
   PAGE_SIZE_DEFAULT,
-  QUERY_PARAM_TAB
+  QUERY_PARAM_TAB,
+  SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
+import {
+  loadScrapingVolumes,
+  resetScraping
+} from '@app/library/actions/scraping.actions';
+import {
+  selectScrapingState,
+  selectScrapingVolumes
+} from '@app/library/selectors/scraping.selectors';
+import { ScrapingVolume } from '@app/library/models/scraping-volume';
 
 @Component({
   selector: 'cx-comic-details',
   templateUrl: './comic-details.component.html',
   styleUrls: ['./comic-details.component.scss']
 })
-export class ComicDetailsComponent implements OnInit, OnDestroy {
+export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   paramSubscription: Subscription;
   queryParamSubscription: Subscription;
   currentTab = 0;
-  comicBusySubscription: Subscription;
+  scrapingStateSubscription: Subscription;
   comicSubscription: Subscription;
   comicId = -1;
   comic: Comic;
@@ -54,6 +63,14 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
   isAdmin = false;
   displaySubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
+  volumesSubscription: Subscription;
+  apiKey = '';
+  skipCache = false;
+  maximumRecords = 0;
+  volumes: ScrapingVolume[] = [];
+  scrapingSeriesName = '';
+  scrapingVolume = '';
+  scrapingIssueNumber = '';
 
   constructor(
     private logger: LoggerService,
@@ -73,29 +90,54 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.comicBusySubscription = this.store
-      .select(selectLibraryBusy)
-      .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
+    this.scrapingStateSubscription = this.store
+      .select(selectScrapingState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
+      );
     this.comicSubscription = this.store
       .select(selectComic)
       .subscribe(comic => (this.comic = comic));
-    this.userSubscription = this.store
-      .select(selectUser)
-      .subscribe(user => (this.isAdmin = isAdmin(user)));
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.isAdmin = isAdmin(user);
+      this.apiKey = getUserPreference(
+        user.preferences,
+        API_KEY_PREFERENCE,
+        this.apiKey
+      );
+      this.skipCache =
+        getUserPreference(
+          user.preferences,
+          SKIP_CACHE_PREFERENCE,
+          `${this.skipCache === true}`
+        ) === `${true}`;
+      this.maximumRecords = parseInt(
+        getUserPreference(user.preferences, MAXIMUM_RECORDS_PREFERENCE, '0'),
+        10
+      );
+    });
     this.displaySubscription = this.store
       .select(selectDisplayState)
       .subscribe(state => {
         this.pageSize = state.pageSize;
       });
+    this.volumesSubscription = this.store
+      .select(selectScrapingVolumes)
+      .subscribe(volumes => (this.volumes = volumes));
   }
 
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();
-    this.comicBusySubscription.unsubscribe();
+    this.scrapingStateSubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
+    this.volumesSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.store.dispatch(resetScraping());
   }
 
   onPreviousComic(): void {
@@ -108,12 +150,6 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
     this.routeToComic(this.comic.nextIssueId);
   }
 
-  private routeToComic(id: number): void {
-    this.router.navigate(['library', id], {
-      queryParamsHandling: 'preserve'
-    });
-  }
-
   onTabChange(index: number): void {
     this.logger.trace('Changing active tab:', index);
     updateQueryParam(
@@ -122,5 +158,28 @@ export class ComicDetailsComponent implements OnInit, OnDestroy {
       QUERY_PARAM_TAB,
       `${index}`
     );
+  }
+
+  onLoadScrapingVolumes(
+    apiKey: string,
+    series: string,
+    volume: string,
+    issueNumber: string,
+    maximumRecords: number,
+    skipCache: boolean
+  ): void {
+    this.logger.trace('Loading scraping volumes');
+    this.scrapingSeriesName = series;
+    this.scrapingVolume = volume;
+    this.scrapingIssueNumber = issueNumber;
+    this.store.dispatch(
+      loadScrapingVolumes({ apiKey, series, maximumRecords, skipCache })
+    );
+  }
+
+  private routeToComic(id: number): void {
+    this.router.navigate(['library', id], {
+      queryParamsHandling: 'preserve'
+    });
   }
 }

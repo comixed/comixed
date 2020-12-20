@@ -39,11 +39,11 @@ h3 {
 // padding
 
 .cx-padding-left-5 {
-  padding-left: 5px;
+  padding-left: 5px !important;
 }
 
 .cx-padding-right-5 {
-  padding-right: 5px;
+  padding-right: 5px !important;
 }
 
 .cx-padding-right-15 {
@@ -53,7 +53,7 @@ h3 {
 // margins
 
 .cx-margin-left-5 {
-  margin-left: 5px;
+  margin-left: 5px !important;
 }
 
 // table column widths
@@ -81,6 +81,18 @@ $cx-column-large: 325px;
 
 // content display
 
+.cx-spacer {
+  padding-left: 5px;
+  flex: 1 1 auto;
+}
+
+.cx-action-button-container-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .cx-detail-label {
   font-weight: bold;
   font-size: larger;
@@ -103,5 +115,6 @@ $cx-column-large: 325px;
 // buttons
 
 .cx-action-button {
-  min-width: 200px;
+  min-width: 200px !important;
+  padding-bottom: 5px !important;
 }

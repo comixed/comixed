@@ -11,7 +11,8 @@
           class="cx-action-button cx-margin-left-5"
           mat-flat-button
           color="accent"
-          [disabled]="!comicForm.valid">
+          [disabled]="!comicForm.valid && hasApiKey"
+          (click)="onFetchScrapingVolumes()">
     <mat-icon>cloud_circle</mat-icon>
     <mat-label>{{"button.scrape"|translate}}</mat-label>
   </button>
@@ -24,8 +25,51 @@
     <mat-icon>undo</mat-icon>
     <mat-label>{{"button.reset"|translate}}</mat-label>
   </button>
+  <div class="cx-spacer"></div>
+  <mat-select id="maximum-records-select"
+              [(value)]="maximumRecords"
+              (selectionChange)="onMaximumRecordsChanged($event.value)">
+    <mat-option *ngFor="let option of maximumRecordsOptions"
+                [value]="option.value">{{option.label|translate}}</mat-option>
+  </mat-select>
+  <button id="skip-cache-button"
+          class="cx-action-button cx-margin-left-5"
+          mat-flat-button
+          color="accent"
+          [matTooltip]="'scraping.tooltip.skip-cache'|translate:{enabled:skipCache}"
+          (click)="onSkipCacheToggle()">
+    <mat-icon *ngIf="skipCache">block</mat-icon>
+    <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
+    <mat-label>{{"button.skip-cache"|translate}}</mat-label>
+  </button>
 </mat-toolbar>
 <form [formGroup]="comicForm">
+  <mat-form-field class="cx-width-100">
+    <mat-label>{{"comic.label.api-key"|translate}}</mat-label>
+    <input id="api-key"
+           matInput
+           formControlName="apiKey"
+           [placeholder]="'comic.placeholder.api-key'|translate">
+    <button id="save-api-key-button"
+            class="cx-action-button cx-margin-left-5"
+            mat-flat-button
+            matSuffix
+            color="primary"
+            [disabled]="!hasApiKey"
+            (click)="onSaveApiKey()">
+      <mat-icon>save</mat-icon>
+      <mat-label>{{"button.save"|translate}}</mat-label>
+    </button>
+    <button id="reset-api-key-button"
+            class="cx-action-button cx-margin-left-5"
+            mat-flat-button
+            matSuffix
+            color="warn"
+            (click)="onResetApiKey()">
+      <mat-icon>undo</mat-icon>
+      <mat-label>{{"button.reset"|translate}}</mat-label>
+    </button>
+  </mat-form-field>
   <mat-form-field class="cx-width-100">
     <mat-label>{{"comic.label.publisher"|translate}}</mat-label>
     <input matInput

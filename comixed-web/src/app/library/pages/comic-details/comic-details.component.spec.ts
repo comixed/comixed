@@ -23,7 +23,7 @@ import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -50,20 +50,35 @@ import {
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
 import { MatDialogRef } from '@angular/material/dialog';
+import {
+  initialState as initialScrapingState,
+  SCRAPING_FEATURE_KEY
+} from '@app/library/reducers/scraping.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
+import { loadScrapingVolumes } from '@app/library/actions/scraping.actions';
 
 describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
   const OTHER_COMIC = COMIC_2;
+  const USER = USER_READER;
+  const API_KEY = '1234567890ABCDEF';
+  const SERIES = 'The Series';
+  const VOLUME = '2000';
+  const ISSUE_NUMBER = '27';
+  const MAXIMUM_RECORDS = 100;
+  const SKIP_CACHE = Math.random() > 0.5;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [USER_FEATURE_KEY]: { ...initialUserState },
-    [DISPLAY_FEATURE_KEY]: { ...initialDisplayState }
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+    [DISPLAY_FEATURE_KEY]: { ...initialDisplayState },
+    [SCRAPING_FEATURE_KEY]: { ...initialScrapingState }
   };
 
   let component: ComicDetailsComponent;
   let fixture: ComponentFixture<ComicDetailsComponent>;
   let router: Router;
   let activatedRoute: ActivatedRoute;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -104,6 +119,8 @@ describe('ComicDetailsComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     activatedRoute = TestBed.inject(ActivatedRoute);
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     fixture.detectChanges();
   }));
 
@@ -152,6 +169,42 @@ describe('ComicDetailsComponent', () => {
     it('updates the URL when the tab changes', () => {
       component.onTabChange(TAB);
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('loading the scraping volumes', () => {
+    beforeEach(() => {
+      component.onLoadScrapingVolumes(
+        API_KEY,
+        SERIES,
+        VOLUME,
+        ISSUE_NUMBER,
+        MAXIMUM_RECORDS,
+        SKIP_CACHE
+      );
+    });
+
+    it('holds the series name', () => {
+      expect(component.scrapingSeriesName).toEqual(SERIES);
+    });
+
+    it('holds the volume', () => {
+      expect(component.scrapingVolume).toEqual(VOLUME);
+    });
+
+    it('holds the issue number', () => {
+      expect(component.scrapingIssueNumber).toEqual(ISSUE_NUMBER);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        loadScrapingVolumes({
+          apiKey: API_KEY,
+          series: SERIES,
+          maximumRecords: MAXIMUM_RECORDS,
+          skipCache: SKIP_CACHE
+        })
+      );
     });
   });
 });

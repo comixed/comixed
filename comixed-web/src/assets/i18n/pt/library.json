@@ -59,6 +59,7 @@
       "added-date": "Added To Library",
       "archive-type": "File Encoded As",
       "characters": "Characters In This Issue ({count})",
+      "api-key": "API Key",
       "comic-edit": "Edit Details",
       "comic-format": "Comic Format",
       "comic-overview": "Overview",
@@ -85,6 +86,7 @@
       "volume": "Volume"
     },
     "placeholder": {
+      "api-key": "The API key used when scraping comics...",
       "issue-number": "The issue number...",
       "publisher": "The publisher...",
       "series": "The series name...",
@@ -101,6 +103,9 @@
     }
   },
   "scraping": {
+    "scraping-issue-detail-subtitle": "Cover Date: {date}",
+    "scrape-comic-confirmation-title": "Replace Comic Data",
+    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
     "load-scraping-volumes": {
       "effect-failure": "Failed to load any volumes..."
     },
@@ -110,6 +115,27 @@
     "scrape-comic": {
       "effect-success": "Comic successfully scraped!",
       "effect-failure": "Failed to scrape comic."
+    },
+    "label": {
+      "100-records": "100 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records",
+      "matchability": "Match",
+      "publisher": "Publisher",
+      "series-name": "Series",
+      "start-year": "Start Year",
+      "issue-count": "# Issues"
+    },
+    "text": {
+      "exact-match": "Exact",
+      "near-match": "Near",
+      "no-match": "No"
+    },
+    "tooltip": {
+      "cancel-scraping": "Stop scraping comics.",
+      "skip-cache": "If enabled, skips the scraping cache, currently {enabled, select, true{ENABLED} other{DISABLED}}",
+      "reject-scraping-issue": "Reject this issue.",
+      "select-scraping-issue": "Select this issue."
     }
   }
 }

@@ -405,7 +405,7 @@ export const COMIC_5: Comic = {
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
   fileEntries: [],
-  readingLists: [],
+  readingLists: []
 };
 
 export const SCRAPING_VOLUME_1: ScrapingVolume = {
@@ -414,7 +414,7 @@ export const SCRAPING_VOLUME_1: ScrapingVolume = {
   publisher: 'Publisher 1',
   startYear: '2000',
   imageUrl: 'http://sitecom/what',
-  issueCount: 17,
+  issueCount: 17
 };
 
 export const SCRAPING_VOLUME_2: ScrapingVolume = {
@@ -423,7 +423,7 @@ export const SCRAPING_VOLUME_2: ScrapingVolume = {
   publisher: 'Publisher 1',
   startYear: '2010',
   imageUrl: 'http://sitecom/what',
-  issueCount: 17,
+  issueCount: 17
 };
 
 export const SCRAPING_VOLUME_3: ScrapingVolume = {
@@ -432,7 +432,7 @@ export const SCRAPING_VOLUME_3: ScrapingVolume = {
   publisher: 'Publisher 1',
   startYear: '2020',
   imageUrl: 'http://sitecom/what',
-  issueCount: 17,
+  issueCount: 17
 };
 
 export const SCRAPING_ISSUE_1: ScrapingIssue = {
