@@ -18,6 +18,7 @@
 
 package org.comixedproject.scrapers.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import lombok.Getter;
@@ -35,11 +36,13 @@ public class ScrapingIssue {
   private int id;
 
   @JsonProperty(value = "coverDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @Getter
   @Setter
   private Date coverDate;
 
   @JsonProperty("storeDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @Getter
   @Setter
   private String storeDate;

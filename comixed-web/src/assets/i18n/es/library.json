@@ -99,5 +99,17 @@
       "go-to-next-comic": "Go to the next comic in this series...",
       "go-to-previous-comic": "Go to the previous comic in this series..."
     }
+  },
+  "scraping": {
+    "load-scraping-volumes": {
+      "effect-failure": "Failed to load any volumes..."
+    },
+    "load-scraping-issue": {
+      "effect-failure": "Failed to load issue..."
+    },
+    "scrape-comic": {
+      "effect-success": "Comic successfully scraped!",
+      "effect-failure": "Failed to scrape comic."
+    }
   }
 }

@@ -44,7 +44,7 @@ public class ComicVineGetIssueDetailsActionTest {
   private static final String TEST_API_KEY = "This.Is.A.Test.Key";
   private static final Integer TEST_ISSUE_ID = 337;
   private static final String TEST_VOLUME_NAME = "Volume Name";
-  private static final String TEST_PUBISHER_NAME = "Publisher Name";
+  private static final String TEST_PUBLISHER_NAME = "Publisher Name";
   private static final String TEST_VOLUME_DETAILS_URL = "http://comicvine.gamespot.com/volume.url";
   private static final String TEST_PUBLISHER_DETAILS_API =
       "http://comicvine.gamespot.com/publisher_url";
@@ -112,7 +112,7 @@ public class ComicVineGetIssueDetailsActionTest {
     Mockito.when(comicVineVolume.getName()).thenReturn(TEST_VOLUME_NAME);
     Mockito.when(comicVineVolume.getStartYear()).thenReturn(TEST_START_YEAR);
 
-    Mockito.when(comicVinePublisher.getName()).thenReturn(TEST_PUBISHER_NAME);
+    Mockito.when(comicVinePublisher.getName()).thenReturn(TEST_PUBLISHER_NAME);
     Mockito.when(comicVinePublisher.getDetailUrl()).thenReturn(TEST_PUBLISHER_DETAILS_API);
 
     Mockito.when(comicVineIssue.getCharacters()).thenReturn(characters);
@@ -191,7 +191,7 @@ public class ComicVineGetIssueDetailsActionTest {
     this.verifyGetVolumeDetailsAction();
     this.verifyGetPublisherDetailsAction();
 
-    assertEquals(TEST_PUBISHER_NAME, result.getPublisher());
+    assertEquals(TEST_PUBLISHER_NAME, result.getPublisher());
     assertEquals(TEST_VOLUME_NAME, result.getSeries());
     assertEquals(TEST_START_YEAR, result.getVolume());
     assertEquals(TEST_ISSUE_NUMBER, result.getIssueNumber());

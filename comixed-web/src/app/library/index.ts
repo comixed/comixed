@@ -34,6 +34,11 @@ import {
   DisplayState,
   reducer as displayReducer
 } from '@app/library/reducers/display.reducer';
+import {
+  reducer as scrapingReducer,
+  SCRAPING_FEATURE_KEY,
+  ScrapingState
+} from '@app/library/reducers/scraping.reducer';
 
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
@@ -45,7 +50,6 @@ export { Page } from '@app/library/models/page';
 export { PageType } from '@app/library/models/page-type';
 export { ReadingList } from '@app/library/models/reading-list';
 export { ScanType } from '@app/library/models/scan-type';
-
 export { updateComics } from '@app/library/actions/library.actions';
 
 interface RouterStateUrl {
@@ -59,6 +63,7 @@ export interface LibraryModuleState {
   [DISPLAY_FEATURE_KEY]: DisplayState;
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
+  [SCRAPING_FEATURE_KEY]: ScrapingState;
 }
 
 export type ModuleState = LibraryModuleState;
@@ -67,5 +72,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: routerReducer,
   [DISPLAY_FEATURE_KEY]: displayReducer,
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
-  [LIBRARY_FEATURE_KEY]: libraryReducer
+  [LIBRARY_FEATURE_KEY]: libraryReducer,
+  [SCRAPING_FEATURE_KEY]: scrapingReducer
 };
