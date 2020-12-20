@@ -16,24 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ComicFile} from '@app/library/models/comic-file';
-import {LoggerService} from '@angular-ru/logger';
-import {Store} from '@ngrx/store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ComicFile } from '@app/library/models/comic-file';
+import { LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
 import {
   selectComicFiles,
   selectComicFileSelections,
   selectComicImportState
 } from '@app/library/selectors/comic-import.selectors';
-import {setBusyState} from '@app/core/actions/busy.actions';
-import {ConfirmationService} from '@app/core';
-import {TranslateService} from '@ngx-translate/core';
-import {sendComicFiles} from '@app/library/actions/comic-import.actions';
-import {selectUser} from '@app/user/selectors/user.selectors';
-import {filter} from 'rxjs/operators';
-import {getUserPreference, User} from '@app/user';
-import {Title} from '@angular/platform-browser';
+import { setBusyState } from '@app/core/actions/busy.actions';
+import { ConfirmationService } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
+import { sendComicFiles } from '@app/library/actions/comic-import.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { filter } from 'rxjs/operators';
+import { getUserPreference, User } from '@app/user';
+import { Title } from '@angular/platform-browser';
 import {
   DELETE_BLOCKED_PAGES_DEFAULT,
   DELETE_BLOCKED_PAGES_PREFERENCE,
@@ -42,9 +42,9 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
-import {MatDialog} from '@angular/material/dialog';
-import {ComicFileDetailsComponent} from '@app/library/components/comic-file-details/comic-file-details.component';
-import {ComicFileDetailsData} from '@app/library/models/ui/comic-file-details-data';
+import { MatDialog } from '@angular/material/dialog';
+import { ComicFileDetailsComponent } from '@app/library/components/comic-file-details/comic-file-details.component';
+import { ComicFileDetailsData } from '@app/library/models/ui/comic-file-details-data';
 
 @Component({
   selector: 'cx-import-comics',
@@ -117,7 +117,7 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
         if (this.busy !== busy) {
           this.logger.debug('Setting busy state:', busy);
           this.busy = busy;
-          this.store.dispatch(setBusyState({enabled: busy}));
+          this.store.dispatch(setBusyState({ enabled: busy }));
         }
         this.importing = state.importing;
       });
@@ -154,7 +154,7 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
       ),
       message: this.translateService.instant(
         'import-comic-files.confirm-start-message',
-        {count: this.selectedFiles.length}
+        { count: this.selectedFiles.length }
       ),
       confirm: () => {
         this.logger.debug('Starting import');

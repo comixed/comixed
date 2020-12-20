@@ -16,18 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {Component, Input} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {LoggerService} from '@angular-ru/logger';
-import {Store} from '@ngrx/store';
+import { Component, Input } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
 import {
   clearComicFileSelections,
   loadComicFiles,
   sendComicFiles,
   setComicFilesSelectedState
 } from '@app/library/actions/comic-import.actions';
-import {getUserPreference, User} from '@app/user';
-import {ComicFile} from '@app/library';
+import { getUserPreference, User } from '@app/user';
+import { ComicFile } from '@app/library';
 import {
   IMPORT_MAXIMUM_RESULTS_DEFAULT,
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
@@ -50,11 +50,11 @@ export class ComicFileToolbarComponent {
 
   const;
   maximumOptions = [
-    {label: 'load-comic-files.maximum.all-files', value: 0},
-    {label: 'load-comic-files.maximum.10-files', value: 10},
-    {label: 'load-comic-files.maximum.50-files', value: 50},
-    {label: 'load-comic-files.maximum.100-files', value: 100},
-    {label: 'load-comic-files.maximum.1000-files', value: 1000}
+    { label: 'load-comic-files.maximum.all-files', value: 0 },
+    { label: 'load-comic-files.maximum.10-files', value: 10 },
+    { label: 'load-comic-files.maximum.50-files', value: 50 },
+    { label: 'load-comic-files.maximum.100-files', value: 100 },
+    { label: 'load-comic-files.maximum.1000-files', value: 1000 }
   ];
 
   constructor(
@@ -101,7 +101,7 @@ export class ComicFileToolbarComponent {
   onSelectAll(): void {
     this.logger.trace('Selecting all comic files');
     this.store.dispatch(
-      setComicFilesSelectedState({files: this.comicFiles, selected: true})
+      setComicFilesSelectedState({ files: this.comicFiles, selected: true })
     );
   }
 

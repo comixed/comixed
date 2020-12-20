@@ -19,7 +19,7 @@
 import {
   ComicImportState,
   initialState,
-  reducer,
+  reducer
 } from './comic-import.reducer';
 import {
   clearComicFileSelections,
@@ -30,13 +30,13 @@ import {
   sendComicFiles,
   sendComicFilesFailed,
   setComicFilesSelectedState,
-  setImportingComicsState,
+  setImportingComicsState
 } from '@app/library/actions/comic-import.actions';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  ROOT_DIRECTORY,
+  ROOT_DIRECTORY
 } from '@app/library/library.fixtures';
 
 describe('ComicImport Reducer', () => {
@@ -138,7 +138,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('adds the comics to the selection list', () => {
-      FILES.forEach((file) => expect(state.selections).toContain(file));
+      FILES.forEach(file => expect(state.selections).toContain(file));
     });
   });
 
@@ -150,7 +150,7 @@ describe('ComicImport Reducer', () => {
         { ...state, selections: FILES },
         setComicFilesSelectedState({
           files: [DESELECTED_FILE],
-          selected: false,
+          selected: false
         })
       );
     });
@@ -180,7 +180,7 @@ describe('ComicImport Reducer', () => {
         sendComicFiles({
           files: FILES,
           ignoreMetadata: true,
-          deleteBlockedPages: true,
+          deleteBlockedPages: true
         })
       );
     });

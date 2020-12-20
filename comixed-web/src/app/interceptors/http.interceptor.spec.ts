@@ -24,7 +24,7 @@ import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController,
-  TestRequest,
+  TestRequest
 } from '@angular/common/http/testing';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -32,7 +32,7 @@ import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import {
   HTTP_AUTHORIZATION_HEADER,
   HTTP_REQUESTED_WITH_HEADER,
-  HTTP_XML_REQUEST,
+  HTTP_XML_REQUEST
 } from '@app/app.constants';
 
 const TEST_REQUEST_URL = 'http://localhost';
@@ -61,10 +61,10 @@ describe('HttpInterceptor', () => {
           provide: TokenService,
           useValue: {
             hasAuthToken: jasmine.createSpy('TokenService.hasAuthToken()'),
-            getAuthToken: jasmine.createSpy('TokenService.getAuthToken()'),
-          },
-        },
-      ],
+            getAuthToken: jasmine.createSpy('TokenService.getAuthToken()')
+          }
+        }
+      ]
     });
 
     tokenService = TestBed.inject(TokenService) as jasmine.SpyObj<TokenService>;
