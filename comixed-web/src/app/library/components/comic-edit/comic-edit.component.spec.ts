@@ -31,9 +31,21 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  API_KEY_PREFERENCE,
+  MAXIMUM_RECORDS_PREFERENCE
+} from '@app/library/library.constants';
 
 describe('ComicEditComponent', () => {
   const COMIC = COMIC_2;
+  const API_KEY = '1234567890ABCDEF';
+  const SKIP_CACHE = Math.random() > 0.5;
+  const MAXIMUM_RECORDS = 100;
+  const ISSUE_NUMBER = '27';
+
   const initialState = {};
 
   let component: ComicEditComponent;
@@ -54,15 +66,21 @@ describe('ComicEditComponent', () => {
         MatFormFieldModule,
         MatToolbarModule,
         MatIconModule,
-        MatInputModule
+        MatInputModule,
+        MatSelectModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({}), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicEditComponent);
     component = fixture.componentInstance;
+    component.apiKey = API_KEY;
+    component.maximumRecords = MAXIMUM_RECORDS;
+    component.skipCache = SKIP_CACHE;
     component.comic = COMIC;
     store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
@@ -92,6 +110,79 @@ describe('ComicEditComponent', () => {
 
     it('confirms with the user', () => {
       expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+  });
+
+  it('sets the API key', () => {
+    expect(component.apiKey).toEqual(API_KEY);
+  });
+
+  describe('fetching the scraping volumes', () => {
+    beforeEach(() => {
+      spyOn(component.scrape, 'emit');
+      component.onFetchScrapingVolumes();
+    });
+
+    it('emits an event', () => {
+      expect(component.scrape.emit).toHaveBeenCalledWith({
+        apiKey: API_KEY,
+        series: COMIC.series,
+        volume: COMIC.volume,
+        issueNumber: COMIC.issueNumber,
+        maximumRecords: MAXIMUM_RECORDS,
+        skipCache: SKIP_CACHE
+      });
+    });
+  });
+
+  describe('the API key', () => {
+    describe('saving it', () => {
+      beforeEach(() => {
+        component.onSaveApiKey();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({ name: API_KEY_PREFERENCE, value: API_KEY })
+        );
+      });
+    });
+
+    describe('resetting it', () => {
+      beforeEach(() => {
+        component.comicForm.controls.apiKey.setValue(API_KEY.substr(1));
+        fixture.detectChanges();
+        component.onResetApiKey();
+      });
+
+      it('restores the original value', () => {
+        expect(component.comicForm.controls.apiKey.value).toEqual(API_KEY);
+      });
+    });
+  });
+
+  describe('toggling skipping the cache', () => {
+    beforeEach(() => {
+      component.onSkipCacheToggle();
+    });
+
+    it('flips the skip cache flag', () => {
+      expect(component.skipCache).toEqual(!SKIP_CACHE);
+    });
+  });
+
+  describe('setting the maximum records', () => {
+    beforeEach(() => {
+      component.onMaximumRecordsChanged(MAXIMUM_RECORDS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: MAXIMUM_RECORDS_PREFERENCE,
+          value: `${MAXIMUM_RECORDS}`
+        })
+      );
     });
   });
 });

@@ -1,0 +1,43 @@
+@import '~styles';
+
+#cx-scraping-container {
+  display: flex;
+}
+
+#cx-scraping-volumes-content {
+  flex-grow: 1;
+}
+
+#cx-scraping-issue-detail-content {
+}
+
+.mat-column-matchability {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-startYear {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issueCount {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

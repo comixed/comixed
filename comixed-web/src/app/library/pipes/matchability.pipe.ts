@@ -16,24 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicScrapingDetailComponent } from './comic-scraping-detail.component';
+import { Pipe, PipeTransform } from '@angular/core';
 
-describe('ComicScrapingDetailComponent', () => {
-  let component: ComicScrapingDetailComponent;
-  let fixture: ComponentFixture<ComicScrapingDetailComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicScrapingDetailComponent]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ComicScrapingDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+@Pipe({
+  name: 'matchability'
+})
+export class MatchabilityPipe implements PipeTransform {
+  transform(value: number): string {
+    switch (value) {
+      case 2:
+        return 'scraping.text.exact-match';
+      case 1:
+        return 'scraping.text.near-match';
+      default:
+        return 'scraping.text.no-match';
+    }
+  }
+}

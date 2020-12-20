@@ -47,6 +47,9 @@ export const IGNORE_METADATA_DEFAULT = `${false}`;
 export const DELETE_BLOCKED_PAGES_PREFERENCE =
   'preference.import.delete-blocked-pages';
 export const DELETE_BLOCKED_PAGES_DEFAULT = `${false}`;
+export const API_KEY_PREFERENCE = 'preference.scraping.api-key';
+export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
+export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
 
 // display options
 export const PAGE_SIZE_PREFERENCE = 'preference.page-size';

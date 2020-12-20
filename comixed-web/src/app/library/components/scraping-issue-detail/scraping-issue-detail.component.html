@@ -1,0 +1,30 @@
+<mat-card>
+  <mat-card-title>{{issue|scrapingIssueTitle}}</mat-card-title>
+  <mat-card-subtitle>{{"scraping.scraping-issue-detail-subtitle"|translate:{date: issue.coverDate|date:'MMMM y'} }}</mat-card-subtitle>
+  <mat-card-content>
+    <cx-comic-page [pageSize]="pageSize"
+                   [imageUrl]="issue.coverUrl"></cx-comic-page>
+  </mat-card-content>
+  <mat-card-actions>
+    <div class="cx-action-button-container-vertical">
+      <button id="cx-select-scraping-issue-button"
+              mat-flat-button
+              class="cx-action-button"
+              color="primary"
+              [matTooltip]="'scraping.tooltip.select-scraping-issue'|translate"
+              (click)="onSelect()">
+        <mat-icon>thumb_up_alt</mat-icon>
+        <mat-label>{{"button.select"|translate}}</mat-label>
+      </button>
+      <button id="cx-cancel-scraping-issue-button"
+              mat-flat-button
+              class="cx-action-button"
+              color="accent"
+              [matTooltip]="'scraping.tooltip.reject-scraping-issue'|translate"
+              (click)="onReject()">
+        <mat-icon>thumb_down_alt</mat-icon>
+        <mat-label>{{"button.reject"|translate}}</mat-label>
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>
