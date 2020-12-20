@@ -36,7 +36,7 @@
         <cx-comic-page [imageUrl]="comic|comicCoverUrl"
                        [pageSize]="pageSize"></cx-comic-page>
       </div>
-      <div class="cx-padding-left-5">
+      <div class="cx-padding-left-5 cx-width-100">
         <mat-tab-group [selectedIndex]="currentTab"
                        (selectedTabChange)="onTabChange($event.index)">
           <mat-tab [label]="'comic.label.comic-overview'|translate">
@@ -51,7 +51,21 @@
           </mat-tab>
           <mat-tab [disabled]="!isAdmin"
                    [label]="'comic.label.comic-edit'|translate">
-            <cx-comic-edit [comic]="comic"></cx-comic-edit>
+            <cx-comic-edit *ngIf="volumes.length === 0"
+                           [comic]="comic"
+                           [apiKey]="apiKey"
+                           [skipCache]="skipCache"
+                           [maximumRecords]="maximumRecords"
+                           (scrape)="onLoadScrapingVolumes($event.apiKey, $event.series, $event.volume, $event.issueNumber, $event.maximumRecords, $event.skipCache)"></cx-comic-edit>
+            <cx-comic-scraping *ngIf="volumes.length > 0"
+                               [comic]="comic"
+                               [comicSeriesName]="scrapingSeriesName"
+                               [comicVolume]="scrapingVolume"
+                               [comicIssueNumber]="scrapingIssueNumber"
+                               [volumes]="volumes"
+                               [apiKey]="apiKey"
+                               [skipCache]="skipCache"
+                               [pageSize]="pageSize"></cx-comic-scraping>
           </mat-tab>
         </mat-tab-group>
       </div>

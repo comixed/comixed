@@ -16,15 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnInit } from '@angular/core';
+import { ScrapingIssueTitlePipe } from './scraping-issue-title.pipe';
 
-@Component({
-  selector: 'cx-comic-scraping-detail',
-  templateUrl: './comic-scraping-detail.component.html',
-  styleUrls: ['./comic-scraping-detail.component.scss']
-})
-export class ComicScrapingDetailComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-}
+describe('ScrapingIssueTitlePipe', () => {
+  it('create an instance', () => {
+    const pipe = new ScrapingIssueTitlePipe();
+    expect(pipe).toBeTruthy();
+  });
+});

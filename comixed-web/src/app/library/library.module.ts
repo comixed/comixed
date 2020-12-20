@@ -74,6 +74,10 @@ import {
   SCRAPING_FEATURE_KEY
 } from '@app/library/reducers/scraping.reducer';
 import { ScrapingEffects } from '@app/library/effects/scraping.effects';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { ScrapingIssueDetailComponent } from './components/scraping-issue-detail/scraping-issue-detail.component';
+import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
+import { MatchabilityPipe } from './pipes/matchability.pipe';
 
 @NgModule({
   declarations: [
@@ -92,7 +96,10 @@ import { ScrapingEffects } from '@app/library/effects/scraping.effects';
     ComicPageUrlPipe,
     AllComicsComponent,
     ComicDisplayOptionsComponent,
-    ComicScrapingComponent
+    ComicScrapingComponent,
+    ScrapingIssueDetailComponent,
+    ScrapingIssueTitlePipe,
+    MatchabilityPipe
   ],
   imports: [
     CommonModule,
@@ -124,7 +131,8 @@ import { ScrapingEffects } from '@app/library/effects/scraping.effects';
     MatToolbarModule,
     MatExpansionModule,
     MatSliderModule,
-    MatListModule
+    MatListModule,
+    MatPaginatorModule
   ],
   exports: [CommonModule, CoreModule]
 })

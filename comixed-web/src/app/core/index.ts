@@ -26,6 +26,7 @@ import {
 } from '@app/core/reducers/busy.reducer';
 
 export * from '@app/core/core.constants';
+export { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 export { TokenService } from '@app/core/services/token.service';
 export { AlertService } from '@app/core/services/alert.service';
 export { ConfirmationService } from '@app/core/services/confirmation.service';

@@ -16,13 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Comic } from '@app/library';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/logger';
 import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
+import { ScrapeEvent } from '@app/library/models/ui/scrape-event';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  API_KEY_PREFERENCE,
+  MAXIMUM_RECORDS_PREFERENCE,
+  SKIP_CACHE_PREFERENCE
+} from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -30,9 +37,18 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./comic-edit.component.scss']
 })
 export class ComicEditComponent implements OnInit {
-  private _comic: Comic;
+  @Input() skipCache = false;
+  @Input() maximumRecords = 0;
 
+  @Output() scrape = new EventEmitter<ScrapeEvent>();
+
+  readonly maximumRecordsOptions = [
+    { value: 0, label: 'scraping.label.all-records' },
+    { value: 100, label: 'scraping.label.100-records' },
+    { value: 1000, label: 'scraping.label.1000-records' }
+  ];
   comicForm: FormGroup;
+  scrapingMode = false;
 
   constructor(
     private logger: LoggerService,
@@ -42,6 +58,7 @@ export class ComicEditComponent implements OnInit {
     private translateService: TranslateService
   ) {
     this.comicForm = this.formBuilder.group({
+      apiKey: [''],
       publisher: [''],
       series: ['', [Validators.required]],
       volume: [''],
@@ -49,7 +66,22 @@ export class ComicEditComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  private _apiKey = '';
+
+  get apiKey(): string {
+    return this._apiKey;
+  }
+
+  @Input() set apiKey(apiKey: string) {
+    this._apiKey = apiKey;
+    this.comicForm.controls.apiKey.setValue(apiKey);
+  }
+
+  private _comic: Comic;
+
+  get comic(): Comic {
+    return this._comic;
+  }
 
   @Input() set comic(comic: Comic) {
     this.logger.trace('Loading comic form:', comic);
@@ -61,14 +93,12 @@ export class ComicEditComponent implements OnInit {
     this.comicForm.updateValueAndValidity();
   }
 
-  get comic(): Comic {
-    return this._comic;
+  get hasApiKey(): boolean {
+    const apiKey = this.comicForm.controls.apiKey.value;
+    return !!apiKey && apiKey.length > 0;
   }
 
-  private setInput(controlName: string, value: any): void {
-    this.logger.trace(`Setting form field: ${controlName}=${value}`);
-    this.comicForm.controls[controlName].setValue(value);
-  }
+  ngOnInit(): void {}
 
   onUndoChanges(): void {
     this.confirmationService.confirm({
@@ -77,7 +107,62 @@ export class ComicEditComponent implements OnInit {
       confirm: () => {
         this.logger.trace('Undoing changes');
         this.comic = this._comic;
+        this.comicForm.markAsUntouched();
       }
     });
+  }
+
+  onFetchScrapingVolumes(): void {
+    this.logger.trace('Loading scraping volumes');
+    this.scrape.emit({
+      apiKey: this.comicForm.controls.apiKey.value,
+      series: this.comicForm.controls.series.value,
+      volume: this.comicForm.controls.volume.value,
+      issueNumber: this.comicForm.controls.issueNumber.value,
+      maximumRecords: this.maximumRecords,
+      skipCache: this.skipCache
+    });
+  }
+
+  onSaveApiKey(): void {
+    this.logger.trace('Saving the new API key');
+    this.store.dispatch(
+      saveUserPreference({
+        name: API_KEY_PREFERENCE,
+        value: this.comicForm.controls.apiKey.value
+      })
+    );
+  }
+
+  onResetApiKey(): void {
+    this.logger.trace('Resetting the API key changes');
+    this.comicForm.controls.apiKey.setValue(this.apiKey);
+    this.comicForm.controls.apiKey.markAsUntouched();
+  }
+
+  onSkipCacheToggle(): void {
+    this.logger.trace('Toggling skipping the cache');
+    this.skipCache = this.skipCache === false;
+    this.store.dispatch(
+      saveUserPreference({
+        name: SKIP_CACHE_PREFERENCE,
+        value: `${this.skipCache}`
+      })
+    );
+  }
+
+  onMaximumRecordsChanged(maximumRecords: number): void {
+    this.logger.trace('Changed maximum records');
+    this.store.dispatch(
+      saveUserPreference({
+        name: MAXIMUM_RECORDS_PREFERENCE,
+        value: `${maximumRecords}`
+      })
+    );
+  }
+
+  private setInput(controlName: string, value: any): void {
+    this.logger.trace(`Setting form field: ${controlName}=${value}`);
+    this.comicForm.controls[controlName].setValue(value);
   }
 }
