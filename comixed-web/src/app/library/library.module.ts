@@ -68,6 +68,7 @@ import { DisplayEffects } from '@app/library/effects/display.effects';
 import { ComicDisplayOptionsComponent } from './components/comic-display-options/comic-display-options.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
+import { ComicScrapingDetailComponent } from './components/comic-scraping-detail/comic-scraping-detail.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { MatListModule } from '@angular/material/list';
     ComicTitlePipe,
     ComicPageUrlPipe,
     AllComicsComponent,
-    ComicDisplayOptionsComponent
+    ComicDisplayOptionsComponent,
+    ComicScrapingDetailComponent
   ],
   imports: [
     CommonModule,
