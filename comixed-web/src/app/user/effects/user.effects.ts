@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {LoggerService} from '@angular-ru/logger';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { LoggerService } from '@angular-ru/logger';
 import {
   currentUserLoaded,
   loadCurrentUser,
@@ -32,15 +32,15 @@ import {
   userLoggedOut,
   userPreferenceSaved
 } from '@app/user/actions/user.actions';
-import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
-import {UserService} from '@app/user/services/user.service';
-import {User} from '@app/user';
-import {AlertService, TokenService} from '@app/core';
-import {TranslateService} from '@ngx-translate/core';
-import {of} from 'rxjs';
-import {LoginResponse} from '@app/user/models/net/login-response';
-import {SaveUserPreferenceResponse} from '@app/user/models/net/save-user-preference-response';
-import {resetDisplayOptions} from '@app/library/actions/display.actions';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { UserService } from '@app/user/services/user.service';
+import { User } from '@app/user';
+import { AlertService, TokenService } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
+import { LoginResponse } from '@app/user/models/net/login-response';
+import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
+import { resetDisplayOptions } from '@app/library/actions/display.actions';
 
 @Injectable()
 export class UserEffects {
@@ -51,8 +51,7 @@ export class UserEffects {
     private alertService: AlertService,
     private translateService: TranslateService,
     private tokenService: TokenService
-  ) {
-  }
+  ) {}
 
   loadCurrentUser$ = createEffect(() => {
     return this.actions$.pipe(
@@ -62,8 +61,8 @@ export class UserEffects {
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
           mergeMap((response: User) => [
-            currentUserLoaded({user: response}),
-            resetDisplayOptions({user: response})
+            currentUserLoaded({ user: response }),
+            resetDisplayOptions({ user: response })
           ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
@@ -92,7 +91,7 @@ export class UserEffects {
       tap(action => this.logger.debug('Effect: logging in user:', action)),
       switchMap(action =>
         this.userService
-          .loginUser({email: action.email, password: action.password})
+          .loginUser({ email: action.email, password: action.password })
           .pipe(
             tap(response => this.logger.debug('Received response:', response)),
             tap((response: LoginResponse) =>
@@ -142,11 +141,11 @@ export class UserEffects {
       tap(action => this.logger.debug('Effect: save user preference:', action)),
       mergeMap(action =>
         this.userService
-          .saveUserPreference({name: action.name, value: action.value})
+          .saveUserPreference({ name: action.name, value: action.value })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             map((response: SaveUserPreferenceResponse) =>
-              userPreferenceSaved({user: response.user})
+              userPreferenceSaved({ user: response.user })
             ),
             catchError(error => {
               this.logger.error('Service failure:', error);

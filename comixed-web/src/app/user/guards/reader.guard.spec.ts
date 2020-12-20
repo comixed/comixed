@@ -115,7 +115,7 @@ describe('ReaderGuard', () => {
         [USER_FEATURE_KEY]: {
           ...initialUserState,
           authenticated: true,
-          user: {...USER_READER, roles: []}
+          user: { ...USER_READER, roles: [] }
         }
       });
     });

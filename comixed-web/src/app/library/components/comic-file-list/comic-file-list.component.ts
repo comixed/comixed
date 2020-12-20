@@ -28,7 +28,7 @@ import { compare } from '@app/core';
 @Component({
   selector: 'cx-comic-file-list',
   templateUrl: './comic-file-list.component.html',
-  styleUrls: ['./comic-file-list.component.scss'],
+  styleUrls: ['./comic-file-list.component.scss']
 })
 export class ComicFileListComponent implements OnInit {
   @Output() currentFile = new EventEmitter<ComicFile>();
