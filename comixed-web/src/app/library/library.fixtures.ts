@@ -26,6 +26,8 @@ import {
   PageType,
   ScanType
 } from '@app/library';
+import { ScrapingVolume } from '@app/library/models/scraping-volume';
+import { ScrapingIssue } from '@app/library/models/scraping-issue';
 
 export const ROOT_DIRECTORY = '/home/comixedadmin/Documents/comics';
 
@@ -403,5 +405,43 @@ export const COMIC_5: Comic = {
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1,
   fileEntries: [],
-  readingLists: []
+  readingLists: [],
+};
+
+export const SCRAPING_VOLUME_1: ScrapingVolume = {
+  id: 1,
+  name: 'Scraping Series 1',
+  publisher: 'Publisher 1',
+  startYear: '2000',
+  imageUrl: 'http://sitecom/what',
+  issueCount: 17,
+};
+
+export const SCRAPING_VOLUME_2: ScrapingVolume = {
+  id: 2,
+  name: 'Scraping Series 2',
+  publisher: 'Publisher 1',
+  startYear: '2010',
+  imageUrl: 'http://sitecom/what',
+  issueCount: 17,
+};
+
+export const SCRAPING_VOLUME_3: ScrapingVolume = {
+  id: 3,
+  name: 'Scraping Series 3',
+  publisher: 'Publisher 1',
+  startYear: '2020',
+  imageUrl: 'http://sitecom/what',
+  issueCount: 17,
+};
+
+export const SCRAPING_ISSUE_1: ScrapingIssue = {
+  id: 1,
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  coverUrl: 'http://localhost/scraping-issue-cover',
+  volumeName: '2020',
+  name: 'Scraping Series 1',
+  issueNumber: '27',
+  description: 'This is my scraping issue.'
 };

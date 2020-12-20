@@ -16,33 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * <code>GetVolumesRequest</code> represents the payload for requesting a set of volumes for a given
- * series.
+ * <code>ScrapeComicRequest</code> hols the details for scraping a single comic issue.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class GetVolumesRequest {
+@NoArgsConstructor
+public class ScrapeComicRequest {
   @JsonProperty("apiKey")
   @Getter
-  private final String apiKey;
+  @Setter
+  private String apiKey;
 
-  @JsonProperty("series")
+  @JsonProperty("issueId")
   @Getter
-  private final String series;
-
-  @JsonProperty("maxRecords")
-  @Getter
-  private final Integer maxRecords;
+  @Setter
+  private Integer issueId;
 
   @JsonProperty("skipCache")
   @Getter
-  private final Boolean skipCache;
+  @Setter
+  private Boolean skipCache;
 }

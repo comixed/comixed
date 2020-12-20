@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.scraping;
+package org.comixedproject.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.net.ComicScrapeRequest;
-import org.comixedproject.model.net.GetScrapingIssueRequest;
-import org.comixedproject.model.net.GetVolumesRequest;
+import org.comixedproject.model.net.library.LoadScrapingIssueRequest;
+import org.comixedproject.model.net.library.LoadScrapingVolumesRequest;
+import org.comixedproject.model.net.library.ScrapeComicRequest;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingVolume;
@@ -33,7 +33,11 @@ import org.comixedproject.service.scraping.ScrapingService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <code>ScrapingController</code> processes REST APIs relating to scraping comics.
@@ -41,29 +45,31 @@ import org.springframework.web.bind.annotation.*;
  * @author Darryl L. Pierce
  */
 @RestController
-@RequestMapping("/api/scraping")
 @Log4j2
 public class ScrapingController {
   @Autowired private ScrapingService scrapingService;
 
   /**
-   * Retrieves the minimal {@link ScrapingIssue} for the specified issue of the given volume.
+   * Retrieves a single {@link ScrapingIssue} for the specified issue of the given volume and issue
+   * number.
    *
    * @param volume the volume id
+   * @param issue the issue number
    * @param request the request body
    * @return the issue
    * @throws ScrapingException if an error occurs
    */
   @PostMapping(
-      value = "/volumes/{volume}/issues",
+      value = "/api/scraping/volumes/{volumeId}/issues/{issueId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public ScrapingIssue queryForIssue(
-      @PathVariable("volume") final Integer volume,
-      @RequestBody() final GetScrapingIssueRequest request)
+  public ScrapingIssue loadScrapingIssue(
+      @PathVariable("volumeId") final Integer volume,
+      @PathVariable("issueId") final String issue,
+      @RequestBody() final LoadScrapingIssueRequest request)
       throws ScrapingException {
-    String issue = request.getIssueNumber();
     boolean skipCache = request.isSkipCache();
     String apiKey = request.getApiKey();
 
@@ -81,16 +87,17 @@ public class ScrapingController {
    * @throws ScrapingException if an error occurs
    */
   @PostMapping(
-      value = "/volumes",
+      value = "/api/scraping/volumes",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public List<ScrapingVolume> queryForVolumes(@RequestBody() final GetVolumesRequest request)
-      throws ScrapingException {
+  public List<ScrapingVolume> loadScrapingVolumes(
+      @RequestBody() final LoadScrapingVolumesRequest request) throws ScrapingException {
     String apiKey = request.getApiKey();
-    boolean skipCache = request.getSkipCache();
     String series = request.getSeries();
-    final Integer maxRecords = request.getMaxRecords();
+    final int maxRecords = request.getMaxRecords();
+    boolean skipCache = request.getSkipCache();
 
     log.info(
         "Getting volumes: series={} (max records={}) {}",
@@ -105,22 +112,22 @@ public class ScrapingController {
    * Scrapes a single {@link Comic} using the specified source issue.
    *
    * @param comicId the comic id
-   * @param issueId the issue id
    * @param request the request body
    * @return the scraped and updated {@link Comic}
    * @throws ScrapingException if an error occurs
    */
   @PostMapping(
-      value = "/comics/{comicId}/issue/{issueId}",
+      value = "/api/scraping/comics/{comicId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
   @JsonView(View.ComicDetailsView.class)
-  public Comic scrapeAndSaveComicDetails(
-      @PathVariable("comicId") final Long comicId,
-      @PathVariable("issueId") final Integer issueId,
-      @RequestBody() final ComicScrapeRequest request)
+  public Comic scrapeComic(
+      @PathVariable("comicId") final Long comicId, @RequestBody() final ScrapeComicRequest request)
       throws ScrapingException {
     boolean skipCache = request.getSkipCache();
+    Integer issueId = request.getIssueId();
     String apiKey = request.getApiKey();
 
     log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);

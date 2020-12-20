@@ -16,38 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class GetScrapingIssueRequest {
+/**
+ * <code>LoadScrapingIssueRequest</code> represents the request to load a single scraping issue.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoadScrapingIssueRequest {
   @JsonProperty("apiKey")
+  @Getter
   private String apiKey;
 
   @JsonProperty("skipCache")
+  @Getter
   private boolean skipCache;
-
-  @JsonProperty("issueNumber")
-  private String issueNumber;
-
-  public GetScrapingIssueRequest() {}
-
-  public GetScrapingIssueRequest(
-      final String apiKey, final boolean skipCache, final String issueNumber) {
-    this.apiKey = apiKey;
-    this.skipCache = skipCache;
-    this.issueNumber = issueNumber;
-  }
-
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  public boolean isSkipCache() {
-    return skipCache;
-  }
-
-  public String getIssueNumber() {
-    return issueNumber;
-  }
 }
