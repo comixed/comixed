@@ -25,7 +25,4 @@ export const selectUserState = createFeatureSelector<UserState>(
 );
 
 /** Selects for the user. */
-export const selectUser = createSelector(
-  selectUserState,
-  state => state.user
-);
+export const selectUser = createSelector(selectUserState, state => state.user);

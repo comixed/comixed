@@ -18,17 +18,17 @@
 
 import {
   COMIC_IMPORT_FEATURE_KEY,
-  ComicImportState,
+  ComicImportState
 } from '../reducers/comic-import.reducer';
 import {
   selectComicFiles,
   selectComicFileSelections,
-  selectComicImportState,
+  selectComicImportState
 } from './comic-import.selectors';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
-  COMIC_FILE_3,
+  COMIC_FILE_3
 } from '@app/library/library.fixtures';
 
 describe('ComicImport Selectors', () => {
@@ -42,14 +42,14 @@ describe('ComicImport Selectors', () => {
       files: FILES,
       selections: FILES,
       sending: Math.random() > 0.5,
-      importing: Math.random() > 0.5,
+      importing: Math.random() > 0.5
     };
   });
 
   it('should select the feature state', () => {
     expect(
       selectComicImportState({
-        [COMIC_IMPORT_FEATURE_KEY]: state,
+        [COMIC_IMPORT_FEATURE_KEY]: state
       })
     ).toEqual(state);
   });
@@ -57,7 +57,7 @@ describe('ComicImport Selectors', () => {
   it('should select the comic files', () => {
     expect(
       selectComicFiles({
-        [COMIC_IMPORT_FEATURE_KEY]: state,
+        [COMIC_IMPORT_FEATURE_KEY]: state
       })
     ).toEqual(state.files);
   });
@@ -65,7 +65,7 @@ describe('ComicImport Selectors', () => {
   it('should select the selected comic files', () => {
     expect(
       selectComicFileSelections({
-        [COMIC_IMPORT_FEATURE_KEY]: state,
+        [COMIC_IMPORT_FEATURE_KEY]: state
       })
     ).toEqual(state.selections);
   });

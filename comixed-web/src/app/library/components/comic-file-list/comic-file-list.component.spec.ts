@@ -24,11 +24,11 @@ import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  COMIC_FILE_4,
+  COMIC_FILE_4
 } from '@app/library/library.fixtures';
 import {
   COMIC_IMPORT_FEATURE_KEY,
-  initialState as initialComicImportState,
+  initialState as initialComicImportState
 } from '@app/library/reducers/comic-import.reducer';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
@@ -51,9 +51,9 @@ describe('ComicFileListComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         MatTableModule,
-        MatCheckboxModule,
+        MatCheckboxModule
       ],
-      providers: [provideMockStore({ initialState })],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicFileListComponent);
@@ -158,7 +158,7 @@ describe('ComicFileListComponent', () => {
 
   describe('selecting a row', () => {
     it('emits an event', () => {
-      component.currentFile.subscribe((response) =>
+      component.currentFile.subscribe(response =>
         expect(response).toEqual(FILE)
       );
     });
