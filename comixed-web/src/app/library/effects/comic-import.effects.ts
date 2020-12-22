@@ -96,7 +96,7 @@ export class ComicImportEffects {
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.general-effect-failure-detail')
+          this.translateService.instant('app.general-effect-failure')
         );
         return of(loadComicFilesFailed());
       })
@@ -149,7 +149,7 @@ export class ComicImportEffects {
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.general-effect-failure-detail')
+          this.translateService.instant('app.general-effect-failure')
         );
         return of(sendComicFilesFailed());
       })
