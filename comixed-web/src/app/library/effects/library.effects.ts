@@ -63,7 +63,7 @@ export class LibraryEffects {
       catchError(error => {
         this.logger.error('general failure:', error);
         this.alertService.error(
-          this.translateService.instant('app.general-effect-failure-detail')
+          this.translateService.instant('app.general-effect-failure')
         );
         return of(loadComicFailed());
       })

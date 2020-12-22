@@ -99,5 +99,8 @@
       "go-to-next-comic": "Go to the next comic in this series...",
       "go-to-previous-comic": "Go to the previous comic in this series..."
     }
+  },
+  "scraping": {
+    "load-volumes-effect-failure": "Failed to load any volumes..."
   }
 }

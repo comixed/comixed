@@ -1,7 +1,7 @@
 {
   "app": {
     "logged-in": "Logged in: {email}",
-    "general-effect-failure-detail": "A general error has occurred."
+    "general-effect-failure": "A general error has occurred."
   },
   "button": {
     "deselect": "Deselect",
