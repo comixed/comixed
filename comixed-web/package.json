@@ -8,13 +8,21 @@
     "test": "ng test --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "code-cleanup": "prettier --write 'src/app/**/*.ts'"
+    "code-cleanup": "prettier --write 'src/app/**/*.{ts,json,html,scss}'"
   },
   "prettier": {
     "singleQuote": true,
     "useTabs": false,
     "bracketSpacing": true,
-    "jsxBracketSameLine": true
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular",
+          "singleQuote": false
+        }
+      }
+    ]
   },
   "private": true,
   "dependencies": {

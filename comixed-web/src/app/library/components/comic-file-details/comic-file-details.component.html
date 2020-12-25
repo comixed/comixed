@@ -1,39 +1,54 @@
-<mat-card *ngIf="file"
-          [style.width]="cardWidth">
-  <mat-card-title class="cx-text-nowrap"
-                  [matTooltip]="file.baseFilename">{{file.baseFilename}}</mat-card-title>
+<mat-card *ngIf="file" [style.width]="cardWidth">
+  <mat-card-title class="cx-text-nowrap" [matTooltip]="file.baseFilename">{{
+    file.baseFilename
+  }}</mat-card-title>
   <mat-card-content>
-    <cx-comic-page [imageUrl]="file|comicFileCoverUrl"
-                   [pageSize]="pageSize"></cx-comic-page>
+    <cx-comic-page
+      [imageUrl]="file | comicFileCoverUrl"
+      [pageSize]="pageSize"
+    ></cx-comic-page>
   </mat-card-content>
   <mat-card-footer>
-    <div class="cx-width-100 cx-text-nowrap">{{"import-comic-files.text.file-size"|translate:{size: file.size|number:'1.0'} }}</div>
+    <div class="cx-width-100 cx-text-nowrap">
+      {{
+        "import-comic-files.text.file-size"
+          | translate: { size: file.size | number: "1.0" }
+      }}
+    </div>
   </mat-card-footer>
   <mat-card-actions>
-    <button mat-flat-button
-            color="accent"
-            [disabled]="noPreviousFile"
-            (click)="onPreviousFile()">
+    <button
+      mat-flat-button
+      color="accent"
+      [disabled]="noPreviousFile"
+      (click)="onPreviousFile()"
+    >
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <button *ngIf="selected"
-            mat-flat-button
-            color="warn"
-            (click)="onSelectFile(false)">
+    <button
+      *ngIf="selected"
+      mat-flat-button
+      color="warn"
+      (click)="onSelectFile(false)"
+    >
       <mat-icon>remove</mat-icon>
-      <span>{{"button.deselect"|translate}}</span>
+      <span>{{ "button.deselect" | translate }}</span>
     </button>
-    <button *ngIf="!selected"
-            mat-flat-button
-            color="primary"
-            (click)="onSelectFile(true)">
+    <button
+      *ngIf="!selected"
+      mat-flat-button
+      color="primary"
+      (click)="onSelectFile(true)"
+    >
       <mat-icon>add_box</mat-icon>
-      <span>{{"button.select"|translate}}</span>
+      <span>{{ "button.select" | translate }}</span>
     </button>
-    <button mat-flat-button
-            color="accent"
-            [disabled]="noNextFile"
-            (click)="onNextFile()">
+    <button
+      mat-flat-button
+      color="accent"
+      [disabled]="noNextFile"
+      (click)="onNextFile()"
+    >
       <mat-icon>arrow_forward</mat-icon>
     </button>
   </mat-card-actions>

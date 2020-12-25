@@ -1,103 +1,136 @@
 <mat-toolbar>
-  <button id="save-comic-changes"
-          class="cx-action-button cx-margin-left-5"
-          mat-flat-button
-          color="primary"
-          [disabled]="!comicForm.valid">
+  <button
+    id="save-comic-changes"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="primary"
+    [disabled]="!comicForm.valid"
+  >
     <mat-icon>save</mat-icon>
-    <mat-label>{{"button.save"|translate}}</mat-label>
+    <mat-label>{{ "button.save" | translate }}</mat-label>
   </button>
-  <button id="scrape-comic"
-          class="cx-action-button cx-margin-left-5"
-          mat-flat-button
-          color="accent"
-          [disabled]="!comicForm.valid && hasApiKey"
-          (click)="onFetchScrapingVolumes()">
+  <button
+    id="scrape-comic"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="accent"
+    [disabled]="!comicForm.valid && hasApiKey"
+    (click)="onFetchScrapingVolumes()"
+  >
     <mat-icon>cloud_circle</mat-icon>
-    <mat-label>{{"button.scrape"|translate}}</mat-label>
+    <mat-label>{{ "button.scrape" | translate }}</mat-label>
   </button>
-  <button id="undo-comic-changes"
-          class="cx-action-button cx-margin-left-5"
-          mat-flat-button
-          color="warn"
-          [disabled]="comicForm.untouched"
-          (click)="onUndoChanges()">
+  <button
+    id="undo-comic-changes"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="warn"
+    [disabled]="comicForm.untouched"
+    (click)="onUndoChanges()"
+  >
     <mat-icon>undo</mat-icon>
-    <mat-label>{{"button.reset"|translate}}</mat-label>
+    <mat-label>{{ "button.reset" | translate }}</mat-label>
   </button>
   <div class="cx-spacer"></div>
-  <mat-select id="maximum-records-select"
-              [(value)]="maximumRecords"
-              (selectionChange)="onMaximumRecordsChanged($event.value)">
-    <mat-option *ngFor="let option of maximumRecordsOptions"
-                [value]="option.value">{{option.label|translate}}</mat-option>
+  <mat-select
+    id="maximum-records-select"
+    [(value)]="maximumRecords"
+    (selectionChange)="onMaximumRecordsChanged($event.value)"
+  >
+    <mat-option
+      *ngFor="let option of maximumRecordsOptions"
+      [value]="option.value"
+      >{{ option.label | translate }}</mat-option
+    >
   </mat-select>
-  <button id="skip-cache-button"
-          class="cx-action-button cx-margin-left-5"
-          mat-flat-button
-          color="accent"
-          [matTooltip]="'scraping.tooltip.skip-cache'|translate:{enabled:skipCache}"
-          (click)="onSkipCacheToggle()">
+  <button
+    id="skip-cache-button"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="accent"
+    [matTooltip]="
+      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
+    "
+    (click)="onSkipCacheToggle()"
+  >
     <mat-icon *ngIf="skipCache">block</mat-icon>
     <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
-    <mat-label>{{"button.skip-cache"|translate}}</mat-label>
+    <mat-label>{{ "button.skip-cache" | translate }}</mat-label>
   </button>
 </mat-toolbar>
 <form [formGroup]="comicForm">
   <mat-form-field class="cx-width-100">
-    <mat-label>{{"comic.label.api-key"|translate}}</mat-label>
-    <input id="api-key"
-           matInput
-           formControlName="apiKey"
-           [placeholder]="'comic.placeholder.api-key'|translate">
-    <button id="save-api-key-button"
-            class="cx-action-button cx-margin-left-5"
-            mat-flat-button
-            matSuffix
-            color="primary"
-            [disabled]="!hasApiKey"
-            (click)="onSaveApiKey()">
+    <mat-label>{{ "comic.label.api-key" | translate }}</mat-label>
+    <input
+      id="api-key"
+      matInput
+      formControlName="apiKey"
+      [placeholder]="'comic.placeholder.api-key' | translate"
+    />
+    <button
+      id="save-api-key-button"
+      class="cx-action-button cx-margin-left-5"
+      mat-flat-button
+      matSuffix
+      color="primary"
+      [disabled]="!hasApiKey"
+      (click)="onSaveApiKey()"
+    >
       <mat-icon>save</mat-icon>
-      <mat-label>{{"button.save"|translate}}</mat-label>
+      <mat-label>{{ "button.save" | translate }}</mat-label>
     </button>
-    <button id="reset-api-key-button"
-            class="cx-action-button cx-margin-left-5"
-            mat-flat-button
-            matSuffix
-            color="warn"
-            (click)="onResetApiKey()">
+    <button
+      id="reset-api-key-button"
+      class="cx-action-button cx-margin-left-5"
+      mat-flat-button
+      matSuffix
+      color="warn"
+      (click)="onResetApiKey()"
+    >
       <mat-icon>undo</mat-icon>
-      <mat-label>{{"button.reset"|translate}}</mat-label>
+      <mat-label>{{ "button.reset" | translate }}</mat-label>
     </button>
   </mat-form-field>
   <mat-form-field class="cx-width-100">
-    <mat-label>{{"comic.label.publisher"|translate}}</mat-label>
-    <input matInput
-           formControlName="publisher"
-           [placeholder]="'comic.placeholder.publisher'|translate">
+    <mat-label>{{ "comic.label.publisher" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="publisher"
+      [placeholder]="'comic.placeholder.publisher' | translate"
+    />
   </mat-form-field>
   <mat-form-field class="cx-width-100">
-    <mat-label>{{"comic.label.series"|translate}}</mat-label>
-    <input matInput
-           formControlName="series"
-           [placeholder]="'comic.placeholder.series'|translate"
-           required>
-    <mat-hint>{{"comic.hint.required-for-scraping"|translate}}</mat-hint>
-    <mat-error *ngIf="comicForm.controls.series.errors?.required">{{"validation.field-required"|translate}}</mat-error>
+    <mat-label>{{ "comic.label.series" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="series"
+      [placeholder]="'comic.placeholder.series' | translate"
+      required
+    />
+    <mat-hint>{{ "comic.hint.required-for-scraping" | translate }}</mat-hint>
+    <mat-error *ngIf="comicForm.controls.series.errors?.required">{{
+      "validation.field-required" | translate
+    }}</mat-error>
   </mat-form-field>
   <mat-form-field class="cx-width-50">
-    <mat-label>{{"comic.label.volume"|translate}}</mat-label>
-    <input matInput
-           formControlName="volume"
-           [placeholder]="'comic.placeholder.volume'|translate">
+    <mat-label>{{ "comic.label.volume" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="volume"
+      [placeholder]="'comic.placeholder.volume' | translate"
+    />
   </mat-form-field>
   <mat-form-field class="cx-width-50">
-    <mat-label>{{"comic.label.issue-number"|translate}}</mat-label>
-    <input matInput
-           formControlName="issueNumber"
-           [placeholder]="'comic.placeholder.issue-number'|translate"
-           required>
-    <mat-hint>{{"comic.hint.required-for-scraping"|translate}}</mat-hint>
-    <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">{{"validation.field-required"|translate}}</mat-error>
+    <mat-label>{{ "comic.label.issue-number" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="issueNumber"
+      [placeholder]="'comic.placeholder.issue-number' | translate"
+      required
+    />
+    <mat-hint>{{ "comic.hint.required-for-scraping" | translate }}</mat-hint>
+    <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">{{
+      "validation.field-required" | translate
+    }}</mat-error>
   </mat-form-field>
 </form>

@@ -1,22 +1,18 @@
 <h1 mat-dialog-title>
-  {{title}}
+  {{ title }}
 </h1>
 
 <div mat-dialog-content>
-  <p>{{message}}</p>
+  <p>{{ message }}</p>
 </div>
 
 <div mat-dialog-actions>
-  <button mat-icon-button
-          color="accent"
-          (click)="onDecline()">
+  <button mat-icon-button color="accent" (click)="onDecline()">
     <mat-icon>cancel</mat-icon>
-    <mat-label>{{noButton}}</mat-label>
+    <mat-label>{{ noButton }}</mat-label>
   </button>
-  <button mat-icon-button
-          color="primary"
-          (click)="onConfirm()">
+  <button mat-icon-button color="primary" (click)="onConfirm()">
     <mat-icon>check</mat-icon>
-    <mat-label>{{yesButton}}</mat-label>
+    <mat-label>{{ yesButton }}</mat-label>
   </button>
 </div>
