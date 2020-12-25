@@ -1,73 +1,66 @@
 <mat-toolbar class="cx-width-100">
-  <button *ngIf="!user"
-          mat-icon-button
-          color="primary"
-          [matTooltip]="'user.login-user.login-tooltip' | translate"
-          (click)="onLogin()">
+  <button
+    *ngIf="!user"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'user.login-user.login-tooltip' | translate"
+    (click)="onLogin()"
+  >
     <mat-icon>login</mat-icon>
   </button>
-  <button *ngIf="!!user"
-          mat-icon-button
-          [matMenuTriggerFor]="menu">
+  <button *ngIf="!!user" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-label class="cx-spacer">ComiXed</mat-label>
   <mat-label *ngIf="!!user">
-    {{ 'app.logged-in' | translate: {email: user.email} }}
-    <button mat-icon-button
-            color="warn"
-            [matTooltip]="'user.login-user.logout-tooltip' | translate"
-            (click)="onLogout()">
+    {{ "app.logged-in" | translate: { email: user.email } }}
+    <button
+      mat-icon-button
+      color="warn"
+      [matTooltip]="'user.login-user.logout-tooltip' | translate"
+      (click)="onLogout()"
+    >
       <mat-icon>logout</mat-icon>
     </button>
   </mat-label>
 </mat-toolbar>
 
 <mat-menu #menu="matMenu">
-  <button *ngIf="isReader"
-          mat-menu-item
-          [matMenuTriggerFor]="libraryMenu">
+  <button *ngIf="isReader" mat-menu-item [matMenuTriggerFor]="libraryMenu">
     <mat-icon>local_library</mat-icon>
-    <mat-label>{{ 'menu.library-menu.root' | translate }}</mat-label>
+    <mat-label>{{ "menu.library-menu.root" | translate }}</mat-label>
   </button>
-  <button *ngIf="isAdmin"
-          mat-menu-item
-          [matMenuTriggerFor]="adminMenu">
+  <button *ngIf="isAdmin" mat-menu-item [matMenuTriggerFor]="adminMenu">
     <mat-icon>admin_panel_settings</mat-icon>
-    <mat-label>{{ 'menu.admin-menu.root' | translate }}</mat-label>
+    <mat-label>{{ "menu.admin-menu.root" | translate }}</mat-label>
   </button>
-  <button *ngIf="isReader"
-          mat-menu-item
-          [matMenuTriggerFor]="optionsMenu">
+  <button *ngIf="isReader" mat-menu-item [matMenuTriggerFor]="optionsMenu">
     <mat-icon>settings</mat-icon>
-    <mat-label>{{ 'menu.options-menu.root' | translate }}</mat-label>
+    <mat-label>{{ "menu.options-menu.root" | translate }}</mat-label>
   </button>
 </mat-menu>
 
 <mat-menu #libraryMenu="matMenu">
-  <button mat-menu-item
-          [routerLink]="['library']">
+  <button mat-menu-item [routerLink]="['library']">
     <mat-icon>library_books</mat-icon>
-    <mat-label>{{ 'menu.library-menu.all-comics' | translate }}</mat-label>
+    <mat-label>{{ "menu.library-menu.all-comics" | translate }}</mat-label>
   </button>
 </mat-menu>
 
 <mat-menu #adminMenu="matMenu">
-  <button mat-menu-item
-          [routerLink]="['admin', 'import']">
+  <button mat-menu-item [routerLink]="['admin', 'import']">
     <mat-icon>import_export</mat-icon>
     <mat-label>{{
-      'menu.admin-menu.import-comic-files' | translate
-      }}</mat-label>
+      "menu.admin-menu.import-comic-files" | translate
+    }}</mat-label>
   </button>
 </mat-menu>
 
 <mat-menu #optionsMenu="matMenu">
-  <button mat-menu-item
-          (click)="onShowDisplayOptions()">
+  <button mat-menu-item (click)="onShowDisplayOptions()">
     <mat-icon>tv</mat-icon>
     <mat-label>{{
-      'menu.options-menu.show-options-panel' | translate
-      }}</mat-label>
+      "menu.options-menu.show-options-panel" | translate
+    }}</mat-label>
   </button>
 </mat-menu>

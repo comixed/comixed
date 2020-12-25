@@ -1,28 +1,34 @@
 <form [formGroup]="loginForm">
   <mat-card class="cx-centered cx-width-50">
-    <mat-card-title>{{"user.login-user.page-title"|translate}}</mat-card-title>
+    <mat-card-title>{{
+      "user.login-user.page-title" | translate
+    }}</mat-card-title>
     <mat-card-content>
-      <mat-form-field class="cx-width-100"
-                      required>
-        <input matInput
-               type="email"
-               formControlName="email"
-               [placeholder]="'user.login-user.email-placeholder'|translate">
+      <mat-form-field class="cx-width-100" required>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          [placeholder]="'user.login-user.email-placeholder' | translate"
+        />
       </mat-form-field>
-      <mat-form-field class="cx-width-100"
-                      required>
-        <input matInput
-               type="password"
-               formControlName="password"
-               [placeholder]="'user.login-user.password-placeholder'|translate">
+      <mat-form-field class="cx-width-100" required>
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+          [placeholder]="'user.login-user.password-placeholder' | translate"
+        />
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-icon-button
-              color="primary"
-              (click)="onSubmitLogin()"
-              [disabled]="!loginForm.valid">
-        <mat-label>{{"button.login"|translate}}</mat-label>
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="onSubmitLogin()"
+        [disabled]="!loginForm.valid"
+      >
+        <mat-label>{{ "button.login" | translate }}</mat-label>
         <mat-icon>check</mat-icon>
       </button>
     </mat-card-actions>
