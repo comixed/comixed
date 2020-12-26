@@ -236,6 +236,17 @@ describe('ImportComicsComponent', () => {
     });
   });
 
+  describe('when no file is selected', () => {
+    beforeEach(() => {
+      component.pageSize = PAGE_SIZE;
+      component.onCurrentFile(null);
+    });
+
+    it('does not open a dialog', () => {
+      expect(dialog.open).not.toHaveBeenCalled();
+    });
+  });
+
   describe('when sending files', () => {
     describe('when sending starts', () => {
       beforeEach(() => {

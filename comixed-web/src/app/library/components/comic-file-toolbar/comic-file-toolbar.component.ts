@@ -50,11 +50,11 @@ export class ComicFileToolbarComponent {
 
   const;
   maximumOptions = [
-    { label: 'load-comic-files.maximum.all-files', value: 0 },
-    { label: 'load-comic-files.maximum.10-files', value: 10 },
-    { label: 'load-comic-files.maximum.50-files', value: 50 },
-    { label: 'load-comic-files.maximum.100-files', value: 100 },
-    { label: 'load-comic-files.maximum.1000-files', value: 1000 }
+    { label: 'import-comic-files.label.maximum-all-files', value: 0 },
+    { label: 'import-comic-files.label.maximum-10-files', value: 10 },
+    { label: 'import-comic-files.label.maximum-50-files', value: 50 },
+    { label: 'import-comic-files.label.maximum-100-files', value: 100 },
+    { label: 'import-comic-files.label.maximum-1000-files', value: 1000 }
   ];
 
   constructor(

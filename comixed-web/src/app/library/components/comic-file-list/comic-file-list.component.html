@@ -15,6 +15,7 @@
     <mat-cell *matCellDef="let file">
       <mat-checkbox
         [checked]="selectedFiles.includes(file)"
+        (click)="$event.stopPropagation()"
         (change)="onSelectFile(file, $event.checked)"
       ></mat-checkbox>
     </mat-cell>
