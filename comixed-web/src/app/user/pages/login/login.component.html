@@ -6,6 +6,7 @@
     <mat-card-content>
       <mat-form-field class="cx-width-100" required>
         <input
+          id="cx-login-email"
           matInput
           type="email"
           formControlName="email"
@@ -14,6 +15,7 @@
       </mat-form-field>
       <mat-form-field class="cx-width-100" required>
         <input
+          id="cx-login-password"
           matInput
           type="password"
           formControlName="password"
@@ -23,7 +25,8 @@
     </mat-card-content>
     <mat-card-actions>
       <button
-        mat-icon-button
+        id="cx-login-submit-button"
+        mat-flat-button
         color="primary"
         (click)="onSubmitLogin()"
         [disabled]="!loginForm.valid"
