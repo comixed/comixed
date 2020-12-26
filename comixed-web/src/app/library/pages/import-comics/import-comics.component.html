@@ -20,6 +20,7 @@
     }}
   </h2>
   <cx-comic-file-list
+    *ngIf="files.length > 0"
     [files]="files"
     [selectedFiles]="selectedFiles"
     (currentFile)="onCurrentFile($event)"
