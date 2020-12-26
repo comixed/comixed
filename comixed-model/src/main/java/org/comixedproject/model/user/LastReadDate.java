@@ -18,12 +18,11 @@
 
 package org.comixedproject.model.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.views.View;
@@ -35,6 +34,8 @@ import org.comixedproject.views.View;
  */
 @Entity
 @Table(name = "user_last_read_dates")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@NoArgsConstructor
 public class LastReadDate {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
