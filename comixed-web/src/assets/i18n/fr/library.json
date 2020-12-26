@@ -1,41 +1,43 @@
 {
-  "load-comic-files": {
-    "effect-success-detail": "Found {count, plural, =1{one comic file} other{# comic files}}.",
-    "effect-failure-detail": "Failed to find any comic files.",
-    "directory-placeholder": "Root Directory To Search...",
-    "maximum": {
-      "all-files": "All files",
-      "10-files": "10 files",
-      "50-files": "50 files",
-      "100-files": "100 files",
-      "1000-files": "1000 files"
-    }
-  },
   "import-comic-files": {
     "tab-title": "Import Comics",
     "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
     "busy-title": "There Are Comics Importing Now",
+    "load-comic-files": {
+      "effect-success-detail": "Found {count, plural, =1{one comic file} other{# comic files}}.",
+      "effect-failure-detail": "Failed to find any comic files."
+    },
     "header": {
       "cover": "Cover Image",
       "filename": "Filename",
       "size": "File Size (kb)"
     },
     "text": {
-      "selected-for-import": "This file will be imported.",
-      "file-size": "{size} bytes"
+      "file-size": "{size} bytes",
+      "selected-for-import": "This file will be imported."
     },
     "label": {
+      "delete-blocked-pages": "Mark blocked pages as delete",
+      "delete-blocked-pages-off": "Ignore Blocked Pages",
+      "delete-blocked-pages-on": "Mark Blocked Pages",
       "ignore-metadata": "Ignore any metadata",
-      "delete-blocked-pages": "Mark blocked pages as delete"
+      "ignore-metadata-off": "Use Metadata",
+      "ignore-metadata-on": "Ignore Metadata",
+      "maximum-all-files": "All files",
+      "maximum-10-files": "10 files",
+      "maximum-50-files": "50 files",
+      "maximum-100-files": "100 files",
+      "maximum-1000-files": "1000 files"
     },
     "tooltip": {
       "ignore-metadata-on": "Will import any metadata in the comic files.",
       "ignore-metadata-off": "Will not import any metadata in the comic files.",
-      "delete-blocked-pages-on": "Will mark blocked pages  for deletion.",
-      "delete-blocked-pages-off": "Will not mark blocked pages for deletion.",
       "select-all": "Select all comic files for import.",
       "deselect-all": "Clear the comic file selections.",
       "start-import": "Start importing the selected comic files."
+    },
+    "placeholder": {
+      "root-directory": "Root Directory To Search..."
     },
     "confirm-start-title": "Import Comic Files?",
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
