@@ -18,9 +18,12 @@
 
 package org.comixedproject.model.comic;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.comixedproject.views.View.ComicListView;
 import org.comixedproject.views.View.PageList;
 
@@ -32,6 +35,8 @@ import org.comixedproject.views.View.PageList;
  */
 @Entity
 @Table(name = "page_types")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@NoArgsConstructor
 public class PageType {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +47,4 @@ public class PageType {
   @JsonView({ComicListView.class, PageList.class})
   @Getter
   private String name;
-
-  public PageType() {}
 }

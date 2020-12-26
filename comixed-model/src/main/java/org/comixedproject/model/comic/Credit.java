@@ -18,12 +18,9 @@
 
 package org.comixedproject.model.comic;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.views.View.ComicListView;
 
 /**
@@ -33,17 +30,28 @@ import org.comixedproject.views.View.ComicListView;
  */
 @Entity
 @Table(name = "comic_credits")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Credit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonView(ComicListView.class)
   private Long id;
 
+  @ManyToOne
+  @JoinColumn(name = "comic_id")
+  @JsonIgnore
+  @Getter
+  @NonNull
+  private Comic comic;
+
   @Column(name = "name")
   @JsonProperty("name")
   @JsonView(ComicListView.class)
   @Getter
   @Setter
+  @NonNull
   private String name;
 
   @Column(name = "role")
@@ -51,19 +59,6 @@ public class Credit {
   @JsonView(ComicListView.class)
   @Getter
   @Setter
+  @NonNull
   private String role;
-
-  @ManyToOne
-  @JoinColumn(name = "comic_id")
-  @JsonIgnore
-  @Getter
-  private Comic comic;
-
-  public Credit() {}
-
-  public Credit(final Comic comic, final String name, final String role) {
-    this.comic = comic;
-    this.name = name;
-    this.role = role;
-  }
 }

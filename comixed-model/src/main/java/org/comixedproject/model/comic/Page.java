@@ -17,8 +17,10 @@
 
 package org.comixedproject.model.comic;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +38,7 @@ import org.hibernate.annotations.Formula;
 @Table(name = "pages")
 @Log4j2
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 public class Page {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
