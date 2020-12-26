@@ -18,9 +18,12 @@
 
 package org.comixedproject.model.comic;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.comixedproject.views.View.ComicListView;
 import org.comixedproject.views.View.PageList;
 import org.springframework.stereotype.Component;
@@ -34,6 +37,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Entity
 @Table(name = "comic_formats")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@NoArgsConstructor
 public class ComicFormat {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

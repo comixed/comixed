@@ -18,11 +18,8 @@
 
 package org.comixedproject.model.comic;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
 import java.util.*;
 import javax.persistence.*;
@@ -55,6 +52,7 @@ import org.springframework.stereotype.Component;
 @Table(name = "comics")
 @Log4j2
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 public class Comic {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

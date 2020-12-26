@@ -18,10 +18,13 @@
 
 package org.comixedproject.model.comic;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.comixedproject.views.View;
 
@@ -32,6 +35,8 @@ import org.comixedproject.views.View;
  */
 @Entity
 @Table(name = "comic_file_entries")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@NoArgsConstructor
 public class ComicFileEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,6 +76,4 @@ public class ComicFileEntry {
   @Getter
   @Setter
   private String fileType;
-
-  public ComicFileEntry() {}
 }

@@ -18,15 +18,14 @@
 
 package org.comixedproject.model.library;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.user.ComiXedUser;
@@ -39,6 +38,8 @@ import org.comixedproject.views.View;
  */
 @Entity
 @Table(name = "reading_lists")
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@NoArgsConstructor
 public class ReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
