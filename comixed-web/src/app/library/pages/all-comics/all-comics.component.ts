@@ -29,8 +29,6 @@ import { selectAllComics } from '@app/library/selectors/library.selectors';
   styleUrls: ['./all-comics.component.scss']
 })
 export class AllComicsComponent implements OnInit, OnDestroy {
-  private _comics: Comic[] = [];
-
   comicSubscription: Subscription;
 
   constructor(private logger: LoggerService, private store: Store<any>) {
@@ -39,10 +37,10 @@ export class AllComicsComponent implements OnInit, OnDestroy {
       .subscribe(comics => (this.comics = comics));
   }
 
-  ngOnInit(): void {}
+  private _comics: Comic[] = [];
 
-  ngOnDestroy(): void {
-    this.comicSubscription.unsubscribe();
+  get comics(): Comic[] {
+    return this._comics;
   }
 
   set comics(comics: Comic[]) {
@@ -50,7 +48,9 @@ export class AllComicsComponent implements OnInit, OnDestroy {
     this._comics = comics;
   }
 
-  get comics(): Comic[] {
-    return this._comics;
+  ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.comicSubscription.unsubscribe();
   }
 }

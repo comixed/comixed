@@ -78,6 +78,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ScrapingIssueDetailComponent } from './components/scraping-issue-detail/scraping-issue-detail.component';
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 import { MatchabilityPipe } from './pipes/matchability.pipe';
+import { NavigationPaneComponent } from './components/navigation-pane/navigation-pane.component';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -99,7 +103,8 @@ import { MatchabilityPipe } from './pipes/matchability.pipe';
     ComicScrapingComponent,
     ScrapingIssueDetailComponent,
     ScrapingIssueTitlePipe,
-    MatchabilityPipe
+    MatchabilityPipe,
+    NavigationPaneComponent
   ],
   imports: [
     CommonModule,
@@ -132,7 +137,10 @@ import { MatchabilityPipe } from './pipes/matchability.pipe';
     MatExpansionModule,
     MatSliderModule,
     MatListModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTreeModule,
+    MatBadgeModule,
+    MatSidenavModule
   ],
   exports: [CommonModule, CoreModule]
 })

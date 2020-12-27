@@ -17,52 +17,60 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AllComicsComponent } from './all-comics.component';
+import { NavigationPaneComponent } from './navigation-pane.component';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { NavigationPaneComponent } from '@app/library/components/navigation-pane/navigation-pane.component';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
+import { COMIC_2 } from '@app/library/library.fixtures';
 
-describe('AllComicsComponent', () => {
+describe('NavigationPaneComponent', () => {
+  const COMIC = COMIC_2;
   const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
 
-  let component: AllComicsComponent;
-  let fixture: ComponentFixture<AllComicsComponent>;
+  let component: NavigationPaneComponent;
+  let fixture: ComponentFixture<NavigationPaneComponent>;
   let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AllComicsComponent, NavigationPaneComponent],
+      declarations: [NavigationPaneComponent],
       imports: [
-        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatSidenavModule,
-        MatToolbarModule,
-        MatIconModule,
         MatTreeModule,
         MatBadgeModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AllComicsComponent);
+    fixture = TestBed.createComponent(NavigationPaneComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
+
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('loading the library content', () => {
+    beforeEach(() => {
+      component.dataSource.data = [];
+      store.setState({
+        ...initialState,
+        [LIBRARY_FEATURE_KEY]: { ...initialLibraryState, comics: [COMIC] }
+      });
+    });
+
+    it('loads the datasource', () => {
+      expect(component.dataSource.data).not.toEqual([]);
+    });
   });
 });
