@@ -56,3 +56,10 @@ export function updateQueryParam(
     queryParams
   });
 }
+
+/** Flattens an array of arrays and returns unique elements. */
+export function flattened<T>(values: T[][]): T[] {
+  const result = [];
+  values.forEach(value => value.forEach(inner => result.push(inner)));
+  return result.filter((entry, index, self) => self.indexOf(entry) === index);
+}

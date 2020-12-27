@@ -139,5 +139,11 @@
       "reject-scraping-issue": "Reject this issue.",
       "select-scraping-issue": "Select this issue."
     }
+  },
+  "library": {
+    "label": {
+      "no-publisher": "Unknown Publisher",
+      "no-series": "Unknown Series"
+    }
   }
 }
