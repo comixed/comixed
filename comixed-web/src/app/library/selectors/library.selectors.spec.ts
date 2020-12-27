@@ -19,15 +19,41 @@
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import {
   selectAllComics,
+  selectCharacters,
   selectComic,
   selectLibraryBusy,
-  selectLibraryState
+  selectLibraryState,
+  selectLocations,
+  selectPublishers,
+  selectSeries,
+  selectStories,
+  selectTeams
 } from './library.selectors';
 import { COMIC_1, COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
 
 describe('Library Selectors', () => {
   const COMIC = COMIC_1;
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
+  const COMICS = [
+    COMIC_1,
+    { ...COMIC_2, publisher: '' },
+    { ...COMIC_3, series: '' }
+  ];
+  const PUBLISHERS = [
+    COMIC_1.publisher,
+    'library.label.no-publisher',
+    COMIC_3.publisher
+  ];
+  const SERIES = [COMIC_1.series, COMIC_2.series, 'library.label.no-series'];
+  const CHARACTERS = [
+    'character1',
+    'character2',
+    'character3',
+    'character4',
+    'character5'
+  ];
+  const TEAMS = ['team1', 'team2'];
+  const LOCATIONS = ['location1', 'location2'];
+  const STORIES = ['story1', 'story2', 'story3'];
 
   let state: LibraryState;
 
@@ -63,5 +89,35 @@ describe('Library Selectors', () => {
     expect(selectAllComics({ [LIBRARY_FEATURE_KEY]: state })).toEqual(
       state.comics
     );
+  });
+
+  it('selects the publishers', () => {
+    expect(selectPublishers({ [LIBRARY_FEATURE_KEY]: state })).toEqual(
+      PUBLISHERS
+    );
+  });
+
+  it('selects the series', () => {
+    expect(selectSeries({ [LIBRARY_FEATURE_KEY]: state })).toEqual(SERIES);
+  });
+
+  it('selects the characters', () => {
+    expect(selectCharacters({ [LIBRARY_FEATURE_KEY]: state })).toEqual(
+      CHARACTERS
+    );
+  });
+
+  it('selects the teams', () => {
+    expect(selectTeams({ [LIBRARY_FEATURE_KEY]: state })).toEqual(TEAMS);
+  });
+
+  it('selects the locations', () => {
+    expect(selectLocations({ [LIBRARY_FEATURE_KEY]: state })).toEqual(
+      LOCATIONS
+    );
+  });
+
+  it('selects the stories', () => {
+    expect(selectStories({ [LIBRARY_FEATURE_KEY]: state })).toEqual(STORIES);
   });
 });
