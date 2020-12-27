@@ -144,6 +144,14 @@
     "label": {
       "no-publisher": "Unknown Publisher",
       "no-series": "Unknown Series"
+    },
+    "navigation": {
+      "publishers": "Publishers",
+      "series": "Series",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations",
+      "stories": "Stories"
     }
   }
 }
