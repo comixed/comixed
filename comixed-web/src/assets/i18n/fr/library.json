@@ -4,8 +4,8 @@
     "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
     "busy-title": "There Are Comics Importing Now",
     "load-comic-files": {
-      "effect-success-detail": "Found {count, plural, =1{one comic file} other{# comic files}}.",
-      "effect-failure-detail": "Failed to find any comic files."
+      "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
+      "effect-failure": "Failed to find any comic files."
     },
     "header": {
       "cover": "Cover Image",
@@ -43,13 +43,13 @@
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
   },
   "send-comic-files": {
-    "effect-success-detail": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
-    "effect-failure-detail": "Failed to send comic files for import."
-  },
-  "load-comic": {
-    "effect-failure-detail": "Failed to load the comic."
+    "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
+    "effect-failure": "Failed to send comic files for import."
   },
   "comic": {
+    "load-comic": {
+      "effect-failure": "Failed to load comic."
+    },
     "undo-changes": {
       "title": "Undo Changes",
       "message": "Are you sure you want to undo changes to this comic?"
