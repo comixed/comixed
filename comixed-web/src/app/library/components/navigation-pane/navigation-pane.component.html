@@ -11,7 +11,9 @@
           [matBadge]="node.childCount"
           matBadgeOverlap="false"
           matBadgePosition="after"
-          >{{ node.label | translate }}</span
+          ><a [routerLink]="node.routerLink">{{
+            node.label | translate
+          }}</a></span
         >
       </li>
     </mat-tree-node>

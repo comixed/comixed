@@ -31,6 +31,14 @@ import {
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { NavigationTreeNode } from '@app/library/models/ui/navigation-tree-node';
+import {
+  CHARACTERS_GROUP,
+  LOCATIONS_GROUP,
+  PUBLISHERS_GROUP,
+  SERIES_GROUP,
+  STORIES_GROUP,
+  TEAMS_GROUP
+} from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-navigation-pane',
@@ -158,42 +166,60 @@ export class NavigationPaneComponent implements OnInit, OnDestroy {
         label: 'library.navigation.publishers',
         childCount: this.publishers.length,
         children: this.publishers.map(publisher => {
-          return { label: publisher } as NavigationTreeNode;
+          return {
+            label: publisher,
+            routerLink: ['/library', PUBLISHERS_GROUP, publisher]
+          } as NavigationTreeNode;
         })
       },
       {
         label: 'library.navigation.series',
         childCount: this.series.length,
         children: this.series.map(series => {
-          return { label: series } as NavigationTreeNode;
+          return {
+            label: series,
+            routerLink: ['/library', SERIES_GROUP, series]
+          } as NavigationTreeNode;
         })
       },
       {
         label: 'library.navigation.characters',
         childCount: this.characters.length,
         children: this.characters.map(character => {
-          return { label: character } as NavigationTreeNode;
+          return {
+            label: character,
+            routerLink: ['/library', CHARACTERS_GROUP, character]
+          } as NavigationTreeNode;
         })
       },
       {
         label: 'library.navigation.teams',
         childCount: this.teams.length,
         children: this.teams.map(team => {
-          return { label: team } as NavigationTreeNode;
+          return {
+            label: team,
+            routerLink: ['/library', TEAMS_GROUP, team]
+          } as NavigationTreeNode;
         })
       },
       {
         label: 'library.navigation.locations',
         childCount: this.locations.length,
         children: this.locations.map(location => {
-          return { label: location } as NavigationTreeNode;
+          return {
+            label: location,
+            routerLink: ['/library', LOCATIONS_GROUP, location]
+          } as NavigationTreeNode;
         })
       },
       {
         label: 'library.navigation.stories',
         childCount: this.stories.length,
         children: this.stories.map(story => {
-          return { label: story } as NavigationTreeNode;
+          return {
+            label: story,
+            routerLink: ['/library', STORIES_GROUP, story]
+          } as NavigationTreeNode;
         })
       }
     ];

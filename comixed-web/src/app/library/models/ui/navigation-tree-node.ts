@@ -19,6 +19,7 @@
 export interface NavigationTreeNode {
   label: string;
   childCount: number;
+  routerLink?: any[];
   children?: NavigationTreeNode[];
   action?: () => void;
 }

@@ -22,6 +22,7 @@ import { ImportComicsComponent } from './pages/import-comics/import-comics.compo
 import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
 import { AdminGuard, ReaderGuard } from '@app/user';
 import { AllComicsComponent } from '@app/library/pages/all-comics/all-comics.component';
+import { ComicGroupComponent } from '@app/library/pages/comic-group/comic-group.component';
 
 const routes: Routes = [
   {
@@ -30,8 +31,13 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
-    path: 'library/:comicId',
+    path: 'library/comics/:comicId',
     component: ComicDetailsComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library/:type/:name',
+    component: ComicGroupComponent,
     canActivate: [ReaderGuard]
   },
   {

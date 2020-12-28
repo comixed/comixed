@@ -15,7 +15,7 @@
           *ngFor="let comic of comics"
           [title]="comic | comicTitle"
           [imageUrl]="comic | comicCoverUrl"
-          [detailLink]="['comics', comic.id]"
+          [detailLink]="['/library', 'comics', comic.id]"
           [blurred]="!comic.fileDetails"
           [busy]="!comic.fileDetails"
         ></cx-comic-detail-card>
