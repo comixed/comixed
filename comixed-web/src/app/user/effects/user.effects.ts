@@ -68,7 +68,7 @@ export class UserEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'user.load-current-user.effect-failure-detail'
+                'user.load-current-user.effect-failure'
               )
             );
             return of(loadCurrentUserFailed());
@@ -105,9 +105,7 @@ export class UserEffects {
               this.logger.error('Service failure:', error);
               this.tokenService.clearAuthToken();
               this.alertService.error(
-                this.translateService.instant(
-                  'user.login-user.effect-failure-detail'
-                )
+                this.translateService.instant('user.login-user.effect-failure')
               );
               return of(loginUserFailed());
             })

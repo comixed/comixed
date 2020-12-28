@@ -52,9 +52,7 @@ export class LibraryEffects {
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
-              this.translateService.instant(
-                'comic.load-comic.effect-failure-detail'
-              )
+              this.translateService.instant('comic.load-comic.effect-failure')
             );
             return of(loadComicFailed());
           })
