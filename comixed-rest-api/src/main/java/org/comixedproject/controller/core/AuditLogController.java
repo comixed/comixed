@@ -104,4 +104,12 @@ public class AuditLogController {
         entries.isEmpty() ? new Date() : entries.get(entries.size() - 1).getEndTime();
     return new GetRestAuditLogResponse(entries, latest);
   }
+
+  /** Clear the rest audit log. */
+  @DeleteMapping(value = "/api/auditing/rest/entries")
+  @PreAuthorize("hasRole('ADMIN')")
+  public void deleteAllRestAuditLog() {
+    log.info("Delete all the entries from the audit log");
+    this.restAuditLogService.deleteAllRestAuditLog();
+  }
 }

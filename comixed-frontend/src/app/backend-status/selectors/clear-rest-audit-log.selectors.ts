@@ -16,10 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from 'app/app.functions';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as fromClearRestAuditLog from '../reducers/clear-rest-audit-log.reducer';
+import { ClearRestAuditLogState } from '../reducers/clear-rest-audit-log.reducer';
 
-export const GET_TASK_LOG_ENTRIES_URL = `${API_ROOT_URL}/tasks/entries/\${timestamp}`;
-export const CLEAR_TASK_AUDIT_LOG_URL = `${API_ROOT_URL}/tasks/entries`;
-export const CLEAR_REST_AUDIT_LOG_URL = `${API_ROOT_URL}/auditing/rest/entries`;
+/**
+ * Returns the clear rest audit log state.
+ */
+export const selectClearRestAuditLogState = createFeatureSelector<
+    fromClearRestAuditLog.ClearRestAuditLogState
+  >(fromClearRestAuditLog.CLEAR_REST_AUDIT_LOG_FEATURE_KEY);
 
-export const GET_REST_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/auditing/rest/entries/\${cutoff}`;
+/**
+ * Returns the rest audit entries cleared.
+ */
+export const selectClearRestAuditLogCleared = createSelector(
+  selectClearRestAuditLogState,
+  (state: ClearRestAuditLogState) => state.entries
+);

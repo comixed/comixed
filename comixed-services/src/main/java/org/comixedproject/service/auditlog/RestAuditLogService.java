@@ -87,4 +87,9 @@ public class RestAuditLogService {
 
     return result;
   }
+
+  public void deleteAllRestAuditLog() {
+    log.debug("Deleting the REST audit log entries");
+    this.auditLogRepository.deleteAll();
+  }
 }

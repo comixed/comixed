@@ -25,6 +25,7 @@ import {
   selectLoadRestAuditLogLoading,
   selectLoadRestAuditLogState
 } from 'app/backend-status/selectors/load-rest-audit-log.selectors';
+import { selectClearRestAuditLogCleared } from 'app/backend-status/selectors/clear-rest-audit-log.selectors';
 import {
   getRestAuditLogEntries,
   startLoadingRestAuditLogEntries,
@@ -34,6 +35,8 @@ import { RestAuditLogEntry } from 'app/backend-status/models/rest-audit-log-entr
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { ConfirmationService } from 'primeng/api';
+import { clearRestAuditLog } from 'app/backend-status/actions/clear-rest-audit-log.actions';
 import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 
 @Component({
@@ -44,6 +47,7 @@ import { setBreadcrumbs } from 'app/actions/breadcrumb.actions';
 export class RestAuditLogPageComponent implements OnInit, OnDestroy {
   stateSubscription: Subscription;
   entriesSubscription: Subscription;
+  clearLogSubscription: Subscription;
   entries: RestAuditLogEntry[] = [];
   currentEntry: RestAuditLogEntry = null;
   showDetailsDialog = false;
@@ -55,6 +59,7 @@ export class RestAuditLogPageComponent implements OnInit, OnDestroy {
     private store: Store<BackendStatusState>,
     private logger: LoggerService,
     private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private titleService: Title
   ) {
     this.stateSubscription = this.store
@@ -81,6 +86,12 @@ export class RestAuditLogPageComponent implements OnInit, OnDestroy {
         this.loadTranslations();
       }
     );
+    this.clearLogSubscription = this.store
+      .select(selectClearRestAuditLogCleared)
+      .subscribe(entries => {
+        this.logger.debug('Loaded rest audit log entries cleared');
+        this.entries = entries;
+      });
     this.loadTranslations();
   }
 
@@ -133,6 +144,23 @@ export class RestAuditLogPageComponent implements OnInit, OnDestroy {
   hideEntryDetails() {
     this.showDetailsDialog = false;
     this.currentEntry = null;
+  }
+
+  /**
+   * Clear the rest audit log
+   */
+  doClearRestAuditLog() {
+    this.confirmationService.confirm({
+      header: this.translateService.instant(
+        'rest.clear-audit-log.confirm-header'
+      ),
+      message: this.translateService.instant(
+        'rest.clear-audit-log.confirm-message'
+      ),
+      accept: () => {
+        this.store.dispatch(clearRestAuditLog());
+      }
+    });
   }
 
   asJson(content: string) {

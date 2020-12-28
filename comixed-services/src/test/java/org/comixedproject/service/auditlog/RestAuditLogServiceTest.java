@@ -75,4 +75,13 @@ public class RestAuditLogServiceTest {
     Mockito.verify(restAuditLogRepository, Mockito.times(1))
         .findByEndTimeAfterOrderByEndTime(new Date(TEST_CUTOFF), pageableArgumentCaptor.getValue());
   }
+
+  @Test
+  public void testDeleteAllRestAuditLog() {
+    Mockito.doNothing().when(restAuditLogRepository).deleteAll();
+
+    this.restAuditLogService.deleteAllRestAuditLog();
+
+    Mockito.verify(restAuditLogRepository, Mockito.times(1)).deleteAll();
+  }
 }

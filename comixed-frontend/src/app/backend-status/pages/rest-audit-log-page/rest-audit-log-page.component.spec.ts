@@ -22,17 +22,23 @@ import { RestAuditLogPageComponent } from './rest-audit-log-page.component';
 import { TableModule } from 'primeng/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PanelModule } from 'primeng/panel';
-import { StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import * as fromLoadRestAuditLogEntries from 'app/backend-status/reducers/load-rest-audit-log.reducer';
 import { LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY } from 'app/backend-status/reducers/load-rest-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { LoadRestAuditLogEffects } from 'app/backend-status/effects/load-rest-audit-log.effects';
 import { LoggerModule } from '@angular-ru/logger';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MessageService } from 'primeng/api';
+import { Confirmation, ConfirmationService, MessageService } from 'primeng/api';
 import { REST_AUDIT_LOG_ENTRY_1 } from 'app/backend-status/backend-status.fixtures';
 import { Title } from '@angular/platform-browser';
 import { ScrollPanelModule, SidebarModule } from 'primeng/primeng';
+import { CLEAR_REST_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-rest-audit-log.reducer';
+import * as fromClearRestAuditLog from 'app/backend-status/reducers/clear-rest-audit-log.reducer';
+import { clearRestAuditLog } from 'app/backend-status/actions/clear-rest-audit-log.actions';
+import { ClearRestAuditLogEffects } from 'app/backend-status/effects/clear-rest-audit-log.effects';
+import { BackendStatusState } from 'app/backend-status';
+import { ButtonModule } from 'primeng/button';
 
 describe('RestAuditLogPageComponent', () => {
   const ENTRY = REST_AUDIT_LOG_ENTRY_1;
@@ -41,6 +47,8 @@ describe('RestAuditLogPageComponent', () => {
   let fixture: ComponentFixture<RestAuditLogPageComponent>;
   let titleService: Title;
   let translateService: TranslateService;
+  let confirmationService: ConfirmationService;
+  let store: Store<BackendStatusState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -53,15 +61,23 @@ describe('RestAuditLogPageComponent', () => {
           LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY,
           fromLoadRestAuditLogEntries.reducer
         ),
+        StoreModule.forFeature(
+          CLEAR_REST_AUDIT_LOG_FEATURE_KEY,
+          fromClearRestAuditLog.reducer
+        ),
         EffectsModule.forRoot([]),
-        EffectsModule.forFeature([LoadRestAuditLogEffects]),
+        EffectsModule.forFeature([
+          LoadRestAuditLogEffects,
+          ClearRestAuditLogEffects
+        ]),
         TableModule,
         PanelModule,
         SidebarModule,
-        ScrollPanelModule
+        ScrollPanelModule,
+        ButtonModule
       ],
       declarations: [RestAuditLogPageComponent],
-      providers: [MessageService, Title]
+      providers: [MessageService, Title, ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RestAuditLogPageComponent);
@@ -70,6 +86,9 @@ describe('RestAuditLogPageComponent', () => {
     spyOn(titleService, 'setTitle');
     translateService = TestBed.get(TranslateService);
     fixture.detectChanges();
+    store = TestBed.get(Store);
+    spyOn(store, 'dispatch').and.callThrough();
+    confirmationService = TestBed.get(ConfirmationService);
   }));
 
   it('should create', () => {
@@ -169,6 +188,24 @@ describe('RestAuditLogPageComponent', () => {
 
     it('changes the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('clearing the rest audit log', () => {
+    beforeEach(() => {
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirm: Confirmation) => confirm.accept());
+      component.doClearRestAuditLog();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('notifies the store', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(clearRestAuditLog());
     });
   });
 });
