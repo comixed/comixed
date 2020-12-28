@@ -192,7 +192,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private routeToComic(id: number): void {
-    this.router.navigate(['library', id], {
+    this.router.navigate(['library', 'comics', id], {
       queryParamsHandling: 'preserve'
     });
   }
