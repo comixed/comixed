@@ -352,7 +352,8 @@
     "start-scraping": "Comenzar a obtener metadatos...",
     "selected": "Seleccionado",
     "not-selected": "No seleccionado",
-    "new-user": "Nuevo usuario"
+    "new-user": "Nuevo usuario",
+    "delete-audit-log": "Delete all logs"
   },
   "user-effects": {
     "login": {
