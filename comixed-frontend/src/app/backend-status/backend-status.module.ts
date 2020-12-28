@@ -23,6 +23,7 @@ import { BuildDetailsPageComponent } from './pages/build-details-page/build-deta
 import { BackendStatusRoutingModule } from 'app/backend-status/backend-status-routing.module';
 import { StoreModule } from '@ngrx/store';
 import * as fromBuildDetails from './reducers/build-details.reducer';
+import * as fromClearRestAuditLog from './reducers/clear-rest-audit-log.reducer';
 import * as fromClearTaskAuditLog from './reducers/clear-task-audit-log.reducer';
 import * as fromLoadTaskAuditLog from './reducers/load-task-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
@@ -48,6 +49,8 @@ import * as fromLoadRestAuditLogEntries from 'app/backend-status/reducers/load-r
 import { LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY } from 'app/backend-status/reducers/load-rest-audit-log.reducer';
 import { LoadRestAuditLogEffects } from 'app/backend-status/effects/load-rest-audit-log.effects';
 import { RestAuditLogPageComponent } from './pages/rest-audit-log-page/rest-audit-log-page.component';
+import { CLEAR_REST_AUDIT_LOG_FEATURE_KEY } from 'app/backend-status/reducers/clear-rest-audit-log.reducer';
+import { ClearRestAuditLogEffects } from 'app/backend-status/effects/clear-rest-audit-log.effects';
 
 @NgModule({
   declarations: [
@@ -73,6 +76,10 @@ import { RestAuditLogPageComponent } from './pages/rest-audit-log-page/rest-audi
       fromClearTaskAuditLog.reducer
     ),
     StoreModule.forFeature(
+      CLEAR_REST_AUDIT_LOG_FEATURE_KEY,
+      fromClearRestAuditLog.reducer
+    ),
+    StoreModule.forFeature(
       LOAD_REST_AUDIT_LOG_ENTRIES_FEATURE_KEY,
       fromLoadRestAuditLogEntries.reducer
     ),
@@ -80,6 +87,7 @@ import { RestAuditLogPageComponent } from './pages/rest-audit-log-page/rest-audi
       BuildDetailsEffects,
       LoadTaskAuditLogEffects,
       ClearTaskAuditLogEffects,
+      ClearRestAuditLogEffects,
       LoadRestAuditLogEffects
     ]),
     TableModule,

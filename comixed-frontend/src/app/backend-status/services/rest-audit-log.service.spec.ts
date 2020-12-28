@@ -28,7 +28,10 @@ import { LoggerModule } from '@angular-ru/logger';
 import { ApiResponse } from 'app/core';
 import { GetRestAuditLogEntriesResponse } from 'app/backend-status/models/net/get-rest-audit-log-entries-response';
 import { interpolate } from 'app/app.functions';
-import { GET_REST_AUDIT_LOG_ENTRIES_URL } from 'app/backend-status/backend-status.constants';
+import {
+  CLEAR_REST_AUDIT_LOG_URL,
+  GET_REST_AUDIT_LOG_ENTRIES_URL
+} from 'app/backend-status/backend-status.constants';
 
 describe('RestAuditLogService', () => {
   const ENTRIES = [REST_AUDIT_LOG_ENTRY_1];
@@ -65,5 +68,17 @@ describe('RestAuditLogService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(serviceResponse);
+  });
+
+  it('can clear the Rest audit log', () => {
+    const success = Math.random() * 100 > 50;
+    service
+      .clearRestAuditLog()
+      .subscribe(response =>
+        expect(response).toEqual({ success } as ApiResponse<void>)
+      );
+    const req = httpMock.expectOne(interpolate(CLEAR_REST_AUDIT_LOG_URL));
+    expect(req.request.method).toEqual('DELETE');
+    req.flush({ success } as ApiResponse<void>);
   });
 });

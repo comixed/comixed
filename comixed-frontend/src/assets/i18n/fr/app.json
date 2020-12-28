@@ -24,6 +24,18 @@
     "copyright": "<b>Copyright &copy; {years}, L'équipe du projet ComiXed</b>",
     "library-counts": "<b>Total:</b> {comic_count} <b>Lues:</b> {read_count} <b>Traitées:</b> {import_count}"
   },
+  "button": {
+    "deselect": "Deselect",
+    "load": "Load",
+    "login": "Login",
+    "logout": "Logout",
+    "no": "No",
+    "select": "Select",
+    "start": "Start",
+    "submit": "Submit",
+    "yes": "Yes",
+    "delete-audit-log": "Delete all logs"
+  },
   "language": {
     "option": {
       "english": "Anglais",

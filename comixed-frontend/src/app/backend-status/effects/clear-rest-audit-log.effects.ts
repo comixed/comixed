@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,26 @@
  */
 
 import { Injectable } from '@angular/core';
+import { LoggerService } from '@angular-ru/logger';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { RestAuditLogService } from 'app/backend-status/services/rest-audit-log.service';
 import { AlertService, ApiResponse } from 'app/core';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '@angular-ru/logger';
+import {
+  clearLoadedAuditLog,
+  clearRestAuditLog,
+  clearRestAuditLogFailed,
+  restAuditLogClearSuccess
+} from 'app/backend-status/actions/clear-rest-audit-log.actions';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import {
   getRestAuditLogEntries,
-  getRestAuditLogEntriesFailed,
-  restAuditLogEntriesReceived
+  startLoadingRestAuditLogEntries
 } from 'app/backend-status/actions/load-rest-audit-log.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { GetRestAuditLogEntriesResponse } from 'app/backend-status/models/net/get-rest-audit-log-entries-response';
-import { of } from 'rxjs';
 
 @Injectable()
-export class LoadRestAuditLogEffects {
+export class ClearRestAuditLogEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
@@ -41,40 +45,48 @@ export class LoadRestAuditLogEffects {
     private translateService: TranslateService
   ) {}
 
-  getLogEntries$ = createEffect(() => {
+  clearRestAuditLog$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(getRestAuditLogEntries),
-      tap(action =>
-        this.logger.debug('effect: get rest audit log entries:', action)
-      ),
-      switchMap(action =>
-        this.restAuditLogService.loadEntries(action.cutoff).pipe(
+      ofType(clearRestAuditLog),
+      tap(() => this.logger.debug('effect: clear rest audit log')),
+      switchMap(() =>
+        this.restAuditLogService.clearRestAuditLog().pipe(
           tap(response => this.logger.debug('received response:', response)),
-          map((response: GetRestAuditLogEntriesResponse) =>
-            restAuditLogEntriesReceived({
-                  entries: response.entries,
-                  latest: response.latest
-                })
+          tap(() =>
+              this.alertService.info(
+                  this.translateService.instant(
+                    'rest.clear-audit-log.effects.clear-audit-log.success.detail'
+                  )
+                )
+          ),
+          mergeMap(() =>
+            [restAuditLogClearSuccess(), clearLoadedAuditLog()]
           ),
           catchError(error => {
-            this.logger.error('service failure:', error);
+            this.logger.error(
+              'service failure clearing the rest audit log:',
+              error
+            );
             this.alertService.error(
               this.translateService.instant(
-                'backend-status.effects.get-rest-audit-log-entries.error-detail'
+                'rest.clear-audit-log.effects.clear-audit.log.error.detail'
               )
             );
-            return of(getRestAuditLogEntriesFailed());
+            return of(clearRestAuditLogFailed());
           })
         )
       ),
       catchError(error => {
-        this.logger.error('service failure:', error);
+        this.logger.error(
+          'service failure clearing the task audit log:',
+          error
+        );
         this.alertService.error(
           this.translateService.instant(
             'general-message.error.general-service-failure'
           )
         );
-        return of(getRestAuditLogEntriesFailed());
+        return of(clearRestAuditLogFailed());
       })
     );
   });

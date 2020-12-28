@@ -120,4 +120,13 @@ public class AuditLogControllerTest {
     Mockito.verify(restAuditLogService, Mockito.times(1))
         .getEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
   }
+
+  @Test
+  public void testDeleteAllRestAuditLog() {
+    Mockito.doNothing().when(restAuditLogService).deleteAllRestAuditLog();
+
+    auditLogController.deleteAllRestAuditLog();
+
+    Mockito.verify(restAuditLogService, Mockito.times(1)).deleteAllRestAuditLog();
+  }
 }

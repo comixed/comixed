@@ -25,6 +25,22 @@
       }
     }
   },
+  "rest": {
+    "clear-audit-log": {
+      "confirm-header": "Clear Web Logs",
+      "confirm-message": "Are you sure you want to clear the web log?",
+      "effects": {
+        "clear-audit-log": {
+          "success": {
+            "detail": "The web log is cleared..."
+          },
+          "error": {
+            "detail": "Failed to clear the web log..."
+          }
+        }
+      }
+    }
+  },
   "build-details-effects": {
     "get-build-details": {
       "error": {

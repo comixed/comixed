@@ -56,7 +56,7 @@ export class ClearTaskAuditLogEffects {
                 )
               : this.alertService.error(
                   this.translateService.instant(
-                    'tasks.audit-log.effects.clear-audit-log.success.detail'
+                    'tasks.audit-log.effects.clear-audit-log.error.detail'
                   )
                 )
           ),
@@ -70,7 +70,7 @@ export class ClearTaskAuditLogEffects {
             );
             this.alertService.error(
               this.translateService.instant(
-                'tasks.audit-log.effects.clear-audit-log.success.detail'
+                'tasks.audit-log.effects.clear-audit-log.error.detail'
               )
             );
             return of(cleartaskAuditLogFailed());

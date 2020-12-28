@@ -76,10 +76,7 @@ describe('LoadRestAuditLogEffects', () => {
 
   describe('getting audit log entries', () => {
     it('fires an action on success', () => {
-      const serviceResponse = {
-        success: true,
-        result: { entries: ENTRIES, latest: LATEST }
-      } as ApiResponse<GetRestAuditLogEntriesResponse>;
+      const serviceResponse = { entries: ENTRIES, latest: LATEST } as GetRestAuditLogEntriesResponse;
       const action = getRestAuditLogEntries({ cutoff: 0 });
       const outcome = restAuditLogEntriesReceived({
         entries: ENTRIES,
@@ -91,21 +88,6 @@ describe('LoadRestAuditLogEffects', () => {
 
       const expected = hot('-b', { b: outcome });
       expect(effects.getLogEntries$).toBeObservable(expected);
-    });
-
-    it('fires an action on failure', () => {
-      const serviceResponse = { success: false } as ApiResponse<
-        GetRestAuditLogEntriesResponse
-      >;
-      const action = getRestAuditLogEntries({ cutoff: 0 });
-      const outcome = getRestAuditLogEntriesFailed();
-
-      actions$ = hot('-a', { a: action });
-      restAuditLogService.loadEntries.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.getLogEntries$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {

@@ -352,7 +352,8 @@
     "start-scraping": "Start Scraping...",
     "selected": "Selected",
     "not-selected": "Not Selected",
-    "new-user": "New User"
+    "new-user": "New User",
+    "delete-audit-log": "Delete all logs"
   },
   "user-effects": {
     "login": {
