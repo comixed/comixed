@@ -20,7 +20,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/logger';
-import { GET_REST_AUDIT_LOG_ENTRIES_URL } from 'app/backend-status/backend-status.constants';
+import {
+  CLEAR_REST_AUDIT_LOG_URL,
+  GET_REST_AUDIT_LOG_ENTRIES_URL
+} from 'app/backend-status/backend-status.constants';
 import { interpolate } from 'app/app.functions';
 
 @Injectable({
@@ -39,5 +42,13 @@ export class RestAuditLogService {
     return this.http.get(
       interpolate(GET_REST_AUDIT_LOG_ENTRIES_URL, { cutoff: cutoff })
     );
+  }
+
+  /**
+   * Send a request to clear the rest audit log.
+   */
+  clearRestAuditLog(): Observable<any> {
+    this.logger.debug('service: send resquest to clear the rest audit log');
+    return this.http.delete(interpolate(CLEAR_REST_AUDIT_LOG_URL));
   }
 }

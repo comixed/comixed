@@ -12,7 +12,8 @@
     "select": "Select",
     "start": "Start",
     "submit": "Submit",
-    "yes": "Yes"
+    "yes": "Yes",
+    "delete-audit-log": "Delete all logs"
   },
   "menu": {
     "admin-menu": {

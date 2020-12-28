@@ -24,6 +24,22 @@
       }
     }
   },
+  "rest": {
+    "clear-rest-audit-log": {
+      "confirm-header": "Effacer les logs des appels webservices",
+      "confirm-message": "Êtes-vous sûr de vouloir effacer les logs des appels webservices ?",
+      "effects": {
+        "clear-audit-log": {
+          "success": {
+            "detail": "Les logs des appels webservices sont effacés..."
+          },
+          "error": {
+            "detail": "Échec de la suppression des logs appels webservices..."
+          }
+        }
+      }
+    }
+  },
   "build-details-effects": {
     "get-build-details": {
       "error": {
@@ -75,7 +91,7 @@
     },
     "clear-audit-log": {
       "tooltip": "Effacer les d'audit des tâches...",
-      "confirm-header": "Effacer les d'audit des tâches",
+      "confirm-header": "Effacer les logs d'audit des tâches",
       "confirm-message": "Êtes-vous sûr de vouloir effacer les logs d'audit des tâches ?",
       "effects": {
         "clear-audit-log": {

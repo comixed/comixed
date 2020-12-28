@@ -1,4 +1,12 @@
-<h2>{{"backend-status.rest-audit-log.page-title"|translate}}</h2>
+<div>
+  <button pButton
+          type='button'
+          [style]='{ float: "right" }'
+          label='{{"button.delete-audit-log"|translate}}'
+          icon='fa fa-fw fa-trash'
+          (click)='doClearRestAuditLog()'></button>
+  <h2>{{"backend-status.rest-audit-log.page-title"|translate}}</h2>
+</div>
 <p-table [value]="entries"
          [paginator]="true"
          [rows]="10"
