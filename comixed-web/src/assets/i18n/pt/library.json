@@ -144,6 +144,9 @@
     "all-comics":{
       "title": "All Comics"
     },
+    "comic-group": {
+      "invalid-grouping": "The group \"{name}\" is not valid."
+    },
     "label": {
       "no-publisher": "Unknown Publisher",
       "no-series": "Unknown Series"

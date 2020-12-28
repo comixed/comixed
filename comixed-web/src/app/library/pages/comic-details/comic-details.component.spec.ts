@@ -167,7 +167,7 @@ describe('ComicDetailsComponent', () => {
 
     it('redirects the browser', () => {
       expect(router.navigate).toHaveBeenCalledWith(
-        ['library', OTHER_COMIC.id],
+        ['library', 'comics', OTHER_COMIC.id],
         { queryParamsHandling: 'preserve' }
       );
     });
@@ -181,7 +181,7 @@ describe('ComicDetailsComponent', () => {
 
     it('redirects the browser', () => {
       expect(router.navigate).toHaveBeenCalledWith(
-        ['library', OTHER_COMIC.id],
+        ['library', 'comics', OTHER_COMIC.id],
         { queryParamsHandling: 'preserve' }
       );
     });

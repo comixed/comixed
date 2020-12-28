@@ -83,6 +83,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
+import { ComicGroupComponent } from './pages/comic-group/comic-group.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { ComicCoversComponent } from './components/comic-covers/comic-covers.com
     ScrapingIssueTitlePipe,
     MatchabilityPipe,
     NavigationPaneComponent,
-    ComicCoversComponent
+    ComicCoversComponent,
+    ComicGroupComponent
   ],
   providers: [ComicTitlePipe],
   imports: [

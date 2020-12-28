@@ -22,6 +22,13 @@ export const QUERY_PARAM_TAB = 'tab';
 
 export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
 
+export const PUBLISHERS_GROUP = 'publishers';
+export const SERIES_GROUP = 'series';
+export const CHARACTERS_GROUP = 'characters';
+export const TEAMS_GROUP = 'teams';
+export const LOCATIONS_GROUP = 'locations';
+export const STORIES_GROUP = 'stories';
+
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
