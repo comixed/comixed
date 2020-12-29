@@ -18,22 +18,42 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from '@app/pages/home/home.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/core';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let translateService: TranslateService;
+  let titleService: TitleService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [HomeComponent]
+      declarations: [HomeComponent],
+      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
+      providers: [TitleService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the page title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 });

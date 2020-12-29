@@ -27,7 +27,7 @@ import { selectComic } from '@app/library/selectors/library.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference, isAdmin } from '@app/user/user.functions';
-import { updateQueryParam } from '@app/core';
+import { TitleService, updateQueryParam } from '@app/core';
 import {
   API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE,
@@ -45,6 +45,8 @@ import {
   selectScrapingVolumes
 } from '@app/library/selectors/scraping.selectors';
 import { ScrapingVolume } from '@app/library/models/scraping-volume';
+import { TranslateService } from '@ngx-translate/core';
+import { ComicTitlePipe } from '@app/library/pipes/comic-title.pipe';
 
 @Component({
   selector: 'cx-comic-details',
@@ -71,13 +73,20 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   scrapingSeriesName = '';
   scrapingVolume = '';
   scrapingIssueNumber = '';
+  langChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private titleService: TitleService,
+    private translateService: TranslateService,
+    private comicTitlePipe: ComicTitlePipe
   ) {
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.comicId = +params.comicId;
       this.logger.trace('Comic id parameter:', params.comicId);
@@ -95,9 +104,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
       );
-    this.comicSubscription = this.store
-      .select(selectComic)
-      .subscribe(comic => (this.comic = comic));
+    this.comicSubscription = this.store.select(selectComic).subscribe(comic => {
+      this.comic = comic;
+      this.loadPageTitle();
+    });
+
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.isAdmin = isAdmin(user);
       this.apiKey = getUserPreference(
@@ -126,9 +137,12 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(volumes => (this.volumes = volumes));
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
 
   ngOnDestroy(): void {
+    this.langChangeSubscription.unsubscribe();
     this.paramSubscription.unsubscribe();
     this.scrapingStateSubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
@@ -181,5 +195,16 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigate(['library', id], {
       queryParamsHandling: 'preserve'
     });
+  }
+
+  private loadTranslations(): void {
+    this.loadPageTitle();
+  }
+
+  private loadPageTitle(): void {
+    if (!!this.comic) {
+      this.logger.trace('Updating page title');
+      this.titleService.setTitle(this.comicTitlePipe.transform(this.comic));
+    }
   }
 }

@@ -22,6 +22,8 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { selectAllComics } from '@app/library/selectors/library.selectors';
+import { TitleService } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-all-comics',
@@ -30,11 +32,20 @@ import { selectAllComics } from '@app/library/selectors/library.selectors';
 })
 export class AllComicsComponent implements OnInit, OnDestroy {
   comicSubscription: Subscription;
+  langChangeSubscription: Subscription;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private titleService: TitleService,
+    private translateService: TranslateService
+  ) {
     this.comicSubscription = this.store
       .select(selectAllComics)
       .subscribe(comics => (this.comics = comics));
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   private _comics: Comic[] = [];
@@ -48,9 +59,18 @@ export class AllComicsComponent implements OnInit, OnDestroy {
     this._comics = comics;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
 
   ngOnDestroy(): void {
     this.comicSubscription.unsubscribe();
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Setting page title');
+    this.titleService.setTitle(
+      this.translateService.instant('library.all-comics.title')
+    );
   }
 }

@@ -25,7 +25,7 @@ import {
 } from '@app/library/reducers/library.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -42,7 +42,7 @@ import { ComicPagesComponent } from '@app/library/components/comic-pages/comic-p
 import { ComicEditComponent } from '@app/library/components/comic-edit/comic-edit.component';
 import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
-import { ConfirmationService } from '@app/core';
+import { ConfirmationService, TitleService } from '@app/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
@@ -56,6 +56,7 @@ import {
 } from '@app/library/reducers/scraping.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { loadScrapingVolumes } from '@app/library/actions/scraping.actions';
+import { ComicTitlePipe } from '@app/library/pipes/comic-title.pipe';
 
 describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
@@ -79,6 +80,8 @@ describe('ComicDetailsComponent', () => {
   let router: Router;
   let activatedRoute: ActivatedRoute;
   let store: MockStore<any>;
+  let translateService: TranslateService;
+  let titleService: TitleService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -110,7 +113,9 @@ describe('ComicDetailsComponent', () => {
           provide: MatDialogRef,
           useValue: {}
         },
-        ConfirmationService
+        ConfirmationService,
+        ComicTitlePipe,
+        TitleService
       ]
     }).compileComponents();
 
@@ -121,11 +126,37 @@ describe('ComicDetailsComponent', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    describe('without a comic set', () => {
+      beforeEach(() => {
+        component.comic = null;
+        translateService.use('fr');
+      });
+
+      it('does not update the page title', () => {
+        expect(titleService.setTitle).not.toHaveBeenCalled();
+      });
+    });
+    describe('with a comic set', () => {
+      beforeEach(() => {
+        component.comic = COMIC;
+        translateService.use('fr');
+      });
+
+      it('updates the page title', () => {
+        expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+      });
+    });
   });
 
   describe('going to the previous comic in a series', () => {

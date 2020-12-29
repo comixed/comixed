@@ -40,7 +40,7 @@ import {
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/library/library.fixtures';
-import { ConfirmationService } from '@app/core';
+import { ConfirmationService, TitleService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { sendComicFiles } from '@app/library/actions/comic-import.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
@@ -53,7 +53,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/library/pipes/comic-file-cover-url.pipe';
-import { Title } from '@angular/platform-browser';
 import { MatCardModule } from '@angular/material/card';
 import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -78,7 +77,7 @@ describe('ImportComicsComponent', () => {
   let fixture: ComponentFixture<ImportComicsComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
-  let title: Title;
+  let titleService: TitleService;
   let translateService: TranslateService;
   let dialog: MatDialog;
 
@@ -109,7 +108,11 @@ describe('ImportComicsComponent', () => {
         MatTooltipModule,
         MatToolbarModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ImportComicsComponent);
@@ -117,8 +120,8 @@ describe('ImportComicsComponent', () => {
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
-    title = TestBed.inject(Title);
-    spyOn(title, 'setTitle');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     dialog = TestBed.inject(MatDialog);
     spyOn(dialog, 'open');
@@ -135,7 +138,7 @@ describe('ImportComicsComponent', () => {
     });
 
     it('sets the page title', () => {
-      expect(title.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
