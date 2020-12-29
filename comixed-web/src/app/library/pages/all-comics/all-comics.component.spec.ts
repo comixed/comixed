@@ -30,8 +30,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
+import { TitleService } from '@app/core';
 
 describe('AllComicsComponent', () => {
   const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
@@ -39,6 +40,8 @@ describe('AllComicsComponent', () => {
   let component: AllComicsComponent;
   let fixture: ComponentFixture<AllComicsComponent>;
   let store: MockStore<any>;
+  let translateService: TranslateService;
+  let titleService: TitleService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -53,16 +56,29 @@ describe('AllComicsComponent', () => {
         MatTreeModule,
         MatBadgeModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AllComicsComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the page title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 });

@@ -24,6 +24,8 @@ import { UserModuleState } from '@app/user';
 import { Subscription } from 'rxjs';
 import { selectUserState } from '@app/user/selectors/user.selectors';
 import { loginUser } from '@app/user/actions/user.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/core';
 
 @Component({
   selector: 'cx-login',
@@ -33,12 +35,16 @@ import { loginUser } from '@app/user/actions/user.actions';
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   userSubscription: Subscription;
+  langChangeSubscription: Subscription;
   busy = false;
+  private;
 
   constructor(
     private logger: LoggerService,
     private formBuilder: FormBuilder,
-    private store: Store<UserModuleState>
+    private store: Store<UserModuleState>,
+    private titleService: TitleService,
+    private translateService: TranslateService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,12 +55,18 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         this.busy = state.initializing || state.authenticating;
       });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   onSubmitLogin(): void {
@@ -62,5 +74,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     const password = this.loginForm.controls.password.value;
     this.logger.trace('Attempting to login user:', email);
     this.store.dispatch(loginUser({ email, password }));
+  }
+
+  loadTranslations(): void {
+    this.titleService.setTitle(this.translateService.instant('login.title'));
   }
 }
