@@ -31,6 +31,7 @@ export { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 export { TokenService } from '@app/core/services/token.service';
 export { AlertService } from '@app/core/services/alert.service';
 export { ConfirmationService } from '@app/core/services/confirmation.service';
+export { TitleService } from '@app/core/services/title.service';
 
 export {
   interpolate,
