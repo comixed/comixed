@@ -27,7 +27,7 @@ import {
   selectComicImportState
 } from '@app/library/selectors/comic-import.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { ConfirmationService } from '@app/core';
+import { ConfirmationService, TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { sendComicFiles } from '@app/library/actions/comic-import.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -52,6 +52,7 @@ import { ComicFileDetailsData } from '@app/library/models/ui/comic-file-details-
   styleUrls: ['./import-comics.component.scss']
 })
 export class ImportComicsComponent implements OnInit, OnDestroy {
+  langChangeSubscription: Subscription;
   filesSubscription: Subscription;
   files: ComicFile[];
   translateSubscription: Subscription;
@@ -72,7 +73,8 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private titleService: TitleService
   ) {
     this.translateSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -170,7 +172,8 @@ export class ImportComicsComponent implements OnInit, OnDestroy {
   }
 
   private loadTranslations(): void {
-    this.title.setTitle(
+    this.logger.trace('Loading page title');
+    this.titleService.setTitle(
       this.translateService.instant('import-comic-files.tab-title')
     );
   }

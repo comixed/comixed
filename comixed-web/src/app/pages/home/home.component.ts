@@ -16,15 +16,40 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LoggerService } from '@angular-ru/logger';
+import { Subscription } from 'rxjs';
+import { TitleService } from '@app/core';
 
 @Component({
   selector: 'cx-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
-  constructor() {}
+export class HomeComponent implements OnInit, OnDestroy {
+  langChangeSubscription: Subscription;
 
-  ngOnInit(): void {}
+  constructor(
+    private logger: LoggerService,
+    private titleService: TitleService,
+    private translateService: TranslateService
+  ) {
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+  }
+
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Loading translations');
+    this.titleService.setTitle(this.translateService.instant('home.title'));
+  }
 }

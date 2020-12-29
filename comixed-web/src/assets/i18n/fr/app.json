@@ -55,5 +55,8 @@
     "label": {
       "page-size": "Page Size"
     }
+  },
+  "home": {
+    "title": "Home"
   }
 }

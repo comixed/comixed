@@ -21,7 +21,7 @@ import { LoginComponent } from './login.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -33,6 +33,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TitleService } from '@app/core';
+import { Title } from '@angular/platform-browser';
 
 describe('LoginComponent', () => {
   const USER = USER_READER;
@@ -45,6 +47,8 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let store: MockStore<any>;
+  let translateService: TranslateService;
+  let titleService: TitleService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -67,6 +71,9 @@ describe('LoginComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    translateService = TestBed.inject(TranslateService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
     fixture.detectChanges();
   }));
 
@@ -84,6 +91,16 @@ describe('LoginComponent', () => {
 
     it('sets the busy flag', () => {
       expect(component.busy).toBeTruthy();
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('updates the page title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 

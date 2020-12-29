@@ -141,6 +141,9 @@
     }
   },
   "library": {
+    "all-comics":{
+      "title": "All Comics"
+    },
     "label": {
       "no-publisher": "Unknown Publisher",
       "no-series": "Unknown Series"

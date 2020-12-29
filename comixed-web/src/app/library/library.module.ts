@@ -106,6 +106,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatchabilityPipe,
     NavigationPaneComponent
   ],
+  providers: [ComicTitlePipe],
   imports: [
     CommonModule,
     CoreModule,
