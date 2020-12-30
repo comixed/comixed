@@ -82,6 +82,7 @@ import { NavigationPaneComponent } from './components/navigation-pane/navigation
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     ScrapingIssueDetailComponent,
     ScrapingIssueTitlePipe,
     MatchabilityPipe,
-    NavigationPaneComponent
+    NavigationPaneComponent,
+    ComicCoversComponent
   ],
   providers: [ComicTitlePipe],
   imports: [

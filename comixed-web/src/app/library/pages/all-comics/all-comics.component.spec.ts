@@ -33,6 +33,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TitleService } from '@app/core';
+import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
 
 describe('AllComicsComponent', () => {
   const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
@@ -45,7 +46,11 @@ describe('AllComicsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AllComicsComponent, NavigationPaneComponent],
+      declarations: [
+        AllComicsComponent,
+        NavigationPaneComponent,
+        ComicCoversComponent
+      ],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
