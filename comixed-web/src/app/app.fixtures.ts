@@ -16,26 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ActionReducerMap } from '@ngrx/store';
-import {
-  reducer as sessionReducer,
-  SESSION_FEATURE_KEY,
-  SessionState
-} from '@app/reducers/session.reducer';
-import {
-  BUILD_DETAILS_FEATURE_KEY,
-  BuildDetailsState,
-  reducer as buildDetailsReducer
-} from '@app/reducers/build-details.reducer';
+import { BuildDetails } from './models/build-details';
 
-export interface AppState {
-  [SESSION_FEATURE_KEY]: SessionState;
-  [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
-}
-
-export type State = AppState;
-
-export const APP_REDUCERS: ActionReducerMap<State> = {
-  [SESSION_FEATURE_KEY]: sessionReducer,
-  [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer
+export const BUILD_DETAILS: BuildDetails = {
+  branch: 'branch-name',
+  buildTime: new Date().getTime(),
+  buildHost: 'build-host',
+  buildVersion: 'build-version',
+  commitId: 'commit-id',
+  commitTime: new Date().getTime(),
+  commitMessage: 'commit-message',
+  commitUser: 'commit-user',
+  commitEmail: 'commit@email.com',
+  dirty: Math.random() > 0.5,
+  remoteOriginURL: 'http://remote.origin.url',
+  jdbcUrl: 'jdbc:h2:mem://localhost/comixed'
 };

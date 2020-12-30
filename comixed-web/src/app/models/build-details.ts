@@ -16,26 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ActionReducerMap } from '@ngrx/store';
-import {
-  reducer as sessionReducer,
-  SESSION_FEATURE_KEY,
-  SessionState
-} from '@app/reducers/session.reducer';
-import {
-  BUILD_DETAILS_FEATURE_KEY,
-  BuildDetailsState,
-  reducer as buildDetailsReducer
-} from '@app/reducers/build-details.reducer';
-
-export interface AppState {
-  [SESSION_FEATURE_KEY]: SessionState;
-  [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
+export interface BuildDetails {
+  branch: string;
+  buildTime: number;
+  buildHost: string;
+  buildVersion: string;
+  commitId: string;
+  commitTime: number;
+  commitMessage: string;
+  commitUser: string;
+  commitEmail: string;
+  dirty: boolean;
+  remoteOriginURL: string;
+  jdbcUrl: string;
 }
-
-export type State = AppState;
-
-export const APP_REDUCERS: ActionReducerMap<State> = {
-  [SESSION_FEATURE_KEY]: sessionReducer,
-  [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer
-};

@@ -19,11 +19,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from '@app/pages/home/home.component';
+import { BuildDetailsComponent } from '@app/pages/build-details/build-details.component';
 
 const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent
+  },
+  {
+    path: 'build',
+    component: BuildDetailsComponent
   },
   {
     path: '**',
