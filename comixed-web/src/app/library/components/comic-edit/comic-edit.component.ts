@@ -30,6 +30,7 @@ import {
   MAXIMUM_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
+import { saveComicDetails } from '@app/library/actions/comic-details.actions';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -99,6 +100,29 @@ export class ComicEditComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  onSaveDetails(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant('comic.save-details.title'),
+      message: this.translateService.instant('comic.save-details.message'),
+      confirm: () => {
+        this.logger.trace('Saving the comic details');
+
+        this.store.dispatch(
+          saveComicDetails({
+            comic: {
+              ...this._comic,
+              publisher: this.comicForm.controls.publisher.value,
+              series: this.comicForm.controls.series.value,
+              volume: this.comicForm.controls.volume.value,
+              issueNumber: this.comicForm.controls.issueNumber.value
+            }
+          })
+        );
+        this.comicForm.markAsPristine();
+      }
+    });
+  }
 
   onUndoChanges(): void {
     this.confirmationService.confirm({

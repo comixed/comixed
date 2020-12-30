@@ -38,6 +38,7 @@ import {
   API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE
 } from '@app/library/library.constants';
+import { saveComicDetails } from '@app/library/actions/comic-details.actions';
 
 describe('ComicEditComponent', () => {
   const COMIC = COMIC_2;
@@ -96,6 +97,34 @@ describe('ComicEditComponent', () => {
 
     it('updates the comic reference', () => {
       expect(component.comic).toEqual(COMIC);
+    });
+  });
+
+  describe('save comic details', () => {
+    beforeEach(() => {
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      component.onSaveDetails();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fire an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveComicDetails({
+          comic: {
+            ...COMIC_2,
+            publisher: COMIC.publisher,
+            series: COMIC.series,
+            volume: COMIC.volume,
+            issueNumber: COMIC.issueNumber
+          }
+        })
+      );
     });
   });
 

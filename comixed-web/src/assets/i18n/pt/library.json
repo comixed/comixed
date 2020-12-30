@@ -50,6 +50,10 @@
     "load-comic": {
       "effect-failure": "Failed to load comic."
     },
+    "save-details": {
+      "title": "Save changes",
+      "message": "Are you sure you want to save the changes made to this comic?"
+    },
     "undo-changes": {
       "title": "Undo Changes",
       "message": "Are you sure you want to undo changes to this comic?"
@@ -102,6 +106,16 @@
       "download-comic": "Download this comic...",
       "go-to-next-comic": "Go to the next comic in this series...",
       "go-to-previous-comic": "Go to the previous comic in this series..."
+    },
+    "comic-effects": {
+      "save-comic": {
+        "success": {
+          "detail": "Comic successfully saved."
+        },
+        "error": {
+          "detail": "Failed to save comic."
+        }
+      }
     }
   },
   "scraping": {

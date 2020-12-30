@@ -5,6 +5,7 @@
     mat-flat-button
     color="primary"
     [disabled]="!comicForm.valid"
+    (click)='onSaveDetails()'
   >
     <mat-icon>save</mat-icon>
     <mat-label>{{ "button.save" | translate }}</mat-label>

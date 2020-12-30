@@ -37,6 +37,7 @@ export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export const SAVE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 
 export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/scraping/volumes`;
 export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volumeId}/issues/\${issueNumber}`;

@@ -84,6 +84,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
 import { ComicGroupComponent } from './pages/comic-group/comic-group.component';
+import { ComicEffects } from '@app/library/effects/comic.effects';
 
 @NgModule({
   declarations: [
@@ -125,7 +126,8 @@ import { ComicGroupComponent } from './pages/comic-group/comic-group.component';
       DisplayEffects,
       ComicImportEffects,
       LibraryEffects,
-      ScrapingEffects
+      ScrapingEffects,
+      ComicEffects
     ]),
     MatInputModule,
     MatSelectModule,
