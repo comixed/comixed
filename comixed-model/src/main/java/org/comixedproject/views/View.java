@@ -71,4 +71,7 @@ public class View {
 
   /** Used when retrieving a session update. */
   public interface SessionUpdateView {}
+
+  /** Uses when viewing the build details for the server. */
+  public interface BuildDetails {}
 }

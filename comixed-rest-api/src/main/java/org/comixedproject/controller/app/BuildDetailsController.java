@@ -16,27 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.core;
+package org.comixedproject.controller.app;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.text.ParseException;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.core.BuildDetails;
-import org.comixedproject.service.core.DetailsService;
+import org.comixedproject.model.app.BuildDetails;
+import org.comixedproject.service.app.DetailsService;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <code>DetailsController</code> handles requests for build details.
+ * <code>BuildDetailsController</code> handles requests for build details.
  *
  * @author Darryl L. Pierce
  */
 @RestController
-@RequestMapping("/api/core")
 @Log4j2
-public class DetailsController {
+public class BuildDetailsController {
   @Autowired private DetailsService detailsService;
 
   /**
@@ -45,8 +46,9 @@ public class DetailsController {
    * @return the build details
    * @throws ParseException if an error occurs
    */
-  @GetMapping("/build-details")
+  @GetMapping(value = "/api/build-details", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
+  @JsonView(View.BuildDetails.class)
   public BuildDetails getBuildDetails() throws ParseException {
     log.info("Getting application build details");
     return this.detailsService.getBuildDetails();

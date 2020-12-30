@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.core;
+package org.comixedproject.service.app;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.core.BuildDetails;
+import org.comixedproject.model.app.BuildDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;

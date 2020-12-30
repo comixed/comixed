@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ActionReducerMap } from '@ngrx/store';
-import {
-  reducer as sessionReducer,
-  SESSION_FEATURE_KEY,
-  SessionState
-} from '@app/reducers/session.reducer';
+import { selectBuildDetailsState } from './build-details.selectors';
 import {
   BUILD_DETAILS_FEATURE_KEY,
-  BuildDetailsState,
-  reducer as buildDetailsReducer
+  BuildDetailsState
 } from '@app/reducers/build-details.reducer';
+import { BUILD_DETAILS } from '@app/app.fixtures';
 
-export interface AppState {
-  [SESSION_FEATURE_KEY]: SessionState;
-  [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
-}
+describe('BuildDetails Selectors', () => {
+  let state: BuildDetailsState;
 
-export type State = AppState;
+  beforeEach(() => {
+    state = { loading: Math.random() > 0.5, details: BUILD_DETAILS };
+  });
 
-export const APP_REDUCERS: ActionReducerMap<State> = {
-  [SESSION_FEATURE_KEY]: sessionReducer,
-  [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer
-};
+  it('selects the feature state', () => {
+    expect(
+      selectBuildDetailsState({
+        [BUILD_DETAILS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

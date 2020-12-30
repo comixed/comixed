@@ -95,10 +95,15 @@ $cx-column-large: 325px;
   transform: translate(-50%, -50%);
 }
 
+.cx-centered-horiz {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 // content display
 
 .cx-spacer {
-  padding-left: 5px;
   flex: 1 1 auto;
 }
 

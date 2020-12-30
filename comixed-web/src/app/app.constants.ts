@@ -23,3 +23,4 @@ export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
 export const HTTP_XML_REQUEST = 'XMLHttpRequest';
 
 export const LOAD_SESSION_UPDATE_URL = `${API_ROOT_URL}/session/updates`;
+export const LOAD_BUILD_DETAILS_URL = `${API_ROOT_URL}/build-details`;

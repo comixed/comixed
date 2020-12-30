@@ -50,9 +50,17 @@ import { APP_REDUCERS } from '@app/app.reducers';
 import { SessionEffects } from '@app/effects/session.effects';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { BuildDetailsEffects } from '@app/effects/build-details.effects';
+import { BuildDetailsComponent } from './pages/build-details/build-details.component';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NavigationBarComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    NavigationBarComponent,
+    BuildDetailsComponent
+  ],
   imports: [
     UserModule,
     LibraryModule,
@@ -62,7 +70,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     MatToolbarModule,
     MatIconModule,
     StoreModule.forRoot(APP_REDUCERS, {}),
-    EffectsModule.forRoot([AppEffects, SessionEffects]),
+    EffectsModule.forRoot([AppEffects, SessionEffects, BuildDetailsEffects]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({
@@ -86,7 +94,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     MatFormFieldModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCardModule
   ],
   providers: [
     [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
