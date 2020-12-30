@@ -1,0 +1,62 @@
+<div class="cx-centered-horiz">
+  <mat-card>
+    <mat-card-title>{{ "build-details.title" | translate }}</mat-card-title>
+    <mat-card-content>
+      <div>
+        {{ "build-details.label.branch" | translate: { name: details.branch } }}
+      </div>
+      <div>
+        {{
+          "build-details.label.build-time"
+            | translate: { time: details.buildTime | date: "long" }
+        }}
+      </div>
+      <div>
+        {{
+          "build-details.label.build-host"
+            | translate: { name: details.buildHost }
+        }}
+      </div>
+      <div>
+        {{
+          "build-details.label.build-version"
+            | translate: { version: details.buildVersion }
+        }}
+      </div>
+      <div>
+        {{
+          "build-details.label.commit-id" | translate: { id: details.commitId }
+        }}
+      </div>
+      <div>
+        {{
+          "build-details.label.commit-time"
+            | translate: { time: details.commitTime | date: "long" }
+        }}
+      </div>
+      <div>{{ "build-details.label.commit-message" | translate }}</div>
+      <div [innerText]="details.commitMessage"></div>
+      <div>
+        {{
+          "build-details.label.commit-user"
+            | translate
+              : { name: details.commitUser, email: details.commitEmail }
+        }}
+      </div>
+      <div>
+        {{ "build-details.label.dirty" | translate: { name: details.dirty } }}
+      </div>
+      <div>
+        {{
+          "build-details.label.remote-origin-url"
+            | translate: { url: details.remoteOriginURL }
+        }}
+      </div>
+      <div>
+        {{
+          "build-details.label.jdbc-url" | translate: { url: details.jdbcUrl }
+        }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

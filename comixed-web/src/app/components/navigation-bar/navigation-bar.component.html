@@ -1,4 +1,8 @@
 <mat-toolbar class="cx-width-100">
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-label class="cx-spacer">ComiXed</mat-label>
   <button
     *ngIf="!user"
     mat-icon-button
@@ -8,10 +12,6 @@
   >
     <mat-icon>login</mat-icon>
   </button>
-  <button *ngIf="!!user" mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
-  <mat-label class="cx-spacer">ComiXed</mat-label>
   <mat-label *ngIf="!!user">
     {{ "app.logged-in" | translate: { email: user.email } }}
     <button
@@ -37,6 +37,10 @@
   <button *ngIf="isReader" mat-menu-item [matMenuTriggerFor]="optionsMenu">
     <mat-icon>settings</mat-icon>
     <mat-label>{{ "menu.options-menu.root" | translate }}</mat-label>
+  </button>
+  <button mat-menu-item [routerLink]="['/build']">
+    <mat-icon>construction</mat-icon>
+    <mat-label>{{ "menu.build-details" | translate }}</mat-label>
   </button>
 </mat-menu>
 

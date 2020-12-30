@@ -38,7 +38,8 @@
     "options-menu": {
       "root": "Options",
       "show-options-panel": "Set User Options..."
-    }
+    },
+    "build-details": "Build Details"
   },
   "session": {
     "load-effect-failure": "Unable to load user session"
@@ -58,5 +59,22 @@
   },
   "home": {
     "title": "Home"
+  },
+  "build-details": {
+    "title": "Build Details",
+    "load-effect-failure": "Failed to load the build details.",
+    "label": {
+      "branch": "The code was build from a branch named {name}",
+      "build-time": "The code was built on {time}.",
+      "build-host": "Code was built on a machine named {name}.",
+      "build-version": "The code was marked with a Build version of {version}.",
+      "commit-id": "The latest commit hash on the source branch is {id}.",
+      "commit-time": "This commit was created on {time}.",
+      "commit-message": "Commit Message",
+      "commit-user": "Commit was created by {name} <{email}>",
+      "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
+      "remote-origin-url": "This branch is tracking the remote branch {url}",
+      "jdbc-url": "The database URL being used is {url}"
+    }
   }
 }
