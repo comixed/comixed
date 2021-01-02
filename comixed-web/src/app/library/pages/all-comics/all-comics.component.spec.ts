@@ -34,9 +34,18 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TitleService } from '@app/core';
 import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
 
 describe('AllComicsComponent', () => {
-  const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
+  const initialState = {
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [DISPLAY_FEATURE_KEY]: initialDisplayState
+  };
 
   let component: AllComicsComponent;
   let fixture: ComponentFixture<AllComicsComponent>;
@@ -53,13 +62,15 @@ describe('AllComicsComponent', () => {
       ],
       imports: [
         NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSidenavModule,
         MatToolbarModule,
         MatIconModule,
         MatTreeModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatPaginatorModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

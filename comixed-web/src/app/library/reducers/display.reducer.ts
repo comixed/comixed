@@ -19,12 +19,15 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   pageSizeSet,
+  paginationSet,
   resetDisplayOptions,
-  setPageSize
+  setPageSize,
+  setPagination
 } from '../actions/display.actions';
 import {
   PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
+  PAGE_SIZE_PREFERENCE,
+  PAGINATION_DEFAULT
 } from '@app/library/library.constants';
 import { getUserPreference } from '@app/user';
 
@@ -32,10 +35,12 @@ export const DISPLAY_FEATURE_KEY = 'display_state';
 
 export interface DisplayState {
   pageSize: number;
+  pagination: number;
 }
 
 export const initialState: DisplayState = {
-  pageSize: PAGE_SIZE_DEFAULT
+  pageSize: PAGE_SIZE_DEFAULT,
+  pagination: PAGINATION_DEFAULT
 };
 
 export const reducer = createReducer(
@@ -59,5 +64,10 @@ export const reducer = createReducer(
     }
   }),
   on(setPageSize, (state, action) => ({ ...state, pageSize: action.size })),
-  on(pageSizeSet, state => state)
+  on(pageSizeSet, state => state),
+  on(setPagination, (state, action) => ({
+    ...state,
+    pagination: action.pagination
+  })),
+  on(paginationSet, state => state)
 );

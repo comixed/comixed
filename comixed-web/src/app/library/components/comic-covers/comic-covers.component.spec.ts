@@ -22,28 +22,77 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { RouterTestingModule } from '@angular/router/testing';
+import { LoggerModule } from '@angular-ru/logger';
+import { TranslateModule } from '@ngx-translate/core';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { NavigationPaneComponent } from '@app/library/components/navigation-pane/navigation-pane.component';
+import { MatTreeModule } from '@angular/material/tree';
+import {
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/library.reducer';
+import { MatBadgeModule } from '@angular/material/badge';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
 
 describe('ComicCoversComponent', () => {
+  const PAGINATION = 25;
+  const initialState = {
+    [DISPLAY_FEATURE_KEY]: initialDisplayState,
+    [LIBRARY_FEATURE_KEY]: initialLibraryState
+  };
+
   let component: ComicCoversComponent;
   let fixture: ComponentFixture<ComicCoversComponent>;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicCoversComponent],
+      declarations: [ComicCoversComponent, NavigationPaneComponent],
       imports: [
         NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
         MatSidenavModule,
         MatToolbarModule,
-        MatIconModule
-      ]
+        MatIconModule,
+        MatPaginatorModule,
+        MatTreeModule,
+        MatBadgeModule
+      ],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicCoversComponent);
     component = fixture.componentInstance;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('pagination changes', () => {
+    beforeEach(() => {
+      component.onPaginationChange(PAGINATION);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: PAGINATION_PREFERENCE,
+          value: `${PAGINATION}`
+        })
+      );
+    });
   });
 });

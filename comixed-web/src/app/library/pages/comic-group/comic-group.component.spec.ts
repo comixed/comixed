@@ -47,9 +47,17 @@ import {
   TEAMS_GROUP
 } from '@app/library/library.constants';
 import { Comic } from '@app/library';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
 
 describe('ComicGroupComponent', () => {
-  const initialState = { [LIBRARY_FEATURE_KEY]: initialLibraryState };
+  const initialState = {
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [DISPLAY_FEATURE_KEY]: initialDisplayState
+  };
 
   let component: ComicGroupComponent;
   let fixture: ComponentFixture<ComicGroupComponent>;
@@ -76,7 +84,8 @@ describe('ComicGroupComponent', () => {
         MatToolbarModule,
         MatIconModule,
         MatTreeModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatPaginatorModule
       ],
       providers: [
         provideMockStore({ initialState }),

@@ -148,6 +148,7 @@
       "invalid-grouping": "The group \"{name}\" is not valid."
     },
     "label": {
+      "pagination-items-per-page": "Covers Per Page",
       "no-publisher": "Unknown Publisher",
       "no-series": "Unknown Series"
     },

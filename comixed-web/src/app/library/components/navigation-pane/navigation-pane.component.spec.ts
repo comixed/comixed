@@ -28,6 +28,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { COMIC_2 } from '@app/library/library.fixtures';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NavigationPaneComponent', () => {
   const COMIC = COMIC_2;
@@ -41,10 +43,12 @@ describe('NavigationPaneComponent', () => {
     TestBed.configureTestingModule({
       declarations: [NavigationPaneComponent],
       imports: [
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatTreeModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatIconModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

@@ -23,8 +23,17 @@ export const resetDisplayOptions = createAction(
   '[Display] Reset the display option state',
   props<{ user?: User }>()
 );
+
 export const setPageSize = createAction(
   '[Display] Set the page size',
   props<{ size: number; save: boolean }>()
 );
+
 export const pageSizeSet = createAction('[Display] The page size is set');
+
+export const setPagination = createAction(
+  '[Display] Set the pagination',
+  props<{ pagination: number }>()
+);
+
+export const paginationSet = createAction('[Display] Pagination is set');
