@@ -50,19 +50,19 @@ describe('User Reducer', () => {
     });
 
     it('sets the initializing flag', () => {
-      expect(state.initializing).toBeTruthy();
+      expect(state.initializing).toBeTrue();
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalsy();
+      expect(state.authenticating).toBeFalse();
     });
 
     it('clears the authenticated flag', () => {
-      expect(state.authenticated).toBeFalsy();
+      expect(state.authenticated).toBeFalse();
     });
 
     it('has no user', () => {
@@ -70,7 +70,7 @@ describe('User Reducer', () => {
     });
 
     it('clears the saving flag', () => {
-      expect(state.saving).toBeFalsy();
+      expect(state.saving).toBeFalse();
     });
   });
 
@@ -80,7 +80,7 @@ describe('User Reducer', () => {
     });
 
     it('sets the loading flag', () => {
-      expect(state.loading).toBeTruthy();
+      expect(state.loading).toBeTrue();
     });
   });
 
@@ -99,15 +99,15 @@ describe('User Reducer', () => {
     });
 
     it('clears the initializing flag', () => {
-      expect(state.initializing).toBeFalsy();
+      expect(state.initializing).toBeFalse();
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('sets the authenticated flag', () => {
-      expect(state.authenticated).toBeTruthy();
+      expect(state.authenticated).toBeTrue();
     });
 
     it('sets the current user', () => {
@@ -124,15 +124,15 @@ describe('User Reducer', () => {
     });
 
     it('clears the initializing flag', () => {
-      expect(state.initializing).toBeFalsy();
+      expect(state.initializing).toBeFalse();
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('clears the authenticated flag', () => {
-      expect(state.authenticated).toBeFalsy();
+      expect(state.authenticated).toBeFalse();
     });
   });
 
@@ -148,11 +148,11 @@ describe('User Reducer', () => {
     });
 
     it('sets the authenticating flag', () => {
-      expect(state.authenticating).toBeTruthy();
+      expect(state.authenticating).toBeTrue();
     });
 
     it('clears the authenticated flag', () => {
-      expect(state.authenticated).toBeFalsy();
+      expect(state.authenticated).toBeFalse();
     });
 
     it('clears the current user', () => {
@@ -169,11 +169,11 @@ describe('User Reducer', () => {
     });
 
     it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalsy();
+      expect(state.authenticating).toBeFalse();
     });
 
     it('sets the authenticated flag', () => {
-      expect(state.authenticated).toBeTruthy();
+      expect(state.authenticated).toBeTrue();
     });
   });
 
@@ -183,7 +183,7 @@ describe('User Reducer', () => {
     });
 
     it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalsy();
+      expect(state.authenticating).toBeFalse();
     });
   });
 
@@ -193,7 +193,7 @@ describe('User Reducer', () => {
     });
 
     it('sets the authenticating flag', () => {
-      expect(state.authenticating).toBeTruthy();
+      expect(state.authenticating).toBeTrue();
     });
   });
 
@@ -206,11 +206,11 @@ describe('User Reducer', () => {
     });
 
     it('clears the authenticating flag', () => {
-      expect(state.authenticating).toBeFalsy();
+      expect(state.authenticating).toBeFalse();
     });
 
     it('clears the authenticated flag', () => {
-      expect(state.authenticated).toBeFalsy();
+      expect(state.authenticated).toBeFalse();
     });
 
     it('clears the user', () => {
@@ -227,7 +227,7 @@ describe('User Reducer', () => {
     });
 
     it('sets the saving flag', () => {
-      expect(state.saving).toBeTruthy();
+      expect(state.saving).toBeTrue();
     });
   });
 
@@ -240,7 +240,7 @@ describe('User Reducer', () => {
     });
 
     it('clears the saving flag', () => {
-      expect(state.saving).toBeFalsy();
+      expect(state.saving).toBeFalse();
     });
 
     it('updates the user', () => {
@@ -254,7 +254,7 @@ describe('User Reducer', () => {
     });
 
     it('clears the saving flag', () => {
-      expect(state.saving).toBeFalsy();
+      expect(state.saving).toBeFalse();
     });
   });
 });

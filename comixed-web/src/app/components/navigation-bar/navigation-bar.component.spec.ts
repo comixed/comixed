@@ -133,7 +133,7 @@ describe('NavigationBarComponent', () => {
     });
 
     it('sets the admin flag', () => {
-      expect(component.isAdmin).toBeTruthy();
+      expect(component.isAdmin).toBeTrue();
     });
   });
 
@@ -144,7 +144,7 @@ describe('NavigationBarComponent', () => {
     });
 
     it('clears the admin flag', () => {
-      expect(component.isAdmin).toBeFalsy();
+      expect(component.isAdmin).toBeFalse();
     });
   });
 

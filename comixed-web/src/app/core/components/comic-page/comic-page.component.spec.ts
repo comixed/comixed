@@ -83,7 +83,7 @@ describe('CoverImageComponent', () => {
 
     it('sends a true selected value', () => {
       component.pageClicked.subscribe(response =>
-        expect(response.selected).toBeTruthy()
+        expect(response.selected).toBeTrue()
       );
     });
   });
@@ -106,7 +106,7 @@ describe('CoverImageComponent', () => {
 
     it('sends a false selected value', () => {
       component.pageClicked.subscribe(response =>
-        expect(response.selected).toBeFalsy()
+        expect(response.selected).toBeFalse()
       );
     });
   });

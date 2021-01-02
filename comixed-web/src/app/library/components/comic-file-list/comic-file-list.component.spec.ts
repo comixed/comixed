@@ -98,11 +98,11 @@ describe('ComicFileListComponent', () => {
     });
 
     it('returns true for an selected file', () => {
-      expect(component.isFileSelected(SELECTED_FILE)).toBeTruthy();
+      expect(component.isFileSelected(SELECTED_FILE)).toBeTrue();
     });
 
     it('returns false for an unselected file', () => {
-      expect(component.isFileSelected(NOT_SELECTED_FILE)).toBeFalsy();
+      expect(component.isFileSelected(NOT_SELECTED_FILE)).toBeFalse();
     });
   });
 

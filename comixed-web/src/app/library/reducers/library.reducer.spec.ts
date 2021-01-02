@@ -42,7 +42,7 @@ describe('Library Reducer', () => {
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('has no current comic', () => {
@@ -63,7 +63,7 @@ describe('Library Reducer', () => {
     });
 
     it('sets the loading flag', () => {
-      expect(state.loading).toBeTruthy();
+      expect(state.loading).toBeTrue();
     });
   });
 
@@ -76,7 +76,7 @@ describe('Library Reducer', () => {
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('sets the comic', () => {
@@ -90,7 +90,7 @@ describe('Library Reducer', () => {
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
   });
 
