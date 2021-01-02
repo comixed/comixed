@@ -99,7 +99,7 @@ describe('AppComponent', () => {
     });
 
     it('sets the session active flag', () => {
-      expect(component.sessionActive).toBeTruthy();
+      expect(component.sessionActive).toBeTrue();
     });
 
     it('fires an action to load the session update', () => {
@@ -121,7 +121,7 @@ describe('AppComponent', () => {
       });
 
       it('clear the session active flag', () => {
-        expect(component.sessionActive).toBeFalsy();
+        expect(component.sessionActive).toBeFalse();
       });
     });
   });

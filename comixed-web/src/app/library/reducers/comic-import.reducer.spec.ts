@@ -54,7 +54,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('has an empty set of files', () => {
@@ -66,11 +66,11 @@ describe('ComicImport Reducer', () => {
     });
 
     it('clears the sending flag', () => {
-      expect(state.sending).toBeFalsy();
+      expect(state.sending).toBeFalse();
     });
 
     it('clears the importing flag', () => {
-      expect(state.importing).toBeFalsy();
+      expect(state.importing).toBeFalse();
     });
   });
 
@@ -83,7 +83,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('sets the loading flag', () => {
-      expect(state.loading).toBeTruthy();
+      expect(state.loading).toBeTrue();
     });
   });
 
@@ -96,7 +96,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('sets the comic files', () => {
@@ -117,7 +117,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('clears the comic files', () => {
@@ -186,7 +186,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('sets the sending flag', () => {
-      expect(state.sending).toBeTruthy();
+      expect(state.sending).toBeTrue();
     });
   });
 
@@ -199,7 +199,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('clears the sending flag', () => {
-      expect(state.sending).toBeFalsy();
+      expect(state.sending).toBeFalse();
     });
 
     it('clears the comic file list', () => {
@@ -220,7 +220,7 @@ describe('ComicImport Reducer', () => {
     });
 
     it('clears the sending flag', () => {
-      expect(state.sending).toBeFalsy();
+      expect(state.sending).toBeFalse();
     });
 
     it('leaves the comic file list intact', () => {
@@ -238,7 +238,7 @@ describe('ComicImport Reducer', () => {
         { ...state, importing: false },
         setImportingComicsState({ importing: true })
       );
-      expect(state.importing).toBeTruthy();
+      expect(state.importing).toBeTrue();
     });
 
     it('can be turned off', () => {
@@ -246,7 +246,7 @@ describe('ComicImport Reducer', () => {
         { ...state, importing: true },
         setImportingComicsState({ importing: false })
       );
-      expect(state.importing).toBeFalsy();
+      expect(state.importing).toBeFalse();
     });
   });
 });

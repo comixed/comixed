@@ -44,11 +44,11 @@ describe('Session Reducer', () => {
     });
 
     it('clears the initialized flag', () => {
-      expect(state.initialized).toBeFalsy();
+      expect(state.initialized).toBeFalse();
     });
 
     it('clears the loading flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('has as import count of zero', () => {
@@ -73,7 +73,7 @@ describe('Session Reducer', () => {
     });
 
     it('sets the loading session flag', () => {
-      expect(state.loading).toBeTruthy();
+      expect(state.loading).toBeTrue();
     });
   });
 
@@ -89,11 +89,11 @@ describe('Session Reducer', () => {
     });
 
     it('clears the loading session flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('sets the initialized flag', () => {
-      expect(state.initialized).toBeTruthy();
+      expect(state.initialized).toBeTrue();
     });
 
     it('sets the import count', () => {
@@ -114,11 +114,11 @@ describe('Session Reducer', () => {
     });
 
     it('clears the loading session flag', () => {
-      expect(state.loading).toBeFalsy();
+      expect(state.loading).toBeFalse();
     });
 
     it('sets the initialized flag', () => {
-      expect(state.initialized).toBeTruthy();
+      expect(state.initialized).toBeTrue();
     });
   });
 });

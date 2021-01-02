@@ -90,7 +90,7 @@ describe('LoginComponent', () => {
     });
 
     it('sets the busy flag', () => {
-      expect(component.busy).toBeTruthy();
+      expect(component.busy).toBeTrue();
     });
   });
 
@@ -113,7 +113,7 @@ describe('LoginComponent', () => {
     });
 
     it('sets the busy flag', () => {
-      expect(component.busy).toBeTruthy();
+      expect(component.busy).toBeTrue();
     });
   });
 

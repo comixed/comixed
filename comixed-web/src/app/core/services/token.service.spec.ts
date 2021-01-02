@@ -39,7 +39,7 @@ describe('TokenService', () => {
     });
 
     it('returns that it has an authentication token', () => {
-      expect(service.hasAuthToken()).toBeTruthy();
+      expect(service.hasAuthToken()).toBeTrue();
     });
 
     it('returns the authentication token', () => {
@@ -54,7 +54,7 @@ describe('TokenService', () => {
     });
 
     it('returns that it does not have an authentication token', () => {
-      expect(service.hasAuthToken()).toBeFalsy();
+      expect(service.hasAuthToken()).toBeFalse();
     });
 
     it('deletes the stored token', () => {

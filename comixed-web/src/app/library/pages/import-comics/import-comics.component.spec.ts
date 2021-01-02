@@ -192,7 +192,7 @@ describe('ImportComicsComponent', () => {
       });
 
       it('sets the busy flag', () => {
-        expect(component.busy).toBeTruthy();
+        expect(component.busy).toBeTrue();
       });
 
       it('fires an action', () => {
@@ -215,7 +215,7 @@ describe('ImportComicsComponent', () => {
       });
 
       it('clears the busy flag', () => {
-        expect(component.busy).toBeFalsy();
+        expect(component.busy).toBeFalse();
       });
 
       it('fires an action', () => {
@@ -264,7 +264,7 @@ describe('ImportComicsComponent', () => {
       });
 
       it('sets the busy flag', () => {
-        expect(component.busy).toBeTruthy();
+        expect(component.busy).toBeTrue();
       });
 
       it('fires an action', () => {
@@ -287,7 +287,7 @@ describe('ImportComicsComponent', () => {
       });
 
       it('clears the busy flag', () => {
-        expect(component.busy).toBeFalsy();
+        expect(component.busy).toBeFalse();
       });
 
       it('fires an action', () => {

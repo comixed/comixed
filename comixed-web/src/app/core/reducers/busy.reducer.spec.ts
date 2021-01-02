@@ -32,7 +32,7 @@ describe('Busy Reducer', () => {
     });
 
     it('clears the enabled flag', () => {
-      expect(state.enabled).toBeFalsy();
+      expect(state.enabled).toBeFalse();
     });
   });
 
@@ -45,7 +45,7 @@ describe('Busy Reducer', () => {
     });
 
     it('sets the enabled flag', () => {
-      expect(state.enabled).toBeTruthy();
+      expect(state.enabled).toBeTrue();
     });
   });
 
@@ -58,7 +58,7 @@ describe('Busy Reducer', () => {
     });
 
     it('clears the enabled flag', () => {
-      expect(state.enabled).toBeFalsy();
+      expect(state.enabled).toBeFalse();
     });
   });
 });

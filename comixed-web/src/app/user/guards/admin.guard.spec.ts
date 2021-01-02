@@ -71,7 +71,7 @@ describe('AdminGuard', () => {
     it('defers access', () => {
       (guard.canActivate(null, null) as Observable<
         boolean
-      >).subscribe(response => expect(response).toBeTruthy());
+      >).subscribe(response => expect(response).toBeTrue());
     });
 
     afterEach(() => {
@@ -103,7 +103,7 @@ describe('AdminGuard', () => {
     });
 
     it('denies access', () => {
-      expect(guard.canActivate(null, null)).toBeFalsy();
+      expect(guard.canActivate(null, null)).toBeFalse();
     });
   });
 
@@ -124,7 +124,7 @@ describe('AdminGuard', () => {
     });
 
     it('denies access', () => {
-      expect(guard.canActivate(null, null)).toBeFalsy();
+      expect(guard.canActivate(null, null)).toBeFalse();
     });
   });
 
@@ -141,7 +141,7 @@ describe('AdminGuard', () => {
     });
 
     it('allows access', () => {
-      expect(guard.canActivate(null, null)).toBeTruthy();
+      expect(guard.canActivate(null, null)).toBeTrue();
     });
   });
 });

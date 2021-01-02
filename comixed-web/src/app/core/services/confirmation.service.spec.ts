@@ -79,7 +79,7 @@ describe('ConfirmationService', () => {
     });
 
     it('invokes the confirm callback', () => {
-      expect(confirmCalled).toBeTruthy();
+      expect(confirmCalled).toBeTrue();
     });
   });
 
@@ -99,7 +99,7 @@ describe('ConfirmationService', () => {
     });
 
     it('invokes the confirm callback', () => {
-      expect(confirmCalled).toBeFalsy();
+      expect(confirmCalled).toBeFalse();
     });
   });
 });
