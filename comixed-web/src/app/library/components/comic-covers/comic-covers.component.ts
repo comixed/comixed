@@ -16,18 +16,101 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Comic } from '@app/library';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  PAGINATION_OPTIONS,
+  PAGINATION_PREFERENCE
+} from '@app/library/library.constants';
+import { selectDisplayState } from '@app/library/selectors/display.selectors';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comic-covers',
   templateUrl: './comic-covers.component.html',
   styleUrls: ['./comic-covers.component.scss']
 })
-export class ComicCoversComponent implements OnInit {
-  @Input() comics: Comic[];
+export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor() {}
+  readonly paginationOptions = PAGINATION_OPTIONS;
 
-  ngOnInit(): void {}
+  langChangeSubscription: Subscription;
+  displaySubscription: Subscription;
+  pagination = this.paginationOptions[0];
+
+  dataSource = new MatTableDataSource<Comic>();
+  private _comicObservable = new BehaviorSubject<Comic[]>([]);
+
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private translateService: TranslateService
+  ) {
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.displaySubscription = this.store
+      .select(selectDisplayState)
+      .subscribe(state => {
+        this.logger.debug('loading pagination from preferences');
+        this.pagination = state.pagination;
+      });
+  }
+
+  get comics(): Comic[] {
+    return this._comicObservable.getValue();
+  }
+
+  @Input() set comics(comics: Comic[]) {
+    this.logger.debug('Setting comics:', comics);
+    this.dataSource.data = comics;
+  }
+
+  ngOnInit(): void {
+    this._comicObservable = this.dataSource.connect();
+  }
+
+  ngOnDestroy(): void {
+    this.dataSource.disconnect();
+    this.displaySubscription.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.loadTranslations();
+  }
+
+  onPaginationChange(pagination: number): void {
+    this.logger.debug('Pagination changed:', pagination);
+    this.store.dispatch(
+      saveUserPreference({
+        name: PAGINATION_PREFERENCE,
+        value: `${pagination}`
+      })
+    );
+  }
+
+  private loadTranslations(): void {
+    this.logger.debug('Loading translations');
+    this.paginator._intl.itemsPerPageLabel = this.translateService.instant(
+      'library.label.pagination-items-per-page'
+    );
+  }
 }
