@@ -5,10 +5,25 @@
   <mat-sidenav-content>
     <div class="cx-width-100 cx-height-100">
       <mat-toolbar>
-        <div class="cx-spacer"></div>
-        <button mat-icon-button (click)="navigationPane.toggle(true)">
+        <button
+          id="navigation-tree-button"
+          mat-flat-button
+          color="accent"
+          [matTooltip]="'library.tooltip.navigation-tree' | translate"
+          (click)="navigationPane.toggle(true)"
+        >
           <mat-icon>account_tree</mat-icon>
+          <mat-label>{{
+            "library.label.navigation-tree" | translate
+          }}</mat-label>
         </button>
+        <div class="cx-spacer"></div>
+        <mat-paginator
+          [pageSizeOptions]="paginationOptions"
+          [showFirstLastButtons]="true"
+          [pageSize]="pagination"
+          (page)="onPaginationChange($event.pageSize)"
+        ></mat-paginator>
       </mat-toolbar>
       <div id="cx-all-comics" class="cx-comic-detail-card-container">
         <cx-comic-detail-card

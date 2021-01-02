@@ -17,11 +17,16 @@
  */
 
 import { DisplayState, initialState, reducer } from './display.reducer';
-import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGINATION_DEFAULT
+} from '@app/library/library.constants';
 import {
   pageSizeSet,
+  paginationSet,
   resetDisplayOptions,
-  setPageSize
+  setPageSize,
+  setPagination
 } from '@app/library/actions/display.actions';
 import { USER_READER } from '@app/user/user.fixtures';
 
@@ -41,6 +46,10 @@ describe('Display Reducer', () => {
 
     it('has a default page size', () => {
       expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
+    });
+
+    it('has a default pagination', () => {
+      expect(state.pagination).toEqual(PAGINATION_DEFAULT);
     });
   });
 
@@ -65,6 +74,10 @@ describe('Display Reducer', () => {
     it('sets the default page size', () => {
       expect(state.pageSize).toEqual(PAGE_SIZE_DEFAULT);
     });
+
+    it('has a default pagination', () => {
+      expect(state.pagination).toEqual(PAGINATION_DEFAULT);
+    });
   });
 
   describe('setting the page size', () => {
@@ -86,6 +99,32 @@ describe('Display Reducer', () => {
     beforeEach(() => {
       originalState = { ...state };
       state = reducer({ ...state }, pageSizeSet());
+    });
+
+    it('does not change the state', () => {
+      expect(state).toEqual(originalState);
+    });
+  });
+
+  describe('setting the pagination', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, pagination: 0 },
+        setPagination({ pagination: PAGINATION_DEFAULT })
+      );
+    });
+
+    it('sets the pagination', () => {
+      expect(state.pagination).toEqual(PAGINATION_DEFAULT);
+    });
+  });
+
+  describe('when the pagination has been set', () => {
+    let originalState: DisplayState;
+
+    beforeEach(() => {
+      originalState = { ...state };
+      state = reducer({ ...state }, paginationSet());
     });
 
     it('does not change the state', () => {

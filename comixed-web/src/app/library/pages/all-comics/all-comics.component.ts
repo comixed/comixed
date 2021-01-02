@@ -21,9 +21,13 @@ import { Comic } from '@app/library';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { selectAllComics } from '@app/library/selectors/library.selectors';
+import {
+  selectAllComics,
+  selectLibraryBusy
+} from '@app/library/selectors/library.selectors';
 import { TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-all-comics',
@@ -31,6 +35,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./all-comics.component.scss']
 })
 export class AllComicsComponent implements OnInit, OnDestroy {
+  libraryBusySubscription: Subscription;
   comicSubscription: Subscription;
   langChangeSubscription: Subscription;
 
@@ -40,6 +45,9 @@ export class AllComicsComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private translateService: TranslateService
   ) {
+    this.libraryBusySubscription = this.store
+      .select(selectLibraryBusy)
+      .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.comicSubscription = this.store
       .select(selectAllComics)
       .subscribe(comics => (this.comics = comics));
@@ -64,7 +72,9 @@ export class AllComicsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.libraryBusySubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {
