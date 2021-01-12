@@ -31,6 +31,12 @@ export const selectComic = createSelector(
   state => state.comic
 );
 
+/** Selects the selected comics. */
+export const selectSelectedComics = createSelector(
+  selectLibraryState,
+  state => state.selected
+);
+
 /** Selects if the feature is current busy. */
 export const selectLibraryBusy = createSelector(
   selectLibraryState,
