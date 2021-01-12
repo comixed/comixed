@@ -25,6 +25,7 @@ import {
   selectLibraryState,
   selectLocations,
   selectPublishers,
+  selectSelectedComics,
   selectSeries,
   selectStories,
   selectTeams
@@ -38,6 +39,7 @@ describe('Library Selectors', () => {
     { ...COMIC_2, publisher: '' },
     { ...COMIC_3, series: '' }
   ];
+  const SELECTED_COMICS = [COMIC_1, COMIC_2, COMIC_3];
   const PUBLISHERS = [
     COMIC_1.publisher,
     'library.label.no-publisher',
@@ -58,7 +60,12 @@ describe('Library Selectors', () => {
   let state: LibraryState;
 
   beforeEach(() => {
-    state = { loading: Math.random() > 0.5, comic: COMIC, comics: COMICS };
+    state = {
+      loading: Math.random() > 0.5,
+      comic: COMIC,
+      comics: COMICS,
+      selected: SELECTED_COMICS
+    };
   });
 
   it('selects the feature state', () => {
@@ -75,6 +82,12 @@ describe('Library Selectors', () => {
         [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state.comic);
+  });
+
+  it('selects the selected comics', () => {
+    expect(selectSelectedComics({ [LIBRARY_FEATURE_KEY]: state })).toEqual(
+      SELECTED_COMICS
+    );
   });
 
   it('selects the busy state', () => {

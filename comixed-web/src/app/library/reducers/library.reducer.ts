@@ -19,8 +19,10 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   comicLoaded,
+  deselectComics,
   loadComic,
   loadComicFailed,
+  selectComics,
   updateComics
 } from '../actions/library.actions';
 import { Comic } from '@app/library';
@@ -31,12 +33,14 @@ export interface LibraryState {
   loading: boolean;
   comic: Comic;
   comics: Comic[];
+  selected: Comic[];
 }
 
 export const initialState: LibraryState = {
   loading: false,
   comic: null,
-  comics: []
+  comics: [],
+  selected: []
 };
 
 export const reducer = createReducer(
@@ -62,5 +66,19 @@ export const reducer = createReducer(
     );
 
     return { ...state, comics };
+  }),
+  on(selectComics, (state, action) => {
+    const selected = state.selected.filter(
+      comic => action.comics.includes(comic) === false
+    );
+
+    return { ...state, selected: selected.concat(action.comics) };
+  }),
+  on(deselectComics, (state, action) => {
+    const selected = state.selected.filter(
+      comic => action.comics.includes(comic) === false
+    );
+
+    return { ...state, selected };
   })
 );

@@ -23,12 +23,25 @@ export const loadComic = createAction(
   '[Library] Load a comic',
   props<{ id: number }>()
 );
+
 export const comicLoaded = createAction(
   '[Library] Loaded a comic',
   props<{ comic: Comic }>()
 );
+
 export const loadComicFailed = createAction('[Library] Failed to load a comic');
+
 export const updateComics = createAction(
   '[Library] Library updates received',
   props<{ updated: Comic[]; removed: number[] }>()
+);
+
+export const selectComics = createAction(
+  '[Library] Mark a set of comics as selected',
+  props<{ comics: Comic[] }>()
+);
+
+export const deselectComics = createAction(
+  '[Library] Unmark a set of comics as selected',
+  props<{ comics: Comic[] }>()
 );

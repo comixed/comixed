@@ -20,8 +20,10 @@ import { initialState, LibraryState, reducer } from './library.reducer';
 import { COMIC_1, COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
 import {
   comicLoaded,
+  deselectComics,
   loadComic,
   loadComicFailed,
+  selectComics,
   updateComics
 } from '@app/library/actions/library.actions';
 import { Comic } from '@app/library';
@@ -49,8 +51,12 @@ describe('Library Reducer', () => {
       expect(state.comic).toBeNull();
     });
 
-    it('has an empty collection of comics', () => {
+    it('has no comics', () => {
       expect(state.comics).toEqual([]);
+    });
+
+    it('has no selected comic', () => {
+      expect(state.selected).toEqual([]);
     });
   });
 
@@ -124,6 +130,62 @@ describe('Library Reducer', () => {
 
     it('does not contain the removed comic', () => {
       expect(state.comics).not.toContain(REMOVED_COMIC);
+    });
+  });
+
+  describe('selecting comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, selected: [] },
+        selectComics({ comics: COMICS })
+      );
+    });
+
+    it('sets the selected comics', () => {
+      expect(state.selected).toEqual(COMICS);
+    });
+
+    describe('reselecting the same comic', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, selected: COMICS },
+          selectComics({ comics: COMICS })
+        );
+      });
+
+      it('does not reselect the same comics', () => {
+        expect(state.selected).toEqual(COMICS);
+      });
+    });
+  });
+
+  describe('deselecting comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, selected: COMICS },
+        deselectComics({ comics: [COMIC] })
+      );
+    });
+
+    it('removes the deselected comics', () => {
+      expect(state.selected).not.toContain(COMIC);
+    });
+
+    it('leaves the remaining comics selected', () => {
+      expect(state.selected).not.toEqual([]);
+    });
+
+    describe('deselecting all comics', () => {
+      beforeEach(() => {
+        state = reducer(
+          { ...state, selected: COMICS },
+          deselectComics({ comics: COMICS })
+        );
+      });
+
+      it('clears the selected comics', () => {
+        expect(state.selected).toEqual([]);
+      });
     });
   });
 });
