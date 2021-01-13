@@ -33,6 +33,7 @@
           [detailLink]="['/library', 'comics', comic.id]"
           [blurred]="!comic.fileDetails"
           [busy]="!comic.fileDetails"
+          [selected]="isSelected(comic)"
         ></cx-comic-detail-card>
       </div>
     </div>
