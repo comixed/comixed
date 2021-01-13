@@ -47,6 +47,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  @Input() selected: Comic[] = [];
+
   readonly paginationOptions = PAGINATION_OPTIONS;
 
   langChangeSubscription: Subscription;
@@ -105,6 +107,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         value: `${pagination}`
       })
     );
+  }
+
+  isSelected(comic: Comic): boolean {
+    return this.selected.includes(comic);
   }
 
   private loadTranslations(): void {

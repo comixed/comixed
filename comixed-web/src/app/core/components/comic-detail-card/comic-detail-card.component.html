@@ -4,14 +4,19 @@
     ><a [routerLink]="detailLink">{{ "text.view-details" | translate }}</a>
   </mat-card-subtitle>
   <mat-card-content>
-    <img
-      *ngIf="!!imageUrl"
-      [class.comic-detail-card-blurred]="blurred"
-      [src]="imageUrl"
-      [style.width]="'100%'"
-      [style.height]="'auto'"
-      [alt]="title"
-    />
+    <div
+      class="comic-detail-card cx-padding-2 cx-margin-2"
+      [class.comic-detail-card-selected]="selected"
+    >
+      <img
+        *ngIf="!!imageUrl"
+        [class.comic-detail-card-blurred]="blurred"
+        [src]="imageUrl"
+        [style.width]="'100%'"
+        [style.height]="'auto'"
+        [alt]="title"
+      />
+    </div>
     <div *ngIf="!!description" [innerHTML]="description"></div>
     <mat-progress-spinner
       *ngIf="busy"

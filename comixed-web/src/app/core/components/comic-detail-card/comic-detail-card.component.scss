@@ -1,6 +1,19 @@
+@import '~styles.scss';
+
+.comic-detail-card {
+  position: relative;
+  display: inline-block;
+}
+
 .comic-detail-card-blurred {
   filter: grayscale(75%);
   filter: blur(3px);
+}
+
+.comic-detail-card-selected {
+  filter: sepia(100%) !important;
+  background-color: $cx-selected-comic-background-color !important;
+  color: $cx-selected-comic-color;
 }
 
 .comic-detail-card-busy-indicator {
