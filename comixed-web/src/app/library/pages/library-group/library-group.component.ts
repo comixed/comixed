@@ -22,8 +22,10 @@ import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
 import { Comic } from '@app/library';
-import { selectAllComics } from '@app/library/selectors/library.selectors';
-import { filter } from 'rxjs/operators';
+import {
+  selectAllComics,
+  selectSelectedComics
+} from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core';
 import {
@@ -37,14 +39,16 @@ import {
 
 @Component({
   selector: 'cx-comic-group',
-  templateUrl: './comic-group.component.html',
-  styleUrls: ['./comic-group.component.scss']
+  templateUrl: './library-group.component.html',
+  styleUrls: ['./library-group.component.scss']
 })
-export class ComicGroupComponent implements OnInit, OnDestroy {
+export class LibraryGroupComponent implements OnInit, OnDestroy {
   typeSubscription: Subscription;
   paramSubscription: Subscription;
   comicSubscription: Subscription;
   comics: Comic[] = [];
+  selectedSubscription: Subscription;
+  selected: Comic[] = [];
   groupType: string;
   groupName: string;
 
@@ -82,6 +86,9 @@ export class ComicGroupComponent implements OnInit, OnDestroy {
         this.subscribeToUpdates();
       }
     });
+    this.selectedSubscription = this.store
+      .select(selectSelectedComics)
+      .subscribe(selected => (this.selected = selected));
   }
 
   ngOnInit(): void {}
