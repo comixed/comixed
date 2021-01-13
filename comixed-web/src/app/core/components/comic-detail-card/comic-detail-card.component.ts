@@ -37,6 +37,7 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() imageHeight = '100%';
   @Input() busy = false;
   @Input() blurred = false;
+  @Input() selected = false;
 
   displayOptionSubscription: Subscription;
 
