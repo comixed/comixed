@@ -1,0 +1,27 @@
+<mat-toolbar>
+  <div class="cx-spacer"></div>
+  <button
+    id="select-all-button"
+    mat-flat-button
+    color="primary"
+    class="cx-action-button cx-margin-right-5"
+    [disabled]="!comics.length"
+    [matTooltip]="'library.tooltip.select-all' | translate"
+    (click)="onSelectAll()"
+  >
+    <mat-icon>check_box</mat-icon>
+    <mat-label>{{ "button.select-all" | translate }}</mat-label>
+  </button>
+  <button
+    id="deselect-all-button"
+    mat-flat-button
+    color="warn"
+    class="cx-action-button cx-margin-right-5"
+    [disabled]="!selected.length"
+    [matTooltip]="'library.tooltip.deselect-all' | translate"
+    (click)="onDeselectAll()"
+  >
+    <mat-icon>check_box</mat-icon>
+    <mat-label>{{ "button.deselect-all" | translate }}</mat-label>
+  </button>
+</mat-toolbar>

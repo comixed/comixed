@@ -23,7 +23,8 @@ import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import {
   selectAllComics,
-  selectLibraryBusy
+  selectLibraryBusy,
+  selectSelectedComics
 } from '@app/library/selectors/library.selectors';
 import { TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -31,12 +32,14 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-all-comics',
-  templateUrl: './all-comics.component.html',
-  styleUrls: ['./all-comics.component.scss']
+  templateUrl: './library.component.html',
+  styleUrls: ['./library.component.scss']
 })
-export class AllComicsComponent implements OnInit, OnDestroy {
+export class LibraryComponent implements OnInit, OnDestroy {
   libraryBusySubscription: Subscription;
   comicSubscription: Subscription;
+  selectedSubscription: Subscription;
+  selected: Comic[] = [];
   langChangeSubscription: Subscription;
 
   constructor(
@@ -51,6 +54,9 @@ export class AllComicsComponent implements OnInit, OnDestroy {
     this.comicSubscription = this.store
       .select(selectAllComics)
       .subscribe(comics => (this.comics = comics));
+    this.selectedSubscription = this.store
+      .select(selectSelectedComics)
+      .subscribe(selected => (this.selected = selected));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -74,6 +80,7 @@ export class AllComicsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.libraryBusySubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
+    this.selectedSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
   }
 

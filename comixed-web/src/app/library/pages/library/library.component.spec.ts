@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AllComicsComponent } from './all-comics.component';
+import { LibraryComponent } from './library.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
   initialState as initialLibraryState,
@@ -40,15 +40,18 @@ import {
   DISPLAY_FEATURE_KEY,
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
+import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-describe('AllComicsComponent', () => {
+describe('LibraryComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [DISPLAY_FEATURE_KEY]: initialDisplayState
   };
 
-  let component: AllComicsComponent;
-  let fixture: ComponentFixture<AllComicsComponent>;
+  let component: LibraryComponent;
+  let fixture: ComponentFixture<LibraryComponent>;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
@@ -56,7 +59,8 @@ describe('AllComicsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AllComicsComponent,
+        LibraryComponent,
+        LibraryToolbarComponent,
         NavigationPaneComponent,
         ComicCoversComponent
       ],
@@ -70,12 +74,14 @@ describe('AllComicsComponent', () => {
         MatIconModule,
         MatTreeModule,
         MatBadgeModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AllComicsComponent);
+    fixture = TestBed.createComponent(LibraryComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     translateService = TestBed.inject(TranslateService);

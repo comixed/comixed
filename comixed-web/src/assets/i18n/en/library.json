@@ -162,7 +162,9 @@
       "stories": "Stories"
     },
     "tooltip": {
-      "navigation-tree": "Show the library tree view"
+      "deselect-all": "Mark no comics as selected.",
+      "navigation-tree": "Show the library tree view",
+      "select-all": "Mark all comics as selected."
     }
   }
 }

@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicGroupComponent } from './comic-group.component';
+import { LibraryGroupComponent } from './library-group.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
   initialState as initialLibraryState,
@@ -52,15 +52,18 @@ import {
   DISPLAY_FEATURE_KEY,
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
+import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
-describe('ComicGroupComponent', () => {
+describe('LibraryGroupComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [DISPLAY_FEATURE_KEY]: initialDisplayState
   };
 
-  let component: ComicGroupComponent;
-  let fixture: ComponentFixture<ComicGroupComponent>;
+  let component: LibraryGroupComponent;
+  let fixture: ComponentFixture<LibraryGroupComponent>;
   let store: MockStore<any>;
   let activatedRoute: ActivatedRoute;
   let router: Router;
@@ -70,8 +73,9 @@ describe('ComicGroupComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ComicGroupComponent,
+        LibraryGroupComponent,
         ComicCoversComponent,
+        LibraryToolbarComponent,
         NavigationPaneComponent
       ],
       imports: [
@@ -85,7 +89,9 @@ describe('ComicGroupComponent', () => {
         MatIconModule,
         MatTreeModule,
         MatBadgeModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatFormFieldModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -105,7 +111,7 @@ describe('ComicGroupComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicGroupComponent);
+    fixture = TestBed.createComponent(LibraryGroupComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     activatedRoute = TestBed.inject(ActivatedRoute);
