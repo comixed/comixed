@@ -59,7 +59,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
-import { AllComicsComponent } from './pages/all-comics/all-comics.component';
+import { LibraryComponent } from './pages/library/library.component';
 import {
   DISPLAY_FEATURE_KEY,
   reducer as displayReducer
@@ -83,7 +83,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
-import { ComicGroupComponent } from './pages/comic-group/comic-group.component';
+import { LibraryGroupComponent } from './pages/library-group/library-group.component';
+import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,7 @@ import { ComicGroupComponent } from './pages/comic-group/comic-group.component';
     ComicCoverUrlPipe,
     ComicTitlePipe,
     ComicPageUrlPipe,
-    AllComicsComponent,
+    LibraryComponent,
     ComicDisplayOptionsComponent,
     ComicScrapingComponent,
     ScrapingIssueDetailComponent,
@@ -108,7 +109,8 @@ import { ComicGroupComponent } from './pages/comic-group/comic-group.component';
     MatchabilityPipe,
     NavigationPaneComponent,
     ComicCoversComponent,
-    ComicGroupComponent
+    LibraryGroupComponent,
+    LibraryToolbarComponent
   ],
   providers: [ComicTitlePipe],
   imports: [

@@ -148,9 +148,10 @@
       "invalid-grouping": "The group \"{name}\" is not valid."
     },
     "label": {
-      "pagination-items-per-page": "Covers Per Page",
+      "navigation-tree": "Tree View",
       "no-publisher": "Unknown Publisher",
-      "no-series": "Unknown Series"
+      "no-series": "Unknown Series",
+      "pagination-items-per-page": "Covers Per Page"
     },
     "navigation": {
       "publishers": "Publishers",
@@ -159,6 +160,11 @@
       "teams": "Teams",
       "locations": "Locations",
       "stories": "Stories"
+    },
+    "tooltip": {
+      "deselect-all": "Mark no comics as selected.",
+      "navigation-tree": "Show the library tree view",
+      "select-all": "Mark all comics as selected."
     }
   }
 }
