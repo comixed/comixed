@@ -38,6 +38,10 @@ import {
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import {
+  deselectComics,
+  selectComics
+} from '@app/library/actions/library.actions';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -111,6 +115,16 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isSelected(comic: Comic): boolean {
     return this.selected.includes(comic);
+  }
+
+  onSelectionChanged(comic: Comic, selected: boolean): void {
+    if (selected) {
+      this.logger.debug('Marking comic as selected:', comic);
+      this.store.dispatch(selectComics({ comics: [comic] }));
+    } else {
+      this.logger.debug('Unmarking comic as selected:', comic);
+      this.store.dispatch(deselectComics({ comics: [comic] }));
+    }
   }
 
   private loadTranslations(): void {

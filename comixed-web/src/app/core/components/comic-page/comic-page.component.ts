@@ -42,9 +42,9 @@ export class ComicPageComponent {
     return this.pageSize === -1 ? 'auto' : `${this.pageSize}px`;
   }
 
-  /** Invoked when the cover is clicked. */
+  /** Invoked when the page is clicked. */
   onClick(): void {
-    this.logger.trace('Cover clicked:', this.source, this.selected);
+    this.logger.trace('Page clicked:', this.source, this.selected);
     this.pageClicked.emit({
       source: this.source,
       selected: !this.selected

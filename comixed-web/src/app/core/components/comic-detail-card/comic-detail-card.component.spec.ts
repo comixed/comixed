@@ -25,8 +25,10 @@ import {
   DISPLAY_FEATURE_KEY,
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
+import { COMIC_3 } from '@app/library/library.fixtures';
 
 describe('ComicDetailCardComponent', () => {
+  const COMIC = COMIC_3;
   const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
 
   let component: ComicDetailCardComponent;
@@ -64,6 +66,38 @@ describe('ComicDetailCardComponent', () => {
 
     it('sets the page size', () => {
       expect(component.imageWidth).toEqual(`${PAGE_SIZE}px`);
+    });
+  });
+
+  describe('when the image is clicked', () => {
+    beforeEach(() => {
+      spyOn(component.selectionChanged, 'emit');
+    });
+
+    describe('not displaying a comic', () => {
+      beforeEach(() => {
+        component.comic = null;
+        component.onCoverClicked();
+      });
+
+      it('does nothing', () => {
+        expect(component.selectionChanged.emit).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('displaying a comic', () => {
+      beforeEach(() => {
+        component.selected = Math.random() > 0.5;
+        component.comic = COMIC;
+        component.onCoverClicked();
+      });
+
+      it('emits an event', () => {
+        expect(component.selectionChanged.emit).toHaveBeenCalledWith({
+          comic: COMIC,
+          selected: !component.selected
+        });
+      });
     });
   });
 });
