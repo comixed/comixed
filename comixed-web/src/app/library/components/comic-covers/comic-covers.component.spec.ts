@@ -40,9 +40,15 @@ import {
 import { MatBadgeModule } from '@angular/material/badge';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
+import { COMIC_1, COMIC_2 } from '@app/library/library.fixtures';
+import {
+  deselectComics,
+  selectComics
+} from '@app/library/actions/library.actions';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
+  const COMIC = COMIC_2;
   const initialState = {
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
@@ -93,6 +99,46 @@ describe('ComicCoversComponent', () => {
           value: `${PAGINATION}`
         })
       );
+    });
+  });
+
+  describe('checking if a comic is selected', () => {
+    beforeEach(() => {
+      component.selected = [COMIC_1];
+    });
+
+    it('returns true for selected comics', () => {
+      expect(component.isSelected(COMIC_1)).toBeTrue();
+    });
+
+    it('returns false for unselected comics', () => {
+      expect(component.isSelected(COMIC_2)).toBeFalse();
+    });
+  });
+
+  describe('when a comic select event is received', () => {
+    describe('selecting a comic', () => {
+      beforeEach(() => {
+        component.onSelectionChanged(COMIC, true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComics({ comics: [COMIC] })
+        );
+      });
+    });
+
+    describe('deselecting a comic', () => {
+      beforeEach(() => {
+        component.onSelectionChanged(COMIC, false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          deselectComics({ comics: [COMIC] })
+        );
+      });
     });
   });
 });

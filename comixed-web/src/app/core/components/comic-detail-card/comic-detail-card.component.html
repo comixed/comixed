@@ -15,6 +15,7 @@
         [style.width]="'100%'"
         [style.height]="'auto'"
         [alt]="title"
+        (click)="onCoverClicked()"
       />
     </div>
     <div *ngIf="!!description" [innerHTML]="description"></div>

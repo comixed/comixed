@@ -16,12 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { filter } from 'rxjs/operators';
 import { LoggerService } from '@angular-ru/logger';
+import { ComicSelectEvent } from '@app/core';
+import { Comic } from '@app/library';
 
 @Component({
   selector: 'cx-comic-detail-card',
@@ -29,6 +38,7 @@ import { LoggerService } from '@angular-ru/logger';
   styleUrls: ['./comic-detail-card.component.scss']
 })
 export class ComicDetailCardComponent implements OnInit, OnDestroy {
+  @Input() comic: Comic;
   @Input() title: string;
   @Input() imageUrl: string;
   @Input() description: string;
@@ -38,6 +48,8 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() busy = false;
   @Input() blurred = false;
   @Input() selected = false;
+
+  @Output() selectionChanged = new EventEmitter<ComicSelectEvent>();
 
   displayOptionSubscription: Subscription;
 
@@ -54,5 +66,16 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.displayOptionSubscription.unsubscribe();
+  }
+
+  onCoverClicked(): void {
+    // only respond to the click if the details are for a comic
+    if (!!this.comic) {
+      this.logger.trace('Comic cover clicked');
+      this.selectionChanged.emit({
+        comic: this.comic,
+        selected: !this.selected
+      });
+    }
   }
 }
