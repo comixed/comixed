@@ -61,7 +61,6 @@ export class LibraryGroupComponent implements OnInit, OnDestroy {
     private translateService: TranslateService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
-      this.logger.debug('The params are:', params);
       this.groupType = params.type;
       this.groupName = params.name;
       if (

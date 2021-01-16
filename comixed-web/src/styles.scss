@@ -40,10 +40,26 @@ $cx-selected-comic-color: #ffffff;
   height: 100vh;
 }
 
+// positioning
+
+.cx-overlay {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.286);
+  z-index: 10;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
 // padding
 
 .cx-padding-left-5 {
   padding-left: 5px !important;
+}
+
+.cx-padding-left-15 {
+  padding-left: 15px !important;
 }
 
 .cx-padding-left-25 {
@@ -143,6 +159,22 @@ $cx-column-large: 325px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+}
+
+// flexible containers
+
+.cx-horizontal-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.cx-vertical-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.cx-grow-1 {
+  flex-grow: 1;
 }
 
 // buttons

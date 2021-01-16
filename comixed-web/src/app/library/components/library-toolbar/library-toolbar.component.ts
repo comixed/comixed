@@ -24,6 +24,9 @@ import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from '@app/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -33,8 +36,15 @@ import {
 export class LibraryToolbarComponent implements OnInit {
   @Input() comics: Comic[] = [];
   @Input() selected: Comic[] = [];
+  @Input() isAdmin = false;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {}
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
 
@@ -46,5 +56,22 @@ export class LibraryToolbarComponent implements OnInit {
   onDeselectAll(): void {
     this.logger.debug('Deselecting all comics');
     this.store.dispatch(deselectComics({ comics: this.selected }));
+  }
+
+  onScrapeComics(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'scraping.start-scraping.confirmation-title',
+        { count: this.selected.length }
+      ),
+      message: this.translateService.instant(
+        'scraping.start-scraping.confirmation-message',
+        { count: this.selected.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Start scraping comics');
+        this.router.navigate(['/library', 'scrape']);
+      }
+    });
   }
 }

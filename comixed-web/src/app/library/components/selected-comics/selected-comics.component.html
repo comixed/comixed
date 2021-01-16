@@ -1,0 +1,22 @@
+<div
+  class="cx-vertical-container cx-height-100 cx-padding-left-15 cx-padding-right-15"
+>
+  <div *ngFor="let comic of comics" class="cx-vertical-container">
+    <mat-card (click)="onSelectionChanged(comic)">
+      <mat-card-title class="cx-width-100 cx-text-nowrap">
+        <button
+          mat-icon-button
+          color="accent"
+          [matTooltip]="'scraping.tooltip.show-comic-details' | translate"
+          (click)="onShowComicDetails(comic, $event)"
+        >
+          <mat-icon>details</mat-icon>
+        </button>
+        {{ comic | comicTitle }}</mat-card-title
+      >
+      <mat-card-subtitle class="cx-width-100 cx-text-nowrap">
+        {{ comic.baseFilename }}
+      </mat-card-subtitle>
+    </mat-card>
+  </div>
+</div>

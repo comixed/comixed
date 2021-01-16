@@ -53,6 +53,7 @@ import {
 } from '@app/library/actions/scraping.actions';
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatchabilityPipe } from '@app/library/pipes/matchability.pipe';
+import { deselectComics } from '@app/library/actions/library.actions';
 
 describe('ComicScrapingComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -218,6 +219,19 @@ describe('ComicScrapingComponent', () => {
             skipCache: SKIP_CACHE
           })
         );
+      });
+
+      describe('when in multi-comic scraping mode', () => {
+        beforeEach(() => {
+          component.multimode = true;
+          component.onDecision(true);
+        });
+
+        it('fires an action to deselect the comic', () => {
+          expect(store.dispatch).toHaveBeenCalledWith(
+            deselectComics({ comics: [COMIC] })
+          );
+        });
       });
     });
 

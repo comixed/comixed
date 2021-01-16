@@ -19,9 +19,11 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { ScrapingVolume } from '@app/library/models/scraping-volume';
@@ -41,6 +43,7 @@ import { Subscription } from 'rxjs';
 import { selectScrapingIssue } from '@app/library/selectors/scraping.selectors';
 import { ConfirmationService, SortableListItem } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
+import { deselectComics } from '@app/library/actions/library.actions';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
@@ -67,6 +70,9 @@ export class ComicScrapingComponent
   @Input() apiKey: string;
   @Input() skipCache = false;
   @Input() pageSize: number;
+  @Input() multimode = false;
+
+  @Output() comicScraped = new EventEmitter<Comic>();
 
   issueSubscription: Subscription;
   issue: ScrapingIssue;
@@ -125,6 +131,7 @@ export class ComicScrapingComponent
       }
     };
     this.dataSource.sort = this.sort;
+    this.logger.debug('***THIS:', this);
   }
 
   onVolumeSelected(volume: ScrapingVolume): void {
@@ -152,7 +159,17 @@ export class ComicScrapingComponent
           'scraping.scrape-comic-confirmation-message'
         ),
         confirm: () => {
-          this.logger.trace('User confirmed scraping the comic');
+          this.logger.debug(
+            'User confirmed scraping the comic:',
+            this.multimode
+          );
+          if (this.multimode) {
+            this.logger.debug(
+              'Removing comic from scraping queue:',
+              this.comic
+            );
+            this.store.dispatch(deselectComics({ comics: [this.comic] }));
+          }
           this.store.dispatch(
             scrapeComic({
               apiKey: this.apiKey,

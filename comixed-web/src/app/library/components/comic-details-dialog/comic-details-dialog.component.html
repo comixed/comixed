@@ -1,0 +1,9 @@
+<h1 *ngIf="!!comic" mat-dialog-title>{{ comic | comicTitle }}</h1>
+<mat-dialog-content *ngIf="!!comic">
+  <div class="cx-horizontal-container">
+    <div>
+      <cx-comic-page [imageUrl]="comic | comicCoverUrl"></cx-comic-page>
+    </div>
+    <div class="cx-grow-1"></div>
+  </div>
+</mat-dialog-content>

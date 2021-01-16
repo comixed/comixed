@@ -1,51 +1,4 @@
 {
-  "import-comic-files": {
-    "tab-title": "Import Comics",
-    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
-    "busy-title": "There Are Comics Importing Now",
-    "load-comic-files": {
-      "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
-      "effect-failure": "Failed to find any comic files."
-    },
-    "header": {
-      "cover": "Cover Image",
-      "filename": "Filename",
-      "size": "File Size (kb)"
-    },
-    "text": {
-      "file-size": "{size} bytes",
-      "selected-for-import": "This file will be imported."
-    },
-    "label": {
-      "delete-blocked-pages": "Mark blocked pages as delete",
-      "delete-blocked-pages-off": "Ignore Blocked Pages",
-      "delete-blocked-pages-on": "Mark Blocked Pages",
-      "ignore-metadata": "Ignore any metadata",
-      "ignore-metadata-off": "Use Metadata",
-      "ignore-metadata-on": "Ignore Metadata",
-      "maximum-all-files": "All files",
-      "maximum-10-files": "10 files",
-      "maximum-50-files": "50 files",
-      "maximum-100-files": "100 files",
-      "maximum-1000-files": "1000 files"
-    },
-    "tooltip": {
-      "ignore-metadata-on": "Will import any metadata in the comic files.",
-      "ignore-metadata-off": "Will not import any metadata in the comic files.",
-      "select-all": "Select all comic files for import.",
-      "deselect-all": "Clear the comic file selections.",
-      "start-import": "Start importing the selected comic files."
-    },
-    "placeholder": {
-      "root-directory": "Root Directory To Search..."
-    },
-    "confirm-start-title": "Import Comic Files?",
-    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
-  },
-  "send-comic-files": {
-    "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
-    "effect-failure": "Failed to send comic files for import."
-  },
   "comic": {
     "load-comic": {
       "effect-failure": "Failed to load comic."
@@ -56,6 +9,53 @@
     },
     "hint": {
       "required-for-scraping": "This value is required for scraping..."
+    },
+    "import-comic-files": {
+      "tab-title": "Import Comics",
+      "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
+      "busy-title": "There Are Comics Importing Now",
+      "load-comic-files": {
+        "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
+        "effect-failure": "Failed to find any comic files."
+      },
+      "header": {
+        "cover": "Cover Image",
+        "filename": "Filename",
+        "size": "File Size (kb)"
+      },
+      "text": {
+        "file-size": "{size} bytes",
+        "selected-for-import": "This file will be imported."
+      },
+      "label": {
+        "delete-blocked-pages": "Mark blocked pages as delete",
+        "delete-blocked-pages-off": "Ignore Blocked Pages",
+        "delete-blocked-pages-on": "Mark Blocked Pages",
+        "ignore-metadata": "Ignore any metadata",
+        "ignore-metadata-off": "Use Metadata",
+        "ignore-metadata-on": "Ignore Metadata",
+        "maximum-all-files": "All files",
+        "maximum-10-files": "10 files",
+        "maximum-50-files": "50 files",
+        "maximum-100-files": "100 files",
+        "maximum-1000-files": "1000 files"
+      },
+      "tooltip": {
+        "ignore-metadata-on": "Will import any metadata in the comic files.",
+        "ignore-metadata-off": "Will not import any metadata in the comic files.",
+        "select-all": "Select all comic files for import.",
+        "deselect-all": "Clear the comic file selections.",
+        "start-import": "Start importing the selected comic files."
+      },
+      "placeholder": {
+        "root-directory": "Root Directory To Search..."
+      },
+      "confirm-start-title": "Import Comic Files?",
+      "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
+    },
+    "send-comic-files": {
+      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
+      "effect-failure": "Failed to send comic files for import."
     },
     "label": {
       "added-date": "Added To Library",
@@ -104,44 +104,8 @@
       "go-to-previous-comic": "Go to the previous comic in this series..."
     }
   },
-  "scraping": {
-    "scraping-issue-detail-subtitle": "Cover Date: {date}",
-    "scrape-comic-confirmation-title": "Replace Comic Data",
-    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
-    "load-scraping-volumes": {
-      "effect-failure": "Failed to load any volumes..."
-    },
-    "load-scraping-issue": {
-      "effect-failure": "Failed to load issue..."
-    },
-    "scrape-comic": {
-      "effect-success": "Comic successfully scraped!",
-      "effect-failure": "Failed to scrape comic."
-    },
-    "label": {
-      "100-records": "100 Records",
-      "1000-records": "1000 Records",
-      "all-records": "All Records",
-      "matchability": "Match",
-      "publisher": "Publisher",
-      "series-name": "Series",
-      "start-year": "Start Year",
-      "issue-count": "# Issues"
-    },
-    "text": {
-      "exact-match": "Exact",
-      "near-match": "Near",
-      "no-match": "No"
-    },
-    "tooltip": {
-      "cancel-scraping": "Stop scraping comics.",
-      "skip-cache": "If enabled, skips the scraping cache, currently {enabled, select, true{ENABLED} other{DISABLED}}",
-      "reject-scraping-issue": "Reject this issue.",
-      "select-scraping-issue": "Select this issue."
-    }
-  },
   "library": {
-    "all-comics":{
+    "all-comics": {
       "title": "All Comics"
     },
     "comic-group": {
@@ -165,6 +129,57 @@
       "deselect-all": "Mark no comics as selected.",
       "navigation-tree": "Show the library tree view",
       "select-all": "Mark all comics as selected."
+    }
+  },
+  "scraping": {
+    "current-comic": {
+      "title": "Currently Comic ({count} Total)"
+    },
+    "label": {
+      "100-records": "100 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records",
+      "matchability": "Match",
+      "publisher": "Publisher",
+      "series-name": "Series",
+      "start-year": "Start Year",
+      "issue-count": "# Issues"
+    },
+    "load-scraping-volumes": {
+      "effect-failure": "Failed to load any volumes..."
+    },
+    "load-scraping-issue": {
+      "effect-failure": "Failed to load issue..."
+    },
+    "page-title": "Library Scraping",
+    "scrape-comic": {
+      "effect-success": "Comic successfully scraped!",
+      "effect-failure": "Failed to scrape comic."
+    },
+    "scrape-comic-confirmation-title": "Replace Comic Data",
+    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
+    "scraping-issue-detail-subtitle": "Cover Date: {date}",
+    "start-scraping": {
+      "confirmation-title": "Scrape Comics",
+      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
+    },
+    "text": {
+      "exact-match": "Exact",
+      "near-match": "Near",
+      "no-match": "No"
+    },
+    "tooltip": {
+      "cancel-scraping": "Stop scraping comics.",
+      "reject-scraping-issue": "Reject this issue.",
+      "select-scraping-issue": "Select this issue.",
+      "show-comic-details": "Show Details",
+      "skip-cache": "If enabled, skips the scraping cache, currently {enabled, select, true{ENABLED} other{DISABLED}}"
+    },
+    "volume-list": {
+      "issue-count-header": "# Of Issues",
+      "name-header": "Series Name",
+      "publisher-header": "Publisher",
+      "start-year-header": "Start Year"
     }
   }
 }

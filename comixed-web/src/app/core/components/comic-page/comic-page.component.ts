@@ -16,9 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { PageClickEvent } from '@app/core';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { getUserPreference } from '@app/user';
+import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 
 /** Displays a page from a comic. Provides events for when the page is clicked. */
 @Component({
@@ -26,7 +37,7 @@ import { PageClickEvent } from '@app/core';
   templateUrl: './comic-page.component.html',
   styleUrls: ['./comic-page.component.scss']
 })
-export class ComicPageComponent {
+export class ComicPageComponent implements OnDestroy {
   @Input() imageTitle: string;
   @Input() source: any;
   @Input() imageUrl: string;
@@ -36,10 +47,27 @@ export class ComicPageComponent {
 
   @Output() pageClicked = new EventEmitter<PageClickEvent>();
 
-  constructor(private logger: LoggerService) {}
+  userSubscription: Subscription;
+
+  constructor(private logger: LoggerService, private store: Store<any>) {
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.pageSize = parseInt(
+        getUserPreference(
+          user.preferences,
+          PAGE_SIZE_PREFERENCE,
+          PAGE_SIZE_PREFERENCE
+        ),
+        10
+      );
+    });
+  }
 
   get imageWidth(): string {
     return this.pageSize === -1 ? 'auto' : `${this.pageSize}px`;
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 
   /** Invoked when the page is clicked. */

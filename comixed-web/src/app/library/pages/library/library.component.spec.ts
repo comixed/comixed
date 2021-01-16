@@ -43,9 +43,15 @@ import {
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import {
+  USER_FEATURE_KEY,
+  initialState as initialUserState
+} from '@app/user/reducers/user.reducer';
 
 describe('LibraryComponent', () => {
   const initialState = {
+    [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [DISPLAY_FEATURE_KEY]: initialDisplayState
   };
@@ -76,7 +82,8 @@ describe('LibraryComponent', () => {
         MatBadgeModule,
         MatPaginatorModule,
         MatFormFieldModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

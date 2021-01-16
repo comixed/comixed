@@ -29,6 +29,8 @@ import {
 import { TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { isAdmin } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-all-comics',
@@ -41,6 +43,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   selectedSubscription: Subscription;
   selected: Comic[] = [];
   langChangeSubscription: Subscription;
+  userSubscription: Subscription;
+  isAdmin = false;
 
   constructor(
     private logger: LoggerService,
@@ -57,6 +61,10 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.logger.trace('Checking if user is admin:', user);
+      this.isAdmin = isAdmin(user);
+    });
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -81,6 +89,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.libraryBusySubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
   }
 

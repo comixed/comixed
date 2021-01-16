@@ -1,6 +1,7 @@
 <mat-toolbar>
   <button
     id="save-comic-changes"
+    *ngIf="!multimode"
     class="cx-action-button cx-margin-left-5"
     mat-flat-button
     color="primary"
@@ -10,18 +11,8 @@
     <mat-label>{{ "button.save" | translate }}</mat-label>
   </button>
   <button
-    id="scrape-comic"
-    class="cx-action-button cx-margin-left-5"
-    mat-flat-button
-    color="accent"
-    [disabled]="!comicForm.valid && hasApiKey"
-    (click)="onFetchScrapingVolumes()"
-  >
-    <mat-icon>cloud_circle</mat-icon>
-    <mat-label>{{ "button.scrape" | translate }}</mat-label>
-  </button>
-  <button
     id="undo-comic-changes"
+    *ngIf="!multimode"
     class="cx-action-button cx-margin-left-5"
     mat-flat-button
     color="warn"
@@ -57,6 +48,17 @@
     <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
     <mat-label>{{ "button.skip-cache" | translate }}</mat-label>
   </button>
+  <button
+    id="scrape-comic"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="accent"
+    [disabled]="!comicForm.valid && hasApiKey"
+    (click)="onFetchScrapingVolumes()"
+  >
+    <mat-icon>cloud_circle</mat-icon>
+    <mat-label>{{ "button.scrape" | translate }}</mat-label>
+  </button>
 </mat-toolbar>
 <form [formGroup]="comicForm">
   <mat-form-field class="cx-width-100">
@@ -69,26 +71,24 @@
     />
     <button
       id="save-api-key-button"
-      class="cx-action-button cx-margin-left-5"
-      mat-flat-button
+      class="cx-margin-left-5"
+      mat-icon-button
       matSuffix
       color="primary"
       [disabled]="!hasApiKey"
       (click)="onSaveApiKey()"
     >
       <mat-icon>save</mat-icon>
-      <mat-label>{{ "button.save" | translate }}</mat-label>
     </button>
     <button
       id="reset-api-key-button"
-      class="cx-action-button cx-margin-left-5"
-      mat-flat-button
+      class="cx-margin-left-5"
+      mat-icon-button
       matSuffix
       color="warn"
       (click)="onResetApiKey()"
     >
       <mat-icon>undo</mat-icon>
-      <mat-label>{{ "button.reset" | translate }}</mat-label>
     </button>
   </mat-form-field>
   <mat-form-field class="cx-width-100">

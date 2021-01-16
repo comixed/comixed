@@ -23,22 +23,28 @@ import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_2 } from '@app/library/library.fixtures';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComicDetailCardComponent } from '@app/core/components/comic-detail-card/comic-detail-card.component';
+import { provideMockStore } from '@ngrx/store/testing';
+import { MatCardModule } from '@angular/material/card';
 
 describe('ComicStoryComponent', () => {
   const COMIC = COMIC_2;
+  const initialState = {};
 
   let component: ComicStoryComponent;
   let fixture: ComponentFixture<ComicStoryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicStoryComponent],
+      declarations: [ComicStoryComponent, ComicDetailCardComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatExpansionModule
-      ]
+        MatExpansionModule,
+        MatCardModule
+      ],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStoryComponent);

@@ -1,0 +1,46 @@
+<div class="cx-horizontal-container cx-width-100">
+  <div>
+    <div class="cx-vertical-container">
+      <div *ngIf="!!currentComic" class="cx-grow-1">
+        <h3 class="cx-text-nowrap">
+          {{
+            "scraping.current-comic.title" | translate: { count: comics.length }
+          }}
+        </h3>
+        <cx-comic-page
+          [imageUrl]="currentComic | comicCoverUrl"
+          [imageHeight]="'auto'"
+        ></cx-comic-page>
+      </div>
+      <div>
+        <cx-selected-comics
+          [comics]="comics"
+          (selectionChanged)="onSelectionChanged($event)"
+        ></cx-selected-comics>
+      </div>
+    </div>
+  </div>
+  <div class="cx-grow-1 cx-margin-left-5 cx-margin-right-5">
+    <cx-comic-edit
+      *ngIf="!!currentComic && scrapingVolumes.length === 0"
+      [comic]="currentComic"
+      [apiKey]="apiKey"
+      [skipCache]="skipCache"
+      [maximumRecords]="maximumRecords"
+      [multimode]="true"
+      (scrape)="onScrape($event)"
+    ></cx-comic-edit>
+    <cx-comic-scraping
+      *ngIf="scrapingVolumes.length > 0"
+      [comic]="currentComic"
+      [comicSeriesName]="currentComic.series"
+      [comicVolume]="currentComic.volume"
+      [comicIssueNumber]="currentComic.issueNumber"
+      [volumes]="scrapingVolumes"
+      [apiKey]="apiKey"
+      [skipCache]="skipCache"
+      [pageSize]="pageSize"
+      [multimode]="true"
+    ></cx-comic-scraping>
+  </div>
+</div>
