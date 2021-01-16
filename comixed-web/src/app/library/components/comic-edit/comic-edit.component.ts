@@ -39,6 +39,7 @@ import {
 export class ComicEditComponent implements OnInit {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
+  @Input() multimode = false;
 
   @Output() scrape = new EventEmitter<ScrapeEvent>();
 

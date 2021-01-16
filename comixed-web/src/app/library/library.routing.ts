@@ -23,6 +23,7 @@ import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-de
 import { AdminGuard, ReaderGuard } from '@app/user';
 import { LibraryComponent } from '@app/library/pages/library/library.component';
 import { LibraryGroupComponent } from '@app/library/pages/library-group/library-group.component';
+import { ScrapingComponent } from '@app/library/pages/scraping/scraping.component';
 
 const routes: Routes = [
   {
@@ -44,6 +45,11 @@ const routes: Routes = [
     path: 'library',
     component: LibraryComponent,
     canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library/scrape',
+    component: ScrapingComponent,
+    canActivate: [AdminGuard]
   }
 ];
 

@@ -85,6 +85,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
 import { LibraryGroupComponent } from './pages/library-group/library-group.component';
 import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
+import { ScrapingComponent } from './pages/scraping/scraping.component';
+import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +114,10 @@ import { LibraryToolbarComponent } from './components/library-toolbar/library-to
     NavigationPaneComponent,
     ComicCoversComponent,
     LibraryGroupComponent,
-    LibraryToolbarComponent
+    LibraryToolbarComponent,
+    ScrapingComponent,
+    SelectedComicsComponent,
+    ComicDetailsDialogComponent
   ],
   providers: [ComicTitlePipe],
   imports: [
@@ -147,7 +154,8 @@ import { LibraryToolbarComponent } from './components/library-toolbar/library-to
     MatPaginatorModule,
     MatTreeModule,
     MatBadgeModule,
-    MatSidenavModule
+    MatSidenavModule,
+    OverlayModule
   ],
   exports: [CommonModule, CoreModule]
 })

@@ -45,6 +45,8 @@ import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -71,7 +73,9 @@ describe('ComicCoversComponent', () => {
         MatIconModule,
         MatPaginatorModule,
         MatTreeModule,
-        MatBadgeModule
+        MatBadgeModule,
+        MatFormFieldModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

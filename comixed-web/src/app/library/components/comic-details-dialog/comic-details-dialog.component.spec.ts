@@ -17,40 +17,45 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BuildDetailsComponent } from './build-details.component';
+import { ComicDetailsDialogComponent } from './comic-details-dialog.component';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { ComicTitlePipe } from '@app/library/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '@app/library/pipes/comic-cover-url.pipe';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
-import {
-  BUILD_DETAILS_FEATURE_KEY,
-  initialState as initialBuildState
-} from '@app/reducers/build-details.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { BUILD_DETAILS } from '@app/app.fixtures';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 import { MatCardModule } from '@angular/material/card';
+import { USER_READER } from '@app/user/user.fixtures';
 
-describe('BuildDetailsComponent', () => {
+describe('ComicDetailsDialogComponent', () => {
+  const USER = USER_READER;
   const initialState = {
-    [BUILD_DETAILS_FEATURE_KEY]: {
-      ...initialBuildState,
-      details: BUILD_DETAILS
-    }
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
-  let component: BuildDetailsComponent;
-  let fixture: ComponentFixture<BuildDetailsComponent>;
+  let component: ComicDetailsDialogComponent;
+  let fixture: ComponentFixture<ComicDetailsDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BuildDetailsComponent],
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatCardModule
+      declarations: [
+        ComicDetailsDialogComponent,
+        ComicPageComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe
       ],
-      providers: [provideMockStore({ initialState })]
+      imports: [LoggerModule.forRoot(), MatDialogModule, MatCardModule],
+      providers: [
+        provideMockStore({ initialState }),
+        { provide: MAT_DIALOG_DATA, useValue: {} }
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BuildDetailsComponent);
+    fixture = TestBed.createComponent(ComicDetailsDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
