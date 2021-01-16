@@ -26,10 +26,15 @@ import {
   selectComics
 } from '@app/library/actions/library.actions';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { ConfirmationService } from '@app/core';
+import { Confirmation } from '@app/core/models/confirmation';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -38,25 +43,32 @@ describe('LibraryToolbarComponent', () => {
   let component: LibraryToolbarComponent;
   let fixture: ComponentFixture<LibraryToolbarComponent>;
   let store: MockStore<any>;
+  let router: Router;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [LibraryToolbarComponent],
       imports: [
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatToolbarModule,
         MatIconModule,
         MatFormFieldModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryToolbarComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
 
@@ -87,6 +99,25 @@ describe('LibraryToolbarComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         deselectComics({ comics: COMICS })
       );
+    });
+  });
+
+  describe('starting the scraping process', () => {
+    beforeEach(() => {
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      component.selected = COMICS;
+      component.onScrapeComics();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('redirects the browsers to the scraping page', () => {
+      expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
     });
   });
 });

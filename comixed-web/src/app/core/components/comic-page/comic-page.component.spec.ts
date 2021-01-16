@@ -20,10 +20,20 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPageComponent } from './comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatCardModule } from '@angular/material/card';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  USER_FEATURE_KEY,
+  initialState as initialUserState
+} from '@app/user/reducers/user.reducer';
+import { USER_ADMIN } from '@app/user/user.fixtures';
 
-describe('CoverImageComponent', () => {
+describe('ComicPageComponent', () => {
   const SOURCE = {} as any;
   const PAGE_SIZE = 400;
+  const USER = USER_ADMIN;
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+  };
 
   let component: ComicPageComponent;
   let fixture: ComponentFixture<ComicPageComponent>;
@@ -31,7 +41,8 @@ describe('CoverImageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicPageComponent],
-      imports: [LoggerModule.forRoot(), MatCardModule]
+      imports: [LoggerModule.forRoot(), MatCardModule],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPageComponent);

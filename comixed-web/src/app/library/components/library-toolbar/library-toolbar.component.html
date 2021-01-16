@@ -24,4 +24,17 @@
     <mat-icon>check_box</mat-icon>
     <mat-label>{{ "button.deselect-all" | translate }}</mat-label>
   </button>
+  <button
+    *ngIf="isAdmin"
+    id="scrape-comics-button"
+    mat-flat-button
+    color="accent"
+    class="cx-action-button cx-margin-right-5"
+    [disabled]="!selected.length"
+    [matTooltip]="'library.tooltip.scrape-comics' | translate"
+    (click)="onScrapeComics()"
+  >
+    <mat-icon>cloud_queue</mat-icon>
+    <mat-label>{{ "button.scrape" | translate }}</mat-label>
+  </button>
 </mat-toolbar>

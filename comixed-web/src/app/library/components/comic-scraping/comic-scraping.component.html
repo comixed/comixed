@@ -1,76 +1,84 @@
-<mat-toolbar>
-  <button mat-flat-button color="warn" (click)="onCancelScraping()">
-    <mat-icon>cancel</mat-icon>
-    <mat-label>{{ "button.cancel" | translate }}</mat-label>
-  </button>
-</mat-toolbar>
-<div id="cx-scraping-container">
-  <div id="cx-scraping-volumes-content">
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons
-    ></mat-paginator>
+<div class="cx-horizontal-container">
+  <div class="cx-grow-1">
+    <mat-toolbar>
+      <button mat-flat-button color="warn" (click)="onCancelScraping()">
+        <mat-icon>cancel</mat-icon>
+        <mat-label>{{ "button.cancel" | translate }}</mat-label>
+      </button>
+    </mat-toolbar>
+    <div class="cx-vertical-container">
+      <div *ngIf="!!comic" class="cx-grow-1">
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
 
-    <mat-table
-      aria-label="Comic files available for import"
-      [dataSource]="dataSource"
-      matSort
-    >
-      <ng-container matColumnDef="matchability">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "scraping.label.matchability" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{
-          element.sortOrder | matchability | translate
-        }}</mat-cell>
-      </ng-container>
+        <mat-table
+          aria-label="Comic files available for import"
+          [dataSource]="dataSource"
+          matSort
+        >
+          <ng-container matColumnDef="matchability">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
+              "scraping.label.matchability" | translate
+            }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{
+              element.sortOrder | matchability | translate
+            }}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="publisher">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "scraping.label.publisher" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{
-          element.item.publisher
-        }}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="publisher">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
+              "scraping.label.publisher" | translate
+            }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{
+              element.item.publisher
+            }}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="name">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "scraping.label.series-name" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{ element.item.name }}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="name">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
+              "scraping.label.series-name" | translate
+            }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{
+              element.item.name
+            }}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="startYear">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "scraping.label.start-year" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{
-          element.item.startYear
-        }}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="startYear">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
+              "scraping.label.start-year" | translate
+            }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{
+              element.item.startYear
+            }}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="issueCount">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "scraping.label.issue-count" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{
-          element.item.issueCount
-        }}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="issueCount">
+            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
+              "scraping.label.issue-count" | translate
+            }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{
+              element.item.issueCount
+            }}</mat-cell>
+          </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        (click)="onVolumeSelected(row.item)"
-      ></mat-row>
-    </mat-table>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="onVolumeSelected(row.item)"
+          ></mat-row>
+        </mat-table>
+      </div>
+    </div>
   </div>
-  <div *ngIf="!!issue" id="cx-scraping-issue-detail-content">
-    <cx-scraping-issue-detail
-      [issue]="issue"
-      [pageSize]="pageSize"
-      (decision)="onDecision($event)"
-    ></cx-scraping-issue-detail>
+  <div>
+    <div *ngIf="!!issue" id="cx-scraping-issue-detail-content">
+      <cx-scraping-issue-detail
+        [issue]="issue"
+        [pageSize]="pageSize"
+        (decision)="onDecision($event)"
+      ></cx-scraping-issue-detail>
+    </div>
   </div>
 </div>

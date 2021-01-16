@@ -23,9 +23,19 @@ import { ComicPageUrlPipe } from '@app/library/pipes/comic-page-url.pipe';
 import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatCardModule } from '@angular/material/card';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  USER_FEATURE_KEY,
+  initialState as initialuUserState
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;
+  const USER = USER_READER;
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialuUserState, user: USER }
+  };
 
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
@@ -33,7 +43,8 @@ describe('ComicPagesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
-      imports: [LoggerModule.forRoot(), MatCardModule]
+      imports: [LoggerModule.forRoot(), MatCardModule],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPagesComponent);

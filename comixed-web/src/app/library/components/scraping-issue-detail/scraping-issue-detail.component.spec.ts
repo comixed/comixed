@@ -22,17 +22,44 @@ import { LoggerModule } from '@angular-ru/logger';
 import { ScrapingIssueTitlePipe } from '@app/library/pipes/scraping-issue-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { SCRAPING_ISSUE_1 } from '@app/library/library.fixtures';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
+import { MatIconModule } from '@angular/material/icon';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  USER_FEATURE_KEY,
+  initialState as initialUserState
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ScrapingIssueDetailComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
+  const USER = USER_READER;
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+  };
 
   let component: ScrapingIssueDetailComponent;
   let fixture: ComponentFixture<ScrapingIssueDetailComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScrapingIssueDetailComponent, ScrapingIssueTitlePipe],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()]
+      declarations: [
+        ScrapingIssueDetailComponent,
+        ComicPageComponent,
+        ScrapingIssueTitlePipe
+      ],
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatTooltipModule
+      ],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ScrapingIssueDetailComponent);

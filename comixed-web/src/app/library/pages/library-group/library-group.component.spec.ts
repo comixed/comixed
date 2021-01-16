@@ -55,6 +55,7 @@ import {
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('LibraryGroupComponent', () => {
   const initialState = {
@@ -91,7 +92,8 @@ describe('LibraryGroupComponent', () => {
         MatBadgeModule,
         MatPaginatorModule,
         MatTooltipModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatDialogModule
       ],
       providers: [
         provideMockStore({ initialState }),
