@@ -4,6 +4,69 @@
     <div>
       <cx-comic-page [imageUrl]="comic | comicCoverUrl"></cx-comic-page>
     </div>
-    <div class="cx-grow-1"></div>
+    <div class="cx-grow-1">
+      <span
+        ><span
+          class="cx-detail-label cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.publisher" | translate }}</span
+        >{{ comic.publisher }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.series" | translate }}</span
+        >{{ comic.series }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.volume" | translate }}</span
+        >{{ comic.volume }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.issue-number" | translate }}</span
+        >{{ comic.issueNumber }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.page-count" | translate }}</span
+        >{{ comic.pageCount }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.cover-date" | translate }}</span
+        >{{ comic.coverDate | date: "MM/dd/yyyy" }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.added-date" | translate }}</span
+        >{{ comic.addedDate | date: "medium" }}</span
+      ><br />
+      <span *ngIf="!!comic.lastRead"
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.last-read-date" | translate }}</span
+        >{{ comic.lastRead | date: "medium" }}</span
+      ><br *ngIf="!!comic.lastRead" />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.archive-type" | translate }}</span
+        >{{
+          "text.archive-type" | translate: { type: comic.archiveType }
+        }}</span
+      ><br />
+      <span
+        ><span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+          >{{ "comic.label.filesize" | translate }}</span
+        >{{ "comic.text.filesize" | translate: { size: 0 } }}</span
+      ><br />
+    </div>
   </div>
 </mat-dialog-content>

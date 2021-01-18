@@ -16,6 +16,7 @@
         [style.height]="'auto'"
         [alt]="title"
         (click)="onCoverClicked()"
+        (contextmenu)="onContextMenu($event)"
       />
     </div>
     <div *ngIf="!!description" [innerHTML]="description"></div>

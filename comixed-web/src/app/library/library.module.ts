@@ -89,6 +89,7 @@ import { ScrapingComponent } from './pages/scraping/scraping.component';
 import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -155,7 +156,8 @@ import { ComicDetailsDialogComponent } from './components/comic-details-dialog/c
     MatTreeModule,
     MatBadgeModule,
     MatSidenavModule,
-    OverlayModule
+    OverlayModule,
+    MatMenuModule
   ],
   exports: [CommonModule, CoreModule]
 })

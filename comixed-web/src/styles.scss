@@ -20,6 +20,7 @@ $cx-selected-comic-background-color: #0033cc;
 $cx-selected-comic-color: #ffffff;
 
 // component sizes
+
 .cx-width-20 {
   width: 20%;
 }
@@ -143,6 +144,7 @@ $cx-column-large: 325px;
 }
 
 .cx-detail-label {
+  width: 200px;
   font-weight: bold;
   font-size: larger;
 }

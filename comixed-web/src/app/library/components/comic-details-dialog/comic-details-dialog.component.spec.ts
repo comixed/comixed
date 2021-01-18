@@ -30,6 +30,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { MatCardModule } from '@angular/material/card';
 import { USER_READER } from '@app/user/user.fixtures';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ComicDetailsDialogComponent', () => {
   const USER = USER_READER;
@@ -48,7 +49,12 @@ describe('ComicDetailsDialogComponent', () => {
         ComicTitlePipe,
         ComicCoverUrlPipe
       ],
-      imports: [LoggerModule.forRoot(), MatDialogModule, MatCardModule],
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatCardModule
+      ],
       providers: [
         provideMockStore({ initialState }),
         { provide: MAT_DIALOG_DATA, useValue: {} }

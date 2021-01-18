@@ -100,4 +100,25 @@ describe('ComicDetailCardComponent', () => {
       });
     });
   });
+
+  describe('showing the context menu', () => {
+    const XPOS = 1;
+    const YPOS = 29;
+    const event = new MouseEvent('testing');
+
+    beforeEach(() => {
+      component.comic = COMIC;
+      spyOn(event, 'preventDefault');
+      spyOn(component.showContextMenu, 'emit');
+      component.onContextMenu({ ...event, clientX: XPOS, clientY: YPOS });
+    });
+
+    it('emits an event', () => {
+      expect(component.showContextMenu.emit).toHaveBeenCalledWith({
+        comic: COMIC,
+        x: `${XPOS}px`,
+        y: `${YPOS}px`
+      });
+    });
+  });
 });
