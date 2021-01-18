@@ -25,7 +25,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/logger';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   DISPLAY_FEATURE_KEY,
   initialState as initialDisplayState
@@ -40,17 +40,26 @@ import {
 import { MatBadgeModule } from '@angular/material/badge';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
-import { COMIC_1, COMIC_2 } from '@app/library/library.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4
+} from '@app/library/library.fixtures';
 import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
   const COMIC = COMIC_2;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
   const initialState = {
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
@@ -59,6 +68,8 @@ describe('ComicCoversComponent', () => {
   let component: ComicCoversComponent;
   let fixture: ComponentFixture<ComicCoversComponent>;
   let store: MockStore<any>;
+  let dialog: MatDialog;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -75,7 +86,9 @@ describe('ComicCoversComponent', () => {
         MatTreeModule,
         MatBadgeModule,
         MatFormFieldModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule,
+        MatMenuModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
@@ -84,6 +97,9 @@ describe('ComicCoversComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
@@ -103,6 +119,17 @@ describe('ComicCoversComponent', () => {
           value: `${PAGINATION}`
         })
       );
+    });
+  });
+
+  describe('loading comics to display', () => {
+    beforeEach(() => {
+      component.dataSource.data = [];
+      component.comics = COMICS;
+    });
+
+    it('loads the comics to display', () => {
+      expect(component.comics).toEqual(COMICS);
     });
   });
 
@@ -143,6 +170,56 @@ describe('ComicCoversComponent', () => {
           deselectComics({ comics: [COMIC] })
         );
       });
+    });
+  });
+
+  describe('showing the context menu', () => {
+    const XPOS = '7';
+    const YPOS = '17';
+
+    beforeEach(() => {
+      component.comic = null;
+      spyOn(component.contextMenu, 'openMenu');
+      component.onShowContextMenu(COMIC, XPOS, YPOS);
+    });
+
+    it('sets the current comic', () => {
+      expect(component.comic).toEqual(COMIC);
+    });
+
+    it('set the context menu x position', () => {
+      expect(component.contextMenuX).toEqual(XPOS);
+    });
+
+    it('set the context menu y position', () => {
+      expect(component.contextMenuY).toEqual(YPOS);
+    });
+
+    it('shows the context menu', () => {
+      expect(component.contextMenu.openMenu).toHaveBeenCalled();
+    });
+  });
+
+  describe('showing the comic details dialog', () => {
+    beforeEach(() => {
+      component.onShowComicDetails(COMIC);
+    });
+
+    it('opens the comic details dialog', () => {
+      expect(dialog.open).toHaveBeenCalledWith(ComicDetailsDialogComponent, {
+        data: COMIC
+      });
+    });
+  });
+
+  describe('chaning the language used', () => {
+    beforeEach(() => {
+      component.paginator._intl.itemsPerPageLabel = null;
+      translateService.use('fr');
+    });
+
+    it('sets the items per page label', () => {
+      expect(component.paginator._intl.itemsPerPageLabel).not.toBeNull();
     });
   });
 });

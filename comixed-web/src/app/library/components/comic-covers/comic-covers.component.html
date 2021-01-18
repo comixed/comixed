@@ -36,8 +36,29 @@
           [busy]="!comic.fileDetails"
           [selected]="isSelected(comic)"
           (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
+          (showContextMenu)="
+            onShowContextMenu($event.comic, $event.x, $event.y)
+          "
         ></cx-comic-detail-card>
       </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<div
+  style="visibility: hidden;position: fixed"
+  [style.left]="contextMenuX"
+  [style.top]="contextMenuY"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="onShowComicDetails(comic)">
+      <mat-icon>details</mat-icon>
+      <mat-label>{{
+        "library.context-menu.comic-details" | translate
+      }}</mat-label>
+    </button>
+  </ng-template>
+</mat-menu>

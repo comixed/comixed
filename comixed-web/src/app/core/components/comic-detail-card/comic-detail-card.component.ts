@@ -31,6 +31,7 @@ import { filter } from 'rxjs/operators';
 import { LoggerService } from '@angular-ru/logger';
 import { ComicSelectEvent } from '@app/core';
 import { Comic } from '@app/library';
+import { ComicContextMenuEvent } from '@app/library/models/ui/comic-context-menu-event';
 
 @Component({
   selector: 'cx-comic-detail-card',
@@ -50,6 +51,7 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() selected = false;
 
   @Output() selectionChanged = new EventEmitter<ComicSelectEvent>();
+  @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
 
   displayOptionSubscription: Subscription;
 
@@ -77,5 +79,15 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
         selected: !this.selected
       });
     }
+  }
+
+  onContextMenu($event: MouseEvent): void {
+    $event.preventDefault();
+    this.logger.trace('Showing context menu for comic:', this.comic);
+    this.showContextMenu.emit({
+      comic: this.comic,
+      x: `${$event.clientX}px`,
+      y: `${$event.clientY}px`
+    } as ComicContextMenuEvent);
   }
 }
