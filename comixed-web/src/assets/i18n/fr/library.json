@@ -1,12 +1,5 @@
 {
   "comic": {
-    "load-comic": {
-      "effect-failure": "Failed to load comic."
-    },
-    "undo-changes": {
-      "title": "Undo Changes",
-      "message": "Are you sure you want to undo changes to this comic?"
-    },
     "hint": {
       "required-for-scraping": "This value is required for scraping..."
     },
@@ -53,10 +46,6 @@
       "confirm-start-title": "Import Comic Files?",
       "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
     },
-    "send-comic-files": {
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import.",
-      "effect-failure": "Failed to send comic files for import."
-    },
     "label": {
       "added-date": "Added To Library",
       "archive-type": "File Encoded As",
@@ -77,8 +66,10 @@
       "imprint": "Imprint",
       "issue-details": "Issue Details",
       "issue-number": "Issue #",
+      "last-read-date": "Last Read",
       "locations": "Locations In This Issue ({count})",
       "other-details": "Other Comic Details",
+      "page-count": "# Of Pages",
       "publisher": "Publisher",
       "scan-type": "Scan Type",
       "series": "Series Name",
@@ -87,12 +78,19 @@
       "teams": "Teams In This Issue ({count})",
       "volume": "Volume"
     },
+    "load-comic": {
+      "effect-failure": "Failed to load comic."
+    },
     "placeholder": {
       "api-key": "The API key used when scraping comics...",
       "issue-number": "The issue number...",
       "publisher": "The publisher...",
       "series": "The series name...",
       "volume": "The volume..."
+    },
+    "send-comic-files": {
+      "effect-failure": "Failed to send comic files for import.",
+      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
     },
     "text": {
       "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
@@ -102,6 +100,10 @@
       "download-comic": "Download this comic...",
       "go-to-next-comic": "Go to the next comic in this series...",
       "go-to-previous-comic": "Go to the previous comic in this series..."
+    },
+    "undo-changes": {
+      "message": "Are you sure you want to undo changes to this comic?",
+      "title": "Undo Changes"
     }
   },
   "library": {
@@ -110,6 +112,9 @@
     },
     "comic-group": {
       "invalid-grouping": "The group \"{name}\" is not valid."
+    },
+    "context-menu": {
+      "comic-details": "Show comic details..."
     },
     "label": {
       "navigation-tree": "Tree View",
@@ -139,11 +144,11 @@
       "100-records": "100 Records",
       "1000-records": "1000 Records",
       "all-records": "All Records",
+      "issue-count": "# Issues",
       "matchability": "Match",
       "publisher": "Publisher",
       "series-name": "Series",
-      "start-year": "Start Year",
-      "issue-count": "# Issues"
+      "start-year": "Start Year"
     },
     "load-scraping-volumes": {
       "effect-failure": "Failed to load any volumes..."

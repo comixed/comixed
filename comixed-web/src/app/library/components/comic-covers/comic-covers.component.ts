@@ -42,6 +42,9 @@ import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -50,6 +53,7 @@ import {
 })
 export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
   @Input() selected: Comic[] = [];
 
@@ -60,6 +64,9 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   pagination = this.paginationOptions[0];
 
   dataSource = new MatTableDataSource<Comic>();
+  comic: Comic = null;
+  contextMenuX = '';
+  contextMenuY = '';
   private _comicObservable = new BehaviorSubject<Comic[]>([]);
 
   constructor(
@@ -67,7 +74,8 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -125,6 +133,19 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
       this.logger.debug('Unmarking comic as selected:', comic);
       this.store.dispatch(deselectComics({ comics: [comic] }));
     }
+  }
+
+  onShowContextMenu(comic: Comic, x: string, y: string): void {
+    this.logger.debug('Popping up context menu for:', comic);
+    this.comic = comic;
+    this.contextMenuX = x;
+    this.contextMenuY = y;
+    this.contextMenu.openMenu();
+  }
+
+  onShowComicDetails(comic: Comic): void {
+    this.logger.debug('Showing comic details:', comic);
+    this.dialog.open(ComicDetailsDialogComponent, { data: comic });
   }
 
   private loadTranslations(): void {

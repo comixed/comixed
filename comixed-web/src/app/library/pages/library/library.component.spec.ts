@@ -45,9 +45,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
-  USER_FEATURE_KEY,
-  initialState as initialUserState
+  initialState as initialUserState,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('LibraryComponent', () => {
   const initialState = {
@@ -83,7 +84,8 @@ describe('LibraryComponent', () => {
         MatPaginatorModule,
         MatFormFieldModule,
         MatTooltipModule,
-        MatDialogModule
+        MatDialogModule,
+        MatMenuModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
