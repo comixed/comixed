@@ -49,6 +49,15 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { MatMenuModule } from '@angular/material/menu';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router
+} from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { QUERY_PARAM_TAB } from '@app/library/library.constants';
+import { MatTabsModule } from '@angular/material/tabs';
+import { DeletedComicsPipe } from '@app/library/pipes/deleted-comics.pipe';
 
 describe('LibraryComponent', () => {
   const initialState = {
@@ -62,6 +71,8 @@ describe('LibraryComponent', () => {
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let activatedRoute: ActivatedRoute;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -69,7 +80,8 @@ describe('LibraryComponent', () => {
         LibraryComponent,
         LibraryToolbarComponent,
         NavigationPaneComponent,
-        ComicCoversComponent
+        ComicCoversComponent,
+        DeletedComicsPipe
       ],
       imports: [
         NoopAnimationsModule,
@@ -85,9 +97,21 @@ describe('LibraryComponent', () => {
         MatFormFieldModule,
         MatTooltipModule,
         MatDialogModule,
-        MatMenuModule
+        MatMenuModule,
+        MatTabsModule
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: new BehaviorSubject<{}>({}),
+            params: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot
+          }
+        },
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LibraryComponent);
@@ -96,6 +120,9 @@ describe('LibraryComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   }));
 
@@ -110,6 +137,22 @@ describe('LibraryComponent', () => {
 
     it('updates the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('changing the displayed tab', () => {
+    const TAB = 3;
+
+    it('loads the tab from the URL', () => {
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        [QUERY_PARAM_TAB]: `${TAB}`
+      });
+      expect(component.currentTab).toEqual(TAB);
+    });
+
+    it('updates the URL when the tab changes', () => {
+      component.onCurrentTabChanged(TAB);
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 });

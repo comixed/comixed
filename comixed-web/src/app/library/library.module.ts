@@ -90,6 +90,7 @@ import { SelectedComicsComponent } from './components/selected-comics/selected-c
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { MatMenuModule } from '@angular/material/menu';
     LibraryToolbarComponent,
     ScrapingComponent,
     SelectedComicsComponent,
-    ComicDetailsDialogComponent
+    ComicDetailsDialogComponent,
+    DeletedComicsPipe
   ],
   providers: [ComicTitlePipe],
   imports: [

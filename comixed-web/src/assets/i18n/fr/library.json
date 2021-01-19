@@ -130,6 +130,10 @@
       "locations": "Locations",
       "stories": "Stories"
     },
+    "tab": {
+      "all-comics": "All",
+      "deleted-comics": "Deleted"
+    },
     "tooltip": {
       "deselect-all": "Mark no comics as selected.",
       "navigation-tree": "Show the library tree view",

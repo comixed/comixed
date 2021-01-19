@@ -3,4 +3,18 @@
   [selected]="selected"
   [isAdmin]="isAdmin"
 ></cx-library-toolbar>
-<cx-comic-covers [comics]="comics" [selected]="selected"></cx-comic-covers>
+<mat-tab-group
+  mat-align-tabs="start"
+  [selectedIndex]="currentTab"
+  (selectedIndexChange)="onCurrentTabChanged($event)"
+>
+  <mat-tab [label]="'library.tab.all-comics' | translate">
+    <cx-comic-covers [comics]="comics" [selected]="selected"></cx-comic-covers>
+  </mat-tab>
+  <mat-tab [label]="'library.tab.deleted-comics' | translate">
+    <cx-comic-covers
+      [comics]="comics | deletedComics"
+      [selected]="selected"
+    ></cx-comic-covers>
+  </mat-tab>
+</mat-tab-group>
