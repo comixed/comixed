@@ -26,11 +26,12 @@ import {
   selectLibraryBusy,
   selectSelectedComics
 } from '@app/library/selectors/library.selectors';
-import { TitleService } from '@app/core';
+import { TitleService, updateQueryParam } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cx-all-comics',
@@ -45,13 +46,26 @@ export class LibraryComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   isAdmin = false;
+  currentTab = 0;
+  paramSubscription: Subscription;
+  readonly TAB_PARAMETER = 'tab';
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
+    this.paramSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        if (+params[this.TAB_PARAMETER]) {
+          this.logger.debug('Setting current tab:', params[this.TAB_PARAMETER]);
+          this.currentTab = +params[this.TAB_PARAMETER];
+        }
+      }
+    );
     this.libraryBusySubscription = this.store
       .select(selectLibraryBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
@@ -91,6 +105,16 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
+  }
+
+  onCurrentTabChanged(tab: number): void {
+    this.logger.debug('Changing current tab:', tab);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      this.TAB_PARAMETER,
+      `${tab}`
+    );
   }
 
   private loadTranslations(): void {
