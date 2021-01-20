@@ -325,6 +325,7 @@ public class Comic {
 
   @Transient
   @JsonView(View.SessionUpdateView.class)
+  @JsonFormat(shape = Shape.NUMBER)
   @Getter
   @Setter
   private Date lastRead;

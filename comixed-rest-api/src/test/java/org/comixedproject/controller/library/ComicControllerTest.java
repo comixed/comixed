@@ -127,7 +127,9 @@ public class ComicControllerTest {
   public void testGetComicsAddedSinceWithComicUpdate()
       throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(
+            comicService.getComicsUpdatedSince(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(comicList);
     Mockito.when(comicList.isEmpty()).thenReturn(false);
     Mockito.when(comicService.getLastReadDatesSince(Mockito.anyString(), Mockito.anyLong()))
@@ -149,7 +151,7 @@ public class ComicControllerTest {
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.atLeast(1))
-        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS);
+        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS, TEST_EMAIL_ADDRESS);
     Mockito.verify(comicList, Mockito.atLeast(1)).isEmpty();
     Mockito.verify(comicService, Mockito.atLeast(1)).getProcessingCount();
     Mockito.verify(comicService, Mockito.atLeast(1)).getRescanCount();
@@ -159,7 +161,9 @@ public class ComicControllerTest {
   public void testGetComicsAddedSinceWithLastReadUpdate()
       throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(
+            comicService.getComicsUpdatedSince(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(comicList);
     Mockito.when(comicList.isEmpty()).thenReturn(true);
     Mockito.when(comicService.getLastReadDatesSince(Mockito.anyString(), Mockito.anyLong()))
@@ -182,7 +186,7 @@ public class ComicControllerTest {
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.atLeast(1))
-        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS);
+        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS, TEST_EMAIL_ADDRESS);
     Mockito.verify(comicList, Mockito.atLeast(1)).isEmpty();
     Mockito.verify(comicService, Mockito.atLeast(1))
         .getLastReadDatesSince(TEST_EMAIL_ADDRESS, TEST_TIMESTAMP);
@@ -195,7 +199,9 @@ public class ComicControllerTest {
   public void testGetComicsAddedSinceWithRescans()
       throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(
+            comicService.getComicsUpdatedSince(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(comicList);
     Mockito.when(comicList.isEmpty()).thenReturn(true);
     Mockito.when(comicService.getLastReadDatesSince(Mockito.anyString(), Mockito.anyLong()))
@@ -218,7 +224,7 @@ public class ComicControllerTest {
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.atLeast(1))
-        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS);
+        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS, TEST_EMAIL_ADDRESS);
     Mockito.verify(comicList, Mockito.atLeast(1)).isEmpty();
     Mockito.verify(comicService, Mockito.atLeast(1))
         .getLastReadDatesSince(TEST_EMAIL_ADDRESS, TEST_TIMESTAMP);
@@ -231,7 +237,9 @@ public class ComicControllerTest {
   public void testGetComicsAddedSinceWithImports()
       throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(
+            comicService.getComicsUpdatedSince(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(comicList);
     Mockito.when(comicList.isEmpty()).thenReturn(true);
     Mockito.when(comicService.getLastReadDatesSince(Mockito.anyString(), Mockito.anyLong()))
@@ -254,7 +262,7 @@ public class ComicControllerTest {
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.atLeast(1))
-        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS);
+        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS, TEST_EMAIL_ADDRESS);
     Mockito.verify(comicList, Mockito.atLeast(1)).isEmpty();
     Mockito.verify(comicService, Mockito.atLeast(1))
         .getLastReadDatesSince(TEST_EMAIL_ADDRESS, TEST_TIMESTAMP);
@@ -267,7 +275,9 @@ public class ComicControllerTest {
   public void testGetComicsAddedSinceNoUpdates()
       throws ParseException, InterruptedException, ComiXedUserException {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-    Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(
+            comicService.getComicsUpdatedSince(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(comicList);
     Mockito.when(comicList.isEmpty()).thenReturn(true);
     Mockito.when(comicService.getLastReadDatesSince(Mockito.anyString(), Mockito.anyLong()))
@@ -290,7 +300,7 @@ public class ComicControllerTest {
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.atLeast(TEST_TIMEOUT))
-        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS);
+        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RESULTS, TEST_EMAIL_ADDRESS);
     Mockito.verify(comicList, Mockito.atLeast(TEST_TIMEOUT)).isEmpty();
     Mockito.verify(comicService, Mockito.atLeast(TEST_TIMEOUT))
         .getLastReadDatesSince(TEST_EMAIL_ADDRESS, TEST_TIMESTAMP);

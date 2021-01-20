@@ -22,7 +22,10 @@ import {
   deselectComics,
   loadComic,
   loadComicFailed,
+  readStateSet,
   selectComics,
+  setReadState,
+  setReadStateFailed,
   updateComics
 } from '../actions/library.actions';
 import { Comic } from '@app/library';
@@ -34,13 +37,15 @@ export interface LibraryState {
   comic: Comic;
   comics: Comic[];
   selected: Comic[];
+  saving: boolean;
 }
 
 export const initialState: LibraryState = {
   loading: false,
   comic: null,
   comics: [],
-  selected: []
+  selected: [],
+  saving: false
 };
 
 export const reducer = createReducer(
@@ -80,5 +85,8 @@ export const reducer = createReducer(
     );
 
     return { ...state, selected };
-  })
+  }),
+  on(setReadState, state => ({ ...state, saving: true })),
+  on(readStateSet, state => ({ ...state, saving: false })),
+  on(setReadStateFailed, state => ({ ...state, saving: false }))
 );

@@ -42,6 +42,8 @@ export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/scraping/volumes`;
 export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volumeId}/issues/\${issueNumber}`;
 export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}`;
 
+export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
+
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
   'preference.import.root-directory';

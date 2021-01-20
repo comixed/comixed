@@ -29,6 +29,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
 import org.comixedproject.model.net.library.MoveComicsRequest;
+import org.comixedproject.model.net.library.SetReadStateRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.service.comic.ComicService;
@@ -66,6 +67,7 @@ public class LibraryControllerTest {
   private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
   private static final Boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
   private static final Boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
+  private static final Boolean TEST_READ = RANDOM.nextBoolean();
 
   @InjectMocks private LibraryController libraryController;
   @Mock private LibraryService libraryService;
@@ -84,6 +86,7 @@ public class LibraryControllerTest {
   @Mock private ConvertComicsWorkerTask convertComicsWorkerTask;
   @Mock private ObjectFactory<MoveComicsWorkerTask> moveComicsWorkerTaskObjectFactory;
   @Mock private MoveComicsWorkerTask moveComicsWorkerTask;
+  @Mock private List<Long> comicIdList;
 
   @Test
   public void testGetUpdatedComics() throws ComiXedUserException {
@@ -297,5 +300,18 @@ public class LibraryControllerTest {
     Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setDirectory(TEST_DESTINATION_DIRECTORY);
     Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULE);
     Mockito.verify(taskManager, Mockito.times(1)).runTask(moveComicsWorkerTask);
+  }
+
+  @Test
+  public void testSetReadState() throws LibraryException {
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.doNothing()
+        .when(libraryService)
+        .setReadState(Mockito.anyString(), Mockito.anyList(), Mockito.anyBoolean());
+
+    libraryController.setReadState(principal, new SetReadStateRequest(comicIdList, TEST_READ));
+
+    Mockito.verify(libraryService, Mockito.times(1))
+        .setReadState(TEST_USER_EMAIL, comicIdList, TEST_READ);
   }
 }

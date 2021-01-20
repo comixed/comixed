@@ -51,11 +51,14 @@ public class SessionService {
    * @param timestamp the timestamp
    * @param maximumRecords the maximum records
    * @param timeout the timeout period
+   * @param email the user's email
    * @return the session update
+   * @throws ComiXedUserException if the user is not found
    */
   public SessionUpdate getSessionUpdate(
-      final long timestamp, final int maximumRecords, final long timeout) {
-    log.debug("Getting session update");
+      final long timestamp, final int maximumRecords, final long timeout, final String email)
+      throws ComiXedUserException {
+    log.debug("Getting session update for {}", email);
 
     Long cutoff = System.currentTimeMillis() + (timeout * 1000L);
     boolean done = false;
@@ -64,7 +67,7 @@ public class SessionService {
     int importCount = 0;
 
     while (!done) {
-      comicsUpdated = this.comicService.getComicsUpdatedSince(timestamp, maximumRecords);
+      comicsUpdated = this.comicService.getComicsUpdatedSince(timestamp, maximumRecords, email);
       comicIdsRemoved = this.comicAuditor.getEntriesSinceTimestamp(timestamp, maximumRecords);
       importCount =
           this.taskService.getTaskCount(TaskType.ADD_COMIC)

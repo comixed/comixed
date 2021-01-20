@@ -40,7 +40,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   deselectComics,
-  selectComics
+  selectComics,
+  setReadState
 } from '@app/library/actions/library.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
@@ -146,6 +147,16 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   onShowComicDetails(comic: Comic): void {
     this.logger.debug('Showing comic details:', comic);
     this.dialog.open(ComicDetailsDialogComponent, { data: comic });
+  }
+
+  onSetOneReadState(comic: Comic, read: boolean): void {
+    this.logger.debug('Setting one comic read state:', comic, read);
+    this.store.dispatch(setReadState({ comics: [comic], read }));
+  }
+
+  onSetSelectedReadState(read: boolean): void {
+    this.logger.debug('Setting selected comics read state:', read);
+    this.store.dispatch(setReadState({ comics: this.selected, read }));
   }
 
   private loadTranslations(): void {

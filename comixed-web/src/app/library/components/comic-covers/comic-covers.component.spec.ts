@@ -48,7 +48,8 @@ import {
 } from '@app/library/library.fixtures';
 import {
   deselectComics,
-  selectComics
+  selectComics,
+  setReadState
 } from '@app/library/actions/library.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -220,6 +221,35 @@ describe('ComicCoversComponent', () => {
 
     it('sets the items per page label', () => {
       expect(component.paginator._intl.itemsPerPageLabel).not.toBeNull();
+    });
+  });
+
+  describe('setting the read state', () => {
+    const READ = Math.random() > 0.5;
+
+    describe('for one comic', () => {
+      beforeEach(() => {
+        component.onSetOneReadState(COMIC, READ);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setReadState({ comics: [COMIC], read: READ })
+        );
+      });
+    });
+
+    describe('for selected comic', () => {
+      beforeEach(() => {
+        component.selected = COMICS;
+        component.onSetSelectedReadState(READ);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setReadState({ comics: COMICS, read: READ })
+        );
+      });
     });
   });
 });
