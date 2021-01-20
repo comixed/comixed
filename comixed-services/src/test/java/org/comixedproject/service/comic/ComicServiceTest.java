@@ -217,15 +217,27 @@ public class ComicServiceTest {
         .findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
   }
 
+  @Test(expected = ComiXedUserException.class)
+  public void testGetComicUpdatesSinceInvalidEmail() throws ComiXedUserException {
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(null);
+
+    try {
+      comicService.getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_COMICS, TEST_EMAIL);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    }
+  }
+
   @Test
-  public void testGetComicsUpdatedSince() {
+  public void testGetComicsUpdatedSince() throws ComiXedUserException {
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             comicRepository.findAllByDateLastUpdatedGreaterThan(
                 Mockito.any(Date.class), pageableCaptor.capture()))
         .thenReturn(comicList);
 
     final List<Comic> result =
-        comicService.getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_COMICS);
+        comicService.getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_COMICS, TEST_EMAIL);
 
     assertNotNull(result);
     assertSame(comicList, result);

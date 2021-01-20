@@ -65,6 +65,7 @@ public class LibraryServiceTest {
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES [v$VOLUME] #$ISSUE $COVERDATE";
   private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
+  private static final Date TEST_READ_DATE = new Date();
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
@@ -80,6 +81,7 @@ public class LibraryServiceTest {
   @Mock private ComiXedUser user;
   @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private PageCacheService pageCacheService;
+  @Mock private LastReadDate lastReadDate;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -211,5 +213,42 @@ public class LibraryServiceTest {
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
     Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
+  }
+
+  @Test
+  public void testSetReadStateOn() throws ComiXedUserException, LibraryException {
+    comicIdList.add(7L);
+    comicIdList.add(17L);
+
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(
+            lastReadDatesRepository.getForComicAndUser(
+                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
+        .thenReturn(null, lastReadDate);
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+
+    libraryService.setReadState(TEST_EMAIL, comicIdList, true);
+
+    Mockito.verify(lastReadDate, Mockito.times(1)).setLastRead(Mockito.any(Date.class));
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).save(lastReadDate);
+  }
+
+  @Test
+  public void testSetReadStateOff() throws ComiXedUserException, LibraryException {
+    comicIdList.add(7L);
+    comicIdList.add(17L);
+
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(
+            lastReadDatesRepository.getForComicAndUser(
+                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
+        .thenReturn(null, lastReadDate);
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
+
+    libraryService.setReadState(TEST_EMAIL, comicIdList, false);
+
+    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).delete(lastReadDate);
   }
 }

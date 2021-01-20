@@ -135,4 +135,55 @@ public class LibraryService {
       throw new LibraryException("failed to clean image cache directory", error);
     }
   }
+
+  /**
+   * Sets the read state for a set of comics, based on their record id.
+   *
+   * @param email the user's email address
+   * @param ids the record ids
+   * @param read the read state
+   * @throws LibraryException if an error occurs
+   */
+  @Transactional
+  public void setReadState(final String email, final List<Long> ids, final boolean read)
+      throws LibraryException {
+    final ComiXedUser user;
+    try {
+      user = this.userService.findByEmail(email);
+    } catch (ComiXedUserException error) {
+      throw new LibraryException("Failed to set read state", error);
+    }
+    log.debug(
+        "Marking {} comic{} as {}",
+        ids.size(),
+        ids.size() == 1 ? "" : "s",
+        read ? "read" : "unread");
+    ids.forEach(
+        id -> {
+          final Comic comic = this.comicRepository.getById(id);
+          if (comic != null) {
+            LastReadDate lastRead = this.lastReadDateRepository.getForComicAndUser(comic, user);
+
+            if (read) {
+              log.debug("Setting last read date");
+              if (lastRead == null) {
+                lastRead = new LastReadDate();
+                lastRead.setUser(user);
+                lastRead.setComic(comic);
+              }
+              lastRead.setLastRead(new Date());
+              lastRead.setLastUpdated(new Date());
+              this.lastReadDateRepository.save(lastRead);
+            } else {
+              if (lastRead != null) {
+                log.debug("Clearing last read date");
+                this.lastReadDateRepository.delete(lastRead);
+              }
+            }
+            log.debug("Updating comic state");
+            comic.setDateLastUpdated(new Date());
+            this.comicRepository.save(comic);
+          }
+        });
+  }
 }

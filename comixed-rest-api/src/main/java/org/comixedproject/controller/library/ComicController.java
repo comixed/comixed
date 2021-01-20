@@ -214,7 +214,7 @@ public class ComicController {
           }
         }
         firstRun = false;
-        comics = this.comicService.getComicsUpdatedSince(timestamp, maximumResults);
+        comics = this.comicService.getComicsUpdatedSince(timestamp, maximumResults, email);
         log.debug("Found {} new or updated comic{}", comics.size(), comics.size() == 1 ? "" : "s");
         lastReadDates = this.comicService.getLastReadDatesSince(email, timestamp);
         log.debug(

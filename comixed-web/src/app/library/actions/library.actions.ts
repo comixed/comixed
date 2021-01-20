@@ -45,3 +45,16 @@ export const deselectComics = createAction(
   '[Library] Unmark a set of comics as selected',
   props<{ comics: Comic[] }>()
 );
+
+export const setReadState = createAction(
+  '[Library] Set the read state for comics',
+  props<{ comics: Comic[]; read: boolean }>()
+);
+
+export const readStateSet = createAction(
+  '[Library] Successfully set the read state for comics'
+);
+
+export const setReadStateFailed = createAction(
+  '[Library] Failed to set the read state for comics'
+);

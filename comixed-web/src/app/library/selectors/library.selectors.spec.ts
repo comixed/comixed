@@ -64,7 +64,8 @@ describe('Library Selectors', () => {
       loading: Math.random() > 0.5,
       comic: COMIC,
       comics: COMICS,
-      selected: SELECTED_COMICS
+      selected: SELECTED_COMICS,
+      saving: Math.random() > 0.5
     };
   });
 
