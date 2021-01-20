@@ -21,12 +21,15 @@ package org.comixedproject.controller.user;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
+import java.security.Principal;
 import javax.servlet.http.HttpSession;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.model.session.SessionUpdate;
 import org.comixedproject.model.session.UserSession;
+import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.SessionService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -37,6 +40,7 @@ public class SessionControllerTest {
   private static final Long TEST_TIMESTAMP = System.currentTimeMillis();
   private static final Integer TEST_MAXIMUM_RECORDS = 100;
   private static final Long TEST_TIMEOUT = 717L;
+  private static final String TEST_EMAIL = "read@comixed.org";
 
   @InjectMocks private SessionController sessionController;
   @Mock private SessionService sessionService;
@@ -45,22 +49,29 @@ public class SessionControllerTest {
   @Captor private ArgumentCaptor<UserSession> userSessionArgumentCaptor;
   @Mock private SessionUpdateRequest sessionUpdateRequest;
   @Mock private SessionUpdate sessionUpdate;
+  @Mock private Principal principal;
+
+  @Before
+  public void setUp() {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+  }
 
   @Test
-  public void testGetSessionUpdate() {
+  public void testGetSessionUpdate() throws ComiXedUserException {
     Mockito.when(
-            sessionService.getSessionUpdate(Mockito.anyLong(), Mockito.anyInt(), Mockito.anyLong()))
+            sessionService.getSessionUpdate(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyLong(), Mockito.anyString()))
         .thenReturn(sessionUpdate);
 
     final SessionUpdateResponse response =
         sessionController.getSessionUpdate(
-            httpSession,
+            principal,
             new SessionUpdateRequest(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT));
 
     assertNotNull(response);
     assertSame(sessionUpdate, response.getUpdate());
 
     Mockito.verify(sessionService, Mockito.times(1))
-        .getSessionUpdate(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT);
+        .getSessionUpdate(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT, TEST_EMAIL);
   }
 }

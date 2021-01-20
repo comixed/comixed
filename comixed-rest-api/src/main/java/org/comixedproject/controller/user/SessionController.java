@@ -19,12 +19,12 @@
 package org.comixedproject.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import java.security.Principal;
 import java.util.Date;
-import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
-import org.comixedproject.model.session.SessionUpdate;
+import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.SessionService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class SessionController {
   /**
    * Retrieves a session update. Waits a given period of time before returning an empty update.
    *
-   * @param httpSession the HTTP session
+   * @param principal the user principal
    * @param request the request body
    * @return the session update
    */
@@ -53,7 +53,8 @@ public class SessionController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.SessionUpdateView.class)
   public SessionUpdateResponse getSessionUpdate(
-      final HttpSession httpSession, @RequestBody() final SessionUpdateRequest request) {
+      final Principal principal, @RequestBody() final SessionUpdateRequest request)
+      throws ComiXedUserException {
     final long timestamp = request.getTimestamp();
     final int maximumRecords = request.getMaximumRecords();
     final long timeout = request.getTimeout();
@@ -63,10 +64,8 @@ public class SessionController {
         new Date(timestamp),
         maximumRecords,
         timeout);
-    final SessionUpdate sessionUpdate =
-        this.sessionService.getSessionUpdate(timestamp, maximumRecords, timeout);
-
-    log.info("Returning session update");
-    return new SessionUpdateResponse(sessionUpdate);
+    return new SessionUpdateResponse(
+        this.sessionService.getSessionUpdate(
+            timestamp, maximumRecords, timeout, principal.getName()));
   }
 }

@@ -29,6 +29,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
 import org.comixedproject.model.net.library.MoveComicsRequest;
+import org.comixedproject.model.net.library.SetReadStateRequest;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
@@ -213,5 +214,24 @@ public class LibraryController {
     task.setRenamingRule(renamingRule);
 
     this.taskManager.runTask(task);
+  }
+
+  /**
+   * Sets the read state for a set of comics.
+   *
+   * @param principal the user principal
+   * @param request the request body
+   * @throws LibraryException if an error occurs
+   */
+  @PostMapping(value = "/library/read", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public void setReadState(final Principal principal, @RequestBody() SetReadStateRequest request)
+      throws LibraryException {
+    final String email = principal.getName();
+    final List<Long> ids = request.getIds();
+    final boolean read = request.getRead();
+    log.info("Marking comics as {} for {}", read ? "read" : "unread", email);
+    this.libraryService.setReadState(email, ids, read);
   }
 }

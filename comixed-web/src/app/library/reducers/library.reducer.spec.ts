@@ -23,7 +23,10 @@ import {
   deselectComics,
   loadComic,
   loadComicFailed,
+  readStateSet,
   selectComics,
+  setReadState,
+  setReadStateFailed,
   updateComics
 } from '@app/library/actions/library.actions';
 import { Comic } from '@app/library';
@@ -31,6 +34,7 @@ import { Comic } from '@app/library';
 describe('Library Reducer', () => {
   const COMIC = COMIC_1;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
+  const READ = Math.random() > 0.5;
 
   let state: LibraryState;
 
@@ -57,6 +61,10 @@ describe('Library Reducer', () => {
 
     it('has no selected comic', () => {
       expect(state.selected).toEqual([]);
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
     });
   });
 
@@ -186,6 +194,39 @@ describe('Library Reducer', () => {
       it('clears the selected comics', () => {
         expect(state.selected).toEqual([]);
       });
+    });
+  });
+
+  describe('setting the read state for comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, saving: false },
+        setReadState({ comics: COMICS, read: READ })
+      );
+    });
+
+    it('sets the saving flag', () => {
+      expect(state.saving).toBeTrue();
+    });
+  });
+
+  describe('successfully setting the read state', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, readStateSet());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
+    });
+  });
+
+  describe('failure setting the read state', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, setReadStateFailed());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
     });
   });
 });

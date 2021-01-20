@@ -114,7 +114,12 @@
       "invalid-grouping": "The group \"{name}\" is not valid."
     },
     "context-menu": {
-      "comic-details": "Show comic details..."
+      "comic-details": "Show comic details...",
+      "mark-as": "Mark...",
+      "mark-one-as-read": "This Comic As Read",
+      "mark-one-as-unread": "This Comic As Unread",
+      "mark-selected-as-read": "Selected Comics As Read",
+      "mark-selected-as-unread": "Selected Comics As Unread"
     },
     "label": {
       "navigation-tree": "Tree View",
@@ -129,6 +134,10 @@
       "teams": "Teams",
       "locations": "Locations",
       "stories": "Stories"
+    },
+    "set-read": {
+      "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
+      "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
     },
     "tab": {
       "all-comics": "All",

@@ -45,6 +45,7 @@ public class SessionServiceTest {
   private static final int TEST_MAXIMUM_RECORDS = 100;
   private static final long TEST_TIMEOUT = 717L;
   private static final Integer TEST_TASK_COUNT = 213;
+  private static final String TEST_EMAIL = "reading@comixed.org";
 
   @InjectMocks private SessionService sessionService;
   @Mock private ComicService comicService;
@@ -61,23 +62,26 @@ public class SessionServiceTest {
   }
 
   @Test
-  public void testGetSessionUpdate() {
+  public void testGetSessionUpdate() throws ComiXedUserException {
     comicList.add(comic);
 
-    Mockito.when(comicService.getComicsUpdatedSince(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(
+            comicService.getComicsUpdatedSince(
+                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(comicList);
     Mockito.when(comicAuditor.getEntriesSinceTimestamp(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(auditEntryList);
     Mockito.when(taskService.getTaskCount(Mockito.any())).thenReturn(TEST_TASK_COUNT);
 
     final SessionUpdate result =
-        sessionService.getSessionUpdate(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT);
+        sessionService.getSessionUpdate(
+            TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_TIMEOUT, TEST_EMAIL);
 
     assertNotNull(result);
     assertTrue(result.getImportCount() > 0);
 
     Mockito.verify(comicService, Mockito.times(1))
-        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS);
+        .getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS, TEST_EMAIL);
     Mockito.verify(comicAuditor, Mockito.times(1))
         .getEntriesSinceTimestamp(TEST_TIMESTAMP, TEST_MAXIMUM_RECORDS);
     Mockito.verify(taskService, Mockito.times(1)).getTaskCount(TaskType.PROCESS_COMIC);

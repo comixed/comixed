@@ -18,17 +18,29 @@
 
 import { TestBed } from '@angular/core/testing';
 import { LibraryService } from './library.service';
-import { COMIC_1 } from '@app/library/library.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4
+} from '@app/library/library.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
-import { LOAD_COMIC_URL } from '@app/library/library.constants';
+import {
+  LOAD_COMIC_URL,
+  SET_READ_STATE_URL
+} from '@app/library/library.constants';
+import { HttpResponse } from '@angular/common/http';
+import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_1;
+  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
+  const READ = Math.random() > 0.5;
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -56,5 +68,20 @@ describe('LibraryService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(COMIC);
+  });
+
+  it('can set the read state for comics', () => {
+    const serviceResponse = new HttpResponse({ status: 200 });
+    service
+      .setRead({ comics: COMICS, read: READ })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(interpolate(SET_READ_STATE_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id),
+      read: READ
+    } as SetComicReadRequest);
+    req.flush(serviceResponse);
   });
 });
