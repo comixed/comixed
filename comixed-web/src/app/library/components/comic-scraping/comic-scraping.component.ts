@@ -131,7 +131,6 @@ export class ComicScrapingComponent
       }
     };
     this.dataSource.sort = this.sort;
-    this.logger.debug('***THIS:', this);
   }
 
   onVolumeSelected(volume: ScrapingVolume): void {

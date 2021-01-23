@@ -41,6 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('NavigationBarComponent', () => {
   const initialState = {
@@ -67,7 +68,8 @@ describe('NavigationBarComponent', () => {
         MatIconModule,
         MatToolbarModule,
         MatTooltipModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatDividerModule
       ],
       providers: [
         provideMockStore({ initialState }),

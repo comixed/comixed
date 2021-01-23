@@ -44,6 +44,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -73,7 +74,8 @@ describe('AppComponent', () => {
         MatMenuModule,
         MatIconModule,
         MatTooltipModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatDividerModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

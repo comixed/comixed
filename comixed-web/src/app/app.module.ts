@@ -53,6 +53,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { BuildDetailsEffects } from '@app/effects/build-details.effects';
 import { BuildDetailsComponent } from './pages/build-details/build-details.component';
 import { MatCardModule } from '@angular/material/card';
+import { AdminModule } from '@app/admin/admin.module';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -62,6 +64,7 @@ import { MatCardModule } from '@angular/material/card';
     BuildDetailsComponent
   ],
   imports: [
+    AdminModule,
     UserModule,
     LibraryModule,
     BrowserModule,
@@ -95,7 +98,8 @@ import { MatCardModule } from '@angular/material/card';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatCardModule
+    MatCardModule,
+    MatDividerModule
   ],
   providers: [
     [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]

@@ -27,13 +27,13 @@ import lombok.Setter;
 import org.comixedproject.views.View;
 
 /**
- * <code>RestAuditLogEntry</code> represents a single entry in the REST API audit log table.
+ * <code>WebAuditLogEntry</code> represents a single entry in the REST API audit log table.
  *
  * @author Darryl L. Pierce
  */
 @Entity
 @Table(name = "rest_audit_log")
-public class RestAuditLogEntry {
+public class WebAuditLogEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { YesNoPipe } from './yes-no.pipe';
+import { TEXT_NO, TEXT_YES } from '@app/core';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/admin.json' },
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
-}
+describe('YesNoPipe', () => {
+  let pipe: YesNoPipe;
+
+  beforeEach(() => {
+    pipe = new YesNoPipe();
+  });
+
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
+  });
+
+  it('returns yes text when true', () => {
+    expect(pipe.transform(true)).toEqual(TEXT_YES);
+  });
+
+  it('returns no text when false', () => {
+    expect(pipe.transform(false)).toEqual(TEXT_NO);
+  });
+
+  it('returns no text when null', () => {
+    expect(pipe.transform(null)).toEqual(TEXT_NO);
+  });
+});

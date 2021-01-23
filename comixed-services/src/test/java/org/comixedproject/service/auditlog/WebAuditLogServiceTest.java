@@ -23,8 +23,8 @@ import static junit.framework.TestCase.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.repositories.auditlog.RestAuditLogRepository;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
+import org.comixedproject.repositories.auditlog.WebAuditLogRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -32,27 +32,27 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RestAuditLogServiceTest {
+public class WebAuditLogServiceTest {
   private static final Long TEST_CUTOFF = System.currentTimeMillis();
 
-  @InjectMocks private RestAuditLogService restAuditLogService;
-  @Mock private RestAuditLogRepository restAuditLogRepository;
-  @Mock private RestAuditLogEntry incomingEntry;
-  @Mock private RestAuditLogEntry savedEntry;
+  @InjectMocks private WebAuditLogService webAuditLogService;
+  @Mock private WebAuditLogRepository webAuditLogRepository;
+  @Mock private WebAuditLogEntry incomingEntry;
+  @Mock private WebAuditLogEntry savedEntry;
   @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
-  private List<RestAuditLogEntry> auditLogEntryList = new ArrayList<>();
+  private List<WebAuditLogEntry> auditLogEntryList = new ArrayList<>();
 
   @Test
   public void testSave() {
-    Mockito.when(restAuditLogRepository.save(Mockito.any())).thenReturn(savedEntry);
+    Mockito.when(webAuditLogRepository.save(Mockito.any())).thenReturn(savedEntry);
 
-    final RestAuditLogEntry result = this.restAuditLogService.save(incomingEntry);
+    final WebAuditLogEntry result = this.webAuditLogService.save(incomingEntry);
 
     assertNotNull(result);
     assertSame(savedEntry, result);
 
-    Mockito.verify(restAuditLogRepository, Mockito.times(1)).save(incomingEntry);
+    Mockito.verify(webAuditLogRepository, Mockito.times(1)).save(incomingEntry);
   }
 
   @Test
@@ -60,11 +60,11 @@ public class RestAuditLogServiceTest {
     auditLogEntryList.add(incomingEntry);
 
     Mockito.when(
-            restAuditLogRepository.findByEndTimeAfterOrderByEndTime(
+            webAuditLogRepository.findByEndTimeAfterOrderByEndTime(
                 Mockito.any(Date.class), pageableArgumentCaptor.capture()))
         .thenReturn(auditLogEntryList);
 
-    final List<RestAuditLogEntry> result = restAuditLogService.getEntriesAfterDate(TEST_CUTOFF);
+    final List<WebAuditLogEntry> result = webAuditLogService.getEntriesAfterDate(TEST_CUTOFF);
 
     assertNotNull(result);
     assertSame(auditLogEntryList, result);
@@ -72,16 +72,16 @@ public class RestAuditLogServiceTest {
     assertEquals(0, pageableArgumentCaptor.getValue().getPageNumber());
     assertEquals(100, pageableArgumentCaptor.getValue().getPageSize());
 
-    Mockito.verify(restAuditLogRepository, Mockito.times(1))
+    Mockito.verify(webAuditLogRepository, Mockito.times(1))
         .findByEndTimeAfterOrderByEndTime(new Date(TEST_CUTOFF), pageableArgumentCaptor.getValue());
   }
 
   @Test
   public void testDeleteAllRestAuditLog() {
-    Mockito.doNothing().when(restAuditLogRepository).deleteAll();
+    Mockito.doNothing().when(webAuditLogRepository).deleteAll();
 
-    this.restAuditLogService.deleteAllRestAuditLog();
+    this.webAuditLogService.clearLogEntries();
 
-    Mockito.verify(restAuditLogRepository, Mockito.times(1)).deleteAll();
+    Mockito.verify(webAuditLogRepository, Mockito.times(1)).deleteAll();
   }
 }

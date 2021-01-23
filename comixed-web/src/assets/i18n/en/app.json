@@ -1,10 +1,28 @@
 {
   "app": {
-    "logged-in": "Logged in: {email}",
-    "general-effect-failure": "A general error has occurred."
+    "general-effect-failure": "A general error has occurred.",
+    "logged-in": "Logged in: {email}"
+  },
+  "build-details": {
+    "label": {
+      "branch": "The code was build from a branch named {name}",
+      "build-host": "Code was built on a machine named {name}.",
+      "build-time": "The code was built on {time}.",
+      "build-version": "The code was marked with a Build version of {version}.",
+      "commit-id": "The latest commit hash on the source branch is {id}.",
+      "commit-message": "Commit Message",
+      "commit-time": "This commit was created on {time}.",
+      "commit-user": "Commit was created by {name} <{email}>",
+      "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
+      "jdbc-url": "The database URL being used is {url}",
+      "remote-origin-url": "This branch is tracking the remote branch {url}"
+    },
+    "title": "Build Details",
+    "load-effect-failure": "Failed to load the build details."
   },
   "button": {
     "cancel": "Cancel",
+    "clear-log": "Clear Log",
     "deselect": "Deselect",
     "deselect-all": "Deselect All",
     "download": "Download",
@@ -26,14 +44,24 @@
     "submit": "Submit",
     "yes": "Yes"
   },
+  "display-options": {
+    "label": {
+      "page-size": "Page Size"
+    },
+    "title": "Display Options"
+  },
+  "home": {
+    "title": "Home"
+  },
   "menu": {
     "library-menu": {
-      "root": "Library",
-      "all-comics": "All Comics"
+      "all-comics": "All Comics",
+      "root": "Library"
     },
     "admin-menu": {
+      "import-comic-files": "Import Comics",
       "root": "Admin",
-      "import-comic-files": "Import Comics"
+      "web-audit-log": "Web Logs"
     },
     "options-menu": {
       "root": "Options",
@@ -46,35 +74,11 @@
   },
   "text": {
     "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
-    "view-details": "View Details"
+    "no": "No",
+    "view-details": "View Details",
+    "yes": "Yes"
   },
   "validation": {
     "field-required": "This field is required"
-  },
-  "display-options": {
-    "title": "Display Options",
-    "label": {
-      "page-size": "Page Size"
-    }
-  },
-  "home": {
-    "title": "Home"
-  },
-  "build-details": {
-    "title": "Build Details",
-    "load-effect-failure": "Failed to load the build details.",
-    "label": {
-      "branch": "The code was build from a branch named {name}",
-      "build-time": "The code was built on {time}.",
-      "build-host": "Code was built on a machine named {name}.",
-      "build-version": "The code was marked with a Build version of {version}.",
-      "commit-id": "The latest commit hash on the source branch is {id}.",
-      "commit-time": "This commit was created on {time}.",
-      "commit-message": "Commit Message",
-      "commit-user": "Commit was created by {name} <{email}>",
-      "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
-      "remote-origin-url": "This branch is tracking the remote branch {url}",
-      "jdbc-url": "The database URL being used is {url}"
-    }
   }
 }

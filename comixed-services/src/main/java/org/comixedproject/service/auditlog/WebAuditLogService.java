@@ -21,25 +21,25 @@ package org.comixedproject.service.auditlog;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.repositories.auditlog.RestAuditLogRepository;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
+import org.comixedproject.repositories.auditlog.WebAuditLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>RestAuditLogService</code> provides business logic services for instances of {@link
- * RestAuditLogEntry}.
+ * <code>WebAuditLogService</code> provides business logic services for instances of {@link
+ * WebAuditLogEntry}.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class RestAuditLogService {
+public class WebAuditLogService {
   private static final Object SEMAPHORE = new Object();
 
-  @Autowired private RestAuditLogRepository auditLogRepository;
+  @Autowired private WebAuditLogRepository auditLogRepository;
 
   /**
    * Save a new entry to the log.
@@ -48,7 +48,7 @@ public class RestAuditLogService {
    * @return the saved entry
    */
   @Transactional
-  public RestAuditLogEntry save(final RestAuditLogEntry entry) {
+  public WebAuditLogEntry save(final WebAuditLogEntry entry) {
     log.debug("Saving new REST audit log entry: started={}", entry.getStartTime());
     return this.auditLogRepository.save(entry);
   }
@@ -59,10 +59,10 @@ public class RestAuditLogService {
    * @param cutoff the cutoff timestamp
    * @return the entries
    */
-  public List<RestAuditLogEntry> getEntriesAfterDate(final Long cutoff) {
+  public List<WebAuditLogEntry> getEntriesAfterDate(final Long cutoff) {
     log.debug("Fetching up to 100 REST audit log entries");
 
-    List<RestAuditLogEntry> result = null;
+    List<WebAuditLogEntry> result = null;
     boolean done = false;
     long started = System.currentTimeMillis();
 
@@ -88,7 +88,7 @@ public class RestAuditLogService {
     return result;
   }
 
-  public void deleteAllRestAuditLog() {
+  public void clearLogEntries() {
     log.debug("Deleting the REST audit log entries");
     this.auditLogRepository.deleteAll();
   }

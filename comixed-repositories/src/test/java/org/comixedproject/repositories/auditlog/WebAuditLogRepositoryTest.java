@@ -25,7 +25,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.Date;
 import java.util.List;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,14 +49,14 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class RestAuditLogRepositoryTest {
+public class WebAuditLogRepositoryTest {
   private static final Date TEST_CUTOFF = new Date();
 
-  @Autowired private RestAuditLogRepository auditLogRepository;
+  @Autowired private WebAuditLogRepository auditLogRepository;
 
   @Test
   public void testFindByEndDateLaterThanOrderByEndDate() {
-    final List<RestAuditLogEntry> result =
+    final List<WebAuditLogEntry> result =
         this.auditLogRepository.findByEndTimeAfterOrderByEndTime(
             TEST_CUTOFF, PageRequest.of(0, 100));
 
