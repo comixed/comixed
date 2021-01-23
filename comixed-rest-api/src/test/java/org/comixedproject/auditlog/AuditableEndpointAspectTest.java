@@ -23,8 +23,8 @@ import static junit.framework.TestCase.assertSame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.service.auditlog.RestAuditLogService;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
+import org.comixedproject.service.auditlog.WebAuditLogService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +39,11 @@ public class AuditableEndpointAspectTest {
   private static final byte[] TEST_RESPONSE_OBJECT = "JSON content".getBytes();
 
   @InjectMocks private AuditableEndpointAspect auditableEndpointAspect;
-  @Mock private RestAuditLogService restAuditLogService;
+  @Mock private WebAuditLogService webAuditLogService;
   @Mock private ProceedingJoinPoint proceedingJoinPoint;
   @Mock private Object response;
-  @Captor private ArgumentCaptor<RestAuditLogEntry> restAuditLogEntryArgumentCaptor;
-  @Mock private RestAuditLogEntry savedEntry;
+  @Captor private ArgumentCaptor<WebAuditLogEntry> restAuditLogEntryArgumentCaptor;
+  @Mock private WebAuditLogEntry savedEntry;
   @Mock private ObjectMapper objectMapper;
   @Mock private ContentCachingRequestWrapper requestWrapper;
 
@@ -55,7 +55,7 @@ public class AuditableEndpointAspectTest {
 
   @Test
   public void testAround() throws Throwable {
-    Mockito.when(restAuditLogService.save(restAuditLogEntryArgumentCaptor.capture()))
+    Mockito.when(webAuditLogService.save(restAuditLogEntryArgumentCaptor.capture()))
         .thenReturn(savedEntry);
     Mockito.when(proceedingJoinPoint.proceed()).thenReturn(response);
 
@@ -64,7 +64,7 @@ public class AuditableEndpointAspectTest {
     assertNotNull(result);
     assertSame(response, result);
 
-    Mockito.verify(restAuditLogService, Mockito.times(1))
+    Mockito.verify(webAuditLogService, Mockito.times(1))
         .save(restAuditLogEntryArgumentCaptor.getValue());
     Mockito.verify(proceedingJoinPoint, Mockito.times(1)).proceed();
   }

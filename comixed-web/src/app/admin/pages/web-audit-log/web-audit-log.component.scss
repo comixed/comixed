@@ -1,0 +1,48 @@
+@import '~styles';
+
+.mat-column-actions {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-email {
+}
+
+.mat-column-remote-ip {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+}
+
+.mat-column-url {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mat-column-method {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-started {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+}
+
+.mat-column-bytes-received,
+.mat-column-bytes-sent {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-runtime {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-success {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}

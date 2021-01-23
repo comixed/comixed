@@ -24,12 +24,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.controller.ComiXedControllerException;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.model.net.GetRestAuditLogResponse;
+import org.comixedproject.controller.admin.AuditLogController;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
+import org.comixedproject.model.net.LoadWebAuditLogResponse;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.ComiXedServiceException;
-import org.comixedproject.service.auditlog.RestAuditLogService;
+import org.comixedproject.service.auditlog.WebAuditLogService;
 import org.comixedproject.service.task.TaskService;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,19 +48,19 @@ public class AuditLogControllerTest {
 
   @InjectMocks private AuditLogController auditLogController;
   @Mock private TaskService taskService;
-  @Mock private RestAuditLogService restAuditLogService;
+  @Mock private WebAuditLogService webAuditLogService;
   @Mock private TaskAuditLogEntry taskAuditLogEntry;
-  @Mock private RestAuditLogEntry restAuditLogEntry;
+  @Mock private WebAuditLogEntry webAuditLogEntry;
 
   private List<TaskAuditLogEntry> auditLogEntries = new ArrayList<>();
-  private List<RestAuditLogEntry> restAuditLogEntries = new ArrayList<>();
+  private List<WebAuditLogEntry> restAuditLogEntries = new ArrayList<>();
 
   @Before
   public void setUp() {
     this.auditLogEntries.add(taskAuditLogEntry);
     Mockito.when(taskAuditLogEntry.getStartTime()).thenReturn(TEST_LAST_UPDATED_DATE);
-    this.restAuditLogEntries.add(restAuditLogEntry);
-    Mockito.when(restAuditLogEntry.getEndTime()).thenReturn(TEST_LAST_UPDATED_DATE);
+    this.restAuditLogEntries.add(webAuditLogEntry);
+    Mockito.when(webAuditLogEntry.getEndTime()).thenReturn(TEST_LAST_UPDATED_DATE);
   }
 
   @Test
@@ -88,18 +89,18 @@ public class AuditLogControllerTest {
 
   @Test
   public void testGetRestAuditLogEntriesAfterDate() {
-    Mockito.when(restAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
+    Mockito.when(webAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
         .thenReturn(restAuditLogEntries);
 
-    GetRestAuditLogResponse result =
-        auditLogController.getAllRestEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
+    LoadWebAuditLogResponse result =
+        auditLogController.loadWebAuditLogEntries(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
     assertSame(restAuditLogEntries, result.getEntries());
     assertNotNull(result.getLatest());
     assertEquals(TEST_LAST_UPDATED_DATE, result.getLatest());
 
-    Mockito.verify(restAuditLogService, Mockito.times(1))
+    Mockito.verify(webAuditLogService, Mockito.times(1))
         .getEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
   }
 
@@ -107,26 +108,26 @@ public class AuditLogControllerTest {
   public void testGetRestAuditLogEntriesAfterDateNoEntries() {
     restAuditLogEntries.clear();
 
-    Mockito.when(restAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
+    Mockito.when(webAuditLogService.getEntriesAfterDate(Mockito.anyLong()))
         .thenReturn(restAuditLogEntries);
 
-    GetRestAuditLogResponse result =
-        auditLogController.getAllRestEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
+    LoadWebAuditLogResponse result =
+        auditLogController.loadWebAuditLogEntries(TEST_LAST_UPDATED_DATE.getTime());
 
     assertNotNull(result);
     assertSame(restAuditLogEntries, result.getEntries());
     assertNotNull(result.getLatest());
 
-    Mockito.verify(restAuditLogService, Mockito.times(1))
+    Mockito.verify(webAuditLogService, Mockito.times(1))
         .getEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
   }
 
   @Test
   public void testDeleteAllRestAuditLog() {
-    Mockito.doNothing().when(restAuditLogService).deleteAllRestAuditLog();
+    Mockito.doNothing().when(webAuditLogService).clearLogEntries();
 
     auditLogController.deleteAllRestAuditLog();
 
-    Mockito.verify(restAuditLogService, Mockito.times(1)).deleteAllRestAuditLog();
+    Mockito.verify(webAuditLogService, Mockito.times(1)).clearLogEntries();
   }
 }
