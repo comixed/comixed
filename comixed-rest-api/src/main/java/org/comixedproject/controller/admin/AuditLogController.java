@@ -16,19 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.core;
+package org.comixedproject.controller.admin;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.model.net.GetRestAuditLogResponse;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
+import org.comixedproject.model.net.LoadWebAuditLogResponse;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.ComiXedServiceException;
-import org.comixedproject.service.auditlog.RestAuditLogService;
+import org.comixedproject.service.auditlog.WebAuditLogService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class AuditLogController {
   @Autowired private TaskService taskService;
-  @Autowired private RestAuditLogService restAuditLogService;
+  @Autowired private WebAuditLogService webAuditLogService;
 
   /**
    * Retrieve the list of log entries after the cutoff time.
@@ -92,24 +92,23 @@ public class AuditLogController {
    * @return the list of entries
    */
   @GetMapping(
-      value = "/api/auditing/rest/entries/{cutoff}",
+      value = "/api/admin/web/audit/entries/{cutoff}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.AuditLogEntryList.class)
-  public GetRestAuditLogResponse getAllRestEntriesAfterDate(
-      @PathVariable("cutoff") final Long cutoff) {
-    log.info("Getting all REST audit entries since {}", cutoff);
-    final List<RestAuditLogEntry> entries = this.restAuditLogService.getEntriesAfterDate(cutoff);
+  public LoadWebAuditLogResponse loadWebAuditLogEntries(@PathVariable("cutoff") final Long cutoff) {
+    log.info("Getting all web audit entries since {}", cutoff);
+    final List<WebAuditLogEntry> entries = this.webAuditLogService.getEntriesAfterDate(cutoff);
     final Date latest =
         entries.isEmpty() ? new Date() : entries.get(entries.size() - 1).getEndTime();
-    return new GetRestAuditLogResponse(entries, latest);
+    return new LoadWebAuditLogResponse(entries, latest);
   }
 
   /** Clear the rest audit log. */
-  @DeleteMapping(value = "/api/auditing/rest/entries")
+  @DeleteMapping(value = "/api/admin/web/audit/entries")
   @PreAuthorize("hasRole('ADMIN')")
   public void deleteAllRestAuditLog() {
-    log.info("Delete all the entries from the audit log");
-    this.restAuditLogService.deleteAllRestAuditLog();
+    log.info("Delete all the entries from the web audit log");
+    this.webAuditLogService.clearLogEntries();
   }
 }

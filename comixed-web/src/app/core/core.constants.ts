@@ -17,3 +17,6 @@
  */
 
 export const API_ROOT_URL = '/api';
+
+export const TEXT_NO = 'text.no';
+export const TEXT_YES = 'text.yes';

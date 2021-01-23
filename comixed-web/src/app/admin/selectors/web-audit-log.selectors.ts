@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  WEB_AUDIT_LOG_FEATURE_KEY,
+  WebAuditLogState
+} from '../reducers/web-audit-log.reducer';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
-    { prefix: './assets/i18n/', suffix: '/admin.json' },
-    { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/core.json' },
-    { prefix: './assets/i18n/', suffix: '/user.json' }
-  ]);
-}
+export const selectWebAuditLogState = createFeatureSelector<WebAuditLogState>(
+  WEB_AUDIT_LOG_FEATURE_KEY
+);
+
+export const selectWebAuditLogEntries = createSelector(
+  selectWebAuditLogState,
+  state => state.entries
+);

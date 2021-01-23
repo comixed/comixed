@@ -27,8 +27,8 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
-import org.comixedproject.service.auditlog.RestAuditLogService;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
+import org.comixedproject.service.auditlog.WebAuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -44,7 +44,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 @Configuration
 @Log4j2
 public class AuditableEndpointAspect {
-  @Autowired private RestAuditLogService restAuditLogService;
+  @Autowired private WebAuditLogService webAuditLogService;
   @Autowired private ObjectMapper objectMapper;
 
   /**
@@ -66,7 +66,7 @@ public class AuditableEndpointAspect {
       error = throwable;
     }
     final Date ended = new Date();
-    final RestAuditLogEntry entry = new RestAuditLogEntry();
+    final WebAuditLogEntry entry = new WebAuditLogEntry();
     HttpServletRequest request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
@@ -99,7 +99,7 @@ public class AuditableEndpointAspect {
       entry.setSuccessful(true);
     }
 
-    this.restAuditLogService.save(entry);
+    this.webAuditLogService.save(entry);
 
     if (error != null) throw error;
     return response;

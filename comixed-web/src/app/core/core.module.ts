@@ -35,12 +35,14 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { YesNoPipe } from './pipes/yes-no.pipe';
 
 @NgModule({
   declarations: [
     ConfirmationComponent,
     ComicPageComponent,
-    ComicDetailCardComponent
+    ComicDetailCardComponent,
+    YesNoPipe
   ],
   imports: [
     CommonModule,
@@ -61,7 +63,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatFormFieldModule,
     ComicPageComponent,
-    ComicDetailCardComponent
+    ComicDetailCardComponent,
+    YesNoPipe
   ],
   providers: []
 })

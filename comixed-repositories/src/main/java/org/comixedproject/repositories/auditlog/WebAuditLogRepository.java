@@ -20,19 +20,19 @@ package org.comixedproject.repositories.auditlog;
 
 import java.util.Date;
 import java.util.List;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * <code>RestAuditLogRepository</code> manages persisted instances of {@link RestAuditLogEntry}.
+ * <code>WebAuditLogRepository</code> manages persisted instances of {@link WebAuditLogEntry}.
  *
  * @author Darryl L. Pierce
  */
 @Repository
-public interface RestAuditLogRepository extends JpaRepository<RestAuditLogEntry, Long> {
+public interface WebAuditLogRepository extends JpaRepository<WebAuditLogEntry, Long> {
   /**
    * Retrieve a page of entries after the provided cutoff date.
    *
@@ -40,6 +40,6 @@ public interface RestAuditLogRepository extends JpaRepository<RestAuditLogEntry,
    * @param pageable the page parameters
    * @return the list of entries
    */
-  List<RestAuditLogEntry> findByEndTimeAfterOrderByEndTime(
+  List<WebAuditLogEntry> findByEndTimeAfterOrderByEndTime(
       @Param("cutoff") Date cutoff, Pageable pageable);
 }

@@ -8,22 +8,22 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixedproject.model.auditlog.RestAuditLogEntry;
+import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.views.View;
 
 /**
- * <code>GetRestAuditLogResponse</code> represents the content for a reqwuest to get REST audit log
+ * <code>LoadWebAuditLogResponse</code> represents the content for a reqwuest to get REST audit log
  * entries.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class GetRestAuditLogResponse {
+public class LoadWebAuditLogResponse {
   @Getter
   @Setter
   @JsonProperty("entries")
   @JsonView(View.AuditLogEntryList.class)
-  private List<RestAuditLogEntry> entries;
+  private List<WebAuditLogEntry> entries;
 
   @Getter
   @Setter

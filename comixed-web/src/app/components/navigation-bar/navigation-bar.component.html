@@ -58,6 +58,11 @@
       "menu.admin-menu.import-comic-files" | translate
     }}</mat-label>
   </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item [routerLink]="['/admin', 'audit', 'web']">
+    <mat-icon>view_headline</mat-icon>
+    <mat-label>{{ "menu.admin-menu.web-audit-log" | translate }}</mat-label>
+  </button>
 </mat-menu>
 
 <mat-menu #optionsMenu="matMenu">
