@@ -28,6 +28,7 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import marvin.image.MarvinImage;
 import marvinplugins.MarvinPluginCollection;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -57,6 +58,7 @@ public class OPDSController {
   @ResponseBody
   @GetMapping(value = "/opds-comics", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
+  @AuditableEndpoint
   public OPDSFeed getNavigationFeed() throws ParseException {
     return new OPDSNavigationFeed();
   }
@@ -64,6 +66,7 @@ public class OPDSController {
   @ResponseBody
   @GetMapping(value = "/opds-comics/all", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
+  @AuditableEndpoint
   public OPDSFeed getAllComics() throws ParseException {
     return new OPDSAcquisitionFeed("/opds/all", "Comics - ", this.comicRepository.findAll());
   }
@@ -74,6 +77,7 @@ public class OPDSController {
       params = {"groupByFolder"},
       produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
+  @AuditableEndpoint
   public OPDSFeed getAllLists(Principal principal) {
     return new OPDSNavigationFeed(
         "/opds/all?groupByFolder=true",
@@ -84,6 +88,7 @@ public class OPDSController {
   @ResponseBody
   @GetMapping(value = "/opds/{id}", produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
+  @AuditableEndpoint
   public OPDSFeed getList(Principal principal, @PathVariable("id") long id)
       throws ParseException, NoSuchReadingListException {
     return new OPDSNavigationFeed(
@@ -94,6 +99,7 @@ public class OPDSController {
 
   @GetMapping(value = "/opds/feed/comics/{id}/download/{filename}")
   @CrossOrigin
+  @AuditableEndpoint
   public ResponseEntity<InputStreamResource> downloadComic(
       @PathVariable("id") long id, @PathVariable("filename") String filename)
       throws FileNotFoundException, IOException {
@@ -125,6 +131,7 @@ public class OPDSController {
 
   @GetMapping(value = "/opds/feed/comics/{id}/{index}/{maxWidth}")
   @CrossOrigin
+  @AuditableEndpoint
   public ResponseEntity<byte[]> getImageInComicByIndex(
       @PathVariable("id") long id,
       @PathVariable("index") int index,

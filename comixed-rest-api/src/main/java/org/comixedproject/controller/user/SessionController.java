@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -52,6 +53,7 @@ public class SessionController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.SessionUpdateView.class)
+  @AuditableEndpoint
   public SessionUpdateResponse getSessionUpdate(
       final Principal principal, @RequestBody() final SessionUpdateRequest request)
       throws ComiXedUserException {

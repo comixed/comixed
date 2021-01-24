@@ -27,6 +27,7 @@ import java.util.*;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
+import org.comixedproject.model.net.library.RemoveComicsFromReadingListResponse;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.library.NoSuchReadingListException;

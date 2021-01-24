@@ -23,8 +23,10 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
+import org.comixedproject.model.net.library.RemoveComicsFromReadingListResponse;
 import org.comixedproject.repositories.library.ReadingListRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.library.NoSuchReadingListException;
@@ -45,6 +47,7 @@ public class ReadingListController {
 
   @RequestMapping(value = "/lists", method = RequestMethod.POST)
   @JsonView(View.ReadingList.class)
+  @AuditableEndpoint
   public ReadingList createReadingList(
       Principal principal, @RequestBody() CreateReadingListRequest request)
       throws NoSuchReadingListException, ReadingListNameException, ComicException {
@@ -62,6 +65,7 @@ public class ReadingListController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingList.class)
+  @AuditableEndpoint
   public ReadingList updateReadingList(
       Principal principal,
       @PathVariable("id") long id,
@@ -83,6 +87,7 @@ public class ReadingListController {
 
   @RequestMapping(value = "/lists", method = RequestMethod.GET)
   @JsonView(View.ReadingList.class)
+  @AuditableEndpoint
   public List<ReadingList> getReadingListsForUser(Principal principal, final Date lastUpdated) {
     if (principal == null) {
       return null;
@@ -100,6 +105,7 @@ public class ReadingListController {
 
   @GetMapping(value = "/lists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingList.class)
+  @AuditableEndpoint
   public ReadingList getReadingList(final Principal principal, @PathVariable("id") final long id)
       throws NoSuchReadingListException {
     final String email = principal.getName();
@@ -112,6 +118,7 @@ public class ReadingListController {
       value = "/lists/{id}/comics/add",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public AddComicsToReadingListResponse addComicsToList(
       Principal principal,
       @PathVariable("id") Long id,
@@ -136,6 +143,7 @@ public class ReadingListController {
       value = "/lists/{id}/comics/remove",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public RemoveComicsFromReadingListResponse removeComicsFromList(
       Principal principal,
       @PathVariable("id") long id,
