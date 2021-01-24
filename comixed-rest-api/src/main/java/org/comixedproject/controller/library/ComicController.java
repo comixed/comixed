@@ -30,6 +30,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
@@ -96,6 +97,7 @@ public class ComicController {
    */
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic getComic(Principal principal, @PathVariable("id") long id) throws ComicException {
     String email = principal.getName();
     log.info("Getting comic for user: id={} user={}", id, email);
@@ -104,6 +106,7 @@ public class ComicController {
 
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
+  @AuditableEndpoint
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
     log.info("Marking comic for deletion: id={}", id);
 
@@ -112,6 +115,7 @@ public class ComicController {
 
   @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     log.debug("Updating comic: id={}", id);
 
@@ -138,6 +142,7 @@ public class ComicController {
   }
 
   @PostMapping(value = "/multiple/delete")
+  @AuditableEndpoint
   public boolean deleteMultipleComics(@RequestParam("comic_ids") List<Long> comicIds) {
     log.debug("Deleting multiple comics: ids={}", comicIds.toArray());
 
@@ -153,6 +158,7 @@ public class ComicController {
   }
 
   @GetMapping(value = "/{id}/download")
+  @AuditableEndpoint
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
       throws IOException, ComicException {
     log.info("Preparing to download comic: id={}", id);
@@ -181,6 +187,7 @@ public class ComicController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicListView.class)
+  @AuditableEndpoint
   public GetLibraryUpdatesResponse getComicsUpdatedSince(
       Principal principal,
       @PathVariable("timestamp") long timestamp,
@@ -250,6 +257,7 @@ public class ComicController {
    * @return the number of rescan tasks
    */
   @PostMapping(value = "/rescan")
+  @AuditableEndpoint
   public int rescanComics() {
     log.info("Beginning rescan of library");
 
@@ -259,6 +267,7 @@ public class ComicController {
   }
 
   @PutMapping(value = "/{id}/format")
+  @AuditableEndpoint
   public void setFormat(@PathVariable("id") long comicId, @RequestParam("format_id") long formatId)
       throws ComicException {
     log.debug("Setting format: comicId={} formatId={}", comicId, formatId);
@@ -276,6 +285,7 @@ public class ComicController {
   }
 
   @PutMapping(value = "/{id}/scan_type")
+  @AuditableEndpoint
   public void setScanType(
       @PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
       throws ComicException {
@@ -294,6 +304,7 @@ public class ComicController {
   }
 
   @PutMapping(value = "/{id}/sort_name")
+  @AuditableEndpoint
   public void setSortName(
       @PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
       throws ComicException {
@@ -315,6 +326,7 @@ public class ComicController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic) {
     log.info("Updating comic: id={}", id, comic);
 
@@ -328,6 +340,7 @@ public class ComicController {
   }
 
   @GetMapping(value = "/{id}/cover/content")
+  @AuditableEndpoint
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
       throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
     log.info("Getting cover for comic: id={}", id);
@@ -379,6 +392,7 @@ public class ComicController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic restoreComic(@PathVariable("id") final long id) throws ComicException {
     log.info("Restoring comic: id={}", id);
 
@@ -390,6 +404,7 @@ public class ComicController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
+  @AuditableEndpoint
   public LastReadDate markAsRead(Principal principal, @PathVariable("id") Long id)
       throws ComicException, ComiXedUserException {
     String email = principal.getName();
@@ -400,6 +415,7 @@ public class ComicController {
   }
 
   @DeleteMapping(value = "/{id}/read", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public boolean markAsUnread(Principal principal, @PathVariable("id") Long id)
       throws ComicException, ComiXedUserException {
     String email = principal.getName();
@@ -413,6 +429,7 @@ public class ComicController {
       value = "/multiple/undelete",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public UndeleteMultipleComicsResponse undeleteMultipleComics(
       @RequestBody() final UndeleteMultipleComicsRequest request) {
     final List<Long> ids = request.getIds();

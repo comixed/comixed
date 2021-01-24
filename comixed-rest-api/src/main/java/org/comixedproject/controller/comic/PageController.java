@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
@@ -60,6 +61,7 @@ public class PageController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic addBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
       throws PageException {
@@ -69,6 +71,7 @@ public class PageController {
   }
 
   @DeleteMapping(value = "/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public int deleteAllWithHash(@PathVariable("hash") String hash) {
     log.info("Marking all pages with hash as deleted: {}", hash);
 
@@ -84,6 +87,7 @@ public class PageController {
   @DeleteMapping(value = "/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic deletePage(@PathVariable("id") long id) {
     log.info("Deleting page: id={}", id);
 
@@ -92,6 +96,7 @@ public class PageController {
 
   @GetMapping(value = "/comics/{id}/pages", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(PageList.class)
+  @AuditableEndpoint
   public List<Page> getAllPagesForComic(@PathVariable("id") long id) {
     log.info("Getting all pages for comic: id={}", id);
 
@@ -99,6 +104,7 @@ public class PageController {
   }
 
   @GetMapping(value = "/pages/blocked", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public List<String> getAllBlockedPageHashes() {
     log.debug("Getting all blocked page hashes");
 
@@ -107,6 +113,7 @@ public class PageController {
 
   @GetMapping(value = "/pages/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
+  @AuditableEndpoint
   public List<DuplicatePage> getDuplicatePages() {
     log.info("Getting duplicate pages");
 
@@ -116,6 +123,7 @@ public class PageController {
   @GetMapping(
       value = "/comics/{id}/pages/{index}/content",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public ResponseEntity<byte[]> getImageInComicByIndex(
       @PathVariable("id") long id, @PathVariable("index") int index)
       throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
@@ -154,6 +162,7 @@ public class PageController {
   }
 
   @GetMapping(value = "/pages/{id}/content", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public ResponseEntity<byte[]> getPageContent(@PathVariable("id") long id)
       throws IOException, ArchiveAdaptorException, ComicFileHandlerException {
     log.info("Getting page content: id={}", id);
@@ -170,6 +179,7 @@ public class PageController {
   @GetMapping(
       value = "/comics/{comic_id}/pages/{index}",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public Page getPageInComicByIndex(
       @PathVariable("comic_id") long comicId, @PathVariable("index") int index) {
     log.info("Getting page in comic: comic id={} page index={}", comicId, index);
@@ -178,6 +188,7 @@ public class PageController {
   }
 
   @GetMapping(value = "/pages/types", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public Iterable<PageType> getPageTypes() {
     log.info("Fetching page types");
 
@@ -186,6 +197,7 @@ public class PageController {
 
   @DeleteMapping(value = "/pages/{id}/unblock/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic removeBlockedPageHash(
       @PathVariable("id") final long pageId, @PathVariable("hash") String hash)
       throws PageException {
@@ -195,6 +207,7 @@ public class PageController {
   }
 
   @PutMapping(value = "/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public int undeleteAllWithHash(@PathVariable("hash") String hash) {
     log.info("Marking all pages with hash as undeleted: {}", hash);
 
@@ -210,6 +223,7 @@ public class PageController {
   @PostMapping(value = "/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicDetailsView.class)
+  @AuditableEndpoint
   public Comic undeletePage(@PathVariable("id") long id) {
     log.info("Undeleting page: id={}", id);
 
@@ -218,6 +232,7 @@ public class PageController {
 
   @PutMapping(value = "/pages/{id}/type", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PageDetails.class)
+  @AuditableEndpoint
   public Page updateTypeForPage(
       @PathVariable("id") long id, @RequestBody() SetPageTypeRequest request) throws PageException {
     String typeName = request.getTypeName();
@@ -231,6 +246,7 @@ public class PageController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
+  @AuditableEndpoint
   public List<DuplicatePage> setBlockingState(
       @RequestBody() final SetBlockingStateRequest request) {
     log.info(
@@ -247,6 +263,7 @@ public class PageController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
+  @AuditableEndpoint
   public List<DuplicatePage> setDeletedState(@RequestBody() final SetDeletedStateRequest request) {
     final List<String> hashes = request.getHashes();
     log.info(

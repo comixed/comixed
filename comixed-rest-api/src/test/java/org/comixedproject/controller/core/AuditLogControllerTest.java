@@ -23,7 +23,6 @@ import static junit.framework.TestCase.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.controller.admin.AuditLogController;
 import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
@@ -64,7 +63,7 @@ public class AuditLogControllerTest {
   }
 
   @Test
-  public void testGetAllTaskEntries() throws ComiXedServiceException, ComiXedControllerException {
+  public void testGetAllTaskEntries() throws ComiXedServiceException {
     Mockito.when(taskService.getAuditLogEntriesAfter(Mockito.any(Date.class)))
         .thenReturn(auditLogEntries);
 

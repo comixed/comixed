@@ -19,6 +19,7 @@
 package org.comixedproject.controller.opds;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.opds.OPDSBookmark;
 import org.comixedproject.model.user.ComiXedUser;
@@ -47,6 +48,7 @@ public class OPDSBookmarkController {
   @Autowired private ComicService comicService;
 
   @GetMapping(value = "/bookmark", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public OPDSBookmark getBookmark(Authentication principal, @RequestParam("docId") long comicId)
       throws ComicException {
     log.debug("Loading comic: id={}", comicId);
@@ -68,6 +70,7 @@ public class OPDSBookmarkController {
   }
 
   @PutMapping(value = "/bookmark", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public ResponseEntity setBookmark(
       Authentication principal,
       @RequestParam("docId") long comicId,

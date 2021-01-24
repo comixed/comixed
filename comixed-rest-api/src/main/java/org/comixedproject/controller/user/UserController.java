@@ -59,6 +59,7 @@ public class UserController implements InitializingBean {
   }
 
   @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.DELETE)
+  @AuditableEndpoint
   public void deleteUser(@PathVariable("id") long userId) throws ComiXedUserException {
     log.info("Deleting user: id={}", userId);
 
@@ -67,6 +68,7 @@ public class UserController implements InitializingBean {
 
   @GetMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(UserList.class)
+  @AuditableEndpoint
   public List<ComiXedUser> getAllUsers() {
     log.info("Getting all user accounts");
 

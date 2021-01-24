@@ -64,6 +64,7 @@ public class LibraryController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LibraryUpdate.class)
+  @AuditableEndpoint
   public GetUpdatedComicsResponse getUpdatedComics(
       Principal principal, @RequestBody() GetUpdatedComicsRequest request)
       throws ComiXedUserException {
@@ -139,6 +140,7 @@ public class LibraryController {
   }
 
   @PostMapping(value = "/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public void convertComics(@RequestBody() ConvertComicsRequest request) {
     List<Long> idList = request.getComicIdList();
     ArchiveType archiveType = request.getArchiveType();
@@ -170,12 +172,14 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DeletedComicList.class)
+  @AuditableEndpoint
   public List<Comic> consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request) {
     log.info("Consolidating library: delete physic files={}", request.getDeletePhysicalFiles());
     return this.libraryService.consolidateLibrary(request.getDeletePhysicalFiles());
   }
 
   @DeleteMapping(value = "/library/cache/images")
+  @AuditableEndpoint
   public ClearImageCacheResponse clearImageCache() {
     log.info("Clearing the image cache");
 
