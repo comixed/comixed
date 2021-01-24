@@ -21,6 +21,7 @@ package org.comixedproject.controller.comic;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Publisher;
 import org.comixedproject.service.comic.PublisherException;
 import org.comixedproject.service.comic.PublisherService;
@@ -38,6 +39,7 @@ public class PublisherController {
   @Autowired private PublisherService publisherService;
 
   @GetMapping(value = "/api/publishers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public Publisher getByName(@PathVariable("name") String name) {
     log.info("Getting publisher: name={}", name);
     return this.publisherService.getByName(name);
@@ -46,6 +48,7 @@ public class PublisherController {
   @GetMapping(
       value = "/api/publishers/{name}/thumbnail",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public ResponseEntity<byte[]> getThumbnail(@PathVariable("name") String name) throws IOException {
     log.debug("Getting thumbnail image for publisher: {}", name);
     Publisher publisher = this.publisherService.getByName(name);
@@ -61,6 +64,7 @@ public class PublisherController {
   }
 
   @GetMapping(value = "/api/publishers/{name}/logo", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
   public ResponseEntity<byte[]> getLogo(@PathVariable("name") String name)
       throws PublisherException, IOException {
     log.debug("Getting logo image for publisher: {}", name);

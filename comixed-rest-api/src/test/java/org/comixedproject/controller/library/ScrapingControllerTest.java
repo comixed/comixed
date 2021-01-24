@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
-import org.comixedproject.controller.ComiXedControllerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.net.library.LoadScrapingIssueRequest;
 import org.comixedproject.model.net.library.LoadScrapingVolumesRequest;
@@ -165,7 +164,7 @@ public class ScrapingControllerTest {
   }
 
   @Test
-  public void testScrapeComic() throws ScrapingException, ComiXedControllerException {
+  public void testScrapeComic() throws ScrapingException {
     Mockito.when(
             scrapingService.scrapeComic(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
