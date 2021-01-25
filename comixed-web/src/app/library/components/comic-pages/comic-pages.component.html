@@ -1,9 +1,34 @@
 <div id="comic-pages" class="cx-comic-detail-card-container cx-width-100">
   <cx-comic-page
     *ngFor="let page of comic.pages; let i = index"
+    [page]="page"
     [imageUrl]="page | comicPageUrl"
     [title]="page.filename"
-    [imageTitle]="page.filename"
     [pageSize]="pageSize"
+    (showContextMenu)="onShowContextMenu($event.page, $event.x, $event.y)"
   ></cx-comic-page>
 </div>
+
+<div
+  style="visibility: hidden;position: fixed"
+  [style.left]="contextMenuX"
+  [style.top]="contextMenuY"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
+    <button *ngIf="page.blocked" (click)="onSetPageBlocked(page, false)">
+      <mat-icon>remove_circle_outline</mat-icon>
+      <mat-label>{{
+        "library.context-menu.set-page-unblocked" | translate
+      }}</mat-label>
+    </button>
+    <button *ngIf="!page.blocked" (click)="onSetPageBlocked(page, true)">
+      <mat-icon>block</mat-icon>
+      <mat-label>{{
+        "library.context-menu.set-page-blocked" | translate
+      }}</mat-label>
+    </button>
+  </ng-template>
+</mat-menu>

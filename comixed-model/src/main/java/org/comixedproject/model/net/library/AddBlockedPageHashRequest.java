@@ -16,12 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from '../../../library';
+package org.comixedproject.model.net.library;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
- * Fired when a comic selection event occurs.
+ * <code>AddBlockedPageHashRequest</code> represents the request body for a REST cal to blocked
+ * pages by hash value.
+ *
+ * @author Darryl L. Pierce
  */
-export interface ComicSelectEvent {
-  comic: Comic;
-  selected: boolean;
+@NoArgsConstructor
+@AllArgsConstructor
+public class AddBlockedPageHashRequest {
+  @JsonProperty("hash")
+  @Getter
+  private String hash;
 }

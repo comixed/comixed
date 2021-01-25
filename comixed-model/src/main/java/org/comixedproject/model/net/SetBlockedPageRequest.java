@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.auditlog;
+package org.comixedproject.model.net;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * <code>AuditEventType</code> specifies the type of event that occurred.
+ * <code>SetBlockedPageRequest</code> contains the request body for marking a page as blocked.
  *
  * @author Darryl L. Pierce
  */
-public enum AuditEventType {
-  ADDED("+"),
-  DELETED("-");
-
-  @Getter private String prefix;
-
-  AuditEventType(final String prefix) {
-    this.prefix = prefix;
-  }
+@NoArgsConstructor
+@AllArgsConstructor
+public class SetBlockedPageRequest {
+  @JsonProperty("hash")
+  @Getter
+  @Setter
+  private String hash;
 }

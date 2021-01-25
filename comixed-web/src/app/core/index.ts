@@ -27,7 +27,6 @@ import {
 
 export * from '@app/core/core.constants';
 export * from '@app/core/core.functions';
-export * from '@app/core/models/event/comic-select-event';
 export { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 export { TokenService } from '@app/core/services/token.service';
 export { AlertService } from '@app/core/services/alert.service';
@@ -39,7 +38,6 @@ export {
   compare,
   updateQueryParam
 } from '@app/core/core.functions';
-export { PageClickEvent } from '@app/core/models/event/page-click-event';
 
 interface RouterStateUrl {
   url: string;

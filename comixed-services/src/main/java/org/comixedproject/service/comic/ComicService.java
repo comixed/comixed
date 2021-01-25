@@ -431,4 +431,27 @@ public class ComicService {
     log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
     return this.comicRepository.findComicsWithIdGreaterThan(threshold, PageRequest.of(0, max));
   }
+
+  /**
+   * Returns all comics with the given page hash
+   *
+   * @param hash
+   */
+  @Transactional
+  public void updateComicsWithPageHash(final String hash) {
+    log.debug("Loading comics with page hash: {}", hash);
+    final List<Comic> comics = this.comicRepository.findComicsForPageHash(hash);
+    if (comics.isEmpty()) {
+      log.debug("No comics found");
+      return;
+    }
+
+    log.debug(
+        "Updating last read date for {} comic{}", comics.size(), comics.size() == 1 ? "" : "s");
+    for (int index = 0; index < comics.size(); index++) {
+      final Comic comic = comics.get(index);
+      comic.setDateLastUpdated(new Date());
+      this.comicRepository.save(comic);
+    }
+  }
 }

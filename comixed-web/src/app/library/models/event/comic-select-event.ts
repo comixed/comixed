@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.auditlog;
-
-import lombok.Getter;
+import { Comic } from '../../index';
 
 /**
- * <code>AuditEventType</code> specifies the type of event that occurred.
- *
- * @author Darryl L. Pierce
+ * Fired when a comic selection event occurs.
  */
-public enum AuditEventType {
-  ADDED("+"),
-  DELETED("-");
-
-  @Getter private String prefix;
-
-  AuditEventType(final String prefix) {
-    this.prefix = prefix;
-  }
+export interface ComicSelectEvent {
+  comic: Comic;
+  selected: boolean;
 }

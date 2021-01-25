@@ -22,6 +22,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View.PageList;
 
 /**
@@ -31,6 +34,8 @@ import org.comixedproject.views.View.PageList;
  */
 @Entity
 @Table(name = "blocked_page_hashes")
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class BlockedPageHash {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,12 +48,6 @@ public class BlockedPageHash {
   @JsonProperty
   @JsonView(PageList.class)
   @Getter
+  @NonNull
   private String hash;
-
-  public BlockedPageHash() {}
-
-  public BlockedPageHash(String hash) {
-    super();
-    this.hash = hash;
-  }
 }

@@ -29,7 +29,6 @@ import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFormat;
 import org.comixedproject.model.comic.ScanType;
-import org.comixedproject.repositories.ComiXedUserRepository;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,22 +69,19 @@ public class ComicRepositoryTest {
   private static final String TEST_VOLUME = "2017";
   private static final String TEST_ISSUE_WITH_NO_NEXT = "514";
   private static final String TEST_ISSUE_WITH_NEXT = "512";
-  private static final Long TEST_NEXT_ISSUE_ID = 1001L;
-  private static final Long TEST_PREV_ISSUE_ID = 1000L;
   private static final String TEST_ISSUE_WITH_NO_PREV = "249";
   private static final String TEST_ISSUE_WITH_PREV = "513";
   private static final Long TEST_COMIC_ID_WITH_DUPLICATES = 1020L;
-  private static final String TEST_USER_EMAIL_NO_READ_COMIC = "comixedreader2@localhost";
   private static final Date TEST_COVER_DATE_NO_NEXT = new Date(1490932800000L);
   private static final Date TEST_COVER_DATE_WITH_NEXT = new Date(1485838800000L);
   private static final Date TEST_COVER_DATE_NO_PREV = new Date(1425099600000L);
   private static final Date TEST_COVER_DATE_WITH_PREV = new Date(1488258000000L);
+  private static final String TEST_HASH_WITH_NO_COMICS = "FEDCBA9876543210FEDCBA9876543210";
+  private static final String TEST_HASH_WITH_COMICS = "0123456789ABCDEF0123456789ABCDEF";
 
   @Autowired private ComicRepository repository;
-  @Autowired private PageTypeRepository pageTypeRepository;
   @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ComicFormatRepository comicFormatRepository;
-  @Autowired private ComiXedUserRepository userRepository;
 
   private Comic comic;
 
@@ -552,5 +548,21 @@ public class ComicRepositoryTest {
     Comic result = repository.getById(TEST_COMIC_ID);
 
     assertNull(result);
+  }
+
+  @Test
+  public void testFindComicsForPageHashNoComics() {
+    final List<Comic> result = repository.findComicsForPageHash(TEST_HASH_WITH_NO_COMICS);
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testFindComicsForPageHash() {
+    final List<Comic> result = repository.findComicsForPageHash(TEST_HASH_WITH_COMICS);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
   }
 }

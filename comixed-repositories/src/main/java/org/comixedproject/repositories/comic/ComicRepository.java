@@ -119,4 +119,13 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT c FROM Comic c WHERE c.id > :threshold ORDER BY c.id")
   List<Comic> findComicsWithIdGreaterThan(@Param("threshold") Long threshold, Pageable page);
+
+  /**
+   * Returns all comics containing a page with the given hash.
+   *
+   * @param hash the page hash
+   * @return the comic list
+   */
+  @Query("SELECT c FROM Comic c WHERE c IN (SELECT p.comic FROM Page p WHERE p.hash = :hash)")
+  List<Comic> findComicsForPageHash(@Param("hash") String hash);
 }
