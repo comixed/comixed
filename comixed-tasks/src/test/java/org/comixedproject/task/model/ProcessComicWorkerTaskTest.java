@@ -35,6 +35,7 @@ import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.library.BlockedPageHashService;
 import org.comixedproject.utils.Utils;
 import org.junit.After;
 import org.junit.Before;
@@ -62,6 +63,7 @@ public class ProcessComicWorkerTaskTest {
   @Mock private Utils utils;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private PageService pageService;
+  @Mock private BlockedPageHashService blockedPageHashService;
   @Mock private Page blockedPage;
   @Mock private Page unblockedPage;
 
@@ -97,7 +99,7 @@ public class ProcessComicWorkerTaskTest {
   @Test
   public void testStartTaskCheckForBlockedPages()
       throws WorkerTaskException, ArchiveAdaptorException, IOException {
-    Mockito.when(pageService.getAllBlockedPageHashes()).thenReturn(blockedPageHashes);
+    Mockito.when(blockedPageHashService.getAllHashes()).thenReturn(blockedPageHashes);
     Mockito.when(comic.getPages()).thenReturn(pageList);
 
     task.setComic(comic);
@@ -108,7 +110,7 @@ public class ProcessComicWorkerTaskTest {
 
     assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
 
-    Mockito.verify(pageService, Mockito.times(1)).getAllBlockedPageHashes();
+    Mockito.verify(blockedPageHashService, Mockito.times(1)).getAllHashes();
     Mockito.verify(blockedPage, Mockito.times(1)).setDeleted(true);
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
@@ -142,7 +144,7 @@ public class ProcessComicWorkerTaskTest {
     assertEquals(TEST_FILE_HASH, comicFileDetailsCaptor.getValue().getHash());
     assertFalse(task.createDescription().isEmpty());
 
-    Mockito.verify(pageService, Mockito.never()).getAllBlockedPageHashes();
+    Mockito.verify(blockedPageHashService, Mockito.never()).getAllHashes();
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(blockedPage, Mockito.never()).setDeleted(true);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());

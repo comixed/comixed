@@ -18,18 +18,19 @@
 
 import {
   Component,
-  EventEmitter,
   Input,
   OnDestroy,
-  Output
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
-import { PageClickEvent } from '@app/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { getUserPreference } from '@app/user';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
+import { Page } from '@app/library';
+import { PageContextMenuEvent } from '@app/library/models/event/page-context-menu-event';
 
 /** Displays a page from a comic. Provides events for when the page is clicked. */
 @Component({
@@ -38,14 +39,14 @@ import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
   styleUrls: ['./comic-page.component.scss']
 })
 export class ComicPageComponent implements OnDestroy {
-  @Input() imageTitle: string;
-  @Input() source: any;
+  @Input() page: Page;
   @Input() imageUrl: string;
   @Input() selected: boolean;
+  @Input() title: string;
   @Input() pageSize = -1;
   @Input() imageHeight = 'auto';
 
-  @Output() pageClicked = new EventEmitter<PageClickEvent>();
+  @Output() showContextMenu = new EventEmitter<PageContextMenuEvent>();
 
   userSubscription: Subscription;
 
@@ -70,12 +71,13 @@ export class ComicPageComponent implements OnDestroy {
     this.userSubscription.unsubscribe();
   }
 
-  /** Invoked when the page is clicked. */
-  onClick(): void {
-    this.logger.trace('Page clicked:', this.source, this.selected);
-    this.pageClicked.emit({
-      source: this.source,
-      selected: !this.selected
-    } as PageClickEvent);
+  onContextMenu($event: MouseEvent): void {
+    $event.preventDefault();
+    this.logger.debug('Showing context menu for page:', this.page);
+    this.showContextMenu.emit({
+      page: this.page,
+      x: `${$event.clientX}px`,
+      y: `${$event.clientY}px`
+    } as PageContextMenuEvent);
   }
 }

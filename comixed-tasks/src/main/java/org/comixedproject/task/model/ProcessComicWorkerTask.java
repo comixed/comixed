@@ -33,6 +33,7 @@ import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.library.BlockedPageHashService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -55,6 +56,7 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
   @Autowired private Utils utils;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private PageService pageService;
+  @Autowired private BlockedPageHashService blockedPageHashService;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private boolean deleteBlockedPages;
@@ -87,7 +89,7 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
 
     if (this.deleteBlockedPages) {
       log.debug("Loading blocked page hashes");
-      final List<String> blockedHashes = this.pageService.getAllBlockedPageHashes();
+      final List<String> blockedHashes = this.blockedPageHashService.getAllHashes();
 
       log.debug("Checking for blocked pages");
       for (Page page : comic.getPages()) {

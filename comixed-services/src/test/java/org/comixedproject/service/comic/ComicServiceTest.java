@@ -63,12 +63,12 @@ public class ComicServiceTest {
   private static final ScanType TEST_SCAN_TYPE = new ScanType();
   private static final ComicFormat TEST_COMIC_FORMAT = new ComicFormat();
   private static final Date TEST_COVER_DATE = new Date();
+  private static final String TEST_HASH = "0123456789ABCDEF";
 
   @InjectMocks private ComicService comicService;
   @Mock private ComicRepository comicRepository;
   @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private UserService userService;
-  @Mock private List<Comic> comicList;
   @Mock private Comic comic;
   @Mock private Comic incomingComic;
   @Mock private ComiXedUser user;
@@ -79,6 +79,7 @@ public class ComicServiceTest {
   @Mock private LastReadDate lastReadDate;
   @Captor private ArgumentCaptor<LastReadDate> lastReadDateCaptor;
 
+  private List<Comic> comicList = new ArrayList<>();
   private List<Comic> comicsBySeries = new ArrayList<>();
   private Comic previousComic = new Comic();
   private Comic currentComic = new Comic();
@@ -533,5 +534,18 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1))
         .findComicsWithIdGreaterThan(TEST_COMIC_ID, pageableCaptor.getValue());
+  }
+
+  @Test
+  public void testUpdateComicsByPageHash() {
+    comicList.add(comic);
+
+    Mockito.when(comicRepository.findComicsForPageHash(Mockito.anyString())).thenReturn(comicList);
+
+    comicService.updateComicsWithPageHash(TEST_HASH);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsForPageHash(TEST_HASH);
+    Mockito.verify(comic, Mockito.times(comicList.size())).setDateLastUpdated(Mockito.any());
+    Mockito.verify(comicRepository, Mockito.times(comicList.size())).save(comic);
   }
 }

@@ -18,42 +18,89 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
-import { COMIC_2 } from '@app/library/library.fixtures';
+import { COMIC_2, PAGE_1 } from '@app/library/library.fixtures';
 import { ComicPageUrlPipe } from '@app/library/pipes/comic-page-url.pipe';
-import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatCardModule } from '@angular/material/card';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  USER_FEATURE_KEY,
-  initialState as initialuUserState
+  initialState as initialuUserState,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { MatMenuModule } from '@angular/material/menu';
+import { setPageBlock } from '@app/library/actions/blocked-page.actions';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;
   const USER = USER_READER;
+  const PAGE = PAGE_1;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialuUserState, user: USER }
   };
 
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
-      imports: [LoggerModule.forRoot(), MatCardModule],
+      imports: [LoggerModule.forRoot(), MatCardModule, MatMenuModule],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPagesComponent);
     component = fixture.componentInstance;
     component.comic = COMIC;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('showing the context menu', () => {
+    const XPOS = '7';
+    const YPOS = '17';
+
+    beforeEach(() => {
+      component.comic = null;
+      spyOn(component.contextMenu, 'openMenu');
+      component.onShowContextMenu(PAGE, XPOS, YPOS);
+    });
+
+    it('sets the current page', () => {
+      expect(component.page).toEqual(PAGE);
+    });
+
+    it('set the context menu x position', () => {
+      expect(component.contextMenuX).toEqual(XPOS);
+    });
+
+    it('set the context menu y position', () => {
+      expect(component.contextMenuY).toEqual(YPOS);
+    });
+
+    it('shows the context menu', () => {
+      expect(component.contextMenu.openMenu).toHaveBeenCalled();
+    });
+  });
+
+  describe('setting the page hash blocked state', () => {
+    const BLOCKED = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.onSetPageBlocked(PAGE, BLOCKED);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setPageBlock({ page: PAGE, blocked: BLOCKED })
+      );
+    });
   });
 });

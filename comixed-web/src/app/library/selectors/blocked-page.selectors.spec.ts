@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project.
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+import * as fromBlockedPage from '../reducers/blocked-page.reducer';
+import { selectBlockedPageState } from './blocked-page.selectors';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
+describe('BlockedPage Selectors', () => {
+  it('should select the feature state', () => {
+    const result = selectBlockedPageState({
+      [fromBlockedPage.BLOCKED_PAGE_FEATURE_KEY]: {}
+    });
 
-public class SetBlockingStateRequest {
-  @JsonProperty("hashes")
-  private List<String> hashes = new ArrayList<>();
-
-  @JsonProperty("blocked")
-  private Boolean blocked;
-
-  public SetBlockingStateRequest() {}
-
-  public SetBlockingStateRequest(final List<String> hashes, final Boolean blocked) {
-    this.hashes = hashes;
-    this.blocked = blocked;
-  }
-
-  public List<String> getHashes() {
-    return hashes;
-  }
-
-  public Boolean getBlocked() {
-    return blocked;
-  }
-}
+    // expect(result).toEqual({});
+  });
+});

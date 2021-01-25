@@ -16,8 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { Comic } from '@app/library';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Comic, Page } from '@app/library';
+import { LoggerService } from '@angular-ru/logger';
+import { Store } from '@ngrx/store';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { setPageBlock } from '@app/library/actions/blocked-page.actions';
 
 @Component({
   selector: 'cx-comic-pages',
@@ -25,10 +29,29 @@ import { Comic } from '@app/library';
   styleUrls: ['./comic-pages.component.scss']
 })
 export class ComicPagesComponent implements OnInit {
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+
   @Input() comic: Comic;
   @Input() pageSize = -1;
 
-  constructor() {}
+  page: Page;
+  contextMenuX = '';
+  contextMenuY = '';
+
+  constructor(private logger: LoggerService, private store: Store<any>) {}
 
   ngOnInit(): void {}
+
+  onShowContextMenu(page: Page, x: string, y: string): void {
+    this.logger.debug('Popping up context menu for:', page);
+    this.page = page;
+    this.contextMenuX = x;
+    this.contextMenuY = y;
+    this.contextMenu.openMenu();
+  }
+
+  onSetPageBlocked(page: Page, blocked: boolean): void {
+    this.logger.debug('Updating page blocked state:', page, blocked);
+    this.store.dispatch(setPageBlock({ page, blocked }));
+  }
 }

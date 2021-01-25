@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,51 +18,44 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { AlertService } from '@app/core';
-import { SessionUpdateResponse } from '@app/models/net/session-update-response';
-import { of } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
-import { TranslateService } from '@ngx-translate/core';
 import {
-  loadSessionUpdate,
-  loadSessionUpdateFailed,
-  sessionUpdateLoaded
-} from '@app/actions/session.actions';
-import { SessionService } from '@app/services/session.service';
-import { updateComics } from '@app/library';
+  pageBlockSet,
+  setPageBlock,
+  setPageBlockFailed
+} from '@app/library/actions/blocked-page.actions';
+import { PageService } from '@app/library/services/page.service';
+import { AlertService } from '@app/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LoggerService } from '@angular-ru/logger';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable()
-export class SessionEffects {
-  loadSessionUpdate$ = createEffect(() => {
+export class BlockedPageEffects {
+  setBlockedState$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadSessionUpdate),
-      tap(action => this.logger.debug('Effect: load session update:', action)),
+      ofType(setPageBlock),
+      tap(action =>
+        this.logger.debug('Effect: set blocked state for page:', action)
+      ),
       switchMap(action =>
-        this.sessionService
-          .loadSessionUpdate({
-            timestamp: action.timestamp,
-            maximumRecords: action.maximumRecords,
-            timeout: action.timeout
-          })
+        this.pageService
+          .setBlockedState({ page: action.page, blocked: action.blocked })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            mergeMap((response: SessionUpdateResponse) => [
-              updateComics({
-                updated: response.update.updatedComics,
-                removed: response.update.removedComicIds
-              }),
-              sessionUpdateLoaded({
-                importCount: response.update.importCount,
-                latest: response.update.latest
-              })
-            ]),
+            map(() => pageBlockSet()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
-                this.translateService.instant('session.load-effect-failure')
+                this.translateService.instant(
+                  'blocked-pages.set-blocked.effect-failure',
+                  {
+                    blocked: action.blocked,
+                    hash: action.page.hash
+                  }
+                )
               );
-              return of(loadSessionUpdateFailed());
+              return of(setPageBlockFailed());
             })
           )
       ),
@@ -71,7 +64,7 @@ export class SessionEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(loadSessionUpdateFailed());
+        return of(setPageBlockFailed());
       })
     );
   });
@@ -79,7 +72,7 @@ export class SessionEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private sessionService: SessionService,
+    private pageService: PageService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

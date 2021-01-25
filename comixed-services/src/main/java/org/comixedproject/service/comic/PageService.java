@@ -23,12 +23,9 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
-import org.comixedproject.model.library.BlockedPageHash;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.repositories.comic.PageRepository;
 import org.comixedproject.repositories.comic.PageTypeRepository;
-import org.comixedproject.repositories.library.BlockedPageHashRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -39,8 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageService {
   @Autowired private PageRepository pageRepository;
   @Autowired private PageTypeRepository pageTypeRepository;
-  @Autowired private BlockedPageHashRepository blockedPageHashRepository;
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
 
   @Transactional
   public Page updateTypeForPage(final long id, final String typeName) throws PageException {
@@ -65,62 +61,24 @@ public class PageService {
     }
   }
 
-  @Transactional
-  public Comic addBlockedPageHash(final long pageId, final String hash) throws PageException {
-    log.debug("Adding blocked page hash: {}", hash);
-    BlockedPageHash existing = this.blockedPageHashRepository.findByHash(hash);
-
-    if (existing != null) {
-      log.debug("Blocked page hash already exists");
-    } else {
-      existing = new BlockedPageHash(hash);
-      this.blockedPageHashRepository.save(existing);
-    }
-
-    final Optional<Page> page = this.pageRepository.findById(pageId);
-
-    if (page.isPresent()) {
-      return page.get().getComic();
-    }
-
-    throw new PageException("no such page: id=" + pageId);
-  }
-
-  @Transactional
-  public Comic removeBlockedPageHash(final long pageId, final String hash) throws PageException {
-    log.debug("Removing blocked page hash: {}", hash);
-    final BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
-    if (entry == null) {
-      log.debug("No such hash");
-    } else {
-      this.blockedPageHashRepository.delete(entry);
-    }
-
-    final Optional<Page> page = this.pageRepository.findById(pageId);
-
-    if (page.isPresent()) {
-      return page.get().getComic();
-    }
-
-    throw new PageException("no such page: id=" + pageId);
-  }
-
-  public List<String> getAllBlockedPageHashes() {
-    log.debug("Returning all blocked page hashes");
-
-    return this.blockedPageHashRepository.getAllHashes();
-  }
-
-  public Page getPageInComicByIndex(final long comicId, final int pageIndex) {
+  /**
+   * Retrieves the content for a comic page.
+   *
+   * @param comicId the comic record id
+   * @param pageIndex the page index
+   * @return the content
+   * @throws ComicException if the comic does not exist
+   */
+  public Page getPageInComicByIndex(final long comicId, final int pageIndex) throws ComicException {
     log.debug("Getting page content for comic: comic id={} page index={}", comicId, pageIndex);
 
     log.debug("Fetching comic: id={}", comicId);
-    final Optional<Comic> comic = this.comicRepository.findById(comicId);
+    final Comic comic = this.comicService.getComic(comicId);
 
-    if (comic.isPresent()) {
-      if (pageIndex < comic.get().getPageCount()) {
+    if (comic != null) {
+      if (pageIndex < comic.getPageCount()) {
         log.debug("Returning page");
-        return comic.get().getPage(pageIndex);
+        return comic.getPage(pageIndex);
       } else {
         log.warn("Index out of range");
       }
@@ -185,7 +143,13 @@ public class PageService {
     return null;
   }
 
-  public Page findById(final long id) {
+  /**
+   * Retrieves a page by its record id.
+   *
+   * @param id the record id
+   * @return the page
+   */
+  public Page getForId(final long id) {
     log.debug("Getting page by id: id={}", id);
 
     final Optional<Page> result = this.pageRepository.findById(id);
@@ -230,38 +194,6 @@ public class PageService {
     log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
 
     return result;
-  }
-
-  @Transactional
-  public List<DuplicatePage> setBlockingState(final List<String> hashes, final boolean blocked) {
-    log.debug(
-        "Updating {} hash{} to {}blocked",
-        hashes.size(),
-        hashes.size() == 1 ? "" : "es",
-        blocked ? "" : "un");
-
-    for (String hash : hashes) {
-      BlockedPageHash entry = this.blockedPageHashRepository.findByHash(hash);
-
-      if (blocked) {
-        if (entry == null) {
-          entry = new BlockedPageHash(hash);
-          log.debug("Creating entry for hash: {}", hash);
-          this.blockedPageHashRepository.save(entry);
-        } else {
-          log.debug("Hash already blocked: {}", hash);
-        }
-      } else {
-        if (entry != null) {
-          log.debug("Deleting entry for hash: {}", hash);
-          this.blockedPageHashRepository.delete(entry);
-        } else {
-          log.debug("Hash not already blocked: {}", hash);
-        }
-      }
-    }
-
-    return this.getDuplicatePages();
   }
 
   @Transactional(isolation = Isolation.READ_UNCOMMITTED)
