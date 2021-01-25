@@ -29,9 +29,9 @@ import { Store } from '@ngrx/store';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { filter } from 'rxjs/operators';
 import { LoggerService } from '@angular-ru/logger';
-import { ComicSelectEvent } from '@app/core';
-import { Comic } from '@app/library';
+import { Comic } from '@app/library/models/comic';
 import { ComicContextMenuEvent } from '@app/library/models/ui/comic-context-menu-event';
+import { ComicSelectEvent } from '@app/library/models/event/comic-select-event';
 
 @Component({
   selector: 'cx-comic-detail-card',

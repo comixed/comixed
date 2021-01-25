@@ -47,6 +47,7 @@ public class SessionController {
    * @param principal the user principal
    * @param request the request body
    * @return the session update
+   * @throws ComiXedUserException if the user is invalid
    */
   @PostMapping(
       value = "/api/session/updates",

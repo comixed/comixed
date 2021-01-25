@@ -22,15 +22,17 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MatCardModule } from '@angular/material/card';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  USER_FEATURE_KEY,
-  initialState as initialUserState
+  initialState as initialUserState,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
+import { PAGE_2 } from '@app/library/library.fixtures';
 
 describe('ComicPageComponent', () => {
   const SOURCE = {} as any;
   const PAGE_SIZE = 400;
   const USER = USER_ADMIN;
+  const PAGE = PAGE_2;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
@@ -76,49 +78,24 @@ describe('ComicPageComponent', () => {
     });
   });
 
-  describe('selecting a page', () => {
+  describe('showing the context menu', () => {
+    const XPOS = 1;
+    const YPOS = 29;
+    const event = new MouseEvent('testing');
+
     beforeEach(() => {
-      component.selected = false;
-      component.source = SOURCE;
+      component.page = PAGE;
+      spyOn(event, 'preventDefault');
+      spyOn(component.showContextMenu, 'emit');
+      component.onContextMenu({ ...event, clientX: XPOS, clientY: YPOS });
     });
 
-    afterEach(() => {
-      component.onClick();
-    });
-
-    it('sends the source of the event', () => {
-      component.pageClicked.subscribe(response =>
-        expect(response.source).toEqual(SOURCE)
-      );
-    });
-
-    it('sends a true selected value', () => {
-      component.pageClicked.subscribe(response =>
-        expect(response.selected).toBeTrue()
-      );
-    });
-  });
-
-  describe('deselecting a page', () => {
-    beforeEach(() => {
-      component.selected = true;
-      component.source = SOURCE;
-    });
-
-    afterEach(() => {
-      component.onClick();
-    });
-
-    it('sends the source of the event', () => {
-      component.pageClicked.subscribe(response =>
-        expect(response.source).toEqual(SOURCE)
-      );
-    });
-
-    it('sends a false selected value', () => {
-      component.pageClicked.subscribe(response =>
-        expect(response.selected).toBeFalse()
-      );
+    it('emits an event', () => {
+      expect(component.showContextMenu.emit).toHaveBeenCalledWith({
+        page: PAGE,
+        x: `${XPOS}px`,
+        y: `${YPOS}px`
+      });
     });
   });
 });

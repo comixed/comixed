@@ -23,14 +23,12 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ComicPageComponent } from './components/comic-page/comic-page.component';
 import { StoreModule } from '@ngrx/store';
 import {
   BUSY_FEATURE_KEY,
   reducer as busyReducer
 } from '@app/core/reducers/busy.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicDetailCardComponent } from './components/comic-detail-card/comic-detail-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -38,12 +36,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 
 @NgModule({
-  declarations: [
-    ConfirmationComponent,
-    ComicPageComponent,
-    ComicDetailCardComponent,
-    YesNoPipe
-  ],
+  declarations: [ConfirmationComponent, YesNoPipe],
   imports: [
     CommonModule,
     TranslateModule.forRoot(),
@@ -62,8 +55,6 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
-    ComicPageComponent,
-    ComicDetailCardComponent,
     YesNoPipe
   ],
   providers: []

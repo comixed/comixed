@@ -33,7 +33,13 @@ public class PageCacheService {
   @Value("${comixed.images.cache.location}")
   private String cacheDirectory;
 
-  public byte[] findByHash(final String hash) throws IOException {
+  /**
+   * Returns a cache entry by page hash.
+   *
+   * @param hash the page hash
+   * @return the content, of <code>null</code> if not found
+   */
+  public byte[] findByHash(final String hash) {
     log.debug("Searching for cached image: hash={}", hash);
 
     final File file = this.getFileForHash(hash);
@@ -72,6 +78,13 @@ public class PageCacheService {
     return new File(path);
   }
 
+  /**
+   * Saves the content for a page by its hash in the cache.
+   *
+   * @param hash the page hash
+   * @param content the page content
+   * @throws IOException if an error occurs
+   */
   public void saveByHash(final String hash, final byte[] content) throws IOException {
     log.debug("Saving image to cache: hash={}", hash);
     final File file = this.getFileForHash(hash);

@@ -54,6 +54,7 @@
       "filesize": "{size, plural, =1{One byte} other{# bytes}}"
     },
     "tooltip": {
+      "blocked-page": "Pages like this are blocked...",
       "download-comic": "Download this comic...",
       "go-to-next-comic": "Go to the next comic in this series...",
       "go-to-previous-comic": "Go to the previous comic in this series..."
@@ -106,6 +107,11 @@
     "confirm-start-title": "Import Comic Files?",
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
   },
+  "blocked-pages": {
+    "set-state": {
+      "effect-failure": "Failed to {enable, select, true{set} other{clear}} the blocked state for pages with as hash of {hash}."
+    }
+  },
   "library": {
     "all-comics": {
       "title": "All Comics"
@@ -119,7 +125,9 @@
       "mark-one-as-read": "This Comic As Read",
       "mark-one-as-unread": "This Comic As Unread",
       "mark-selected-as-read": "Selected Comics As Read",
-      "mark-selected-as-unread": "Selected Comics As Unread"
+      "mark-selected-as-unread": "Selected Comics As Unread",
+      "set-page-blocked": "Block Pages Like This",
+      "set-page-unblocked": "Don't Block Pages Like This"
     },
     "label": {
       "navigation-tree": "Tree View",

@@ -20,8 +20,8 @@ package org.comixedproject.repositories.library;
 
 import java.util.List;
 import org.comixedproject.model.library.BlockedPageHash;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.data.repository.query.Param;
  *
  * @author The ComiXed Project
  */
-public interface BlockedPageHashRepository extends CrudRepository<BlockedPageHash, Long> {
+public interface BlockedPageHashRepository extends JpaRepository<BlockedPageHash, Long> {
   /**
    * Returns the one instance with the given hash.
    *
