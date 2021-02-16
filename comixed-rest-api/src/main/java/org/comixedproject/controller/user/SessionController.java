@@ -25,8 +25,8 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.SessionService;
+import org.comixedproject.service.session.SessionException;
+import org.comixedproject.service.session.SessionService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -47,7 +47,7 @@ public class SessionController {
    * @param principal the user principal
    * @param request the request body
    * @return the session update
-   * @throws ComiXedUserException if the user is invalid
+   * @throws SessionException if an error occurs
    */
   @PostMapping(
       value = "/api/session/updates",
@@ -57,7 +57,7 @@ public class SessionController {
   @AuditableEndpoint
   public SessionUpdateResponse getSessionUpdate(
       final Principal principal, @RequestBody() final SessionUpdateRequest request)
-      throws ComiXedUserException {
+      throws SessionException {
     final long timestamp = request.getTimestamp();
     final int maximumRecords = request.getMaximumRecords();
     final long timeout = request.getTimeout();

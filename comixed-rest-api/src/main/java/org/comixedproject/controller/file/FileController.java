@@ -156,7 +156,7 @@ public class FileController {
     final boolean ignoreMetadata = request.isIgnoreMetadata();
 
     log.info(
-        "Importing {} comic files: delete blocked pages={} ignore metadata={}",
+        "Importing {} comic files: delete blocked page={} ignore metadata={}",
         filenames.size(),
         deleteBlockedPages,
         ignoreMetadata);

@@ -72,7 +72,7 @@ public abstract class AbstractComicVineScrapingAction<T> extends AbstractScrapin
   /**
    * Sets the page to be returned in a multi-page response set.
    *
-   * <p>At ComicVine, pages start with 1.
+   * <p>At ComicVine, page start with 1.
    *
    * @param page the page
    */

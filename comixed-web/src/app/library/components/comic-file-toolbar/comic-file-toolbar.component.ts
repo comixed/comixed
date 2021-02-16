@@ -117,7 +117,7 @@ export class ComicFileToolbarComponent {
 
   onToggleDeleteBlockedPages(): void {
     this.logger.trace(
-      'Setting deleting blocked pages to',
+      'Setting deleting blocked page to',
       !this.deleteBlockedPages
     );
     this.deleteBlockedPages = this.deleteBlockedPages === false;

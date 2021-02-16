@@ -33,6 +33,7 @@ import {
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { LANGUAGE_PREFERENCE } from '@app/app.constants';
+import { resetBlockedPageHashes } from '@app/blocked-page/actions/blocked-page.actions';
 
 @Component({
   selector: 'cx-root',
@@ -56,7 +57,9 @@ export class AppComponent implements OnInit {
       this.logger.debug('User updated:', user);
       this.user = user;
       if (!!this.user && !this.sessionActive) {
-        this.logger.debug('Getting first session update');
+        this.logger.trace('Resetting blocked page hashes');
+        this.store.dispatch(resetBlockedPageHashes());
+        this.logger.debug('Starting session updates');
         this.sessionActive = true;
         this.store.dispatch(
           loadSessionUpdate({ timestamp: 0, maximumRecords: 100, timeout: 300 })

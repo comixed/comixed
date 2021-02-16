@@ -22,8 +22,10 @@ import java.io.File;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
@@ -96,7 +98,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
       log.debug("Saving process comic task");
       final Task task = taskEncoder.encode();
       this.taskService.save(task);
-    } catch (Exception error) {
+    } catch (AdaptorException | ComicFileHandlerException error) {
       throw new WorkerTaskException("Failed to load comic", error);
     }
   }
@@ -109,7 +111,7 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
         .append("Add comic to library:")
         .append(" filename=")
         .append(this.filename)
-        .append(" delete blocked pages=")
+        .append(" delete blocked page=")
         .append(this.deleteBlockedPages ? "Yes" : "No")
         .append(" ignore metadata=")
         .append(this.ignoreMetadata ? "Yes" : "No");

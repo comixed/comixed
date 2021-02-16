@@ -72,7 +72,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
   @Transactional
   public void startTask() throws WorkerTaskException {
     log.debug(
-        "Enqueueing {} comic{}: delete blocked pages={} ignore metadata={}",
+        "Enqueueing {} comic{}: delete blocked page={} ignore metadata={}",
         this.filenames.size(),
         this.filenames.size() == 1 ? "" : "s",
         this.deleteBlockedPages,
@@ -105,7 +105,7 @@ public class QueueComicsWorkerTask extends AbstractWorkerTask {
         .append("Queue comics for import:")
         .append(" count=")
         .append(this.filenames.size())
-        .append(" delete blocked pages=")
+        .append(" delete blocked page=")
         .append(this.deleteBlockedPages ? "Yes" : "No")
         .append(" ignore metadata=")
         .append(this.ignoreMetadata ? "Yes" : "No");

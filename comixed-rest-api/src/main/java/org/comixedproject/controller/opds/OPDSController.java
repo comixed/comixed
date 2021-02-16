@@ -30,7 +30,7 @@ import marvin.image.MarvinImage;
 import marvinplugins.MarvinPluginCollection;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.page.Page;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.service.library.NoSuchReadingListException;
 import org.comixedproject.service.library.ReadingListService;

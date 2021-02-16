@@ -83,7 +83,7 @@ public interface ArchiveAdaptor {
    * <p>If a comic already exists with the filename, it is replaced by the new comic.
    *
    * @param comic the comic
-   * @param renamePages true rename pages
+   * @param renamePages true rename page
    * @return the new comic
    * @throws ArchiveAdaptorException if an error occurs
    */

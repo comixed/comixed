@@ -295,7 +295,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
    *
    * @param source the source comic
    * @param filename the new filename
-   * @param renamePages rename pages
+   * @param renamePages rename page
    * @throws ArchiveException if an error occurs
    * @throws IOException if an error occurs
    */

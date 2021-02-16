@@ -29,6 +29,8 @@ import java.util.Date;
 import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.page.Page;
+import org.comixedproject.model.page.PageType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.DigestUtils;

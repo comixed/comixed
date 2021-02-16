@@ -30,6 +30,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
+import org.comixedproject.model.page.Page;
+import org.comixedproject.model.page.PageType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.context.TestPropertySource;

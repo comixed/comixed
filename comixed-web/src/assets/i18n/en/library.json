@@ -1,4 +1,10 @@
 {
+  "blocked-pages": {
+    "page-title": "Blocked Pages",
+    "set-state": {
+      "effect-failure": "Failed to {enable, select, true{set} other{clear}} the blocked state for pages with as hash of {hash}."
+    }
+  },
   "comic": {
     "hint": {
       "required-for-scraping": "This value is required for scraping..."
@@ -106,11 +112,6 @@
     },
     "confirm-start-title": "Import Comic Files?",
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
-  },
-  "blocked-pages": {
-    "set-state": {
-      "effect-failure": "Failed to {enable, select, true{set} other{clear}} the blocked state for pages with as hash of {hash}."
-    }
   },
   "library": {
     "all-comics": {

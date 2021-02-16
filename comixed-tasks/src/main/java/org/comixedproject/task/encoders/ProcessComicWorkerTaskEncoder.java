@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ProcessComicWorkerTaskEncoder
     extends AbstractWorkerTaskEncoder<ProcessComicWorkerTask> {
-  public static final String DELETE_BLOCKED_PAGES = "delete-blocked-pages";
+  public static final String DELETE_BLOCKED_PAGES = "delete-blocked-page";
   public static final String IGNORE_METADATA = "ignore-metadata";
 
   @Autowired private ObjectFactory<ProcessComicWorkerTask> processComicTaskObjectFactory;
@@ -47,7 +47,7 @@ public class ProcessComicWorkerTaskEncoder
   @Override
   public Task encode() {
     log.debug(
-        "Encoding process comic task: comic={} delete blocked pages={} ignore metadata={}",
+        "Encoding process comic task: comic={} delete blocked page={} ignore metadata={}",
         this.comic.getId(),
         this.deleteBlockedPages,
         this.ignoreMetadata);

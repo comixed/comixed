@@ -33,8 +33,16 @@ import {
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
+import {
+  COMIC_2,
+  COMIC_3,
+  PAGE_1,
+  PAGE_2,
+  PAGE_3,
+  PAGE_4
+} from '@app/library/library.fixtures';
 import { updateComics } from '@app/library/actions/library.actions';
+import { blockedPageHashesLoaded } from '@app/blocked-page/actions/blocked-page.actions';
 
 describe('SessionEffects', () => {
   const TIMESTAMP = new Date().getTime();
@@ -43,6 +51,7 @@ describe('SessionEffects', () => {
   const IMPORT_COUNT = 717;
   const UPDATED_COMICS = [COMIC_2];
   const REMOVED_COMICS = [COMIC_3];
+  const BLOCKED_HASHES = [PAGE_1.hash, PAGE_2.hash, PAGE_3.hash, PAGE_4.hash];
 
   let actions$: Observable<any>;
   let effects: SessionEffects;
@@ -86,9 +95,10 @@ describe('SessionEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
         update: {
-          importCount: IMPORT_COUNT,
           updatedComics: UPDATED_COMICS,
           removedComicIds: REMOVED_COMICS.map(comic => comic.id),
+          importCount: IMPORT_COUNT,
+          hashes: BLOCKED_HASHES,
           latest: TIMESTAMP
         }
       } as SessionUpdateResponse;
@@ -101,7 +111,8 @@ describe('SessionEffects', () => {
         updated: UPDATED_COMICS,
         removed: REMOVED_COMICS.map(comic => comic.id)
       });
-      const outcome2 = sessionUpdateLoaded({
+      const outcome2 = blockedPageHashesLoaded({ hashes: BLOCKED_HASHES });
+      const outcome3 = sessionUpdateLoaded({
         importCount: IMPORT_COUNT,
         latest: TIMESTAMP
       });
@@ -109,7 +120,7 @@ describe('SessionEffects', () => {
       actions$ = hot('-a', { a: action });
       sessionService.loadSessionUpdate.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
       expect(effects.loadSessionUpdate$).toBeObservable(expected);
     });
 

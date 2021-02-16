@@ -18,13 +18,15 @@
 
 package org.comixedproject.task.model;
 
+import static junit.framework.TestCase.assertFalse;
+
 import java.io.File;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.page.Page;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
@@ -59,6 +61,73 @@ public class AddComicWorkerTaskTest {
   @Mock private TaskService taskService;
 
   @Test
+  public void testCreateDescription() {
+    task.setDeleteBlockedPages(true);
+    task.setIgnoreMetadata(true);
+    task.setFilename(TEST_CBZ_FILE);
+
+    assertFalse(task.createDescription().isEmpty());
+  }
+
+  @Test
+  public void testAddFileComicAlreadyImported() throws WorkerTaskException {
+    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(comic);
+
+    task.setFilename(TEST_CBZ_FILE);
+
+    task.startTask();
+
+    Mockito.verify(comicService, Mockito.times(1))
+        .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+  }
+
+  @Test(expected = WorkerTaskException.class)
+  public void testAddFileScraperThrowsException() throws WorkerTaskException, AdaptorException {
+    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doThrow(AdaptorException.class)
+        .when(filenameScraperAdaptor)
+        .execute(Mockito.any(Comic.class));
+
+    task.setFilename(TEST_CBZ_FILE);
+
+    try {
+      task.startTask();
+    } finally {
+      Mockito.verify(comicService, Mockito.times(1))
+          .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+      Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+      Mockito.verify(comic, Mockito.times(1))
+          .setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+      Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    }
+  }
+
+  @Test(expected = WorkerTaskException.class)
+  public void testAddFileComicFileHandlerException()
+      throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
+    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicFactory.getObject()).thenReturn(comic);
+    Mockito.doThrow(ComicFileHandlerException.class)
+        .when(comicFileHandler)
+        .loadComicArchiveType(Mockito.any(Comic.class));
+
+    task.setFilename(TEST_CBZ_FILE);
+
+    try {
+      task.startTask();
+    } finally {
+      Mockito.verify(comicService, Mockito.times(1))
+          .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+      Mockito.verify(comicFactory, Mockito.times(1)).getObject();
+      Mockito.verify(comic, Mockito.times(1))
+          .setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
+      Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+      Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
+    }
+  }
+
+  @Test
   public void testAddFile()
       throws WorkerTaskException, ComicFileHandlerException, AdaptorException {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
@@ -70,8 +139,8 @@ public class AddComicWorkerTaskTest {
 
     task.setDeleteBlockedPages(false);
     task.setIgnoreMetadata(false);
-
     task.setFilename(TEST_CBZ_FILE);
+
     task.startTask();
 
     Mockito.verify(comicService, Mockito.times(1))
@@ -98,8 +167,8 @@ public class AddComicWorkerTaskTest {
 
     task.setDeleteBlockedPages(false);
     task.setIgnoreMetadata(true);
-
     task.setFilename(TEST_CBZ_FILE);
+
     task.startTask();
 
     Mockito.verify(comicService, Mockito.times(1))
@@ -126,8 +195,8 @@ public class AddComicWorkerTaskTest {
 
     task.setDeleteBlockedPages(true);
     task.setIgnoreMetadata(false);
-
     task.setFilename(TEST_CBZ_FILE);
+
     task.startTask();
 
     Mockito.verify(comicService, Mockito.times(1))
@@ -154,8 +223,8 @@ public class AddComicWorkerTaskTest {
 
     task.setDeleteBlockedPages(true);
     task.setIgnoreMetadata(true);
-
     task.setFilename(TEST_CBZ_FILE);
+
     task.startTask();
 
     Mockito.verify(comicService, Mockito.times(1))

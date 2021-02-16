@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
 import { COMIC_2, PAGE_1 } from '@app/library/library.fixtures';
 import { ComicPageUrlPipe } from '@app/library/pipes/comic-page-url.pipe';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatCardModule } from '@angular/material/card';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -30,7 +30,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
-import { setPageBlock } from '@app/library/actions/blocked-page.actions';
+import { setPageBlock } from '@app/blocked-page/actions/blocked-page.actions';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;

@@ -27,8 +27,8 @@ import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.model.session.SessionUpdate;
 import org.comixedproject.model.session.UserSession;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.SessionService;
+import org.comixedproject.service.session.SessionException;
+import org.comixedproject.service.session.SessionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class SessionControllerTest {
   }
 
   @Test
-  public void testGetSessionUpdate() throws ComiXedUserException {
+  public void testGetSessionUpdate() throws SessionException {
     Mockito.when(
             sessionService.getSessionUpdate(
                 Mockito.anyLong(), Mockito.anyInt(), Mockito.anyLong(), Mockito.anyString()))

@@ -40,8 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ConvertComicWorkerTaskEncoder
     extends AbstractWorkerTaskEncoder<ConvertComicWorkerTask> {
   public static final String ARCHIVE_TYPE = "target-archive-type";
-  public static final String RENAME_PAGES = "rename-pages";
-  public static final String DELETE_PAGES = "delete-pages";
+  public static final String RENAME_PAGES = "rename-page";
+  public static final String DELETE_PAGES = "delete-page";
   public static final String DELETE_ORIGINAL_COMIC = "delete-original-comic";
 
   @Autowired private TaskService taskService;

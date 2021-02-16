@@ -20,8 +20,8 @@ package org.comixedproject.task.model;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Page;
-import org.comixedproject.service.comic.PageService;
+import org.comixedproject.model.page.Page;
+import org.comixedproject.service.page.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

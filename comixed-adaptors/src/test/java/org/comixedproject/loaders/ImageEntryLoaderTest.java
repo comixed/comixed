@@ -22,8 +22,8 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.PageType;
-import org.comixedproject.repositories.comic.PageTypeRepository;
+import org.comixedproject.model.page.PageType;
+import org.comixedproject.repositories.page.PageTypeRepository;
 import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;

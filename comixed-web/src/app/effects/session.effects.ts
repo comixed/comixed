@@ -31,6 +31,7 @@ import {
 } from '@app/actions/session.actions';
 import { SessionService } from '@app/services/session.service';
 import { updateComics } from '@app/library';
+import { blockedPageHashesLoaded } from '@app/blocked-page/actions/blocked-page.actions';
 
 @Injectable()
 export class SessionEffects {
@@ -52,6 +53,7 @@ export class SessionEffects {
                 updated: response.update.updatedComics,
                 removed: response.update.removedComicIds
               }),
+              blockedPageHashesLoaded({ hashes: response.update.hashes }),
               sessionUpdateLoaded({
                 importCount: response.update.importCount,
                 latest: response.update.latest

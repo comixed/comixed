@@ -34,9 +34,11 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [ConfirmationComponent, YesNoPipe],
+  declarations: [ConfirmationComponent, ComicPageComponent, YesNoPipe],
   imports: [
     CommonModule,
     TranslateModule.forRoot(),
@@ -48,13 +50,15 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     MatFormFieldModule,
     MatCardModule,
     RouterModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   exports: [
     MatSnackBarModule,
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
+    ComicPageComponent,
     YesNoPipe
   ],
   providers: []

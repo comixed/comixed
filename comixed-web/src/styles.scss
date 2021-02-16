@@ -175,6 +175,10 @@ $cx-column-large: 325px;
   flex-direction: column;
 }
 
+.cx-wrapping-container {
+  flex-wrap: wrap;
+}
+
 .cx-grow-1 {
   flex-grow: 1;
 }

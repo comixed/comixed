@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.plugins.PluginException;
 import org.comixedproject.plugins.model.Plugin;
 import org.comixedproject.service.comic.ComicService;
-import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.page.PageService;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

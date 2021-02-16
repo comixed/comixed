@@ -30,7 +30,7 @@ import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.repositories.library.LastReadDatesRepository;
-import org.comixedproject.service.comic.PageCacheService;
+import org.comixedproject.service.page.PageCacheService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;

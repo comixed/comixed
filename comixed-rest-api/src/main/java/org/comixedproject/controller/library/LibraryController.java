@@ -153,8 +153,8 @@ public class LibraryController {
         idList.size(),
         idList.size() == 1 ? "" : "s",
         archiveType,
-        renamePages ? " (rename pages)" : "",
-        deletePages ? " (delete pages)" : "",
+        renamePages ? " (rename page)" : "",
+        deletePages ? " (delete page)" : "",
         deleteOriginal ? " (delete original comic)" : "");
 
     final ConvertComicsWorkerTask task = this.convertComicsWorkerTaskObjectFactory.getObject();

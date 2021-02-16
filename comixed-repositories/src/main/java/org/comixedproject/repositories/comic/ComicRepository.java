@@ -128,4 +128,12 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT c FROM Comic c WHERE c IN (SELECT p.comic FROM Page p WHERE p.hash = :hash)")
   List<Comic> findComicsForPageHash(@Param("hash") String hash);
+
+  /**
+   * Returns all comics sorted by last updated date.
+   *
+   * @return the comic list
+   */
+  @Query("SELECT c FROM Comic c ORDER BY c.dateLastUpdated")
+  List<Comic> findAllByDateLastUpdated();
 }

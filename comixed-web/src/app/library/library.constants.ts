@@ -32,8 +32,6 @@ export const STORIES_GROUP = 'stories';
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
-export const SET_BLOCKED_PAGE_HASH_URL = `${API_ROOT_URL}/pages/blocked`;
-export const CLEAR_BLOCKED_PAGE_HASH_URL = `${API_ROOT_URL}/pages/blocked/\${hash}`;
 
 export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 
@@ -57,7 +55,7 @@ export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
 export const IGNORE_METADATA_PREFERENCE = 'preference.import.ignore-metadata';
 export const IGNORE_METADATA_DEFAULT = `${false}`;
 export const DELETE_BLOCKED_PAGES_PREFERENCE =
-  'preference.import.delete-blocked-pages';
+  'preference.import.delete-blocked-page';
 export const DELETE_BLOCKED_PAGES_DEFAULT = `${false}`;
 export const API_KEY_PREFERENCE = 'preference.scraping.api-key';
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';

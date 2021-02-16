@@ -158,7 +158,7 @@ describe('ComicFileToolbarComponent', () => {
     });
   });
 
-  describe('marking blocked pages for deletion', () => {
+  describe('marking blocked page for deletion', () => {
     const MARKED = Math.random() > 0.5;
 
     beforeEach(() => {

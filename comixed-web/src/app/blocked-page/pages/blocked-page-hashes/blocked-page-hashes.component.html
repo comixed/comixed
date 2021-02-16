@@ -1,0 +1,11 @@
+<div
+  id="cx-all-blocked-pages"
+  class="cx-horizontal-container cx-wrapping-container"
+>
+  <cx-comic-page
+    *ngFor="let hash of hashes"
+    [title]="hash"
+    [imageUrl]="hash | blockedPageUrl"
+    [imageHeight]="imageHeight"
+  ></cx-comic-page>
+</div>

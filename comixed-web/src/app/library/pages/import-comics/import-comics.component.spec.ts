@@ -54,7 +54,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/library/pipes/comic-file-cover-url.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   DELETE_BLOCKED_PAGES_PREFERENCE,
@@ -173,7 +173,7 @@ describe('ImportComicsComponent', () => {
       expect(component.ignoreMetadata).toEqual(IGNORE_METADATA);
     });
 
-    it('sets the delete blocked pages flag', () => {
+    it('sets the delete blocked page flag', () => {
       expect(component.deleteBlockedPages).toEqual(DELETE_BLOCKED_PAGES);
     });
   });

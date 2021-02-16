@@ -454,4 +454,14 @@ public class ComicService {
       this.comicRepository.save(comic);
     }
   }
+
+  /**
+   * Returns all comics updated after a given timestamp.
+   *
+   * @return the comics
+   */
+  public List<Comic> getAll() {
+    log.debug("Getting all comics");
+    return this.comicRepository.findAllByDateLastUpdated();
+  }
 }

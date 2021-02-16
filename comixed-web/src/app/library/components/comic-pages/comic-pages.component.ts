@@ -21,7 +21,7 @@ import { Comic, Page } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { setPageBlock } from '@app/library/actions/blocked-page.actions';
+import { setPageBlock } from '@app/blocked-page/actions/blocked-page.actions';
 
 @Component({
   selector: 'cx-comic-pages',

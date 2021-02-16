@@ -32,10 +32,10 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
-import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.page.Page;
 import org.comixedproject.service.comic.ComicService;
-import org.comixedproject.service.comic.PageService;
-import org.comixedproject.service.library.BlockedPageHashService;
+import org.comixedproject.service.page.BlockedPageHashService;
+import org.comixedproject.service.page.PageService;
 import org.comixedproject.utils.Utils;
 import org.junit.After;
 import org.junit.Before;
@@ -54,6 +54,7 @@ public class ProcessComicWorkerTaskTest {
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
   private static final String TEST_BLOCKED_PAGE_HASH = "1234567890";
   private static final String TEST_UNBLOCKED_PAGE_HASH = "0987654321";
+  private static final long TEST_TIMESTAMP = System.currentTimeMillis();
 
   @InjectMocks private ProcessComicWorkerTask task;
   @Mock private Comic comic;

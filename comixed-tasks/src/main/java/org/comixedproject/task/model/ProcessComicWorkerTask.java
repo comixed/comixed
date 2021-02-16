@@ -30,10 +30,10 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
-import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.page.Page;
 import org.comixedproject.service.comic.ComicService;
-import org.comixedproject.service.comic.PageService;
-import org.comixedproject.service.library.BlockedPageHashService;
+import org.comixedproject.service.page.BlockedPageHashService;
+import org.comixedproject.service.page.PageService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -91,7 +91,7 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
       log.debug("Loading blocked page hashes");
       final List<String> blockedHashes = this.blockedPageHashService.getAllHashes();
 
-      log.debug("Checking for blocked pages");
+      log.debug("Checking for blocked page");
       for (Page page : comic.getPages()) {
         if (blockedHashes.contains(page.getHash())) {
           log.debug("Marking page as blocked: [{}:{}]", page.getFilename(), page.getHash());
@@ -100,7 +100,7 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
       }
     }
 
-    logger.debug("Sorting pages");
+    logger.debug("Sorting page");
     comic.sortPages();
     logger.debug("Setting comic file details");
     ComicFileDetails fileDetails = comic.getFileDetails();

@@ -50,7 +50,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask {
   }
 
   /**
-   * If set to true then pages are renamed as the comic is exported.
+   * If set to true then page are renamed as the comic is exported.
    *
    * @param renamePages the flag
    */
@@ -86,7 +86,7 @@ public class ExportComicWorkerTask extends AbstractWorkerTask {
         .append("Exporting comic:")
         .append(" comic=")
         .append(this.comic.getFilename())
-        .append(" rename pages=")
+        .append(" rename page=")
         .append(this.renamePages ? "Yes" : "No");
 
     return result.toString();

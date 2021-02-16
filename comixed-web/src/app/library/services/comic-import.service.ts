@@ -55,7 +55,7 @@ export class ComicImportService {
    * Sends the supplied comic files to the backend to be imported.
    * @param args.files the comic files
    * @param args.ignoreMetadata flag to ignore metadata
-   * @param args.deleteBlockedPages flag to mark blocked pages as deleted
+   * @param args.deleteBlockedPages flag to mark blocked page as deleted
    */
   sendComicFiles(args: {
     files: ComicFile[];

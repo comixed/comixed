@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>ConvertComicWorkerTask</code> converts comics from one archive type to, potentially,
- * another. It also managings renaming and deleting pages.
+ * another. It also managings renaming and deleting page.
  *
  * @author Darryl L. Pierce
  */
@@ -75,8 +75,8 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
         this.comic.getId(),
         this.comic.getArchiveType(),
         this.targetArchiveType,
-        this.renamePages ? "(renaming pages)" : "",
-        this.deletePages ? "(deleting pages)" : "",
+        this.renamePages ? "(renaming page)" : "",
+        this.deletePages ? "(deleting page)" : "",
         this.deleteOriginal ? "(deleting original comic)" : "");
   }
 

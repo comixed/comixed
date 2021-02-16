@@ -21,7 +21,7 @@ import { ComicDetailsDialogComponent } from './comic-details-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ComicTitlePipe } from '@app/library/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/library/pipes/comic-cover-url.pipe';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { provideMockStore } from '@ngrx/store/testing';
 import {

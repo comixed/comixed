@@ -21,6 +21,7 @@ import { Comic } from '@app/library';
 export interface SessionUpdate {
   updatedComics: Comic[];
   removedComicIds: number[];
+  hashes: string[];
   importCount: number;
   latest: number;
 }

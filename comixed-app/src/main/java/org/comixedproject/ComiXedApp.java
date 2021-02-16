@@ -21,9 +21,10 @@ package org.comixedproject;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-// @EnableJdbcHttpSession
+@EnableJpaAuditing
 public class ComiXedApp implements CommandLineRunner {
   private static final int VERSION_MAJOR = 0;
   private static final int VERSION_MINOR = 1;

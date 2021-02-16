@@ -91,13 +91,8 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
-import {
-  BLOCKED_PAGE_FEATURE_KEY,
-  reducer as blockedPageReducer
-} from '@app/library/reducers/blocked-page.reducer';
-import { BlockedPageEffects } from '@app/library/effects/blocked-page.effects';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
 import { ComicDetailCardComponent } from '@app/library/components/comic-detail-card/comic-detail-card.component';
+import { BlockedPageModule } from '@app/blocked-page/blocked-page.module';
 
 @NgModule({
   declarations: [
@@ -128,13 +123,13 @@ import { ComicDetailCardComponent } from '@app/library/components/comic-detail-c
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
     DeletedComicsPipe,
-    ComicPageComponent,
     ComicDetailCardComponent
   ],
   providers: [ComicTitlePipe],
   imports: [
     CommonModule,
     CoreModule,
+    BlockedPageModule,
     LibraryRouting,
     ReactiveFormsModule,
     TranslateModule.forRoot(),
@@ -142,13 +137,11 @@ import { ComicDetailCardComponent } from '@app/library/components/comic-detail-c
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
-    StoreModule.forFeature(BLOCKED_PAGE_FEATURE_KEY, blockedPageReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       ComicImportEffects,
       LibraryEffects,
-      ScrapingEffects,
-      BlockedPageEffects
+      ScrapingEffects
     ]),
     MatInputModule,
     MatSelectModule,

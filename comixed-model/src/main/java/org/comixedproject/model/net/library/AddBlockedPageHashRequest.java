@@ -24,8 +24,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>AddBlockedPageHashRequest</code> represents the request body for a REST cal to blocked
- * pages by hash value.
+ * <code>AddBlockedPageHashRequest</code> represents the request body for a REST cal to blocked page
+ * by hash value.
  *
  * @author Darryl L. Pierce
  */

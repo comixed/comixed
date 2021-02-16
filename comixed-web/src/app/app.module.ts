@@ -55,6 +55,7 @@ import { BuildDetailsComponent } from './pages/build-details/build-details.compo
 import { MatCardModule } from '@angular/material/card';
 import { AdminModule } from '@app/admin/admin.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { BlockedPageModule } from '@app/blocked-page/blocked-page.module';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     AdminModule,
     UserModule,
+    BlockedPageModule,
     LibraryModule,
     BrowserModule,
     AppRouting,

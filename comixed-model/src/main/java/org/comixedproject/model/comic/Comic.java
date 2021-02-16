@@ -30,6 +30,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.page.Page;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.views.View;
@@ -48,7 +49,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
-@EntityListeners(ComicAuditor.class)
+@EntityListeners(ComicSessionEventAuditor.class)
 @Table(name = "comics")
 @Log4j2
 @NoArgsConstructor
@@ -459,7 +460,7 @@ public class Comic {
   }
 
   /**
-   * Returns the number of pages associated with this comic.
+   * Returns the number of page associated with this comic.
    *
    * @return the offset count
    */
@@ -539,7 +540,7 @@ public class Comic {
   }
 
   public void removeDeletedPages(final boolean deletePages) {
-    log.debug("Remove deleted pages? {}", deletePages);
+    log.debug("Remove deleted page? {}", deletePages);
     if (deletePages) {
       Page[] pageArray = this.pages.toArray(new Page[this.pages.size()]);
       for (int index = 0; index < pageArray.length; index++) {

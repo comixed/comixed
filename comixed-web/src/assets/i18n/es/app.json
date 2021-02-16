@@ -55,6 +55,7 @@
   },
   "menu": {
     "admin-menu": {
+      "blocked-page-hashes": "Blocked Pages",
       "import-comic-files": "Import Comics",
       "root": "Admin",
       "web-audit-log": "Web Logs"

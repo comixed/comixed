@@ -24,7 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SCRAPING_ISSUE_1 } from '@app/library/library.fixtures';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/core/components/comic-page/comic-page.component';
 import { MatIconModule } from '@angular/material/icon';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
