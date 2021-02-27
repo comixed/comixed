@@ -106,10 +106,6 @@ asking for those changes. Please apply them and resubmit your changes.
 And, if this is your first addition to the project, please add your name to
 the [CONTRIBUTORS.md](./CONTRIBUTORS.md) file with your pull request.
 
-## Abandoned/Discontinued
-
-The **comixed-importer** project, for the time being, has been disabled as a part of our release bundles.
-
 ## Credits
 
 * example.cbz - https://www.contrapositivediary.com/?p=1197
