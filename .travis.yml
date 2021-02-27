@@ -53,4 +53,4 @@ deploy:
 cache:
     directories:
         - $HOME/.m2/repository
-        - $TRAVIS_BUILD_DIR/comixed-frontend/node_modules
+        - $TRAVIS_BUILD_DIR/comixed-web/node_modules
