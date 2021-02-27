@@ -101,7 +101,7 @@ Most editors and IDEs support formatting Typescript code. Please check the docum
 
 #### Lint Checks
 
-To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-frontend** module:
+To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-web** module:
 
 ```
 $ cd comixed-web
@@ -185,7 +185,7 @@ commandline:
 ```
 mvn spring-boot:run -DskipTests
 ```
-Then, in the **comixed-frontend** subdirectory, launch it using the commandline:
+Then, in the **comixed-web** subdirectory, launch it using the commandline:
 
 ```
 $ yarn start
