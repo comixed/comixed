@@ -5,6 +5,11 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+## Use A Single Commit For Each Feature Or Bug Fix
+
+To make searching history easier, we ask that you bundle your changes into a single commit, and that commit should
+address a single feature or issue.
+
 ## Commit Message Rules
 
 The goal of the following rules is to make the output for the follow command line easier to read:
@@ -28,7 +33,8 @@ easier, and will help to make your contributions easier to understand.
  Source: http://chris.beams.io/posts/git-commit/#seven-rules
  
 ### Do
- * Write the summary line and description of what you have done in the imperative mood, that is as if you were narrating the changes. Start the line with "Fixed", "Added", "Changed" instead of "Fixes", "Adds", "Changes".
+ * Write the summary line and description of what you have done in the imperative mood, that is as if you were narrating
+   the changes. Start the line with "Fixed", "Added", "Changed" instead of "Fixes", "Adds", "Changes".
  * Always leave the second line blank.
  * Line break the commit message (to make the commit message readable without having to scroll horizontally in gitk).
 
@@ -36,7 +42,8 @@ easier, and will help to make your contributions easier to understand.
  * Don't end the summary line with a period - it's a title and titles don't end with a period.
 
 ### Tips
-* If it seems difficult to summarize what your commit does, it may be because it includes several logical changes or bug fixes, and are better split up into several commits using git add -p.
+ * If it seems difficult to summarize what your commit does, it may be because it includes more than one feature or bug
+   fix. If that is the case, please consider breaking them up into multiple commits and open a separate issue for each.
 
 ## Commit Template
 
@@ -97,7 +104,7 @@ Most editors and IDEs support formatting Typescript code. Please check the docum
 To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-frontend** module:
 
 ```
-$ cd comixed-frontend
+$ cd comixed-web
 $ yarn lint
 ```
 
@@ -120,14 +127,14 @@ Once you've installed the requirements, you need to setup your environment:
 
 The application is composed of several modules:
  * **comixed-model**: the domain model
- * **comixed-repositories**: the repositories,
+ * **comixed-repositories**: the database repository interfaces,
  * **comixed-adaptors**: the various adaptors for loading archives, images, etc.,
  * **comixed-services**: the business logic layer,
  * **comixed-scrapers**: the library for building comic data scrapers,
- * **comixed-tasks**: the set of worker tasks that run in the backend server
- * **comixed-rest-api**: the web layer and REST API processors,
- * **comixed-frontend**: the Angular frontend, and
- * **comixed-app**: the application, which pulls the previous pieces together in a working application.
+ * **comixed-tasks**: the set of worker tasks that run on the server,
+ * **comixed-rest-api**: the REST API processors,
+ * **comixed-web**: the Angular frontend, and
+ * **comixed-app**: the core module, which pulls the previous pieces together in a working application.
 
 To build all of them then execute the following from the project's root directory:
 
@@ -190,7 +197,8 @@ as your make changes to the Angular code, this frontend will update automaticall
 ## Unit Tests
 
 To help keep the code as thoroughly tested and understandable as possible, all features and bug fixes must come with some
-set of unit tests to demonstrate and validate them. Contributions should never reduce the unit test coverage for the project.
+set of unit tests to demonstrate and validate them. Contributions should never reduce the unit test coverage for the 
+project.
 
 Please also be sure that the contribution does not break any existing unit tests. So be sure to run the full suite of unit
 tests for the entire project before submitting your pull request.
