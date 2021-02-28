@@ -54,20 +54,27 @@
     "title": "Home"
   },
   "menu": {
-    "library-menu": {
-      "all-comics": "All Comics",
-      "root": "Library"
-    },
     "admin-menu": {
       "import-comic-files": "Import Comics",
       "root": "Admin",
       "web-audit-log": "Web Logs"
     },
+    "build-details": "Build Details",
+    "language-menu": {
+      "en": "English",
+      "es": "Spanish",
+      "fr": "French",
+      "pt": "Portuguese",
+      "root": "Select Language"
+    },
+    "library-menu": {
+      "all-comics": "All Comics",
+      "root": "Library"
+    },
     "options-menu": {
       "root": "Options",
       "show-options-panel": "Set User Options..."
-    },
-    "build-details": "Build Details"
+    }
   },
   "session": {
     "load-effect-failure": "Unable to load user session"

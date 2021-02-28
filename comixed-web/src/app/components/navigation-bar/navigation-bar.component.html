@@ -38,6 +38,10 @@
     <mat-icon>settings</mat-icon>
     <mat-label>{{ "menu.options-menu.root" | translate }}</mat-label>
   </button>
+  <button mat-menu-item [matMenuTriggerFor]="languageMenu">
+    <mat-icon>language</mat-icon>
+    <mat-label>{{ "menu.language-menu.root" | translate }}</mat-label>
+  </button>
   <button mat-menu-item [routerLink]="['/build']">
     <mat-icon>construction</mat-icon>
     <mat-label>{{ "menu.build-details" | translate }}</mat-label>
@@ -62,6 +66,20 @@
   <button mat-menu-item [routerLink]="['/admin', 'audit', 'web']">
     <mat-icon>view_headline</mat-icon>
     <mat-label>{{ "menu.admin-menu.web-audit-log" | translate }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #languageMenu="matMenu">
+  <button
+    *ngFor="let language of languages"
+    mat-menu-item
+    (click)="onSelectLanguage(language)"
+  >
+    <mat-icon *ngIf="currentLanguage === language">check_box</mat-icon>
+    <mat-icon *ngIf="currentLanguage !== language"
+      >check_box_outline_blank</mat-icon
+    >
+    <mat-label>{{ "menu.language-menu." + language | translate }}</mat-label>
   </button>
 </mat-menu>
 

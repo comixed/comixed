@@ -22,11 +22,12 @@ import { LoggerService } from '@angular-ru/logger';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
-import { logoutUser } from '@app/user/actions/user.actions';
+import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
 import { isAdmin, isReader } from '@app/user/user.functions';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDisplayOptionsComponent } from '@app/library/components/comic-display-options/comic-display-options.component';
+import { LANGUAGE_PREFERENCE } from '@app/app.constants';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -34,10 +35,10 @@ import { ComicDisplayOptionsComponent } from '@app/library/components/comic-disp
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
-  private _user: User;
-
   isReader = false;
   isAdmin = false;
+  readonly languages = ['en', 'fr', 'es', 'pt'];
+  currentLanguage = '';
 
   constructor(
     private logger: LoggerService,
@@ -46,17 +47,25 @@ export class NavigationBarComponent {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private dialog: MatDialog
-  ) {}
-
-  @Input()
-  set user(user: User) {
-    this._user = user;
-    this.isReader = isReader(user);
-    this.isAdmin = isAdmin(user);
+  ) {
+    this.translateService.onLangChange.subscribe(language => {
+      this.logger.debug('Active language changed:', language.lang);
+      this.currentLanguage = language.lang;
+    });
   }
+
+  private _user: User;
 
   get user(): User {
     return this._user;
+  }
+
+  @Input()
+  set user(user: User) {
+    this.logger.trace('Setting user');
+    this._user = user;
+    this.isReader = isReader(user);
+    this.isAdmin = isAdmin(user);
   }
 
   onLogin(): void {
@@ -82,5 +91,16 @@ export class NavigationBarComponent {
   onShowDisplayOptions(): void {
     this.logger.trace('Showing comic display options dialog');
     this.dialog.open(ComicDisplayOptionsComponent, {});
+  }
+
+  onSelectLanguage(language: string): void {
+    this.logger.debug('Changing selected language:', language);
+    this.translateService.use(language);
+    if (!!this.user) {
+      this.logger.trace('Saving user language preference');
+      this.store.dispatch(
+        saveUserPreference({ name: LANGUAGE_PREFERENCE, value: language })
+      );
+    }
   }
 }
