@@ -56,7 +56,10 @@ export const reducer = createReducer(
     loadingRecords: false,
     volumes: action.volumes
   })),
-  on(loadScrapingVolumesFailed, state => ({ ...state, loadingRecords: false })),
+  on(loadScrapingVolumesFailed, state => ({
+    ...state,
+    loadingRecords: false
+  })),
   on(loadScrapingIssue, state => ({ ...state, loadingRecords: true })),
   on(scrapingIssueLoaded, (state, action) => ({
     ...state,
