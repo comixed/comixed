@@ -10,7 +10,7 @@
 </div>
 
 <div
-  style="visibility: hidden;position: fixed"
+  style="visibility: hidden; position: fixed"
   [style.left]="contextMenuX"
   [style.top]="contextMenuY"
   [matMenuTriggerFor]="contextMenu"
@@ -18,13 +18,21 @@
 
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
-    <button *ngIf="page.blocked" (click)="onSetPageBlocked(page, false)">
+    <button
+      *ngIf="page.blocked"
+      mat-menu-item
+      (click)="onSetPageBlocked(page, false)"
+    >
       <mat-icon>remove_circle_outline</mat-icon>
       <mat-label>{{
         "library.context-menu.set-page-unblocked" | translate
       }}</mat-label>
     </button>
-    <button *ngIf="!page.blocked" (click)="onSetPageBlocked(page, true)">
+    <button
+      *ngIf="!page.blocked"
+      mat-menu-item
+      (click)="onSetPageBlocked(page, true)"
+    >
       <mat-icon>block</mat-icon>
       <mat-label>{{
         "library.context-menu.set-page-blocked" | translate
