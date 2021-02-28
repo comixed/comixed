@@ -21,11 +21,11 @@ import { NavigationBarComponent } from './navigation-bar.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
-import { logoutUser } from '@app/user/actions/user.actions';
+import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -42,10 +42,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
+import { LANGUAGE_PREFERENCE } from '@app/app.constants';
 
 describe('NavigationBarComponent', () => {
+  const USER = USER_ADMIN;
   const initialState = {
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN }
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
   let component: NavigationBarComponent;
@@ -55,6 +57,7 @@ describe('NavigationBarComponent', () => {
   let confirmationService: ConfirmationService;
   let dialog: MatDialog;
   let dialogRef: jasmine.SpyObj<MatDialogRef<any>>;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -93,6 +96,7 @@ describe('NavigationBarComponent', () => {
     dialogRef = TestBed.inject(MatDialogRef) as jasmine.SpyObj<
       MatDialogRef<any>
     >;
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
@@ -158,6 +162,41 @@ describe('NavigationBarComponent', () => {
 
     it('invokes the confirm callback', () => {
       expect(dialog.open).toHaveBeenCalled();
+    });
+  });
+
+  describe('when the language is changed', () => {
+    const LANGUAGE = 'foo';
+
+    beforeEach(() => {
+      spyOn(translateService, 'use');
+    });
+
+    describe('for an anonymous user', () => {
+      beforeEach(() => {
+        component.onSelectLanguage(LANGUAGE);
+      });
+
+      it('changes the active translation', () => {
+        expect(translateService.use).toHaveBeenCalledWith(LANGUAGE);
+      });
+
+      it('does not the language choice', () => {
+        expect(store.dispatch).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('for an authenticated user', () => {
+      beforeEach(() => {
+        component.user = USER;
+        component.onSelectLanguage(LANGUAGE);
+      });
+
+      it('stores the language choice', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({ name: LANGUAGE_PREFERENCE, value: LANGUAGE })
+        );
+      });
     });
   });
 });
