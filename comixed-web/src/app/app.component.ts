@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { User } from '@app/user';
+import { getUserPreference, User } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,11 +28,11 @@ import { loadSessionUpdate } from '@app/actions/session.actions';
 import { selectUserSessionState } from '@app/selectors/session.selectors';
 import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
 import { setPageSize } from '@app/library/actions/display.actions';
-import { getUserPreference } from '@app/user';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
+import { LANGUAGE_PREFERENCE } from '@app/app.constants';
 
 @Component({
   selector: 'cx-root',
@@ -66,6 +66,9 @@ export class AppComponent implements OnInit {
         this.sessionActive = false;
       }
       if (!!this.user) {
+        this.translateService.use(
+          getUserPreference(this.user.preferences, LANGUAGE_PREFERENCE, 'en')
+        );
         this.store.dispatch(
           setPageSize({
             size: parseInt(
