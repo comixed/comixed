@@ -77,9 +77,9 @@ describe('WebAuditLogEffects', () => {
     });
 
     effects = TestBed.inject(WebAuditLogEffects);
-    webAuditLogService = TestBed.inject(WebAuditLogService) as jasmine.SpyObj<
+    webAuditLogService = TestBed.inject(
       WebAuditLogService
-    >;
+    ) as jasmine.SpyObj<WebAuditLogService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

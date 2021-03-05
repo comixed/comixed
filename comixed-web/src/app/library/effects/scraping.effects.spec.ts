@@ -90,9 +90,9 @@ describe('ScrapingEffects', () => {
     });
 
     effects = TestBed.inject(ScrapingEffects);
-    scrapingService = TestBed.inject(ScrapingService) as jasmine.SpyObj<
+    scrapingService = TestBed.inject(
       ScrapingService
-    >;
+    ) as jasmine.SpyObj<ScrapingService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

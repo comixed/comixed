@@ -11,9 +11,13 @@
     "code-cleanup": "prettier --write 'src/app/**/*.{ts,json,html,scss}'"
   },
   "prettier": {
-    "singleQuote": true,
+   "singleQuote": true,
     "useTabs": false,
     "bracketSpacing": true,
+    "trailingComma": "none",
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "arrowParens": "avoid",
     "overrides": [
       {
         "files": "*.html",

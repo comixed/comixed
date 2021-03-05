@@ -19,6 +19,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromBlockedPage from '../reducers/blocked-page.reducer';
 
-export const selectBlockedPageState = createFeatureSelector<
-  fromBlockedPage.BlockedPageState
->(fromBlockedPage.BLOCKED_PAGE_FEATURE_KEY);
+export const selectBlockedPageState = createFeatureSelector<fromBlockedPage.BlockedPageState>(
+  fromBlockedPage.BLOCKED_PAGE_FEATURE_KEY
+);

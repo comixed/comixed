@@ -84,9 +84,9 @@ describe('ComicImportEffects', () => {
     });
 
     effects = TestBed.inject(ComicImportEffects);
-    comicImportService = TestBed.inject(ComicImportService) as jasmine.SpyObj<
+    comicImportService = TestBed.inject(
       ComicImportService
-    >;
+    ) as jasmine.SpyObj<ComicImportService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

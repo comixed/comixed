@@ -123,9 +123,9 @@ describe('LibraryGroupComponent', () => {
     spyOn(router, 'navigate');
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
-    existingSubscription = TestBed.inject(Subscription) as jasmine.SpyObj<
+    existingSubscription = TestBed.inject(
       Subscription
-    >;
+    ) as jasmine.SpyObj<Subscription>;
     fixture.detectChanges();
   }));
 

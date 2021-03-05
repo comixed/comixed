@@ -73,9 +73,9 @@ describe('LibraryEffects', () => {
     });
 
     effects = TestBed.inject(LibraryEffects);
-    comicService = TestBed.inject(LibraryService) as jasmine.SpyObj<
+    comicService = TestBed.inject(
       LibraryService
-    >;
+    ) as jasmine.SpyObj<LibraryService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');

@@ -71,9 +71,9 @@ describe('SessionEffects', () => {
     });
 
     effects = TestBed.inject(SessionEffects);
-    sessionService = TestBed.inject(SessionService) as jasmine.SpyObj<
+    sessionService = TestBed.inject(
       SessionService
-    >;
+    ) as jasmine.SpyObj<SessionService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
   });

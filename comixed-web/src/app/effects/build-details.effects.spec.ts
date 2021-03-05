@@ -61,9 +61,9 @@ describe('BuildStatusEffects', () => {
     });
 
     effects = TestBed.inject(BuildDetailsEffects);
-    buildService = TestBed.inject(BuildDetailsService) as jasmine.SpyObj<
+    buildService = TestBed.inject(
       BuildDetailsService
-    >;
+    ) as jasmine.SpyObj<BuildDetailsService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
   });
