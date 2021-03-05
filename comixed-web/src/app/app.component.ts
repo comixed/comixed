@@ -34,6 +34,10 @@ import {
 } from '@app/library/library.constants';
 import { LANGUAGE_PREFERENCE } from '@app/app.constants';
 import { Router } from '@angular/router';
+import { WebSocketService } from '@app/services/web-socket.service';
+import { selectMessagingState } from '@app/selectors/messaging.selectors';
+import { startMessaging, stopMessaging } from '@app/actions/messaging.actions';
+import { SessionService } from '@app/services/session.service';
 
 @Component({
   selector: 'cx-root',
@@ -44,12 +48,15 @@ export class AppComponent implements OnInit {
   user: User = null;
   busy = false;
   sessionActive = false;
+  messagingActive = false;
 
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
     private store: Store<any>,
-    private router: Router
+    private router: Router,
+    private webSocketService: WebSocketService,
+    private sessionService: SessionService
   ) {
     this.logger.level = LoggerLevel.TRACE;
     this.translateService.use('en');
@@ -58,15 +65,19 @@ export class AppComponent implements OnInit {
       this.logger.debug('User updated:', user);
       this.user = user;
       if (!!this.user && !this.sessionActive) {
-        this.logger.debug('Redirecting the user to the home page');
+        this.logger.trace('Redirecting the user to the home page');
         this.router.navigate(['/home']);
-        this.logger.debug('Getting first session update');
+        this.logger.debug('Starting messaging subsystem');
+        this.store.dispatch(startMessaging());
+        this.logger.trace('Getting first session update');
         this.sessionActive = true;
         this.store.dispatch(
           loadSessionUpdate({ timestamp: 0, maximumRecords: 100, timeout: 300 })
         );
       } else if (!this.user && this.sessionActive) {
-        this.logger.debug('Stopping user session updates');
+        this.logger.trace('Stopping the messaging subsystem');
+        this.store.dispatch(stopMessaging());
+        this.logger.trace('Stopping user session updates');
         this.sessionActive = false;
       }
       if (!!this.user) {
@@ -107,6 +118,14 @@ export class AppComponent implements OnInit {
             })
           );
         }
+      }
+    });
+    this.store.select(selectMessagingState).subscribe(state => {
+      this.logger.debug('Messaging state updated:', state);
+      if (!this.messagingActive && state.messagingStarted) {
+        this.sessionService.startSubscriptions();
+      } else if (this.messagingActive && !state.messagingStarted) {
+        this.sessionService.stopSubscriptions();
       }
     });
   }

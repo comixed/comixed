@@ -157,4 +157,14 @@ public class TaskService {
   public Map<Long, TaskType> getRunningTasks() {
     return this.runningTasks;
   }
+
+  /**
+   * Return the number of tasks both in the database and running.
+   *
+   * @return the task count
+   */
+  public long getTaskCount() {
+    log.debug("Fetching the number of tasks in the database");
+    return this.taskRepository.count() + this.runningTasks.size();
+  }
 }

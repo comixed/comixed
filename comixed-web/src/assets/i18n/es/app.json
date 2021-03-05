@@ -51,6 +51,9 @@
     "title": "Display Options"
   },
   "home": {
+    "label": {
+      "task-count": "Task Count"
+    },
     "title": "Home"
   },
   "menu": {

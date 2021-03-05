@@ -46,6 +46,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/reducers/messaging.reducer';
+import { WebSocketService } from '@app/services/web-socket.service';
+import { SessionService } from '@app/services/session.service';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -56,13 +62,16 @@ describe('AppComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [BUSY_FEATURE_KEY]: initialBusyState,
-    [SESSION_FEATURE_KEY]: initialSessionState
+    [SESSION_FEATURE_KEY]: initialSessionState,
+    [MESSAGING_FEATURE_KEY]: initialMessagingState
   };
 
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let store: MockStore<any>;
   let router: Router;
+  let webSocketService: WebSocketService;
+  let sessionService: jasmine.SpyObj<SessionService>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -79,7 +88,21 @@ describe('AppComponent', () => {
         MatFormFieldModule,
         MatDividerModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [
+        provideMockStore({ initialState }),
+        WebSocketService,
+        {
+          provide: SessionService,
+          useValue: {
+            startSubscriptions: jasmine.createSpy(
+              'SessionService.startSubscriptions()'
+            ),
+            stopSubscriptions: jasmine.createSpy(
+              'SessionService.stopSubscriptions()'
+            )
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -88,6 +111,10 @@ describe('AppComponent', () => {
     spyOn(store, 'dispatch');
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
+    webSocketService = TestBed.inject(WebSocketService);
+    sessionService = TestBed.inject(
+      SessionService
+    ) as jasmine.SpyObj<SessionService>;
     fixture.detectChanges();
   }));
 
@@ -191,6 +218,40 @@ describe('AppComponent', () => {
           timeout: TIMEOUT
         })
       );
+    });
+  });
+
+  describe('when messaging starts', () => {
+    beforeEach(() => {
+      component.messagingActive = false;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          messagingStarted: true
+        }
+      });
+    });
+
+    it('starts the session subscriptions', () => {
+      expect(sessionService.startSubscriptions).toHaveBeenCalled();
+    });
+  });
+
+  describe('when messaging stops', () => {
+    beforeEach(() => {
+      component.messagingActive = true;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          messagingStarted: false
+        }
+      });
+    });
+
+    it('starts the session subscriptions', () => {
+      expect(sessionService.stopSubscriptions).toHaveBeenCalled();
     });
   });
 });

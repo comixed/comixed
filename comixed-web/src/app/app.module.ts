@@ -55,6 +55,7 @@ import { BuildDetailsComponent } from './pages/build-details/build-details.compo
 import { MatCardModule } from '@angular/material/card';
 import { AdminModule } from '@app/admin/admin.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { MessagingEffects } from '@app/effects/messaging.effects';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,12 @@ import { MatDividerModule } from '@angular/material/divider';
     MatToolbarModule,
     MatIconModule,
     StoreModule.forRoot(APP_REDUCERS, {}),
-    EffectsModule.forRoot([AppEffects, SessionEffects, BuildDetailsEffects]),
+    EffectsModule.forRoot([
+      AppEffects,
+      SessionEffects,
+      BuildDetailsEffects,
+      MessagingEffects
+    ]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({

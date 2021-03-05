@@ -29,6 +29,7 @@ import org.comixedproject.task.model.MonitorTaskQueueWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class TaskManager implements InitializingBean {
-  @Autowired private ThreadPoolTaskExecutor taskExecutor;
+  @Autowired
+  @Qualifier("CxTaskExecutor")
+  private ThreadPoolTaskExecutor taskExecutor;
+
   @Autowired private TaskService taskService;
 
   /**

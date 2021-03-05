@@ -19,9 +19,11 @@
 package org.comixedproject.task.model;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.comixedproject.task.model.MonitorTaskQueueWorkerTask.TASK_UPDATE_TARGET;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.model.state.messaging.TaskCountMessage;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.task.TaskException;
@@ -30,10 +32,9 @@ import org.comixedproject.task.encoders.WorkerTaskEncoder;
 import org.comixedproject.task.runner.TaskManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MonitorTaskQueueWorkerTaskTest {
@@ -45,6 +46,9 @@ public class MonitorTaskQueueWorkerTaskTest {
   @Mock private WorkerTaskEncoder<?> workerTaskEncoder;
   @Mock private Task task;
   @Mock private WorkerTask workerTask;
+  @Mock private SimpMessagingTemplate messagingTemplate;
+
+  @Captor private ArgumentCaptor<TaskCountMessage> taskCountMessageArgumentCaptor;
 
   private List<Task> taskList = new ArrayList<>();
 
@@ -96,6 +100,9 @@ public class MonitorTaskQueueWorkerTaskTest {
     Mockito.when(workerTaskAdaptor.getEncoder(Mockito.any(TaskType.class)))
         .thenReturn(workerTaskEncoder);
     Mockito.when(workerTaskEncoder.decode(Mockito.any(Task.class))).thenReturn(workerTask);
+    Mockito.doNothing()
+        .when(messagingTemplate)
+        .convertAndSend(Mockito.anyString(), taskCountMessageArgumentCaptor.capture());
 
     monitorTaskQueueWorkerTask.startTask();
 
@@ -104,6 +111,8 @@ public class MonitorTaskQueueWorkerTaskTest {
     Mockito.verify(workerTaskAdaptor, Mockito.times(taskList.size())).getEncoder(TEST_TASK_TYPE);
     Mockito.verify(workerTaskEncoder, Mockito.times(taskList.size())).decode(task);
     Mockito.verify(taskManager, Mockito.times(taskList.size())).runTask(workerTask, task);
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSend(TASK_UPDATE_TARGET, taskCountMessageArgumentCaptor.getValue());
   }
 
   @Test

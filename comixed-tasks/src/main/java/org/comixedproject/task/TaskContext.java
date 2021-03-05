@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const API_ROOT_URL = '/api';
-export const WS_ROOT_URL = '/ws';
+package org.comixedproject.task;
 
-export const TEXT_NO = 'text.no';
-export const TEXT_YES = 'text.yes';
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+/**
+ * <code>TaskContext</code> provides a runtime context for the task runner environment.
+ *
+ * @author Darryl L. Pierce
+ */
+@Configuration
+public class TaskContext {
+  @Bean
+  @Qualifier("CxTaskExecutor")
+  public ThreadPoolTaskExecutor getTaskExecutor() {
+    return new ThreadPoolTaskExecutor();
+  }
+}
