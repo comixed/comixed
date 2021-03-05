@@ -5,7 +5,7 @@ MAINTAINER Pidockmedia "pidockmedia@gmail.com"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v0.8.0-SNAPSHOT/comixed-release-0.8.0-SNAPSHOT-GA.zip
+RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v0.9.0-SNAPSHOT/comixed-release-0.9.0-SNAPSHOT-GA.zip
 RUN unzip *.zip
 RUN rm *.zip
 RUN mv comixed*/bin/comixed-app*.jar /app/comixed-app.jar
