@@ -21,7 +21,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core';
-import { Router } from '@angular/router';
+import { selectServerStatusState } from '@app/selectors/server-status.selectors';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'cx-home',
@@ -30,25 +31,33 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
+  serverStateSubscription: Subscription;
+
+  taskCount = 0;
 
   constructor(
     private logger: LoggerService,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private router: Router
+    private store: Store<any>
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+    this.serverStateSubscription = this.store
+      .select(selectServerStatusState)
+      .subscribe(state => {
+        this.taskCount = state.taskCount;
+      });
   }
 
   ngOnInit(): void {
     this.loadTranslations();
-    this.router.navigate(['/library']);
   }
 
   ngOnDestroy(): void {
     this.langChangeSubscription.unsubscribe();
+    this.serverStateSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const API_ROOT_URL = '/api';
-export const WS_ROOT_URL = '/ws';
+import { createAction, props } from '@ngrx/store';
 
-export const TEXT_NO = 'text.no';
-export const TEXT_YES = 'text.yes';
+export const setTaskCount = createAction(
+  '[Server Status] Set the task count',
+  props<{ count: number }>()
+);

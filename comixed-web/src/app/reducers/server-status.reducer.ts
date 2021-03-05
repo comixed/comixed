@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const API_ROOT_URL = '/api';
-export const WS_ROOT_URL = '/ws';
+import { createReducer, on } from '@ngrx/store';
+import { setTaskCount } from '../actions/server-status.actions';
 
-export const TEXT_NO = 'text.no';
-export const TEXT_YES = 'text.yes';
+export const SERVER_STATUS_FEATURE_KEY = 'server_status';
+
+export interface ServerStatusState {
+  taskCount: number;
+}
+
+export const initialState: ServerStatusState = {
+  taskCount: 0
+};
+
+export const reducer = createReducer(
+  initialState,
+
+  on(setTaskCount, (state, action) => ({ ...state, taskCount: action.count }))
+);

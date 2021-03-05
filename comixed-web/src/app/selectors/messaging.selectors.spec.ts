@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const API_ROOT_URL = '/api';
-export const WS_ROOT_URL = '/ws';
+import {
+  MESSAGING_FEATURE_KEY,
+  MessagingState
+} from '../reducers/messaging.reducer';
+import { selectMessagingState } from './messaging.selectors';
 
-export const TEXT_NO = 'text.no';
-export const TEXT_YES = 'text.yes';
+describe('Messaging Selectors', () => {
+  let state: MessagingState;
+
+  beforeEach(() => {
+    state = {
+      stoppingMessaging: Math.random() > 0.5,
+      startingMessaging: Math.random() > 0.5,
+      messagingStarted: Math.random() > 0.5
+    };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectMessagingState({
+        [MESSAGING_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

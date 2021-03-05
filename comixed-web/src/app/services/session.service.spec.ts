@@ -26,9 +26,11 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
-import { HttpResponse } from '@angular/common/http';
 import { SessionUpdateResponse } from '@app/models/net/session-update-response';
 import { COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
+import { TaskCountService } from '@app/services/state/task-count.service';
+import { WebSocketService } from '@app/services/web-socket.service';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('SessionService', () => {
   const TIMESTAMP = new Date().getTime();
@@ -40,14 +42,27 @@ describe('SessionService', () => {
 
   let service: SessionService;
   let httpMock: HttpTestingController;
+  let taskCountService: jasmine.SpyObj<TaskCountService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerModule.forRoot(), HttpClientTestingModule]
+      imports: [LoggerModule.forRoot(), HttpClientTestingModule],
+      providers: [
+        {
+          provide: TaskCountService,
+          useValue: {
+            start: jasmine.createSpy('ImportCountService.start()'),
+            stop: jasmine.createSpy('ImportCountService.stop()')
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(SessionService);
     httpMock = TestBed.inject(HttpTestingController);
+    taskCountService = TestBed.inject(
+      TaskCountService
+    ) as jasmine.SpyObj<TaskCountService>;
   });
 
   it('should be created', () => {
@@ -78,5 +93,25 @@ describe('SessionService', () => {
       timeout: TIMEOUT
     } as SessionUpdateRequest);
     req.flush(serviceResponse);
+  });
+
+  describe('starting session services', () => {
+    beforeEach(() => {
+      service.startSubscriptions();
+    });
+
+    it('starts the import subscription service', () => {
+      expect(taskCountService.start).toHaveBeenCalled();
+    });
+  });
+
+  describe('stopping session services', () => {
+    beforeEach(() => {
+      service.stopSubscriptions();
+    });
+
+    it('stops the import subscription service', () => {
+      expect(taskCountService.stop).toHaveBeenCalled();
+    });
   });
 });

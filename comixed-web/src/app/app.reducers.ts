@@ -27,15 +27,29 @@ import {
   BuildDetailsState,
   reducer as buildDetailsReducer
 } from '@app/reducers/build-details.reducer';
+import {
+  MESSAGING_FEATURE_KEY,
+  MessagingState,
+  reducer as messagingReducer
+} from '@app/reducers/messaging.reducer';
+import {
+  reducer as serverStatusReducer,
+  SERVER_STATUS_FEATURE_KEY,
+  ServerStatusState
+} from '@app/reducers/server-status.reducer';
 
 export interface AppState {
   [SESSION_FEATURE_KEY]: SessionState;
   [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
+  [MESSAGING_FEATURE_KEY]: MessagingState;
+  [SERVER_STATUS_FEATURE_KEY]: ServerStatusState;
 }
 
 export type State = AppState;
 
 export const APP_REDUCERS: ActionReducerMap<State> = {
   [SESSION_FEATURE_KEY]: sessionReducer,
-  [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer
+  [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer,
+  [MESSAGING_FEATURE_KEY]: messagingReducer,
+  [SERVER_STATUS_FEATURE_KEY]: serverStatusReducer
 };

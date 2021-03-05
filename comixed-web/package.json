@@ -11,11 +11,10 @@
     "code-cleanup": "prettier --write 'src/app/**/*.{ts,json,html,scss}'"
   },
   "prettier": {
-   "singleQuote": true,
+    "singleQuote": true,
     "useTabs": false,
     "bracketSpacing": true,
     "trailingComma": "none",
-    "bracketSpacing": true,
     "jsxBracketSameLine": true,
     "arrowParens": "avoid",
     "overrides": [
@@ -61,9 +60,11 @@
     "object-path": "^0.11.5",
     "rxjs": "~6.5.5",
     "socket.io": "^2.4",
+    "sockjs-client": "^1.5.0",
     "tslib": "^2.0.0",
     "webpack": "5.4.0",
     "webpack-subresource-integrity": "^1.5.1",
+    "webstomp-client": "^1.2.6",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

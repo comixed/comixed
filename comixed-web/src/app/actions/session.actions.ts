@@ -22,6 +22,7 @@ export const loadSessionUpdate = createAction(
   '[Session] Load updates to the session',
   props<{ timestamp: number; maximumRecords: number; timeout: number }>()
 );
+
 export const sessionUpdateLoaded = createAction(
   '[Session] Received the session update',
   props<{
@@ -29,6 +30,7 @@ export const sessionUpdateLoaded = createAction(
     latest: number;
   }>()
 );
+
 export const loadSessionUpdateFailed = createAction(
   '[Session] Failed to load the session update'
 );

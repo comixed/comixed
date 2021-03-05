@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { SESSION_FEATURE_KEY, SessionState } from '../reducers/session.reducer';
 
 export const selectUserSessionState = createFeatureSelector<SessionState>(

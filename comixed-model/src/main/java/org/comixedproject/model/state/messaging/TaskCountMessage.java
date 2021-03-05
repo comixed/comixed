@@ -16,8 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export const API_ROOT_URL = '/api';
-export const WS_ROOT_URL = '/ws';
+package org.comixedproject.model.state.messaging;
 
-export const TEXT_NO = 'text.no';
-export const TEXT_YES = 'text.yes';
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * <code>TaskCountMessage</code> is the message that's send to the task count queue.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class TaskCountMessage implements Serializable {
+  @JsonProperty("count")
+  @Getter
+  private long taskCount;
+}

@@ -48,11 +48,10 @@ import org.springframework.stereotype.Service;
 @ConfigurationProperties(prefix = "task", ignoreUnknownFields = false)
 @Log4j2
 public class WorkerTaskAdaptor implements InitializingBean {
+  Map<TaskType, String> adaptorMap = new EnumMap<>(TaskType.class);
   @Autowired private ApplicationContext applicationContext;
   @Autowired private TaskService taskService;
-
   private List<TaskTypeEntry> adaptors = new ArrayList<>();
-  Map<TaskType, String> adaptorMap = new EnumMap<>(TaskType.class);
 
   public List<TaskTypeEntry> getAdaptors() {
     return adaptors;
@@ -99,6 +98,16 @@ public class WorkerTaskAdaptor implements InitializingBean {
       throw new TaskException("No adaptor configured: " + taskType);
 
     return (T) this.applicationContext.getBean(this.adaptorMap.get(taskType));
+  }
+
+  /**
+   * Returns the total number of tasks running and in the database.
+   *
+   * @return the task count
+   */
+  public long getTaskCount() {
+    log.debug("Getting the task count");
+    return this.taskService.getTaskCount();
   }
 
   public static class TaskTypeEntry {

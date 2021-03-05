@@ -22,8 +22,17 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import {
+  initialState as initialServerStatusState,
+  SERVER_STATUS_FEATURE_KEY
+} from '@app/reducers/server-status.reducer';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('HomeComponent', () => {
+  const initialState = {
+    [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState
+  };
+
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let translateService: TranslateService;
@@ -37,7 +46,7 @@ describe('HomeComponent', () => {
         LoggerModule.forRoot(),
         TranslateModule.forRoot()
       ],
-      providers: [TitleService]
+      providers: [TitleService, provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
