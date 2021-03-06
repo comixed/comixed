@@ -1,45 +1,39 @@
 <mat-toolbar>
   <mat-toolbar-row>
     <form [formGroup]="loadFilesForm" class="cx-width-100">
-      <div class="cx-comic-file-toolbar-container">
-        <div class="cx-comic-file-toolbar-growable-content">
-          <mat-form-field class="cx-width-100">
-            <input
-              id="import-directory"
-              class="cx-width-100"
-              matInput
-              formControlName="rootDirectory"
-              [placeholder]="
-                'import-comic-files.placeholder.root-directory' | translate
-              "
-              required
-            />
-            <button
-              id="load-comic-files-button"
-              mat-flat-button
-              color="primary"
-              matSuffix
-              [disabled]="!loadFilesForm.valid"
-              (click)="onLoadFiles()"
-            >
-              <mat-icon>search</mat-icon>
-              <mat-label>{{ "button.load" | translate }}</mat-label>
-            </button>
-          </mat-form-field>
-        </div>
-        <div class="cx-comic-file-toolbar-static-content">
-          <mat-form-field class="cx-width-100">
-            <select matNativeControl formControlName="maximum">
-              <option
-                *ngFor="let option of maximumOptions"
-                [value]="option.value"
-              >
-                {{ option.label | translate }}
-              </option>
-            </select>
-          </mat-form-field>
-        </div>
-      </div>
+      <mat-form-field class="cx-width-75">
+        <input
+          id="import-directory"
+          matInput
+          formControlName="rootDirectory"
+          [placeholder]="
+            'import-comic-files.placeholder.root-directory' | translate
+          "
+          required
+        />
+      </mat-form-field>
+      <mat-form-field class="cx-width-10">
+        <mat-select formControlName="maximum">
+          <mat-option
+            *ngFor="let option of maximumOptions"
+            [value]="option.value"
+          >
+            {{ option.label | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        id="load-comic-files-button"
+        class="cx-action-button"
+        mat-flat-button
+        color="primary"
+        matSuffix
+        [disabled]="!loadFilesForm.valid"
+        (click)="onLoadFiles()"
+      >
+        <mat-icon>search</mat-icon>
+        <mat-label>{{ "button.load" | translate }}</mat-label>
+      </button>
     </form>
   </mat-toolbar-row>
   <mat-toolbar-row *ngIf="comicFiles.length > 0">
