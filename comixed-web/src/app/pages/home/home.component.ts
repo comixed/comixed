@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-home',
@@ -33,7 +34,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private logger: LoggerService,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -42,6 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadTranslations();
+    this.router.navigate(['/library']);
   }
 
   ngOnDestroy(): void {
