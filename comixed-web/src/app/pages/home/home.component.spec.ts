@@ -21,6 +21,7 @@ import { HomeComponent } from '@app/pages/home/home.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -31,7 +32,11 @@ describe('HomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot()
+      ],
       providers: [TitleService]
     }).compileComponents();
 
