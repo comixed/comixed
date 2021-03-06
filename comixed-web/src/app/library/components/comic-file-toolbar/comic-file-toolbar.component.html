@@ -38,19 +38,6 @@
   </mat-toolbar-row>
   <mat-toolbar-row *ngIf="comicFiles.length > 0">
     <button
-      id="start-import-button"
-      class="cx-action-button cx-margin-right-5"
-      mat-flat-button
-      color="primary"
-      [disabled]="selectedComicFiles.length === 0"
-      [matTooltip]="'import-comic-files.tooltip.start-import' | translate"
-      (click)="onStartImport()"
-    >
-      <mat-icon>publish</mat-icon>
-      <mat-label>{{ "button.start" | translate }}</mat-label>
-    </button>
-    <div class="cx-spacer"></div>
-    <button
       id="select-all-button"
       class="cx-action-button cx-margin-right-5"
       mat-flat-button
@@ -125,6 +112,19 @@
       <mat-label>{{
         "import-comic-files.label.delete-blocked-pages-off" | translate
       }}</mat-label>
+    </button>
+    <div class="cx-spacer"></div>
+    <button
+      id="start-import-button"
+      class="cx-action-button cx-margin-right-5"
+      mat-flat-button
+      color="primary"
+      [disabled]="selectedComicFiles.length === 0"
+      [matTooltip]="'import-comic-files.tooltip.start-import' | translate"
+      (click)="onStartImport()"
+    >
+      <mat-icon>publish</mat-icon>
+      <mat-label>{{ "button.start" | translate }}</mat-label>
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
