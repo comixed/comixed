@@ -45,6 +45,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
+import { Router } from '@angular/router';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -61,12 +62,13 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let store: MockStore<any>;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AppComponent, NavigationBarComponent],
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         MatToolbarModule,
@@ -84,6 +86,8 @@ describe('AppComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   }));
 
@@ -102,6 +106,10 @@ describe('AppComponent', () => {
 
     it('sets the session active flag', () => {
       expect(component.sessionActive).toBeTrue();
+    });
+
+    it('redirects the user to the home page', () => {
+      expect(router.navigate).toHaveBeenCalledWith(['/home']);
     });
 
     it('fires an action to load the session update', () => {

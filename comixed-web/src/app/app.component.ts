@@ -33,6 +33,7 @@ import {
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { LANGUAGE_PREFERENCE } from '@app/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-root',
@@ -47,7 +48,8 @@ export class AppComponent implements OnInit {
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
-    private store: Store<any>
+    private store: Store<any>,
+    private router: Router
   ) {
     this.logger.level = LoggerLevel.TRACE;
     this.translateService.use('en');
@@ -56,6 +58,8 @@ export class AppComponent implements OnInit {
       this.logger.debug('User updated:', user);
       this.user = user;
       if (!!this.user && !this.sessionActive) {
+        this.logger.debug('Redirecting the user to the home page');
+        this.router.navigate(['/home']);
         this.logger.debug('Getting first session update');
         this.sessionActive = true;
         this.store.dispatch(
