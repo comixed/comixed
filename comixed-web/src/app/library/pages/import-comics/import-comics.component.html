@@ -1,4 +1,7 @@
-<h2 *ngIf="importing">{{ "import-comic-files.busy-title" | translate }}</h2>
+<div *ngIf="importing">
+  <h2>{{ "import-comic-files.busy-title" | translate }}</h2>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
 <div *ngIf="!importing">
   <cx-comic-file-details
     *ngIf="currentFile"

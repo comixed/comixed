@@ -98,6 +98,7 @@ import {
 import { BlockedPageEffects } from '@app/library/effects/blocked-page.effects';
 import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
 import { ComicDetailCardComponent } from '@app/library/components/comic-detail-card/comic-detail-card.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -170,7 +171,8 @@ import { ComicDetailCardComponent } from '@app/library/components/comic-detail-c
     MatBadgeModule,
     MatSidenavModule,
     OverlayModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressBarModule
   ],
   exports: [CommonModule, CoreModule]
 })
