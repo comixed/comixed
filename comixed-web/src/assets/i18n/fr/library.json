@@ -1,211 +1,211 @@
 {
   "comic": {
     "hint": {
-      "required-for-scraping": "This value is required for scraping..."
+      "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails..."
     },
     "label": {
-      "added-date": "Added To Library",
-      "archive-type": "File Encoded As",
-      "characters": "Characters In This Issue ({count})",
+      "added-date": "Ajouté à la bibliothèque le",
+      "archive-type": "Fichier de type :",
+      "characters": "Personnages dans ce numéro ({count})",
       "api-key": "API Key",
-      "comic-edit": "Edit Details",
-      "comic-format": "Comic Format",
-      "comic-overview": "Overview",
+      "comic-edit": "Éditer les détails",
+      "comic-format": "Format",
+      "comic-overview": "Aperçu",
       "comic-pages": "Pages",
-      "comic-story": "Story",
-      "cover-date": "Cover Date",
-      "credits": "Creative Team ({count})",
-      "description": "Issue Description",
-      "file-details": "Comic File Details",
-      "file-entries": "File Entries",
-      "filename": "Filename",
-      "filesize": "Filesize",
-      "imprint": "Imprint",
-      "issue-details": "Issue Details",
-      "issue-number": "Issue #",
-      "last-read-date": "Last Read",
-      "locations": "Locations In This Issue ({count})",
-      "other-details": "Other Comic Details",
-      "page-count": "# Of Pages",
-      "publisher": "Publisher",
-      "scan-type": "Scan Type",
-      "series": "Series Name",
-      "sort-name": "Sort Name",
-      "stories": "Story Arcs In This Issue ({count})",
-      "teams": "Teams In This Issue ({count})",
+      "comic-story": "Histoire",
+      "cover-date": "Date de la couverture",
+      "credits": "Équipe créative ({count})",
+      "description": "Description de ce numéro",
+      "file-details": "Détails du fichier de la Bande Dessinée",
+      "file-entries": "Nombre d'éléments",
+      "filename": "Nom du fichier",
+      "filesize": "Taille du fichier",
+      "imprint": "Mentions légales",
+      "issue-details": "Détails du numéro",
+      "issue-number": "Numéro #",
+      "last-read-date": "Dernière lecture",
+      "locations": "Lieux dans ce numéro ({count})",
+      "other-details": "Autres détails de cette Bande Dessinée",
+      "page-count": "# de pages",
+      "publisher": "Éditeur",
+      "scan-type": "Type de scan",
+      "series": "Nom de série",
+      "sort-name": "Nom pour le tri",
+      "stories": "Arcs naratifs dans ce numéro ({count})",
+      "teams": "Équipes dans ce numéro ({count})",
       "volume": "Volume"
     },
     "load-comic": {
-      "effect-failure": "Failed to load comic."
+      "effect-failure": "Échec du chargement de la Bande Dessinée."
     },
     "placeholder": {
-      "api-key": "The API key used when scraping comics...",
-      "issue-number": "The issue number...",
-      "publisher": "The publisher...",
-      "series": "The series name...",
-      "volume": "The volume..."
+      "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
+      "issue-number": "Le numéro de cette Bande Dessinée...",
+      "publisher": "L'éditeur...",
+      "series": "Le nom de la série...",
+      "volume": "Le volume..."
     },
     "send-comic-files": {
-      "effect-failure": "Failed to send comic files for import.",
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
+      "effect-failure": "Échec de l'envoi des fichiers de Bande Dessinée pour import.",
+      "effect-success": "{count, plural, =1{un fichier} other{# fichiers}} de Bandes Dessinées soumis pour import."
     },
     "text": {
-      "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
-      "filesize": "{size, plural, =1{One byte} other{# bytes}}"
+      "file-entries": "Il y a {count, plural, =1{un fichier} other{# fichiers}} dans cette archive.",
+      "filesize": "{size, plural, =1{Un byte} other{# bytes}}"
     },
     "tooltip": {
-      "blocked-page": "Pages like this are blocked...",
-      "download-comic": "Download this comic...",
-      "go-to-next-comic": "Go to the next comic in this series...",
-      "go-to-previous-comic": "Go to the previous comic in this series..."
+      "blocked-page": "Les pages comme celle-ci sont bloquées...",
+      "download-comic": "Télécharger cette Bande Dessinée...",
+      "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
+      "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série..."
     },
     "undo-changes": {
-      "message": "Are you sure you want to undo changes to this comic?",
-      "title": "Undo Changes"
+      "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",
+      "title": "Annuler les changements"
     }
   },
   "import-comic-files": {
-    "tab-title": "Import Comics",
-    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
-    "busy-title": "There Are Comics Importing Now",
+    "tab-title": "Import de Bandes Dessinées",
+    "page-title": "Import de Bandes Dessinées: {selected, plural, =1{Une} other{#}} sur {count, plural, =1{une Bande dessinée sélectionnée} other{# Bandes Dessinées sélectionnées}}",
+    "busy-title": "Import de Bandes Dessinées en cours",
     "load-comic-files": {
-      "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
-      "effect-failure": "Failed to find any comic files."
+      "effect-success": "{count, plural, =1{1 fichier de bande dessinée trouvé} other{# fichiers de bande dessinée trouvés}}.",
+      "effect-failure": "Impossible de trouver des fichiers de Bande Dessinées pour importation."
     },
     "header": {
-      "cover": "Cover Image",
-      "filename": "Filename",
-      "size": "File Size (kb)"
+      "cover": "Image de couverture",
+      "filename": "Nom du fichier",
+      "size": "Taille du fichier (kb)"
     },
     "text": {
       "file-size": "{size} bytes",
-      "selected-for-import": "This file will be imported."
+      "selected-for-import": "Ce fichier sera importé."
     },
     "label": {
-      "delete-blocked-pages": "Mark blocked pages as delete",
-      "delete-blocked-pages-off": "Ignore Blocked Pages",
-      "delete-blocked-pages-on": "Mark Blocked Pages",
-      "ignore-metadata": "Ignore any metadata",
+      "delete-blocked-pages": "Marquer les pages bloquées comme étant supprimées",
+      "delete-blocked-pages-off": "gnorer les pages bloquées",
+      "delete-blocked-pages-on": "Marquer les pages bloquées",
+      "ignore-metadata": "Ignorer les métadonnées",
       "ignore-metadata-off": "Use Metadata",
-      "ignore-metadata-on": "Ignore Metadata",
-      "maximum-all-files": "All files",
-      "maximum-10-files": "10 files",
-      "maximum-50-files": "50 files",
-      "maximum-100-files": "100 files",
-      "maximum-1000-files": "1000 files"
+      "ignore-metadata-on": "Utiliser les métadonnées",
+      "maximum-all-files": "Toutes les fichiers",
+      "maximum-10-files": "10 fichiers",
+      "maximum-50-files": "50 fichiers",
+      "maximum-100-files": "100 fichiers",
+      "maximum-1000-files": "1000 fichiers"
     },
     "tooltip": {
-      "ignore-metadata-on": "Will import any metadata in the comic files.",
-      "ignore-metadata-off": "Will not import any metadata in the comic files.",
-      "select-all": "Select all comic files for import.",
-      "deselect-all": "Clear the comic file selections.",
-      "start-import": "Start importing the selected comic files."
+      "ignore-metadata-on": "Importera les metadonnées des fichiers de Bandes Dessinées.",
+      "ignore-metadata-off": "N'importera pas les metadonnées des fichiers de Bandes Dessinées.",
+      "select-all": "Sélectionner tous les fichiers de Bandes Dessinées pour import.",
+      "deselect-all": "Annuler la sélection des fichiers de Bandes Dessinées.",
+      "start-import": "Commencez l'import des fichiers sélectionnés de Bandes Dessinées."
     },
     "placeholder": {
-      "root-directory": "Root Directory To Search..."
+      "root-directory": "Répertoire parent pour la Recherche..."
     },
-    "confirm-start-title": "Import Comic Files?",
-    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
+    "confirm-start-title": "Import des Fichiers de Bandes Dessinées ?",
+    "confirm-start-message": "Êtes-vous sûr de vouloir importer {count, plural, =1{le fichier de Bande Dessinée} other{les # fichiers de Bandes Dessinées}} dans la bibliothèque ?"
   },
   "blocked-pages": {
     "set-state": {
-      "effect-failure": "Failed to {enable, select, true{set} other{clear}} the blocked state for pages with as hash of {hash}."
+      "effect-failure": "Impossible {enable, select, true{d'ajouter} other{de supprimer}} le statut bloqué pour les pages avec le hash {hash}."
     }
   },
   "library": {
     "all-comics": {
-      "title": "All Comics"
+      "title": "Toutes les Bandes Dessinées"
     },
     "comic-group": {
-      "invalid-grouping": "The group \"{name}\" is not valid."
+      "invalid-grouping": "Le groupe \"{name}\" n'est pas valide."
     },
     "context-menu": {
-      "comic-details": "Show comic details...",
-      "mark-as": "Mark...",
-      "mark-one-as-read": "This Comic As Read",
-      "mark-one-as-unread": "This Comic As Unread",
-      "mark-selected-as-read": "Selected Comics As Read",
-      "mark-selected-as-unread": "Selected Comics As Unread",
-      "set-page-blocked": "Block Pages Like This",
-      "set-page-unblocked": "Don't Block Pages Like This"
+      "comic-details": "Afficher les détails de la Bande Dessinée...",
+      "mark-as": "Marquer...",
+      "mark-one-as-read": "Cette Bande Dessinée comme Lue",
+      "mark-one-as-unread": "Cette Bande Dessinée comme Non lue",
+      "mark-selected-as-read": "Les Bandes Dessinées sélectionnées comme Lues",
+      "mark-selected-as-unread": "Les Bandes Dessinées sélectionnées comme Non lues",
+      "set-page-blocked": "Bloquer des pages comme celle-ci",
+      "set-page-unblocked": "Ne pas bloquer des pages comme celle-ci"
     },
     "label": {
-      "navigation-tree": "Tree View",
-      "no-publisher": "Unknown Publisher",
-      "no-series": "Unknown Series",
-      "pagination-items-per-page": "Covers Per Page"
+      "navigation-tree": "Vue arborescente",
+      "no-publisher": "Éditeur inconnu",
+      "no-series": "Série inconnue",
+      "pagination-items-per-page": "Couvertures par page"
     },
     "navigation": {
-      "publishers": "Publishers",
-      "series": "Series",
-      "characters": "Characters",
-      "teams": "Teams",
-      "locations": "Locations",
-      "stories": "Stories"
+      "publishers": "Éditeurs",
+      "series": "Séries",
+      "characters": "Personnages",
+      "teams": "Équipes",
+      "locations": "Lieux",
+      "stories": "Histoires"
     },
     "set-read": {
-      "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
-      "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
+      "effect-failure": "Impossible de marquer les Bandes Dessinées comme {read, select, true{lues} other{non lues}}.",
+      "effect-success": "{count, plural, =1{une Bande Dessinée marquée} other{# Bandes Dessinées marquées}} comme {read, select, true{lues} other{non lues}}."
     },
     "tab": {
-      "all-comics": "All",
-      "deleted-comics": "Deleted"
+      "all-comics": "Toutes",
+      "deleted-comics": "Supprimées"
     },
     "tooltip": {
-      "deselect-all": "Mark no comics as selected.",
-      "navigation-tree": "Show the library tree view",
-      "select-all": "Mark all comics as selected."
+      "deselect-all": "Déselectionner toutes les Bandes Dessinées.",
+      "navigation-tree": "Affichier la bibliothèque en vue arborescente",
+      "select-all": "Sélectionner toutes les Bandes Dessinées."
     }
   },
   "scraping": {
     "current-comic": {
-      "title": "Currently Comic ({count} Total)"
+      "title": "Bande Dessinée actuelle ({count} Total)"
     },
     "label": {
-      "100-records": "100 Records",
-      "1000-records": "1000 Records",
-      "all-records": "All Records",
-      "issue-count": "# Issues",
-      "matchability": "Match",
-      "publisher": "Publisher",
-      "series-name": "Series",
-      "start-year": "Start Year"
+      "100-records": "100 enregistrements",
+      "1000-records": "1000 enregistrements",
+      "all-records": "Toutes les enregistrements",
+      "issue-count": "Nombre de numéro",
+      "matchability": "Correspondance",
+      "publisher": "Éditeur",
+      "series-name": "Série",
+      "start-year": "SAnnée de lancement"
     },
     "load-scraping-volumes": {
-      "effect-failure": "Failed to load any volumes..."
+      "effect-failure": "Impossible d'obtenir des volumes..."
     },
     "load-scraping-issue": {
-      "effect-failure": "Failed to load issue..."
+      "effect-failure": "Impossible d'obtenir ce numéro..."
     },
-    "page-title": "Library Scraping",
+    "page-title": "Récupération des détails",
     "scrape-comic": {
-      "effect-success": "Comic successfully scraped!",
-      "effect-failure": "Failed to scrape comic."
+      "effect-success": "Détails de la Bande Dessinée récupérés avec succès !",
+      "effect-failure": "Échec de la récupération des détails de la Bande Dessinée."
     },
-    "scrape-comic-confirmation-title": "Replace Comic Data",
-    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
-    "scraping-issue-detail-subtitle": "Cover Date: {date}",
+    "scrape-comic-confirmation-title": "Remplacer les données de la bande dessinée",
+    "scrape-comic-confirmation-message": "Êtes-vous sûr de vouloir remplacer les détails de cette bande dessinée ?",
+    "scraping-issue-detail-subtitle": "Date de couverture : {date}",
     "start-scraping": {
-      "confirmation-title": "Scrape Comics",
-      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
+      "confirmation-title": "Récupération des détails des Bandes Dessinées",
+      "confirmation-message": "Êtes-vous sûr de vouloir remplacer les détails {count, plural, =1{de la Bande Dessinée sélectionnée} other{des # Bandes Dessinées sélectionnées}} ?"
     },
     "text": {
-      "exact-match": "Exact",
-      "near-match": "Near",
-      "no-match": "No"
+      "exact-match": "Exacte",
+      "near-match": "Proche",
+      "no-match": "Non"
     },
     "tooltip": {
-      "cancel-scraping": "Stop scraping comics.",
-      "reject-scraping-issue": "Reject this issue.",
-      "select-scraping-issue": "Select this issue.",
-      "show-comic-details": "Show Details",
-      "skip-cache": "If enabled, skips the scraping cache, currently {enabled, select, true{ENABLED} other{DISABLED}}"
+      "cancel-scraping": "Arrêt de la récupération des détails des Bandes Dessinées.",
+      "reject-scraping-issue": "Rejeter ce numéro.",
+      "select-scraping-issue": "Sélectionner ce numéro.",
+      "show-comic-details": "Afficher les détails",
+      "skip-cache": "Si activée, ignoer le cache de la récupération des données, cette option est actuellement {enabled, select, true{ACTIVÉE} other{DÉSACTIVÉE}}"
     },
     "volume-list": {
-      "issue-count-header": "# Of Issues",
-      "name-header": "Series Name",
-      "publisher-header": "Publisher",
-      "start-year-header": "Start Year"
+      "issue-count-header": "# Numéros",
+      "name-header": "Nom de la série",
+      "publisher-header": "Éditeur",
+      "start-year-header": "Année de lancement"
     }
   }
 }

@@ -1,91 +1,91 @@
 {
   "app": {
-    "general-effect-failure": "A general error has occurred.",
-    "logged-in": "Logged in: {email}"
+    "general-effect-failure": "Un dysfonctionnement général du système s'est produit.",
+    "logged-in": "Connecté avec le compte : {email}"
   },
   "build-details": {
     "label": {
-      "branch": "The code was build from a branch named {name}",
-      "build-host": "Code was built on a machine named {name}.",
-      "build-time": "The code was built on {time}.",
-      "build-version": "The code was marked with a Build version of {version}.",
-      "commit-id": "The latest commit hash on the source branch is {id}.",
-      "commit-message": "Commit Message",
-      "commit-time": "This commit was created on {time}.",
-      "commit-user": "Commit was created by {name} <{email}>",
-      "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
-      "jdbc-url": "The database URL being used is {url}",
-      "remote-origin-url": "This branch is tracking the remote branch {url}"
+      "branch": "Le code a été build depuis la branche nommée {name}",
+      "build-host": "Le code a été build sur la machine nommée {name}",
+      "build-time": "Le code a été build le {time}.",
+      "build-version": "Le version du code est : {version}.",
+      "commit-id": "Le hash du dernier commit de la branche source est {id}.",
+      "commit-message": "Message du commit",
+      "commit-time": "Le commit a été créé le {time}.",
+      "commit-user": "Le commit a été créé par {name} <{email}>",
+      "dirty": "La branche {dirty, select, true{contient} other{ne contient pas}} de modification non comité.",
+      "jdbc-url": "L'url de la base de données utilisée est {url}",
+      "remote-origin-url": "Cette branche suit la branche distante {url}"
     },
-    "title": "Build Details",
-    "load-effect-failure": "Failed to load the build details."
+    "title": "Détails du Build",
+    "load-effect-failure": "Échec de la récupération des détails du build..."
   },
   "button": {
-    "cancel": "Cancel",
-    "clear-log": "Clear Log",
-    "deselect": "Deselect",
-    "deselect-all": "Deselect All",
-    "download": "Download",
-    "load": "Load",
-    "login": "Login",
-    "logout": "Logout",
-    "next": "Next",
-    "no": "No",
-    "previous": "Previous",
-    "reject": "Reject",
-    "reset": "Reset",
-    "save": "Save",
-    "scrape": "Scrape",
-    "select": "Select",
-    "select-all": "Select All",
-    "skip-cache": "Skip Cache",
-    "start": "Start",
-    "stop": "Stop",
-    "submit": "Submit",
-    "yes": "Yes"
+    "cancel": "Annuler",
+    "clear-log": "Effacer le journal",
+    "deselect": "Déselectionner",
+    "deselect-all": "Tout déselectionner",
+    "download": "Télécharger",
+    "load": "Charger",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "next": "Suivant",
+    "no": "Non",
+    "previous": "Précédent",
+    "reject": "Rejecter",
+    "reset": "Reinitialiser",
+    "save": "Enregistrer",
+    "scrape": "Récupération des détails",
+    "select": "Sélectionner",
+    "select-all": "Tout sélectionner",
+    "skip-cache": "Ignorer le cache",
+    "start": "Commencer",
+    "stop": "Arrêter",
+    "submit": "Soumettre",
+    "yes": "Oui"
   },
   "display-options": {
     "label": {
-      "page-size": "Page Size"
+      "page-size": "Taille des pages"
     },
-    "title": "Display Options"
+    "title": "Options d'affichage"
   },
   "home": {
     "title": "Home"
   },
   "menu": {
     "admin-menu": {
-      "import-comic-files": "Import Comics",
-      "root": "Admin",
-      "web-audit-log": "Web Logs"
+      "import-comic-files": "Importer des Bandes Dessinées",
+      "root": "Administration",
+      "web-audit-log": "Journal des appels web"
     },
-    "build-details": "Build Details",
+    "build-details": "Détails du Build",
     "language-menu": {
-      "en": "English",
-      "es": "Spanish",
-      "fr": "French",
-      "pt": "Portuguese",
-      "root": "Select Language"
+      "en": "Anglais",
+      "es": "Espagnol",
+      "fr": "Français",
+      "pt": "Portuguais",
+      "root": "Choix de la langue"
     },
     "library-menu": {
-      "all-comics": "All Comics",
-      "root": "Library"
+      "all-comics": "Toutes les Bandes Dessinées",
+      "root": "Bibliothèque"
     },
     "options-menu": {
       "root": "Options",
-      "show-options-panel": "Set User Options..."
+      "show-options-panel": "Paramétrer les options utilisateur..."
     }
   },
   "session": {
-    "load-effect-failure": "Unable to load user session"
+    "load-effect-failure": "Echec du chargement de la session de l'utilisateur"
   },
   "text": {
-    "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
-    "no": "No",
-    "view-details": "View Details",
-    "yes": "Yes"
+    "archive-type": "{type, select, CBZ{Fichier Zip (CBZ)} CBR{Fichier RAR (CBR)} CB7{Fichier 7Zip (CB7)} other{Inconnu}}",
+    "no": "Non",
+    "view-details": "Voir les détails",
+    "yes": "Oui"
   },
   "validation": {
-    "field-required": "This field is required"
+    "field-required": "Ce champ est obligatoire"
   }
 }
