@@ -1,28 +1,29 @@
 {
   "web-audit-log": {
     "clear": {
-      "confirmation-message": "Are you sure you want to clear the audit log? This action cannot be undone.",
-      "confirmation-title": "Clear Web Audit Log",
-      "effect-failure": "Failed to clear the web audit logs.",
-      "effect-success": "Web audit logs cleared."
+      "confirmation-message": "Êtes-vous sûr de vouloir vider le journal d'audit ? Cette action est irreversible.",
+      "confirmation-title": "Vider le journal d'audit Web",
+      "effect-failure": "Échec lors de la suppression du journal d'audit Web.",
+      "effect-success": "Journal d'audit Web vidé."
     },
     "label": {
       "actions": "Actions",
-      "bytes-sent": "Bytes Sent",
-      "bytes-received": "Bytes Received",
-      "method": "HTTP Method",
-      "pagination-items-per-page": "Entries Per Page",
-      "remote-ip": "Account",
-      "runtime": "Duration",
-      "started": "Started",
-      "success": "Successful?",
-      "url": "URL Accessed"
+      "bytes-sent": "Bytes envoyés",
+      "bytes-received": "Bytes Reçus",
+      "method": "Méthode HTTP",
+      "pagination-items-per-page": "Entrées par page",
+      "account" : "Compte",
+      "remote-ip": "Adresse IP",
+      "runtime": "Durée",
+      "started": "Début",
+      "success": "Réussite ?",
+      "url": "URL consultée"
     },
     "load-entries": {
-      "effect-failure": "Failed to load web audit log entries."
+      "effect-failure": "Échec du chargement des entrées du journal d'audit Web."
     },
-    "request-content-title": "Request Content",
-    "response-content-title": "Response Content",
+    "request-content-title": "Contenu de la requête",
+    "response-content-title": "Contenu de la réponse",
     "text": {
       "runtime": "{time}ms"
     }

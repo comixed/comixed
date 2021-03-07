@@ -1,22 +1,22 @@
 {
   "login": {
-    "title": "Login"
+    "title": "Connexion"
   },
   "user": {
     "load-current-user": {
-      "effect-failure": "Failed to load the current user."
+      "effect-failure": "Impossible de charger le compte de l'utilisateur actuel."
     },
     "login-user": {
-      "page-title": "Please Enter Your User Details",
-      "email-placeholder": "Your email address",
-      "password-placeholder": "Your password",
-      "effect-failure": "Email or password is invalid.",
-      "login-tooltip": "Go to the login page...",
-      "logout-tooltip": "Log out..."
+      "page-title": "Veuillez saisir vous authentifier",
+      "email-placeholder": "Votre adresse email",
+      "password-placeholder": "Votre mot de passe",
+      "effect-failure": "L'email ou le mot de passe est incorrect.",
+      "login-tooltip": "Aller sur la page de connexion...",
+      "logout-tooltip": "Déconnexion..."
     },
     "logout": {
-      "confirmation-title": "Logout",
-      "confirmation-message": "Are you sure you want to logout?"
+      "confirmation-title": "Déconnexion",
+      "confirmation-message": "Êtes-vous sûr de vouloir vous déconnecter ?"
     }
   }
 }
