@@ -154,6 +154,7 @@
     "tooltip": {
       "deselect-all": "Déselectionner toutes les Bandes Dessinées.",
       "navigation-tree": "Affichier la bibliothèque en vue arborescente",
+      "scrape-comics": "Commencer la récupération des détails",
       "select-all": "Sélectionner toutes les Bandes Dessinées."
     }
   },
