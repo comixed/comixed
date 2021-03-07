@@ -154,6 +154,7 @@
     "tooltip": {
       "deselect-all": "Mark no comics as selected.",
       "navigation-tree": "Show the library tree view",
+      "scrape-comics": "Start scraping comics",
       "select-all": "Mark all comics as selected."
     }
   },
