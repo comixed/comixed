@@ -2,6 +2,6 @@
   "page-title": "ComiXed: {title}",
   "alert": {
     "info-action": "INFO",
-    "error-action": "ERROR"
+    "error-action": "ERREUR"
   }
 }
