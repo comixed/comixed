@@ -1,7 +1,13 @@
 <div class="cx-horizontal-container">
   <div class="cx-grow-1">
     <mat-toolbar>
-      <button mat-flat-button color="warn" (click)="onCancelScraping()">
+      <button
+        id="cancel-scraping-button"
+        class="cx-action-button"
+        mat-flat-button
+        color="warn"
+        (click)="onCancelScraping()"
+      >
         <mat-icon>cancel</mat-icon>
         <mat-label>{{ "button.cancel" | translate }}</mat-label>
       </button>
