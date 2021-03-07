@@ -192,4 +192,7 @@ $cx-column-large: 325px;
 .cx-action-button {
   min-width: 100px !important;
   padding-bottom: 5px !important;
+  overflow-x: hidden !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
