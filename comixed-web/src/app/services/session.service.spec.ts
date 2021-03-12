@@ -28,9 +28,7 @@ import {
 import { LoggerModule } from '@angular-ru/logger';
 import { SessionUpdateResponse } from '@app/models/net/session-update-response';
 import { COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
-import { TaskCountService } from '@app/services/state/task-count.service';
-import { WebSocketService } from '@app/services/web-socket.service';
-import { provideMockStore } from '@ngrx/store/testing';
+import { TaskCountService } from '@app/services/task-count.service';
 
 describe('SessionService', () => {
   const TIMESTAMP = new Date().getTime();
@@ -93,25 +91,5 @@ describe('SessionService', () => {
       timeout: TIMEOUT
     } as SessionUpdateRequest);
     req.flush(serviceResponse);
-  });
-
-  describe('starting session services', () => {
-    beforeEach(() => {
-      service.startSubscriptions();
-    });
-
-    it('starts the import subscription service', () => {
-      expect(taskCountService.start).toHaveBeenCalled();
-    });
-  });
-
-  describe('stopping session services', () => {
-    beforeEach(() => {
-      service.stopSubscriptions();
-    });
-
-    it('stops the import subscription service', () => {
-      expect(taskCountService.stop).toHaveBeenCalled();
-    });
   });
 });

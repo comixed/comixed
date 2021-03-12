@@ -22,14 +22,6 @@ export const startMessaging = createAction(
   '[Messaging] Start the messaging subsystem'
 );
 
-export const messagingStarting = createAction(
-  '[Messaging] Actively starting the message subsystem'
-);
-
-export const startMessagingFailed = createAction(
-  '[Messaging] Failed to start the messaging subsystem'
-);
-
 export const messagingStarted = createAction(
   '[Messaging] The messaging subsystem was started'
 );
@@ -44,8 +36,4 @@ export const stopMessaging = createAction(
 
 export const messagingStopped = createAction(
   '[Messaging] The message subsystem has stopped'
-);
-
-export const stopMessagingFailed = createAction(
-  '[Message] Failed to stop the messaging subsystem'
 );

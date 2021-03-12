@@ -18,16 +18,16 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MessagingEffects } from './messaging.effects';
-import { WebSocketService } from '@app/services/web-socket.service';
+import { WebSocketService } from '@app/messaging/services/web-socket.service';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  messagingStarting,
+  messagingStarted,
   messagingStopped,
   startMessaging,
   stopMessaging
-} from '@app/actions/messaging.actions';
+} from '@app/messaging/actions/messaging.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/logger';
 
@@ -68,12 +68,23 @@ describe('MessagingEffects', () => {
   describe('starting the messaging service', () => {
     it('fires an action on success', () => {
       const action = startMessaging();
-      const outcome = messagingStarting();
+      const outcome = messagingStarted();
 
       actions$ = hot('-a', { a: action });
-      webSocketService.connect.and.stub();
+      webSocketService.connect.and.returnValue(of({}));
 
       const expected = hot('-b', { b: outcome });
+      expect(effects.startMessaging$).toBeObservable(expected);
+    });
+
+    it('fires an action on general failure', () => {
+      const action = startMessaging();
+      const outcome = messagingStopped();
+
+      actions$ = hot('-a', { a: action });
+      webSocketService.connect.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
       expect(effects.startMessaging$).toBeObservable(expected);
     });
   });
@@ -84,9 +95,20 @@ describe('MessagingEffects', () => {
       const outcome = messagingStopped();
 
       actions$ = hot('-a', { a: action });
-      webSocketService.disconnect.and.stub();
+      webSocketService.disconnect.and.returnValue(of({}));
 
       const expected = hot('-b', { b: outcome });
+      expect(effects.stopMessaging$).toBeObservable(expected);
+    });
+
+    it('fires an action on general failure', () => {
+      const action = stopMessaging();
+      const outcome = messagingStopped();
+
+      actions$ = hot('-a', { a: action });
+      webSocketService.connect.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
       expect(effects.stopMessaging$).toBeObservable(expected);
     });
   });

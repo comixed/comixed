@@ -55,7 +55,8 @@ import { BuildDetailsComponent } from './pages/build-details/build-details.compo
 import { MatCardModule } from '@angular/material/card';
 import { AdminModule } from '@app/admin/admin.module';
 import { MatDividerModule } from '@angular/material/divider';
-import { MessagingEffects } from '@app/effects/messaging.effects';
+import { MessagingModule } from '@app/messaging/messaging.module';
+import { TaskCountService } from '@app/services/task-count.service';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { MessagingEffects } from '@app/effects/messaging.effects';
   ],
   imports: [
     AdminModule,
+    MessagingModule,
     UserModule,
     LibraryModule,
     BrowserModule,
@@ -74,12 +76,7 @@ import { MessagingEffects } from '@app/effects/messaging.effects';
     MatToolbarModule,
     MatIconModule,
     StoreModule.forRoot(APP_REDUCERS, {}),
-    EffectsModule.forRoot([
-      AppEffects,
-      SessionEffects,
-      BuildDetailsEffects,
-      MessagingEffects
-    ]),
+    EffectsModule.forRoot([AppEffects, SessionEffects, BuildDetailsEffects]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({
@@ -108,7 +105,10 @@ import { MessagingEffects } from '@app/effects/messaging.effects';
     MatDividerModule
   ],
   providers: [
-    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
+    [
+      { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true },
+      TaskCountService
+    ]
   ],
   bootstrap: [AppComponent]
 })

@@ -23,33 +23,12 @@ import { SessionUpdateRequest } from '@app/models/net/session-update-request';
 import { LOAD_SESSION_UPDATE_URL } from '@app/app.constants';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/logger';
-import { TaskCountService } from '@app/services/state/task-count.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-  constructor(
-    private logger: LoggerService,
-    private http: HttpClient,
-    private taskCountService: TaskCountService
-  ) {}
-
-  /**
-   * Invoked to start subscriptions.
-   */
-  startSubscriptions(): void {
-    this.logger.debug('Starting session services');
-    this.taskCountService.start();
-  }
-
-  /**
-   * Invoked to stop subscriptions.
-   */
-  stopSubscriptions(): void {
-    this.logger.debug('Stopping session services');
-    this.taskCountService.stop();
-  }
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
   /**
    * Loads a server-side session update for the user.

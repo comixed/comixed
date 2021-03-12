@@ -19,15 +19,16 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { WS_ROOT_URL } from '@app/core';
+import { TokenService, WS_ROOT_URL } from '@app/core';
 import webstomp, { Client, Frame, over, Subscription } from 'webstomp-client';
 import {
   messagingStarted,
   messagingStopped,
-  startMessagingFailed,
   stopMessaging
-} from '@app/actions/messaging.actions';
+} from '@app/messaging/actions/messaging.actions';
 import * as SockJS from 'sockjs-client';
+import { HTTP_AUTHORIZATION_HEADER } from '@app/app.constants';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,35 +36,46 @@ import * as SockJS from 'sockjs-client';
 export class WebSocketService {
   client: Client;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {}
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private tokenService: TokenService
+  ) {}
 
-  connect(): void {
-    if (!this.client) {
-      this.logger.debug('Creating STOMP client');
-      this.client = over(new SockJS(WS_ROOT_URL), {
-        protocols: webstomp.VERSIONS.supportedProtocols()
-      });
-      this.client.onreceipt = frame => this.logger.trace('[FRAME]', frame);
-      this.client.debug = text => this.logger.trace('[STOMP]', text);
-    }
+  connect(): Observable<any> {
+    return new Observable(() => {
+      if (!this.client) {
+        this.logger.debug('Creating STOMP client');
+        this.client = over(new SockJS(WS_ROOT_URL), {
+          protocols: webstomp.VERSIONS.supportedProtocols()
+        });
+        this.client.onreceipt = frame => this.logger.trace('[FRAME]', frame);
+        this.client.debug = text => this.logger.trace('[STOMP]', text);
+      }
 
-    if (!!this.client && !this.client.connected) {
-      this.logger.debug('Connecting STOMP client');
-      this.client.connect(
-        {},
-        frame => this.onConnected(frame),
-        error => this.onError(error)
-      );
-    }
+      if (!!this.client && !this.client.connected) {
+        const token = this.tokenService.getAuthToken();
+        const headers =
+          !!token && token !== '' ? { [HTTP_AUTHORIZATION_HEADER]: token } : {};
+        this.logger.debug('Connecting STOMP client:', headers);
+        this.client.connect(
+          headers,
+          frame => this.onConnected(frame),
+          error => this.onError(error)
+        );
+      }
+    });
   }
 
-  disconnect(): void {
-    if (!!this.client && this.client.connected) {
-      this.logger.trace('Stopping STOMP client');
-      this.store.dispatch(stopMessaging());
-      this.client.disconnect(() => this.onDisconnected());
-    }
-    this.client = null;
+  disconnect(): Observable<any> {
+    return new Observable(() => {
+      if (!!this.client && this.client.connected) {
+        this.logger.trace('Stopping STOMP client');
+        this.store.dispatch(stopMessaging());
+        this.client.disconnect(() => this.onDisconnected());
+      }
+      this.client = null;
+    });
   }
 
   subscribe(topic: string, callback: any): Subscription {
@@ -83,7 +95,10 @@ export class WebSocketService {
 
   onError(error: CloseEvent | Frame): void {
     this.logger.error('[STOMP] ERROR:', error);
-    this.store.dispatch(startMessagingFailed());
+    if (error instanceof CloseEvent) {
+      this.store.dispatch(messagingStopped());
+      this.client = null;
+    }
   }
 
   onDisconnected(): void {
