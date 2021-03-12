@@ -18,9 +18,6 @@
 
 package org.comixedproject.authentication;
 
-import static org.comixedproject.authentication.AuthenticationConstants.HEADER_STRING;
-import static org.comixedproject.authentication.AuthenticationConstants.TOKEN_PREFIX;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -29,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +44,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @Log4j2
 public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
+  static final String HEADER_STRING = "Authorization";
+  static final String TOKEN_PREFIX = "Bearer ";
+  public static final String BASIC_PREFIX = "Basic ";
+  public static final String USER_PREFIX = "user";
+
   @Autowired private ComiXedUserDetailsService userDetailsService;
   @Autowired private JwtTokenUtil jwtTokenUtil;
   @Autowired private Utils utils;
@@ -58,28 +61,28 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
     String username = null;
     String password = null;
     String authToken = null;
-    if ((header != null) && header.startsWith(TOKEN_PREFIX)) {
+    if (StringUtils.startsWith(header, TOKEN_PREFIX)) {
       authToken = header.replace(TOKEN_PREFIX, "").trim();
       try {
         username = this.jwtTokenUtil.getEmailFromToken(authToken);
       } catch (Exception error) {
         log.error("Unable to extract username from auth token", error);
       }
-    } else if ((header != null) && header.toLowerCase().startsWith("basic")) {
-
-      String base64Credentials = header.substring("Basic".length()).trim();
+    } else if (StringUtils.startsWith(header, BASIC_PREFIX)) {
+      String base64Credentials = header.substring(BASIC_PREFIX.length()).trim();
       byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
       String credentials = new String(credDecoded, StandardCharsets.UTF_8);
 
       String[] userDetails = credentials.split(":", 2);
-      if (!userDetails[0].equals("user")) {
+      if (!userDetails[0].equals(USER_PREFIX)) {
         username = userDetails[0];
         password = this.utils.createHash(userDetails[1].getBytes());
       }
     } else {
       this.logger.warn("couldn't find bearer string, will ignore the header");
     }
-    if ((username != null) && (SecurityContextHolder.getContext().getAuthentication() == null)) {
+    if (!StringUtils.isEmpty(username)
+        && (SecurityContextHolder.getContext().getAuthentication() == null)) {
 
       UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 

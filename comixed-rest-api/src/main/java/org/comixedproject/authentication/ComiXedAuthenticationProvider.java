@@ -18,8 +18,6 @@
 
 package org.comixedproject.authentication;
 
-import static org.comixedproject.authentication.AuthenticationConstants.ROLE_PREFIX;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +44,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComiXedAuthenticationProvider implements AuthenticationProvider {
+  private static final String ROLE_PREFIX = "ROLE_";
+
   @Autowired private UserService userService;
   @Autowired private Utils utils;
 

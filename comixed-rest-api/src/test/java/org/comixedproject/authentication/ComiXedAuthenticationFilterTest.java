@@ -20,8 +20,7 @@ package org.comixedproject.authentication;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
-import static org.comixedproject.authentication.AuthenticationConstants.HEADER_STRING;
-import static org.comixedproject.authentication.AuthenticationConstants.TOKEN_PREFIX;
+import static org.comixedproject.authentication.ComiXedAuthenticationFilter.*;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -46,8 +45,8 @@ public class ComiXedAuthenticationFilterTest {
   private static final String TEST_PASSWORD = "test password";
   private static final String TEST_AUTH_TOKEN =
       Base64.getEncoder().encodeToString((TEST_EMAIL + ":" + TEST_PASSWORD).getBytes());
-  private static final String TEST_TOKEN_AUTH_TOKEN = TOKEN_PREFIX + " " + TEST_AUTH_TOKEN;
-  private static final String TEST_BASIC_AUTH_HEADER = "basic " + TEST_AUTH_TOKEN;
+  private static final String TEST_TOKEN_AUTH_TOKEN = TOKEN_PREFIX + TEST_AUTH_TOKEN;
+  private static final String TEST_BASIC_AUTH_HEADER = BASIC_PREFIX + TEST_AUTH_TOKEN;
 
   @InjectMocks private ComiXedAuthenticationFilter authenticationFilter;
   @Mock private ComiXedUserDetailsService userDetailsService;
@@ -67,7 +66,6 @@ public class ComiXedAuthenticationFilterTest {
     Mockito.when(userDetailsService.loadUserByUsername(Mockito.anyString()))
         .thenReturn(userDetails);
     Mockito.when(userDetails.getPassword()).thenReturn(TEST_PASSWORD);
-    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD);
 
     SecurityContextHolder.setContext(securityContext);
   }

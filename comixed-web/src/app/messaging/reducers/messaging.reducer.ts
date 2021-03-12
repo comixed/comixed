@@ -19,53 +19,44 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   messagingStarted,
-  messagingStarting,
   messagingStopped,
   restartMessaging,
   startMessaging,
-  startMessagingFailed,
-  stopMessaging,
-  stopMessagingFailed
-} from '@app/actions/messaging.actions';
+  stopMessaging
+} from '@app/messaging/actions/messaging.actions';
 
 export const MESSAGING_FEATURE_KEY = 'messaging_state';
 
 export interface MessagingState {
-  startingMessaging: boolean;
-  stoppingMessaging: boolean;
-  messagingStarted: boolean;
+  busy: boolean;
+  started: boolean;
 }
 
 export const initialState: MessagingState = {
-  startingMessaging: false,
-  stoppingMessaging: false,
-  messagingStarted: false
+  busy: false,
+  started: false
 };
 
 export const reducer = createReducer(
   initialState,
   on(startMessaging, state => ({
     ...state,
-    startingMessaging: true,
-    messagingStarted: false
+    busy: true,
+    started: false
   })),
-  on(messagingStarting, state => ({ ...state, startingMessaging: true })),
-  on(startMessagingFailed, state => ({ ...state, startingMessaging: false })),
   on(messagingStarted, state => ({
     ...state,
-    startingMessaging: false,
-    messagingStarted: true
+    busy: false,
+    started: true
   })),
   on(restartMessaging, state => ({
     ...state,
-    startingMessaging: true,
-    messagingStarted: false
+    busy: true
   })),
-  on(stopMessaging, state => ({ ...state, stoppingMessaging: true })),
+  on(stopMessaging, state => ({ ...state, busy: true })),
   on(messagingStopped, state => ({
     ...state,
-    stoppingMessaging: false,
-    messagingStarted: false
-  })),
-  on(stopMessagingFailed, state => ({ ...state, stoppingMessaging: false }))
+    busy: false,
+    started: false
+  }))
 );

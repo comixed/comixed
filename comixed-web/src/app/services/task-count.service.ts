@@ -17,13 +17,14 @@
  */
 
 import { Injectable } from '@angular/core';
-import { WebSocketService } from '@app/services/web-socket.service';
 import { LoggerService } from '@angular-ru/logger';
 import { setTaskCount } from '@app/actions/server-status.actions';
 import { TaskCountMessage } from '@app/models/net/task-count-message';
 import { Subscription } from 'webstomp-client';
 import { Store } from '@ngrx/store';
 import { TASK_COUNT_TOPIC } from '@app/app.constants';
+import { WebSocketService } from '@app/messaging';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -35,15 +36,26 @@ export class TaskCountService {
     private logger: LoggerService,
     private webSocketService: WebSocketService,
     private store: Store<any>
-  ) {}
+  ) {
+    this.store.select(selectMessagingState).subscribe(state => {
+      if (state.started && !this.subscription) {
+        this.logger.debug('Starting task count service');
+        this.start();
+      }
+      if (!state.started && !!this.subscription) {
+        this.logger.debug('Stopping task count service');
+        this.stop();
+      }
+    });
+  }
 
   start(): void {
-    this.logger.debug('Starting the import count service');
+    this.logger.debug('Starting the task count service');
     this.subscription = this.webSocketService.subscribe(
       TASK_COUNT_TOPIC,
       frame => {
         const message = JSON.parse(frame.body) as TaskCountMessage;
-        this.logger.trace('Task message:', message);
+        this.logger.debug('Task message:', message);
         this.store.dispatch(
           setTaskCount({
             count: message.count
@@ -54,7 +66,7 @@ export class TaskCountService {
   }
 
   stop(): void {
-    this.logger.debug('Stopping the import count service');
+    this.logger.debug('Stopping the task count service');
     this.subscription.unsubscribe();
   }
 }

@@ -34,10 +34,11 @@ import {
 } from '@app/library/library.constants';
 import { LANGUAGE_PREFERENCE } from '@app/app.constants';
 import { Router } from '@angular/router';
-import { WebSocketService } from '@app/services/web-socket.service';
-import { selectMessagingState } from '@app/selectors/messaging.selectors';
-import { startMessaging, stopMessaging } from '@app/actions/messaging.actions';
-import { SessionService } from '@app/services/session.service';
+import {
+  startMessaging,
+  stopMessaging
+} from '@app/messaging/actions/messaging.actions';
+import { TaskCountService } from '@app/services/task-count.service';
 
 @Component({
   selector: 'cx-root',
@@ -55,8 +56,7 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private store: Store<any>,
     private router: Router,
-    private webSocketService: WebSocketService,
-    private sessionService: SessionService
+    private taskCountService: TaskCountService
   ) {
     this.logger.level = LoggerLevel.TRACE;
     this.translateService.use('en');
@@ -118,14 +118,6 @@ export class AppComponent implements OnInit {
             })
           );
         }
-      }
-    });
-    this.store.select(selectMessagingState).subscribe(state => {
-      this.logger.debug('Messaging state updated:', state);
-      if (!this.messagingActive && state.messagingStarted) {
-        this.sessionService.startSubscriptions();
-      } else if (this.messagingActive && !state.messagingStarted) {
-        this.sessionService.stopSubscriptions();
       }
     });
   }

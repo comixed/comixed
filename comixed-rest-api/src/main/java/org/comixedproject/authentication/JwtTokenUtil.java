@@ -18,9 +18,6 @@
 
 package org.comixedproject.authentication;
 
-import static org.comixedproject.authentication.AuthenticationConstants.ROLE_PREFIX;
-import static org.comixedproject.authentication.AuthenticationConstants.SIGNING_KEY;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -47,6 +44,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class JwtTokenUtil {
+  private static final String ROLE_PREFIX = "ROLE_";
+  private static final String SIGNING_KEY = "comixedproject";
+
   @Autowired private UserService userService;
 
   public String getEmailFromToken(String token) {

@@ -27,9 +27,8 @@ describe('Messaging Selectors', () => {
 
   beforeEach(() => {
     state = {
-      stoppingMessaging: Math.random() > 0.5,
-      startingMessaging: Math.random() > 0.5,
-      messagingStarted: Math.random() > 0.5
+      busy: Math.random() > 0.5,
+      started: Math.random() > 0.5
     };
   });
 

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.authentication;
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
+import {
+  MESSAGING_FEATURE_KEY,
+  reducer as messagingReducer
+} from '@app/messaging/reducers/messaging.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { MessagingEffects } from '@app/messaging/effects/messaging.effects';
 
-/**
- * <code>AuthenticationConstants</code> is a placeholder for constant values used in the
- * authentication code.
- *
- * @author Darryl L. Pierce
- */
-public final class AuthenticationConstants {
-  public static final String ROLE_PREFIX = "ROLE_";
-  public static final String SIGNING_KEY = "comixedproject";
-  public static final String HEADER_STRING = "Authorization";
-  public static final String TOKEN_PREFIX = "Bearer ";
-
-  private AuthenticationConstants() {
-    // prevent it from being instantiates
-  }
-}
+@NgModule({
+  declarations: [],
+  providers: [],
+  imports: [
+    CommonModule,
+    StoreModule.forFeature(MESSAGING_FEATURE_KEY, messagingReducer),
+    EffectsModule.forFeature([MessagingEffects])
+  ],
+  exports: [CommonModule]
+})
+export class MessagingModule {}

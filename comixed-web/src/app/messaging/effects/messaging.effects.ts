@@ -18,15 +18,16 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
-  messagingStarting,
+  messagingStarted,
   messagingStopped,
   startMessaging,
   stopMessaging
-} from '@app/actions/messaging.actions';
-import { WebSocketService } from '@app/services/web-socket.service';
+} from '@app/messaging/actions/messaging.actions';
+import { WebSocketService } from '@app/messaging/services/web-socket.service';
 import { LoggerService } from '@angular-ru/logger';
+import { of } from 'rxjs';
 
 @Injectable()
 export class MessagingEffects {
@@ -34,8 +35,13 @@ export class MessagingEffects {
     return this.actions$.pipe(
       ofType(startMessaging),
       tap(action => this.logger.debug('Effect: start messaging:', action)),
-      map(() => this.webSocketService.connect()),
-      map(() => messagingStarting())
+      switchMap(() =>
+        this.webSocketService.connect().pipe(map(() => messagingStarted()))
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        return of(messagingStopped());
+      })
     );
   });
 
@@ -43,8 +49,13 @@ export class MessagingEffects {
     return this.actions$.pipe(
       ofType(stopMessaging),
       tap(action => this.logger.debug('Effect: stop messaging:', action)),
-      map(() => this.webSocketService.disconnect()),
-      map(() => messagingStopped())
+      switchMap(() =>
+        this.webSocketService.disconnect().pipe(map(() => messagingStopped()))
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        return of(messagingStopped());
+      })
     );
   });
 

@@ -20,14 +20,18 @@ import { TestBed } from '@angular/core/testing';
 import { TaskCountService } from './task-count.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { WebSocketService } from '@app/services/web-socket.service';
 import { TASK_COUNT_TOPIC } from '@app/app.constants';
 import { TaskCountMessage } from '@app/models/net/task-count-message';
 import { setTaskCount } from '@app/actions/server-status.actions';
 import { Frame, Subscription } from 'webstomp-client';
+import { WebSocketService } from '@app/messaging';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
 
 describe('TaskCountService', () => {
-  const initialState = {};
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: TaskCountService;
   let store: MockStore<any>;
@@ -62,7 +66,7 @@ describe('TaskCountService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('starting the service', () => {
+  describe('messaging has started', () => {
     const COUNT = 17;
     const MESSAGE = new Frame(
       'MESSAGE',
@@ -75,7 +79,13 @@ describe('TaskCountService', () => {
         callback(MESSAGE);
         return {} as Subscription;
       });
-      service.start();
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          started: true
+        }
+      });
     });
 
     it('subscribes to the task topic', () => {
@@ -92,10 +102,16 @@ describe('TaskCountService', () => {
     });
   });
 
-  describe('stopping the servicing', () => {
+  describe('messaging stops', () => {
     beforeEach(() => {
       service.subscription = subscription;
-      service.stop();
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          started: false
+        }
+      });
     });
 
     it('unsubscribes from the topic', () => {

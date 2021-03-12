@@ -25,9 +25,8 @@ import { Client, Frame, Subscription } from 'webstomp-client';
 import {
   messagingStarted,
   messagingStopped,
-  startMessagingFailed,
   stopMessaging
-} from '@app/actions/messaging.actions';
+} from '@app/messaging/actions/messaging.actions';
 
 describe('WebSocketService', () => {
   const initialState = {};
@@ -71,7 +70,7 @@ describe('WebSocketService', () => {
     describe('when not already connected', () => {
       beforeEach(() => {
         service.client = null;
-        service.connect();
+        service.connect().subscribe(() => {});
       });
 
       it('creates a client', () => {
@@ -95,7 +94,7 @@ describe('WebSocketService', () => {
       beforeEach(() => {
         service.client = client;
         service.client.connected = true;
-        service.connect();
+        service.connect().subscribe(() => {});
       });
 
       it('does not establish a connection', () => {
@@ -110,7 +109,7 @@ describe('WebSocketService', () => {
         client.connected = true;
         service.client = client;
         client.disconnect.and.callFake(callback => callback());
-        service.disconnect();
+        service.disconnect().subscribe(() => {});
       });
 
       it('breaks the connection', () => {
@@ -126,7 +125,7 @@ describe('WebSocketService', () => {
       beforeEach(() => {
         client.connected = false;
         service.client = client;
-        service.disconnect();
+        service.disconnect().subscribe(() => {});
       });
 
       it('does not try to break the connection', () => {
@@ -181,11 +180,31 @@ describe('WebSocketService', () => {
 
   describe('the error callback', () => {
     beforeEach(() => {
-      service.onError({} as Frame);
+      service.client = client;
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(startMessagingFailed());
+    describe('when not a close event', () => {
+      beforeEach(() => {
+        service.onError(new Frame('error'));
+      });
+
+      it('does not clear the client reference', () => {
+        expect(service.client).not.toBeNull();
+      });
+    });
+
+    describe('when a close event', () => {
+      beforeEach(() => {
+        service.onError(new CloseEvent('close'));
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(messagingStopped());
+      });
+
+      it('clears the client reference', () => {
+        expect(service.client).toBeNull();
+      });
     });
   });
 
