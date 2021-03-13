@@ -38,9 +38,10 @@ public class Preference {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "user_id", updatable = false, nullable = false)
   @JsonIgnore
   @Getter
+  @Setter
   private ComiXedUser user;
 
   @Column(name = "name", nullable = false)

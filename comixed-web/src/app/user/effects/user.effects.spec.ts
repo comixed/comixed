@@ -44,6 +44,7 @@ import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
 import { resetDisplayOptions } from '@app/library/actions/display.actions';
+import { startMessaging } from '@app/messaging/actions/messaging.actions';
 
 describe('UserEffects', () => {
   const USER = USER_READER;
@@ -142,7 +143,7 @@ describe('UserEffects', () => {
       } as LoginResponse;
       const action = loginUser({ email: USER.email, password: PASSWORD });
       const outcome1 = userLoggedIn();
-      const outcome2 = loadCurrentUser();
+      const outcome2 = startMessaging();
 
       actions$ = hot('-a', { a: action });
       userService.loginUser.and.returnValue(of(serviceResponse));

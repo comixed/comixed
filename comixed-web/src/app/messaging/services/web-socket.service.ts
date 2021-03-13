@@ -44,7 +44,7 @@ export class WebSocketService {
 
   connect(): Observable<any> {
     return new Observable(() => {
-      if (!this.client) {
+      if (!this.client && this.tokenService.hasAuthToken()) {
         this.logger.debug('Creating STOMP client');
         this.client = over(new SockJS(WS_ROOT_URL), {
           protocols: webstomp.VERSIONS.supportedProtocols()
@@ -74,7 +74,6 @@ export class WebSocketService {
         this.store.dispatch(stopMessaging());
         this.client.disconnect(() => this.onDisconnected());
       }
-      this.client = null;
     });
   }
 
@@ -104,5 +103,6 @@ export class WebSocketService {
   onDisconnected(): void {
     this.logger.debug('[STOMP] Disconnected');
     this.store.dispatch(messagingStopped());
+    this.client = null;
   }
 }

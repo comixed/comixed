@@ -19,20 +19,26 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '@app/user';
 
-export const loadCurrentUser = createAction('[User] Load the current user');
-export const currentUserLoaded = createAction(
-  '[User] Current user is loaded',
-  props<{ user: User }>()
-);
-export const loadCurrentUserFailed = createAction(
-  '[User] No  current user loaded'
-);
 export const loginUser = createAction(
   '[User] Submit the login credentials',
   props<{ email: string; password: string }>()
 );
+
 export const userLoggedIn = createAction('[User] User login successful');
+
 export const loginUserFailed = createAction('[User] User login failed');
+
+export const loadCurrentUser = createAction('[User] Load the current user');
+
+export const currentUserLoaded = createAction(
+  '[User] Current user is loaded',
+  props<{ user: User }>()
+);
+
+export const loadCurrentUserFailed = createAction(
+  '[User] Failed to load current user'
+);
+
 export const logoutUser = createAction('[User] Log out current user');
 export const userLoggedOut = createAction('[User] Current user logged out');
 export const saveUserPreference = createAction(

@@ -20,7 +20,6 @@ import { createReducer, on } from '@ngrx/store';
 import {
   currentUserLoaded,
   loadCurrentUser,
-  loadCurrentUserFailed,
   loginUser,
   loginUserFailed,
   logoutUser,
@@ -66,12 +65,6 @@ export const reducer = createReducer(
     loading: false,
     authenticated: true,
     user: action.user
-  })),
-  on(loadCurrentUserFailed, state => ({
-    ...state,
-    initializing: false,
-    loading: false,
-    authenticated: false
   })),
   on(loginUser, state => ({
     ...state,

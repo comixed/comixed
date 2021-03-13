@@ -79,7 +79,11 @@ public class ComiXedUser {
   @Getter
   private List<Role> roles = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(
+      mappedBy = "user",
+      cascade = CascadeType.ALL,
+      fetch = FetchType.EAGER,
+      orphanRemoval = true)
   @JsonView(View.UserList.class)
   @Getter
   private List<Preference> preferences = new ArrayList<>();
@@ -129,6 +133,7 @@ public class ComiXedUser {
   public void deleteProperty(final String name) {
     for (int index = 0; index < this.preferences.size(); index++) {
       if (this.preferences.get(index).getName().equals(name)) {
+        this.preferences.get(index).setUser(null);
         this.preferences.remove(index);
       }
     }

@@ -23,7 +23,7 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.opds.OPDSBookmark;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.repositories.ComiXedUserRepository;
+import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;

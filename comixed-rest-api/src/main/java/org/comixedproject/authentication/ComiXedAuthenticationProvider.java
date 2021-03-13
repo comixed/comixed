@@ -19,7 +19,6 @@
 package org.comixedproject.authentication;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
@@ -78,13 +77,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
         log.debug("Granting role: {}", role.getName());
         roles.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
       }
-      // update the last authenticated date
-      user.setLastLoginDate(new Date());
-      try {
-        userService.save(user);
-      } catch (ComiXedUserException error) {
-        log.error("Failed to update user", error);
-      }
+      userService.updateLastLoggedInDate(user);
       return new UsernamePasswordAuthenticationToken(email, password, roles);
     }
 
