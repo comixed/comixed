@@ -19,245 +19,86 @@
 package org.comixedproject.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sun.istack.NotNull;
 import java.security.Principal;
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.net.SaveUserRequest;
-import org.comixedproject.model.net.user.SaveUserPreferenceRequest;
-import org.comixedproject.model.net.user.SaveUserPreferenceResponse;
+import org.comixedproject.model.messaging.user.DeleteUserPropertyMessage;
+import org.comixedproject.model.messaging.user.SetUserPropertyMessage;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.Preference;
-import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.utils.Utils;
-import org.comixedproject.views.View.UserDetailsView;
-import org.comixedproject.views.View.UserList;
-import org.springframework.beans.factory.InitializingBean;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <code>UserController</code> provides endpoints for working with instances of {@link ComiXedUser}.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
 @Log4j2
-public class UserController implements InitializingBean {
-  Role readerRole;
-  Role adminRole;
-
+public class UserController {
   @Autowired private UserService userService;
-  @Autowired private Utils utils;
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    try {
-      this.readerRole = this.userService.findRoleByName("READER");
-      this.adminRole = this.userService.findRoleByName("ADMIN");
-    } catch (ComiXedUserException error) {
-      error.printStackTrace();
-    }
-  }
-
-  @RequestMapping(value = "/admin/users/{id}", method = RequestMethod.DELETE)
-  @AuditableEndpoint
-  public void deleteUser(@PathVariable("id") long userId) throws ComiXedUserException {
-    log.info("Deleting user: id={}", userId);
-
-    this.userService.delete(userId);
-  }
-
-  @GetMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(UserList.class)
-  @AuditableEndpoint
-  public List<ComiXedUser> getAllUsers() {
-    log.info("Getting all user accounts");
-
-    return this.userService.findAll();
-  }
 
   /**
-   * Returns the currently authenticated user.
+   * Loads the current user.
    *
-   * @param principal the principal
-   * @return the user, or <code>null</code> if no user is authenticated
-   * @throws ComiXedUserException if an error occurs
+   * @param principal the user principal.
+   * @return the user
+   * @throws ComiXedUserException if no such user exists
    */
-  @GetMapping(value = "/api/user")
-  @JsonView(UserDetailsView.class)
-  @AuditableEndpoint
-  public ComiXedUser getCurrentUser(Principal principal) throws ComiXedUserException {
-    log.debug("Returning current user");
-    ComiXedUser comixedUser = null;
-
-    if (principal == null) {
-      log.debug("Not authenticated");
-      return null;
-    }
-
-    log.debug("Loading user: {}", principal.getName());
-    comixedUser = this.userService.findByEmail(principal.getName());
-
-    if (comixedUser != null) {
-      log.debug("Setting authenticated flag");
-      comixedUser.setAuthenticated(true);
-    }
-
-    return comixedUser;
-  }
-
-  @GetMapping(value = "/api/user/preferences")
-  @JsonView(UserDetailsView.class)
-  public List<Preference> getUserPreferences(Principal principal) throws ComiXedUserException {
-    log.debug("Getting user preferences");
-
-    if (principal == null) {
-      log.debug("User is not authenticated");
-      return null;
-    }
-
-    String email = principal.getName();
-
-    log.debug("Loading user: email={}", email);
-    ComiXedUser user = this.userService.findByEmail(email);
-
-    if (user == null) {
-      log.debug("No such user: {}", email);
-      return null;
-    }
-
-    return user.getPreferences();
-  }
-
-  @PostMapping(
-      value = "/admin/users",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComiXedUser saveNewUser(@RequestBody() final SaveUserRequest request)
+  @GetMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.UserDetailsView.class)
+  public ComiXedUser loadCurrentUser(@NotNull final Principal principal)
       throws ComiXedUserException {
-    log.info(
-        "Creating new user: email={} admin={}",
-        request.getEmail(),
-        request.getIsAdmin() ? "Yes" : "No");
-
-    return this.userService.createUser(
-        request.getEmail(), request.getPassword(), request.getIsAdmin());
+    log.info("Loading current user: {}", principal.getName());
+    return this.userService.findByEmail(principal.getName());
   }
 
   /**
-   * Sets a user preference.
+   * Sets a preference name and value for a user.
    *
    * @param principal the user principal
-   * @param name the preference name
-   * @param request the request body
-   * @return the response body
-   * @throws ComiXedUserException if an error occurs
+   * @param message the message body
+   * @return the updated user
+   * @throws ComiXedUserException if the user is invalid
    */
-  @PutMapping(
-      value = "/api/user/preferences/{name}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public SaveUserPreferenceResponse setUserProperty(
-      Principal principal,
-      @PathVariable("name") String name,
-      @RequestBody() SaveUserPreferenceRequest request)
+  @MessageMapping("user.preference.save")
+  @SendToUser("/topic/user/current")
+  public ComiXedUser saveCurrentUserProperty(
+      @NotNull final Principal principal, @Payload SetUserPropertyMessage message)
       throws ComiXedUserException {
     final String email = principal.getName();
-    final String value = request.getValue();
+    final String name = message.getName();
+    final String value = message.getValue();
 
-    log.info("Setting user property: email={} property[{}]={}", email, name, value);
-    return new SaveUserPreferenceResponse(this.userService.setUserProperty(email, name, value));
+    log.info("Setting user preference: {} {}=\"{}\"", email, name, value);
+    return this.userService.setUserProperty(email, name, value);
   }
 
   /**
-   * Deletes a user preference.
+   * Deletes a user property.
    *
    * @param principal the user principal
-   * @param name the preference name
-   * @return the response body
+   * @param message the message body
+   * @return the updated user
+   * @throws ComiXedUserException if the user is invalid
    */
-  @DeleteMapping(
-      value = "/api/user/preferences/{name}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public SaveUserPreferenceResponse deleteUserProperty(
-      final Principal principal, @PathVariable("name") final String name) {
-    final String email = principal.getName();
-
-    log.info("Deleting user property: email={} property={}", email, name);
-    return new SaveUserPreferenceResponse(this.userService.deleteUserProperty(email, name));
-  }
-
-  @PostMapping(value = "/api/user/email")
-  public ComiXedUser setUserEmail(Principal principal, @RequestParam("username") String username)
+  @MessageMapping("user.preference.delete")
+  @SendToUser("/topic/user/current")
+  public ComiXedUser deleteCurrentUserProperty(
+      @NotNull final Principal principal, @Payload DeleteUserPropertyMessage message)
       throws ComiXedUserException {
     final String email = principal.getName();
+    final String name = message.getName();
 
-    log.info("Updating email address for: email={} new={}", email, username);
-
-    return this.userService.setUserEmail(email, username);
-  }
-
-  @PostMapping(value = "/api/user/password")
-  public ComiXedUser updatePassword(Principal principal, @RequestParam("password") String password)
-      throws ComiXedUserException {
-    final String email = principal.getName();
-
-    log.info("Updating password for: email={}", email);
-
-    return this.userService.setUserPassword(email, password);
-  }
-
-  @PutMapping(
-      value = "/admin/users/{id}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ComiXedUser updateUser(
-      final Principal principal,
-      @PathVariable("id") long id,
-      @RequestBody() final SaveUserRequest request)
-      throws ComiXedUserException {
-    final ComiXedUser authUser = this.userService.findByEmail(principal.getName());
-
-    log.info("Updating user: id={}", id);
-    ComiXedUser user = this.userService.findById(id);
-
-    if (user == null) {
-      log.debug("No such user");
-      return null;
-    }
-
-    user.setEmail(request.getEmail());
-
-    if ((request.getPassword() != null) && !request.getPassword().isEmpty()) {
-      log.debug("Updating user's password");
-      user.setPasswordHash(this.utils.createHash(request.getPassword().getBytes()));
-    }
-
-    if (authUser.isAdmin()) {
-      log.debug("Auth user is admin: updating roles");
-      if (authUser.getId() != id) {
-        user.clearRoles();
-        user.addRole(this.readerRole);
-        if (request.getIsAdmin()) {
-          user.addRole(this.adminRole);
-        }
-      } else {
-        log.debug("Admins cannot change their own roles");
-      }
-    }
-    log.debug(
-        "Updating user: id={} email={} is_admin={}",
-        id,
-        request.getEmail(),
-        request.getIsAdmin() ? "Yes" : "No");
-    return this.userService.save(user);
-  }
-
-  void setReaderRole(final Role role) {
-    this.readerRole = role;
-  }
-
-  void setAdminRole(final Role role) {
-    this.adminRole = role;
+    log.info("Deleting user preference: {} {}", principal.getName(), message.getName());
+    return this.userService.deleteUserProperty(email, name);
   }
 }

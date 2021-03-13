@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+package org.comixedproject.model.messaging.user;
 
-export const ROLE_NAME_READER = 'READER';
-export const ROLE_NAME_ADMIN = 'ADMIN';
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
-export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate-token`;
-
-export const USER_SELF_TOPIC = '/secured/user/topic/user/current';
-export const LOAD_SELF_MESSAGE = '/comixed/loadself';
-export const SAVE_PREFERENCE_MESSAGE = '/comixed/user.preference.save';
-export const DELETE_PREFERENCE_MESSAGE = '/comixed/user.preference.delete';
+/**
+ * <code>DeleteUserPropertyMessage</code> represents the message body when deleting a user
+ * preference.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+@NoArgsConstructor
+public class DeleteUserPropertyMessage {
+  @JsonProperty("name")
+  @Getter
+  private String name;
+}

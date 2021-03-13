@@ -34,25 +34,16 @@ import {
 } from '@app/user/actions/user.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '@app/user/services/user.service';
-import { User } from '@app/user';
 import { AlertService, TokenService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
 import { resetDisplayOptions } from '@app/library/actions/display.actions';
+import { User } from '@app/user';
 
 @Injectable()
 export class UserEffects {
-  constructor(
-    private logger: LoggerService,
-    private actions$: Actions,
-    private userService: UserService,
-    private alertService: AlertService,
-    private translateService: TranslateService,
-    private tokenService: TokenService
-  ) {}
-
   loadCurrentUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadCurrentUser),
@@ -66,20 +57,12 @@ export class UserEffects {
           ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'user.load-current-user.effect-failure'
-              )
-            );
             return of(loadCurrentUserFailed());
           })
         )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
         return of(loadCurrentUserFailed());
       })
     );
@@ -121,7 +104,6 @@ export class UserEffects {
       })
     );
   });
-
   logoutUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(logoutUser),
@@ -157,4 +139,13 @@ export class UserEffects {
       })
     );
   });
+
+  constructor(
+    private logger: LoggerService,
+    private actions$: Actions,
+    private userService: UserService,
+    private alertService: AlertService,
+    private translateService: TranslateService,
+    private tokenService: TokenService
+  ) {}
 }

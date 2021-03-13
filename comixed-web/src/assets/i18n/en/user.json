@@ -3,9 +3,6 @@
     "title": "Login"
   },
   "user": {
-    "load-current-user": {
-      "effect-failure": "Failed to load the current user."
-    },
     "login-user": {
       "page-title": "Please Enter Your User Details",
       "email-placeholder": "Your email address",

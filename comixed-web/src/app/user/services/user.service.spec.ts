@@ -25,33 +25,60 @@ import {
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
-  DELETE_USER_PREFERENCE_URL,
+  DELETE_PREFERENCE_MESSAGE,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
-  SAVE_USER_PREFERENCE_URL
+  SAVE_PREFERENCE_MESSAGE,
+  USER_SELF_TOPIC
 } from '@app/user/user.constants';
 import { LoggerModule } from '@angular-ru/logger';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
-import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
-import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { SetUserPreference } from '@app/user/models/messaging/set-user-preference';
+import { DeleteUserPreference } from '@app/user/models/messaging/delete-user-preference';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { Frame, Subscription } from 'webstomp-client';
+import { currentUserLoaded } from '@app/user/actions/user.actions';
+import { WebSocketService } from '@app/messaging';
 
 describe('UserService', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
   const PREFERENCE_NAME = 'user.preference';
   const PREFERENCE_VALUE = 'preference.value';
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: UserService;
   let httpMock: HttpTestingController;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
+  let store: MockStore<any>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            send: jasmine.createSpy('WebSocketService.send()'),
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(UserService);
     httpMock = TestBed.inject(HttpTestingController);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
   });
 
   it('should be created', () => {
@@ -85,34 +112,95 @@ describe('UserService', () => {
     req.flush(serviceResponse);
   });
 
-  it('can save a user preferences', () => {
-    service
-      .saveUserPreference({ name: PREFERENCE_NAME, value: PREFERENCE_VALUE })
-      .subscribe(response =>
-        expect(response).toEqual({ user: USER } as SaveUserPreferenceResponse)
-      );
+  describe('saving a user preferences', () => {
+    beforeEach(() => {
+      webSocketService.send.and.stub();
+      service
+        .saveUserPreference({
+          name: PREFERENCE_NAME,
+          value: PREFERENCE_VALUE
+        })
+        .subscribe(() => {});
+    });
 
-    const req = httpMock.expectOne(
-      interpolate(SAVE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
-    );
-    expect(req.request.method).toEqual('PUT');
-    expect(req.request.body).toEqual({
-      value: PREFERENCE_VALUE
-    } as SaveUserPreferenceRequest);
-    req.flush({ user: USER } as SaveUserPreferenceResponse);
+    it('sends a message', () => {
+      expect(webSocketService.send).toHaveBeenCalledWith(
+        SAVE_PREFERENCE_MESSAGE,
+        JSON.stringify({
+          name: PREFERENCE_NAME,
+          value: PREFERENCE_VALUE
+        } as SetUserPreference)
+      );
+    });
   });
 
-  it('can delete a user preferences', () => {
-    service
-      .saveUserPreference({ name: PREFERENCE_NAME, value: null })
-      .subscribe(response =>
-        expect(response).toEqual({ user: USER } as SaveUserPreferenceResponse)
-      );
+  describe('can delete a user preferences', () => {
+    beforeEach(() => {
+      webSocketService.send.and.stub();
+      service
+        .saveUserPreference({ name: PREFERENCE_NAME, value: null })
+        .subscribe(() => {});
+    });
 
-    const req = httpMock.expectOne(
-      interpolate(DELETE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
-    );
-    expect(req.request.method).toEqual('DELETE');
-    req.flush({ user: USER } as SaveUserPreferenceResponse);
+    it('sends a message', () => {
+      expect(webSocketService.send).toHaveBeenCalledWith(
+        DELETE_PREFERENCE_MESSAGE,
+        JSON.stringify({ name: PREFERENCE_NAME } as DeleteUserPreference)
+      );
+    });
+  });
+
+  describe('when messaging starts', () => {
+    let topic: string;
+    let subscription: any;
+
+    beforeEach(() => {
+      service.subscription = null;
+      webSocketService.subscribe.and.callFake((topicUsed, callback) => {
+        topic = topicUsed;
+        subscription = callback;
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to user updates', () => {
+      expect(topic).toEqual(USER_SELF_TOPIC);
+    });
+
+    describe('when updates are received', () => {
+      beforeEach(() => {
+        subscription(new Frame('', {}, JSON.stringify(USER)));
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          currentUserLoaded({ user: USER })
+        );
+      });
+    });
+  });
+
+  describe('when messaging is stopped', () => {
+    const subscription = jasmine.createSpyObj(['unsubscribe']);
+
+    beforeEach(() => {
+      service.subscription = subscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from updates', () => {
+      expect(subscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the subscription reference', () => {
+      expect(service.subscription).toBeNull();
+    });
   });
 });

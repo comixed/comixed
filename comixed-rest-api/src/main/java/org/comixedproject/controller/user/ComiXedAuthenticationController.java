@@ -23,7 +23,7 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.authentication.AuthToken;
 import org.comixedproject.authentication.JwtTokenUtil;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.repositories.ComiXedUserRepository;
+import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

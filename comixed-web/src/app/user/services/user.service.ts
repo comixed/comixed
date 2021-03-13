@@ -22,12 +22,22 @@ import { LoggerService } from '@angular-ru/logger';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
-  DELETE_USER_PREFERENCE_URL,
+  DELETE_PREFERENCE_MESSAGE,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
-  SAVE_USER_PREFERENCE_URL
+  SAVE_PREFERENCE_MESSAGE,
+  USER_SELF_TOPIC
 } from '@app/user/user.constants';
-import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import { Store } from '@ngrx/store';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { Subscription } from 'webstomp-client';
+import { WebSocketService } from '@app/messaging';
+import {
+  currentUserLoaded,
+  loadCurrentUser
+} from '@app/user/actions/user.actions';
+import { SetUserPreference } from '@app/user/models/messaging/set-user-preference';
+import { DeleteUserPreference } from '@app/user/models/messaging/delete-user-preference';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -36,7 +46,33 @@ import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-prefer
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  subscription: Subscription;
+
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private webSocketService: WebSocketService,
+    private http: HttpClient
+  ) {
+    this.store.select(selectMessagingState).subscribe(state => {
+      if (state.started && !this.subscription) {
+        this.logger.trace('Subscribing to self updates');
+        this.subscription = this.webSocketService.subscribe(
+          USER_SELF_TOPIC,
+          frame => {
+            const user = JSON.parse(frame.body);
+            this.logger.debug('Received user update:', user);
+            this.store.dispatch(currentUserLoaded({ user }));
+          }
+        );
+      }
+      if (!state.started && !!this.subscription) {
+        this.logger.debug('Stopping user subscription');
+        this.subscription.unsubscribe();
+        this.subscription = null;
+      }
+    });
+  }
 
   /**
    * Retrieve the current user's details.
@@ -68,17 +104,23 @@ export class UserService {
   saveUserPreference(args: { name: string; value: string }): Observable<any> {
     if (!!args.value && args.value.length > 0) {
       this.logger.trace('Service: saving user preference:', args);
-      return this.http.put(
-        interpolate(SAVE_USER_PREFERENCE_URL, { name: args.name }),
-        {
-          value: args.value
-        } as SaveUserPreferenceRequest
-      );
+      return new Observable<void>(() => {
+        this.webSocketService.send(
+          SAVE_PREFERENCE_MESSAGE,
+          JSON.stringify({
+            name: args.name,
+            value: args.value
+          } as SetUserPreference)
+        );
+      });
     } else {
       this.logger.trace('Service: deleting user preference:', args);
-      return this.http.delete(
-        interpolate(DELETE_USER_PREFERENCE_URL, { name: args.name })
-      );
+      return new Observable<void>(() => {
+        this.webSocketService.send(
+          DELETE_PREFERENCE_MESSAGE,
+          JSON.stringify({ name: args.name } as DeleteUserPreference)
+        );
+      });
     }
   }
 }

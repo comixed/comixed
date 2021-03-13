@@ -3,9 +3,6 @@
     "title": "Connexion"
   },
   "user": {
-    "load-current-user": {
-      "effect-failure": "Impossible de charger le compte de l'utilisateur actuel."
-    },
     "login-user": {
       "page-title": "Veuillez saisir vous authentifier",
       "email-placeholder": "Votre adresse email",
