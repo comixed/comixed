@@ -118,7 +118,6 @@ describe('UserEffects', () => {
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadCurrentUser$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
@@ -130,7 +129,6 @@ describe('UserEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadCurrentUser$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 

@@ -36,9 +36,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { UserService } from '@app/user/services/user.service';
 
 @NgModule({
   declarations: [LoginComponent],
+  providers: [UserService],
   imports: [
     CommonModule,
     CoreModule,

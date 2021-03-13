@@ -22,6 +22,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import * as WebStomp from 'webstomp-client';
 import { Client, Frame, Subscription } from 'webstomp-client';
+import { TokenService } from '@app/core';
 import {
   messagingStarted,
   messagingStopped,
@@ -33,10 +34,12 @@ describe('WebSocketService', () => {
   const TOPIC = '/topic/something';
   const CALLBACK = () => {};
   const MESSAGE = 'Some message';
+  const AUTH_TOKEN = 'This is the auth token';
 
   let service: WebSocketService;
   let store: MockStore<any>;
   let client: jasmine.SpyObj<Client>;
+  let tokenService: jasmine.SpyObj<TokenService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -51,6 +54,13 @@ describe('WebSocketService', () => {
             subscribe: jasmine.createSpy('Client.subscribe()'),
             send: jasmine.createSpy('Client.send()')
           }
+        },
+        {
+          provide: TokenService,
+          useValue: {
+            hasAuthToken: jasmine.createSpy('TokenService.hasAuthToken()'),
+            getAuthToken: jasmine.createSpy('TokenService.getAuthToken()')
+          }
         }
       ]
     });
@@ -60,6 +70,7 @@ describe('WebSocketService', () => {
     spyOn(store, 'dispatch');
     client = TestBed.inject(Client) as jasmine.SpyObj<Client>;
     spyOn(WebStomp, 'over').and.returnValue(client);
+    tokenService = TestBed.inject(TokenService) as jasmine.SpyObj<TokenService>;
   });
 
   it('should be created', () => {
@@ -70,6 +81,9 @@ describe('WebSocketService', () => {
     describe('when not already connected', () => {
       beforeEach(() => {
         service.client = null;
+        service.connect();
+        tokenService.hasAuthToken.and.returnValue(true);
+        tokenService.getAuthToken.and.returnValue(AUTH_TOKEN);
         service.connect().subscribe(() => {});
       });
 

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+package org.comixedproject.repositories.users;
 
-export const ROLE_NAME_READER = 'READER';
-export const ROLE_NAME_ADMIN = 'ADMIN';
+import org.comixedproject.model.user.ComiXedUser;
+import org.springframework.data.repository.CrudRepository;
 
-export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
-export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate-token`;
-
-export const USER_SELF_TOPIC = '/secured/user/topic/user/current';
-export const LOAD_SELF_MESSAGE = '/comixed/loadself';
-export const SAVE_PREFERENCE_MESSAGE = '/comixed/user.preference.save';
-export const DELETE_PREFERENCE_MESSAGE = '/comixed/user.preference.delete';
+/**
+ * <code>ComiXedUserRepository</code> provides APIs for working with persistenced instances of
+ * {@link ComiXedUser}.
+ *
+ * @author Darryl L. Pierce
+ */
+public interface ComiXedUserRepository extends CrudRepository<ComiXedUser, Long> {
+  /**
+   * Find a single user by email address.
+   *
+   * @param email the email address
+   * @return the user, or null if not found
+   */
+  ComiXedUser findByEmail(String email);
+}

@@ -58,7 +58,7 @@ public class ComiXedAuthenticationProviderTest {
     Mockito.when(user.getPasswordHash()).thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(user.getRoles()).thenReturn(roles);
-    Mockito.when(userService.save(Mockito.any())).thenReturn(user);
+    Mockito.when(userService.updateLastLoggedInDate(Mockito.any())).thenReturn(user);
 
     roles.add(new Role("TEST"));
   }
@@ -114,7 +114,6 @@ public class ComiXedAuthenticationProviderTest {
             .contains(new SimpleGrantedAuthority("ROLE_" + roles.get(0).getName())));
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(user, Mockito.times(1)).setLastLoginDate(Mockito.any());
-    Mockito.verify(userService, Mockito.times(1)).save(user);
+    Mockito.verify(userService, Mockito.times(1)).updateLastLoggedInDate(user);
   }
 }
