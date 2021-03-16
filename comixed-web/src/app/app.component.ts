@@ -32,7 +32,10 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
-import { LANGUAGE_PREFERENCE } from '@app/app.constants';
+import {
+  LANGUAGE_PREFERENCE,
+  LOGGER_LEVEL_PREFERENCE
+} from '@app/app.constants';
 import {
   startMessaging,
   stopMessaging
@@ -54,7 +57,7 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private store: Store<any>
   ) {
-    this.logger.level = LoggerLevel.TRACE;
+    this.logger.level = LoggerLevel.INFO;
     this.translateService.use('en');
     this.logger.trace('Subscribing to user changes');
     this.store.select(selectUser).subscribe(user => {
@@ -75,6 +78,14 @@ export class AppComponent implements OnInit {
         this.sessionActive = false;
       }
       if (!!this.user) {
+        this.logger.level =
+          LoggerLevel[
+            getUserPreference(
+              this.user.preferences,
+              LOGGER_LEVEL_PREFERENCE,
+              `${LoggerLevel.INFO}`
+            )
+          ];
         this.translateService.use(
           getUserPreference(this.user.preferences, LANGUAGE_PREFERENCE, 'en')
         );

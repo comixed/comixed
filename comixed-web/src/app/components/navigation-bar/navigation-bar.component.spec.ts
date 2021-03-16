@@ -19,17 +19,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavigationBarComponent } from './navigation-bar.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerLevel, LoggerModule, LoggerService } from '@angular-ru/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  initialState as initialUserState,
-  USER_FEATURE_KEY
-} from '@app/user/reducers/user.reducer';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import {
   MatDialog,
@@ -42,13 +38,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
-import { LANGUAGE_PREFERENCE } from '@app/app.constants';
+import {
+  LANGUAGE_PREFERENCE,
+  LOGGER_LEVEL_PREFERENCE
+} from '@app/app.constants';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
-  const initialState = {
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
-  };
+  const initialState = {};
 
   let component: NavigationBarComponent;
   let fixture: ComponentFixture<NavigationBarComponent>;
@@ -58,6 +55,7 @@ describe('NavigationBarComponent', () => {
   let dialog: MatDialog;
   let dialogRef: jasmine.SpyObj<MatDialogRef<any>>;
   let translateService: TranslateService;
+  let logger: LoggerService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -97,6 +95,7 @@ describe('NavigationBarComponent', () => {
       MatDialogRef<any>
     >;
     translateService = TestBed.inject(TranslateService);
+    logger = TestBed.inject(LoggerService);
     fixture.detectChanges();
   }));
 
@@ -195,6 +194,57 @@ describe('NavigationBarComponent', () => {
       it('stores the language choice', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           saveUserPreference({ name: LANGUAGE_PREFERENCE, value: LANGUAGE })
+        );
+      });
+    });
+  });
+
+  describe('changing the active language', () => {
+    const LANGUAGE = 'fr';
+
+    beforeEach(() => {
+      translateService.use(LANGUAGE);
+    });
+
+    it('updates the current language', () => {
+      expect(component.currentLanguage).toEqual(LANGUAGE);
+    });
+  });
+
+  describe('changing the logging level', () => {
+    const LOGGER_LEVEL = LoggerLevel.TRACE;
+
+    beforeEach(() => {
+      logger.level = LoggerLevel.OFF;
+    });
+
+    describe('when the user is anonymous', () => {
+      beforeEach(() => {
+        component.user = null;
+        component.onSetLogging(LOGGER_LEVEL);
+      });
+
+      it('changes the logging level', () => {
+        expect(logger.level).toEqual(LOGGER_LEVEL);
+      });
+    });
+
+    describe('when the user is logged in', () => {
+      beforeEach(() => {
+        component.user = USER;
+        component.onSetLogging(LOGGER_LEVEL);
+      });
+
+      it('changes the logging level', () => {
+        expect(logger.level).toEqual(LOGGER_LEVEL);
+      });
+
+      it('saves the preference', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: LOGGER_LEVEL_PREFERENCE,
+            value: `${LOGGER_LEVEL}`
+          })
         );
       });
     });

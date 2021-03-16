@@ -36,7 +36,7 @@
     <mat-icon>admin_panel_settings</mat-icon>
     <mat-label>{{ "menu.admin-menu.root" | translate }}</mat-label>
   </button>
-  <button *ngIf="isReader" mat-menu-item [matMenuTriggerFor]="optionsMenu">
+  <button mat-menu-item [matMenuTriggerFor]="optionsMenu">
     <mat-icon>settings</mat-icon>
     <mat-label>{{ "menu.options-menu.root" | translate }}</mat-label>
   </button>
@@ -79,17 +79,37 @@
   >
     <mat-icon *ngIf="currentLanguage === language">check_box</mat-icon>
     <mat-icon *ngIf="currentLanguage !== language"
-      >check_box_outline_blank</mat-icon
-    >
+      >check_box_outline_blank
+    </mat-icon>
     <mat-label>{{ "menu.language-menu." + language | translate }}</mat-label>
   </button>
 </mat-menu>
 
 <mat-menu #optionsMenu="matMenu">
-  <button mat-menu-item (click)="onShowDisplayOptions()">
+  <button *ngIf="isReader" mat-menu-item (click)="onShowDisplayOptions()">
     <mat-icon>tv</mat-icon>
     <mat-label>{{
       "menu.options-menu.show-options-panel" | translate
     }}</mat-label>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="loggingMenu">
+    <mat-icon>settings</mat-icon>
+    <mat-label>{{ "menu.logging-menu.root" | translate }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #loggingMenu="matMenu">
+  <button
+    *ngFor="let option of loggingOptions"
+    mat-menu-item
+    (click)="onSetLogging(option)"
+  >
+    <mat-icon *ngIf="isCurrentLoggingLevel(option)"
+      >radio_button_checked</mat-icon
+    >
+    <mat-icon *ngIf="!isCurrentLoggingLevel(option)"
+      >radio_button_unchecked</mat-icon
+    >
+    <mat-label>{{ "menu.logging-menu." + option | translate }}</mat-label>
   </button>
 </mat-menu>
