@@ -34,7 +34,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleService } from '@app/core';
-import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LoginComponent', () => {
   const USER = USER_READER;
@@ -49,12 +50,14 @@ describe('LoginComponent', () => {
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
       imports: [
         NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot(),
@@ -74,6 +77,8 @@ describe('LoginComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
     fixture.detectChanges();
   }));
 
@@ -114,6 +119,19 @@ describe('LoginComponent', () => {
 
     it('sets the busy flag', () => {
       expect(component.busy).toBeTrue();
+    });
+  });
+
+  describe('when authenticated', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [USER_FEATURE_KEY]: { ...initialUserState, authenticated: true }
+      });
+    });
+
+    it('redirects the browser to the root url', () => {
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/');
     });
   });
 
