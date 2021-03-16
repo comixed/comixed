@@ -18,9 +18,9 @@
 
 package org.comixedproject.controller.comic;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static org.comixedproject.controller.comic.ScanTypeController.ADD_SCAN_TYPE_QUEUE;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comic.ScanType;
 import org.comixedproject.service.comic.ScanTypeService;
@@ -30,22 +30,27 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScanTypeControllerTest {
   @InjectMocks private ScanTypeController controller;
   @Mock private ScanTypeService scanTypeService;
-  @Mock private List<ScanType> scanTypeList;
+  @Mock private SimpMessagingTemplate messagingTemplate;
+  @Mock private ScanType scanType;
+
+  private List<ScanType> scanTypeList = new ArrayList<ScanType>();
 
   @Test
   public void testGetScanTypes() {
+    scanTypeList.add(scanType);
+
     Mockito.when(scanTypeService.getAll()).thenReturn(scanTypeList);
 
-    final List<ScanType> result = controller.getScanTypes();
-
-    assertNotNull(result);
-    assertSame(scanTypeList, result);
+    controller.getScanTypes();
 
     Mockito.verify(scanTypeService, Mockito.times(1)).getAll();
+    Mockito.verify(messagingTemplate, Mockito.times(scanTypeList.size()))
+        .convertAndSend(ADD_SCAN_TYPE_QUEUE, scanType);
   }
 }
