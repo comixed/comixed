@@ -26,6 +26,7 @@ import { selectUserState } from '@app/user/selectors/user.selectors';
 import { loginUser } from '@app/user/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-login',
@@ -44,7 +45,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private store: Store<UserModuleState>,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -54,6 +56,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       .select(selectUserState)
       .subscribe(state => {
         this.busy = state.initializing || state.authenticating;
+        if (state.authenticated) {
+          this.logger.debug('Already authenticated: sending to home');
+          this.router.navigateByUrl('/');
+        }
       });
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

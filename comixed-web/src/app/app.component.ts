@@ -33,12 +33,10 @@ import {
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { LANGUAGE_PREFERENCE } from '@app/app.constants';
-import { Router } from '@angular/router';
 import {
   startMessaging,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
-import { TaskCountService } from '@app/services/task-count.service';
 
 @Component({
   selector: 'cx-root',
@@ -54,9 +52,7 @@ export class AppComponent implements OnInit {
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
-    private store: Store<any>,
-    private router: Router,
-    private taskCountService: TaskCountService
+    private store: Store<any>
   ) {
     this.logger.level = LoggerLevel.TRACE;
     this.translateService.use('en');
@@ -65,8 +61,6 @@ export class AppComponent implements OnInit {
       this.logger.debug('User updated:', user);
       this.user = user;
       if (!!this.user && !this.sessionActive) {
-        this.logger.trace('Redirecting the user to the home page');
-        this.router.navigate(['/home']);
         this.logger.debug('Starting messaging subsystem');
         this.store.dispatch(startMessaging());
         this.logger.trace('Getting first session update');
