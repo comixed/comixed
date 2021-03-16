@@ -74,6 +74,13 @@
       "all-comics": "All Comics",
       "root": "Library"
     },
+    "logging-menu": {
+      "root": "Logging",
+      "1": "All (Verbose)",
+      "2": "Trace (Even More)",
+      "3": "Debug (A Lot)",
+      "4": "Informational"
+    },
     "options-menu": {
       "root": "Options",
       "show-options-panel": "Set User Options..."

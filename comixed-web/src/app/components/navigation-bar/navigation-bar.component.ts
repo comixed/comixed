@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { User } from '@app/user';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,7 +27,10 @@ import { Store } from '@ngrx/store';
 import { isAdmin, isReader } from '@app/user/user.functions';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDisplayOptionsComponent } from '@app/library/components/comic-display-options/comic-display-options.component';
-import { LANGUAGE_PREFERENCE } from '@app/app.constants';
+import {
+  LANGUAGE_PREFERENCE,
+  LOGGER_LEVEL_PREFERENCE
+} from '@app/app.constants';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -39,6 +42,12 @@ export class NavigationBarComponent {
   isAdmin = false;
   readonly languages = ['en', 'fr', 'es', 'pt'];
   currentLanguage = '';
+  readonly loggingOptions = [
+    LoggerLevel.INFO,
+    LoggerLevel.DEBUG,
+    LoggerLevel.TRACE,
+    LoggerLevel.ALL
+  ];
 
   constructor(
     private logger: LoggerService,
@@ -102,5 +111,23 @@ export class NavigationBarComponent {
         saveUserPreference({ name: LANGUAGE_PREFERENCE, value: language })
       );
     }
+  }
+
+  onSetLogging(loggerLevel: LoggerLevel): void {
+    this.logger.debug('Setting logger level:', loggerLevel);
+    this.logger.level = loggerLevel;
+    if (!!this.user) {
+      this.logger.trace('Saving user logging preference');
+      this.store.dispatch(
+        saveUserPreference({
+          name: LOGGER_LEVEL_PREFERENCE,
+          value: `${loggerLevel}`
+        })
+      );
+    }
+  }
+
+  isCurrentLoggingLevel(option: LoggerLevel): boolean {
+    return `${option}` === this.logger.level.toString();
   }
 }
