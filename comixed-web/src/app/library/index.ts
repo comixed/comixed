@@ -44,6 +44,11 @@ import {
   BlockedPageState,
   reducer as blockedPageReducer
 } from '@app/library/reducers/blocked-page.reducer';
+import {
+  reducer as scanTypeReducer,
+  SCAN_TYPE_FEATURE_KEY,
+  ScanTypeState
+} from '@app/library/reducers/scan-type.reducer';
 
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
@@ -70,6 +75,7 @@ export interface LibraryModuleState {
   [LIBRARY_FEATURE_KEY]: LibraryState;
   [SCRAPING_FEATURE_KEY]: ScrapingState;
   [BLOCKED_PAGE_FEATURE_KEY]: BlockedPageState;
+  [SCAN_TYPE_FEATURE_KEY]: ScanTypeState;
 }
 
 export type ModuleState = LibraryModuleState;
@@ -80,5 +86,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [SCRAPING_FEATURE_KEY]: scrapingReducer,
-  [BLOCKED_PAGE_FEATURE_KEY]: blockedPageReducer
+  [BLOCKED_PAGE_FEATURE_KEY]: blockedPageReducer,
+  [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer
 };

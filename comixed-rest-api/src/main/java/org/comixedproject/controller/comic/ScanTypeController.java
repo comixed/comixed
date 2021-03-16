@@ -18,14 +18,11 @@
 
 package org.comixedproject.controller.comic;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.comic.ScanType;
 import org.comixedproject.service.comic.ScanTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -37,17 +34,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class ScanTypeController {
-  @Autowired private ScanTypeService scanTypeService;
+  private static final String LOAD_SCAN_TYPES = "load.scan-types";
+  public static final String ADD_SCAN_TYPE_QUEUE = "/queue/scan-type.add";
 
-  /**
-   * Retrieves the list of all scan types.
-   *
-   * @return the scan type list
-   */
-  @GetMapping(value = "/api/comics/scantypes", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public List<ScanType> getScanTypes() {
+  @Autowired private ScanTypeService scanTypeService;
+  @Autowired private SimpMessagingTemplate messagingTemplate;
+
+  /** Retrieves the list of all scan types and publishes them. */
+  @MessageMapping(LOAD_SCAN_TYPES)
+  public void getScanTypes() {
     log.info("Getting all scan types");
-    return this.scanTypeService.getAll();
+    this.scanTypeService
+        .getAll()
+        .forEach(scanType -> this.messagingTemplate.convertAndSend(ADD_SCAN_TYPE_QUEUE, scanType));
   }
 }

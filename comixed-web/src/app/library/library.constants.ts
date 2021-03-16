@@ -69,3 +69,7 @@ export const PAGE_SIZE_DEFAULT = 400;
 export const PAGINATION_OPTIONS = [10, 25, 50, 100];
 export const PAGINATION_PREFERENCE = 'preference.pagination';
 export const PAGINATION_DEFAULT = PAGINATION_OPTIONS[0];
+
+// messaging
+export const LOAD_SCAN_TYPES_MESSAGE = '/comixed/load.scan-types';
+export const SCAN_TYPE_ADD_QUEUE = '/queue/scan-type.add';
