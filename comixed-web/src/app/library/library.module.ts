@@ -104,6 +104,11 @@ import {
   reducer as scanTypeReducer
 } from '@app/library/reducers/scan-type.reducer';
 import { ScanTypeEffects } from '@app/library/effects/scan-type.effects';
+import {
+  COMIC_FORMAT_FEATURE_KEY,
+  reducer as comicFormatReducer
+} from '@app/library/reducers/comic-format.reducer';
+import { ComicFormatEffects } from '@app/library/effects/comic-format.effects';
 
 @NgModule({
   declarations: [
@@ -150,13 +155,15 @@ import { ScanTypeEffects } from '@app/library/effects/scan-type.effects';
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(BLOCKED_PAGE_FEATURE_KEY, blockedPageReducer),
     StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
+    StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       ComicImportEffects,
       LibraryEffects,
       ScrapingEffects,
       BlockedPageEffects,
-      ScanTypeEffects
+      ScanTypeEffects,
+      ComicFormatEffects
     ]),
     MatInputModule,
     MatSelectModule,
