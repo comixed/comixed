@@ -73,3 +73,6 @@ export const PAGINATION_DEFAULT = PAGINATION_OPTIONS[0];
 // messaging
 export const LOAD_SCAN_TYPES_MESSAGE = '/comixed/load.scan-types';
 export const SCAN_TYPE_ADD_QUEUE = '/queue/scan-type.add';
+
+export const LOAD_COMIC_FORMATS_MESSAGE = '/comixed/load.comic-formats';
+export const COMIC_FORMAT_ADD_QUEUE = '/queue/comic-format.add';

@@ -18,14 +18,12 @@
 
 package org.comixedproject.controller.comic;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.ComicFormat;
 import org.comixedproject.service.comic.ComicFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -37,17 +35,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class ComicFormatController {
-  @Autowired private ComicFormatService comicFormatService;
+  private static final String LOAD_COMIC_FORMATS = "load.comic-formats";
+  private static final String ADD_COMIC_FORMAT_QUEUE = "/queue/comic-format.add";
 
-  /**
-   * Returns the list of all defined comic formats.
-   *
-   * @return the list
-   */
-  @GetMapping(value = "/api/comics/formats", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public List<ComicFormat> getAll() {
-    log.info("Retrieving the list of comic formats");
-    return this.comicFormatService.getAll();
+  @Autowired private ComicFormatService comicFormatService;
+  @Autowired private SimpMessagingTemplate messagingTemplate;
+
+  /** Retrieves the list of all comic formats and publishes them. */
+  @MessageMapping(LOAD_COMIC_FORMATS)
+  public void getAll() {
+    log.info("Getting all comic formats");
+    this.comicFormatService
+        .getAll()
+        .forEach(
+            comicFormat ->
+                this.messagingTemplate.convertAndSend(ADD_COMIC_FORMAT_QUEUE, comicFormat));
   }
 }
