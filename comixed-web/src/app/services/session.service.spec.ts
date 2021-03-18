@@ -70,7 +70,6 @@ describe('SessionService', () => {
   it('can load user session updates', () => {
     const serviceResponse = {
       update: {
-        importCount: IMPORT_COUNT,
         updatedComics: UPDATED_COMICS,
         removedComicIds: REMOVED_COMICS.map(comic => comic.id)
       }

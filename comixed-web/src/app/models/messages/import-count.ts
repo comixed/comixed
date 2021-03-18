@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from '@app/library';
-
-export interface SessionUpdate {
-  updatedComics: Comic[];
-  removedComicIds: number[];
-  latest: number;
+export interface ImportCount {
+  addCount: number;
+  processingCount: number;
 }

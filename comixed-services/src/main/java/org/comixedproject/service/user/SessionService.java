@@ -25,7 +25,6 @@ import org.comixedproject.model.auditlog.AuditEvent;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicAuditor;
 import org.comixedproject.model.session.SessionUpdate;
-import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,14 +63,10 @@ public class SessionService {
     boolean done = false;
     List<Comic> comicsUpdated = null;
     List<AuditEvent<Long>> comicIdsRemoved = null;
-    int importCount = 0;
 
     while (!done) {
       comicsUpdated = this.comicService.getComicsUpdatedSince(timestamp, maximumRecords, email);
       comicIdsRemoved = this.comicAuditor.getEntriesSinceTimestamp(timestamp, maximumRecords);
-      importCount =
-          this.taskService.getTaskCount(TaskType.ADD_COMIC)
-              + this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
       done = !comicsUpdated.isEmpty() || !comicIdsRemoved.isEmpty();
       if (!done) {
         try {
@@ -85,14 +80,12 @@ public class SessionService {
       }
     }
 
-    return createSessionUpdate(
-        timestamp, maximumRecords, importCount, comicsUpdated, comicIdsRemoved);
+    return createSessionUpdate(timestamp, maximumRecords, comicsUpdated, comicIdsRemoved);
   }
 
   private SessionUpdate createSessionUpdate(
       final long timestamp,
       final int maximumRecords,
-      final int importCount,
       final List<Comic> comicsUpdated,
       final List<AuditEvent<Long>> comicIdsRemoved) {
     final List<Comic> updated = new ArrayList<>();
@@ -127,6 +120,6 @@ public class SessionService {
               || count == maximumRecords;
     }
 
-    return new SessionUpdate(updated, removed, importCount, latest);
+    return new SessionUpdate(updated, removed, latest);
   }
 }

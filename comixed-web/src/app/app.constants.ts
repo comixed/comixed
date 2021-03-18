@@ -29,4 +29,6 @@ export const LANGUAGE_PREFERENCE = 'preference.language';
 
 // messaging constants
 
+export const IMPORT_COUNT_TOPIC = '/topic/import.count';
+
 export const TASK_COUNT_TOPIC = '/topic/taskcount';

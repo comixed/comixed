@@ -18,11 +18,13 @@
 
 package org.comixedproject.task.model;
 
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.*;
+import static org.comixedproject.task.model.MonitorTaskQueueWorkerTask.IMPORT_COUNT_TOPIC;
 import static org.comixedproject.task.model.MonitorTaskQueueWorkerTask.TASK_UPDATE_TARGET;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.model.state.messaging.ImportCountMessage;
 import org.comixedproject.model.state.messaging.TaskCountMessage;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
@@ -39,6 +41,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class MonitorTaskQueueWorkerTaskTest {
   private static final TaskType TEST_TASK_TYPE = TaskType.RESCAN_COMIC;
+  private static final long TEST_TASK_COUNT = 97;
+  private static final long TEST_ADD_COMIC_COUNT = 23L;
+  private static final long TEST_PROCESS_COMIC_COUNT = 17L;
 
   @InjectMocks private MonitorTaskQueueWorkerTask monitorTaskQueueWorkerTask;
   @Mock private TaskManager taskManager;
@@ -48,7 +53,7 @@ public class MonitorTaskQueueWorkerTaskTest {
   @Mock private WorkerTask workerTask;
   @Mock private SimpMessagingTemplate messagingTemplate;
 
-  @Captor private ArgumentCaptor<TaskCountMessage> taskCountMessageArgumentCaptor;
+  @Captor private ArgumentCaptor<Object> messageCaptor;
 
   private List<Task> taskList = new ArrayList<>();
 
@@ -102,9 +107,21 @@ public class MonitorTaskQueueWorkerTaskTest {
     Mockito.when(workerTaskEncoder.decode(Mockito.any(Task.class))).thenReturn(workerTask);
     Mockito.doNothing()
         .when(messagingTemplate)
-        .convertAndSend(Mockito.anyString(), taskCountMessageArgumentCaptor.capture());
+        .convertAndSend(Mockito.anyString(), messageCaptor.capture());
+    Mockito.when(workerTaskAdaptor.getTaskCount()).thenReturn(TEST_TASK_COUNT);
+    Mockito.when(workerTaskAdaptor.getTaskCount(TaskType.ADD_COMIC))
+        .thenReturn(TEST_ADD_COMIC_COUNT);
+    Mockito.when(workerTaskAdaptor.getTaskCount(TaskType.PROCESS_COMIC))
+        .thenReturn(TEST_PROCESS_COMIC_COUNT);
 
     monitorTaskQueueWorkerTask.startTask();
+
+    assertFalse(messageCaptor.getAllValues().isEmpty());
+    assertTrue(messageCaptor.getAllValues().contains(new TaskCountMessage(TEST_TASK_COUNT)));
+    assertTrue(
+        messageCaptor
+            .getAllValues()
+            .contains(new ImportCountMessage(TEST_ADD_COMIC_COUNT, TEST_PROCESS_COMIC_COUNT)));
 
     Mockito.verify(workerTaskAdaptor, Mockito.times(1)).getNextTask();
     Mockito.verify(task, Mockito.times(taskList.size())).getTaskType();
@@ -112,7 +129,11 @@ public class MonitorTaskQueueWorkerTaskTest {
     Mockito.verify(workerTaskEncoder, Mockito.times(taskList.size())).decode(task);
     Mockito.verify(taskManager, Mockito.times(taskList.size())).runTask(workerTask, task);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(TASK_UPDATE_TARGET, taskCountMessageArgumentCaptor.getValue());
+        .convertAndSend(TASK_UPDATE_TARGET, new TaskCountMessage(TEST_TASK_COUNT));
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSend(
+            IMPORT_COUNT_TOPIC,
+            new ImportCountMessage(TEST_ADD_COMIC_COUNT, TEST_PROCESS_COMIC_COUNT));
   }
 
   @Test

@@ -57,6 +57,7 @@ import { AdminModule } from '@app/admin/admin.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MessagingModule } from '@app/messaging/messaging.module';
 import { TaskCountService } from '@app/services/task-count.service';
+import { ImportCountEffects } from '@app/effects/import-count.effects';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,12 @@ import { TaskCountService } from '@app/services/task-count.service';
     MatToolbarModule,
     MatIconModule,
     StoreModule.forRoot(APP_REDUCERS, {}),
-    EffectsModule.forRoot([AppEffects, SessionEffects, BuildDetailsEffects]),
+    EffectsModule.forRoot([
+      AppEffects,
+      SessionEffects,
+      BuildDetailsEffects,
+      ImportCountEffects
+    ]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({

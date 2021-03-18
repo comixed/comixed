@@ -26,7 +26,6 @@ export const loadSessionUpdate = createAction(
 export const sessionUpdateLoaded = createAction(
   '[Session] Received the session update',
   props<{
-    importCount: number;
     latest: number;
   }>()
 );

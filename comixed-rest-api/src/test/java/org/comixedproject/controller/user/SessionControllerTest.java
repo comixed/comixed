@@ -22,17 +22,17 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.security.Principal;
-import javax.servlet.http.HttpSession;
 import org.comixedproject.model.net.session.SessionUpdateRequest;
 import org.comixedproject.model.net.session.SessionUpdateResponse;
 import org.comixedproject.model.session.SessionUpdate;
-import org.comixedproject.model.session.UserSession;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.SessionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,10 +44,6 @@ public class SessionControllerTest {
 
   @InjectMocks private SessionController sessionController;
   @Mock private SessionService sessionService;
-  @Mock private HttpSession httpSession;
-  @Mock private UserSession userSession;
-  @Captor private ArgumentCaptor<UserSession> userSessionArgumentCaptor;
-  @Mock private SessionUpdateRequest sessionUpdateRequest;
   @Mock private SessionUpdate sessionUpdate;
   @Mock private Principal principal;
 

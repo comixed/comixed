@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { SESSION_FEATURE_KEY, SessionState } from '../reducers/session.reducer';
-import { selectUserSessionState } from './session.selectors';
+import {
+  IMPORT_COUNT_FEATURE_KEY,
+  ImportCountState
+} from '../reducers/import-count.reducer';
+import {
+  selectImportCount,
+  selectImportCountState
+} from './import-count.selectors';
 
-describe('UserSession Selectors', () => {
-  let state: SessionState;
+describe('ImportCount Selectors', () => {
+  let state: ImportCountState;
 
   beforeEach(() => {
     state = {
-      initialized: Math.random() > 0.5,
-      loading: Math.random() > 0.5,
-      latest: new Date().getTime()
+      active: Math.random() > 0.5,
+      count: Math.abs(Math.floor(Math.random() * 1000))
     };
   });
 
   it('should select the feature state', () => {
     expect(
-      selectUserSessionState({
-        [SESSION_FEATURE_KEY]: state
+      selectImportCountState({
+        [IMPORT_COUNT_FEATURE_KEY]: state
       })
     ).toEqual(state);
+  });
+
+  it('should select the import count', () => {
+    expect(
+      selectImportCount({
+        [IMPORT_COUNT_FEATURE_KEY]: state
+      })
+    ).toEqual(state.count);
   });
 });

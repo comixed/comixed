@@ -53,7 +53,6 @@ export class SessionEffects {
                 removed: response.update.removedComicIds
               }),
               sessionUpdateLoaded({
-                importCount: response.update.importCount,
                 latest: response.update.latest
               })
             ]),
