@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,32 +19,35 @@
 package org.comixedproject.model.state.messaging;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <code>TaskCountMessage</code> is the message that's sent to the task count queue.
+ * <code>ImportCountMessage</code> is the message that's sent to the import count queue.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class TaskCountMessage implements Serializable {
-  @JsonProperty("count")
+public class ImportCountMessage {
+  @JsonProperty("addCount")
   @Getter
-  private long taskCount;
+  private long addCount;
+
+  @JsonProperty("processingCount")
+  @Getter
+  private long processingCount;
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final TaskCountMessage that = (TaskCountMessage) o;
-    return taskCount == that.taskCount;
+    final ImportCountMessage that = (ImportCountMessage) o;
+    return addCount == that.addCount && processingCount == that.processingCount;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(taskCount);
+    return Objects.hash(addCount, processingCount);
   }
 }

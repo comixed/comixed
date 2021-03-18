@@ -28,7 +28,6 @@ describe('Session Reducer', () => {
   const TIMESTAMP = new Date().getTime();
   const MAXIMUM_RECORDS = 100;
   const TIMEOUT = 300;
-  const IMPORT_COUNT = Math.abs(Math.round(Math.random() * 25));
   const UPDATED_COMICS = [COMIC_1];
   const REMOVED_COMICS = [COMIC_2];
 
@@ -49,10 +48,6 @@ describe('Session Reducer', () => {
 
     it('clears the loading flag', () => {
       expect(state.loading).toBeFalse();
-    });
-
-    it('has as import count of zero', () => {
-      expect(state.importCount).toEqual(0);
     });
 
     it('has a default latest value', () => {
@@ -80,9 +75,8 @@ describe('Session Reducer', () => {
   describe('receiving a user session update', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, initialized: false, importCount: 0 },
+        { ...state, loading: true, initialized: false },
         sessionUpdateLoaded({
-          importCount: IMPORT_COUNT,
           latest: TIMESTAMP
         })
       );
@@ -94,10 +88,6 @@ describe('Session Reducer', () => {
 
     it('sets the initialized flag', () => {
       expect(state.initialized).toBeTrue();
-    });
-
-    it('sets the import count', () => {
-      expect(state.importCount).toEqual(IMPORT_COUNT);
     });
 
     it('sets the latest timestamp', () => {

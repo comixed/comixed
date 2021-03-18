@@ -25,11 +25,6 @@ public class SessionUpdate {
   @Getter
   private List<Long> removedComicIds;
 
-  @JsonProperty("importCount")
-  @JsonView(View.SessionUpdateView.class)
-  @Getter
-  private Integer importCount = 0;
-
   @JsonProperty("latest")
   @JsonView(View.SessionUpdateView.class)
   @Getter

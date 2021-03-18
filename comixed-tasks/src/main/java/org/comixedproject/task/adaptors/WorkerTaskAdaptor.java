@@ -110,6 +110,17 @@ public class WorkerTaskAdaptor implements InitializingBean {
     return this.taskService.getTaskCount();
   }
 
+  /**
+   * Returns the total number of tasks of a given type that are running or in the database.
+   *
+   * @param taskType the task type
+   * @return the task count
+   */
+  public long getTaskCount(final TaskType taskType) {
+    log.debug("Getting task count for type: {}", taskType);
+    return this.taskService.getTaskCount(taskType);
+  }
+
   public static class TaskTypeEntry {
     private TaskType type;
     private String name;

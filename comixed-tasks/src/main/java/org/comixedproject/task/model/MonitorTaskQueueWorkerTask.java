@@ -20,8 +20,10 @@ package org.comixedproject.task.model;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.state.messaging.ImportCountMessage;
 import org.comixedproject.model.state.messaging.TaskCountMessage;
 import org.comixedproject.model.tasks.Task;
+import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.task.TaskException;
 import org.comixedproject.task.adaptors.WorkerTaskAdaptor;
 import org.comixedproject.task.encoders.WorkerTaskEncoder;
@@ -42,6 +44,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MonitorTaskQueueWorkerTask extends AbstractWorkerTask implements InitializingBean {
   public static final String TASK_UPDATE_TARGET = "/topic/taskcount";
+  static final String IMPORT_COUNT_TOPIC = "/topic/import.count";
 
   @Autowired private TaskManager taskManager;
   @Autowired private WorkerTaskAdaptor workerTaskAdaptor;
@@ -60,9 +63,17 @@ public class MonitorTaskQueueWorkerTask extends AbstractWorkerTask implements In
 
   @Override
   public void startTask() throws WorkerTaskException {
-    log.debug("Updating topic: task count");
+    log.debug("Updating task counts");
     this.messagingTemplate.convertAndSend(
         TASK_UPDATE_TARGET, new TaskCountMessage(this.workerTaskAdaptor.getTaskCount()));
+
+    log.debug("Updating import counts");
+    this.messagingTemplate.convertAndSend(
+        IMPORT_COUNT_TOPIC,
+        new ImportCountMessage(
+            this.workerTaskAdaptor.getTaskCount(TaskType.ADD_COMIC),
+            this.workerTaskAdaptor.getTaskCount(TaskType.PROCESS_COMIC)));
+
     log.debug("Checking queue for waiting tasks");
     final List<Task> taskQueue = this.workerTaskAdaptor.getNextTask();
     for (int index = 0; index < taskQueue.size(); index++) {

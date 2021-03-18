@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from '@app/library';
+import { Injectable } from '@angular/core';
+import { Actions } from '@ngrx/effects';
+import { ImportCountService } from '@app/services/import-count.service';
+import { LoggerService } from '@angular-ru/logger';
 
-export interface SessionUpdate {
-  updatedComics: Comic[];
-  removedComicIds: number[];
-  latest: number;
+@Injectable()
+export class ImportCountEffects {
+  constructor(
+    private logger: LoggerService,
+    private actions$: Actions,
+    private importCountService: ImportCountService
+  ) {}
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.session;
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  IMPORT_COUNT_FEATURE_KEY,
+  ImportCountState
+} from '../reducers/import-count.reducer';
 
-import java.io.Serializable;
-import lombok.Getter;
-import lombok.Setter;
+export const selectImportCountState = createFeatureSelector<ImportCountState>(
+  IMPORT_COUNT_FEATURE_KEY
+);
 
-/**
- * <code>UserSession</code> represents the server-side details for a user's session.
- *
- * @author Darryl L. Pierce
- */
-public class UserSession implements Serializable {
-  @Getter @Setter private Integer importCount;
-
-  public void copyValues(final SessionUpdate sessionUpdate) {
-    this.importCount = sessionUpdate.getImportCount();
-  }
-}
+export const selectImportCount = createSelector(
+  selectImportCountState,
+  state => state.count
+);

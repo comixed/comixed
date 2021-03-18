@@ -35,7 +35,6 @@ import {
 } from '@app/reducers/session.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { loadSessionUpdate } from '@app/actions/session.actions';
-import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
 import { NavigationBarComponent } from '@app/components/navigation-bar/navigation-bar.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -49,6 +48,10 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
+import {
+  IMPORT_COUNT_FEATURE_KEY,
+  initialState as initialImportCountState
+} from '@app/reducers/import-count.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -60,7 +63,8 @@ describe('AppComponent', () => {
     [USER_FEATURE_KEY]: initialUserState,
     [BUSY_FEATURE_KEY]: initialBusyState,
     [SESSION_FEATURE_KEY]: initialSessionState,
-    [MESSAGING_FEATURE_KEY]: initialMessagingState
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState
   };
 
   let component: AppComponent;
@@ -134,8 +138,6 @@ describe('AppComponent', () => {
   });
 
   describe('when a session update is loaded', () => {
-    const IMPORT_COUNT = Math.random() > 0.5 ? 717 : 0;
-
     beforeEach(() => {
       component.sessionActive = true;
       store.setState({
@@ -144,16 +146,9 @@ describe('AppComponent', () => {
           ...initialSessionState,
           loading: false,
           initialized: true,
-          importCount: IMPORT_COUNT,
           latest: TIMESTAMP
         }
       });
-    });
-
-    it('updates the importing state', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setImportingComicsState({ importing: IMPORT_COUNT !== 0 })
-      );
     });
 
     it('gets the next session update', () => {

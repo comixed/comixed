@@ -28,14 +28,12 @@ export const SESSION_FEATURE_KEY = 'session_state';
 export interface SessionState {
   initialized: boolean;
   loading: boolean;
-  importCount: number;
   latest: number;
 }
 
 export const initialState: SessionState = {
   initialized: false,
   loading: false,
-  importCount: 0,
   latest: 0
 };
 
@@ -47,7 +45,6 @@ export const reducer = createReducer(
     ...state,
     loading: false,
     initialized: true,
-    importCount: action.importCount,
     latest: action.latest
   })),
   on(loadSessionUpdateFailed, state => ({

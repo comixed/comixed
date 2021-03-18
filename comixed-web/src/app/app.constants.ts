@@ -30,4 +30,6 @@ export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 
 // messaging constants
 
+export const IMPORT_COUNT_TOPIC = '/topic/import.count';
+
 export const TASK_COUNT_TOPIC = '/topic/taskcount';

@@ -40,6 +40,7 @@ import {
   startMessaging,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
+import { selectImportCount } from '@app/selectors/import-count.selectors';
 
 @Component({
   selector: 'cx-root',
@@ -110,9 +111,6 @@ export class AppComponent implements OnInit {
     this.store.select(selectUserSessionState).subscribe(state => {
       if (!state.loading && state.initialized) {
         this.logger.debug('Session state updated:', state);
-        this.store.dispatch(
-          setImportingComicsState({ importing: state.importCount !== 0 })
-        );
         if (this.sessionActive) {
           this.logger.debug('Getting next session update');
           this.store.dispatch(
@@ -125,6 +123,11 @@ export class AppComponent implements OnInit {
         }
       }
     });
+    this.store
+      .select(selectImportCount)
+      .subscribe(count =>
+        this.store.dispatch(setImportingComicsState({ importing: count > 0 }))
+      );
   }
 
   ngOnInit(): void {

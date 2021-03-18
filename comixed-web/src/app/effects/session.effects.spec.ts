@@ -40,7 +40,6 @@ describe('SessionEffects', () => {
   const TIMESTAMP = new Date().getTime();
   const MAXIMUM_RECORDS = 100;
   const TIMEOUT = 300;
-  const IMPORT_COUNT = 717;
   const UPDATED_COMICS = [COMIC_2];
   const REMOVED_COMICS = [COMIC_3];
 
@@ -86,7 +85,6 @@ describe('SessionEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = {
         update: {
-          importCount: IMPORT_COUNT,
           updatedComics: UPDATED_COMICS,
           removedComicIds: REMOVED_COMICS.map(comic => comic.id),
           latest: TIMESTAMP
@@ -102,7 +100,6 @@ describe('SessionEffects', () => {
         removed: REMOVED_COMICS.map(comic => comic.id)
       });
       const outcome2 = sessionUpdateLoaded({
-        importCount: IMPORT_COUNT,
         latest: TIMESTAMP
       });
 
