@@ -18,6 +18,7 @@
 
 package org.comixedproject.task.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,11 +54,10 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicService comicService;
   @Autowired private FilenameScraperAdaptor filenameScraper;
-
-  @Autowired
-  private ObjectFactory<ProcessComicWorkerTaskEncoder> processComicTaskEncoderObjectFactory;
-
+  @Autowired private ObjectFactory<ProcessComicWorkerTaskEncoder> processTaskEncoderObjectFactory;
   @Autowired private TaskService taskService;
+  @Autowired private SimpMessagingTemplate messagingTemplate;
+  @Autowired private ObjectMapper objectMapper;
 
   @Getter @Setter private String filename;
   @Getter @Setter private boolean deleteBlockedPages = false;
@@ -86,9 +88,12 @@ public class AddComicWorkerTask extends AbstractWorkerTask {
       log.debug("Saving comic");
       result = this.comicService.save(result);
 
+      log.trace("Publishing updated comic");
+      this.messagingTemplate.convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, result);
+
       log.debug("Encoding process comic task");
       final ProcessComicWorkerTaskEncoder taskEncoder =
-          this.processComicTaskEncoderObjectFactory.getObject();
+          this.processTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);
       taskEncoder.setIgnoreMetadata(this.ignoreMetadata);

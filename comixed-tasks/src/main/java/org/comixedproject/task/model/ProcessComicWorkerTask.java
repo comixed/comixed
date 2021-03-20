@@ -18,6 +18,8 @@
 
 package org.comixedproject.task.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
@@ -31,13 +33,15 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.service.comic.ComicService;
-import org.comixedproject.service.comic.PageService;
 import org.comixedproject.service.library.BlockedPageHashService;
 import org.comixedproject.utils.Utils;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -50,13 +54,12 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class ProcessComicWorkerTask extends AbstractWorkerTask {
-  private static final Object semaphore = new Object();
-
   @Autowired private ComicService comicService;
   @Autowired private Utils utils;
   @Autowired private ComicFileHandler comicFileHandler;
-  @Autowired private PageService pageService;
   @Autowired private BlockedPageHashService blockedPageHashService;
+  @Autowired private SimpMessagingTemplate messagingTemplate;
+  @Autowired private ObjectMapper objectMapper;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private boolean deleteBlockedPages;
@@ -69,12 +72,12 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
 
   @Override
   public void startTask() throws WorkerTaskException {
-    logger.debug("Processing comic: id={}", comic.getId());
-    logger.debug("Getting archive adaptor");
+    log.debug("Processing comic: id={}", comic.getId());
+    log.debug("Getting archive adaptor");
     final ArchiveAdaptor adaptor =
         this.comicFileHandler.getArchiveAdaptorFor(this.comic.getArchiveType());
     if (adaptor == null) throw new WorkerTaskException("No archive adaptor found");
-    logger.debug("Loading comic");
+    log.debug("Loading comic");
     try {
       if (this.ignoreMetadata) {
         log.debug("Filling comic from disk");
@@ -100,12 +103,12 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
       }
     }
 
-    logger.debug("Sorting pages");
+    log.debug("Sorting pages");
     comic.sortPages();
-    logger.debug("Setting comic file details");
+    log.debug("Setting comic file details");
     ComicFileDetails fileDetails = comic.getFileDetails();
     if (fileDetails == null) {
-      logger.debug("Creating new file details entry for comic");
+      log.debug("Creating new file details entry for comic");
       fileDetails = new ComicFileDetails();
     }
 
@@ -118,8 +121,17 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
     fileDetails.setComic(comic);
     comic.setFileDetails(fileDetails);
 
-    logger.debug("Updating comic");
+    log.debug("Updating comic");
     comic.setDateLastUpdated(new Date());
-    this.comicService.save(comic);
+    final Comic result = this.comicService.save(comic);
+
+    log.debug("Publishing comic update");
+    try {
+      this.messagingTemplate.convertAndSend(
+          Constants.COMIC_LIST_UPDATE_TOPIC,
+          this.objectMapper.writerWithView(View.ComicDetailsView.class).writeValueAsString(result));
+    } catch (JsonProcessingException error) {
+      log.error("Failed to publish comic changes", error);
+    }
   }
 }
