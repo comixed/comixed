@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,34 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.task.model;
+package org.comixedproject.action;
 
 /**
- * <code>AbstractWorkerTask</code> provides a foundation for creating new {@link WorkerTask} types.
+ * <code>PerObjectAction</code> defines a type that performs an action on instance of an object
+ * type.
  *
+ * @param <T> the object type
  * @author Darryl L. Pierce
  */
-public abstract class AbstractWorkerTask implements WorkerTask {
-  private String description;
-
-  public AbstractWorkerTask() {}
-
-  @Override
-  public String getDescription() {
-    if (this.description == null) {
-      this.description = this.createDescription();
-    }
-
-    return this.description;
-  }
-
+@FunctionalInterface
+public interface PerObjectAction<T> {
   /**
-   * Must be overridden by child classes to provide a description.
+   * The action to be executed.
    *
-   * @return the description
+   * @param object the target object
    */
-  protected abstract String createDescription();
-
-  @Override
-  public void afterExecution() {}
+  void execute(T object);
 }
