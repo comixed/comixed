@@ -31,6 +31,7 @@ import {
   comicListUpdateReceived,
   resetComicList
 } from '@app/library/actions/comic-list.actions';
+import { securedTopic } from '@app/messaging/messaging.functions';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,8 @@ export class ComicListService {
         this.logger.debug('Loading the comic list');
         this.webSocketService.requestResponse<Comic>(
           LOAD_COMIC_LIST_MESSAGE,
-          `/secured/user${COMIC_LIST_UPDATE_TOPIC}`,
+          '',
+          COMIC_LIST_UPDATE_TOPIC,
           comic => {
             this.logger.debug('Loading comic:', comic);
             this.store.dispatch(comicListUpdateReceived({ comic }));

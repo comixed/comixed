@@ -23,7 +23,7 @@ import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
-  COMIC_FORMAT_ADD_QUEUE,
+  COMIC_FORMAT_UPDATE_TOPIC,
   LOAD_COMIC_FORMATS_MESSAGE
 } from '@app/library/library.constants';
 import { comicFormatAdded } from '@app/library/actions/comic-format.actions';
@@ -42,18 +42,28 @@ export class ComicFormatService {
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
-        this.logger.trace('Subscribing to scan type updates');
-        this.subscription = this.webSocketService.subscribe<ComicFormat>(
-          COMIC_FORMAT_ADD_QUEUE,
+        this.logger.trace('Loading the comic formats');
+        this.webSocketService.requestResponse<ComicFormat>(
+          LOAD_COMIC_FORMATS_MESSAGE,
+          '',
+          COMIC_FORMAT_UPDATE_TOPIC,
           format => {
             this.logger.debug('Received comic format:', format);
             this.store.dispatch(comicFormatAdded({ format }));
           }
         );
-        this.webSocketService.send(LOAD_COMIC_FORMATS_MESSAGE, '');
+
+        this.logger.trace('Subscribing to comic format updates');
+        this.subscription = this.webSocketService.subscribe<ComicFormat>(
+          COMIC_FORMAT_UPDATE_TOPIC,
+          format => {
+            this.logger.debug('Received comic format:', format);
+            this.store.dispatch(comicFormatAdded({ format }));
+          }
+        );
       }
       if (!state.started && !!this.subscription) {
-        this.logger.trace('Unsubscribing from scan type updates');
+        this.logger.trace('Unsubscribing from comic format updates');
         this.subscription.unsubscribe();
         this.subscription = null;
       }

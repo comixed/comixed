@@ -29,6 +29,7 @@ import {
 import * as SockJS from 'sockjs-client';
 import { HTTP_AUTHORIZATION_HEADER } from '@app/app.constants';
 import { Observable } from 'rxjs';
+import { securedTopic } from '@app/messaging/messaging.functions';
 
 @Injectable({
   providedIn: 'root'
@@ -100,28 +101,33 @@ export class WebSocketService {
    * Sends a message and waits for a response. Passes the responses received to the provided callback function.
    *
    * @param message the message
+   * @param body the message body
    * @param destination the destination
    * @param callback the callback function
    */
   requestResponse<T>(
     message: string,
+    body: string,
     destination: string,
     callback: (T) => void
   ): void {
     this.logger.trace('Subscribing to temporary queue:', destination);
-    const subscription = this.client.subscribe(destination, frame => {
-      const content = JSON.parse(frame.body);
-      if (content.finished === true) {
-        this.logger.trace('End of content');
-        subscription.unsubscribe();
-        return;
-      } else {
-        this.logger.trace('Received content:', content);
-        callback(content);
+    const subscription = this.client.subscribe(
+      securedTopic(destination),
+      frame => {
+        const content = JSON.parse(frame.body);
+        if (content.finished === true) {
+          this.logger.trace('End of content');
+          subscription.unsubscribe();
+          return;
+        } else {
+          this.logger.trace('Received content:', content);
+          callback(content);
+        }
       }
-    });
+    );
     this.logger.trace('Sending request message:', message);
-    this.client.send(message);
+    this.client.send(message, body);
   }
 
   /**
