@@ -110,37 +110,6 @@ public class LibraryServiceTest {
   }
 
   @Test
-  public void testGetComicsUpdatedSince() {
-    List<Comic> comics = new ArrayList<>();
-    comics.add(comic2);
-    comics.add(comic3);
-    comics.add(comic4);
-
-    Mockito.when(
-            comicRepository.getLibraryUpdates(
-                Mockito.any(Date.class), pageableArgumentCaptor.capture()))
-        .thenReturn(comics);
-
-    List<Comic> result =
-        libraryService.getComicsUpdatedSince(
-            TEST_EMAIL, comic3.getDateLastUpdated(), TEST_MAXIMUM_COMICS, 2L);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(2, result.size());
-    assertTrue(result.contains(comic3));
-    assertTrue(result.contains(comic4));
-
-    assertEquals(0, pageableArgumentCaptor.getValue().getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageableArgumentCaptor.getValue().getPageSize());
-
-    Mockito.verify(comicRepository, Mockito.times(1))
-        .getLibraryUpdates(comic3.getDateLastUpdated(), pageableArgumentCaptor.getValue());
-    Mockito.verify(readingListService, Mockito.times(1))
-        .getReadingListsForComics(TEST_EMAIL, result);
-  }
-
-  @Test
   public void testConsolidateLibraryNoDeleteFile() {
     Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
 

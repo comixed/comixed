@@ -41,7 +41,7 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { Frame, Subscription } from 'webstomp-client';
+import { Subscription } from 'webstomp-client';
 import { currentUserLoaded } from '@app/user/actions/user.actions';
 import { WebSocketService } from '@app/messaging';
 
@@ -173,7 +173,7 @@ describe('UserService', () => {
 
     describe('when updates are received', () => {
       beforeEach(() => {
-        subscription(new Frame('', {}, JSON.stringify(USER)));
+        subscription(USER);
       });
 
       it('fires an action', () => {

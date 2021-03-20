@@ -154,16 +154,21 @@ describe('WebSocketService', () => {
 
   describe('subscribing to a topic', () => {
     const SUBSCRIPTION = {} as Subscription;
+    const CONTENT = { something: true };
     let result: Subscription;
+    let processingCallback: any;
 
     beforeEach(() => {
       service.client = client;
-      client.subscribe.and.returnValue(SUBSCRIPTION);
+      client.subscribe.and.callFake((topic, callback) => {
+        processingCallback = callback;
+        return SUBSCRIPTION;
+      });
       result = service.subscribe(TOPIC, CALLBACK);
     });
 
     it('notifies the client', () => {
-      expect(client.subscribe).toHaveBeenCalledWith(TOPIC, CALLBACK);
+      expect(client.subscribe).toHaveBeenCalledWith(TOPIC, processingCallback);
     });
 
     it('returns a subscription', () => {

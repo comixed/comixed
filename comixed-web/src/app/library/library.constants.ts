@@ -76,3 +76,6 @@ export const SCAN_TYPE_ADD_QUEUE = '/queue/scan-type.add';
 
 export const LOAD_COMIC_FORMATS_MESSAGE = '/comixed/load.comic-formats';
 export const COMIC_FORMAT_ADD_QUEUE = '/queue/comic-format.add';
+
+export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';
+export const LOAD_COMIC_LIST_MESSAGE = '/comixed/comic-list.load';

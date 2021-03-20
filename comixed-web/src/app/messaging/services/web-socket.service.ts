@@ -78,14 +78,60 @@ export class WebSocketService {
     });
   }
 
-  subscribe(topic: string, callback: any): Subscription {
-    this.logger.debug('Subscribing to topic:', topic);
-    return this.client.subscribe(topic, callback);
+  /**
+   * Subscribes to a topic.
+   *
+   * Passes any received content to the provided callback. Messages are expected to be of the provided type.
+   *
+   * @param destination the destination
+   * @param callback the callback function
+   */
+  subscribe<T>(destination: string, callback: (T) => void): Subscription {
+    this.logger.debug('Subscribing to destination:', destination);
+    return this.client.subscribe(destination, frame => {
+      this.logger.debug('Extracting payload for callback:', frame);
+      const content = JSON.parse(frame.body);
+      this.logger.debug('Sending content to callback:', content);
+      callback(content);
+    });
   }
 
-  send(topic: string, message: string): void {
-    this.logger.debug('Publishing message:', topic, message);
-    this.client.send(topic, message);
+  /**
+   * Sends a message and waits for a response. Passes the responses received to the provided callback function.
+   *
+   * @param message the message
+   * @param destination the destination
+   * @param callback the callback function
+   */
+  requestResponse<T>(
+    message: string,
+    destination: string,
+    callback: (T) => void
+  ): void {
+    this.logger.trace('Subscribing to temporary queue:', destination);
+    const subscription = this.client.subscribe(destination, frame => {
+      const content = JSON.parse(frame.body);
+      if (content.finished === true) {
+        this.logger.trace('End of content');
+        subscription.unsubscribe();
+        return;
+      } else {
+        this.logger.trace('Received content:', content);
+        callback(content);
+      }
+    });
+    this.logger.trace('Sending request message:', message);
+    this.client.send(message);
+  }
+
+  /**
+   * Sends a message to a given destination.
+   * @param destination the destination
+   * @param message the message
+   */
+  send(destination: string, message: string): void {
+    this.logger.debug('Publishing message:', destination, message);
+    this.client.send(destination, message);
   }
 
   onConnected(frame: Frame): void {

@@ -44,10 +44,9 @@ export class ImportCountService {
       .subscribe(state => {
         if (state.started && !this.subscription) {
           this.logger.trace('Subscribing to import count updates');
-          this.subscription = this.webSocketService.subscribe(
+          this.subscription = this.webSocketService.subscribe<ImportCount>(
             IMPORT_COUNT_TOPIC,
-            frame => {
-              const update = JSON.parse(frame.body) as ImportCount;
+            update => {
               this.logger.debug('Received import count update:', update);
               this.store.dispatch(
                 importCountUpdated({

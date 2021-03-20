@@ -38,6 +38,7 @@ import {
 } from '@app/user/actions/user.actions';
 import { SetUserPreference } from '@app/user/models/messaging/set-user-preference';
 import { DeleteUserPreference } from '@app/user/models/messaging/delete-user-preference';
+import { User } from '@app/user';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -57,10 +58,9 @@ export class UserService {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
         this.logger.trace('Subscribing to self updates');
-        this.subscription = this.webSocketService.subscribe(
+        this.subscription = this.webSocketService.subscribe<User>(
           USER_SELF_TOPIC,
-          frame => {
-            const user = JSON.parse(frame.body);
+          user => {
             this.logger.debug('Received user update:', user);
             this.store.dispatch(currentUserLoaded({ user }));
           }

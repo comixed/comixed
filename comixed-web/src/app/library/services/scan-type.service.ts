@@ -27,6 +27,7 @@ import {
   SCAN_TYPE_ADD_QUEUE
 } from '@app/library/library.constants';
 import { scanTypeAdded } from '@app/library/actions/scan-type.actions';
+import { ScanType } from '@app/library';
 
 @Injectable({
   providedIn: 'root'
@@ -43,10 +44,9 @@ export class ScanTypeService {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
         this.logger.trace('Subscribing to scan type updates');
-        this.subscription = this.webSocketService.subscribe(
+        this.subscription = this.webSocketService.subscribe<ScanType>(
           SCAN_TYPE_ADD_QUEUE,
-          frame => {
-            const scanType = JSON.parse(frame.body);
+          scanType => {
             this.logger.debug('Received scan type:', scanType);
             this.store.dispatch(scanTypeAdded({ scanType }));
           }

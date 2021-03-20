@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { SESSION_FEATURE_KEY, SessionState } from '../reducers/session.reducer';
-import { selectUserSessionState } from './session.selectors';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  ComicListState
+} from '../reducers/comic-list.reducer';
+import { selectComicList, selectComicListState } from './comic-list.selectors';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/library/library.fixtures';
 
-describe('UserSession Selectors', () => {
-  let state: SessionState;
+describe('Comic List Selectors', () => {
+  let state: ComicListState;
 
   beforeEach(() => {
-    state = {
-      initialized: Math.random() > 0.5,
-      loading: Math.random() > 0.5,
-      latest: new Date().getTime()
-    };
+    state = { comics: [COMIC_1, COMIC_3, COMIC_5] };
   });
 
   it('should select the feature state', () => {
     expect(
-      selectUserSessionState({
-        [SESSION_FEATURE_KEY]: state
+      selectComicListState({
+        [COMIC_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state);
+  });
+
+  it('should select the comic list', () => {
+    expect(selectComicList({ [COMIC_LIST_FEATURE_KEY]: state })).toEqual(
+      state.comics
+    );
   });
 });

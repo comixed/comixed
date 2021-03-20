@@ -69,9 +69,6 @@ public class View {
   /** Used when viewing a list of comic files. */
   public interface ComicFileList {}
 
-  /** Used when retrieving a session update. */
-  public interface SessionUpdateView extends ComicListView {}
-
   /** Uses when viewing the build details for the server. */
   public interface BuildDetails {}
 }

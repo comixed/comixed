@@ -24,8 +24,6 @@ import { getUserPreference, User } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
-import { loadSessionUpdate } from '@app/actions/session.actions';
-import { selectUserSessionState } from '@app/selectors/session.selectors';
 import { setImportingComicsState } from '@app/library/actions/comic-import.actions';
 import { setPageSize } from '@app/library/actions/display.actions';
 import {
@@ -65,28 +63,39 @@ export class AppComponent implements OnInit {
       this.logger.debug('User updated:', user);
       this.user = user;
       if (!!this.user && !this.sessionActive) {
-        this.logger.debug('Starting messaging subsystem');
-        this.store.dispatch(startMessaging());
-        this.logger.trace('Getting first session update');
+        this.logger.trace('Marking the session as active');
         this.sessionActive = true;
-        this.store.dispatch(
-          loadSessionUpdate({ timestamp: 0, maximumRecords: 100, timeout: 300 })
-        );
+        this.logger.trace('Starting messaging subsystem');
+        this.store.dispatch(startMessaging());
       } else if (!this.user && this.sessionActive) {
         this.logger.trace('Stopping the messaging subsystem');
         this.store.dispatch(stopMessaging());
-        this.logger.trace('Stopping user session updates');
+        this.logger.trace('Marking the session as inactive');
         this.sessionActive = false;
       }
       if (!!this.user) {
-        this.logger.level =
-          LoggerLevel[
-            getUserPreference(
-              this.user.preferences,
-              LOGGER_LEVEL_PREFERENCE,
-              `${LoggerLevel.INFO}`
-            )
-          ];
+        const preferredLevel = parseInt(
+          getUserPreference(
+            this.user.preferences,
+            LOGGER_LEVEL_PREFERENCE,
+            `${LoggerLevel.INFO}`
+          ),
+          10
+        );
+        switch (preferredLevel) {
+          case 1:
+            this.logger.level = LoggerLevel.ALL;
+            break;
+          case 2:
+            this.logger.level = LoggerLevel.TRACE;
+            break;
+          case 3:
+            this.logger.level = LoggerLevel.DEBUG;
+            break;
+          case 4:
+            this.logger.level = LoggerLevel.INFO;
+            break;
+        }
         this.translateService.use(
           getUserPreference(this.user.preferences, LANGUAGE_PREFERENCE, 'en')
         );
@@ -108,21 +117,6 @@ export class AppComponent implements OnInit {
     this.store
       .select(selectBusyState)
       .subscribe(state => (this.busy = state.enabled));
-    this.store.select(selectUserSessionState).subscribe(state => {
-      if (!state.loading && state.initialized) {
-        this.logger.debug('Session state updated:', state);
-        if (this.sessionActive) {
-          this.logger.debug('Getting next session update');
-          this.store.dispatch(
-            loadSessionUpdate({
-              timestamp: state.latest,
-              maximumRecords: 100,
-              timeout: 300
-            })
-          );
-        }
-      }
-    });
     this.store
       .select(selectImportCount)
       .subscribe(count =>

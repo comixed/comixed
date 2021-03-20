@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { SessionUpdate } from '../session-update';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  ComicListState
+} from '../reducers/comic-list.reducer';
 
-export interface SessionUpdateResponse {
-  update: SessionUpdate;
-}
+export const selectComicListState = createFeatureSelector<ComicListState>(
+  COMIC_LIST_FEATURE_KEY
+);
+
+export const selectComicList = createSelector(
+  selectComicListState,
+  state => state.comics
+);

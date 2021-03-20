@@ -56,35 +56,6 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   List<Comic> findBySeries(String series);
 
-  /**
-   * Return all comic entries that have been updated after the specified timestamp.
-   *
-   * @param timestamp the timestamp
-   * @param pageable the constraints
-   * @return the list of comics
-   */
-  List<Comic> findAllByDateLastUpdatedGreaterThan(Date timestamp, Pageable pageable);
-
-  /**
-   * Returns the most recently updated comics.
-   *
-   * @param pageable the constraints
-   * @return the list of comics
-   */
-  List<Comic> findTopByOrderByDateLastUpdatedDesc(Pageable pageable);
-
-  /**
-   * Returns comics updated on or since the specified latestUpdatedDate.
-   *
-   * @param latestUpdatedDate the latest updated latestUpdatedDate
-   * @param paging the paging parameters
-   * @return the list of comics
-   */
-  @Query(
-      "SELECT c FROM Comic c WHERE c.dateLastUpdated >= :latestUpdatedDate ORDER BY c.dateLastUpdated ASC")
-  List<Comic> getLibraryUpdates(
-      @Param("latestUpdatedDate") Date latestUpdatedDate, final Pageable paging);
-
   @Query("SELECT c FROM Comic c JOIN FETCH c.pages WHERE c.id = :id")
   Comic getById(@Param("id") long id);
 
@@ -128,4 +99,12 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT c FROM Comic c WHERE c IN (SELECT p.comic FROM Page p WHERE p.hash = :hash)")
   List<Comic> findComicsForPageHash(@Param("hash") String hash);
+
+  /**
+   * Loads all comics, ordered by date added.
+   *
+   * @return the list of comics
+   */
+  @Query("SELECT c FROM Comic c ORDER BY c.dateAdded")
+  List<Comic> loadComicList();
 }

@@ -101,6 +101,18 @@ public class ComicServiceTest {
     comicsBySeries.add(currentComic);
   }
 
+  @Test
+  public void testLoadAll() {
+    Mockito.when(comicRepository.loadComicList()).thenReturn(comicList);
+
+    final List<Comic> result = comicService.loadComicList();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).loadComicList();
+  }
+
   @Test(expected = ComicException.class)
   public void testGetComicForInvalidUser() throws ComicException, ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString()))
@@ -216,37 +228,6 @@ public class ComicServiceTest {
             TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
     Mockito.verify(comicRepository, Mockito.times(1))
         .findIssuesAfterComic(TEST_SERIES, TEST_VOLUME, TEST_CURRENT_ISSUE_NUMBER, TEST_COVER_DATE);
-  }
-
-  @Test(expected = ComiXedUserException.class)
-  public void testGetComicUpdatesSinceInvalidEmail() throws ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(null);
-
-    try {
-      comicService.getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_COMICS, TEST_EMAIL);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    }
-  }
-
-  @Test
-  public void testGetComicsUpdatedSince() throws ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(
-            comicRepository.findAllByDateLastUpdatedGreaterThan(
-                Mockito.any(Date.class), pageableCaptor.capture()))
-        .thenReturn(comicList);
-
-    final List<Comic> result =
-        comicService.getComicsUpdatedSince(TEST_TIMESTAMP, TEST_MAXIMUM_COMICS, TEST_EMAIL);
-
-    assertNotNull(result);
-    assertSame(comicList, result);
-    assertEquals(0, pageableCaptor.getValue().getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageableCaptor.getValue().getPageSize());
-
-    Mockito.verify(comicRepository, Mockito.times(1))
-        .findAllByDateLastUpdatedGreaterThan(new Date(TEST_TIMESTAMP), pageableCaptor.getValue());
   }
 
   @Test(expected = ComicException.class)

@@ -20,22 +20,18 @@ package org.comixedproject.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.net.*;
 import org.comixedproject.model.net.library.MoveComicsRequest;
 import org.comixedproject.model.net.library.SetReadStateRequest;
-import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.ReadingListService;
-import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.task.model.ConvertComicsWorkerTask;
 import org.comixedproject.task.model.MoveComicsWorkerTask;
@@ -58,86 +54,6 @@ public class LibraryController {
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<MoveComicsWorkerTask> moveComicsWorkerTaskObjectFactory;
-
-  @PostMapping(
-      value = "/library/updates",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.LibraryUpdate.class)
-  @AuditableEndpoint
-  public GetUpdatedComicsResponse getUpdatedComics(
-      Principal principal, @RequestBody() GetUpdatedComicsRequest request)
-      throws ComiXedUserException {
-    Date latestUpdateDate = new Date(request.getLastUpdatedDate());
-    String email = principal.getName();
-    log.info(
-        "Getting comics updated since {} for {} (max: {}, last id: {}, timeout: {}s)",
-        latestUpdateDate,
-        email,
-        request.getMaximumComics(),
-        request.getLastComicId(),
-        request.getTimeout());
-
-    long expire = System.currentTimeMillis() + (request.getTimeout() * 1000L);
-    boolean done = false;
-    List<Comic> comics = null;
-    Long lastComicId = null;
-    Date mostRecentUpdate = null;
-    boolean moreUpdates = false;
-    long processingCount = 0L;
-
-    while (!done) {
-      comics =
-          this.libraryService.getComicsUpdatedSince(
-              email, latestUpdateDate, request.getMaximumComics() + 1, request.getLastComicId());
-
-      if (comics.size() > request.getMaximumComics()) {
-        log.debug("More updates are waiting");
-        moreUpdates = true;
-        log.debug("Removing last comic from result set");
-        comics.remove(comics.size() - 1);
-      }
-
-      log.debug("Getting processing count");
-      processingCount = this.libraryService.getProcessingCount();
-
-      if (!comics.isEmpty()) {
-        log.debug("{} update{} loaded", comics.size(), comics.size() == 1 ? "" : "s");
-        lastComicId = comics.get(comics.size() - 1).getId();
-        mostRecentUpdate = comics.get(comics.size() - 1).getDateLastUpdated();
-        done = true;
-      } else if (System.currentTimeMillis() > expire) {
-        log.debug("Timeout reached");
-        done = true;
-      } else {
-        log.debug("Sleeping 1000ms");
-        try {
-          Thread.sleep(1000L);
-        } catch (InterruptedException error) {
-          log.error("error while waiting for updates", error);
-          Thread.currentThread().interrupt();
-        }
-      }
-    }
-
-    log.debug("Loading updated last read dates");
-    List<LastReadDate> lastReadDates =
-        this.libraryService.getLastReadDatesSince(email, latestUpdateDate);
-
-    log.debug("Getting updated reading lists");
-    List<ReadingList> readingLists =
-        this.readingListService.getReadingListsForUser(email, latestUpdateDate);
-
-    log.debug("Returning result");
-    return new GetUpdatedComicsResponse(
-        comics,
-        lastComicId,
-        mostRecentUpdate,
-        lastReadDates,
-        readingLists,
-        moreUpdates,
-        processingCount);
-  }
 
   @PostMapping(value = "/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint

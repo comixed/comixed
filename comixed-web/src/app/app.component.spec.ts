@@ -29,12 +29,7 @@ import {
   initialState as initialBusyState
 } from '@app/core/reducers/busy.reducer';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  initialState as initialSessionState,
-  SESSION_FEATURE_KEY
-} from '@app/reducers/session.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
-import { loadSessionUpdate } from '@app/actions/session.actions';
 import { NavigationBarComponent } from '@app/components/navigation-bar/navigation-bar.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -62,7 +57,6 @@ describe('AppComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [BUSY_FEATURE_KEY]: initialBusyState,
-    [SESSION_FEATURE_KEY]: initialSessionState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState
   };
@@ -113,16 +107,6 @@ describe('AppComponent', () => {
       expect(component.sessionActive).toBeTrue();
     });
 
-    it('fires an action to load the session update', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadSessionUpdate({
-          timestamp: 0,
-          maximumRecords: MAXIMUM_RECORDS,
-          timeout: TIMEOUT
-        })
-      );
-    });
-
     describe('when the user logs out', () => {
       beforeEach(() => {
         store.setState({
@@ -134,55 +118,6 @@ describe('AppComponent', () => {
       it('clear the session active flag', () => {
         expect(component.sessionActive).toBeFalse();
       });
-    });
-  });
-
-  describe('when a session update is loaded', () => {
-    beforeEach(() => {
-      component.sessionActive = true;
-      store.setState({
-        ...initialState,
-        [SESSION_FEATURE_KEY]: {
-          ...initialSessionState,
-          loading: false,
-          initialized: true,
-          latest: TIMESTAMP
-        }
-      });
-    });
-
-    it('gets the next session update', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        loadSessionUpdate({
-          timestamp: TIMESTAMP,
-          maximumRecords: MAXIMUM_RECORDS,
-          timeout: TIMEOUT
-        })
-      );
-    });
-  });
-
-  describe('when the user logs out', () => {
-    beforeEach(() => {
-      component.sessionActive = false;
-      store.setState({
-        ...initialState,
-        [SESSION_FEATURE_KEY]: {
-          ...initialSessionState,
-          loading: false,
-          initialized: true
-        }
-      });
-    });
-
-    it('does not get the next session update', () => {
-      expect(store.dispatch).not.toHaveBeenCalledWith(
-        loadSessionUpdate({
-          timestamp: TIMESTAMP,
-          maximumRecords: MAXIMUM_RECORDS,
-          timeout: TIMEOUT
-        })
-      );
     });
   });
 });

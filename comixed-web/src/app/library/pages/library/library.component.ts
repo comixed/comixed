@@ -22,7 +22,6 @@ import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import {
-  selectAllComics,
   selectLibraryBusy,
   selectSelectedComics
 } from '@app/library/selectors/library.selectors';
@@ -32,6 +31,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
+import { selectComicList } from '@app/library/selectors/comic-list.selectors';
 
 @Component({
   selector: 'cx-all-comics',
@@ -70,7 +70,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .select(selectLibraryBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.comicSubscription = this.store
-      .select(selectAllComics)
+      .select(selectComicList)
       .subscribe(comics => (this.comics = comics));
     this.selectedSubscription = this.store
       .select(selectSelectedComics)

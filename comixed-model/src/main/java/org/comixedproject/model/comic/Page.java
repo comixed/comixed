@@ -85,7 +85,7 @@ public class Page {
 
   @Column(name = "deleted", updatable = true, nullable = false)
   @JsonProperty("deleted")
-  @JsonView({View.SessionUpdateView.class, View.ComicDetailsView.class})
+  @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private boolean deleted = false;
@@ -107,7 +107,7 @@ public class Page {
   @Formula(
       "(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
   @JsonProperty("blocked")
-  @JsonView({View.SessionUpdateView.class, View.ComicDetailsView.class})
+  @JsonView(View.ComicDetailsView.class)
   @Getter
   private boolean blocked;
 
