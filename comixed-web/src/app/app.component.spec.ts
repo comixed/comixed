@@ -18,7 +18,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerLevel, LoggerModule, LoggerService } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialUserState,
@@ -47,6 +47,7 @@ import {
   IMPORT_COUNT_FEATURE_KEY,
   initialState as initialImportCountState
 } from '@app/reducers/import-count.reducer';
+import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -64,6 +65,7 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let store: MockStore<any>;
+  let logger: LoggerService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -88,6 +90,7 @@ describe('AppComponent', () => {
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     fixture.detectChanges();
+    logger = TestBed.inject(LoggerService);
   }));
 
   it('should create the app', () => {
@@ -117,6 +120,96 @@ describe('AppComponent', () => {
 
       it('clear the session active flag', () => {
         expect(component.sessionActive).toBeFalse();
+      });
+    });
+  });
+
+  describe('setting user logging preference', () => {
+    describe('info level', () => {
+      beforeEach(() => {
+        logger.level = LoggerLevel.OFF;
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            user: {
+              ...initialUserState.user,
+              preferences: [
+                { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.INFO}` }
+              ]
+            }
+          }
+        });
+      });
+
+      it('sets the logging level to debug', () => {
+        expect(logger.level).toEqual(LoggerLevel.INFO);
+      });
+    });
+
+    describe('debug level', () => {
+      beforeEach(() => {
+        logger.level = LoggerLevel.OFF;
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            user: {
+              ...initialUserState.user,
+              preferences: [
+                { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.DEBUG}` }
+              ]
+            }
+          }
+        });
+      });
+
+      it('sets the logging level to info', () => {
+        expect(logger.level).toEqual(LoggerLevel.DEBUG);
+      });
+    });
+
+    describe('trace level', () => {
+      beforeEach(() => {
+        logger.level = LoggerLevel.OFF;
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            user: {
+              ...initialUserState.user,
+              preferences: [
+                { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.TRACE}` }
+              ]
+            }
+          }
+        });
+      });
+
+      it('sets the logging level to info', () => {
+        expect(logger.level).toEqual(LoggerLevel.TRACE);
+      });
+    });
+
+    describe('all logging level', () => {
+      beforeEach(() => {
+        logger.level = LoggerLevel.OFF;
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            user: {
+              ...initialUserState.user,
+              preferences: [
+                { name: LOGGER_LEVEL_PREFERENCE, value: `${LoggerLevel.ALL}` }
+              ]
+            }
+          }
+        });
+      });
+
+      it('sets the logging level to info', () => {
+        expect(logger.level).toEqual(LoggerLevel.ALL);
       });
     });
   });

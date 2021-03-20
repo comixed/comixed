@@ -18,8 +18,11 @@
 
 package org.comixedproject.controller.comic;
 
+import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.ComicFormat;
+import org.comixedproject.model.messaging.Constants;
+import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.service.comic.ComicFormatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -35,20 +38,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class ComicFormatController {
-  private static final String LOAD_COMIC_FORMATS = "load.comic-formats";
-  private static final String ADD_COMIC_FORMAT_QUEUE = "/queue/comic-format.add";
 
   @Autowired private ComicFormatService comicFormatService;
   @Autowired private SimpMessagingTemplate messagingTemplate;
 
   /** Retrieves the list of all comic formats and publishes them. */
-  @MessageMapping(LOAD_COMIC_FORMATS)
-  public void getAll() {
-    log.info("Getting all comic formats");
+  @MessageMapping(Constants.LOAD_COMIC_FORMATS)
+  public void getAll(final Principal principal) {
+    log.info("Getting all comic formats for {}", principal.getName());
     this.comicFormatService
         .getAll()
         .forEach(
-            comicFormat ->
-                this.messagingTemplate.convertAndSend(ADD_COMIC_FORMAT_QUEUE, comicFormat));
+            comicFormat -> {
+              log.trace("Sending comic format: {}", comicFormat.getName());
+              this.messagingTemplate.convertAndSendToUser(
+                  principal.getName(), Constants.COMIC_FORMAT_UPDATE_TOPIC, comicFormat);
+            });
+    log.trace("Sending end of list");
+    this.messagingTemplate.convertAndSendToUser(
+        principal.getName(), Constants.COMIC_FORMAT_UPDATE_TOPIC, EndOfList.MESSAGE);
   }
 }
