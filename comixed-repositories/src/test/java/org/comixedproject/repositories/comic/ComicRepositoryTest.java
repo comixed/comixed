@@ -90,6 +90,17 @@ public class ComicRepositoryTest {
     comic = repository.getById(TEST_COMIC_ID);
   }
 
+  @Test
+  public void testLoadComicList() {
+    final List<Comic> result = repository.loadComicList();
+
+    for (int index = 0; index < result.size() - 1; index++) {
+      assertTrue(
+          result.get(index).getDateAdded().getTime()
+              <= result.get(index + 1).getDateAdded().getTime());
+    }
+  }
+
   @Test(expected = DataIntegrityViolationException.class)
   public void testFilenameIsRequired() {
     comic.setFilename(null);
@@ -376,16 +387,6 @@ public class ComicRepositoryTest {
   }
 
   @Test
-  public void testFindAllByDateLastUpdatedGreaterThan() {
-    final List<Comic> result =
-        repository.findAllByDateLastUpdatedGreaterThan(new Date(0L), PageRequest.of(0, 1));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(1, result.size());
-  }
-
-  @Test
   public void testGetComics() {
     final List<Comic> result =
         repository.findAll(PageRequest.of(1, 2, Sort.by(Direction.DESC, "dateAdded"))).getContent();
@@ -393,40 +394,6 @@ public class ComicRepositoryTest {
     assertNotNull(result);
     assertEquals(2, result.size());
     assertTrue(result.get(0).getDateAdded().after(result.get(1).getDateAdded()));
-  }
-
-  @Test
-  public void testFindTopByLastUpdatedDateDesc() {
-    final List<Comic> result = repository.findTopByOrderByDateLastUpdatedDesc(PageRequest.of(0, 3));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    for (int index = 1; index < result.size(); index++) {
-      assertTrue(
-          result.get(index - 1).getDateLastUpdated().after(result.get(index).getDateLastUpdated()));
-    }
-  }
-
-  @Test
-  public void testGetLibraryUpdatesFirstRequest() {
-    List<Comic> result = this.repository.getLibraryUpdates(new Date(0L), PageRequest.of(0, 100));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(10, result.size());
-    testComicOrder(0L, 0L, result);
-  }
-
-  @Test
-  public void testGetLibraryUpdatesSubsequentRequest() {
-    final Comic lastComic = this.repository.getById(1002L);
-    final Date timestamp = lastComic.getDateLastUpdated();
-    final List<Comic> result = this.repository.getLibraryUpdates(timestamp, PageRequest.of(0, 100));
-
-    testComicOrder(0, timestamp.getTime(), result);
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(6, result.size());
   }
 
   private void testComicOrder(long id, long timestamp, List<Comic> comicList) {

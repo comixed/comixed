@@ -41,7 +41,7 @@ public class ComicFileDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.ComicListView.class, View.SessionUpdateView.class})
+  @JsonView(View.ComicListView.class)
   @Getter
   private Long id;
 
@@ -53,7 +53,7 @@ public class ComicFileDetails {
 
   @Column(name = "file_hash", length = 32, nullable = false, updatable = true)
   @JsonProperty("hash")
-  @JsonView({View.ComicListView.class, View.SessionUpdateView.class})
+  @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String hash;

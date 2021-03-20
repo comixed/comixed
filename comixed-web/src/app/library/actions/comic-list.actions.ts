@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.auditlog;
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '@app/library';
 
-import lombok.Getter;
+export const resetComicList = createAction(
+  '[Comic List] Indicates the loading process is started'
+);
 
-/**
- * <code>AuditEventType</code> specifies the type of event that occurred.
- *
- * @author Darryl L. Pierce
- */
-public enum AuditEventType {
-  ADDED("+"),
-  DELETED("-");
-
-  @Getter private String prefix;
-
-  AuditEventType(final String prefix) {
-    this.prefix = prefix;
-  }
-}
+export const comicListUpdateReceived = createAction(
+  '[Comic List] A comic update was received',
+  props<{ comic: Comic }>()
+);

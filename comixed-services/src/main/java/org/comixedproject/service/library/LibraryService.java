@@ -20,7 +20,6 @@ package org.comixedproject.service.library;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -36,7 +35,6 @@ import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,43 +48,6 @@ public class LibraryService {
   @Autowired private ReadingListService readingListService;
   @Autowired private Utils utils;
   @Autowired private PageCacheService pageCacheService;
-
-  public List<Comic> getComicsUpdatedSince(
-      String email, Date latestUpdatedDate, int maximumComics, long lastComicId) {
-    log.debug(
-        "Finding up to {} comics updated since {} for {}", maximumComics, latestUpdatedDate, email);
-
-    List<Comic> comics =
-        this.comicRepository.getLibraryUpdates(latestUpdatedDate, PageRequest.of(0, maximumComics));
-    List<Comic> result = new ArrayList<>();
-
-    final long timestamp = latestUpdatedDate.getTime();
-    for (int index = 0; index < comics.size(); index++) {
-      Comic comic = comics.get(index);
-      final long thisTimestamp = comic.getDateLastUpdated().getTime();
-      final Long thisId = comic.getId();
-      log.debug(
-          "Checking comic: timestamp: {} >= {} id: {} > {}",
-          thisTimestamp,
-          timestamp,
-          thisId,
-          lastComicId);
-      boolean include = thisTimestamp > timestamp || thisId > lastComicId;
-
-      if (include) {
-        log.debug("Including comic: id={}", thisId);
-        result.add(comic);
-      }
-    }
-
-    if (!result.isEmpty()) {
-      log.debug("Loading reading lists");
-      this.readingListService.getReadingListsForComics(email, result);
-    }
-
-    log.debug("Returning {} updated comic{}", result.size(), result.size() == 1 ? "" : "s");
-    return result;
-  }
 
   public List<LastReadDate> getLastReadDatesSince(String email, Date lastReadDate)
       throws ComiXedUserException {

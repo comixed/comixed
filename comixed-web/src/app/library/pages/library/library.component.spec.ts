@@ -58,12 +58,17 @@ import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DeletedComicsPipe } from '@app/library/pipes/deleted-comics.pipe';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/library/reducers/comic-list.reducer';
 
 describe('LibraryComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [DISPLAY_FEATURE_KEY]: initialDisplayState
+    [DISPLAY_FEATURE_KEY]: initialDisplayState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState
   };
 
   let component: LibraryComponent;

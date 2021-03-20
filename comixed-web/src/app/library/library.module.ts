@@ -100,8 +100,8 @@ import { ComicPageComponent } from '@app/library/components/comic-page/comic-pag
 import { ComicDetailCardComponent } from '@app/library/components/comic-detail-card/comic-detail-card.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {
-  SCAN_TYPE_FEATURE_KEY,
-  reducer as scanTypeReducer
+  reducer as scanTypeReducer,
+  SCAN_TYPE_FEATURE_KEY
 } from '@app/library/reducers/scan-type.reducer';
 import { ScanTypeEffects } from '@app/library/effects/scan-type.effects';
 import {
@@ -109,6 +109,11 @@ import {
   reducer as comicFormatReducer
 } from '@app/library/reducers/comic-format.reducer';
 import { ComicFormatEffects } from '@app/library/effects/comic-format.effects';
+import { ComicListEffects } from '@app/library/effects/comic-list.effects';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  reducer as comicReducer
+} from '@app/library/reducers/comic-list.reducer';
 
 @NgModule({
   declarations: [
@@ -156,6 +161,7 @@ import { ComicFormatEffects } from '@app/library/effects/comic-format.effects';
     StoreModule.forFeature(BLOCKED_PAGE_FEATURE_KEY, blockedPageReducer),
     StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
     StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
+    StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       ComicImportEffects,
@@ -163,7 +169,8 @@ import { ComicFormatEffects } from '@app/library/effects/comic-format.effects';
       ScrapingEffects,
       BlockedPageEffects,
       ScanTypeEffects,
-      ComicFormatEffects
+      ComicFormatEffects,
+      ComicListEffects
     ]),
     MatInputModule,
     MatSelectModule,

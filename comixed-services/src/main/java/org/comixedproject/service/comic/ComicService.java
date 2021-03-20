@@ -80,50 +80,6 @@ public class ComicService {
     return result;
   }
 
-  /**
-   * Loads library updates for the given user made after a given point in time.
-   *
-   * @param timestamp the timestamp
-   * @param maximumResults the maximum results
-   * @param email the user's email address
-   * @return the updated comics
-   * @throws ComiXedUserException if the user is not found
-   */
-  public List<Comic> getComicsUpdatedSince(
-      final long timestamp, final int maximumResults, final String email)
-      throws ComiXedUserException {
-    final ComiXedUser user = this.userService.findByEmail(email);
-    if (user == null) throw new ComiXedUserException("No such user: " + email);
-
-    final Date lastUpdated = new Date(timestamp);
-    log.debug(
-        "Getting {} comic{} updated since {} for {}",
-        maximumResults,
-        maximumResults == 1 ? "" : "s",
-        lastUpdated,
-        email);
-
-    final List<Comic> result =
-        this.comicRepository.findAllByDateLastUpdatedGreaterThan(
-            lastUpdated, PageRequest.of(0, maximumResults));
-
-    if (!result.isEmpty()) {
-      log.debug("Loading last read dates");
-      result.forEach(
-          comic -> {
-            final LastReadDate lastRead =
-                this.lastReadDatesRepository.getForComicAndUser(comic, user);
-            if (lastRead != null) {
-              comic.setLastRead(lastRead.getLastRead());
-            }
-          });
-    }
-
-    log.debug("Returning {} comic{}", result.size(), result.size() == 1 ? "" : "s");
-
-    return result;
-  }
-
   @Transactional
   public Comic deleteComic(final long id) throws ComicException {
     log.debug("Marking comic for deletion: id={}", id);
@@ -453,5 +409,15 @@ public class ComicService {
       comic.setDateLastUpdated(new Date());
       this.comicRepository.save(comic);
     }
+  }
+
+  /**
+   * Returns the entire list of comics.
+   *
+   * @return the comic list
+   */
+  @Transactional
+  public List<Comic> loadComicList() {
+    return this.comicRepository.loadComicList();
   }
 }

@@ -19,11 +19,11 @@
 package org.comixedproject.controller.comic;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
@@ -37,8 +37,8 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFormat;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.ScanType;
-import org.comixedproject.model.net.GetLibraryUpdatesRequest;
-import org.comixedproject.model.net.GetLibraryUpdatesResponse;
+import org.comixedproject.model.messaging.Constants;
+import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
 import org.comixedproject.model.user.LastReadDate;
@@ -61,6 +61,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -72,7 +74,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/comics")
 @Log4j2
 public class ComicController {
-  private static final Object STATUS_SEMAPHORE = new Object();
+
+  @Autowired private SimpMessagingTemplate messagingTemplate;
+  @Autowired private ObjectMapper objectMapper;
 
   @Autowired private ComicService comicService;
   @Autowired private PageCacheService pageCacheService;
@@ -86,6 +90,34 @@ public class ComicController {
   @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
+
+  /**
+   * Loads the entire list of comics and sends them to the requesting user.
+   *
+   * @param principal the user principal
+   */
+  @MessageMapping(Constants.LOAD_COMIC_LIST_MESSAGE)
+  public void loadComicList(final Principal principal) {
+    log.info("Loading all comics for user: {}", principal.getName());
+    this.comicService
+        .loadComicList()
+        .forEach(
+            comic -> {
+              log.trace("Sending comic to user: {}", comic.getId());
+              try {
+                this.messagingTemplate.convertAndSendToUser(
+                    principal.getName(),
+                    Constants.COMIC_LIST_UPDATE_TOPIC,
+                    this.objectMapper
+                        .writerWithView(ComicDetailsView.class)
+                        .writeValueAsString(comic));
+              } catch (JsonProcessingException error) {
+                log.error("Could not send comic", error);
+              }
+            });
+    this.messagingTemplate.convertAndSendToUser(
+        principal.getName(), Constants.COMIC_LIST_UPDATE_TOPIC, EndOfList.MESSAGE);
+  }
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
@@ -126,19 +158,11 @@ public class ComicController {
       this.comicDataAdaptor.clear(comic);
       log.debug("Saving updates to comic");
       this.comicService.save(comic);
-      ComicController.stopWaitingForStatus();
     } else {
       log.debug("No such comic found");
     }
 
     return comic;
-  }
-
-  /** Tells any pending status calls to wake up. */
-  public static void stopWaitingForStatus() {
-    synchronized (STATUS_SEMAPHORE) {
-      STATUS_SEMAPHORE.notifyAll();
-    }
   }
 
   @PostMapping(value = "/multiple/delete")
@@ -180,75 +204,6 @@ public class ComicController {
         .header("Content-Disposition", "attachment; filename=\"" + comic.getFilename() + "\"")
         .contentType(MediaType.parseMediaType(comic.getArchiveType().getMimeType()))
         .body(new InputStreamResource(new ByteArrayInputStream(content)));
-  }
-
-  @PostMapping(
-      value = "/since/{timestamp}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicListView.class)
-  @AuditableEndpoint
-  public GetLibraryUpdatesResponse getComicsUpdatedSince(
-      Principal principal,
-      @PathVariable("timestamp") long timestamp,
-      @RequestBody() GetLibraryUpdatesRequest request)
-      throws InterruptedException, ComiXedUserException {
-    final String email = principal.getName();
-    final Date lastUpdated = new Date(timestamp);
-    final long timeout = request.getTimeout();
-    final int maximumResults = request.getMaximumResults();
-    final long latestCheck = System.currentTimeMillis() + (timeout * 1000L);
-
-    boolean done = false;
-
-    log.info("Getting library updates: user={} timestamp={}", email, lastUpdated);
-
-    List<Comic> comics = null;
-    List<LastReadDate> lastReadDates = null;
-    long processCount = 0;
-    int rescanCount = 0;
-    boolean firstRun = true;
-
-    while (!done) {
-      if (System.currentTimeMillis() >= latestCheck) {
-        log.debug("Timed out checking for library updates");
-        done = true;
-      } else {
-        if (!firstRun) {
-          synchronized (STATUS_SEMAPHORE) {
-            log.debug("Sleeping for 1000ms");
-            STATUS_SEMAPHORE.wait(1000);
-          }
-        }
-        firstRun = false;
-        comics = this.comicService.getComicsUpdatedSince(timestamp, maximumResults, email);
-        log.debug("Found {} new or updated comic{}", comics.size(), comics.size() == 1 ? "" : "s");
-        lastReadDates = this.comicService.getLastReadDatesSince(email, timestamp);
-        log.debug(
-            "Found {} updated last read record{}",
-            lastReadDates.size(),
-            lastReadDates.size() == 1 ? "" : "s");
-        processCount = this.comicService.getProcessingCount();
-        log.debug("Import count: {}", processCount);
-        rescanCount = this.comicService.getRescanCount();
-        log.debug("Rescan count: {}", rescanCount);
-
-        done =
-            !comics.isEmpty()
-                || !lastReadDates.isEmpty()
-                || (processCount != request.getLastProcessingCount())
-                || (rescanCount != request.getLastRescanCount());
-      }
-    }
-
-    if (comics == null) {
-      comics = new ArrayList<>();
-    }
-    if (lastReadDates == null) {
-      lastReadDates = new ArrayList<>();
-    }
-
-    return new GetLibraryUpdatesResponse(comics, lastReadDates, rescanCount, processCount);
   }
 
   /**

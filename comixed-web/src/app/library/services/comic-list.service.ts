@@ -18,21 +18,24 @@
 
 import { Injectable } from '@angular/core';
 import { Subscription } from 'webstomp-client';
-import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
+import { LoggerService } from '@angular-ru/logger';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
-  COMIC_FORMAT_ADD_QUEUE,
-  LOAD_COMIC_FORMATS_MESSAGE
+  COMIC_LIST_UPDATE_TOPIC,
+  LOAD_COMIC_LIST_MESSAGE
 } from '@app/library/library.constants';
-import { comicFormatAdded } from '@app/library/actions/comic-format.actions';
-import { ComicFormat } from '@app/library';
+import { Comic } from '@app/library';
+import {
+  comicListUpdateReceived,
+  resetComicList
+} from '@app/library/actions/comic-list.actions';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ComicFormatService {
+export class ComicListService {
   subscription: Subscription;
 
   constructor(
@@ -42,18 +45,30 @@ export class ComicFormatService {
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
-        this.logger.trace('Subscribing to scan type updates');
-        this.subscription = this.webSocketService.subscribe<ComicFormat>(
-          COMIC_FORMAT_ADD_QUEUE,
-          format => {
-            this.logger.debug('Received comic format:', format);
-            this.store.dispatch(comicFormatAdded({ format }));
+        this.logger.trace('Resetting comic list state');
+        this.store.dispatch(resetComicList());
+        this.logger.trace('Subscribing to comic list updates');
+        this.subscription = this.webSocketService.subscribe<Comic>(
+          COMIC_LIST_UPDATE_TOPIC,
+          comic => {
+            this.logger.debug('Received comic list update:', comic);
+            this.store.dispatch(comicListUpdateReceived({ comic }));
           }
         );
-        this.webSocketService.send(LOAD_COMIC_FORMATS_MESSAGE, '');
+
+        this.logger.debug('Loading the comic list');
+        this.webSocketService.requestResponse<Comic>(
+          LOAD_COMIC_LIST_MESSAGE,
+          `/secured/user${COMIC_LIST_UPDATE_TOPIC}`,
+          comic => {
+            this.logger.debug('Loading comic:', comic);
+            this.store.dispatch(comicListUpdateReceived({ comic }));
+          }
+        );
       }
+
       if (!state.started && !!this.subscription) {
-        this.logger.trace('Unsubscribing from scan type updates');
+        this.logger.trace('Unsubscribing from comic list updates');
         this.subscription.unsubscribe();
         this.subscription = null;
       }

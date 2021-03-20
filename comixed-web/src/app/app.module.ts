@@ -47,7 +47,6 @@ import { LibraryModule } from '@app/library/library.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { APP_REDUCERS } from '@app/app.reducers';
-import { SessionEffects } from '@app/effects/session.effects';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { BuildDetailsEffects } from '@app/effects/build-details.effects';
@@ -79,7 +78,6 @@ import { ImportCountEffects } from '@app/effects/import-count.effects';
     StoreModule.forRoot(APP_REDUCERS, {}),
     EffectsModule.forRoot([
       AppEffects,
-      SessionEffects,
       BuildDetailsEffects,
       ImportCountEffects
     ]),

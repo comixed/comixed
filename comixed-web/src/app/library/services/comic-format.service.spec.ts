@@ -20,13 +20,13 @@ import { TestBed } from '@angular/core/testing';
 import { ComicFormatService } from './comic-format.service';
 import { FORMAT_3 } from '@app/library/library.fixtures';
 import {
-  MESSAGING_FEATURE_KEY,
-  initialState as initialMessagingState
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
-import { Frame, Subscription } from 'webstomp-client';
+import { Subscription } from 'webstomp-client';
 import {
   COMIC_FORMAT_ADD_QUEUE,
   LOAD_COMIC_FORMATS_MESSAGE
@@ -74,7 +74,7 @@ describe('ComicFormatService', () => {
   });
 
   describe('when messaging starts', () => {
-    const MESSAGE = new Frame('scan type', {}, JSON.stringify(COMIC_FORMAT));
+    const MESSAGE = COMIC_FORMAT;
 
     beforeEach(() => {
       webSocketService.subscribe.and.callFake((topic, callback) => {
