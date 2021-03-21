@@ -48,14 +48,6 @@ export class ComicListService {
       if (state.started && !this.subscription) {
         this.logger.trace('Resetting comic list state');
         this.store.dispatch(resetComicList());
-        this.logger.trace('Subscribing to comic list updates');
-        this.subscription = this.webSocketService.subscribe<Comic>(
-          COMIC_LIST_UPDATE_TOPIC,
-          comic => {
-            this.logger.debug('Received comic list update:', comic);
-            this.store.dispatch(comicListUpdateReceived({ comic }));
-          }
-        );
 
         this.logger.debug('Loading the comic list');
         this.webSocketService.requestResponse<Comic>(
@@ -64,6 +56,15 @@ export class ComicListService {
           COMIC_LIST_UPDATE_TOPIC,
           comic => {
             this.logger.debug('Loading comic:', comic);
+            this.store.dispatch(comicListUpdateReceived({ comic }));
+          }
+        );
+
+        this.logger.trace('Subscribing to comic list updates');
+        this.subscription = this.webSocketService.subscribe<Comic>(
+          COMIC_LIST_UPDATE_TOPIC,
+          comic => {
+            this.logger.debug('Received comic list update:', comic);
             this.store.dispatch(comicListUpdateReceived({ comic }));
           }
         );
