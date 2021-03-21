@@ -31,7 +31,6 @@ import {
   comicListUpdateReceived,
   resetComicList
 } from '@app/library/actions/comic-list.actions';
-import { securedTopic } from '@app/messaging/messaging.functions';
 
 @Injectable({
   providedIn: 'root'

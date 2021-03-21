@@ -24,7 +24,7 @@ import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'webstomp-client';
 import {
   LOAD_SCAN_TYPES_MESSAGE,
-  SCAN_TYPE_ADD_QUEUE
+  SCAN_TYPE_UPDATE_TOPIC
 } from '@app/library/library.constants';
 import { scanTypeAdded } from '@app/library/actions/scan-type.actions';
 import { ScanType } from '@app/library';
@@ -43,9 +43,20 @@ export class ScanTypeService {
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
+        this.logger.trace('Loading scan types');
+        this.webSocketService.requestResponse<ScanType>(
+          LOAD_SCAN_TYPES_MESSAGE,
+          '',
+          SCAN_TYPE_UPDATE_TOPIC,
+          scanType => {
+            this.logger.debug('Received scan type:', scanType);
+            this.store.dispatch(scanTypeAdded({ scanType }));
+          }
+        );
+
         this.logger.trace('Subscribing to scan type updates');
         this.subscription = this.webSocketService.subscribe<ScanType>(
-          SCAN_TYPE_ADD_QUEUE,
+          SCAN_TYPE_UPDATE_TOPIC,
           scanType => {
             this.logger.debug('Received scan type:', scanType);
             this.store.dispatch(scanTypeAdded({ scanType }));

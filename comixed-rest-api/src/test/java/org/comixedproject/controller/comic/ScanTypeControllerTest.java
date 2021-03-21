@@ -18,12 +18,15 @@
 
 package org.comixedproject.controller.comic;
 
-import static org.comixedproject.controller.comic.ScanTypeController.ADD_SCAN_TYPE_QUEUE;
+import static org.comixedproject.model.messaging.Constants.SCAN_TYPE_UPDATE_TOPIC;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comic.ScanType;
+import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.service.comic.ScanTypeService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,12 +37,20 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScanTypeControllerTest {
+  private static final String TEST_USER_EMAIL = "user@domain.tld";
+
   @InjectMocks private ScanTypeController controller;
   @Mock private ScanTypeService scanTypeService;
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ScanType scanType;
+  @Mock private Principal principal;
 
   private List<ScanType> scanTypeList = new ArrayList<ScanType>();
+
+  @Before
+  public void setUp() {
+    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+  }
 
   @Test
   public void testGetScanTypes() {
@@ -47,10 +58,12 @@ public class ScanTypeControllerTest {
 
     Mockito.when(scanTypeService.getAll()).thenReturn(scanTypeList);
 
-    controller.getScanTypes();
+    controller.getScanTypes(principal);
 
     Mockito.verify(scanTypeService, Mockito.times(1)).getAll();
     Mockito.verify(messagingTemplate, Mockito.times(scanTypeList.size()))
-        .convertAndSend(ADD_SCAN_TYPE_QUEUE, scanType);
+        .convertAndSendToUser(TEST_USER_EMAIL, SCAN_TYPE_UPDATE_TOPIC, scanType);
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSendToUser(TEST_USER_EMAIL, SCAN_TYPE_UPDATE_TOPIC, EndOfList.MESSAGE);
   }
 }
