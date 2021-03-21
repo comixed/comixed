@@ -12,6 +12,12 @@ public interface Constants {
   /** Topic which receives the set of comic formats. */
   String COMIC_FORMAT_UPDATE_TOPIC = "/topic/comic-format.update";
 
+  /** Message sent to start loading scan types. */
+  String LOAD_SCAN_TYPES = "scan-types.load";
+
+  /** Topic which receives scan type updates. */
+  String SCAN_TYPE_UPDATE_TOPIC = "/topic/scan-type.update";
+
   /** Message sent to start the process of loading comics for a browser. */
   String LOAD_COMIC_LIST_MESSAGE = "comic-list.load";
 

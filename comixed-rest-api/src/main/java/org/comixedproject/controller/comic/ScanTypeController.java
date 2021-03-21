@@ -18,12 +18,15 @@
 
 package org.comixedproject.controller.comic;
 
+import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.messaging.Constants;
+import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.service.comic.ScanTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
 
 /**
  * <code>ScanTypeController</code> provides APIs for working with {@link
@@ -31,21 +34,29 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Darryl L. Pierce
  */
-@RestController
+@Controller
 @Log4j2
 public class ScanTypeController {
-  private static final String LOAD_SCAN_TYPES = "load.scan-types";
-  public static final String ADD_SCAN_TYPE_QUEUE = "/queue/scan-type.add";
-
   @Autowired private ScanTypeService scanTypeService;
   @Autowired private SimpMessagingTemplate messagingTemplate;
 
-  /** Retrieves the list of all scan types and publishes them. */
-  @MessageMapping(LOAD_SCAN_TYPES)
-  public void getScanTypes() {
-    log.info("Getting all scan types");
+  /**
+   * Retrieves the list of all scan types and publishes them.
+   *
+   * @param principal the user principal
+   */
+  @MessageMapping(Constants.LOAD_SCAN_TYPES)
+  public void getScanTypes(final Principal principal) {
+    log.info("Getting all scan types for user: {}", principal.getName());
     this.scanTypeService
         .getAll()
-        .forEach(scanType -> this.messagingTemplate.convertAndSend(ADD_SCAN_TYPE_QUEUE, scanType));
+        .forEach(
+            scanType -> {
+              log.trace("Sending scan type to user: {}", scanType.getName());
+              this.messagingTemplate.convertAndSendToUser(
+                  principal.getName(), Constants.SCAN_TYPE_UPDATE_TOPIC, scanType);
+            });
+    this.messagingTemplate.convertAndSendToUser(
+        principal.getName(), Constants.SCAN_TYPE_UPDATE_TOPIC, EndOfList.MESSAGE);
   }
 }

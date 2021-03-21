@@ -24,19 +24,17 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { Frame, Subscription } from 'webstomp-client';
+import { Subscription } from 'webstomp-client';
 import { scanTypeAdded } from '@app/library/actions/scan-type.actions';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   LOAD_SCAN_TYPES_MESSAGE,
-  SCAN_TYPE_ADD_QUEUE
+  SCAN_TYPE_UPDATE_TOPIC
 } from '@app/library/library.constants';
 import { LoggerModule } from '@angular-ru/logger';
-import { SCAN_TYPE_6 } from '@app/library/library.fixtures';
+import { SCAN_TYPE_1, SCAN_TYPE_2 } from '@app/library/library.fixtures';
 
 describe('ScanTypeService', () => {
-  const SCAN_TYPE = SCAN_TYPE_6;
-
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -56,7 +54,10 @@ describe('ScanTypeService', () => {
           provide: WebSocketService,
           useValue: {
             subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-            send: jasmine.createSpy('WebSocketService.send()')
+            send: jasmine.createSpy('WebSocketService.send()'),
+            requestResponse: jasmine.createSpy(
+              'WebSocketService.requestResponse()'
+            )
           }
         }
       ]
@@ -75,11 +76,18 @@ describe('ScanTypeService', () => {
   });
 
   describe('when messaging starts', () => {
-    const MESSAGE = SCAN_TYPE;
+    const TYPE_1 = SCAN_TYPE_1;
+    const TYPE_2 = SCAN_TYPE_2;
 
     beforeEach(() => {
-      webSocketService.subscribe.and.callFake((topic, callback) => {
-        callback(MESSAGE);
+      webSocketService.requestResponse.and.callFake(
+        (message, body, destination, callback) => {
+          callback(TYPE_1);
+          return {} as Subscription;
+        }
+      );
+      webSocketService.subscribe.and.callFake((destination, callback) => {
+        callback(TYPE_2);
         return {} as Subscription;
       });
       store.setState({
@@ -88,23 +96,31 @@ describe('ScanTypeService', () => {
       });
     });
 
-    it('subscribes to the scan types topic', () => {
-      expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        SCAN_TYPE_ADD_QUEUE,
+    it('requests the initial load of scan types', () => {
+      expect(webSocketService.requestResponse).toHaveBeenCalledWith(
+        LOAD_SCAN_TYPES_MESSAGE,
+        '',
+        SCAN_TYPE_UPDATE_TOPIC,
         jasmine.anything()
       );
     });
 
-    it('publishes a message', () => {
-      expect(webSocketService.send).toHaveBeenCalledWith(
-        LOAD_SCAN_TYPES_MESSAGE,
-        ''
+    it('processes scan types received on the initial load', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        scanTypeAdded({ scanType: TYPE_1 })
       );
     });
 
-    it('fires an action', () => {
+    it('subscribes to the scan type update topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        SCAN_TYPE_UPDATE_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('processes scan types received on the subscription', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        scanTypeAdded({ scanType: SCAN_TYPE })
+        scanTypeAdded({ scanType: TYPE_2 })
       );
     });
   });
