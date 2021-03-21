@@ -19,30 +19,25 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ComicListService } from './comic-list.service';
-import { COMIC_1, SCAN_TYPE_6 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_2 } from '@app/library/library.fixtures';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { ScanTypeService } from '@app/library/services/scan-type.service';
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
-import { Frame, Subscription } from 'webstomp-client';
+import { Subscription } from 'webstomp-client';
 import {
   COMIC_LIST_UPDATE_TOPIC,
-  LOAD_SCAN_TYPES_MESSAGE,
-  SCAN_TYPE_ADD_QUEUE
+  LOAD_COMIC_LIST_MESSAGE
 } from '@app/library/library.constants';
-import { scanTypeAdded } from '@app/library/actions/scan-type.actions';
 import {
   comicListUpdateReceived,
   resetComicList
 } from '@app/library/actions/comic-list.actions';
 
 describe('ComicListService', () => {
-  const COMIC = COMIC_1;
-
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -85,8 +80,14 @@ describe('ComicListService', () => {
 
   describe('when messaging starts', () => {
     beforeEach(() => {
-      webSocketService.subscribe.and.callFake((topic, callback) => {
-        callback(COMIC);
+      webSocketService.requestResponse.and.callFake(
+        (message, body, destination, callback) => {
+          callback(COMIC_1);
+          return {} as Subscription;
+        }
+      );
+      webSocketService.subscribe.and.callFake((destination, callback) => {
+        callback(COMIC_2);
         return {} as Subscription;
       });
       store.setState({
@@ -99,16 +100,31 @@ describe('ComicListService', () => {
       expect(store.dispatch).toHaveBeenCalledWith(resetComicList());
     });
 
-    it('subscribes to the scan types topic', () => {
+    it('loads the list of comics', () => {
+      expect(webSocketService.requestResponse).toHaveBeenCalledWith(
+        LOAD_COMIC_LIST_MESSAGE,
+        '',
+        COMIC_LIST_UPDATE_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('processes comics from the initial load', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        comicListUpdateReceived({ comic: COMIC_1 })
+      );
+    });
+
+    it('subscribes to the comic list update topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
         COMIC_LIST_UPDATE_TOPIC,
         jasmine.anything()
       );
     });
 
-    it('fires an action', () => {
+    it('processes comic updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        comicListUpdateReceived({ comic: COMIC })
+        comicListUpdateReceived({ comic: COMIC_2 })
       );
     });
   });
@@ -122,7 +138,7 @@ describe('ComicListService', () => {
       });
     });
 
-    it('unsubscribes from the add scan type queue', () => {
+    it('unsubscribes from the comic list update queue', () => {
       expect(subscription.unsubscribe).toHaveBeenCalled();
     });
 
