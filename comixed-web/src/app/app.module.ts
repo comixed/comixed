@@ -57,6 +57,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MessagingModule } from '@app/messaging/messaging.module';
 import { TaskCountService } from '@app/services/task-count.service';
 import { ImportCountEffects } from '@app/effects/import-count.effects';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { ImportCountEffects } from '@app/effects/import-count.effects';
     MatProgressSpinnerModule,
     MatMenuModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSelectModule
   ],
   providers: [
     [

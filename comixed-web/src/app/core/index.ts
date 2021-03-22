@@ -27,6 +27,7 @@ import {
 
 export * from '@app/core/core.constants';
 export * from '@app/core/core.functions';
+export { SelectionOption } from '@app/core/models/ui/selection-option';
 export { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 export { TokenService } from '@app/core/services/token.service';
 export { AlertService } from '@app/core/services/alert.service';

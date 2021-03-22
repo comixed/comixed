@@ -42,6 +42,9 @@ import {
   LANGUAGE_PREFERENCE,
   LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
+import { MatSelectModule } from '@angular/material/select';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComicViewMode } from '@app/library';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
@@ -61,6 +64,7 @@ describe('NavigationBarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [NavigationBarComponent],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
@@ -70,7 +74,8 @@ describe('NavigationBarComponent', () => {
         MatToolbarModule,
         MatTooltipModule,
         MatFormFieldModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSelectModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -248,5 +253,30 @@ describe('NavigationBarComponent', () => {
         );
       });
     });
+  });
+
+  describe('toggling stacked mode', () => {
+    const stacked = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.stacked = stacked;
+      component.onToggleStacked();
+    });
+
+    it('flips the stacked flag', () => {
+      expect(component.stacked).toEqual(!stacked);
+    });
+  });
+
+  describe('changing the comic view', () => {
+    it('can show all comics', () => {
+      component.onComicViewChange(ComicViewMode.ALL);
+      expect(router.navigate).toHaveBeenCalledWith(['/library']);
+    });
+  });
+
+  it('can show the build details', () => {
+    component.onShowBuildDetails();
+    expect(router.navigate).toHaveBeenCalledWith(['/build']);
   });
 });

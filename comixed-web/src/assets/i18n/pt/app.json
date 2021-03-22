@@ -86,6 +86,33 @@
       "show-options-panel": "Set User Options..."
     }
   },
+  "navigation": {
+    "collections": {
+      "characters": "Characters",
+      "locations": "Locations",
+      "publishers": "Publishers",
+      "root": "Collections",
+      "series": "Series",
+      "stories": "Stories",
+      "teams": "Teams"
+    },
+    "comics": {
+      "all": "All Comics",
+      "newest": "Newest Comics",
+      "recently-read": "Recently Read",
+      "root": "Comics",
+      "stacked": "Stacked",
+      "unread": "Not Read"
+    },
+    "help": {
+      "build-details": "Build Details",
+      "root": "Help"
+    },
+    "reading-lists": {
+      "create-new": "Create list...",
+      "root": "Reading Lists"
+    }
+  },
   "session": {
     "load-effect-failure": "Unable to load user session"
   },
