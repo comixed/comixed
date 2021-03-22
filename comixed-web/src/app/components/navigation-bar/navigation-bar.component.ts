@@ -20,7 +20,7 @@ import { Component, Input } from '@angular/core';
 import { User } from '@app/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { Router } from '@angular/router';
-import { ConfirmationService } from '@app/core';
+import { ConfirmationService, SelectionOption } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
@@ -31,6 +31,8 @@ import {
   LANGUAGE_PREFERENCE,
   LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
+import { ComicViewMode } from '@app/library';
+import { ComicCollection } from '@app/library/models/comic-collection.enum';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -47,6 +49,22 @@ export class NavigationBarComponent {
     LoggerLevel.DEBUG,
     LoggerLevel.TRACE,
     LoggerLevel.ALL
+  ];
+  readonly comicOptions: SelectionOption<any>[] = [
+    { label: 'all', value: ComicViewMode.ALL },
+    { label: 'newest', value: ComicViewMode.NEWEST },
+    { label: 'recently-read', value: ComicViewMode.RECENTLY_READ },
+    { label: 'unread', value: ComicViewMode.UNREAD }
+  ];
+  stacked = false;
+  readingLists: string[] = [];
+  readonly collectionOptions: SelectionOption<ComicCollection>[] = [
+    { label: 'publishers', value: ComicCollection.PUBLISHERS },
+    { label: 'series', value: ComicCollection.SERIES },
+    { label: 'characters', value: ComicCollection.CHARACTERS },
+    { label: 'teams', value: ComicCollection.TEAMS },
+    { label: 'locations', value: ComicCollection.LOCATIONS },
+    { label: 'stories', value: ComicCollection.STORIES }
   ];
 
   constructor(
@@ -129,5 +147,24 @@ export class NavigationBarComponent {
 
   isCurrentLoggingLevel(option: LoggerLevel): boolean {
     return `${option}` === this.logger.level.toString();
+  }
+
+  onToggleStacked(): void {
+    this.logger.debug('Toggling stacked mode:', !this.stacked);
+    this.stacked = !this.stacked;
+  }
+
+  onComicViewChange(viewMode: ComicViewMode): void {
+    this.logger.debug('Toggling view mode:', viewMode);
+    switch (viewMode) {
+      case ComicViewMode.ALL:
+        this.router.navigate(['/library']);
+        break;
+    }
+  }
+
+  onShowBuildDetails(): void {
+    this.logger.trace('Showing build details');
+    this.router.navigate(['/build']);
   }
 }

@@ -48,6 +48,8 @@ import {
   initialState as initialImportCountState
 } from '@app/reducers/import-count.reducer';
 import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
+import { MatSelectModule } from '@angular/material/select';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -71,6 +73,7 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AppComponent, NavigationBarComponent],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
@@ -80,7 +83,8 @@ describe('AppComponent', () => {
         MatIconModule,
         MatTooltipModule,
         MatFormFieldModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSelectModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

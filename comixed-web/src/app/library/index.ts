@@ -65,6 +65,7 @@ export { ComicCredit } from '@app/library/models/comic-credit';
 export { ComicFile } from '@app/library/models/comic-file';
 export { ComicFormat } from '@app/library/models/comic-format';
 export { ComicFileEntry } from '@app/library/models/comic-file-entry';
+export { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 export { FileDetails } from '@app/library/models/file-details';
 export { Page } from '@app/library/models/page';
 export { PageType } from '@app/library/models/page-type';
