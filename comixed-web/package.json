@@ -8,7 +8,7 @@
     "test": "ng test --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "code-cleanup": "prettier --write 'src/app/**/*.{ts,json,html,scss}'"
+    "format": "prettier --write 'src/app/**/*.{ts,json,html,scss}'"
   },
   "prettier": {
     "singleQuote": true,
@@ -22,7 +22,9 @@
         "files": "*.html",
         "options": {
           "parser": "angular",
-          "singleQuote": false
+          "singleQuote": false,
+          "jsxBracketSameLine": false,
+          "htmlWhitespaceSensitivity": "ignore"
         }
       }
     ]

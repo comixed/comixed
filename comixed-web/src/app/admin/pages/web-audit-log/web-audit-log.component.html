@@ -28,9 +28,9 @@
 
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef>{{
-          "web-audit-log.label.actions" | translate
-        }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>
+          {{ "web-audit-log.label.actions" | translate }}
+        </mat-header-cell>
         <mat-cell *matCellDef="let entry">
           <button
             [id]="'show-request-content-button-' + entry.id"
@@ -52,78 +52,80 @@
       </ng-container>
 
       <ng-container matColumnDef="email">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "web-audit-log.label.account" | translate
-        }}</mat-header-cell>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "web-audit-log.label.account" | translate }}
+        </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.email }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="remote-ip">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "web-audit-log.label.remote-ip" | translate
-        }}</mat-header-cell>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "web-audit-log.label.remote-ip" | translate }}
+        </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.remoteIp }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="url">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "web-audit-log.label.url" | translate
-        }}</mat-header-cell>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "web-audit-log.label.url" | translate }}
+        </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.url }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="method">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "web-audit-log.label.method" | translate
-        }}</mat-header-cell>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "web-audit-log.label.method" | translate }}
+        </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.method }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="started">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "web-audit-log.label.started" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{
-          entry.startTime | date: "medium"
-        }}</mat-cell>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "web-audit-log.label.started" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.startTime | date: "medium" }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="bytes-received">
-        <mat-header-cell *matHeaderCellDef>{{
-          "web-audit-log.label.bytes-received" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{
-          entry.requestContent?.length | number
-        }}</mat-cell>
+        <mat-header-cell *matHeaderCellDef>
+          {{ "web-audit-log.label.bytes-received" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.requestContent?.length | number }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="bytes-sent">
-        <mat-header-cell *matHeaderCellDef>{{
-          "web-audit-log.label.bytes-sent" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{
-          entry.responseContent?.length | number
-        }}</mat-cell>
+        <mat-header-cell *matHeaderCellDef>
+          {{ "web-audit-log.label.bytes-sent" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.responseContent?.length | number }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="runtime">
-        <mat-header-cell *matHeaderCellDef>{{
-          "web-audit-log.label.runtime" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{
-          "web-audit-log.text.runtime"
-            | translate
-              : { time: entry.endTime - entry.startTime | number: "1.0-0" }
-        }}</mat-cell>
+        <mat-header-cell *matHeaderCellDef>
+          {{ "web-audit-log.label.runtime" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{
+            "web-audit-log.text.runtime"
+              | translate
+                : { time: entry.endTime - entry.startTime | number: "1.0-0" }
+          }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="success">
-        <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-          "web-audit-log.label.success" | translate
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{
-          entry.successful | yesNo | translate
-        }}</mat-cell>
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "web-audit-log.label.success" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.successful | yesNo | translate }}
+        </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

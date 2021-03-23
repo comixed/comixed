@@ -22,19 +22,19 @@
   </ng-container>
 
   <ng-container matColumnDef="filename">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-      "import-comic-files.header.filename" | translate
-    }}</mat-header-cell>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "import-comic-files.header.filename" | translate }}
+    </mat-header-cell>
     <mat-cell *matCellDef="let file">{{ file.baseFilename }}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="size">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-      "import-comic-files.header.size" | translate
-    }}</mat-header-cell>
-    <mat-cell *matCellDef="let file">{{
-      file.size / 1024 | number: "1.2-2"
-    }}</mat-cell>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "import-comic-files.header.size" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let file">
+      {{ file.size / 1024 | number: "1.2-2" }}
+    </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

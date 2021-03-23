@@ -24,9 +24,9 @@
       (click)="onSetPageBlocked(page, false)"
     >
       <mat-icon>remove_circle_outline</mat-icon>
-      <mat-label>{{
-        "library.context-menu.set-page-unblocked" | translate
-      }}</mat-label>
+      <mat-label>
+        {{ "library.context-menu.set-page-unblocked" | translate }}
+      </mat-label>
     </button>
     <button
       *ngIf="!page.blocked"
@@ -34,9 +34,9 @@
       (click)="onSetPageBlocked(page, true)"
     >
       <mat-icon>block</mat-icon>
-      <mat-label>{{
-        "library.context-menu.set-page-blocked" | translate
-      }}</mat-label>
+      <mat-label>
+        {{ "library.context-menu.set-page-blocked" | translate }}
+      </mat-label>
     </button>
   </ng-template>
 </mat-menu>

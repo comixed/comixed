@@ -99,6 +99,16 @@ The frontend code uses [Prettier](https://prettier.io/) for code formatting, and
 
 Most editors and IDEs support formatting Typescript code. Please check the documentation for the one you use for how to apply the convention when coding.
 
+#### Code Formatting
+
+To ensure your code confirms to coding conventions, run the following command in the **comixed-web** module:
+
+```
+$ yarn format
+```
+
+This will reformat all Typescript-related code.
+
 #### Lint Checks
 
 To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-web** module:

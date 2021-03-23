@@ -1,7 +1,7 @@
 <mat-card *ngIf="file" [style.width]="cardWidth">
-  <mat-card-title class="cx-text-nowrap" [matTooltip]="file.baseFilename">{{
-    file.baseFilename
-  }}</mat-card-title>
+  <mat-card-title class="cx-text-nowrap" [matTooltip]="file.baseFilename">
+    {{ file.baseFilename }}
+  </mat-card-title>
   <mat-card-content>
     <cx-comic-page
       [imageUrl]="file | comicFileCoverUrl"

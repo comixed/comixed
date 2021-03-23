@@ -13,9 +13,9 @@
           (click)="navigationPane.toggle(true)"
         >
           <mat-icon>account_tree</mat-icon>
-          <mat-label>{{
-            "library.label.navigation-tree" | translate
-          }}</mat-label>
+          <mat-label>
+            {{ "library.label.navigation-tree" | translate }}
+          </mat-label>
         </button>
         <div class="cx-spacer"></div>
         <mat-paginator
@@ -56,9 +56,9 @@
   <ng-template matMenuContent>
     <button mat-menu-item (click)="onShowComicDetails(comic)">
       <mat-icon>details</mat-icon>
-      <mat-label>{{
-        "library.context-menu.comic-details" | translate
-      }}</mat-label>
+      <mat-label>
+        {{ "library.context-menu.comic-details" | translate }}
+      </mat-label>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="markAsMenu">
       <mat-icon>rule</mat-icon>
@@ -74,9 +74,9 @@
     (click)="onSetOneReadState(comic, true)"
   >
     <mat-icon>turned_in</mat-icon>
-    <mat-label>{{
-      "library.context-menu.mark-one-as-read" | translate
-    }}</mat-label>
+    <mat-label>
+      {{ "library.context-menu.mark-one-as-read" | translate }}
+    </mat-label>
   </button>
   <button
     id="mark-one-as-unread-button"
@@ -84,9 +84,9 @@
     (click)="onSetOneReadState(comic, false)"
   >
     <mat-icon>turned_in_not</mat-icon>
-    <mat-label>{{
-      "library.context-menu.mark-one-as-unread" | translate
-    }}</mat-label>
+    <mat-label>
+      {{ "library.context-menu.mark-one-as-unread" | translate }}
+    </mat-label>
   </button>
   <mat-divider *ngIf="selected.length > 0"></mat-divider>
   <button
@@ -96,9 +96,9 @@
     (click)="onSetSelectedReadState(true)"
   >
     <mat-icon>turned_in</mat-icon>
-    <mat-label>{{
-      "library.context-menu.mark-selected-as-read" | translate
-    }}</mat-label>
+    <mat-label>
+      {{ "library.context-menu.mark-selected-as-read" | translate }}
+    </mat-label>
   </button>
   <button
     id="mark-selected-as-unread-button"
@@ -107,8 +107,8 @@
     (click)="onSetSelectedReadState(false)"
   >
     <mat-icon>turned_in_not</mat-icon>
-    <mat-label>{{
-      "library.context-menu.mark-selected-as-unread" | translate
-    }}</mat-label>
+    <mat-label>
+      {{ "library.context-menu.mark-selected-as-unread" | translate }}
+    </mat-label>
   </button>
 </mat-menu>

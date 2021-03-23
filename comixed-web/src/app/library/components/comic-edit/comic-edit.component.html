@@ -31,8 +31,9 @@
     <mat-option
       *ngFor="let option of maximumRecordsOptions"
       [value]="option.value"
-      >{{ option.label | translate }}</mat-option
     >
+      {{ option.label | translate }}
+    </mat-option>
   </mat-select>
   <button
     id="skip-cache-button"
@@ -107,9 +108,9 @@
       required
     />
     <mat-hint>{{ "comic.hint.required-for-scraping" | translate }}</mat-hint>
-    <mat-error *ngIf="comicForm.controls.series.errors?.required">{{
-      "validation.field-required" | translate
-    }}</mat-error>
+    <mat-error *ngIf="comicForm.controls.series.errors?.required">
+      {{ "validation.field-required" | translate }}
+    </mat-error>
   </mat-form-field>
   <mat-form-field class="cx-width-50">
     <mat-label>{{ "comic.label.volume" | translate }}</mat-label>
@@ -128,8 +129,8 @@
       required
     />
     <mat-hint>{{ "comic.hint.required-for-scraping" | translate }}</mat-hint>
-    <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">{{
-      "validation.field-required" | translate
-    }}</mat-error>
+    <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">
+      {{ "validation.field-required" | translate }}
+    </mat-error>
   </mat-form-field>
 </form>

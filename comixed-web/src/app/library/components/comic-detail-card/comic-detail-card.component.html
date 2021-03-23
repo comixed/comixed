@@ -1,7 +1,7 @@
 <mat-card [style.width]="imageWidth" [style.height]="imageHeight">
   <mat-card-title class="cx-text-nowrap">{{ title }}</mat-card-title>
-  <mat-card-subtitle *ngIf="detailLink"
-    ><a [routerLink]="detailLink">{{ "text.view-details" | translate }}</a>
+  <mat-card-subtitle *ngIf="detailLink">
+    <a [routerLink]="detailLink">{{ "text.view-details" | translate }}</a>
   </mat-card-subtitle>
   <mat-card-content>
     <div

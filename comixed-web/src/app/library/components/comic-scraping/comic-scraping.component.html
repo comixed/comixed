@@ -25,48 +25,48 @@
           matSort
         >
           <ng-container matColumnDef="matchability">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-              "scraping.label.matchability" | translate
-            }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{
-              element.sortOrder | matchability | translate
-            }}</mat-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>
+              {{ "scraping.label.matchability" | translate }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.sortOrder | matchability | translate }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="publisher">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-              "scraping.label.publisher" | translate
-            }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{
-              element.item.publisher
-            }}</mat-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>
+              {{ "scraping.label.publisher" | translate }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.item.publisher }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="name">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-              "scraping.label.series-name" | translate
-            }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{
-              element.item.name
-            }}</mat-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>
+              {{ "scraping.label.series-name" | translate }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.item.name }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="startYear">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-              "scraping.label.start-year" | translate
-            }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{
-              element.item.startYear
-            }}</mat-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>
+              {{ "scraping.label.start-year" | translate }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.item.startYear }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="issueCount">
-            <mat-header-cell mat-sort-header *matHeaderCellDef>{{
-              "scraping.label.issue-count" | translate
-            }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{
-              element.item.issueCount
-            }}</mat-cell>
+            <mat-header-cell mat-sort-header *matHeaderCellDef>
+              {{ "scraping.label.issue-count" | translate }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.item.issueCount }}
+            </mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

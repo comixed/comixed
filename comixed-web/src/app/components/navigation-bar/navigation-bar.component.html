@@ -60,9 +60,9 @@
 <mat-menu #adminMenu="matMenu">
   <button mat-menu-item [routerLink]="['admin', 'import']">
     <mat-icon>import_export</mat-icon>
-    <mat-label>{{
-      "menu.admin-menu.import-comic-files" | translate
-    }}</mat-label>
+    <mat-label>
+      {{ "menu.admin-menu.import-comic-files" | translate }}
+    </mat-label>
   </button>
   <mat-divider></mat-divider>
   <button mat-menu-item [routerLink]="['/admin', 'audit', 'web']">
@@ -78,8 +78,8 @@
     (click)="onSelectLanguage(language)"
   >
     <mat-icon *ngIf="currentLanguage === language">check_box</mat-icon>
-    <mat-icon *ngIf="currentLanguage !== language"
-      >check_box_outline_blank
+    <mat-icon *ngIf="currentLanguage !== language">
+      check_box_outline_blank
     </mat-icon>
     <mat-label>{{ "menu.language-menu." + language | translate }}</mat-label>
   </button>
@@ -88,9 +88,9 @@
 <mat-menu #optionsMenu="matMenu">
   <button *ngIf="isReader" mat-menu-item (click)="onShowDisplayOptions()">
     <mat-icon>tv</mat-icon>
-    <mat-label>{{
-      "menu.options-menu.show-options-panel" | translate
-    }}</mat-label>
+    <mat-label>
+      {{ "menu.options-menu.show-options-panel" | translate }}
+    </mat-label>
   </button>
   <button mat-menu-item [matMenuTriggerFor]="loggingMenu">
     <mat-icon>settings</mat-icon>
@@ -104,12 +104,12 @@
     mat-menu-item
     (click)="onSetLogging(option)"
   >
-    <mat-icon *ngIf="isCurrentLoggingLevel(option)"
-      >radio_button_checked</mat-icon
-    >
-    <mat-icon *ngIf="!isCurrentLoggingLevel(option)"
-      >radio_button_unchecked</mat-icon
-    >
+    <mat-icon *ngIf="isCurrentLoggingLevel(option)">
+      radio_button_checked
+    </mat-icon>
+    <mat-icon *ngIf="!isCurrentLoggingLevel(option)">
+      radio_button_unchecked
+    </mat-icon>
     <mat-label>{{ "menu.logging-menu." + option | translate }}</mat-label>
   </button>
 </mat-menu>

@@ -11,10 +11,9 @@
           [matBadge]="node.childCount"
           matBadgeOverlap="false"
           matBadgePosition="after"
-          ><a [routerLink]="node.routerLink">{{
-            node.label | translate
-          }}</a></span
         >
+          <a [routerLink]="node.routerLink">{{ node.label | translate }}</a>
+        </span>
       </li>
     </mat-tree-node>
     <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
@@ -31,8 +30,9 @@
             [matBadge]="node.childCount"
             matBadgeOverlap="false"
             matBadgePosition="after"
-            >{{ node.label | translate }}</span
           >
+            {{ node.label | translate }}
+          </span>
         </div>
         <ul [class.cx-invisible-node]="!treeControl.isExpanded(node)">
           <ng-container matTreeNodeOutlet></ng-container>
