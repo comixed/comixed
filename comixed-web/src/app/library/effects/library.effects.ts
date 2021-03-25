@@ -23,45 +23,15 @@ import { LoggerService } from '@angular-ru/logger';
 import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  comicLoaded,
-  loadComic,
-  loadComicFailed,
   readStateSet,
   setReadState,
   setReadStateFailed
 } from '@app/library/actions/library.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { Comic } from '@app/library';
 import { of } from 'rxjs';
 
 @Injectable()
 export class LibraryEffects {
-  loadComic$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(loadComic),
-      tap(action => this.logger.debug('Effect: load comic:', action)),
-      switchMap(action =>
-        this.comicService.loadComic({ id: action.id }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          map((response: Comic) => comicLoaded({ comic: response })),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant('comic.load-comic.effect-failure')
-            );
-            return of(loadComicFailed());
-          })
-        )
-      ),
-      catchError(error => {
-        this.logger.error('general failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(loadComicFailed());
-      })
-    );
-  });
   setRead$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setReadState),

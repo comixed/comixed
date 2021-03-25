@@ -38,6 +38,7 @@ import {
   API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE
 } from '@app/library/library.constants';
+import { updateComic } from '@app/library/actions/comic.actions';
 
 describe('ComicEditComponent', () => {
   const COMIC = COMIC_2;
@@ -183,6 +184,37 @@ describe('ComicEditComponent', () => {
           value: `${MAXIMUM_RECORDS}`
         })
       );
+    });
+  });
+
+  describe('saving changes', () => {
+    beforeEach(() => {
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      component.comic = COMIC;
+      component.onSaveChanges();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updateComic({ comic: COMIC })
+      );
+    });
+  });
+
+  describe('checking for the api key', () => {
+    beforeEach(() => {
+      component.comicForm.controls.apiKey.setValue(API_KEY);
+    });
+
+    it('returns true when set', () => {
+      expect(component.hasApiKey).toBeTrue();
     });
   });
 });

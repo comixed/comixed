@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,30 @@
 import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/library';
 
-export const updateComics = createAction(
-  '[Library] Library updates received',
-  props<{ updated: Comic[]; removed: number[] }>()
+export const loadComic = createAction(
+  '[Comic] Loads a single comic',
+  props<{ id: number }>()
 );
 
-export const selectComics = createAction(
-  '[Library] Mark a set of comics as selected',
-  props<{ comics: Comic[] }>()
+export const comicLoaded = createAction(
+  '[Comic] A single comic was loaded',
+  props<{ comic: Comic }>()
 );
 
-export const deselectComics = createAction(
-  '[Library] Unmark a set of comics as selected',
-  props<{ comics: Comic[] }>()
+export const loadComicFailed = createAction(
+  '[Comic] Failed to load a single comic'
 );
 
-export const setReadState = createAction(
-  '[Library] Set the read state for comics',
-  props<{ comics: Comic[]; read: boolean }>()
+export const updateComic = createAction(
+  '[Comic] Update a comic',
+  props<{ comic: Comic }>()
 );
 
-export const readStateSet = createAction(
-  '[Library] Successfully set the read state for comics'
+export const comicUpdated = createAction(
+  '[Comic] Comic updated',
+  props<{ comic: Comic }>()
 );
 
-export const setReadStateFailed = createAction(
-  '[Library] Failed to set the read state for comics'
+export const updateComicFailed = createAction(
+  '[Comic] Failed to update a comic'
 );

@@ -22,8 +22,6 @@ import { Comic } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { loadComic } from '@app/library/actions/library.actions';
-import { selectComic } from '@app/library/selectors/library.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference, isAdmin } from '@app/user/user.functions';
@@ -47,6 +45,11 @@ import {
 import { ScrapingVolume } from '@app/library/models/scraping-volume';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/library/pipes/comic-title.pipe';
+import { loadComic } from '@app/library/actions/comic.actions';
+import {
+  selectComic,
+  selectComicBusy
+} from '@app/library/selectors/comic.selectors';
 
 @Component({
   selector: 'cx-comic-details',
@@ -74,6 +77,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   scrapingVolume = '';
   scrapingIssueNumber = '';
   langChangeSubscription: Subscription;
+  comicBusySubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
@@ -108,6 +112,9 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.comic = comic;
       this.loadPageTitle();
     });
+    this.comicBusySubscription = this.store
+      .select(selectComicBusy)
+      .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
 
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.isAdmin = isAdmin(user);
@@ -146,6 +153,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.paramSubscription.unsubscribe();
     this.scrapingStateSubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
+    this.comicBusySubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.volumesSubscription.unsubscribe();
   }

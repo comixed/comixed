@@ -57,6 +57,10 @@ import {
 import { USER_READER } from '@app/user/user.fixtures';
 import { loadScrapingVolumes } from '@app/library/actions/scraping.actions';
 import { ComicTitlePipe } from '@app/library/pipes/comic-title.pipe';
+import {
+  COMIC_FEATURE_KEY,
+  initialState as initialComicState
+} from '@app/library/reducers/comic.reducer';
 
 describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
@@ -72,7 +76,8 @@ describe('ComicDetailsComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [DISPLAY_FEATURE_KEY]: { ...initialDisplayState },
-    [SCRAPING_FEATURE_KEY]: { ...initialScrapingState }
+    [SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
+    [COMIC_FEATURE_KEY]: { ...initialComicState }
   };
 
   let component: ComicDetailsComponent;

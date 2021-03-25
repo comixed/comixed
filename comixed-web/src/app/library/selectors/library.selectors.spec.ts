@@ -20,7 +20,6 @@ import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import {
   selectAllComics,
   selectCharacters,
-  selectComic,
   selectLibraryBusy,
   selectLibraryState,
   selectLocations,
@@ -62,7 +61,6 @@ describe('Library Selectors', () => {
   beforeEach(() => {
     state = {
       loading: Math.random() > 0.5,
-      comic: COMIC,
       comics: COMICS,
       selected: SELECTED_COMICS,
       saving: Math.random() > 0.5
@@ -75,14 +73,6 @@ describe('Library Selectors', () => {
         [LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state);
-  });
-
-  it('selects the comic', () => {
-    expect(
-      selectComic({
-        [LIBRARY_FEATURE_KEY]: state
-      })
-    ).toEqual(state.comic);
   });
 
   it('selects the selected comics', () => {

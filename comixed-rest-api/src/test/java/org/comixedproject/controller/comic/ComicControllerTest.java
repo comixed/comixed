@@ -18,6 +18,7 @@
 
 package org.comixedproject.controller.comic;
 
+import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
 import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -173,6 +174,21 @@ public class ComicControllerTest {
   }
 
   @Test
+  public void testUpdateComic() throws ComicException {
+    Mockito.when(comicService.updateComic(Mockito.anyLong(), Mockito.any(Comic.class)))
+        .thenReturn(comic);
+
+    final Comic result = controller.updateComic(TEST_COMIC_ID, comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    Mockito.verify(comicService, Mockito.times(1)).updateComic(TEST_COMIC_ID, comic);
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSend(COMIC_LIST_UPDATE_TOPIC, comic);
+  }
+
+  @Test
   public void testDeleteComic() throws ComicException {
     Mockito.when(comicService.deleteComic(Mockito.anyLong())).thenReturn(comic);
 
@@ -309,19 +325,6 @@ public class ComicControllerTest {
 
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comicService, Mockito.times(1)).getComicContent(comic);
-  }
-
-  @Test
-  public void testUpdateComic() {
-    Mockito.when(comicService.updateComic(Mockito.anyLong(), Mockito.any(Comic.class)))
-        .thenReturn(comic);
-
-    final Comic result = controller.updateComic(TEST_COMIC_ID, comic);
-
-    assertNotNull(result);
-    assertSame(comic, result);
-
-    Mockito.verify(comicService, Mockito.times(1)).updateComic(TEST_COMIC_ID, comic);
   }
 
   @Test

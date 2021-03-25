@@ -57,8 +57,13 @@ import {
 import {
   COMIC_LIST_FEATURE_KEY,
   ComicListState,
-  reducer as comicReducer
+  reducer as comicListReducer
 } from '@app/library/reducers/comic-list.reducer';
+import {
+  COMIC_FEATURE_KEY,
+  ComicState,
+  reducer as comicReducer
+} from '@app/library/reducers/comic.reducer';
 
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
@@ -89,6 +94,7 @@ export interface LibraryModuleState {
   [SCAN_TYPE_FEATURE_KEY]: ScanTypeState;
   [COMIC_FORMAT_FEATURE_KEY]: ComicFormatState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
+  [COMIC_FEATURE_KEY]: ComicState;
 }
 
 export type ModuleState = LibraryModuleState;
@@ -102,5 +108,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [BLOCKED_PAGE_FEATURE_KEY]: blockedPageReducer,
   [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer,
   [COMIC_FORMAT_FEATURE_KEY]: comicFormatReducer,
-  [COMIC_LIST_FEATURE_KEY]: comicReducer
+  [COMIC_LIST_FEATURE_KEY]: comicListReducer,
+  [COMIC_FEATURE_KEY]: comicReducer
 };
