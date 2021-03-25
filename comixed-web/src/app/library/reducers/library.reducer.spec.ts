@@ -19,10 +19,7 @@
 import { initialState, LibraryState, reducer } from './library.reducer';
 import { COMIC_1, COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
 import {
-  comicLoaded,
   deselectComics,
-  loadComic,
-  loadComicFailed,
   readStateSet,
   selectComics,
   setReadState,
@@ -51,10 +48,6 @@ describe('Library Reducer', () => {
       expect(state.loading).toBeFalse();
     });
 
-    it('has no current comic', () => {
-      expect(state.comic).toBeNull();
-    });
-
     it('has no comics', () => {
       expect(state.comics).toEqual([]);
     });
@@ -65,46 +58,6 @@ describe('Library Reducer', () => {
 
     it('clears the saving flag', () => {
       expect(state.saving).toBeFalse();
-    });
-  });
-
-  describe('loading a comic', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, loading: false },
-        loadComic({ id: COMIC.id })
-      );
-    });
-
-    it('sets the loading flag', () => {
-      expect(state.loading).toBeTrue();
-    });
-  });
-
-  describe('receiving a comic', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, loading: true, comic: null },
-        comicLoaded({ comic: COMIC })
-      );
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
-    });
-
-    it('sets the comic', () => {
-      expect(state.comic).toEqual(COMIC);
-    });
-  });
-
-  describe('failure to load a comic', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, loading: true }, loadComicFailed());
-    });
-
-    it('clears the loading flag', () => {
-      expect(state.loading).toBeFalse();
     });
   });
 

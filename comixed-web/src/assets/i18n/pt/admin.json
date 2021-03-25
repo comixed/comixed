@@ -12,7 +12,7 @@
       "bytes-received": "Bytes Received",
       "method": "HTTP Method",
       "pagination-items-per-page": "Entries Per Page",
-      "account" : "Account",
+      "account": "Account",
       "remote-ip": "Remote IP",
       "runtime": "Duration",
       "started": "Started",

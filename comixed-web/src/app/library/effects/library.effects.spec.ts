@@ -31,9 +31,6 @@ import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  comicLoaded,
-  loadComic,
-  loadComicFailed,
   readStateSet,
   setReadState,
   setReadStateFailed
@@ -83,45 +80,6 @@ describe('LibraryEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
-  });
-
-  describe('loading a comic', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = COMIC;
-      const action = loadComic({ id: COMIC.id });
-      const outcome = comicLoaded({ comic: COMIC });
-
-      actions$ = hot('-a', { a: action });
-      comicService.loadComic.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.loadComic$).toBeObservable(expected);
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = loadComic({ id: COMIC.id });
-      const outcome = loadComicFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.loadComic.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.loadComic$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on general failure', () => {
-      const action = loadComic({ id: COMIC.id });
-      const outcome = loadComicFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.loadComic.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.loadComic$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
   });
 
   describe('setting the read state for comics', () => {

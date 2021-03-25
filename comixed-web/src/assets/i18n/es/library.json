@@ -45,6 +45,12 @@
       "series": "The series name...",
       "volume": "The volume..."
     },
+    "save-changes": {
+      "effect-failure": "Failed to save changes.",
+      "effect-success": "Changes saved.",
+      "message": "Are you sure you want to manual changes to this comic?",
+      "title": "Save Changes To Comic"
+    },
     "send-comic-files": {
       "effect-failure": "Failed to send comic files for import.",
       "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."

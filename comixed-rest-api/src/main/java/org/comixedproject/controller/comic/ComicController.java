@@ -18,6 +18,8 @@
 
 package org.comixedproject.controller.comic;
 
+import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +27,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
@@ -34,9 +35,7 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.ComicFormat;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.comic.ScanType;
 import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
@@ -62,6 +61,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +74,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/comics")
 @Log4j2
 public class ComicController {
-
   @Autowired private SimpMessagingTemplate messagingTemplate;
   @Autowired private ObjectMapper objectMapper;
 
@@ -107,7 +106,7 @@ public class ComicController {
               try {
                 this.messagingTemplate.convertAndSendToUser(
                     principal.getName(),
-                    Constants.COMIC_LIST_UPDATE_TOPIC,
+                    COMIC_LIST_UPDATE_TOPIC,
                     this.objectMapper
                         .writerWithView(ComicDetailsView.class)
                         .writeValueAsString(comic));
@@ -116,7 +115,7 @@ public class ComicController {
               }
             });
     this.messagingTemplate.convertAndSendToUser(
-        principal.getName(), Constants.COMIC_LIST_UPDATE_TOPIC, EndOfList.MESSAGE);
+        principal.getName(), COMIC_LIST_UPDATE_TOPIC, EndOfList.MESSAGE);
   }
 
   /**
@@ -136,18 +135,34 @@ public class ComicController {
     return this.comicService.getComic(id, email);
   }
 
+  /**
+   * Marks a comic for deletion.
+   *
+   * @param id the comic id
+   * @return the updated comic
+   * @throws ComicException if the id is invalid
+   */
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
   @AuditableEndpoint
+  @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
     log.info("Marking comic for deletion: id={}", id);
 
     return this.comicService.deleteComic(id);
   }
 
+  /**
+   * Removes all metadata from a comic.
+   *
+   * @param id the comic id
+   * @return the upddtaed comic
+   * @throws ComicException if the id is invalid
+   */
   @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
+  @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     log.debug("Updating comic: id={}", id);
 
@@ -221,61 +236,13 @@ public class ComicController {
     return this.comicService.getRescanCount();
   }
 
-  @PutMapping(value = "/{id}/format")
-  @AuditableEndpoint
-  public void setFormat(@PathVariable("id") long comicId, @RequestParam("format_id") long formatId)
-      throws ComicException {
-    log.debug("Setting format: comicId={} formatId={}", comicId, formatId);
-
-    Comic comic = this.comicService.getComic(comicId);
-    Optional<ComicFormat> formatRecord = this.comicFormatRepository.findById(formatId);
-
-    if (comic != null && formatRecord.isPresent()) {
-      comic.setFormat(formatRecord.get());
-      log.debug("Saving updated format");
-      this.comicService.save(comic);
-    } else {
-      log.debug("No such comic found");
-    }
-  }
-
-  @PutMapping(value = "/{id}/scan_type")
-  @AuditableEndpoint
-  public void setScanType(
-      @PathVariable("id") long comicId, @RequestParam("scan_type_id") long scanTypeId)
-      throws ComicException {
-    log.debug("Setting scan type: comicId={} scanTypeId={}", comicId, scanTypeId);
-
-    Comic comic = this.comicService.getComic(comicId);
-    Optional<ScanType> scanTypeRecord = this.scanTypeRepository.findById(scanTypeId);
-
-    if (comic != null && scanTypeRecord.isPresent()) {
-      comic.setScanType(scanTypeRecord.get());
-      log.debug("Saving updated scan type");
-      this.comicService.save(comic);
-    } else {
-      log.debug("No such comic found");
-    }
-  }
-
-  @PutMapping(value = "/{id}/sort_name")
-  @AuditableEndpoint
-  public void setSortName(
-      @PathVariable("id") long comicId, @RequestParam("sort_name") String sortName)
-      throws ComicException {
-    log.debug("Setting sort name: comicId={} sortName={}", comicId, sortName);
-
-    Comic comic = this.comicService.getComic(comicId);
-
-    if (comic != null) {
-      comic.setSortName(sortName);
-      log.debug("Saving updated sorted name");
-      this.comicService.save(comic);
-    } else {
-      log.debug("No such comic found");
-    }
-  }
-
+  /**
+   * Updates a comic with all incoming data.
+   *
+   * @param id the comic id
+   * @param comic the source comic
+   * @return the updated comic
+   */
   @PutMapping(
       value = "/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -286,11 +253,7 @@ public class ComicController {
     log.info("Updating comic: id={}", id, comic);
 
     final Comic result = this.comicService.updateComic(id, comic);
-
-    if (result == null) {
-      log.error("No such comic");
-    }
-
+    this.messagingTemplate.convertAndSend(COMIC_LIST_UPDATE_TOPIC, result);
     return result;
   }
 
@@ -342,12 +305,20 @@ public class ComicController {
         .body(content);
   }
 
+  /**
+   * Unmarks a comic for deletion.
+   *
+   * @param id the comic id
+   * @return the updated comic
+   * @throws ComicException if the id is invalid
+   */
   @PutMapping(
       value = "/{id}/restore",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
+  @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic restoreComic(@PathVariable("id") final long id) throws ComicException {
     log.info("Restoring comic: id={}", id);
 

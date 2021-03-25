@@ -38,7 +38,7 @@ import { AlertService } from '@app/core';
 import { of } from 'rxjs';
 import { ScrapingIssue } from '@app/library/models/scraping-issue';
 import { Comic } from '@app/library';
-import { comicLoaded } from '@app/library/actions/library.actions';
+import { comicLoaded } from '@app/library/actions/comic.actions';
 
 @Injectable()
 export class ScrapingEffects {

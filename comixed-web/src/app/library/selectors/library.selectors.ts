@@ -25,12 +25,6 @@ export const selectLibraryState = createFeatureSelector<LibraryState>(
   LIBRARY_FEATURE_KEY
 );
 
-/** Selects the comic. */
-export const selectComic = createSelector(
-  selectLibraryState,
-  state => state.comic
-);
-
 /** Selects the selected comics. */
 export const selectSelectedComics = createSelector(
   selectLibraryState,

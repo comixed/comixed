@@ -30,6 +30,7 @@ import {
   MAXIMUM_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
+import { updateComic } from '@app/library/actions/comic.actions';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -162,8 +163,31 @@ export class ComicEditComponent implements OnInit {
     );
   }
 
+  onSaveChanges(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant('comic.save-changes.title'),
+      message: this.translateService.instant('comic.save-changes.message'),
+      confirm: () => {
+        const comic = this.encodeForm();
+        this.logger.debug('Saving changes to comic:', comic);
+        this.store.dispatch(updateComic({ comic }));
+      }
+    });
+  }
+
   private setInput(controlName: string, value: any): void {
     this.logger.trace(`Setting form field: ${controlName}=${value}`);
     this.comicForm.controls[controlName].setValue(value);
+  }
+
+  private encodeForm(): Comic {
+    this.logger.trace('Encoding comic format');
+    return {
+      ...this.comic,
+      publisher: this.comicForm.controls.publisher.value,
+      series: this.comicForm.controls.series.value,
+      volume: this.comicForm.controls.volume.value,
+      issueNumber: this.comicForm.controls.issueNumber.value
+    } as Comic;
   }
 }

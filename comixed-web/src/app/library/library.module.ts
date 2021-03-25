@@ -112,8 +112,13 @@ import { ComicFormatEffects } from '@app/library/effects/comic-format.effects';
 import { ComicListEffects } from '@app/library/effects/comic-list.effects';
 import {
   COMIC_LIST_FEATURE_KEY,
-  reducer as comicReducer
+  reducer as comicListReducer
 } from '@app/library/reducers/comic-list.reducer';
+import {
+  COMIC_FEATURE_KEY,
+  reducer as comicReducer
+} from '@app/library/reducers/comic.reducer';
+import { ComicEffects } from '@app/library/effects/comic.effects';
 
 @NgModule({
   declarations: [
@@ -161,7 +166,8 @@ import {
     StoreModule.forFeature(BLOCKED_PAGE_FEATURE_KEY, blockedPageReducer),
     StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
     StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
-    StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicReducer),
+    StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
+    StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       ComicImportEffects,
@@ -170,7 +176,8 @@ import {
       BlockedPageEffects,
       ScanTypeEffects,
       ComicFormatEffects,
-      ComicListEffects
+      ComicListEffects,
+      ComicEffects
     ]),
     MatInputModule,
     MatSelectModule,

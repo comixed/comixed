@@ -18,10 +18,7 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
-  comicLoaded,
   deselectComics,
-  loadComic,
-  loadComicFailed,
   readStateSet,
   selectComics,
   setReadState,
@@ -34,7 +31,6 @@ export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
   loading: boolean;
-  comic: Comic;
   comics: Comic[];
   selected: Comic[];
   saving: boolean;
@@ -42,7 +38,6 @@ export interface LibraryState {
 
 export const initialState: LibraryState = {
   loading: false,
-  comic: null,
   comics: [],
   selected: [],
   saving: false
@@ -51,13 +46,6 @@ export const initialState: LibraryState = {
 export const reducer = createReducer(
   initialState,
 
-  on(loadComic, state => ({ ...state, loading: true })),
-  on(comicLoaded, (state, action) => ({
-    ...state,
-    loading: false,
-    comic: action.comic
-  })),
-  on(loadComicFailed, state => ({ ...state, loading: false })),
   on(updateComics, (state, action) => {
     // removed from the local state the old version of incoming comic updates
     let comics = state.comics.filter(comic => {

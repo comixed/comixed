@@ -45,7 +45,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { comicLoaded } from '@app/library/actions/library.actions';
+import { comicLoaded } from '@app/library/actions/comic.actions';
 
 describe('ScrapingEffects', () => {
   const API_KEY = '1234567890ABCDEF';
