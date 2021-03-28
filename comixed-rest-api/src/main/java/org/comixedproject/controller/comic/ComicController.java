@@ -94,12 +94,14 @@ public class ComicController {
    * Loads the entire list of comics and sends them to the requesting user.
    *
    * @param principal the user principal
+   * @throws ComiXedUserException if the user is invalid
    */
   @MessageMapping(Constants.LOAD_COMIC_LIST_MESSAGE)
-  public void loadComicList(final Principal principal) {
-    log.info("Loading all comics for user: {}", principal.getName());
+  public void loadComicList(final Principal principal) throws ComiXedUserException {
+    final String email = principal.getName();
+    log.info("Loading all comics for user: {}", email);
     this.comicService
-        .loadComicList()
+        .loadComicList(email)
         .forEach(
             comic -> {
               log.trace("Sending comic to user: {}", comic.getId());
@@ -219,21 +221,6 @@ public class ComicController {
         .header("Content-Disposition", "attachment; filename=\"" + comic.getFilename() + "\"")
         .contentType(MediaType.parseMediaType(comic.getArchiveType().getMimeType()))
         .body(new InputStreamResource(new ByteArrayInputStream(content)));
-  }
-
-  /**
-   * Starts the process of rescanning all comics in the library.
-   *
-   * @return the number of rescan tasks
-   */
-  @PostMapping(value = "/rescan")
-  @AuditableEndpoint
-  public int rescanComics() {
-    log.info("Beginning rescan of library");
-
-    final RescanComicsWorkerTask task = this.rescanComicsWorkerTaskObjectFactory.getObject();
-    this.taskManager.runTask(task);
-    return this.comicService.getRescanCount();
   }
 
   /**

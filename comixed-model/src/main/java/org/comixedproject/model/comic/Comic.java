@@ -318,6 +318,7 @@ public class Comic {
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @JsonIgnore
+  @Getter
   private List<LastReadDate> lastReadDates = new ArrayList<>();
 
   @Transient

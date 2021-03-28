@@ -48,7 +48,6 @@ import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.model.DeleteComicsWorkerTask;
 import org.comixedproject.task.model.RescanComicsWorkerTask;
 import org.comixedproject.task.model.UndeleteComicsWorkerTask;
-import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.comixedproject.views.View;
@@ -113,17 +112,18 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testLoadComicListJsonException() throws JsonProcessingException {
+  public void testLoadComicListJsonException()
+      throws JsonProcessingException, ComiXedUserException {
     for (int x = 0; x < 25; x++) comicList.add(comic);
 
-    Mockito.when(comicService.loadComicList()).thenReturn(comicList);
+    Mockito.when(comicService.loadComicList(Mockito.anyString())).thenReturn(comicList);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenThrow(JsonProcessingException.class);
 
     try {
       controller.loadComicList(principal);
     } finally {
-      Mockito.verify(comicService, Mockito.times(1)).loadComicList();
+      Mockito.verify(comicService, Mockito.times(1)).loadComicList(TEST_EMAIL_ADDRESS);
       Mockito.verify(objectMapper, Mockito.times(comicList.size()))
           .writerWithView(View.ComicDetailsView.class);
       Mockito.verify(objectWriter, Mockito.times(comicList.size())).writeValueAsString(comic);
@@ -133,15 +133,15 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testLoadComicList() throws JsonProcessingException {
+  public void testLoadComicList() throws JsonProcessingException, ComiXedUserException {
     for (int x = 0; x < 25; x++) comicList.add(comic);
 
-    Mockito.when(comicService.loadComicList()).thenReturn(comicList);
+    Mockito.when(comicService.loadComicList(Mockito.anyString())).thenReturn(comicList);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
 
     controller.loadComicList(principal);
 
-    Mockito.verify(comicService, Mockito.times(1)).loadComicList();
+    Mockito.verify(comicService, Mockito.times(1)).loadComicList(TEST_EMAIL_ADDRESS);
     Mockito.verify(objectMapper, Mockito.times(comicList.size()))
         .writerWithView(View.ComicDetailsView.class);
     Mockito.verify(objectWriter, Mockito.times(comicList.size())).writeValueAsString(comic);
@@ -325,20 +325,6 @@ public class ComicControllerTest {
 
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comicService, Mockito.times(1)).getComicContent(comic);
-  }
-
-  @Test
-  public void testRescanComics() {
-    Mockito.when(rescanComicsWorkerTaskObjectFactory.getObject())
-        .thenReturn(rescanComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
-    Mockito.when(comicService.getRescanCount()).thenReturn(TEST_RESCAN_COUNT);
-
-    final int result = controller.rescanComics();
-
-    assertEquals(TEST_RESCAN_COUNT, result);
-
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(rescanComicsWorkerTask);
   }
 
   @Test(expected = ComicException.class)

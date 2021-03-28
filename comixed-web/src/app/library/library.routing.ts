@@ -37,6 +37,12 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
+    path: 'library/comics/unread',
+    component: LibraryComponent,
+    canActivate: [ReaderGuard],
+    data: { unread: true }
+  },
+  {
     path: 'library/:type/:name',
     component: LibraryGroupComponent,
     canActivate: [ReaderGuard]

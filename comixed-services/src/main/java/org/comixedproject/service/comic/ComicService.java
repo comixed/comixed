@@ -27,7 +27,6 @@ import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -145,22 +144,6 @@ public class ComicService {
 
     log.debug("No such comic");
     return null;
-  }
-
-  public long getProcessingCount() {
-    log.debug("Getting the current processing count");
-
-    final long result = this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
-
-    log.debug("There {} record{} to be processed", result, result == 1 ? "" : "s");
-
-    return result;
-  }
-
-  public int getRescanCount() {
-    log.debug("Getting the current rescan count");
-
-    return this.taskService.getTaskCount(TaskType.RESCAN_COMIC);
   }
 
   public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp)
@@ -391,7 +374,7 @@ public class ComicService {
   /**
    * Returns all comics with the given page hash
    *
-   * @param hash
+   * @param hash the page hash
    */
   @Transactional
   public void updateComicsWithPageHash(final String hash) {
@@ -415,9 +398,30 @@ public class ComicService {
    * Returns the entire list of comics.
    *
    * @return the comic list
+   * @param email the user's email
+   * @throws ComiXedUserException if the user principal is invalid
    */
   @Transactional
-  public List<Comic> loadComicList() {
-    return this.comicRepository.loadComicList();
+  public List<Comic> loadComicList(final String email) throws ComiXedUserException {
+    final ComiXedUser user = this.userService.findByEmail(email);
+    final List<Comic> result = new ArrayList<>();
+    this.comicRepository
+        .loadComicList()
+        .forEach(
+            comic -> {
+              log.trace("Finding last read date for user");
+              final Optional<LastReadDate> lastRead =
+                  comic.getLastReadDates().stream()
+                      .filter(lastReadDate -> lastReadDate.getUser().equals(user))
+                      .findFirst();
+              if (lastRead.isPresent()) {
+                comic.setLastRead(lastRead.get().getLastRead());
+              }
+
+              log.trace("Adding comic");
+              result.add(comic);
+            });
+
+    return result;
   }
 }
