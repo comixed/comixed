@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '@app/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { Router } from '@angular/router';
@@ -40,6 +40,8 @@ import { ComicCollection } from '@app/library/models/comic-collection.enum';
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
+  @Output() toggleSidebar = new EventEmitter<void>();
+
   isReader = false;
   isAdmin = false;
   readonly languages = ['en', 'fr', 'es', 'pt'];
@@ -166,5 +168,10 @@ export class NavigationBarComponent {
   onShowBuildDetails(): void {
     this.logger.trace('Showing build details');
     this.router.navigate(['/build']);
+  }
+
+  onToggleSidebar(): void {
+    this.logger.trace('Toggling sidebar');
+    this.toggleSidebar.emit();
   }
 }

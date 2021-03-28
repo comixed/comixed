@@ -11,8 +11,10 @@ body {
 // header
 h1,
 h2,
-h3 {
+h3,
+h4 {
   text-transform: uppercase;
+  font-weight: bold !important;
 }
 
 // colors
@@ -46,7 +48,7 @@ $cx-selected-comic-color: #ffffff;
 }
 
 .cx-height-100 {
-  height: 100vh;
+  height: 100%;
 }
 
 // positioning
@@ -85,6 +87,14 @@ $cx-selected-comic-color: #ffffff;
 
 .cx-padding-right-50 {
   padding-right: 50px !important;
+}
+
+.cx-padding-top-5 {
+  padding-top: 5px !important;
+}
+
+.cx-padding-bottom-5 {
+  padding-bottom: 5px !important;
 }
 
 .cx-padding-2 {

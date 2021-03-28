@@ -58,13 +58,20 @@ import { MessagingModule } from '@app/messaging/messaging.module';
 import { TaskCountService } from '@app/services/task-count.service';
 import { ImportCountEffects } from '@app/effects/import-count.effects';
 import { MatSelectModule } from '@angular/material/select';
+import { FooterComponent } from './components/footer/footer.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NavigationBarComponent,
-    BuildDetailsComponent
+    BuildDetailsComponent,
+    FooterComponent,
+    SideNavigationComponent
   ],
   imports: [
     AdminModule,
@@ -108,7 +115,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatMenuModule,
     MatCardModule,
     MatDividerModule,
-    MatSelectModule
+    MatSelectModule,
+    FlexLayoutModule,
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [
     [

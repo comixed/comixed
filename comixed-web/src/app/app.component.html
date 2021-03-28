@@ -7,5 +7,28 @@
     ></mat-progress-spinner>
   </div>
 </div>
-<cx-navigation-bar [user]="user"></cx-navigation-bar>
-<router-outlet></router-outlet>
+<div class="cx-width-100 cx-height-100">
+  <cx-navigation-bar
+    [user]="user"
+    (toggleSidebar)="sidenav.toggle()"
+  ></cx-navigation-bar>
+  <mat-sidenav-container class="cx-width-100 cx-height-100">
+    <mat-sidenav #sidenav mode="side">
+      <div class="cx-padding-left-15 cx-padding-right-15">
+        <cx-side-navigation [user]="user"></cx-side-navigation>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content #sidebar>
+      <div class="cx-width-100 cx-height-100">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <div
+    id="footer"
+    class="cx-width-100 cx-padding-left-15 cx-padding-right-15 cx-padding-top-5 cx-padding-bottom-5"
+  >
+    <cx-footer [user]="user"></cx-footer>
+  </div>
+</div>

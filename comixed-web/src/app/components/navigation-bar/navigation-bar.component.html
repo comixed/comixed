@@ -1,66 +1,18 @@
-<mat-toolbar class="cx-width-100" color="accent">
-  <span class="cx-logo">ComiXed</span>
+<mat-toolbar class="cx-width-100" color="primary">
+  <button
+    mat-icon-button
+    color="accent"
+    [matTooltip]="'menu.tooltip.toggle-sidenav' | translate"
+    (click)="onToggleSidebar()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span id="cx-logo">ComiXed</span>
   <div class="cx-spacer"></div>
-  <mat-form-field *ngIf="!!user" appearance="fill">
-    <mat-select
-      id="comics-view-selection"
-      [placeholder]="'navigation.comics.root' | translate"
-      (selectionChange)="onComicViewChange($event.value)"
-    >
-      <mat-option *ngFor="let option of comicOptions" [value]="option.value">
-        {{ "navigation.comics." + option.label | translate }}
-      </mat-option>
-      <mat-option (change)="onToggleStacked()" [value]="null">
-        {{ "navigation.comics.stacked" | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field *ngIf="!!user" appearance="fill">
-    <mat-select
-      id="reading-list-selection"
-      [value]="currentReadingList"
-      [placeholder]="'navigation.reading-lists.root' | translate"
-    >
-      <mat-option [value]="'create-reading-list'">
-        {{ "navigation.reading-lists.create-new" | translate }}
-      </mat-option>
-      <mat-option
-        *ngFor="let readingList of readingLists"
-        [value]="readingList"
-      >
-        {{ readingList }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field *ngIf="!!user" appearance="fill">
-    <mat-select
-      id="collection-selection"
-      [value]="currentSelection"
-      [placeholder]="'navigation.collections.root' | translate"
-    >
-      <mat-option
-        *ngFor="let option of collectionOptions"
-        [value]="option.value"
-      >
-        {{ "navigation.collections." + option.label | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-select
-      id="help-selection"
-      [placeholder]="'navigation.help.root' | translate"
-    >
-      <mat-option (click)="onShowBuildDetails()">
-        {{ "navigation.help.build-details" | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-divider vertical="true"></mat-divider>
   <button
     id="toolbar-menu-trigger-button"
     mat-flat-button
-    color="accent"
+    color="primary"
     [mat-menu-trigger-for]="mainMenu"
   >
     <mat-icon>more_vert</mat-icon>
@@ -71,10 +23,6 @@
   <button *ngIf="!!user" mat-menu-item [matMenuTriggerFor]="userMenu">
     <mat-icon>account_box</mat-icon>
     <mat-label>{{ "menu.user-menu.root" | translate }}</mat-label>
-  </button>
-  <button *ngIf="isAdmin" mat-menu-item [matMenuTriggerFor]="adminMenu">
-    <mat-icon>supervisor_account</mat-icon>
-    <mat-label>{{ "menu.admin-menu.root" | translate }}</mat-label>
   </button>
   <button *ngIf="!user" mat-menu-item (click)="onLogin()">
     <mat-icon>login</mat-icon>
@@ -128,19 +76,5 @@
       radio_button_unchecked
     </mat-icon>
     <mat-label>{{ "menu.logging-menu." + option | translate }}</mat-label>
-  </button>
-</mat-menu>
-
-<mat-menu #adminMenu="matMenu">
-  <button mat-menu-item [routerLink]="['admin', 'import']">
-    <mat-icon>import_export</mat-icon>
-    <mat-label>
-      {{ "menu.admin-menu.import-comic-files" | translate }}
-    </mat-label>
-  </button>
-  <mat-divider></mat-divider>
-  <button mat-menu-item [routerLink]="['/admin', 'audit', 'web']">
-    <mat-icon>view_headline</mat-icon>
-    <mat-label>{{ "menu.admin-menu.web-audit-log" | translate }}</mat-label>
   </button>
 </mat-menu>

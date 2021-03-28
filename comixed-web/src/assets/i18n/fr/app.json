@@ -1,7 +1,8 @@
 {
   "app": {
     "general-effect-failure": "Un dysfonctionnement général du système s'est produit.",
-    "logged-in": "Connecté avec le compte : {email}"
+    "logged-in": "Connecté avec le compte : {email}",
+    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount}"
   },
   "build-details": {
     "label": {
@@ -57,22 +58,12 @@
     "title": "Home"
   },
   "menu": {
-    "admin-menu": {
-      "import-comic-files": "Importer des Bandes Dessinées",
-      "root": "Administration",
-      "web-audit-log": "Journal des appels web"
-    },
-    "build-details": "Détails du Build",
     "language-menu": {
       "en": "Anglais",
       "es": "Espagnol",
       "fr": "Français",
       "pt": "Portuguais",
       "root": "Choix de la langue"
-    },
-    "library-menu": {
-      "all-comics": "Toutes les Bandes Dessinées",
-      "root": "Bibliothèque"
     },
     "logging-menu": {
       "root": "Logging",
@@ -87,30 +78,12 @@
     }
   },
   "navigation": {
-    "collections": {
-      "characters": "Characters",
-      "locations": "Locations",
-      "publishers": "Publishers",
-      "root": "Collections",
-      "series": "Series",
-      "stories": "Stories",
-      "teams": "Teams"
-    },
-    "comics": {
-      "all": "All Comics",
-      "newest": "Newest Comics",
-      "recently-read": "Recently Read",
-      "root": "Comics",
-      "stacked": "Stacked",
-      "unread": "Not Read"
-    },
-    "help": {
+    "label": {
+      "all-comics": "All comics",
       "build-details": "Build Details",
-      "root": "Help"
-    },
-    "reading-lists": {
-      "create-new": "Create list...",
-      "root": "Reading Lists"
+      "comics-section": "Comics",
+      "reading-lists-section": "Reading Lists",
+      "system-status-section": "System"
     }
   },
   "session": {
