@@ -1,0 +1,14 @@
+<div fxLayout="row" class="cx-width-100" fxLayoutAlign="center start">
+  <div *ngIf="!!user" fxFlex="75%">
+    {{
+      "app.system-status"
+        | translate
+          : {
+              importCount: importCount,
+              comicCount: comicCount,
+              readCount: readCount
+            }
+    }}
+  </div>
+  <div fxFlex="25%">Copyright &copy; 2017-2021, The ComiXed Project.</div>
+</div>

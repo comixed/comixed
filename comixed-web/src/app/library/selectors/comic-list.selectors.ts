@@ -30,3 +30,13 @@ export const selectComicList = createSelector(
   selectComicListState,
   state => state.comics
 );
+
+export const selectComicListCount = createSelector(
+  selectComicListState,
+  state => state.comics.length
+);
+
+export const selectComicListReadCount = createSelector(
+  selectComicListState,
+  state => state.comics.filter(comic => !!comic.lastRead).length
+);

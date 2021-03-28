@@ -20,14 +20,25 @@ import {
   COMIC_LIST_FEATURE_KEY,
   ComicListState
 } from '../reducers/comic-list.reducer';
-import { selectComicList, selectComicListState } from './comic-list.selectors';
+import {
+  selectComicList,
+  selectComicListCount,
+  selectComicListReadCount,
+  selectComicListState
+} from './comic-list.selectors';
 import { COMIC_1, COMIC_3, COMIC_5 } from '@app/library/library.fixtures';
 
 describe('Comic List Selectors', () => {
   let state: ComicListState;
 
   beforeEach(() => {
-    state = { comics: [COMIC_1, COMIC_3, COMIC_5] };
+    state = {
+      comics: [
+        { ...COMIC_1, lastRead: new Date().getTime() },
+        { ...COMIC_3, lastRead: null },
+        { ...COMIC_5, lastRead: null }
+      ]
+    };
   });
 
   it('should select the feature state', () => {
@@ -42,5 +53,17 @@ describe('Comic List Selectors', () => {
     expect(selectComicList({ [COMIC_LIST_FEATURE_KEY]: state })).toEqual(
       state.comics
     );
+  });
+
+  it('should select the number of comics in the list', () => {
+    expect(selectComicListCount({ [COMIC_LIST_FEATURE_KEY]: state })).toEqual(
+      state.comics.length
+    );
+  });
+
+  it('should select the number of read comics in the list', () => {
+    expect(
+      selectComicListReadCount({ [COMIC_LIST_FEATURE_KEY]: state })
+    ).toEqual(state.comics.filter(comic => !!comic.lastRead).length);
   });
 });

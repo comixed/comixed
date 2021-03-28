@@ -1,0 +1,39 @@
+<div fxLayout="column">
+  <div *ngIf="!!user">
+    <h3>{{ "navigation.heading.comics" | translate }}</h3>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/library">
+        {{ "navigation.option.all-comics" | translate }}
+      </a>
+      <a *ngIf="isAdmin" mat-list-item routerLink="/admin/import">
+        {{ "navigation.option.import-comics" | translate }}
+      </a>
+    </mat-nav-list>
+  </div>
+
+  <div *ngIf="!!user">
+    <h3>{{ "navigation.heading.reading-lists" | translate }}</h3>
+  </div>
+
+  <div *ngIf="!!user">
+    <h3>{{ "navigation.heading.account" | translate }}</h3>
+  </div>
+
+  <div *ngIf="isAdmin">
+    <h3>{{ "navigation.heading.admin" | translate }}</h3>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/admin/audit/web">
+        {{ "navigation.option.web-audit-log" | translate }}
+      </a>
+    </mat-nav-list>
+  </div>
+
+  <div>
+    <h3>{{ "navigation.heading.system-status" | translate }}</h3>
+    <mat-nav-list>
+      <a mat-list-item [routerLink]="['/build']">
+        {{ "navigation.option.build-details" | translate }}
+      </a>
+    </mat-nav-list>
+  </div>
+</div>

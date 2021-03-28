@@ -1,7 +1,8 @@
 {
   "app": {
     "general-effect-failure": "A general error has occurred.",
-    "logged-in": "Logged in: {email}"
+    "logged-in": "Logged in: {email}",
+    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount}"
   },
   "build-details": {
     "label": {
@@ -57,22 +58,12 @@
     "title": "Home"
   },
   "menu": {
-    "admin-menu": {
-      "import-comic-files": "Import Comics",
-      "root": "Admin",
-      "web-audit-log": "Web Logs"
-    },
-    "build-details": "Build Details",
     "language-menu": {
       "en": "English",
       "es": "Spanish",
       "fr": "French",
       "pt": "Portuguese",
       "root": "Select Language"
-    },
-    "library-menu": {
-      "all-comics": "All Comics",
-      "root": "Library"
     },
     "logging-menu": {
       "root": "Logging",
@@ -81,36 +72,27 @@
       "3": "Debug (A Lot)",
       "4": "Informational"
     },
+    "tooltip": {
+      "toggle-sidenav": "Shows/Hides the side navigation panel..."
+    },
     "user-menu": {
       "root": "Account",
       "show-options-panel": "Set User Options..."
     }
   },
   "navigation": {
-    "collections": {
-      "characters": "Characters",
-      "locations": "Locations",
-      "publishers": "Publishers",
-      "root": "Collections",
-      "series": "Series",
-      "stories": "Stories",
-      "teams": "Teams"
+    "heading": {
+      "account": "My Account",
+      "admin": "Administration",
+      "comics": "Comics",
+      "reading-lists": "Reading Lists",
+      "system-status": "System"
     },
-    "comics": {
-      "all": "All Comics",
-      "newest": "Newest Comics",
-      "recently-read": "Recently Read",
-      "root": "Comics",
-      "stacked": "Stacked",
-      "unread": "Not Read"
-    },
-    "help": {
+    "option": {
+      "all-comics": "All comics",
       "build-details": "Build Details",
-      "root": "Help"
-    },
-    "reading-lists": {
-      "create-new": "Create list...",
-      "root": "Reading Lists"
+      "import-comics": "Import Comics",
+      "web-audit-log": "Web Audit Log"
     }
   },
   "session": {
