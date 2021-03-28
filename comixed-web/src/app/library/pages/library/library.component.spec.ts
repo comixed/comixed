@@ -110,9 +110,10 @@ describe('LibraryComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
+            data: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot,
             queryParams: new BehaviorSubject<{}>({}),
-            params: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
+            params: new BehaviorSubject<{}>({})
           }
         },
         TitleService

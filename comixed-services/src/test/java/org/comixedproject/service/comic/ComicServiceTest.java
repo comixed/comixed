@@ -21,10 +21,12 @@ package org.comixedproject.service.comic;
 import static junit.framework.TestCase.*;
 
 import java.io.File;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFormat;
 import org.comixedproject.model.comic.ScanType;
@@ -40,6 +42,7 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,6 +67,8 @@ public class ComicServiceTest {
   private static final ComicFormat TEST_COMIC_FORMAT = new ComicFormat();
   private static final Date TEST_COVER_DATE = new Date();
   private static final String TEST_HASH = "0123456789ABCDEF";
+  private static final Date TEST_LAST_READ_DATE = new Date();
+  private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
 
   @InjectMocks private ComicService comicService;
   @Mock private ComicRepository comicRepository;
@@ -73,11 +78,14 @@ public class ComicServiceTest {
   @Mock private Comic incomingComic;
   @Mock private ComiXedUser user;
   @Mock private List<LastReadDate> listLastReadDate;
+  @Mock private LastReadDate lastReadDate;
+  @Mock private Principal principal;
+
   @Captor private ArgumentCaptor<Date> lastUpdatedDateCaptor;
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<Date> deletedCaptor;
-  @Mock private LastReadDate lastReadDate;
   @Captor private ArgumentCaptor<LastReadDate> lastReadDateCaptor;
+  @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
 
   private List<Comic> comicList = new ArrayList<>();
   private List<Comic> comicsBySeries = new ArrayList<>();
@@ -102,15 +110,28 @@ public class ComicServiceTest {
   }
 
   @Test
-  public void testLoadAll() {
-    Mockito.when(comicRepository.loadComicList()).thenReturn(comicList);
+  public void testLoadAll() throws ComiXedUserException {
+    final List<Comic> comics = new ArrayList<>();
+    comics.add(comic);
 
-    final List<Comic> result = comicService.loadComicList();
+    final List<LastReadDate> lastReadDates = new ArrayList<>();
+    lastReadDates.add(lastReadDate);
+
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(comicRepository.loadComicList()).thenReturn(comics);
+    Mockito.when(comic.getLastReadDates()).thenReturn(lastReadDates);
+    Mockito.when(lastReadDate.getUser()).thenReturn(user);
+    Mockito.when(lastReadDate.getLastRead()).thenReturn(TEST_LAST_READ_DATE);
+
+    final List<Comic> result = comicService.loadComicList(TEST_EMAIL);
 
     assertNotNull(result);
-    assertSame(comicList, result);
+    assertFalse(result.isEmpty());
+    assertSame(comic, result.get(0));
 
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(comicRepository, Mockito.times(1)).loadComicList();
+    Mockito.verify(comic, Mockito.times(1)).setLastRead(TEST_LAST_READ_DATE);
   }
 
   @Test(expected = ComicException.class)
@@ -528,5 +549,49 @@ public class ComicServiceTest {
     Mockito.verify(comicRepository, Mockito.times(1)).findComicsForPageHash(TEST_HASH);
     Mockito.verify(comic, Mockito.times(comicList.size())).setDateLastUpdated(Mockito.any());
     Mockito.verify(comicRepository, Mockito.times(comicList.size())).save(comic);
+  }
+
+  @Test
+  public void testUpdateComicsByPageHashNoComics() {
+    comicList.clear();
+
+    Mockito.when(comicRepository.findComicsForPageHash(Mockito.anyString())).thenReturn(comicList);
+
+    comicService.updateComicsWithPageHash(TEST_HASH);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsForPageHash(TEST_HASH);
+    Mockito.verify(comic, Mockito.never()).setDateLastUpdated(Mockito.any());
+    Mockito.verify(comicRepository, Mockito.never()).save(comic);
+  }
+
+  @Test
+  public void testFindComicsToMove() {
+    Mockito.when(comicRepository.findComicsToMove(pageRequestCaptor.capture()))
+        .thenReturn(comicList);
+
+    final List<Comic> result = comicService.findComicsToMove(TEST_PAGE, TEST_MAXIMUM_COMICS);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    assertNotNull(pageRequestCaptor.getValue());
+    final PageRequest request = pageRequestCaptor.getValue();
+    assertEquals(TEST_PAGE, request.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, request.getPageSize());
+
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findComicsToMove(pageRequestCaptor.getValue());
+  }
+
+  @Test
+  public void testFindByFilename() {
+    Mockito.when(comicRepository.findByFilename(TEST_COMIC_FILENAME)).thenReturn(comic);
+
+    final Comic result = comicService.findByFilename(TEST_COMIC_FILENAME);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findByFilename(TEST_COMIC_FILENAME);
   }
 }

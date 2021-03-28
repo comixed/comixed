@@ -48,6 +48,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
   isAdmin = false;
   currentTab = 0;
   paramSubscription: Subscription;
+  dataSubscription: Subscription;
+  unreadOnly = false;
+
   readonly TAB_PARAMETER = 'tab';
 
   constructor(
@@ -58,6 +61,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
+    this.dataSubscription = this.activatedRoute.data.subscribe(data => {
+      this.unreadOnly = !!data.unread && data.unread === true;
+    });
     this.paramSubscription = this.activatedRoute.queryParams.subscribe(
       params => {
         if (+params[this.TAB_PARAMETER]) {
@@ -71,7 +77,12 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.comicSubscription = this.store
       .select(selectComicList)
-      .subscribe(comics => (this.comics = comics));
+      .subscribe(
+        comics =>
+          (this.comics = comics.filter(
+            comic => !this.unreadOnly || !comic.lastRead
+          ))
+      );
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
@@ -100,6 +111,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.dataSubscription.unsubscribe();
+    this.paramSubscription.unsubscribe();
     this.libraryBusySubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
