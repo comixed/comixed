@@ -25,7 +25,7 @@ import {
   selectLibraryBusy,
   selectSelectedComics
 } from '@app/library/selectors/library.selectors';
-import { TitleService, updateQueryParam } from '@app/core';
+import { TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -34,11 +34,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { selectComicList } from '@app/library/selectors/comic-list.selectors';
 
 @Component({
-  selector: 'cx-all-comics',
-  templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss']
+  selector: 'cx-library-page',
+  templateUrl: './library-page.component.html',
+  styleUrls: ['./library-page.component.scss']
 })
-export class LibraryComponent implements OnInit, OnDestroy {
+export class LibraryPageComponent implements OnInit, OnDestroy {
   libraryBusySubscription: Subscription;
   comicSubscription: Subscription;
   selectedSubscription: Subscription;
@@ -47,11 +47,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;
   isAdmin = false;
   currentTab = 0;
-  paramSubscription: Subscription;
   dataSubscription: Subscription;
   unreadOnly = false;
-
-  readonly TAB_PARAMETER = 'tab';
+  deletedOnly = false;
 
   constructor(
     private logger: LoggerService,
@@ -63,15 +61,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   ) {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
+      this.deletedOnly = !!data.deleted && data.deleted === true;
     });
-    this.paramSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (+params[this.TAB_PARAMETER]) {
-          this.logger.debug('Setting current tab:', params[this.TAB_PARAMETER]);
-          this.currentTab = +params[this.TAB_PARAMETER];
-        }
-      }
-    );
     this.libraryBusySubscription = this.store
       .select(selectLibraryBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
@@ -80,7 +71,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
       .subscribe(
         comics =>
           (this.comics = comics.filter(
-            comic => !this.unreadOnly || !comic.lastRead
+            comic =>
+              (!this.unreadOnly || !comic.lastRead) &&
+              (!this.deletedOnly || !!comic.deletedDate)
           ))
       );
     this.selectedSubscription = this.store
@@ -112,7 +105,6 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
-    this.paramSubscription.unsubscribe();
     this.libraryBusySubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
@@ -120,20 +112,20 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.langChangeSubscription.unsubscribe();
   }
 
-  onCurrentTabChanged(tab: number): void {
-    this.logger.debug('Changing current tab:', tab);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      this.TAB_PARAMETER,
-      `${tab}`
-    );
-  }
-
   private loadTranslations(): void {
     this.logger.trace('Setting page title');
-    this.titleService.setTitle(
-      this.translateService.instant('library.all-comics.title')
-    );
+    if (this.deletedOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.page-title-deleted')
+      );
+    } else if (this.unreadOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.page-title-unread')
+      );
+    } else {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.page-title')
+      );
+    }
   }
 }

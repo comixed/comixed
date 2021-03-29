@@ -120,7 +120,9 @@
   },
   "library": {
     "all-comics": {
-      "title": "Toutes les Bandes Dessinées"
+      "title": "Toutes les Bandes Dessinées",
+      "page-title-deleted": "Deleted Comics",
+      "page-title-unread": "All Unread Comics"
     },
     "comic-group": {
       "invalid-grouping": "Le groupe \"{name}\" n'est pas valide."
@@ -136,7 +138,6 @@
       "set-page-unblocked": "Ne pas bloquer des pages comme celle-ci"
     },
     "label": {
-      "navigation-tree": "Vue arborescente",
       "no-publisher": "Éditeur inconnu",
       "no-series": "Série inconnue",
       "pagination-items-per-page": "Couvertures par page"
@@ -153,13 +154,8 @@
       "effect-failure": "Impossible de marquer les Bandes Dessinées comme {read, select, true{lues} other{non lues}}.",
       "effect-success": "{count, plural, =1{une Bande Dessinée marquée} other{# Bandes Dessinées marquées}} comme {read, select, true{lues} other{non lues}}."
     },
-    "tab": {
-      "all-comics": "Toutes",
-      "deleted-comics": "Supprimées"
-    },
     "tooltip": {
       "deselect-all": "Déselectionner toutes les Bandes Dessinées.",
-      "navigation-tree": "Affichier la bibliothèque en vue arborescente",
       "scrape-comics": "Commencer la récupération des détails",
       "select-all": "Sélectionner toutes les Bandes Dessinées."
     }

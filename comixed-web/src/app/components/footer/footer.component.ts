@@ -23,6 +23,7 @@ import { selectImportCount } from '@app/selectors/import-count.selectors';
 import { User } from '@app/user';
 import {
   selectComicListCount,
+  selectComicListDeletedCount,
   selectComicListReadCount
 } from '@app/library/selectors/comic-list.selectors';
 
@@ -37,6 +38,7 @@ export class FooterComponent implements OnInit {
   importCount = 0;
   comicCount = 0;
   readCount = 0;
+  deletedCount = 0;
 
   constructor(private logger: LoggerModule, private store: Store<any>) {
     this.store
@@ -48,6 +50,9 @@ export class FooterComponent implements OnInit {
     this.store
       .select(selectComicListReadCount)
       .subscribe(count => (this.readCount = count));
+    this.store
+      .select(selectComicListDeletedCount)
+      .subscribe(count => (this.deletedCount = count));
   }
 
   ngOnInit(): void {}

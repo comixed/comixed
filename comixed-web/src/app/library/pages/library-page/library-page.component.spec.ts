@@ -17,14 +17,13 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { LibraryComponent } from './library.component';
+import { LibraryPageComponent } from './library-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { NavigationPaneComponent } from '@app/library/components/navigation-pane/navigation-pane.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -55,15 +54,14 @@ import {
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { QUERY_PARAM_TAB } from '@app/library/library.constants';
-import { MatTabsModule } from '@angular/material/tabs';
 import { DeletedComicsPipe } from '@app/library/pipes/deleted-comics.pipe';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
+import { COMIC_1, COMIC_3 } from '@app/library/library.fixtures';
 
-describe('LibraryComponent', () => {
+describe('LibraryPageComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -71,8 +69,8 @@ describe('LibraryComponent', () => {
     [COMIC_LIST_FEATURE_KEY]: initialComicListState
   };
 
-  let component: LibraryComponent;
-  let fixture: ComponentFixture<LibraryComponent>;
+  let component: LibraryPageComponent;
+  let fixture: ComponentFixture<LibraryPageComponent>;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
@@ -82,9 +80,8 @@ describe('LibraryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        LibraryComponent,
+        LibraryPageComponent,
         LibraryToolbarComponent,
-        NavigationPaneComponent,
         ComicCoversComponent,
         DeletedComicsPipe
       ],
@@ -102,8 +99,7 @@ describe('LibraryComponent', () => {
         MatFormFieldModule,
         MatTooltipModule,
         MatDialogModule,
-        MatMenuModule,
-        MatTabsModule
+        MatMenuModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -120,7 +116,7 @@ describe('LibraryComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LibraryComponent);
+    fixture = TestBed.createComponent(LibraryPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     translateService = TestBed.inject(TranslateService);
@@ -136,29 +132,98 @@ describe('LibraryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when the language changes', () => {
+  describe('loading page data', () => {
     beforeEach(() => {
-      translateService.use('fr');
+      component.unreadOnly = false;
+      component.deletedOnly = false;
     });
 
-    it('updates the page title', () => {
+    describe('when showing unread comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ unread: true });
+      });
+
+      it('sets the unread only flag', () => {
+        expect(component.unreadOnly).toBeTrue();
+      });
+    });
+
+    describe('when showing deleted comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ deleted: true });
+      });
+
+      it('sets the deleted only flag', () => {
+        expect(component.deletedOnly).toBeTrue();
+      });
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      component.unreadOnly = false;
+      component.deletedOnly = false;
+    });
+
+    it('updates the page title for all comic', () => {
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for unread comic', () => {
+      component.unreadOnly = true;
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for deleted comic', () => {
+      component.deletedOnly = true;
+      translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 
-  describe('changing the displayed tab', () => {
-    const TAB = 3;
+  describe('loading all pages', () => {
+    const UNREAD = { ...COMIC_1, lastRead: null, deletedDate: null };
+    const DELETED = {
+      ...COMIC_3,
+      lastRead: new Date().getTime(),
+      deletedDate: new Date().getTime()
+    };
+    const COMICS = [UNREAD, DELETED];
 
-    it('loads the tab from the URL', () => {
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        [QUERY_PARAM_TAB]: `${TAB}`
+    describe('for unread comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = true;
+        component.deletedOnly = false;
+        store.setState({
+          ...initialState,
+          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+        });
       });
-      expect(component.currentTab).toEqual(TAB);
+
+      it('only loads the unread comics', () => {
+        component.comics.every(comic => expect(comic.lastRead).toBeNull());
+      });
     });
 
-    it('updates the URL when the tab changes', () => {
-      component.onCurrentTabChanged(TAB);
-      expect(router.navigate).toHaveBeenCalled();
+    describe('for deleted comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = false;
+        component.deletedOnly = true;
+        store.setState({
+          ...initialState,
+          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+        });
+      });
+
+      it('only loads the unread comics', () => {
+        component.comics.every(comic =>
+          expect(comic.deletedDate).not.toBeNull()
+        );
+      });
     });
   });
+
+  describe('loading the translations', () => {});
 });

@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["lodash"],
+            "allowedCommonJsDependencies": ["lodash", "sockjs-client"],
             "outputPath": "target/classes/static",
             "index": "src/index.html",
             "main": "src/main.ts",

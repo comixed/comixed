@@ -31,7 +31,6 @@ import {
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { NavigationPaneComponent } from '@app/library/components/navigation-pane/navigation-pane.component';
 import { MatTreeModule } from '@angular/material/tree';
 import {
   initialState as initialLibraryState,
@@ -74,7 +73,7 @@ describe('ComicCoversComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicCoversComponent, NavigationPaneComponent],
+      declarations: [ComicCoversComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),

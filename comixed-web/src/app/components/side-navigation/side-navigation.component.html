@@ -8,6 +8,9 @@
       <a mat-list-item routerLink="/library/comics/unread">
         {{ "navigation.option.unread-comics" | translate }}
       </a>
+      <a mat-list-item routerLink="/library/comics/deleted">
+        {{ "navigation.option.deleted-comics" | translate }}
+      </a>
       <a *ngIf="isAdmin" mat-list-item routerLink="/admin/import">
         {{ "navigation.option.import-comics" | translate }}
       </a>

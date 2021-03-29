@@ -120,7 +120,9 @@
   },
   "library": {
     "all-comics": {
-      "title": "All Comics"
+      "page-title": "All Comics",
+      "page-title-deleted": "Deleted Comics",
+      "page-title-unread": "All Unread Comics"
     },
     "comic-group": {
       "invalid-grouping": "The group \"{name}\" is not valid."
@@ -136,7 +138,6 @@
       "set-page-unblocked": "Don't Block Pages Like This"
     },
     "label": {
-      "navigation-tree": "Tree View",
       "no-publisher": "Unknown Publisher",
       "no-series": "Unknown Series",
       "pagination-items-per-page": "Covers Per Page"
@@ -153,13 +154,8 @@
       "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
       "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
     },
-    "tab": {
-      "all-comics": "All",
-      "deleted-comics": "Deleted"
-    },
     "tooltip": {
       "deselect-all": "Mark no comics as selected.",
-      "navigation-tree": "Show the library tree view",
       "scrape-comics": "Start scraping comics",
       "select-all": "Mark all comics as selected."
     }
