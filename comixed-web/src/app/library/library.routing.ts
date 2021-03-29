@@ -21,7 +21,7 @@ import { NgModule } from '@angular/core';
 import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
 import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
 import { AdminGuard, ReaderGuard } from '@app/user';
-import { LibraryComponent } from '@app/library/pages/library/library.component';
+import { LibraryPageComponent } from '@app/library/pages/library-page/library-page.component';
 import { LibraryGroupComponent } from '@app/library/pages/library-group/library-group.component';
 import { ScrapingComponent } from '@app/library/pages/scraping/scraping.component';
 
@@ -32,15 +32,21 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
+    path: 'library/comics/unread',
+    component: LibraryPageComponent,
+    canActivate: [ReaderGuard],
+    data: { unread: true }
+  },
+  {
+    path: 'library/comics/deleted',
+    component: LibraryPageComponent,
+    canActivate: [ReaderGuard],
+    data: { deleted: true }
+  },
+  {
     path: 'library/comics/:comicId',
     component: ComicDetailsComponent,
     canActivate: [ReaderGuard]
-  },
-  {
-    path: 'library/comics/unread',
-    component: LibraryComponent,
-    canActivate: [ReaderGuard],
-    data: { unread: true }
   },
   {
     path: 'library/:type/:name',
@@ -49,7 +55,7 @@ const routes: Routes = [
   },
   {
     path: 'library',
-    component: LibraryComponent,
+    component: LibraryPageComponent,
     canActivate: [ReaderGuard]
   },
   {

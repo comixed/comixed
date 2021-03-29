@@ -23,6 +23,7 @@ import {
 import {
   selectComicList,
   selectComicListCount,
+  selectComicListDeletedCount,
   selectComicListReadCount,
   selectComicListState
 } from './comic-list.selectors';
@@ -34,9 +35,9 @@ describe('Comic List Selectors', () => {
   beforeEach(() => {
     state = {
       comics: [
-        { ...COMIC_1, lastRead: new Date().getTime() },
-        { ...COMIC_3, lastRead: null },
-        { ...COMIC_5, lastRead: null }
+        { ...COMIC_1, lastRead: new Date().getTime(), deletedDate: null },
+        { ...COMIC_3, lastRead: null, deletedDate: null },
+        { ...COMIC_5, lastRead: null, deletedDate: new Date().getTime() }
       ]
     };
   });
@@ -65,5 +66,11 @@ describe('Comic List Selectors', () => {
     expect(
       selectComicListReadCount({ [COMIC_LIST_FEATURE_KEY]: state })
     ).toEqual(state.comics.filter(comic => !!comic.lastRead).length);
+  });
+
+  it('should select the number of deleted comics in the list', () => {
+    expect(
+      selectComicListDeletedCount({ [COMIC_LIST_FEATURE_KEY]: state })
+    ).toEqual(state.comics.filter(comic => !!comic.deletedDate).length);
   });
 });

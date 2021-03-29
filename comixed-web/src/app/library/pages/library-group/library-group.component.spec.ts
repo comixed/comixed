@@ -31,7 +31,6 @@ import { ComicCoversComponent } from '@app/library/components/comic-covers/comic
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NavigationPaneComponent } from '@app/library/components/navigation-pane/navigation-pane.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -77,8 +76,7 @@ describe('LibraryGroupComponent', () => {
       declarations: [
         LibraryGroupComponent,
         ComicCoversComponent,
-        LibraryToolbarComponent,
-        NavigationPaneComponent
+        LibraryToolbarComponent
       ],
       imports: [
         NoopAnimationsModule,

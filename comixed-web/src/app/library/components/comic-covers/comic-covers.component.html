@@ -1,49 +1,28 @@
-<mat-sidenav-container class="cx-all-comics-container" autosize>
-  <mat-sidenav #navigationPane mode="over" position="start">
-    <cx-navigation-pane></cx-navigation-pane>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <div class="cx-width-100 cx-height-100">
-      <mat-toolbar>
-        <button
-          id="navigation-tree-button"
-          mat-flat-button
-          color="accent"
-          [matTooltip]="'library.tooltip.navigation-tree' | translate"
-          (click)="navigationPane.toggle(true)"
-        >
-          <mat-icon>account_tree</mat-icon>
-          <mat-label>
-            {{ "library.label.navigation-tree" | translate }}
-          </mat-label>
-        </button>
-        <div class="cx-spacer"></div>
-        <mat-paginator
-          [pageSizeOptions]="paginationOptions"
-          [showFirstLastButtons]="true"
-          [pageSize]="pagination"
-          (page)="onPaginationChange($event.pageSize)"
-        ></mat-paginator>
-      </mat-toolbar>
-      <div id="cx-all-comics" class="cx-comic-detail-card-container">
-        <cx-comic-detail-card
-          *ngFor="let comic of comics"
-          [comic]="comic"
-          [title]="comic | comicTitle"
-          [imageUrl]="comic | comicCoverUrl"
-          [detailLink]="['/library', 'comics', comic.id]"
-          [blurred]="!comic.fileDetails"
-          [busy]="!comic.fileDetails"
-          [selected]="isSelected(comic)"
-          (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
-          (showContextMenu)="
-            onShowContextMenu($event.comic, $event.x, $event.y)
-          "
-        ></cx-comic-detail-card>
-      </div>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="cx-width-100 cx-height-100">
+  <mat-toolbar>
+    <div class="cx-spacer"></div>
+    <mat-paginator
+      [pageSizeOptions]="paginationOptions"
+      [showFirstLastButtons]="true"
+      [pageSize]="pagination"
+      (page)="onPaginationChange($event.pageSize)"
+    ></mat-paginator>
+  </mat-toolbar>
+  <div id="cx-all-comics" class="cx-comic-detail-card-container">
+    <cx-comic-detail-card
+      *ngFor="let comic of comics"
+      [comic]="comic"
+      [title]="comic | comicTitle"
+      [imageUrl]="comic | comicCoverUrl"
+      [detailLink]="['/library', 'comics', comic.id]"
+      [blurred]="!comic.fileDetails"
+      [busy]="!comic.fileDetails"
+      [selected]="isSelected(comic)"
+      (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
+      (showContextMenu)="onShowContextMenu($event.comic, $event.x, $event.y)"
+    ></cx-comic-detail-card>
+  </div>
+</div>
 
 <div
   style="visibility: hidden; position: fixed"

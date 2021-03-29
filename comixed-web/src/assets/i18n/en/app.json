@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "A general error has occurred.",
     "logged-in": "Logged in: {email}",
-    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount}"
+    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Deleted: {deletedCount}"
   },
   "build-details": {
     "label": {
@@ -91,6 +91,7 @@
     "option": {
       "all-comics": "All comics",
       "build-details": "Build Details",
+      "deleted-comics": "Deleted comics",
       "import-comics": "Import Comics",
       "unread-comics": "Unread Comics",
       "web-audit-log": "Web Audit Log"

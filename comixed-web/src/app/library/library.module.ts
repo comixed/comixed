@@ -59,7 +59,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
-import { LibraryComponent } from './pages/library/library.component';
+import { LibraryPageComponent } from './pages/library-page/library-page.component';
 import {
   DISPLAY_FEATURE_KEY,
   reducer as displayReducer
@@ -78,7 +78,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ScrapingIssueDetailComponent } from './components/scraping-issue-detail/scraping-issue-detail.component';
 import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 import { MatchabilityPipe } from './pipes/matchability.pipe';
-import { NavigationPaneComponent } from './components/navigation-pane/navigation-pane.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -135,13 +134,12 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     ComicCoverUrlPipe,
     ComicTitlePipe,
     ComicPageUrlPipe,
-    LibraryComponent,
+    LibraryPageComponent,
     ComicDisplayOptionsComponent,
     ComicScrapingComponent,
     ScrapingIssueDetailComponent,
     ScrapingIssueTitlePipe,
     MatchabilityPipe,
-    NavigationPaneComponent,
     ComicCoversComponent,
     LibraryGroupComponent,
     LibraryToolbarComponent,

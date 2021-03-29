@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "Un dysfonctionnement général du système s'est produit.",
     "logged-in": "Connecté avec le compte : {email}",
-    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount}"
+    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Deleted: {deletedCount}"
   },
   "build-details": {
     "label": {
@@ -81,6 +81,7 @@
     "label": {
       "all-comics": "All comics",
       "build-details": "Build Details",
+      "deleted-comics": "Deleted comics",
       "comics-section": "Comics",
       "reading-lists-section": "Reading Lists",
       "unread-comics": "Unread Comics",
