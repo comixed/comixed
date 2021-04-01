@@ -23,16 +23,27 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { COMIC_2 } from '@app/library/library.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_5
+} from '@app/library/library.fixtures';
 import {
   LOAD_COMIC_URL,
+  LOAD_COMICS_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
+import { LoadComicsResponse } from '@app/library/models/net/load-comics-response';
+import { LoadComicsRequest } from '@app/library/models/net/load-comics-request';
 
 describe('ComicService', () => {
   const COMIC = COMIC_2;
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
+  const LAST_PAGE = Math.random() > 0.5;
 
   let service: ComicService;
   let httpMock: HttpTestingController;
@@ -48,6 +59,25 @@ describe('ComicService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('can load a batch of comics', () => {
+    service.loadBatch({ lastId: LAST_ID }).subscribe(response =>
+      expect(response).toEqual({
+        comics: COMICS,
+        lastId: LAST_ID,
+        lastPayload: LAST_PAGE
+      } as LoadComicsResponse)
+    );
+
+    const req = httpMock.expectOne(interpolate(LOAD_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({ lastId: LAST_ID } as LoadComicsRequest);
+    req.flush({
+      comics: COMICS,
+      lastId: LAST_ID,
+      lastPayload: LAST_PAGE
+    } as LoadComicsResponse);
   });
 
   it('can load a single comic', () => {

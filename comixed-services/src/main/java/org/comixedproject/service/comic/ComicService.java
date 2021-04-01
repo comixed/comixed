@@ -20,7 +20,6 @@ package org.comixedproject.service.comic;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +29,6 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.library.LastReadDatesRepository;
-import org.comixedproject.service.task.TaskService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicService {
   @Autowired private ComicRepository comicRepository;
-  @Autowired private LastReadDatesRepository lastReadDatesRepository;
-  @Autowired private TaskService taskService;
+  @Autowired private LastReadService lastReadService;
   @Autowired private UserService userService;
 
   /**
@@ -70,137 +66,9 @@ public class ComicService {
 
     Comic result = this.getComic(id);
     log.debug("Loading last read date for comic: user id={}", user.getId());
-    LastReadDate lastRead = this.lastReadDatesRepository.getForComicAndUser(result, user);
-    if (lastRead != null) {
-      log.debug("Last read on {}", lastRead.getLastRead());
-      result.setLastRead(lastRead.getLastRead());
-    }
+    result.setLastRead(this.lastReadService.getLastReadForComicAndUser(result, user));
 
     return result;
-  }
-
-  @Transactional
-  public Comic deleteComic(final long id) throws ComicException {
-    log.debug("Marking comic for deletion: id={}", id);
-
-    final Optional<Comic> record = this.comicRepository.findById(id);
-
-    if (!record.isPresent()) {
-      throw new ComicException("no such comic: id=" + id);
-    }
-
-    final Comic comic = record.get();
-    log.debug("Setting deleted date");
-    comic.setDateDeleted(new Date());
-
-    log.debug("Updating comic in the database");
-    comic.setDateLastUpdated(new Date());
-    return this.comicRepository.save(comic);
-  }
-
-  @Transactional
-  public List<Long> deleteMultipleComics(final List<Long> ids) {
-    log.debug("Preparing to delete {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    List<Long> result = new ArrayList<>();
-
-    for (long id : ids) {
-      log.debug("Fetching comic: id={}", id);
-      final Optional<Comic> comic = this.comicRepository.findById(id);
-
-      if (comic.isPresent()) {
-        log.debug("Deleting comics");
-        this.comicRepository.delete(comic.get());
-        result.add(id);
-      } else {
-        log.error("No such comic");
-      }
-    }
-    return result;
-  }
-
-  @Transactional
-  public Comic updateComic(final long id, final Comic update) {
-    log.debug("Updating comic: id={}", id);
-
-    final Optional<Comic> record = this.comicRepository.findById(id);
-
-    if (record.isPresent()) {
-      final Comic comic = record.get();
-      log.debug("Updating the comic fields");
-
-      comic.setPublisher(update.getPublisher());
-      comic.setImprint(update.getImprint());
-      comic.setSeries(update.getSeries());
-      comic.setVolume(update.getVolume());
-      comic.setIssueNumber(update.getIssueNumber());
-      comic.setSortName(update.getSortName());
-      comic.setScanType(update.getScanType());
-      comic.setFormat(update.getFormat());
-      comic.setDateLastUpdated(new Date());
-
-      log.debug("Saving updated comic");
-      return this.comicRepository.save(comic);
-    }
-
-    log.debug("No such comic");
-    return null;
-  }
-
-  public List<LastReadDate> getLastReadDatesSince(final String email, final long timestamp)
-      throws ComiXedUserException {
-    log.debug("Getting last read dates for user: email={}", email);
-
-    final ComiXedUser user = this.userService.findByEmail(email);
-
-    return this.lastReadDatesRepository.findAllForUser(user.getId(), new Date(timestamp));
-  }
-
-  @Transactional
-  public Comic save(final Comic comic) {
-    log.debug("Saving comic: filename={}", comic.getFilename());
-
-    comic.setDateLastUpdated(new Date());
-
-    final Comic result = this.comicRepository.save(comic);
-
-    this.comicRepository.flush();
-
-    return result;
-  }
-
-  @Transactional
-  public byte[] getComicContent(final Comic comic) {
-    log.debug("Getting file content: filename={}", comic.getFilename());
-
-    try {
-      return FileUtils.readFileToByteArray(new File(comic.getFilename()));
-    } catch (IOException error) {
-      log.error("Failed to read comic file content", error);
-      return null;
-    }
-  }
-
-  @Transactional
-  public Comic restoreComic(final long id) throws ComicException {
-    log.debug("Restoring comic: id={}", id);
-
-    final Optional<Comic> record = this.comicRepository.findById(id);
-
-    if (!record.isPresent()) {
-      throw new ComicException("no such comic: id=" + id);
-    }
-
-    final Comic comic = record.get();
-
-    log.debug("Restoring comic: id={} originally deleted={}", id, comic.getDateDeleted());
-
-    log.debug("Clearing deleted date");
-    comic.setDateDeleted(null);
-    log.debug("Refreshing last updated date");
-    comic.setDateLastUpdated(new Date());
-
-    log.debug("Saving comic");
-    return this.comicRepository.save(comic);
   }
 
   /**
@@ -243,8 +111,6 @@ public class ComicService {
       if (nextComic != null) {
         log.debug("Setting the next comic: id={}", nextComic.getId());
         result.setNextIssueId(nextComic.getId());
-      } else {
-        log.debug("Did not find a next issue");
       }
     }
     final List<Comic> prev =
@@ -270,8 +136,6 @@ public class ComicService {
       if (prevComic != null) {
         log.debug("Setting previous comic: id={}", prevComic.getId());
         result.setPreviousIssueId(prevComic.getId());
-      } else {
-        log.debug("Did not find a previous issue");
       }
     }
 
@@ -279,6 +143,143 @@ public class ComicService {
     return result;
   }
 
+  /**
+   * Marks a comic for deletion but does not actually delete the comic.
+   *
+   * @param id the comic id
+   * @return the updated comic
+   * @throws ComicException if the comic id is invalid
+   */
+  @Transactional
+  public Comic deleteComic(final long id) throws ComicException {
+    log.debug("Marking comic for deletion: id={}", id);
+
+    final Optional<Comic> record = this.comicRepository.findById(id);
+
+    if (!record.isPresent()) {
+      throw new ComicException("no such comic: id=" + id);
+    }
+
+    final Comic comic = record.get();
+    log.debug("Setting deleted date");
+    comic.setDateDeleted(new Date());
+
+    log.debug("Updating comic in the database");
+    comic.setDateLastUpdated(new Date());
+    return this.comicRepository.save(comic);
+  }
+
+  /**
+   * Updates a comic record.
+   *
+   * @param id the comic id
+   * @param update the updated comic data
+   * @return the updated comic
+   */
+  @Transactional
+  public Comic updateComic(final long id, final Comic update) {
+    log.debug("Updating comic: id={}", id);
+
+    final Optional<Comic> record = this.comicRepository.findById(id);
+
+    if (record.isPresent()) {
+      final Comic comic = record.get();
+      log.debug("Updating the comic fields");
+
+      comic.setPublisher(update.getPublisher());
+      comic.setImprint(update.getImprint());
+      comic.setSeries(update.getSeries());
+      comic.setVolume(update.getVolume());
+      comic.setIssueNumber(update.getIssueNumber());
+      comic.setSortName(update.getSortName());
+      comic.setScanType(update.getScanType());
+      comic.setFormat(update.getFormat());
+      comic.setDateLastUpdated(new Date());
+
+      log.debug("Saving updated comic");
+      return this.comicRepository.save(comic);
+    }
+
+    log.debug("No such comic");
+    return null;
+  }
+
+  /**
+   * Saves a new comic.
+   *
+   * @param comic the comic
+   * @return the saved comic
+   */
+  @Transactional
+  public Comic save(final Comic comic) {
+    log.debug("Saving comic: filename={}", comic.getFilename());
+
+    comic.setDateLastUpdated(new Date());
+
+    final Comic result = this.comicRepository.save(comic);
+
+    this.comicRepository.flush();
+
+    return result;
+  }
+
+  /**
+   * Retrieves the full content of the comic file.
+   *
+   * @param comic the comic
+   * @return the comic content
+   */
+  @Transactional
+  public byte[] getComicContent(final Comic comic) {
+    log.debug("Getting file content: filename={}", comic.getFilename());
+
+    try {
+      return FileUtils.readFileToByteArray(new File(comic.getFilename()));
+    } catch (IOException error) {
+      log.error("Failed to read comic file content", error);
+      return null;
+    }
+  }
+
+  /**
+   * Unmarks a comic for deletion.
+   *
+   * @param id the comic id
+   * @return the updated comic
+   * @throws ComicException if the comic id is invalid
+   */
+  @Transactional
+  public Comic restoreComic(final long id) throws ComicException {
+    log.debug("Restoring comic: id={}", id);
+
+    final Optional<Comic> record = this.comicRepository.findById(id);
+
+    if (!record.isPresent()) {
+      throw new ComicException("no such comic: id=" + id);
+    }
+
+    final Comic comic = record.get();
+
+    log.debug("Restoring comic: id={} originally deleted={}", id, comic.getDateDeleted());
+
+    log.debug("Clearing deleted date");
+    comic.setDateDeleted(null);
+    log.debug("Refreshing last updated date");
+    comic.setDateLastUpdated(new Date());
+
+    log.debug("Saving comic");
+    return this.comicRepository.save(comic);
+  }
+
+  /**
+   * Marks a comic as read by the given user.
+   *
+   * @param email the user's email
+   * @param id the comic id
+   * @return the last read date
+   * @throws ComicException if the comic id is invalid
+   * @throws ComiXedUserException if the email is invalid
+   */
   @Transactional
   public LastReadDate markAsRead(String email, long id)
       throws ComicException, ComiXedUserException {
@@ -287,44 +288,27 @@ public class ComicService {
     if (comic == null) throw new ComicException("no such comic: id=" + id);
 
     ComiXedUser user = this.userService.findByEmail(email);
-    LastReadDate lastReadDate = this.lastReadDatesRepository.getForComicAndUser(comic, user);
 
-    if (lastReadDate == null) {
-      log.debug("Creating a new last read date record");
-      lastReadDate = new LastReadDate();
-      lastReadDate.setUser(user);
-      lastReadDate.setComic(comic);
-    } else {
-      log.debug("Updating last read date");
-      lastReadDate.setLastRead(new Date());
-    }
-
-    log.debug("Saving last read date: {}", lastReadDate.getLastRead());
-    this.lastReadDatesRepository.save(lastReadDate);
-
-    log.debug("Returning the list of last read dates");
-    return this.lastReadDatesRepository.getForComicAndUser(comic, user);
+    return this.lastReadService.markComicAsRead(comic, user);
   }
 
+  /**
+   * Marks a comic as unread by the given user.
+   *
+   * @param email the user's email
+   * @param id the comic id
+   * @throws ComicException if the comic is invalid
+   * @throws ComiXedUserException if the email is invalid
+   */
   @Transactional
-  public boolean markAsUnread(String email, long id) throws ComicException, ComiXedUserException {
+  public void markAsUnread(String email, long id) throws ComicException, ComiXedUserException {
     log.debug("Marking comic as not read by {}: id={}", email, id);
     Comic comic = this.comicRepository.getById(id);
     if (comic == null) throw new ComicException("no such comic: id=" + id);
 
     ComiXedUser user = this.userService.findByEmail(email);
-    LastReadDate lastReadDate = this.lastReadDatesRepository.getForComicAndUser(comic, user);
 
-    if (lastReadDate != null) {
-      log.debug("Deleting last read record for {}: id={}", email, id);
-      this.lastReadDatesRepository.delete(lastReadDate);
-    } else {
-      log.debug("Comic is not already marked as read");
-      return false;
-    }
-
-    log.debug("Returning success");
-    return true;
+    this.lastReadService.markComicAsUnread(comic, user);
   }
 
   /**
@@ -360,18 +344,6 @@ public class ComicService {
   }
 
   /**
-   * Returns a list of comics with ids greater than the threshold specified.
-   *
-   * @param threshold the id threshold
-   * @param max the maximum number of records
-   * @return the list of comics
-   */
-  public List<Comic> getComicsById(final long threshold, final int max) {
-    log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
-    return this.comicRepository.findComicsWithIdGreaterThan(threshold, PageRequest.of(0, max));
-  }
-
-  /**
    * Returns all comics with the given page hash
    *
    * @param hash the page hash
@@ -395,33 +367,39 @@ public class ComicService {
   }
 
   /**
-   * Returns the entire list of comics.
+   * Returns a list of comics, including the last read date, for a given user.
    *
-   * @return the comic list
    * @param email the user's email
-   * @throws ComiXedUserException if the user principal is invalid
+   * @param lastId the last id loaded
+   * @param maximum the maximum number to return
+   * @throws ComiXedUserException if the email is invalid
+   * @return the list of comics
    */
-  @Transactional
-  public List<Comic> loadComicList(final String email) throws ComiXedUserException {
+  public List<Comic> getComicsById(final String email, final Long lastId, final Integer maximum)
+      throws ComiXedUserException {
+    log.debug("Loading {} comics for {} with id > {}", email, maximum, lastId);
     final ComiXedUser user = this.userService.findByEmail(email);
-    final List<Comic> result = new ArrayList<>();
-    this.comicRepository
-        .loadComicList()
-        .forEach(
-            comic -> {
-              log.trace("Finding last read date for user");
-              final Optional<LastReadDate> lastRead =
-                  comic.getLastReadDates().stream()
-                      .filter(lastReadDate -> lastReadDate.getUser().equals(user))
-                      .findFirst();
-              if (lastRead.isPresent()) {
-                comic.setLastRead(lastRead.get().getLastRead());
-              }
-
-              log.trace("Adding comic");
-              result.add(comic);
-            });
-
+    final List<Comic> result = this.getComicsById(lastId, maximum);
+    log.debug(
+        "Loading last read date for {} comic{}", result.size(), result.size() == 1 ? "" : "s");
+    result.forEach(
+        comic -> {
+          log.trace("Loading last read date: id={} user={}", comic.getId(), email);
+          comic.setLastRead(this.lastReadService.getLastReadForComicAndUser(comic, user));
+        });
+    log.trace("Returning comics");
     return result;
+  }
+
+  /**
+   * Returns a list of comics with ids greater than the threshold specified.
+   *
+   * @param threshold the id threshold
+   * @param max the maximum number of records
+   * @return the list of comics
+   */
+  public List<Comic> getComicsById(final long threshold, final int max) {
+    log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
+    return this.comicRepository.findComicsWithIdGreaterThan(threshold, PageRequest.of(0, max));
   }
 }

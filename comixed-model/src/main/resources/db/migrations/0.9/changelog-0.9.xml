@@ -6,10 +6,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <include file="/db/migrations/0.5.0/changelog-0.5.0.xml"/>
-  <include file="/db/migrations/0.5.1/changelog-0.5.1.xml"/>
-  <include file="/db/migrations/0.6.0/changelog-0.6.0.xml"/>
-  <include file="/db/migrations/0.7.0/changelog-0.7.0.xml"/>
-  <include file="/db/migrations/0.9/changelog-0.9.xml"/>
+  <include file="/db/migrations/0.9/001_682_add_created_dates_to_comics.xml"/>
 
 </databaseChangeLog>

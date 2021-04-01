@@ -21,7 +21,6 @@ package org.comixedproject.controller.comic;
 import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -36,8 +35,6 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.messaging.Constants;
-import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
 import org.comixedproject.model.user.LastReadDate;
@@ -60,7 +57,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -89,36 +85,6 @@ public class ComicController {
   @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
-
-  /**
-   * Loads the entire list of comics and sends them to the requesting user.
-   *
-   * @param principal the user principal
-   * @throws ComiXedUserException if the user is invalid
-   */
-  @MessageMapping(Constants.LOAD_COMIC_LIST_MESSAGE)
-  public void loadComicList(final Principal principal) throws ComiXedUserException {
-    final String email = principal.getName();
-    log.info("Loading all comics for user: {}", email);
-    this.comicService
-        .loadComicList(email)
-        .forEach(
-            comic -> {
-              log.trace("Sending comic to user: {}", comic.getId());
-              try {
-                this.messagingTemplate.convertAndSendToUser(
-                    principal.getName(),
-                    COMIC_LIST_UPDATE_TOPIC,
-                    this.objectMapper
-                        .writerWithView(ComicDetailsView.class)
-                        .writeValueAsString(comic));
-              } catch (JsonProcessingException error) {
-                log.error("Could not send comic", error);
-              }
-            });
-    this.messagingTemplate.convertAndSendToUser(
-        principal.getName(), COMIC_LIST_UPDATE_TOPIC, EndOfList.MESSAGE);
-  }
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
@@ -329,13 +295,13 @@ public class ComicController {
 
   @DeleteMapping(value = "/{id}/read", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public boolean markAsUnread(Principal principal, @PathVariable("id") Long id)
+  public void markAsUnread(Principal principal, @PathVariable("id") Long id)
       throws ComicException, ComiXedUserException {
     String email = principal.getName();
     if (email == null) throw new ComicException("not authenticated");
     log.info("Marking comic as unread for {}: id={}", email, id);
 
-    return this.comicService.markAsUnread(email, id);
+    this.comicService.markAsUnread(email, id);
   }
 
   @PostMapping(

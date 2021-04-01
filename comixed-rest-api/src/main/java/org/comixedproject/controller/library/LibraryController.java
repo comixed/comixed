@@ -25,13 +25,18 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.net.*;
+import org.comixedproject.model.net.ClearImageCacheResponse;
+import org.comixedproject.model.net.ConsolidateLibraryRequest;
+import org.comixedproject.model.net.ConvertComicsRequest;
+import org.comixedproject.model.net.library.LoadLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.MoveComicsRequest;
 import org.comixedproject.model.net.library.SetReadStateRequest;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.ReadingListService;
+import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.task.model.ConvertComicsWorkerTask;
 import org.comixedproject.task.model.MoveComicsWorkerTask;
@@ -47,6 +52,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api")
 @Log4j2
 public class LibraryController {
+  static final int MAXIMUM_RECORDS = 100;
+
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
   @Autowired private UserService userService;
@@ -153,5 +160,37 @@ public class LibraryController {
     final boolean read = request.getRead();
     log.info("Marking comics as {} for {}", read ? "read" : "unread", email);
     this.libraryService.setReadState(email, ids, read);
+  }
+
+  /**
+   * Loads a batch of comics during the initial startup process.
+   *
+   * @param principal the user principal
+   * @param request the request
+   * @return the response
+   * @throws ComiXedUserException if the email is invalid
+   */
+  @PostMapping(
+      value = "/library",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('READER')")
+  @AuditableEndpoint
+  @JsonView(View.ComicListView.class)
+  public LoadLibraryResponse loadLibrary(
+      final Principal principal, @RequestBody() final LoadLibraryRequest request)
+      throws ComiXedUserException {
+    final String email = principal.getName();
+    final Long lastId = request.getLastId();
+    log.info("Loading library for {}: last id was {}", email, lastId);
+
+    List<Comic> comics = this.comicService.getComicsById(email, lastId, MAXIMUM_RECORDS + 1);
+    boolean lastPayload = true;
+    if (comics.size() > MAXIMUM_RECORDS) {
+      comics = comics.subList(0, MAXIMUM_RECORDS);
+      lastPayload = false;
+    }
+
+    return new LoadLibraryResponse(comics, comics.get(comics.size() - 1).getId(), lastPayload);
   }
 }

@@ -20,12 +20,12 @@ package org.comixedproject.model.user;
 
 import com.fasterxml.jackson.annotation.*;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.views.View;
+import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * <code>LastReadDate</code> holds the date and time for when a user last read a specific comic.
@@ -36,6 +36,7 @@ import org.comixedproject.views.View;
 @Table(name = "user_last_read_dates")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class LastReadDate {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,34 +49,51 @@ public class LastReadDate {
   @JsonProperty("comic")
   @Getter
   @Setter
+  @NonNull
   private Comic comic;
 
   @ManyToOne
   @JoinColumn(name = "user_id", insertable = true, updatable = false, nullable = false)
   @Getter
   @Setter
+  @NonNull
   private ComiXedUser user;
 
   @Column(name = "last_read", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.UserDetailsView.class, View.LibraryUpdate.class})
+  @JsonView({View.UserDetailsView.class, View.ComicDetailsView.class})
   @Getter
   @Setter
   private Date lastRead = new Date();
 
+  @Column(name = "created_on", updatable = false, nullable = false)
+  @JsonProperty("createdOn")
+  @JsonView({View.UserDetailsView.class, View.ComicDetailsView.class})
+  @Getter
+  private Date createdOn = new Date();
+
   @Column(name = "last_updated", nullable = false, updatable = true)
+  @LastModifiedDate
   @JsonProperty("lastUpdated")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.UserDetailsView.class, View.LibraryUpdate.class})
+  @JsonView({View.UserDetailsView.class, View.ComicDetailsView.class})
   @Getter
   @Setter
   private Date lastUpdated = new Date();
 
-  @JsonProperty("comicId")
-  @JsonView({View.UserDetailsView.class, View.LibraryUpdate.class})
-  @Transient
-  public Long getComicId() {
-    return this.comic.getId();
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final LastReadDate that = (LastReadDate) o;
+    return Objects.equals(comic, that.comic)
+        && Objects.equals(user, that.user)
+        && Objects.equals(lastRead, that.lastRead);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(comic, user, lastRead);
   }
 }

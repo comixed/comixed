@@ -17,15 +17,55 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Actions } from '@ngrx/effects';
-import { ComicListService } from '@app/library/services/comic-list.service';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
+import { ComicService } from '@app/library/services/comic.service';
+import {
+  comicsReceived,
+  loadComics,
+  loadComicsFailed
+} from '@app/library/actions/comic-list.actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { LoadComicsResponse } from '@app/library/models/net/load-comics-response';
+import { of } from 'rxjs';
+import { ComicListService } from '@app/library/services/comic-list.service';
 
 @Injectable()
 export class ComicListEffects {
+  loadBatch$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadComics),
+      tap(action => this.logger.debug('Effect: load comic batch:', action)),
+      switchMap(action =>
+        this.comicService.loadBatch({ lastId: action.lastId }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map((response: LoadComicsResponse) =>
+            comicsReceived({
+              comics: response.comics,
+              lastId: response.lastId,
+              lastPayload: response.lastPayload
+            })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            return of(loadComicsFailed());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        return of(loadComicsFailed());
+      })
+    );
+  });
+
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
+    private comicService: ComicService,
     private comicListService: ComicListService
-  ) {}
+  ) {
+    // done to ensure the service was injected
+    this.logger.assert(this.comicListService);
+  }
 }

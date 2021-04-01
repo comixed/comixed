@@ -16,28 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/library';
 
-export const resetComicList = createAction(
-  '[Comic List] Indicates the loading process is started'
-);
-
-export const loadComics = createAction(
-  '[Comic List] Load a batch of comics',
-  props<{ lastId: number }>()
-);
-
-export const comicsReceived = createAction(
-  '[Comic List] A batch of comics was received',
-  props<{ comics: Comic[]; lastId: number; lastPayload: boolean }>()
-);
-
-export const loadComicsFailed = createAction(
-  '[Comic List] Failed to load a batch of comics'
-);
-
-export const comicListUpdateReceived = createAction(
-  '[Comic List] A comic update was received',
-  props<{ comic: Comic }>()
-);
+export interface LoadComicsResponse {
+  comics: Comic[];
+  lastId: number;
+  lastPayload: boolean;
+}

@@ -428,7 +428,8 @@
                         user_id="1000"
                         comic_id="1000"
                         last_read="2018-12-19 08:00:00"
-                        last_updated="2018-12-19 08:00:00"/>
+                        last_updated="2018-12-19 08:00:00"
+                        created_on="[now]"/>
   <reading_lists id="1000"
                  name="First Reading List"
                  owner_id="1000"

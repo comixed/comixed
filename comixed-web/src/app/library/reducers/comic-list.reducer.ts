@@ -19,6 +19,9 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   comicListUpdateReceived,
+  comicsReceived,
+  loadComics,
+  loadComicsFailed,
   resetComicList
 } from '../actions/comic-list.actions';
 import { Comic } from '@app/library';
@@ -26,17 +29,37 @@ import { Comic } from '@app/library';
 export const COMIC_LIST_FEATURE_KEY = 'comic_list_state';
 
 export interface ComicListState {
+  loading: boolean;
+  lastId: number;
+  lastPayload: boolean;
   comics: Comic[];
 }
 
 export const initialState: ComicListState = {
+  loading: false,
+  lastId: 0,
+  lastPayload: false,
   comics: []
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(resetComicList, state => ({ ...state, comics: [] })),
+  on(resetComicList, state => ({
+    ...state,
+    loading: false,
+    lastId: 0,
+    lastPayload: false,
+    comics: []
+  })),
+  on(loadComics, state => ({ ...state, loading: true })),
+  on(comicsReceived, (state, action) => {
+    const comics = state.comics.concat(action.comics);
+    const lastId = action.lastId;
+    const lastPayload = action.lastPayload;
+    return { ...state, comics, lastId, lastPayload, loading: false };
+  }),
+  on(loadComicsFailed, state => ({ ...state, loading: false })),
   on(comicListUpdateReceived, (state, action) => {
     const comics = state.comics.filter(comic => comic.id !== action.comic.id);
     comics.push(action.comic);

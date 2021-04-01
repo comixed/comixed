@@ -19,16 +19,23 @@
 import { ComicListState, initialState, reducer } from './comic-list.reducer';
 import {
   comicListUpdateReceived,
+  comicsReceived,
+  loadComics,
+  loadComicsFailed,
   resetComicList
 } from '@app/library/actions/comic-list.actions';
 import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
+  COMIC_4,
   COMIC_5
 } from '@app/library/library.fixtures';
 
 describe('Comic List Reducer', () => {
+  const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+
   let state: ComicListState;
 
   beforeEach(() => {
@@ -40,6 +47,18 @@ describe('Comic List Reducer', () => {
       state = reducer({ ...state }, {} as any);
     });
 
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalse();
+    });
+
+    it('resets the last id', () => {
+      expect(state.lastId).toEqual(0);
+    });
+
+    it('clears the last payload flag', () => {
+      expect(state.lastPayload).toBeFalse();
+    });
+
     it('has no comics', () => {
       expect(state.comics).toEqual([]);
     });
@@ -48,13 +67,96 @@ describe('Comic List Reducer', () => {
   describe('resetting the comic state', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, comics: [COMIC_1, COMIC_3, COMIC_5] },
+        {
+          ...state,
+          loading: true,
+          lastId: LAST_ID,
+          lastPayload: true,
+          comics: [COMIC_1, COMIC_3, COMIC_5]
+        },
         resetComicList()
       );
     });
 
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalse();
+    });
+
+    it('resets the last id', () => {
+      expect(state.lastId).toEqual(0);
+    });
+
+    it('clears the last payload flag', () => {
+      expect(state.lastPayload).toBeFalse();
+    });
+
     it('clears the existing set of comics', () => {
       expect(state.comics).toEqual([]);
+    });
+  });
+
+  describe('loading a batch of comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, loading: false },
+        loadComics({ lastId: LAST_ID })
+      );
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
+  describe('receiving a batch of comics', () => {
+    const BATCH = [COMIC_2, COMIC_4];
+    const LAST_PAGE = Math.random() > 0.5;
+
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          loading: true,
+          lastId: 0,
+          lastPayload: !LAST_PAGE,
+          comics: COMICS
+        },
+        comicsReceived({
+          comics: BATCH,
+          lastId: LAST_ID,
+          lastPayload: LAST_PAGE
+        })
+      );
+    });
+
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalse();
+    });
+
+    it('updates the last id', () => {
+      expect(state.lastId).toEqual(LAST_ID);
+    });
+
+    it('sets the last payload flag', () => {
+      expect(state.lastPayload).toEqual(LAST_PAGE);
+    });
+
+    it('leaves the existing comics intact', () => {
+      COMICS.every(comic => expect(state.comics).toContain(comic));
+    });
+
+    it('adds the received comics', () => {
+      BATCH.every(comic => expect(state.comics).toContain(comic));
+    });
+  });
+
+  describe('failure to load a batch of comics', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, loading: true }, loadComicsFailed());
+    });
+
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalse();
     });
   });
 

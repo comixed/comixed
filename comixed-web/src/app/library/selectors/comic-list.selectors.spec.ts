@@ -34,6 +34,9 @@ describe('Comic List Selectors', () => {
 
   beforeEach(() => {
     state = {
+      loading: Math.random() > 0.5,
+      lastId: Math.floor(Math.abs(Math.random() * 1000)),
+      lastPayload: Math.random() > 0.5,
       comics: [
         { ...COMIC_1, lastRead: new Date().getTime(), deletedDate: null },
         { ...COMIC_3, lastRead: null, deletedDate: null },

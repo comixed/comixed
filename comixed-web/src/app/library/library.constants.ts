@@ -39,6 +39,8 @@ export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 
 export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
 
+export const LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
+
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/scraping/volumes`;
@@ -78,5 +80,4 @@ export const SCAN_TYPE_UPDATE_TOPIC = '/topic/scan-type.add';
 export const LOAD_COMIC_FORMATS_MESSAGE = '/comixed/comic-format.load';
 export const COMIC_FORMAT_UPDATE_TOPIC = '/topic/comic-format.update';
 
-export const LOAD_COMIC_LIST_MESSAGE = '/comixed/comic-list.load';
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';

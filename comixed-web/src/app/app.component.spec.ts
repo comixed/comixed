@@ -50,18 +50,25 @@ import {
 import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/library/reducers/comic-list.reducer';
+import { loadComics } from '@app/library/actions/comic-list.actions';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
   const TIMESTAMP = new Date().getTime();
   const MAXIMUM_RECORDS = 100;
   const TIMEOUT = 300;
+  const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
 
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState
+    [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState
   };
 
   let component: AppComponent;
@@ -214,6 +221,52 @@ describe('AppComponent', () => {
 
       it('sets the logging level to info', () => {
         expect(logger.level).toEqual(LoggerLevel.ALL);
+      });
+    });
+  });
+
+  describe('loading the comic list', () => {
+    describe('starting', () => {
+      beforeEach(() => {
+        component.comicListStateSubscription = null;
+        component.comicsLoaded = false;
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+          [COMIC_LIST_FEATURE_KEY]: {
+            ...initialComicListState,
+            loading: false,
+            lastPayload: false,
+            lastId: LAST_ID
+          }
+        });
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          loadComics({ lastId: LAST_ID })
+        );
+      });
+    });
+
+    describe('finishing', () => {
+      beforeEach(() => {
+        component.comicListStateSubscription = null;
+        component.comicsLoaded = false;
+        store.setState({
+          ...initialState,
+          [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+          [COMIC_LIST_FEATURE_KEY]: {
+            ...initialComicListState,
+            loading: false,
+            lastPayload: true,
+            lastId: LAST_ID
+          }
+        });
+      });
+
+      it('sets the comics loaded flag', () => {
+        expect(component.comicsLoaded).toBeTrue();
       });
     });
   });
