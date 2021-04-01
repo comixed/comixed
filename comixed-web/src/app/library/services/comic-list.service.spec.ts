@@ -28,10 +28,7 @@ import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { Subscription } from 'webstomp-client';
-import {
-  COMIC_LIST_UPDATE_TOPIC,
-  LOAD_COMIC_LIST_MESSAGE
-} from '@app/library/library.constants';
+import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
 import {
   comicListUpdateReceived,
   resetComicList
@@ -94,25 +91,6 @@ describe('ComicListService', () => {
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
       });
-    });
-
-    it('resets the comic list state', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(resetComicList());
-    });
-
-    it('loads the list of comics', () => {
-      expect(webSocketService.requestResponse).toHaveBeenCalledWith(
-        LOAD_COMIC_LIST_MESSAGE,
-        '',
-        COMIC_LIST_UPDATE_TOPIC,
-        jasmine.anything()
-      );
-    });
-
-    it('processes comics from the initial load', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        comicListUpdateReceived({ comic: COMIC_1 })
-      );
     });
 
     it('subscribes to the comic list update topic', () => {

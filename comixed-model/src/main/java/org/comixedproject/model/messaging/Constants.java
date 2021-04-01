@@ -18,9 +18,6 @@ public interface Constants {
   /** Topic which receives scan type updates. */
   String SCAN_TYPE_UPDATE_TOPIC = "/topic/scan-type.update";
 
-  /** Message sent to start the process of loading comics for a browser. */
-  String LOAD_COMIC_LIST_MESSAGE = "comic-list.load";
-
   /** Topic which receives comic updates in real time. */
   String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
 }

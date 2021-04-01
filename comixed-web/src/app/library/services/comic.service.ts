@@ -23,15 +23,29 @@ import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
 import {
   LOAD_COMIC_URL,
+  LOAD_COMICS_URL,
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
+import { LoadComicsRequest } from '@app/library/models/net/load-comics-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComicService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
+
+  /**
+   * Loads a batch of comics.
+   *
+   * @param args.lastId the last id received
+   */
+  loadBatch(args: { lastId: number }): Observable<any> {
+    this.logger.debug('Loading a batch of comics:', args);
+    return this.http.post(interpolate(LOAD_COMICS_URL), {
+      lastId: args.lastId
+    } as LoadComicsRequest);
+  }
 
   /**
    * Loads a single comic.

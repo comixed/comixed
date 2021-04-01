@@ -22,15 +22,9 @@ import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/logger';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import {
-  COMIC_LIST_UPDATE_TOPIC,
-  LOAD_COMIC_LIST_MESSAGE
-} from '@app/library/library.constants';
+import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
 import { Comic } from '@app/library';
-import {
-  comicListUpdateReceived,
-  resetComicList
-} from '@app/library/actions/comic-list.actions';
+import { comicListUpdateReceived } from '@app/library/actions/comic-list.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -45,20 +39,6 @@ export class ComicListService {
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
       if (state.started && !this.subscription) {
-        this.logger.trace('Resetting comic list state');
-        this.store.dispatch(resetComicList());
-
-        this.logger.debug('Loading the comic list');
-        this.webSocketService.requestResponse<Comic>(
-          LOAD_COMIC_LIST_MESSAGE,
-          '',
-          COMIC_LIST_UPDATE_TOPIC,
-          comic => {
-            this.logger.debug('Loading comic:', comic);
-            this.store.dispatch(comicListUpdateReceived({ comic }));
-          }
-        );
-
         this.logger.trace('Subscribing to comic list updates');
         this.subscription = this.webSocketService.subscribe<Comic>(
           COMIC_LIST_UPDATE_TOPIC,

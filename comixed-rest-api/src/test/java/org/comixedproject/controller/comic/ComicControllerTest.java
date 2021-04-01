@@ -21,9 +21,6 @@ package org.comixedproject.controller.comic;
 import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
 import static org.junit.Assert.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -36,7 +33,6 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
 import org.comixedproject.model.user.LastReadDate;
@@ -46,11 +42,9 @@ import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.model.DeleteComicsWorkerTask;
-import org.comixedproject.task.model.RescanComicsWorkerTask;
 import org.comixedproject.task.model.UndeleteComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
-import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +62,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 public class ComicControllerTest {
   private static final long TEST_COMIC_ID = 129;
   private static final String TEST_COMIC_FILE = "src/test/resources/example.cbz";
-  private static final int TEST_RESCAN_COUNT = 729;
   private static final String TEST_EMAIL_ADDRESS = "user@testing";
   private static final byte[] TEST_COMIC_CONTENT = "This is the comic content.".getBytes();
   private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
@@ -76,12 +69,9 @@ public class ComicControllerTest {
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
   private static final String TEST_PAGE_FILENAME = "cover.jpg";
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF1234567890ABCDEF";
-  private static final String TEST_COMIC_AS_JSON = "This is a JSON encoded comic";
 
   @InjectMocks private ComicController controller;
   @Mock private SimpMessagingTemplate messagingTemplate;
-  @Mock private ObjectMapper objectMapper;
-  @Mock private ObjectWriter objectWriter;
   @Mock private ComicService comicService;
   @Mock private PageCacheService pageCacheService;
   @Mock private TaskManager taskManager;
@@ -94,60 +84,18 @@ public class ComicControllerTest {
   @Mock private List<Long> comicIds;
   @Mock private FileService fileService;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
-  @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
   @Mock private Page page;
   @Mock private LastReadDate lastReadDate;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
-  @Mock private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
-  @Mock private RescanComicsWorkerTask rescanComicsWorkerTask;
+
+  @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
   private List<Comic> comicList = new ArrayList<>();
 
   @Before()
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-
-    Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
-  }
-
-  @Test
-  public void testLoadComicListJsonException()
-      throws JsonProcessingException, ComiXedUserException {
-    for (int x = 0; x < 25; x++) comicList.add(comic);
-
-    Mockito.when(comicService.loadComicList(Mockito.anyString())).thenReturn(comicList);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
-
-    try {
-      controller.loadComicList(principal);
-    } finally {
-      Mockito.verify(comicService, Mockito.times(1)).loadComicList(TEST_EMAIL_ADDRESS);
-      Mockito.verify(objectMapper, Mockito.times(comicList.size()))
-          .writerWithView(View.ComicDetailsView.class);
-      Mockito.verify(objectWriter, Mockito.times(comicList.size())).writeValueAsString(comic);
-      Mockito.verify(messagingTemplate, Mockito.never())
-          .convertAndSendToUser(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
-    }
-  }
-
-  @Test
-  public void testLoadComicList() throws JsonProcessingException, ComiXedUserException {
-    for (int x = 0; x < 25; x++) comicList.add(comic);
-
-    Mockito.when(comicService.loadComicList(Mockito.anyString())).thenReturn(comicList);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
-
-    controller.loadComicList(principal);
-
-    Mockito.verify(comicService, Mockito.times(1)).loadComicList(TEST_EMAIL_ADDRESS);
-    Mockito.verify(objectMapper, Mockito.times(comicList.size()))
-        .writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(comicList.size())).writeValueAsString(comic);
-    Mockito.verify(messagingTemplate, Mockito.times(comicList.size()))
-        .convertAndSendToUser(
-            TEST_EMAIL_ADDRESS, Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
   }
 
   @Test
@@ -482,12 +430,9 @@ public class ComicControllerTest {
 
   @Test
   public void testMarkAsUnread() throws ComicException, ComiXedUserException {
-    Mockito.when(comicService.markAsUnread(Mockito.anyString(), Mockito.anyLong()))
-        .thenReturn(true);
+    Mockito.doNothing().when(comicService).markAsUnread(Mockito.anyString(), Mockito.anyLong());
 
-    boolean result = controller.markAsUnread(principal, TEST_COMIC_ID);
-
-    assertTrue(result);
+    controller.markAsUnread(principal, TEST_COMIC_ID);
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.times(1)).markAsUnread(TEST_EMAIL_ADDRESS, TEST_COMIC_ID);

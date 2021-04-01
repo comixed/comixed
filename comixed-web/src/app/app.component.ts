@@ -39,6 +39,12 @@ import {
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import { selectImportCount } from '@app/selectors/import-count.selectors';
+import { Subscription } from 'rxjs';
+import { selectComicListState } from '@app/library/selectors/comic-list.selectors';
+import {
+  loadComics,
+  resetComicList
+} from '@app/library/actions/comic-list.actions';
 
 @Component({
   selector: 'cx-root',
@@ -50,6 +56,8 @@ export class AppComponent implements OnInit {
   busy = false;
   sessionActive = false;
   messagingActive = false;
+  comicListStateSubscription: Subscription;
+  comicsLoaded = false;
 
   constructor(
     private logger: LoggerService,
@@ -67,11 +75,34 @@ export class AppComponent implements OnInit {
         this.sessionActive = true;
         this.logger.trace('Starting messaging subsystem');
         this.store.dispatch(startMessaging());
-      } else if (!this.user && this.sessionActive) {
+      }
+      if (!!this.user && !this.comicListStateSubscription) {
+        this.logger.trace('Resetting the comic list state');
+        this.store.dispatch(resetComicList());
+        this.logger.trace('Subscribing to comic list state changes');
+        this.comicListStateSubscription = this.store
+          .select(selectComicListState)
+          .subscribe(state => {
+            if (!state.loading && state.lastPayload && !this.comicsLoaded) {
+              this.logger.debug('Finished loading comics');
+              this.comicsLoaded = true;
+            }
+            if (!state.loading && !this.comicsLoaded) {
+              this.logger.debug('Loading a batch of comics');
+              this.store.dispatch(loadComics({ lastId: state.lastId }));
+            }
+          });
+      }
+      if (!this.user && this.sessionActive) {
         this.logger.trace('Stopping the messaging subsystem');
         this.store.dispatch(stopMessaging());
         this.logger.trace('Marking the session as inactive');
         this.sessionActive = false;
+      }
+      if (!this.user && this.comicListStateSubscription) {
+        this.logger.trace('Unsubscribing from comics list state changes');
+        this.comicListStateSubscription.unsubscribe();
+        this.comicListStateSubscription = null;
       }
       if (!!this.user) {
         const preferredLevel = parseInt(
