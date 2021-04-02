@@ -56,7 +56,7 @@ public class Plugin {
    *
    * @throws PluginException if an error occurs
    */
-  void execute() throws PluginException {}
+  public void execute() throws PluginException {}
 
   public String getLanguage() {
     return this.descriptor.getLanguage();

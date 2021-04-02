@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.plugins.interpreters;
+package org.comixedproject.adaptor.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang.StringUtils;
 
-/**
- * <code>AbstractPluginInterpreter</code> defines a base type for providing concrete implementations
- * of {@link PluginInterpreter}.
- *
- * @author Darryl L. Pierce
- */
-public abstract class AbstractPluginInterpreter implements PluginInterpreter {}
+@NoArgsConstructor
+public class EntryLoaderEntry {
+  @Getter @Setter private String mask;
+  @Getter @Setter private String bean;
+
+  public boolean isValid() {
+    return !(StringUtils.isEmpty(this.mask) || StringUtils.isEmpty(this.bean));
+  }
+}

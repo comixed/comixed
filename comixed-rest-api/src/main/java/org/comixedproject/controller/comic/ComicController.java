@@ -136,16 +136,10 @@ public class ComicController {
 
     Comic comic = this.comicService.getComic(id);
 
-    if (comic != null) {
-      log.debug("Clearing metadata for comic");
-      this.comicDataAdaptor.clear(comic);
-      log.debug("Saving updates to comic");
-      this.comicService.save(comic);
-    } else {
-      log.debug("No such comic found");
-    }
-
-    return comic;
+    log.debug("Clearing metadata for comic");
+    this.comicDataAdaptor.clear(comic);
+    log.debug("Saving updates to comic");
+    return this.comicService.save(comic);
   }
 
   @PostMapping(value = "/multiple/delete")

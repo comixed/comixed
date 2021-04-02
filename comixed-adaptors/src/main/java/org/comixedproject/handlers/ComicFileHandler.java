@@ -24,6 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
+import org.comixedproject.adaptor.model.ArchiveAdaptorEntry;
 import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -55,8 +57,8 @@ public class ComicFileHandler implements InitializingBean {
   @Autowired private ComicDataAdaptor comicDataAdaptor;
 
   private List<ArchiveAdaptorEntry> adaptors = new ArrayList<>();
-  private Map<String, ArchiveType> archiveTypes = new HashMap<>();
-  private Map<ArchiveType, ArchiveAdaptor> adaptorForType = new EnumMap<>(ArchiveType.class);
+  Map<String, ArchiveType> archiveTypes = new HashMap<>();
+  Map<ArchiveType, ArchiveAdaptor> adaptorForType = new EnumMap<>(ArchiveType.class);
 
   @Override
   public void afterPropertiesSet() throws Exception {
@@ -65,21 +67,24 @@ public class ComicFileHandler implements InitializingBean {
     this.archiveTypes.clear();
     for (ArchiveAdaptorEntry loader : this.adaptors) {
       if (loader.isValid()) {
-        ArchiveAdaptor bean = (ArchiveAdaptor) this.context.getBean(loader.bean);
-
-        if (this.context.containsBean(loader.bean)) {
-          log.debug("Adding new archive adaptor: format=" + loader.format + " bean=" + loader.bean);
-          this.archiveAdaptors.put(loader.format, bean);
-          this.archiveTypes.put(loader.format, loader.archiveType);
-          this.adaptorForType.put(loader.archiveType, bean);
+        if (this.context.containsBean(loader.getBean())) {
+          ArchiveAdaptor bean = (ArchiveAdaptor) this.context.getBean(loader.getBean());
+          log.debug(
+              "Adding new archive adaptor: format="
+                  + loader.getFormat()
+                  + " bean="
+                  + loader.getBean());
+          this.archiveAdaptors.put(loader.getFormat(), bean);
+          this.archiveTypes.put(loader.getFormat(), loader.getArchiveType());
+          this.adaptorForType.put(loader.getArchiveType(), bean);
         } else {
-          log.warn("No such bean: name=" + loader.bean);
+          log.warn("No such bean: name=" + loader.getBean());
         }
       } else {
-        if ((loader.format == null) || loader.format.isEmpty()) {
+        if (StringUtils.isEmpty(loader.getFormat())) {
           log.warn("Missing type for archive adaptor");
         }
-        if ((loader.bean == null) || loader.bean.isEmpty()) {
+        if (StringUtils.isEmpty(loader.getBean())) {
           log.warn("Missing name for archive adaptor");
         }
       }
@@ -179,14 +184,6 @@ public class ComicFileHandler implements InitializingBean {
     ArchiveType archiveType = this.archiveTypes.get(archiveMimeSubtype);
     log.debug("Archive type: {}", archiveType);
     comic.setArchiveType(archiveType);
-
-    ArchiveAdaptor archiveAdaptor = this.archiveAdaptors.get(archiveMimeSubtype);
-
-    if (archiveAdaptor == null)
-      throw new ComicFileHandlerException(
-          "No archive adaptor defined for type: " + archiveMimeSubtype);
-
-    comic.setArchiveType(this.archiveTypes.get(archiveMimeSubtype));
   }
 
   /**
@@ -198,31 +195,5 @@ public class ComicFileHandler implements InitializingBean {
   public ArchiveAdaptor getArchiveAdaptorFor(final ArchiveType archiveType) {
     log.debug("Getting the archive adaptor for: type={}", archiveType);
     return this.adaptorForType.get(archiveType);
-  }
-
-  public static class ArchiveAdaptorEntry {
-    private String format;
-    private String bean;
-    private ArchiveType archiveType;
-
-    public boolean isValid() {
-      return (this.format != null)
-          && !this.format.isEmpty()
-          && (this.bean != null)
-          && !this.bean.isEmpty()
-          && (this.archiveType != null);
-    }
-
-    public void setArchiveType(ArchiveType archiveType) {
-      this.archiveType = archiveType;
-    }
-
-    public void setBean(String bean) {
-      this.bean = bean;
-    }
-
-    public void setFormat(String format) {
-      this.format = format;
-    }
   }
 }

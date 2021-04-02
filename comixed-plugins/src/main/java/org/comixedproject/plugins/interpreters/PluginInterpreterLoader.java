@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.plugins.runners.PluginRunner;
+import org.comixedproject.plugins.model.PluginInterpreterEntry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -31,7 +31,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
  * <code>PluginInterpreterLoader</code> loads the configuration for the langauge interpreters for
@@ -46,10 +45,9 @@ import org.springframework.util.StringUtils;
 @Log4j2
 public class PluginInterpreterLoader implements InitializingBean {
   @Autowired private ApplicationContext context;
-  @Autowired private PluginRunner pluginRunner;
 
   private List<PluginInterpreterEntry> runtimes = new ArrayList<>();
-  private Map<String, String> interpreters = new HashMap<>();
+  Map<String, String> interpreters = new HashMap<>();
 
   public List<PluginInterpreterEntry> getRuntime() {
     return runtimes;
@@ -100,32 +98,5 @@ public class PluginInterpreterLoader implements InitializingBean {
     log.debug("Retrieving interpreter: language={}", language);
     log.debug("Returning instance");
     return (PluginInterpreter) this.context.getBean(language);
-  }
-
-  public static class PluginInterpreterEntry {
-    private String language;
-    private String interpreter;
-
-    public PluginInterpreterEntry() {}
-
-    public String getLanguage() {
-      return language;
-    }
-
-    public void setLanguage(String language) {
-      this.language = language;
-    }
-
-    public String getInterpreter() {
-      return interpreter;
-    }
-
-    public void setInterpreter(String interpreter) {
-      this.interpreter = interpreter;
-    }
-
-    public boolean isValid() {
-      return !StringUtils.isEmpty(this.language) && !StringUtils.isEmpty((this.interpreter));
-    }
   }
 }

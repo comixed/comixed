@@ -24,8 +24,8 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -88,10 +88,10 @@ public class ComicControllerTest {
   @Mock private LastReadDate lastReadDate;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
+  @Mock private ComicDataAdaptor comicDataAdaptor;
+  @Mock private Comic comicRecord;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
-
-  private List<Comic> comicList = new ArrayList<>();
 
   @Before()
   public void setUp() {
@@ -436,5 +436,32 @@ public class ComicControllerTest {
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(comicService, Mockito.times(1)).markAsUnread(TEST_EMAIL_ADDRESS, TEST_COMIC_ID);
+  }
+
+  @Test(expected = ComicException.class)
+  public void testDeleteMetadataDoesNotExist() throws ComicException {
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+
+    try {
+      controller.deleteMetadata(TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    }
+  }
+
+  @Test
+  public void testDeleteMetadata() throws ComicException {
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.doNothing().when(comicDataAdaptor).clear(Mockito.any(Comic.class));
+    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comicRecord);
+
+    final Comic result = controller.deleteMetadata(TEST_COMIC_ID);
+
+    assertNotNull(result);
+    assertSame(comicRecord, result);
+
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comicDataAdaptor, Mockito.times(1)).clear(comic);
+    Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 }

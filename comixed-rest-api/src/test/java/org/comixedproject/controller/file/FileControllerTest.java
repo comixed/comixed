@@ -36,6 +36,7 @@ import org.comixedproject.task.model.QueueComicsWorkerTask;
 import org.comixedproject.task.model.WorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -53,11 +54,11 @@ public class FileControllerTest {
   private static final byte[] IMAGE_CONTENT = new byte[65535];
   private static final String TEST_DIRECTORY = "src/test";
   private static final List<String> TEST_FILENAMES = new ArrayList<>();
-  private static final int TEST_IMPORT_STATUS = 129;
   private static final Integer TEST_LIMIT = RANDOM.nextInt();
   private static final Integer TEST_NO_LIMIT = -1;
   private static final boolean TEST_DELETE_BLOCKED_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_IGNORE_METADATA = RANDOM.nextBoolean();
+  private static final byte[] TEST_MISSING_FILE_CONTENT = "Missing image file content".getBytes();
 
   static {
     TEST_FILENAMES.add("First.cbz");
@@ -72,6 +73,36 @@ public class FileControllerTest {
   @Mock private ObjectFactory<QueueComicsWorkerTask> queueComicsWorkerTaskObjectFactory;
   @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
   @Mock private TaskManager taskManager;
+
+  @Before
+  public void setUp() {
+    controller.missingFileImageContent = TEST_MISSING_FILE_CONTENT;
+  }
+
+  @Test
+  public void testGetImportFileCoverCoverLoadFailed()
+      throws ArchiveAdaptorException, ComicFileHandlerException {
+    Mockito.when(fileService.getImportFileCover(Mockito.anyString()))
+        .thenThrow(ArchiveAdaptorException.class);
+
+    final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
+
+    assertNotNull(result);
+
+    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
+  }
+
+  @Test
+  public void testGetImportFileCoverNoData()
+      throws ArchiveAdaptorException, ComicFileHandlerException, IOException {
+    Mockito.when(fileService.getImportFileCover(Mockito.anyString())).thenReturn(null);
+
+    final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
+
+    assertNotNull(result);
+
+    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
+  }
 
   @Test
   public void testGetImportFileCover() throws ArchiveAdaptorException, ComicFileHandlerException {
@@ -127,5 +158,12 @@ public class FileControllerTest {
     Mockito.verify(queueComicsWorkerTask, Mockito.times(1))
         .setDeleteBlockedPages(TEST_DELETE_BLOCKED_PAGES);
     Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setIgnoreMetadata(TEST_IGNORE_METADATA);
+  }
+
+  @Test
+  public void testAfterPropertiesSet() throws Exception {
+    controller.afterPropertiesSet();
+
+    assertNotNull(controller.missingFileImageContent);
   }
 }

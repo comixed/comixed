@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptor.model.EntryLoaderEntry;
 import org.comixedproject.model.comic.Comic;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,22 +44,23 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "comic.filename-entry", ignoreUnknownFields = false)
 @Log4j2
 public class FilenameEntryLoader extends AbstractEntryLoader implements InitializingBean {
-  @Autowired private ApplicationContext context;
-  @Autowired private Map<String, EntryLoader> entryLoaders;
-  private List<EntryLoaderEntry> loaders = new ArrayList<>();
+  @Autowired ApplicationContext context;
+  @Autowired Map<String, EntryLoader> entryLoaders;
+  List<EntryLoaderEntry> entryLoaderEntries = new ArrayList<>();
 
   @Override
   public void afterPropertiesSet() throws Exception {
     this.entryLoaders = new HashMap<>();
-    for (EntryLoaderEntry loader : this.loaders) {
+    for (EntryLoaderEntry loader : this.entryLoaderEntries) {
       if (loader.isValid() && this.context.containsBean(loader.getBean())) {
-        this.entryLoaders.put(loader.getMask(), (EntryLoader) this.context.getBean(loader.bean));
+        this.entryLoaders.put(
+            loader.getMask(), (EntryLoader) this.context.getBean(loader.getBean()));
       }
     }
   }
 
-  public List<EntryLoaderEntry> getLoaders() {
-    return this.loaders;
+  public List<EntryLoaderEntry> getEntryLoaderEntries() {
+    return this.entryLoaderEntries;
   }
 
   @Override
@@ -74,34 +76,6 @@ public class FilenameEntryLoader extends AbstractEntryLoader implements Initiali
       loader.loadContent(comic, filename, content, ignoreMetadata);
     } else {
       log.debug("No filename adaptor defined");
-    }
-  }
-
-  public static class EntryLoaderEntry {
-    private String mask;
-    private String bean;
-
-    public boolean isValid() {
-      return (this.mask != null)
-          && !this.mask.isEmpty()
-          && (this.bean != null)
-          && !this.bean.isEmpty();
-    }
-
-    public String getBean() {
-      return bean;
-    }
-
-    public void setBean(String bean) {
-      this.bean = bean;
-    }
-
-    public String getMask() {
-      return mask;
-    }
-
-    public void setMask(String mask) {
-      this.mask = mask;
     }
   }
 }

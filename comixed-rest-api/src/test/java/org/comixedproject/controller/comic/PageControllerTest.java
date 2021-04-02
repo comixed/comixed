@@ -20,6 +20,7 @@ package org.comixedproject.controller.comic;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,10 @@ import org.comixedproject.model.comic.PageType;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.SetDeletedStateRequest;
 import org.comixedproject.model.net.SetPageTypeRequest;
-import org.comixedproject.model.net.library.AddBlockedPageHashRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.comic.PageException;
 import org.comixedproject.service.comic.PageService;
-import org.comixedproject.service.library.BlockedPageHashService;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,7 +65,6 @@ public class PageControllerTest {
 
   @InjectMocks private PageController pageController;
   @Mock private PageService pageService;
-  @Mock private BlockedPageHashService blockedPageHashService;
   @Mock private PageCacheService pageCacheService;
   @Mock private Page page;
   @Mock private List<Page> pageList;
@@ -106,35 +104,6 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testAddBlockedPageHash() {
-    Mockito.doNothing().when(blockedPageHashService).addHash(Mockito.anyString());
-
-    pageController.addBlockedPageHash(new AddBlockedPageHashRequest(TEST_PAGE_HASH));
-
-    Mockito.verify(blockedPageHashService, Mockito.times(1)).addHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testDeleteBlockedPageHash() {
-    Mockito.doNothing().when(blockedPageHashService).deleteHash(Mockito.anyString());
-
-    pageController.deleteBlockedPageHash(TEST_PAGE_HASH);
-
-    Mockito.verify(blockedPageHashService, Mockito.times(1)).deleteHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testGetBlockedPageHashes() {
-    Mockito.when(blockedPageHashService.getAllHashes()).thenReturn(pageHashList);
-
-    List<String> result = pageController.getAllBlockedPageHashes();
-
-    assertSame(pageHashList, result);
-
-    Mockito.verify(blockedPageHashService, Mockito.times(1)).getAllHashes();
-  }
-
-  @Test
   public void testGetDuplicatePages() {
 
     Mockito.when(pageService.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
@@ -145,6 +114,62 @@ public class PageControllerTest {
     assertSame(TEST_DUPLICATE_PAGES, result);
 
     Mockito.verify(pageService, Mockito.times(1)).getDuplicatePages();
+  }
+
+  @Test(expected = ComicException.class)
+  public void testGetPageContentLoadingSingleFileFails()
+      throws ComicException, ArchiveAdaptorException {
+    Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
+    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
+    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
+        .thenReturn(archiveAdaptor);
+    Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
+    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
+        .thenThrow(ArchiveAdaptorException.class);
+
+    try {
+      pageController.getPageContent(TEST_PAGE_ID);
+    } finally {
+      Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
+      Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+      Mockito.verify(archiveAdaptor, Mockito.times(1)).loadSingleFile(comic, TEST_PAGE_FILENAME);
+    }
+  }
+
+  @Test
+  public void testGetPageContentPageCacheFailure()
+      throws ComicException, ArchiveAdaptorException, IOException {
+    Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
+    Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
+    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
+        .thenReturn(archiveAdaptor);
+    Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
+    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
+        .thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture()))
+        .thenReturn(TEST_PAGE_CONTENT_TYPE);
+    Mockito.when(fileTypeIdentifier.subtypeFor(inputStream.capture()))
+        .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
+    Mockito.doThrow(IOException.class)
+        .when(pageCacheService)
+        .saveByHash(Mockito.anyString(), Mockito.any());
+
+    ResponseEntity<byte[]> result = pageController.getPageContent(TEST_PAGE_ID);
+
+    assertNotNull(result);
+    assertSame(TEST_PAGE_CONTENT, result.getBody());
+
+    Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
+    Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+    Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getAllValues().get(0));
+    Mockito.verify(fileTypeIdentifier, Mockito.times(1))
+        .subtypeFor(inputStream.getAllValues().get(1));
+    Mockito.verify(pageCacheService, Mockito.times(1))
+        .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
   }
 
   @Test
@@ -276,18 +301,6 @@ public class PageControllerTest {
     assertSame(pageTypes, pageController.getPageTypes());
 
     Mockito.verify(pageService, Mockito.times(1)).getPageTypes();
-  }
-
-  @Test
-  public void testDeletePagesByHash() {
-    Mockito.when(pageService.deleteAllWithHash(Mockito.anyString()))
-        .thenReturn(TEST_DELETED_PAGE_COUNT);
-
-    int result = pageController.deleteAllWithHash(TEST_PAGE_HASH);
-
-    assertEquals(TEST_DELETED_PAGE_COUNT, result);
-
-    Mockito.verify(pageService, Mockito.times(1)).deleteAllWithHash(TEST_PAGE_HASH);
   }
 
   @Test

@@ -19,7 +19,6 @@
 package org.comixedproject.controller.file;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -27,7 +26,6 @@ import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.handlers.ComicFileHandlerException;
-import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
@@ -35,8 +33,8 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.task.model.QueueComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
-import org.comixedproject.utils.ComicFileUtils;
 import org.comixedproject.views.View;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,13 +50,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/files")
 @Log4j2
-public class FileController {
+public class FileController implements InitializingBean {
   @Autowired private ComicService comicService;
   @Autowired private FileService fileService;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<QueueComicsWorkerTask> queueComicsWorkerTaskObjectFactory;
 
   private int requestId = 0;
+  byte[] missingFileImageContent;
 
   /**
    * Retrieves all comic files under the specified directory.
@@ -88,22 +87,6 @@ public class FileController {
     return new LoadComicFilesResponse(this.fileService.getAllComicsUnder(directory, maximum));
   }
 
-  private void getAllFilesUnder(File root, List<ComicFile> result) throws IOException {
-    for (File file : root.listFiles()) {
-      if (file.isDirectory()) {
-        log.debug("Searching directory: " + file.getAbsolutePath());
-        this.getAllFilesUnder(file, result);
-      } else {
-
-        if (ComicFileUtils.isComicFile(file)
-            && (this.comicService.findByFilename(file.getCanonicalPath()) == null)) {
-          log.debug("Adding file: " + file.getCanonicalPath());
-          result.add(new ComicFile(file.getCanonicalPath(), file.length()));
-        }
-      }
-    }
-  }
-
   /**
    * Returns the content for the first image in the specified file.
    *
@@ -128,11 +111,8 @@ public class FileController {
     }
 
     if (result == null) {
-      try {
-        result = IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
-      } catch (IOException error) {
-        log.error("Failed to load the missing page image", error);
-      }
+      log.debug("No file found; using missing file image instead");
+      result = this.missingFileImageContent;
     }
 
     return result;
@@ -167,5 +147,12 @@ public class FileController {
 
     log.debug("Enqueueing task");
     this.taskManager.runTask(task);
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    log.trace("Loading missing file image content");
+    this.missingFileImageContent =
+        IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/missing.png"));
   }
 }

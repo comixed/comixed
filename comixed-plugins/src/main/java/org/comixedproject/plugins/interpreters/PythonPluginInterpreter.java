@@ -39,15 +39,17 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class PythonPluginInterpreter extends AbstractPluginInterpreter {
-  @Autowired private ComicService comicService;
-  @Autowired private PageService pageService;
+  public static final String COMIC_SERVICE = "comicService";
+  public static final String PAGE_SERVICE = "pageService";
+  public static final String LOGGER = "logger";
 
-  private PythonInterpreter interpreter;
+  @Autowired ComicService comicService;
+  @Autowired PageService pageService;
+
+  PythonInterpreter interpreter;
 
   @Override
   public void initialize() throws PluginException {
-    super.initialize();
-
     log.debug("Initializing Python runtime environment");
     this.interpreter = new PythonInterpreter();
 
@@ -56,16 +58,14 @@ public class PythonPluginInterpreter extends AbstractPluginInterpreter {
 
   private void loadRuntimeObjects() {
     log.debug("Loading ComiXed Python runtime objects");
-    this.interpreter.set("comicService", this.comicService);
-    this.interpreter.set("pageService", this.pageService);
-    this.interpreter.set("logger", this.log);
+    this.interpreter.set(COMIC_SERVICE, this.comicService);
+    this.interpreter.set(PAGE_SERVICE, this.pageService);
+    this.interpreter.set(LOGGER, this.log);
   }
 
   @Override
   public void start(Plugin plugin) throws PluginException {}
 
   @Override
-  public void finish() throws PluginException {
-    super.finish();
-  }
+  public void finish() throws PluginException {}
 }

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.library.ReadingList;
@@ -88,10 +89,8 @@ public class ReadingListController {
   @RequestMapping(value = "/lists", method = RequestMethod.GET)
   @JsonView(View.ReadingList.class)
   @AuditableEndpoint
-  public List<ReadingList> getReadingListsForUser(Principal principal, final Date lastUpdated) {
-    if (principal == null) {
-      return null;
-    }
+  public List<ReadingList> getReadingListsForUser(
+      @NonNull final Principal principal, final Date lastUpdated) {
     final String email = principal.getName();
 
     log.info("Getting reading lists: user={}", email);
@@ -106,7 +105,8 @@ public class ReadingListController {
   @GetMapping(value = "/lists/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingList.class)
   @AuditableEndpoint
-  public ReadingList getReadingList(final Principal principal, @PathVariable("id") final long id)
+  public ReadingList getReadingList(
+      @NonNull final Principal principal, @PathVariable("id") final long id)
       throws NoSuchReadingListException {
     final String email = principal.getName();
     log.info("Getting reading list for user: email={} id={}", email, id);
