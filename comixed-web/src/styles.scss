@@ -206,3 +206,27 @@ $cx-column-large: 325px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+// alerts
+
+.cx-info-alert {
+  background: var(--accent-color);
+  color: var(--text-accent-color);
+
+  button {
+    background: var(--accent-color);
+    color: var(--text-accent-color);
+    font-weight: bold;
+  }
+}
+
+.cx-error-alert {
+  background: var(--warn-color);
+  color: var(--text-warn-color);
+
+  button: {
+    background: var(--warn-color);
+    color: var(--text-warn-color);
+    font-weight: bold;
+  }
+}

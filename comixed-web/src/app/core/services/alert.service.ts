@@ -21,8 +21,8 @@ import { LoggerService } from '@angular-ru/logger';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 
-export const INFO_MESSAGE_DURATION = 500;
-export const ERROR_MESSAGE_DURATION = 0;
+export const INFO_MESSAGE_DURATION = 5000;
+export const ERROR_MESSAGE_DURATION = undefined;
 export const ALERT_HORZ_POSITION = 'end';
 export const ALERT_VERT_POSITION = 'top';
 
@@ -48,7 +48,8 @@ export class AlertService {
       {
         duration: INFO_MESSAGE_DURATION,
         horizontalPosition: ALERT_HORZ_POSITION,
-        verticalPosition: ALERT_VERT_POSITION
+        verticalPosition: ALERT_VERT_POSITION,
+        panelClass: ['cx-info-alert']
       }
     );
   }
@@ -62,7 +63,8 @@ export class AlertService {
       {
         duration: ERROR_MESSAGE_DURATION,
         horizontalPosition: ALERT_HORZ_POSITION,
-        verticalPosition: ALERT_VERT_POSITION
+        verticalPosition: ALERT_VERT_POSITION,
+        panelClass: ['cx-error-alert']
       }
     );
   }
