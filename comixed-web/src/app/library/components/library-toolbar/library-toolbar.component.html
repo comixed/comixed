@@ -1,4 +1,11 @@
-<mat-toolbar>
+<mat-toolbar class="cx-primary-light-background">
+  <mat-paginator
+    class="cx-primary-light-background"
+    [pageSizeOptions]="paginationOptions"
+    [showFirstLastButtons]="true"
+    [pageSize]="pagination"
+    (page)="onPaginationChange($event.pageSize)"
+  ></mat-paginator>
   <div class="cx-spacer"></div>
   <button
     id="select-all-button"

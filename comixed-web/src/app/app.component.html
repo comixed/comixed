@@ -7,7 +7,7 @@
     ></mat-progress-spinner>
   </div>
 </div>
-<div class="cx-width-100 cx-height-100">
+<div id="cx-navigation-bar" class="cx-width-100 cx-height-100">
   <cx-navigation-bar
     [user]="user"
     (toggleSidebar)="sidenav.toggle()"
@@ -19,14 +19,17 @@
       </div>
     </mat-sidenav>
     <mat-sidenav-content #sidebar>
-      <div class="cx-width-100 cx-height-100">
+      <div
+        id="cx-main-content-area"
+        class="cx-width-100 cx-height-100 cx-margin-bottom-50px"
+      >
         <router-outlet></router-outlet>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 
   <div
-    id="footer"
+    id="cx-footer"
     class="cx-width-100 cx-padding-left-15 cx-padding-right-15 cx-padding-top-5 cx-padding-bottom-5"
   >
     <cx-footer [user]="user"></cx-footer>

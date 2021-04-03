@@ -26,18 +26,10 @@ import {
 } from '@angular/core';
 import { Comic } from '@app/library';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  PAGINATION_OPTIONS,
-  PAGINATION_PREFERENCE
-} from '@app/library/library.constants';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import {
   deselectComics,
   selectComics,
@@ -46,6 +38,8 @@ import {
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { PAGINATION_DEFAULT } from '@app/library/library.constants';
+import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -53,21 +47,18 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
   styleUrls: ['./comic-covers.component.scss']
 })
 export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(LibraryToolbarComponent) toolbar: LibraryToolbarComponent;
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
   @Input() selected: Comic[] = [];
 
-  readonly paginationOptions = PAGINATION_OPTIONS;
-
-  langChangeSubscription: Subscription;
-  displaySubscription: Subscription;
-  pagination = this.paginationOptions[0];
+  pagination = PAGINATION_DEFAULT;
 
   dataSource = new MatTableDataSource<Comic>();
   comic: Comic = null;
   contextMenuX = '';
   contextMenuY = '';
+
   private _comicObservable = new BehaviorSubject<Comic[]>([]);
 
   constructor(
@@ -75,19 +66,8 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private translateService: TranslateService,
     private dialog: MatDialog
-  ) {
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.displaySubscription = this.store
-      .select(selectDisplayState)
-      .subscribe(state => {
-        this.logger.debug('loading pagination from preferences');
-        this.pagination = state.pagination;
-      });
-  }
+  ) {}
 
   get comics(): Comic[] {
     return this._comicObservable.getValue();
@@ -104,22 +84,6 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.dataSource.disconnect();
-    this.displaySubscription.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.loadTranslations();
-  }
-
-  onPaginationChange(pagination: number): void {
-    this.logger.debug('Pagination changed:', pagination);
-    this.store.dispatch(
-      saveUserPreference({
-        name: PAGINATION_PREFERENCE,
-        value: `${pagination}`
-      })
-    );
   }
 
   isSelected(comic: Comic): boolean {
@@ -159,10 +123,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(setReadState({ comics: this.selected, read }));
   }
 
-  private loadTranslations(): void {
-    this.logger.debug('Loading translations');
-    this.paginator._intl.itemsPerPageLabel = this.translateService.instant(
-      'library.label.pagination-items-per-page'
-    );
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.toolbar.paginator;
   }
 }

@@ -115,6 +115,10 @@ $cx-selected-comic-color: #ffffff;
   margin-right: 50px !important;
 }
 
+.cx-margin-bottom-50px {
+  margin-bottom: 50px !important;
+}
+
 .cx-margin-2 {
   margin: 2px;
 }
@@ -229,4 +233,9 @@ $cx-column-large: 325px;
     color: var(--text-warn-color);
     font-weight: bold;
   }
+}
+
+.cx-primary-light-background {
+  background: var(--primary-lighter-color);
+  color: var(--text-primary-lighter-color);
 }

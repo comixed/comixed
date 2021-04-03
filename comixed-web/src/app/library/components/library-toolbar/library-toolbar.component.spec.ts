@@ -25,7 +25,7 @@ import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,21 +35,32 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
-  const initialState = {};
+  const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
+  const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
 
   let component: LibraryToolbarComponent;
   let fixture: ComponentFixture<LibraryToolbarComponent>;
   let store: MockStore<any>;
   let router: Router;
   let confirmationService: ConfirmationService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [LibraryToolbarComponent],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
@@ -57,7 +68,8 @@ describe('LibraryToolbarComponent', () => {
         MatIconModule,
         MatFormFieldModule,
         MatTooltipModule,
-        MatDialogModule
+        MatDialogModule,
+        MatPaginatorModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -69,6 +81,7 @@ describe('LibraryToolbarComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     confirmationService = TestBed.inject(ConfirmationService);
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
@@ -118,6 +131,42 @@ describe('LibraryToolbarComponent', () => {
 
     it('redirects the browsers to the scraping page', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/library', 'scrape']);
+    });
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      component.paginator._intl.itemsPerPageLabel = null;
+      translateService.use('fr');
+    });
+
+    it('updates the items per page label', () => {
+      expect(component.paginator._intl.itemsPerPageLabel).not.toBeNull();
+    });
+  });
+
+  describe('setting the pagination', () => {
+    beforeEach(() => {
+      component.pagination = PAGINATION;
+    });
+
+    it('updates the component', () => {
+      expect(component.pagination).toEqual(PAGINATION);
+    });
+  });
+
+  describe('when the pagintion changes', () => {
+    beforeEach(() => {
+      component.onPaginationChange(PAGINATION);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: PAGINATION_PREFERENCE,
+          value: `${PAGINATION}`
+        })
+      );
     });
   });
 });
