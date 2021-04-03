@@ -1,6 +1,18 @@
 @import '~theme';
 
-#footer {
+#cx-navigation-bar {
+  left: 0;
+  top: 0;
+  position: fixed;
+  z-index: 100;
+}
+
+#cx-main-content-area {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+#cx-footer {
   left: 0;
   bottom: 0;
   position: fixed;

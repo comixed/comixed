@@ -279,4 +279,15 @@ describe('NavigationBarComponent', () => {
     component.onShowBuildDetails();
     expect(router.navigate).toHaveBeenCalledWith(['/build']);
   });
+
+  describe('toggling the sidebar', () => {
+    beforeEach(() => {
+      spyOn(component.toggleSidebar, 'emit');
+      component.onToggleSidebar();
+    });
+
+    it('emits an event', () => {
+      expect(component.toggleSidebar.emit).toHaveBeenCalled();
+    });
+  });
 });

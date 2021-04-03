@@ -55,6 +55,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -73,7 +74,7 @@ describe('ComicCoversComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicCoversComponent],
+      declarations: [ComicCoversComponent, LibraryToolbarComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -105,21 +106,6 @@ describe('ComicCoversComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('pagination changes', () => {
-    beforeEach(() => {
-      component.onPaginationChange(PAGINATION);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: PAGINATION_PREFERENCE,
-          value: `${PAGINATION}`
-        })
-      );
-    });
   });
 
   describe('loading comics to display', () => {
@@ -209,17 +195,6 @@ describe('ComicCoversComponent', () => {
       expect(dialog.open).toHaveBeenCalledWith(ComicDetailsDialogComponent, {
         data: COMIC
       });
-    });
-  });
-
-  describe('chaning the language used', () => {
-    beforeEach(() => {
-      component.paginator._intl.itemsPerPageLabel = null;
-      translateService.use('fr');
-    });
-
-    it('sets the items per page label', () => {
-      expect(component.paginator._intl.itemsPerPageLabel).not.toBeNull();
     });
   });
 

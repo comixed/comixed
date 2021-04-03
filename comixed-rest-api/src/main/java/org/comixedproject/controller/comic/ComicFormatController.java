@@ -42,7 +42,11 @@ public class ComicFormatController {
   @Autowired private ComicFormatService comicFormatService;
   @Autowired private SimpMessagingTemplate messagingTemplate;
 
-  /** Retrieves the list of all comic formats and publishes them. */
+  /**
+   * Retrieves the list of all comic formats and publishes them.
+   *
+   * @param principal the user principal
+   */
   @MessageMapping(Constants.LOAD_COMIC_FORMATS)
   public void getAll(final Principal principal) {
     log.info("Getting all comic formats for {}", principal.getName());

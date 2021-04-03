@@ -55,6 +55,13 @@ import {
   initialState as initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
 import { loadComics } from '@app/library/actions/comic-list.actions';
+import {
+  MatSidenavContainer,
+  MatSidenavModule
+} from '@angular/material/sidenav';
+import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
+import { FooterComponent } from '@app/components/footer/footer.component';
+import { MatListModule } from '@angular/material/list';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -78,7 +85,12 @@ describe('AppComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent, NavigationBarComponent],
+      declarations: [
+        AppComponent,
+        NavigationBarComponent,
+        SideNavigationComponent,
+        FooterComponent
+      ],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -91,7 +103,9 @@ describe('AppComponent', () => {
         MatTooltipModule,
         MatFormFieldModule,
         MatDividerModule,
-        MatSelectModule
+        MatSelectModule,
+        MatSidenavModule,
+        MatListModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

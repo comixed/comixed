@@ -16,7 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Comic } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
@@ -27,16 +34,31 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core';
 import { Router } from '@angular/router';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  PAGINATION_OPTIONS,
+  PAGINATION_PREFERENCE
+} from '@app/library/library.constants';
+import { Subscription } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
+import { selectDisplayState } from '@app/library/selectors/display.selectors';
 
 @Component({
   selector: 'cx-library-toolbar',
   templateUrl: './library-toolbar.component.html',
   styleUrls: ['./library-toolbar.component.scss']
 })
-export class LibraryToolbarComponent implements OnInit {
+export class LibraryToolbarComponent
+  implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   @Input() comics: Comic[] = [];
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
+  langChangSubscription: Subscription;
+
+  paginationSubscription: Subscription;
+  readonly paginationOptions = PAGINATION_OPTIONS;
 
   constructor(
     private logger: LoggerService,
@@ -44,9 +66,36 @@ export class LibraryToolbarComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router
-  ) {}
+  ) {
+    this.langChangSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+    this.paginationSubscription = this.store
+      .select(selectDisplayState)
+      .subscribe(state => {
+        this._pagination = state.pageSize;
+      });
+  }
+
+  _pagination = this.paginationOptions[0];
+
+  get pagination(): number {
+    return this._pagination;
+  }
+
+  @Input() set pagination(pagination: number) {
+    this._pagination = pagination;
+  }
+
+  ngAfterViewInit(): void {
+    this.loadTranslations();
+  }
 
   ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.langChangSubscription.unsubscribe();
+  }
 
   onSelectAll(): void {
     this.logger.debug('Selecting all comics');
@@ -73,5 +122,21 @@ export class LibraryToolbarComponent implements OnInit {
         this.router.navigate(['/library', 'scrape']);
       }
     });
+  }
+
+  onPaginationChange(pagination: number): void {
+    this.logger.debug('Pagination changed:', pagination);
+    this.store.dispatch(
+      saveUserPreference({
+        name: PAGINATION_PREFERENCE,
+        value: `${pagination}`
+      })
+    );
+  }
+
+  private loadTranslations(): void {
+    this.paginator._intl.itemsPerPageLabel = this.translateService.instant(
+      'library.label.pagination-items-per-page'
+    );
   }
 }

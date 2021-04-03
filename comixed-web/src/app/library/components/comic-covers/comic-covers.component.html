@@ -1,13 +1,9 @@
 <div class="cx-width-100 cx-height-100">
-  <mat-toolbar>
-    <div class="cx-spacer"></div>
-    <mat-paginator
-      [pageSizeOptions]="paginationOptions"
-      [showFirstLastButtons]="true"
-      [pageSize]="pagination"
-      (page)="onPaginationChange($event.pageSize)"
-    ></mat-paginator>
-  </mat-toolbar>
+  <cx-library-toolbar
+    [comics]="comics"
+    [selected]="selected"
+    [pagination]="pagination"
+  ></cx-library-toolbar>
   <div id="cx-all-comics" class="cx-comic-detail-card-container">
     <cx-comic-detail-card
       *ngFor="let comic of comics"

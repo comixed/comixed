@@ -21,6 +21,7 @@ import { SideNavigationComponent } from './side-navigation.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
+import { MatListModule } from '@angular/material/list';
 
 describe('SideNavigationComponent', () => {
   let component: SideNavigationComponent;
@@ -29,7 +30,11 @@ describe('SideNavigationComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SideNavigationComponent],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()]
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatListModule
+      ]
     }).compileComponents();
   }));
 
