@@ -34,7 +34,7 @@ import org.comixedproject.views.View.PageList;
  * @author The ComiXed Project
  */
 @Entity
-@Table(name = "page_types")
+@Table(name = "PageTypes")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 public class PageType {
@@ -43,7 +43,7 @@ public class PageType {
   @JsonView({ComicListView.class, PageList.class})
   private Long id;
 
-  @Column(name = "name", updatable = false, nullable = false)
+  @Column(name = "Name", length = 32, updatable = false, nullable = false)
   @JsonView({ComicListView.class, PageList.class})
   @Getter
   private String name;

@@ -234,7 +234,6 @@ public class ComicServiceTest {
   public void testDeleteComic() throws ComicException {
     Mockito.when(comicRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(comic));
     Mockito.doNothing().when(comic).setDateDeleted(deletedCaptor.capture());
-    Mockito.doNothing().when(comic).setDateLastUpdated(lastUpdatedDateCaptor.capture());
     Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
     final Comic result = comicService.deleteComic(TEST_COMIC_ID);
@@ -244,7 +243,6 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1)).findById(TEST_COMIC_ID);
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(deletedCaptor.getValue());
-    Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(lastUpdatedDateCaptor.getValue());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
   }
 
@@ -319,7 +317,6 @@ public class ComicServiceTest {
     Mockito.when(incomingComic.getSortName()).thenReturn(TEST_SORTABLE_NAME);
     Mockito.when(incomingComic.getScanType()).thenReturn(TEST_SCAN_TYPE);
     Mockito.when(incomingComic.getFormat()).thenReturn(TEST_COMIC_FORMAT);
-    Mockito.doNothing().when(comic).setDateLastUpdated(lastUpdatedDateCaptor.capture());
     Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
     final Comic result = comicService.updateComic(TEST_COMIC_ID, incomingComic);
@@ -336,7 +333,6 @@ public class ComicServiceTest {
     Mockito.verify(comic, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
     Mockito.verify(comic, Mockito.times(1)).setScanType(TEST_SCAN_TYPE);
     Mockito.verify(comic, Mockito.times(1)).setFormat(TEST_COMIC_FORMAT);
-    Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(lastUpdatedDateCaptor.getValue());
     Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
   }
 
@@ -404,32 +400,6 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1))
         .findComicsWithIdGreaterThan(TEST_COMIC_ID, pageableCaptor.getValue());
-  }
-
-  @Test
-  public void testUpdateComicsByPageHash() {
-    comicList.add(comic);
-
-    Mockito.when(comicRepository.findComicsForPageHash(Mockito.anyString())).thenReturn(comicList);
-
-    comicService.updateComicsWithPageHash(TEST_HASH);
-
-    Mockito.verify(comicRepository, Mockito.times(1)).findComicsForPageHash(TEST_HASH);
-    Mockito.verify(comic, Mockito.times(comicList.size())).setDateLastUpdated(Mockito.any());
-    Mockito.verify(comicRepository, Mockito.times(comicList.size())).save(comic);
-  }
-
-  @Test
-  public void testUpdateComicsByPageHashNoComics() {
-    comicList.clear();
-
-    Mockito.when(comicRepository.findComicsForPageHash(Mockito.anyString())).thenReturn(comicList);
-
-    comicService.updateComicsWithPageHash(TEST_HASH);
-
-    Mockito.verify(comicRepository, Mockito.times(1)).findComicsForPageHash(TEST_HASH);
-    Mockito.verify(comic, Mockito.never()).setDateLastUpdated(Mockito.any());
-    Mockito.verify(comicRepository, Mockito.never()).save(comic);
   }
 
   @Test

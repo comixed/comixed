@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.Matcher;
 import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.library.SmartListMatcher;
 import org.comixedproject.model.library.SmartReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.ReadingListRepository;
@@ -134,7 +134,7 @@ public class ReadingListService {
       final String summary,
       final boolean not,
       final String mode,
-      final List<Matcher> matchers)
+      final List<SmartListMatcher> smartListMatchers)
       throws ReadingListNameException {
     log.debug("Creating smart reading list: email={} name={}", email, name);
 
@@ -152,44 +152,47 @@ public class ReadingListService {
     smartReadingList.setName(name);
     smartReadingList.setSummary(summary);
     smartReadingList.setNot(not);
-    smartReadingList.setMode(mode);
-    for (Matcher matcher : matchers) {
-      matcher.setSmartList(smartReadingList);
-      smartReadingList.getMatchers().add(matcher);
+    smartReadingList.setMatcherMode(mode);
+    for (SmartListMatcher smartListMatcher : smartListMatchers) {
+      smartListMatcher.setSmartList(smartReadingList);
+      smartReadingList.getSmartListMatchers().add(smartListMatcher);
     }
 
     log.debug("Saving smart reading list");
     return this.smartReadingListRepository.save(smartReadingList);
   }
 
-  public Matcher createMatcher(
-      final String type, final boolean not, final String mode, final List<Matcher> matchers) {
+  public SmartListMatcher createMatcher(
+      final String type,
+      final boolean not,
+      final String mode,
+      final List<SmartListMatcher> smartListMatchers) {
     log.debug("Creating Group matcher: type={} not={} mode={}", type, not, mode);
 
-    Matcher matcher = new Matcher();
-    matcher.setType(type);
-    matcher.setNot(not);
-    matcher.setMode(mode);
-    for (Matcher matcherMatcher : matchers) {
-      matcherMatcher.setMatcher(matcher);
-      matcher.getMatchers().add(matcherMatcher);
+    SmartListMatcher smartListMatcher = new SmartListMatcher();
+    smartListMatcher.setType(type);
+    smartListMatcher.setNot(not);
+    smartListMatcher.setMode(mode);
+    for (SmartListMatcher matcherSmartListMatcher : smartListMatchers) {
+      matcherSmartListMatcher.setNextMatcher(smartListMatcher);
+      smartListMatcher.getSmartListMatchers().add(matcherSmartListMatcher);
     }
 
-    return matcher;
+    return smartListMatcher;
   }
 
-  public Matcher createMatcher(
+  public SmartListMatcher createMatcher(
       final String type, final boolean not, final String operator, final String value) {
     log.debug(
         "Creating Item matcher: type={} not={} operator={} value={}", type, not, operator, value);
 
-    Matcher matcher = new Matcher();
-    matcher.setType(type);
-    matcher.setNot(not);
-    matcher.setOperator(operator);
-    matcher.setValue(value);
+    SmartListMatcher smartListMatcher = new SmartListMatcher();
+    smartListMatcher.setType(type);
+    smartListMatcher.setNot(not);
+    smartListMatcher.setOperator(operator);
+    smartListMatcher.setValue(value);
 
-    return matcher;
+    return smartListMatcher;
   }
 
   public void getReadingListsForComics(String email, List<Comic> comics) {
@@ -243,7 +246,6 @@ public class ReadingListService {
       }
       log.debug("Adding comic to reading list");
       readingList.getComics().add(comic);
-      comic.setDateLastUpdated(new Date());
       result++;
     }
 
@@ -290,7 +292,6 @@ public class ReadingListService {
         throw new ReadingListException("could not remove comic from reading list", error);
       }
       readingList.getComics().remove(comic);
-      comic.setDateLastUpdated(new Date());
       result++;
     }
 

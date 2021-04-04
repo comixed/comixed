@@ -18,13 +18,13 @@
 
 package org.comixedproject.model.tasks;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 import org.comixedproject.model.comic.Comic;
+import org.springframework.data.annotation.CreatedDate;
 
 /**
  * <code>Task</code> represents a persisted worker task.
@@ -32,35 +32,37 @@ import org.comixedproject.model.comic.Comic;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "tasks")
+@Table(name = "Tasks")
 public class Task {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter
   private Long id;
 
-  @Column(name = "task_type", nullable = false, updatable = false)
+  @Column(name = "TaskType", nullable = false, updatable = false)
   @Enumerated(EnumType.STRING)
   @Getter
   @Setter
   private TaskType taskType;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "comic_id", nullable = true, updatable = false)
+  @JoinColumn(name = "ComicId", nullable = true, updatable = false)
   @Getter
   @Setter
   private Comic comic;
 
-  @ElementCollection
-  @CollectionTable(name = "task_properties")
-  @MapKeyColumn(name = "name")
-  @Column(name = "value")
-  private Map<String, String> properties = new HashMap<>();
+  @OneToMany(
+      mappedBy = "task",
+      fetch = FetchType.EAGER,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  @JsonIgnore
+  private Set<TaskProperty> properties = new HashSet<>();
 
-  @Column(name = "created", updatable = false, nullable = false)
+  @Column(name = "CreatedOn", updatable = false, nullable = false)
+  @CreatedDate
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
-  @Setter
   private Date created = new Date();
 
   /**
@@ -70,7 +72,7 @@ public class Task {
    * @param value the property value
    */
   public void setProperty(final String name, final String value) {
-    this.properties.put(name, value);
+    this.properties.add(new TaskProperty(this, name, value));
   }
 
   /**
@@ -80,6 +82,11 @@ public class Task {
    * @return the property value
    */
   public String getProperty(final String name) {
-    return this.properties.get(name);
+    for (int index = 0; index < this.properties.size(); index++) {
+      TaskProperty property = (TaskProperty) this.properties.toArray()[index];
+      if (property.getName().equals(name)) return property.getValue();
+    }
+
+    return null;
   }
 }

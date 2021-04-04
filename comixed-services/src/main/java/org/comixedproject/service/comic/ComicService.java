@@ -165,7 +165,6 @@ public class ComicService {
     comic.setDateDeleted(new Date());
 
     log.debug("Updating comic in the database");
-    comic.setDateLastUpdated(new Date());
     return this.comicRepository.save(comic);
   }
 
@@ -194,7 +193,6 @@ public class ComicService {
       comic.setSortName(update.getSortName());
       comic.setScanType(update.getScanType());
       comic.setFormat(update.getFormat());
-      comic.setDateLastUpdated(new Date());
 
       log.debug("Saving updated comic");
       return this.comicRepository.save(comic);
@@ -213,8 +211,6 @@ public class ComicService {
   @Transactional
   public Comic save(final Comic comic) {
     log.debug("Saving comic: filename={}", comic.getFilename());
-
-    comic.setDateLastUpdated(new Date());
 
     final Comic result = this.comicRepository.save(comic);
 
@@ -264,8 +260,6 @@ public class ComicService {
 
     log.debug("Clearing deleted date");
     comic.setDateDeleted(null);
-    log.debug("Refreshing last updated date");
-    comic.setDateLastUpdated(new Date());
 
     log.debug("Saving comic");
     return this.comicRepository.save(comic);
@@ -341,29 +335,6 @@ public class ComicService {
    */
   public Comic findByFilename(final String filename) {
     return this.comicRepository.findByFilename(filename);
-  }
-
-  /**
-   * Returns all comics with the given page hash
-   *
-   * @param hash the page hash
-   */
-  @Transactional
-  public void updateComicsWithPageHash(final String hash) {
-    log.debug("Loading comics with page hash: {}", hash);
-    final List<Comic> comics = this.comicRepository.findComicsForPageHash(hash);
-    if (comics.isEmpty()) {
-      log.debug("No comics found");
-      return;
-    }
-
-    log.debug(
-        "Updating last read date for {} comic{}", comics.size(), comics.size() == 1 ? "" : "s");
-    for (int index = 0; index < comics.size(); index++) {
-      final Comic comic = comics.get(index);
-      comic.setDateLastUpdated(new Date());
-      this.comicRepository.save(comic);
-    }
   }
 
   /**

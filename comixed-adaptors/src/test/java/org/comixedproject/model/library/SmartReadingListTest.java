@@ -41,7 +41,7 @@ public class SmartReadingListTest {
     smartReadingList.setName(NAME);
     smartReadingList.setSummary(SUMMARY);
     smartReadingList.setNot(NOT);
-    smartReadingList.setMode(MODE);
+    smartReadingList.setMatcherMode(MODE);
   }
 
   @Test
@@ -81,13 +81,13 @@ public class SmartReadingListTest {
 
   @Test
   public void testHasMode() {
-    assertEquals(MODE, smartReadingList.getMode());
+    assertEquals(MODE, smartReadingList.getMatcherMode());
   }
 
   @Test
   public void testCanUpdateMode() {
     String newMode = "";
-    smartReadingList.setMode(newMode);
-    assertEquals(newMode, smartReadingList.getMode());
+    smartReadingList.setMatcherMode(newMode);
+    assertEquals(newMode, smartReadingList.getMatcherMode());
   }
 }

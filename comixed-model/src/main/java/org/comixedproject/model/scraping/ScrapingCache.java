@@ -32,35 +32,35 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "scraping_cache")
+@Table(name = "ScrapingCache")
 public class ScrapingCache {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter
   private Long id;
 
-  @Column(name = "source", length = 32, updatable = false, nullable = false)
+  @Column(name = "Source", length = 32, updatable = false, nullable = false)
   @Getter
   @Setter
   private String source;
 
-  @Column(name = "cache_key", length = 256, updatable = false, nullable = false)
+  @Column(name = "CacheKey", length = 256, updatable = false, nullable = false)
   @Getter
   @Setter
   private String cacheKey;
 
-  @Column(name = "date_fetched", nullable = false, updatable = false)
+  @Column(name = "CreatedOn", nullable = false, updatable = false)
   @Getter
   @Setter
   @Temporal(TemporalType.TIMESTAMP)
-  private Date fetched = new Date();
+  private Date createdOn = new Date();
 
   @OneToMany(
       mappedBy = "scrapingCache",
       fetch = FetchType.EAGER,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  @OrderColumn(name = "entry_number")
+  @OrderColumn(name = "EntryNumber")
   @Getter
   private List<ScrapingCacheEntry> entries = new ArrayList<>();
 }

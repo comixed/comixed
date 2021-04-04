@@ -40,7 +40,7 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
    * @param request the constraints
    * @return the tasks
    */
-  @Query("SELECT t FROM Task t JOIN FETCH t.properties ORDER BY t.created ASC")
+  @Query("SELECT t FROM Task t ORDER BY t.created ASC")
   List<Task> getTasksToRun(PageRequest request);
 
   /**

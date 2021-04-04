@@ -29,7 +29,7 @@ import org.comixedproject.views.View.ComicListView;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_credits")
+@Table(name = "Credits")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -40,13 +40,13 @@ public class Credit {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "comic_id")
+  @JoinColumn(name = "ComicId")
   @JsonIgnore
   @Getter
   @NonNull
   private Comic comic;
 
-  @Column(name = "name")
+  @Column(name = "Name")
   @JsonProperty("name")
   @JsonView(ComicListView.class)
   @Getter
@@ -54,7 +54,7 @@ public class Credit {
   @NonNull
   private String name;
 
-  @Column(name = "role")
+  @Column(name = "Role")
   @JsonProperty("role")
   @JsonView(ComicListView.class)
   @Getter

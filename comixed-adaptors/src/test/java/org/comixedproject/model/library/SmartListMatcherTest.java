@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MatcherTest {
+public class SmartListMatcherTest {
 
   private static final String TYPE = "ComicBookPublisherMatcher";
   private static final String OPERATOR = "1";
@@ -31,74 +31,74 @@ public class MatcherTest {
   private static final String MODE = "Or";
   private static final String VALUE = "Dark Horse";
 
-  private Matcher matcher;
+  private SmartListMatcher smartListMatcher;
 
   @Before
   public void setUp() {
-    matcher = new Matcher();
-    matcher.setType(TYPE);
-    matcher.setOperator(OPERATOR);
-    matcher.setNot(NOT);
-    matcher.setMode(MODE);
-    matcher.setValue(VALUE);
+    smartListMatcher = new SmartListMatcher();
+    smartListMatcher.setType(TYPE);
+    smartListMatcher.setOperator(OPERATOR);
+    smartListMatcher.setNot(NOT);
+    smartListMatcher.setMode(MODE);
+    smartListMatcher.setValue(VALUE);
   }
 
   @Test
   public void testHasType() {
-    assertEquals(TYPE, matcher.getType());
+    assertEquals(TYPE, smartListMatcher.getType());
   }
 
   @Test
   public void testCanUpdateType() {
     String newName = "ComicBookSeriesMatcher";
-    matcher.setType(newName);
-    assertEquals(newName, matcher.getType());
+    smartListMatcher.setType(newName);
+    assertEquals(newName, smartListMatcher.getType());
   }
 
   @Test
   public void testHasOperator() {
-    assertEquals(OPERATOR, matcher.getOperator());
+    assertEquals(OPERATOR, smartListMatcher.getOperator());
   }
 
   @Test
   public void testCanUpdateOperator() {
     String newOperator = "2";
-    matcher.setOperator(newOperator);
-    assertEquals(newOperator, matcher.getOperator());
+    smartListMatcher.setOperator(newOperator);
+    assertEquals(newOperator, smartListMatcher.getOperator());
   }
 
   @Test
   public void testHasNot() {
-    assertEquals(NOT, matcher.isNot());
+    assertEquals(NOT, smartListMatcher.isNot());
   }
 
   @Test
   public void testCanUpdateNot() {
-    matcher.setNot(true);
-    assertEquals(true, matcher.isNot());
+    smartListMatcher.setNot(true);
+    assertEquals(true, smartListMatcher.isNot());
   }
 
   @Test
   public void testHasMode() {
-    assertEquals(MODE, matcher.getMode());
+    assertEquals(MODE, smartListMatcher.getMode());
   }
 
   @Test
   public void testCanUpdateMode() {
     String newMode = "";
-    matcher.setMode(newMode);
-    assertEquals(newMode, matcher.getMode());
+    smartListMatcher.setMode(newMode);
+    assertEquals(newMode, smartListMatcher.getMode());
   }
 
   @Test
   public void testHasValue() {
-    assertEquals(VALUE, matcher.getValue());
+    assertEquals(VALUE, smartListMatcher.getValue());
   }
 
   @Test
   public void testCanUpdateValue() {
     String newValue = "new value";
-    matcher.setValue(newValue);
-    assertEquals(newValue, matcher.getValue());
+    smartListMatcher.setValue(newValue);
+    assertEquals(newValue, smartListMatcher.getValue());
   }
 }

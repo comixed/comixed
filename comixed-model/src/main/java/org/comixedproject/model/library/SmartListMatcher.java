@@ -24,8 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.views.View;
 
 /**
@@ -34,8 +33,10 @@ import org.comixedproject.views.View;
  * @author João França
  */
 @Entity
-@Table(name = "matchers")
-public class Matcher {
+@Table(name = "SmartListMatchers")
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class SmartListMatcher {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -43,59 +44,60 @@ public class Matcher {
   @Getter
   private Long id;
 
-  @Column(name = "type", length = 128)
+  @ManyToOne(fetch = FetchType.LAZY, optional = true)
+  @JoinColumn(name = "SmartListId")
+  @JsonIgnore
+  @JsonView(View.SmartReadingList.class)
+  @Getter
+  @Setter
+  @NonNull
+  private SmartReadingList smartList;
+
+  @Column(name = "MatcherType", length = 128)
   @JsonProperty("type")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private String type;
 
-  @Column(name = "negative")
+  @Column(name = "Negative")
   @JsonProperty("negative")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private boolean not = false;
 
-  @Column(name = "mode")
-  @JsonProperty("matcher_mode")
+  @Column(name = "MatcherMode")
+  @JsonProperty("mode")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private String mode;
 
-  @Column(name = "operator")
-  @JsonProperty("matcher_operator")
+  @Column(name = "MatcherOperator")
+  @JsonProperty("operator")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private String operator;
 
-  @Column(name = "value")
-  @JsonProperty("matcher_value")
+  @Column(name = "MatcherValue")
+  @JsonProperty("value")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private String value;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = true)
-  @JoinColumn(name = "smart_list_id")
+  @JoinColumn(name = "NextMatcherId")
   @JsonIgnore
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
-  private SmartReadingList smartList;
-
-  @ManyToOne(fetch = FetchType.LAZY, optional = true)
-  @JoinColumn(name = "matcher_id")
-  @JsonIgnore
-  @JsonView(View.SmartReadingList.class)
-  @Getter
-  @Setter
-  private Matcher matcher;
+  private SmartListMatcher nextMatcher;
 
   @OneToMany(
-      mappedBy = "matcher",
+      mappedBy = "nextMatcher",
       cascade = CascadeType.ALL,
       fetch = FetchType.EAGER,
       orphanRemoval = true)
@@ -105,11 +107,5 @@ public class Matcher {
     View.SmartReadingList.class,
   })
   @Getter
-  Set<Matcher> matchers = new HashSet<>();
-
-  public Matcher() {}
-
-  public Matcher(final SmartReadingList list) {
-    this.smartList = list;
-  }
+  Set<SmartListMatcher> smartListMatchers = new HashSet<>();
 }

@@ -153,19 +153,6 @@ public class ComicRepositoryTest {
   }
 
   @Test
-  public void testDateAddedCannotBeUpdated() {
-    comic.setDateAdded(new Date());
-
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertNotEquals(
-        DateUtils.truncate(comic.getDateAdded(), Calendar.SECOND),
-        DateUtils.truncate(result.getDateAdded(), Calendar.SECOND));
-  }
-
-  @Test
   public void testCoverDateCanBeNull() {
     comic.setCoverDate(null);
 

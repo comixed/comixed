@@ -20,10 +20,9 @@ package org.comixedproject.model.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.views.View.UserList;
+import org.comixedproject.views.View;
 
 /**
  * <code>Bookmark</code> represents the last read position for a comic by a user.
@@ -31,7 +30,9 @@ import org.comixedproject.views.View.UserList;
  * @author Joao Franca
  */
 @Entity
-@Table(name = "bookmarks")
+@Table(name = "Bookmarks")
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Bookmark {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,27 +40,22 @@ public class Bookmark {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "UserId")
   @Getter
+  @NonNull
   private ComiXedUser user;
 
   @ManyToOne
-  @JoinColumn(name = "comic_id", nullable = false, updatable = false)
-  @JsonView(UserList.class)
+  @JoinColumn(name = "ComicId", nullable = false, updatable = false)
+  @JsonView(View.UserDetailsView.class)
   @Getter
+  @NonNull
   private Comic comic;
 
-  @Column(name = "mark", updatable = true, nullable = false)
-  @JsonView(UserList.class)
+  @Column(name = "Mark", updatable = true, nullable = false)
+  @JsonView(View.UserDetailsView.class)
   @Getter
   @Setter
+  @NonNull
   private String mark;
-
-  public Bookmark() {}
-
-  public Bookmark(ComiXedUser user, Comic comic, String mark) {
-    this.user = user;
-    this.comic = comic;
-    this.mark = mark;
-  }
 }

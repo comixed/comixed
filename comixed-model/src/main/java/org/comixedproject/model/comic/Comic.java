@@ -38,6 +38,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,7 +50,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
-@Table(name = "comics")
+@Table(name = "Comics")
 @Log4j2
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
@@ -90,6 +92,7 @@ public class Comic {
 
   @Getter @Setter @Transient @JsonIgnore private File backingFile;
 
+  @Column(name = "ArchiveType", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
   @JsonView(View.ComicListView.class)
@@ -97,34 +100,34 @@ public class Comic {
   @Setter
   private ArchiveType archiveType;
 
-  @Column(name = "publisher", length = 128)
+  @Column(name = "Publisher", length = 128)
   @JsonProperty("publisher")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String publisher;
 
-  @Column(name = "series", length = 128)
+  @Column(name = "Series", length = 128)
   @JsonProperty("series")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String series;
 
-  @Column(name = "volume", length = 4)
+  @Column(name = "Volume", length = 4)
   @JsonProperty("volume")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String volume;
 
-  @Column(name = "issue_number", length = 16)
+  @Column(name = "IssueNumber", length = 16)
   @JsonProperty("issueNumber")
   @JsonView(View.ComicListView.class)
   @Getter
   private String issueNumber;
 
-  @Column(name = "imprint")
+  @Column(name = "Imprint")
   @JsonProperty("imprint")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -132,20 +135,20 @@ public class Comic {
   private String imprint;
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "page_number")
+  @OrderColumn(name = "PageNumber")
   @JsonProperty("pages")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   List<Page> pages = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "file_number")
+  @OrderColumn(name = "FileNumber")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   private List<ComicFileEntry> fileEntries = new ArrayList<>();
 
   @ManyToOne
-  @JoinColumn(name = "scan_type_id")
+  @JoinColumn(name = "ScanTypeId")
   @JsonProperty("scanType")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -153,33 +156,33 @@ public class Comic {
   private ScanType scanType;
 
   @ManyToOne
-  @JoinColumn(name = "format_id")
+  @JoinColumn(name = "FormatId")
   @JsonProperty("format")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private ComicFormat format;
 
-  @Formula(value = "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id)")
+  @Formula(value = "(SELECT COUNT(*) FROM pages p WHERE p.ComicId = id)")
   @JsonIgnore
   @Transient
   private Integer calculatedPageCount;
 
-  @Formula(value = "(SELECT COUNT(*) FROM pages p where p.comic_id = id AND p.deleted = true)")
+  @Formula(value = "(SELECT COUNT(*) FROM pages p where p.ComicId = id AND p.deleted = true)")
   @JsonIgnore
   @Getter
   private Integer calculatedDeletedPageCount;
 
-  @Column(name = "added_date", updatable = false, nullable = false)
+  @Column(name = "CreatedOn", updatable = false, nullable = false)
+  @CreatedDate
   @JsonProperty("addedDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.ComicListView.class)
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
-  @Setter
   private Date dateAdded = new Date();
 
-  @Column(name = "deleted_date", updatable = true, nullable = true)
+  @Column(name = "DeletedOn", updatable = true, nullable = true)
   @JsonProperty("deletedDate")
   @JsonFormat(shape = Shape.NUMBER)
   @JsonView(View.ComicListView.class)
@@ -188,23 +191,23 @@ public class Comic {
   @Setter
   private Date dateDeleted;
 
-  @Column(name = "last_updated_date", updatable = true, nullable = false)
+  @Column(name = "LastUpdatedOn", updatable = true, nullable = false)
+  @LastModifiedDate
   @JsonProperty("lastUpdatedDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.ComicListView.class)
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
-  @Setter
   private Date dateLastUpdated = new Date();
 
-  @Column(name = "comic_vine_id", length = 16)
+  @Column(name = "ComicVineId", length = 16)
   @JsonProperty("comicVineId")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private String comicVineId;
 
-  @Column(name = "cover_date", nullable = true)
+  @Column(name = "CoverDate", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("coverDate")
   @JsonView(View.ComicListView.class)
@@ -212,21 +215,21 @@ public class Comic {
   @Setter
   private Date coverDate;
 
-  @Column(name = "sort_name", length = 128)
+  @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String sortName;
 
-  @Column(name = "title", length = 128)
+  @Column(name = "Title", length = 128)
   @JsonProperty("title")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String title;
 
-  @Column(name = "description")
+  @Column(name = "Description")
   @Lob
   @JsonProperty("description")
   @JsonView(View.ComicDetailsView.class)
@@ -234,18 +237,10 @@ public class Comic {
   @Setter
   private String description;
 
-  @Column(name = "notes")
-  @Lob
-  @JsonProperty("notes")
-  @JsonView(View.ComicDetailsView.class)
-  @Getter
-  @Setter
-  private String notes;
-
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_characters", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "character_name")
+  @CollectionTable(name = "Characters", joinColumns = @JoinColumn(name = "ComicId"))
+  @Column(name = "Name")
   @JsonProperty("characters")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -253,8 +248,8 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_teams", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "team_name")
+  @CollectionTable(name = "Teams", joinColumns = @JoinColumn(name = "ComicId"))
+  @Column(name = "Name")
   @JsonProperty("teams")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -262,8 +257,8 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_locations", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "location_name")
+  @CollectionTable(name = "Locations", joinColumns = @JoinColumn(name = "ComicId"))
+  @Column(name = "Name")
   @JsonProperty("locations")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -271,8 +266,8 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "comic_story_arcs", joinColumns = @JoinColumn(name = "comic_id"))
-  @Column(name = "story_name")
+  @CollectionTable(name = "Stories", joinColumns = @JoinColumn(name = "ComicId"))
+  @Column(name = "Name")
   @JsonProperty("storyArcs")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -286,7 +281,7 @@ public class Comic {
 
   @Formula(
       value =
-          "(SELECT COUNT(*) FROM pages p WHERE p.comic_id = id AND p.hash in (SELECT d.hash FROM blocked_page_hashes d))")
+          "(SELECT COUNT(*) FROM Pages p WHERE p.ComicId = id AND p.FileHash in (SELECT b.Hash FROM BlockedPageHashes b))")
   @JsonProperty("blockedPageCount")
   @JsonView(View.ComicListView.class)
   @Getter
@@ -300,7 +295,7 @@ public class Comic {
   private String comicVineURL;
 
   @Formula(
-      "(SELECT COUNT(*) FROM comics c WHERE c.series = series AND c.volume = volume AND c.issue_number = issue_number AND c.cover_date = cover_date)")
+      "(SELECT COUNT(*) FROM comics c WHERE c.Series = series AND c.Volume = volume AND c.IssueNumber = IssueNumber AND c.CoverDate = CoverDate)")
   @JsonProperty("duplicateCount")
   @JsonView(View.ComicListView.class)
   private Integer duplicateCount;

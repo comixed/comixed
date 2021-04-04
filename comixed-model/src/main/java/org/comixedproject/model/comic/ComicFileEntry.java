@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "comic_file_entries")
+@Table(name = "ComicFileEntries")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 public class ComicFileEntry {
@@ -44,33 +44,33 @@ public class ComicFileEntry {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "comic_id")
+  @JoinColumn(name = "ComicId")
   @Getter
   @Setter
   private Comic comic;
 
-  @Column(name = "file_number", nullable = false, updatable = true)
+  @Column(name = "FileNumber", nullable = false, updatable = true)
   @JsonProperty("fileNumber")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private Integer fileNumber;
 
-  @Column(name = "file_name", nullable = false, length = 1024)
+  @Column(name = "FileName", nullable = false, length = 1024)
   @JsonProperty("fileName")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private String fileName;
 
-  @Column(name = "file_size", nullable = false)
+  @Column(name = "FileSize", nullable = false)
   @JsonProperty("fileSize")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private Integer fileSize;
 
-  @Column(name = "file_type", nullable = false, length = 256)
+  @Column(name = "FileType", nullable = false, length = 256)
   @JsonProperty("fileType")
   @JsonView(View.ComicDetailsView.class)
   @Getter

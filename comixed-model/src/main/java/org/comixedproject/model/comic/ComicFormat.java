@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Entity
-@Table(name = "comic_formats")
+@Table(name = "ComicFormats")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 public class ComicFormat {
@@ -46,7 +46,7 @@ public class ComicFormat {
   @Getter
   private Long id;
 
-  @Column(name = "name", updatable = false, nullable = false)
+  @Column(name = "Name", updatable = false, nullable = false)
   @JsonView({ComicListView.class, PageList.class})
   @Getter
   private String name;

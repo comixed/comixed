@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Entity
-@Table(name = "scan_types")
+@Table(name = "ScanTypes")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 public class ScanType {
@@ -47,7 +47,7 @@ public class ScanType {
   @Getter
   private long id;
 
-  @Column(name = "name", updatable = false, nullable = false)
+  @Column(name = "Name", updatable = false, nullable = false)
   @JsonView({ComicListView.class, PageList.class})
   @Getter
   private String name;

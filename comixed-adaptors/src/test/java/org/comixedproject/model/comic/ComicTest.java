@@ -43,7 +43,6 @@ public class ComicTest {
   private static final String TEST_COMIC_VINE_ID = "206568";
   private static final String TEST_DESCRIPTION = "Simple comic description";
   private static final String TEST_FILENAME = "src/test/resources/example.cbz";
-  private static final String TEST_NOTES = "Some sample notes";
   private static final String TEST_PAGE_FILENAME = "src/test/resources/example.jpg";
   private static final String TEST_BASE_FILENAME = "example.cbz";
   private static final String TEST_COMIC_VINE_URL = "http://comicvine.gamespot.com/blah/blah/blah";
@@ -144,12 +143,6 @@ public class ComicTest {
   }
 
   @Test
-  public void testDateAdded() {
-    this.comic.setDateAdded(TEST_DATE);
-    assertEquals(TEST_DATE, this.comic.getDateAdded());
-  }
-
-  @Test
   public void testDescription() {
     this.comic.setDescription(TEST_DESCRIPTION);
     assertNotNull(this.comic.getDescription());
@@ -184,12 +177,6 @@ public class ComicTest {
   public void testIssueNumberAllowsItToBe0() {
     this.comic.setIssueNumber("0");
     assertEquals("0", this.comic.getIssueNumber());
-  }
-
-  @Test
-  public void testNotes() {
-    this.comic.setNotes(TEST_NOTES);
-    assertEquals(TEST_NOTES, this.comic.getNotes());
   }
 
   @Test

@@ -18,7 +18,6 @@
 
 package org.comixedproject.task.model;
 
-import java.util.Date;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
 import org.junit.Test;
@@ -43,7 +42,6 @@ public class UndeleteComicWorkerTaskTest {
     undeleteComicWorkerTask.startTask();
 
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(null);
-    Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 }

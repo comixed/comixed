@@ -42,7 +42,6 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   private static final String TEST_ISSUE_NUMBER = "24";
   private static final String TEST_TITLE = "Test Title";
   private static final String TEST_DESCRIPTION = "Test summary";
-  private static final String TEST_NOTES = "Test notes";
 
   @InjectMocks ComicInfoEntryAdaptor adaptor;
   @Mock private Comic comic;
@@ -55,7 +54,6 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(comic.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(comic.getDescription()).thenReturn(TEST_DESCRIPTION);
-    Mockito.when(comic.getNotes()).thenReturn(TEST_NOTES);
   }
 
   @Test
@@ -69,7 +67,6 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
     Mockito.verify(comic, Mockito.never()).setTitle(Mockito.anyString());
     Mockito.verify(comic, Mockito.never()).setDescription(Mockito.anyString());
-    Mockito.verify(comic, Mockito.never()).setNotes(Mockito.anyString());
   }
 
   @Test
@@ -83,7 +80,6 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
     Mockito.verify(comic, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
-    Mockito.verify(comic, Mockito.times(1)).setNotes(TEST_NOTES);
   }
 
   @Test
@@ -98,6 +94,5 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.verify(comic, Mockito.times(1)).getIssueNumber();
     Mockito.verify(comic, Mockito.times(1)).getTitle();
     Mockito.verify(comic, Mockito.times(1)).getDescription();
-    Mockito.verify(comic, Mockito.times(1)).getNotes();
   }
 }

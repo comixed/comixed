@@ -35,9 +35,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ScrapingCacheServiceTest {
   private static final String TEST_SOURCE = "Source.Name";
   private static final String TEST_KEY = "Entry.Key";
-  private static final Date TEST_EXPIRED_FETCH_DATE =
+  private static final Date TEST_EXPIRED_CREATED_ON_DATE =
       new Date(System.currentTimeMillis() - 8L * 24L * 60L * 60L * 1000L);
-  private static final Date TEST_UNEXPIRED_FETCH_DATE =
+  private static final Date TEST_UNEXPECTED_CREATED_ON_DATE =
       new Date(System.currentTimeMillis() - 6L * 24L * 60L * 60L * 1000L);
   private static final String TEST_SCRAPING_CACHE_ENTRY = "This is the scraping cache entry value";
 
@@ -122,7 +122,7 @@ public class ScrapingCacheServiceTest {
   public void testGetFromCacheExpiredEntry() {
     Mockito.when(scrapingCacheRepository.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(existingScapingCache);
-    Mockito.when(existingScapingCache.getFetched()).thenReturn(TEST_EXPIRED_FETCH_DATE);
+    Mockito.when(existingScapingCache.getCreatedOn()).thenReturn(TEST_EXPIRED_CREATED_ON_DATE);
 
     final List<String> result = this.scrapingCacheService.getFromCache(TEST_SOURCE, TEST_KEY);
 
@@ -138,7 +138,7 @@ public class ScrapingCacheServiceTest {
 
     Mockito.when(scrapingCacheRepository.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(existingScapingCache);
-    Mockito.when(existingScapingCache.getFetched()).thenReturn(TEST_UNEXPIRED_FETCH_DATE);
+    Mockito.when(existingScapingCache.getCreatedOn()).thenReturn(TEST_UNEXPECTED_CREATED_ON_DATE);
     Mockito.when(existingScapingCache.getEntries()).thenReturn(scrapingCacheEntries);
     Mockito.when(scrapingCacheEntry.getEntryValue()).thenReturn(TEST_SCRAPING_CACHE_ENTRY);
 

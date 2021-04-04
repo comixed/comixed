@@ -142,7 +142,6 @@ public class LibraryService {
               }
             }
             log.debug("Updating comic state");
-            comic.setDateLastUpdated(new Date());
             this.comicRepository.save(comic);
           }
         });

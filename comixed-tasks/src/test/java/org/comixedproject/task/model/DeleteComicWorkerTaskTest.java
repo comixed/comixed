@@ -88,7 +88,6 @@ public class DeleteComicWorkerTaskTest {
     Mockito.verify(readingListService, Mockito.times(TEST_READING_LIST_COUNT))
         .save(Mockito.any(ReadingList.class));
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(Mockito.any());
-    Mockito.verify(comic, Mockito.times(1)).setDateLastUpdated(Mockito.any());
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
   }
 
