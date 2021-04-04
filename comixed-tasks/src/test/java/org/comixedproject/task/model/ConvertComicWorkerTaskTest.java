@@ -22,7 +22,6 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertSame;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -148,7 +147,6 @@ class ConvertComicWorkerTaskTest {
     Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
         .saveComic(sourceComic, TEST_RENAME_PAGES);
-    Mockito.verify(savedComic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));
     Mockito.verify(comicService, Mockito.times(1)).save(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(convertedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
@@ -201,7 +199,6 @@ class ConvertComicWorkerTaskTest {
     Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
         .saveComic(sourceComic, TEST_RENAME_PAGES);
-    Mockito.verify(savedComic, Mockito.times(1)).setDateLastUpdated(Mockito.any(Date.class));
     Mockito.verify(comicService, Mockito.times(1)).save(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);

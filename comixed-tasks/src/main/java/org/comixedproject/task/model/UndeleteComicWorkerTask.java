@@ -18,7 +18,6 @@
 
 package org.comixedproject.task.model;
 
-import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
@@ -53,7 +52,6 @@ public class UndeleteComicWorkerTask extends AbstractWorkerTask {
     log.debug("Undeleting comic: id={}", this.comic.getId());
 
     this.comic.setDateDeleted(null);
-    this.comic.setDateLastUpdated(new Date());
     this.comicService.save(this.comic);
   }
 

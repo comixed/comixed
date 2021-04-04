@@ -30,6 +30,7 @@ import lombok.Setter;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
+import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * <code>ReadingList</code> represents a reading list of comics.
@@ -37,7 +38,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "reading_lists")
+@Table(name = "ReadingLists")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 public class ReadingList {
@@ -48,29 +49,30 @@ public class ReadingList {
   @Getter
   private Long id;
 
-  @Column(name = "name", length = 128)
+  @Column(name = "Name", length = 128)
   @JsonProperty("name")
   @JsonView({View.ComicListView.class, View.ReadingList.class, View.LibraryUpdate.class})
   @Getter
   @Setter
   private String name;
 
-  @Column(name = "summary", length = 256, nullable = true)
+  @Column(name = "Summary", length = 256, nullable = true)
   @JsonProperty("summary")
   @JsonView({View.ComicListView.class, View.ReadingList.class, View.LibraryUpdate.class})
   @Getter
   @Setter
   private String summary;
 
-  @JsonProperty("owner")
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "owner_id")
+  @JoinColumn(name = "OwnerId")
+  @JsonProperty("owner")
   @JsonView({View.ComicListView.class, View.ReadingList.class})
   @Getter
   @Setter
   private ComiXedUser owner;
 
-  @Column(name = "last_updated")
+  @Column(name = "LastUpdated")
+  @LastModifiedDate
   @JsonProperty("lastUpdated")
   @JsonView({View.ComicListView.class, View.ReadingList.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
@@ -80,9 +82,9 @@ public class ReadingList {
 
   @ManyToMany
   @JoinTable(
-      name = "reading_list_entries",
-      joinColumns = {@JoinColumn(name = "reading_list_id")},
-      inverseJoinColumns = {@JoinColumn(name = "comic_id")})
+      name = "ReadingListEntries",
+      joinColumns = {@JoinColumn(name = "ReadingListId")},
+      inverseJoinColumns = {@JoinColumn(name = "ComicId")})
   @Getter
   private List<Comic> comics = new ArrayList<>();
 

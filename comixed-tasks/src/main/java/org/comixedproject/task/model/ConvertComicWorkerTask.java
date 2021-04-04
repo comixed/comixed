@@ -20,7 +20,6 @@ package org.comixedproject.task.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -92,7 +91,6 @@ public class ConvertComicWorkerTask extends AbstractWorkerTask {
       this.comic.removeDeletedPages(this.deletePages);
       Comic saveComic = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
       log.debug("Saving updated comic");
-      saveComic.setDateLastUpdated(new Date());
       final Comic result = this.comicService.save(saveComic);
       updateReadingList(this.comic, result);
 

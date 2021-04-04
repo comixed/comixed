@@ -24,7 +24,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
 import java.util.Optional;
-import org.comixedproject.model.library.Matcher;
+import org.comixedproject.model.library.SmartListMatcher;
 import org.comixedproject.model.library.SmartReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.RepositoryContext;
@@ -91,9 +91,9 @@ public class SmartReadingListRepositoryTest {
 
     assertNotNull(result);
     assertEquals(TEST_EXISTING_LIST_NAME, result.getName());
-    assertEquals(2, result.getMatchers().size());
-    for (Matcher matcher : result.getMatchers()) {
-      assertEquals(result.getId(), matcher.getSmartList().getId());
+    assertEquals(2, result.getSmartListMatchers().size());
+    for (SmartListMatcher smartListMatcher : result.getSmartListMatchers()) {
+      assertEquals(result.getId(), smartListMatcher.getSmartList().getId());
     }
   }
 
@@ -104,32 +104,32 @@ public class SmartReadingListRepositoryTest {
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
 
-    list.getMatchers().add(new Matcher(list));
-    list.getMatchers().add(new Matcher(list));
+    list.getSmartListMatchers().add(new SmartListMatcher(list));
+    list.getSmartListMatchers().add(new SmartListMatcher(list));
     repository.save(list);
 
     SmartReadingList result = repository.findSmartReadingListForUser(reader, TEST_NEW_LIST_NAME);
 
     assertNotNull(result);
     assertEquals(reader.getId(), result.getOwner().getId());
-    assertEquals(list.getMatchers().size(), result.getMatchers().size());
+    assertEquals(list.getSmartListMatchers().size(), result.getSmartListMatchers().size());
   }
 
   @Test
   public void testUpdateReadingList() {
     SmartReadingList list = repository.findById(1000L).get();
-    Matcher newMatcher = new Matcher(list);
-    newMatcher.setValue("Marvel");
+    SmartListMatcher newSmartListMatcher = new SmartListMatcher(list);
+    newSmartListMatcher.setValue("Marvel");
 
-    list.getMatchers().add(newMatcher);
+    list.getSmartListMatchers().add(newSmartListMatcher);
     repository.save(list);
 
     SmartReadingList result = repository.findById(list.getId()).get();
 
-    assertEquals(list.getMatchers().size(), result.getMatchers().size());
+    assertEquals(list.getSmartListMatchers().size(), result.getSmartListMatchers().size());
     boolean found = false;
-    for (Matcher matcher : result.getMatchers()) {
-      found |= (matcher.getValue().equals(newMatcher.getValue()));
+    for (SmartListMatcher smartListMatcher : result.getSmartListMatchers()) {
+      found |= (smartListMatcher.getValue().equals(newSmartListMatcher.getValue()));
     }
     assertTrue(found);
   }

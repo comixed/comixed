@@ -6,6 +6,12 @@
   <changeSet id="001_682_add_created_dates_to_comics.xml"
              author="mcpierce">
 
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <columnExists tableName="user_last_read_dates"
+                      columnName="created_on"/>
+      </not>
+    </preConditions>
     <addColumn tableName="user_last_read_dates">
       <column name="created_on"
               type="timestamp"

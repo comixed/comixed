@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "task_audit_log")
+@Table(name = "TaskAuditLog")
 public class TaskAuditLogEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +42,7 @@ public class TaskAuditLogEntry {
   @Setter
   private Long id;
 
-  @Column(name = "start_time", nullable = false, updatable = false)
+  @Column(name = "StartTime", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonProperty("startTime")
@@ -50,7 +50,7 @@ public class TaskAuditLogEntry {
   @JsonView(View.AuditLogEntryList.class)
   private Date startTime = new Date();
 
-  @Column(name = "end_time", nullable = false, updatable = false)
+  @Column(name = "EndTime", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonProperty("endTime")
@@ -58,21 +58,21 @@ public class TaskAuditLogEntry {
   @JsonView(View.AuditLogEntryList.class)
   private Date endTime = new Date();
 
-  @Column(name = "successful", nullable = false, updatable = false)
+  @Column(name = "Successful", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonProperty("successful")
   @JsonView(View.AuditLogEntryList.class)
   private Boolean successful;
 
-  @Column(name = "description", nullable = false, updatable = false, length = 2048)
+  @Column(name = "Description", nullable = false, updatable = false, length = 2048)
   @Getter
   @Setter
   @JsonProperty("description")
   @JsonView(View.AuditLogEntryList.class)
   private String description;
 
-  @Column(name = "exception", nullable = true, updatable = false)
+  @Column(name = "Exception", nullable = true, updatable = false)
   @Lob
   @Getter
   @Setter

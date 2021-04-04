@@ -35,7 +35,7 @@ import org.hibernate.annotations.Formula;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "pages")
+@Table(name = "Pages")
 @Log4j2
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
@@ -48,56 +48,56 @@ public class Page {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "comic_id")
+  @JoinColumn(name = "ComicId")
   @JsonProperty("comic")
   @Getter
   @Setter
   private Comic comic;
 
   @ManyToOne
-  @JoinColumn(name = "type_id", nullable = false)
+  @JoinColumn(name = "TypeId", nullable = false)
   @JsonProperty("pageType")
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private PageType pageType;
 
-  @Column(name = "filename", length = 128, updatable = true, nullable = false)
+  @Column(name = "Filename", length = 128, updatable = true, nullable = false)
   @JsonProperty("filename")
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private String filename;
 
-  @Column(name = "hash", length = 32, updatable = true, nullable = false)
+  @Column(name = "FileHash", length = 32, updatable = true, nullable = false)
   @JsonProperty("hash")
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private String hash;
 
-  @Column(name = "page_number", nullable = false, updatable = true)
+  @Column(name = "PageNumber", nullable = false, updatable = true)
   @JsonProperty("pageNumber")
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer pageNumber;
 
-  @Column(name = "deleted", updatable = true, nullable = false)
+  @Column(name = "Deleted", updatable = true, nullable = false)
   @JsonProperty("deleted")
   @JsonView(View.ComicDetailsView.class)
   @Getter
   @Setter
   private boolean deleted = false;
 
-  @Column(name = "width", updatable = true)
+  @Column(name = "Width", updatable = true)
   @JsonProperty("width")
   @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer width = -1;
 
-  @Column(name = "height", updatable = true)
+  @Column(name = "Height", updatable = true)
   @JsonProperty("height")
   @JsonView({View.ComicDetailsView.class})
   @Getter
@@ -105,7 +105,7 @@ public class Page {
   private Integer height = -1;
 
   @Formula(
-      "(SELECT CASE WHEN (hash IN (SELECT bph.hash FROM blocked_page_hashes bph)) THEN true ELSE false END)")
+      "(SELECT CASE WHEN (FileHash IN (SELECT b.hash FROM BlockedPageHashes b)) THEN true ELSE false END)")
   @JsonProperty("blocked")
   @JsonView(View.ComicDetailsView.class)
   @Getter

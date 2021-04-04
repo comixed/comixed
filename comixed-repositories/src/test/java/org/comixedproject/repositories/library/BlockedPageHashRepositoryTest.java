@@ -50,19 +50,20 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class BlockedPageHashRepositoryTest {
   private static final String BLOCKED_PAGE_HASH_1 = "0123456789ABCDEF0123456789ABCDEF";
   private static final String BLOCKED_PAGE_HASH_2 = "ABCDEF0123456789ABCDEF0123456789";
+  private static final String BLOCKED_PAGE_HASH_3 = "9876543210FEDCBA9876543210FEDCBA";
 
   @Autowired private BlockedPageHashRepository repository;
 
   @Test
   public void testAddBlockedHash() {
-    BlockedPageHash hash = new BlockedPageHash(BLOCKED_PAGE_HASH_1 + BLOCKED_PAGE_HASH_1);
+    BlockedPageHash hash = new BlockedPageHash(BLOCKED_PAGE_HASH_3);
 
     repository.save(hash);
 
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH_1 + BLOCKED_PAGE_HASH_1);
+    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH_3);
 
     assertNotNull(result);
-    assertEquals(BLOCKED_PAGE_HASH_1 + BLOCKED_PAGE_HASH_1, result.getHash());
+    assertEquals(BLOCKED_PAGE_HASH_3, result.getHash());
   }
 
   @Test

@@ -25,6 +25,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.views.View;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 /**
@@ -33,7 +34,7 @@ import org.springframework.data.annotation.LastModifiedDate;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "user_last_read_dates")
+@Table(name = "LastReadDates")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class LastReadDate {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "comic_id", insertable = true, updatable = false, nullable = false)
+  @JoinColumn(name = "ComicId", insertable = true, updatable = false, nullable = false)
   @JsonProperty("comic")
   @Getter
   @Setter
@@ -53,13 +54,13 @@ public class LastReadDate {
   private Comic comic;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", insertable = true, updatable = false, nullable = false)
+  @JoinColumn(name = "UserId", insertable = true, updatable = false, nullable = false)
   @Getter
   @Setter
   @NonNull
   private ComiXedUser user;
 
-  @Column(name = "last_read", insertable = true, updatable = false, nullable = false)
+  @Column(name = "LastReadOn", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView({View.UserDetailsView.class, View.ComicDetailsView.class})
@@ -67,13 +68,14 @@ public class LastReadDate {
   @Setter
   private Date lastRead = new Date();
 
-  @Column(name = "created_on", updatable = false, nullable = false)
+  @Column(name = "FirstReadOn", updatable = false, nullable = false)
+  @CreatedDate
   @JsonProperty("createdOn")
   @JsonView({View.UserDetailsView.class, View.ComicDetailsView.class})
   @Getter
   private Date createdOn = new Date();
 
-  @Column(name = "last_updated", nullable = false, updatable = true)
+  @Column(name = "LastUpdated", nullable = false, updatable = true)
   @LastModifiedDate
   @JsonProperty("lastUpdated")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)

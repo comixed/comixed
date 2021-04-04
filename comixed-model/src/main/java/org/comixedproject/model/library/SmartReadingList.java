@@ -28,6 +28,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
+import org.springframework.data.annotation.CreatedDate;
 
 /**
  * <code>SmartReadingList</code> represents a reading list of comics.
@@ -35,7 +36,7 @@ import org.comixedproject.views.View;
  * @author João França
  */
 @Entity
-@Table(name = "smart_reading_lists")
+@Table(name = "SmartReadingLists")
 public class SmartReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,46 +45,47 @@ public class SmartReadingList {
   @Getter
   private Long id;
 
-  @Column(name = "name", length = 128)
+  @Column(name = "Name", length = 128)
   @JsonProperty("name")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private String name;
 
-  @Column(name = "summary", length = 256, nullable = true)
+  @Column(name = "Summary", length = 256, nullable = true)
   @JsonProperty("summary")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private String summary;
 
-  @JsonProperty("owner")
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "owner_id")
+  @JoinColumn(name = "OwnerId")
+  @JsonProperty("owner")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private ComiXedUser owner;
 
-  @Column(name = "created")
-  @JsonProperty("created_date")
+  @CreatedDate
+  @Column(name = "CreatedOn")
+  @JsonProperty("createdOne")
   @JsonView(View.SmartReadingList.class)
-  private Date created = new Date();
+  private Date createdOn = new Date();
 
-  @Column(name = "negative")
+  @Column(name = "Negative")
   @JsonProperty("negative")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
   private boolean not = false;
 
-  @Column(name = "mode")
+  @Column(name = "MatchMode")
   @JsonProperty("matcher_mode")
   @JsonView(View.SmartReadingList.class)
   @Getter
   @Setter
-  private String mode;
+  private String matcherMode;
 
   @OneToMany(
       mappedBy = "smartList",
@@ -96,5 +98,5 @@ public class SmartReadingList {
     View.SmartReadingList.class,
   })
   @Getter
-  Set<Matcher> matchers = new HashSet<>();
+  Set<SmartListMatcher> smartListMatchers = new HashSet<>();
 }

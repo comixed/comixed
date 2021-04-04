@@ -39,7 +39,6 @@ public class ComicDataAdaptor {
     comic.setIssueNumber("");
     comic.setTitle("");
     comic.setDescription("");
-    comic.setNotes("");
     comic.getStoryArcs().clear();
     comic.getTeams().clear();
     comic.getCharacters().clear();

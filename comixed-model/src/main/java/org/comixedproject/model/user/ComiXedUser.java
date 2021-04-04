@@ -36,7 +36,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class ComiXedUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class ComiXedUser {
   @Getter
   private Long id;
 
-  @Column(name = "email", updatable = true, nullable = false, unique = true)
+  @Column(name = "Email", updatable = true, nullable = false, unique = true)
   @JsonView(View.UserList.class)
   @Getter
   @Setter
@@ -52,18 +52,18 @@ public class ComiXedUser {
 
   @Transient @JsonIgnore private String password;
 
-  @Column(name = "password_hash", updatable = true, nullable = false)
+  @Column(name = "PasswordHash", updatable = true, nullable = false)
   @Getter
   @Setter
   private String passwordHash;
 
-  @Column(name = "first_login_date", nullable = false, updatable = false)
+  @Column(name = "CreatedOn", nullable = false, updatable = false)
   @JsonProperty("first_login_date")
   @JsonView(View.UserList.class)
   @Getter
   private Date firstLoginDate = new Date();
 
-  @Column(name = "last_login_date", nullable = false, updatable = true)
+  @Column(name = "LastLoggedOn", nullable = false, updatable = true)
   @JsonProperty("last_login_date")
   @JsonView(View.UserList.class)
   @Getter
@@ -72,9 +72,9 @@ public class ComiXedUser {
 
   @ManyToMany
   @JoinTable(
-      name = "users_roles",
-      joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+      name = "UsersRoles",
+      joinColumns = @JoinColumn(name = "UserId", referencedColumnName = "Id"),
+      inverseJoinColumns = @JoinColumn(name = "RoleId", referencedColumnName = "Id"))
   @JsonView(View.UserList.class)
   @Getter
   private List<Role> roles = new ArrayList<>();
@@ -89,7 +89,7 @@ public class ComiXedUser {
   private List<Preference> preferences = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  @JsonView(View.UserList.class)
+  @JsonIgnore
   private List<Bookmark> bookmarks = new ArrayList<>();
 
   @Transient
@@ -171,20 +171,5 @@ public class ComiXedUser {
       }
     }
     this.bookmarks.add(new Bookmark(this, comic, mark));
-  }
-
-  /**
-   * Returns whether the user has the administrator role.
-   *
-   * @return true if the user is an administrator
-   */
-  public boolean isAdmin() {
-    for (int index = 0; index < this.roles.size(); index++) {
-      if (this.roles.get(index).getName().equals("ADMIN")) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }

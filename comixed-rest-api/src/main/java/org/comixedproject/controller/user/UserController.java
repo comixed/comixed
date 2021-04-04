@@ -33,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,6 +56,7 @@ public class UserController {
    */
   @GetMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
+  @PreAuthorize("hasAnyRole('READER','ADMIN')")
   public ComiXedUser loadCurrentUser(@NotNull final Principal principal)
       throws ComiXedUserException {
     log.info("Loading current user: {}", principal.getName());

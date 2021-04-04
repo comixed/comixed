@@ -31,25 +31,25 @@ import org.comixedproject.views.View.UserList;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "user_preferences")
+@Table(name = "UserPreferences")
 public class Preference {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", updatable = false, nullable = false)
+  @JoinColumn(name = "UserId", updatable = false, nullable = false)
   @JsonIgnore
   @Getter
   @Setter
   private ComiXedUser user;
 
-  @Column(name = "name", nullable = false)
+  @Column(name = "Name", nullable = false, updatable = false, length = 128)
   @JsonView(UserList.class)
   @Getter
   private String name;
 
-  @Column(name = "value", updatable = true, nullable = false)
+  @Column(name = "Value", updatable = true, nullable = false, length = 256)
   @JsonView(UserList.class)
   @Getter
   @Setter

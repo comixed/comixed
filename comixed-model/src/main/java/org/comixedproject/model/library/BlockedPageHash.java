@@ -20,6 +20,7 @@ package org.comixedproject.model.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,12 +29,13 @@ import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View.PageList;
 
 /**
- * <code>BlockedPageHash</code> represents a single blocked page hash.
+ * <code>BlockedPageHash</code> represents the hash for a page that can be automatically marked for
+ * deletion.
  *
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "blocked_page_hashes")
+@Table(name = "BlockedPageHashes")
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class BlockedPageHash {
@@ -44,10 +46,23 @@ public class BlockedPageHash {
   @Getter
   private Long id;
 
-  @Column(name = "hash", nullable = false, unique = true, length = 1024)
+  @Column(name = "Hash", nullable = false, unique = true, length = 32)
   @JsonProperty
   @JsonView(PageList.class)
   @Getter
   @NonNull
   private String hash;
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final BlockedPageHash that = (BlockedPageHash) o;
+    return hash.equals(that.hash);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(hash);
+  }
 }

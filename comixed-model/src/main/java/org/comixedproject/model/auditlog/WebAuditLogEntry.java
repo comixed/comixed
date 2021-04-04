@@ -32,7 +32,7 @@ import org.comixedproject.views.View;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "rest_audit_log")
+@Table(name = "WebAuditLogEntries")
 public class WebAuditLogEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,65 +40,65 @@ public class WebAuditLogEntry {
   @JsonView(View.AuditLogEntryList.class)
   private Long id;
 
-  @Column(name = "remote_ip", nullable = false, updatable = false)
+  @Column(name = "RemoteIp", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private String remoteIp;
 
-  @Column(name = "url", nullable = false, updatable = false)
+  @Column(name = "URL", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private String url;
 
-  @Column(name = "method", nullable = false, updatable = false)
+  @Column(name = "Method", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private String method;
 
-  @Column(name = "request_content", nullable = true, updatable = false)
+  @Column(name = "RequestContent", nullable = true, updatable = false)
   @Lob
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private String requestContent;
 
-  @Column(name = "response_content", nullable = true, updatable = false)
+  @Column(name = "ResponseContent", nullable = true, updatable = false)
   @Lob
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private String responseContent;
 
-  @Column(name = "email", nullable = true, updatable = false)
+  @Column(name = "Email", nullable = true, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private String email;
 
-  @Column(name = "start_time", nullable = false, updatable = false)
+  @Column(name = "StartTime", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date startTime = new Date();
 
-  @Column(name = "end_time", nullable = false, updatable = false)
+  @Column(name = "EndTime", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date endTime = new Date();
 
-  @Column(name = "successful", nullable = false, updatable = false)
+  @Column(name = "Successful", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   private Boolean successful;
 
-  @Column(name = "exception", nullable = true, updatable = false)
+  @Column(name = "Exception", nullable = true, updatable = false)
   @Lob
   @Getter
   @Setter

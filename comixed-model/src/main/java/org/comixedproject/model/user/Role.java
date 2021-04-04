@@ -26,6 +26,8 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View.UserList;
 
 /**
@@ -34,8 +36,9 @@ import org.comixedproject.views.View.UserList;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "roles")
+@Table(name = "Roles")
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,19 +46,16 @@ public class Role {
   @Getter
   private Long id;
 
-  @Column(name = "name", updatable = true, nullable = false, unique = true)
+  @Column(name = "Name", updatable = true, nullable = false, unique = true)
   @JsonView(UserList.class)
   @Getter
+  @NonNull
   private String name;
 
   @ManyToMany(mappedBy = "roles")
   @JsonIgnore
   @Getter
   private List<ComiXedUser> users = new ArrayList<>();
-
-  public Role(final String name) {
-    this.name = name;
-  }
 
   @Override
   public boolean equals(final Object o) {

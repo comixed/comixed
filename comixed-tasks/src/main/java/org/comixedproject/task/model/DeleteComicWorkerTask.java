@@ -84,7 +84,6 @@ public class DeleteComicWorkerTask extends AbstractWorkerTask implements WorkerT
     } else {
       log.debug("Marking comic for deletion: id={}", this.comic.getId());
       comic.setDateDeleted(new Date());
-      comic.setDateLastUpdated(new Date());
       this.comicService.save(this.comic);
     }
   }

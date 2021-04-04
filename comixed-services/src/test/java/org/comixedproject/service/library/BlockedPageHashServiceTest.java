@@ -46,7 +46,6 @@ public class BlockedPageHashServiceTest {
     Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(blockedPageHashRepository.save(blockedPageHashArgumentCaptor.capture()))
         .thenReturn(blockedPageHashRecord);
-    Mockito.doNothing().when(comicService).updateComicsWithPageHash(Mockito.anyString());
 
     service.addHash(TEST_HASH);
 
@@ -56,7 +55,6 @@ public class BlockedPageHashServiceTest {
     Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(TEST_HASH);
     Mockito.verify(blockedPageHashRepository, Mockito.times(1))
         .save(blockedPageHashArgumentCaptor.getValue());
-    Mockito.verify(comicService, Mockito.times(1)).updateComicsWithPageHash(TEST_HASH);
   }
 
   @Test
@@ -68,7 +66,6 @@ public class BlockedPageHashServiceTest {
 
     Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(TEST_HASH);
     Mockito.verify(blockedPageHashRepository, Mockito.never()).save(Mockito.any());
-    Mockito.verify(comicService, Mockito.never()).updateComicsWithPageHash(Mockito.anyString());
   }
 
   @Test
@@ -79,7 +76,6 @@ public class BlockedPageHashServiceTest {
 
     Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(TEST_HASH);
     Mockito.verify(blockedPageHashRepository, Mockito.never()).delete(Mockito.any());
-    Mockito.verify(comicService, Mockito.never()).updateComicsWithPageHash(Mockito.anyString());
   }
 
   @Test
@@ -87,13 +83,11 @@ public class BlockedPageHashServiceTest {
     Mockito.when(blockedPageHashRepository.findByHash(Mockito.anyString()))
         .thenReturn(blockedPageHashRecord);
     Mockito.doNothing().when(blockedPageHashRepository).delete(Mockito.any());
-    Mockito.doNothing().when(comicService).updateComicsWithPageHash(Mockito.anyString());
 
     service.deleteHash(TEST_HASH);
 
     Mockito.verify(blockedPageHashRepository, Mockito.times(1)).findByHash(TEST_HASH);
     Mockito.verify(blockedPageHashRepository, Mockito.times(1)).delete(blockedPageHashRecord);
-    Mockito.verify(comicService, Mockito.times(1)).updateComicsWithPageHash(TEST_HASH);
   }
 
   @Test

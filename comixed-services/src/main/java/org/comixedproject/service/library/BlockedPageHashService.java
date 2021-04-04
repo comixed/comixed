@@ -54,8 +54,6 @@ public class BlockedPageHashService {
 
     log.debug("Deleting record for hash: {}", hash);
     this.blockedPageHashRepository.delete(record);
-    log.debug("Updating affected comics");
-    this.comicService.updateComicsWithPageHash(hash);
   }
 
   /**
@@ -72,8 +70,6 @@ public class BlockedPageHashService {
     }
     log.debug("Blocking hash: {}", hash);
     this.blockedPageHashRepository.save(new BlockedPageHash(hash));
-    log.debug("Updating affected comics");
-    this.comicService.updateComicsWithPageHash(hash);
   }
 
   /**

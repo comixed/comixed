@@ -95,7 +95,7 @@ public class ScrapingCacheService {
     }
 
     final long expireThreshold = System.currentTimeMillis() - SEVEN_DAYS;
-    if (cacheEntry.getFetched().getTime() <= expireThreshold) {
+    if (cacheEntry.getCreatedOn().getTime() <= expireThreshold) {
       log.debug("Entry is expired");
       this.scrapingCacheRepository.delete(cacheEntry);
       return null;

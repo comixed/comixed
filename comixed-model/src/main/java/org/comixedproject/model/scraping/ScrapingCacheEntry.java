@@ -28,7 +28,7 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "scraping_cache_entries")
+@Table(name = "ScrapingCacheEntries")
 public class ScrapingCacheEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +36,18 @@ public class ScrapingCacheEntry {
   private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "ScrapingCacheId", updatable = false, nullable = false)
   @Getter
   @Setter
   private ScrapingCache scrapingCache;
 
-  @Column(name = "entry_number", updatable = false, nullable = false)
+  @Column(name = "EntryNumber", updatable = false, nullable = false)
   @Getter
   @Setter
   private Integer entryNumber;
 
-  @Column(name = "entry_value", updatable = false, nullable = false)
+  @Column(name = "EntryValue", updatable = false, nullable = false)
+  @Lob
   @Getter
   @Setter
   private String entryValue;

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -122,7 +121,6 @@ public class ProcessComicWorkerTask extends AbstractWorkerTask {
     comic.setFileDetails(fileDetails);
 
     log.debug("Updating comic");
-    comic.setDateLastUpdated(new Date());
     final Comic result = this.comicService.save(comic);
 
     log.debug("Publishing comic update");
