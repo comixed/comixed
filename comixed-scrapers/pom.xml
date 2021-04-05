@@ -6,18 +6,18 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.8.0-1.2</version>
+    <version>0.8.0-1.3</version>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-scrapers</artifactId>
-  <version>0.8.0-1.2</version>
+  <version>0.8.0-1.3</version>
   <name>comixed-scrapers</name>
   <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>
-      <version>0.8.0-1.2</version>
+      <version>0.8.0-1.3</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
