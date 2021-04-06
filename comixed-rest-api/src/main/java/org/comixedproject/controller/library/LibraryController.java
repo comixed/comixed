@@ -191,6 +191,7 @@ public class LibraryController {
       lastPayload = false;
     }
 
-    return new LoadLibraryResponse(comics, comics.get(comics.size() - 1).getId(), lastPayload);
+    return new LoadLibraryResponse(
+        comics, comics.isEmpty() ? 0 : comics.get(comics.size() - 1).getId(), lastPayload);
   }
 }
