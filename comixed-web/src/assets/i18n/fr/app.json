@@ -72,6 +72,9 @@
       "3": "Debug (A Lot)",
       "4": "Informational"
     },
+    "tooltip": {
+      "toggle-sidenav": "Shows/Hides the side navigation panel..."
+    },
     "options-menu": {
       "root": "Options",
       "show-options-panel": "Paramétrer les options utilisateur..."
