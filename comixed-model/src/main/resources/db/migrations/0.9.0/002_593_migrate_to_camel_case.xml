@@ -6,6 +6,56 @@
   <changeSet id="002_593_migrate_to_camel_case.xml"
              author="mcpierce">
 
+    <!-- drop all foreign key constraints -->
+    <dropForeignKeyConstraint baseTableName="comic_characters"
+                              constraintName="comic_characters_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comic_credits"
+                              constraintName="comic_credits_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comic_file_details"
+                              constraintName="comic_file_details_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comic_file_entries"
+                              constraintName="comic_file_entries_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comic_locations"
+                              constraintName="comic_locations_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comic_story_arcs"
+                              constraintName="comic_story_arcs_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comic_teams"
+                              constraintName="comic_teams_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="comics"
+                              constraintName="comics_comic_format_fk"/>
+    <dropForeignKeyConstraint baseTableName="comics"
+                              constraintName="comics_scan_type_fk"/>
+    <dropForeignKeyConstraint baseTableName="matchers"
+                              constraintName="matchers_smart_reading_lits_fk"/>
+    <dropForeignKeyConstraint baseTableName="matchers"
+                              constraintName="matchers_matcher_fk"/>
+    <dropForeignKeyConstraint baseTableName="pages"
+                              constraintName="pages_comic_id"/>
+    <dropForeignKeyConstraint baseTableName="pages"
+                              constraintName="pages_page_type_fk"/>
+    <dropForeignKeyConstraint baseTableName="reading_list_entries"
+                              constraintName="reading_list_entries_reading_list_fk"/>
+    <dropForeignKeyConstraint baseTableName="reading_lists"
+                              constraintName="reading_lists_owner_fk"/>
+    <dropForeignKeyConstraint baseTableName="smart_reading_lists"
+                              constraintName="smart_reading_lists_owner_fk"/>
+    <dropForeignKeyConstraint baseTableName="tasks"
+                              constraintName="task_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="task_properties"
+                              constraintName="task_property_task_fk"/>
+    <dropForeignKeyConstraint baseTableName="user_last_read_dates"
+                              constraintName="user_last_read_dates_comic_fk"/>
+    <dropForeignKeyConstraint baseTableName="user_last_read_dates"
+                              constraintName="user_last_read_dates_user_fk"/>
+    <dropForeignKeyConstraint baseTableName="user_preferences"
+                              constraintName="user_preferences_user_fk"/>
+    <dropForeignKeyConstraint baseTableName="users_roles"
+                              constraintName="users_roles_user_fk"/>
+    <dropForeignKeyConstraint baseTableName="users_roles"
+                              constraintName="users_roles_role_fk"/>
+
+    <!-- table renames and creations, plus columns and data migrations -->
+
     <renameTable oldTableName="blocked_page_hashes"
                  newTableName="BlockedPageHashes"/>
     <renameColumn tableName="BlockedPageHashes"
@@ -53,12 +103,6 @@
     <addUniqueConstraint tableName="Bookmarks"
                          columnNames="UserId,ComicId"
                          constraintName="BookmarksUniqueUserAndComicIdx"/>
-
-    <addForeignKeyConstraint baseTableName="Bookmarks"
-                             baseColumnNames="UserId"
-                             constraintName="BookmarksUserFk"
-                             referencedTableName="Users"
-                             referencedColumnNames="Id"/>
 
     <renameTable oldTableName="comic_characters"
                  newTableName="Characters"/>
@@ -227,11 +271,11 @@
     <renameColumn tableName="Comics"
                   oldColumnName="deleted_date"
                   newColumnName="DeletedOn"
-                  columnDataType="timestamp"/>
+                  columnDataType="datetime"/>
     <renameColumn tableName="Comics"
                   oldColumnName="last_updated_date"
                   newColumnName="LastUpdatedOn"
-                  columnDataType="timestamp"/>
+                  columnDataType="datetime"/>
     <renameColumn tableName="Comics"
                   oldColumnName="comic_vine_id"
                   newColumnName="ComicVineId"
@@ -247,7 +291,7 @@
     <renameColumn tableName="Comics"
                   oldColumnName="title"
                   newColumnName="Title"
-                  columnDataType="varhcar(128)"/>
+                  columnDataType="varchar(128)"/>
     <renameColumn tableName="Comics"
                   oldColumnName="description"
                   newColumnName="Description"
@@ -274,7 +318,7 @@
                   oldColumnName="mode"
                   newColumnName="MatcherMode"
                   columnDataType="varchar(255)"/>
-    <renameColumn tableName="smartListMatchers"
+    <renameColumn tableName="SmartListMatchers"
                   oldColumnName="operator"
                   newColumnName="MatcherOperator"
                   columnDataType="varchar(255)"/>
@@ -282,7 +326,7 @@
                   oldColumnName="value"
                   newColumnName="MatcherValue"
                   columnDataType="varchar(255)"/>
-    <renameColumn tableName="smartListMatchers"
+    <renameColumn tableName="SmartListMatchers"
                   oldColumnName="smart_list_id"
                   newColumnName="SmartListId"
                   columnDataType="bigint"/>
@@ -369,7 +413,7 @@
     <renameColumn tableName="ReadingLists"
                   oldColumnName="summary"
                   newColumnName="Summary"
-                  columnDataType="varchar(256)}"/>
+                  columnDataType="varchar(256)"/>
     <renameColumn tableName="ReadingLists"
                   oldColumnName="owner_id"
                   newColumnName="OwnerId"
@@ -388,11 +432,11 @@
     <renameColumn tableName="WebAuditLogEntries"
                   oldColumnName="remote_ip"
                   newColumnName="RemoteIp"
-                  columnDataType="bigint"/>
+                  columnDataType="varchar(15)"/>
     <renameColumn tableName="WebAuditLogEntries"
                   oldColumnName="url"
                   newColumnName="URL"
-                  columnDataType="varchar(15)"/>
+                  columnDataType="varchar(256)"/>
     <renameColumn tableName="WebAuditLogEntries"
                   oldColumnName="method"
                   newColumnName="Method"
@@ -411,11 +455,7 @@
                   columnDataType="varchar(256)"/>
     <renameColumn tableName="WebAuditLogEntries"
                   oldColumnName="start_time"
-                  newColumnName="StartTime"
-                  columnDataType="timestamp"/>
-    <renameColumn tableName="WebAuditLogEntries"
-                  oldColumnName="end_time"
-                  newColumnName="EndTime"
+                  newColumnName="StartedAt"
                   columnDataType="timestamp"/>
     <renameColumn tableName="WebAuditLogEntries"
                   oldColumnName="successful"
@@ -425,6 +465,21 @@
                   oldColumnName="exception"
                   newColumnName="Exception"
                   columnDataType="clob"/>
+
+    <addColumn tableName="WebAuditLogEntries">
+      <column name="EndedAt"
+              type="datetime"
+              defaultValue="null"></column>
+    </addColumn>
+
+    <sql>UPDATE WebAuditLogEntries SET EndedAt=end_time</sql>
+
+    <dropColumn tableName="WebAuditLogEntries"
+                columnName="end_time"/>
+
+    <addNotNullConstraint tableName="WebAuditLogEntries"
+                          columnName="EndedAt"
+                          columnDataType="datetime"/>
 
     <renameTable oldTableName="roles"
                  newTableName="old_roles"/>
@@ -506,12 +561,6 @@
                       columnDataType="bigint"
                       startWith="1"/>
 
-    <addForeignKeyConstraint baseTableName="ScrapingCacheEntries"
-                             baseColumnNames="ScrapingCacheId"
-                             constraintName="ScrapingCacheEntriesScrapingCacheFk"
-                             referencedTableName="ScrapingCache"
-                             referencedColumnNames="Id"/>
-
     <addUniqueConstraint tableName="ScrapingCacheEntries"
                          columnNames="ScrapingCacheId,EntryNumber"
                          constraintName="ScrapingCacheEntriesUniqueScrapingCacheAndEntryIdx"/>
@@ -565,11 +614,7 @@
                   columnDataType="bigint"/>
     <renameColumn tableName="TaskAuditLog"
                   oldColumnName="start_time"
-                  newColumnName="StartTime"
-                  columnDataType="timestamp"/>
-    <renameColumn tableName="TaskAuditLog"
-                  oldColumnName="end_time"
-                  newColumnName="EndTime"
+                  newColumnName="StartedAt"
                   columnDataType="timestamp"/>
     <renameColumn tableName="TaskAuditLog"
                   oldColumnName="successful"
@@ -583,6 +628,21 @@
                   oldColumnName="exception"
                   newColumnName="Exception"
                   columnDataType="clob"/>
+
+    <addColumn tableName="TaskAuditLog">
+      <column name="EndedAt"
+              type="datetime"
+              defaultValue="null"></column>
+    </addColumn>
+
+    <sql>UPDATE TaskAuditLog SET EndedAt=end_time</sql>
+
+    <dropColumn tableName="TaskAuditLog"
+                columnName="end_time"/>
+
+    <addNotNullConstraint tableName="TaskAuditLog"
+                          columnName="EndedAt"
+                          columnDataType="datetime"/>
 
     <renameTable oldTableName="tasks"
                  newTableName="old_tasks"/>
@@ -647,7 +707,7 @@
     <renameColumn tableName="Users"
                   oldColumnName="last_login_date"
                   newColumnName="LastLoggedOn"
-                  columnDataType="timestamp"/>
+                  columnDataType="datetime"/>
 
     <renameTable oldTableName="user_last_read_dates"
                  newTableName="LastReadDates"/>
@@ -667,14 +727,31 @@
                   oldColumnName="last_read"
                   newColumnName="LastReadOn"
                   columnDataType="timestamp"/>
-    <renameColumn tableName="LastReadDates"
-                  oldColumnName="created_on"
-                  newColumnName="FirstReadOn"
-                  columnDataType="timestamp"/>
-    <renameColumn tableName="LastReadDates"
-                  oldColumnName="last_updated"
-                  newColumnName="LastUpdated"
-                  columnDataType="timestamp"/>
+
+    <addColumn tableName="LastReadDates">
+      <column name="CreatedOn"
+              type="datetime"></column>
+    </addColumn>
+
+    <sql>UPDATE LastReadDates SET CreatedOn=created_on</sql>
+
+    <addNotNullConstraint tableName="LastReadDates"
+                          columnName="CreatedOn"
+                          columnDataType="datetime"/>
+
+    <addColumn tableName="LastReadDates">
+      <column name="LastUpdated"
+              type="datetime"></column>
+    </addColumn>
+
+    <sql>UPDATE LastReadDates SET LastUpdated=last_updated</sql>
+
+    <addNotNullConstraint tableName="LastReadDates"
+                          columnName="LastUpdated"
+                          columnDataType="datetime"/>
+
+    <dropColumn tableName="LastReadDates"
+                columnName="last_updated"/>
 
     <renameTable oldTableName="user_preferences"
                  newTableName="UserPreferences"/>
@@ -706,78 +783,6 @@
                   newColumnName="RoleId"
                   columnDataType="bigint"/>
 
-    <dropForeignKeyConstraint baseTableName="Comics"
-                              constraintName="comics_scan_type_fk"/>
-    <addForeignKeyConstraint baseTableName="Comics"
-                             baseColumnNames="ScanTypeId"
-                             constraintName="ComicScanTypeFk"
-                             referencedTableName="ScanTypes"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Characters"
-                              constraintName="comic_characters_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="Characters"
-                             baseColumnNames="ComicId"
-                             constraintName="CharactersComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Teams"
-                              constraintName="comic_teams_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="Teams"
-                             baseColumnNames="ComicId"
-                             constraintName="TeamsComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Locations"
-                              constraintName="comic_locations_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="Locations"
-                             baseColumnNames="ComicId"
-                             constraintName="LocationsComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Stories"
-                              constraintName="comic_story_arcs_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="Stories"
-                             baseColumnNames="ComicId"
-                             constraintName="StoriesComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Comics"
-                              constraintName="comics_comic_format_fk"/>
-    <addForeignKeyConstraint baseTableName="Comics"
-                             baseColumnNames="FormatId"
-                             constraintName="ComicsComicFormatFk"
-                             referencedTableName="ComicFormats"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="ComicFileDetails"
-                              constraintName="comic_file_details_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="ComicFileDetails"
-                             baseColumnNames="ComicId"
-                             constraintName="ComicFileDetailsComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Credits"
-                              constraintName="comic_credits_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="Credits"
-                             baseColumnNames="ComicId"
-                             constraintName="CreditComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="ComicFileEntries"
-                              constraintName="comic_file_entries_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="ComicFileEntries"
-                             baseColumnNames="ComicId"
-                             constraintName="ComicFileEntriesComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
     <dropIndex tableName="ComicFileDetails"
                indexName="idx_comic_file_details_file_hash"/>
     <createIndex tableName="ComicFileDetails"
@@ -785,67 +790,15 @@
       <column name="FileHash"/>
     </createIndex>
 
-    <dropForeignKeyConstraint baseTableName="SmartReadingLists"
-                              constraintName="smart_reading_lists_owner_fk"/>
-    <addForeignKeyConstraint baseTableName="SmartReadingLists"
-                             baseColumnNames="OwnerId"
-                             constraintName="SmartReadingListsOwnerFk"
-                             referencedTableName="Users"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="SmartListMatchers"
-                              constraintName="matchers_smart_reading_lits_fk"/>
-    <addForeignKeyConstraint baseTableName="SmartListMatchers"
-                             baseColumnNames="SmartListId"
-                             constraintName="SmartListMatchersSmartListFk"
-                             referencedTableName="SmartReadingLists"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="SmartListMatchers"
-                              constraintName="matchers_matcher_fk"/>
-    <addForeignKeyConstraint baseTableName="SmartListMatchers"
-                             baseColumnNames="NextMatcherId"
-                             constraintName="SmartListMatchersNextMatcherFk"
-                             referencedTableName="SmartListMatchers"
-                             referencedColumnNames="Id"/>
-
-
-    <dropForeignKeyConstraint baseTableName="Pages"
-                              constraintName="pages_comic_id"/>
-    <addForeignKeyConstraint baseTableName="Pages"
-                             baseColumnNames="ComicId"
-                             constraintName="PagesComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="Pages"
-                              constraintName="pages_page_type_fk"/>
-    <addForeignKeyConstraint baseTableName="Pages"
-                             baseColumnNames="TypeId"
-                             constraintName="PagesPageTypeFk"
-                             referencedTableName="PageTypes"
-                             referencedColumnNames="Id"/>
-
     <dropIndex tableName="TaskAuditLog"
                indexName="task_audit_log_start_time_idx"/>
     <createIndex tableName="TaskAuditLog"
-                 indexName="TaskAuditLogStartTimeIdx">
-      <column name="StartTime"/>
+                 indexName="TaskAuditLogStartedAtIdx">
+      <column name="StartedAt"/>
     </createIndex>
 
     <dropIndex tableName="TaskAuditLog"
                indexName="task_audit_log_successful_idx"/>
-
-    <dropForeignKeyConstraint baseTableName="Tasks"
-                              constraintName="task_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="Tasks"
-                             baseColumnNames="ComicId"
-                             constraintName="TasksComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="TaskProperties"
-                              constraintName="task_property_task_fk"/>
 
     <dropIndex tableName="TaskProperties"
                indexName="task_property_task_idx"/>
@@ -855,39 +808,9 @@
       <column name="TaskId"/>
     </createIndex>
 
-    <addForeignKeyConstraint baseTableName="TaskProperties"
-                             baseColumnNames="TaskId"
-                             constraintName="TaskPropertiesTaskFk"
-                             referencedTableName="Tasks"
-                             referencedColumnNames="Id"/>
-
     <addUniqueConstraint tableName="Users"
                          columnNames="Email"
                          constraintName="UsersUniqueEmailIdx"/>
-
-    <dropForeignKeyConstraint baseTableName="LastReadDates"
-                              constraintName="user_last_read_dates_comic_fk"/>
-    <addForeignKeyConstraint baseTableName="LastReadDates"
-                             baseColumnNames="ComicId"
-                             constraintName="LastReadDatesComicFk"
-                             referencedTableName="Comics"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="LastReadDates"
-                              constraintName="user_last_read_dates_user_fk"/>
-    <addForeignKeyConstraint baseTableName="LastReadDates"
-                             baseColumnNames="UserId"
-                             constraintName="LastReadDatesUserFk"
-                             referencedTableName="Users"
-                             referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="UserPreferences"
-                              constraintName="user_preferences_user_fk"/>
-    <addForeignKeyConstraint baseTableName="UserPreferences"
-                             baseColumnNames="UserId"
-                             constraintName="UserPreferencesUserFk"
-                             referencedTableName="Users"
-                             referencedColumnNames="Id"/>
 
     <addUniqueConstraint tableName="UserPreferences"
                          columnNames="UserId,Name"
@@ -897,32 +820,148 @@
                          columnNames="Name"
                          constraintName="RolesUniqueNameIdx"/>
 
-    <dropForeignKeyConstraint baseTableName="UsersRoles"
-                              constraintName="users_roles_user_fk"/>
+    <dropIndex tableName="WebAuditLogEntries"
+               indexName="rest_audit_log_start_time_idx"/>
+    <createIndex tableName="WebAuditLogEntries"
+                 indexName="WebAuditLogEntryStartedAtIdx">
+      <column name="StartedAt"/>
+    </createIndex>
 
+    <dropIndex tableName="WebAuditLogEntries"
+               indexName="rest_audit_log_successful_idx"/>
+
+    <!-- add foreign key constraints -->
+
+    <addForeignKeyConstraint baseTableName="Bookmarks"
+                             baseColumnNames="UserId"
+                             constraintName="BookmarksUserFk"
+                             referencedTableName="Users"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Characters"
+                             baseColumnNames="ComicId"
+                             constraintName="CharactersComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="ComicFileDetails"
+                             baseColumnNames="ComicId"
+                             constraintName="ComicFileDetailsComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="ComicFileEntries"
+                             baseColumnNames="ComicId"
+                             constraintName="ComicFileEntriesComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Comics"
+                             baseColumnNames="ScanTypeId"
+                             constraintName="ComicScanTypeFk"
+                             referencedTableName="ScanTypes"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Comics"
+                             baseColumnNames="FormatId"
+                             constraintName="ComicsComicFormatFk"
+                             referencedTableName="ComicFormats"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Credits"
+                             baseColumnNames="ComicId"
+                             constraintName="CreditComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="LastReadDates"
+                             baseColumnNames="ComicId"
+                             constraintName="LastReadDatesComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="LastReadDates"
+                             baseColumnNames="UserId"
+                             constraintName="LastReadDatesUserFk"
+                             referencedTableName="Users"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Locations"
+                             baseColumnNames="ComicId"
+                             constraintName="LocationsComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Pages"
+                             baseColumnNames="ComicId"
+                             constraintName="PagesComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Pages"
+                             baseColumnNames="TypeId"
+                             constraintName="PagesPageTypeFk"
+                             referencedTableName="PageTypes"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="ReadingListEntries"
+                             baseColumnNames="ReadingListId"
+                             constraintName="ReadingListEntriesReadingListFk"
+                             referencedTableName="ReadingLists"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="ReadingListEntries"
+                             baseColumnNames="ComicId"
+                             constraintName="ReadingListEntriesComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="ReadingLists"
+                             baseColumnNames="OwnerId"
+                             constraintName="ReadingListsOwnerFk"
+                             referencedTableName="Users"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="SmartListMatchers"
+                             baseColumnNames="SmartListId"
+                             constraintName="SmartListMatchersSmartListFk"
+                             referencedTableName="SmartReadingLists"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="SmartListMatchers"
+                             baseColumnNames="NextMatcherId"
+                             constraintName="SmartListMatchersNextMatcherFk"
+                             referencedTableName="SmartListMatchers"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="SmartReadingLists"
+                             baseColumnNames="OwnerId"
+                             constraintName="SmartReadingListsOwnerFk"
+                             referencedTableName="Users"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Stories"
+                             baseColumnNames="ComicId"
+                             constraintName="StoriesComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Tasks"
+                             baseColumnNames="ComicId"
+                             constraintName="TasksComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="TaskProperties"
+                             baseColumnNames="TaskId"
+                             constraintName="TaskPropertiesTaskFk"
+                             referencedTableName="Tasks"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="Teams"
+                             baseColumnNames="ComicId"
+                             constraintName="TeamsComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
     <addForeignKeyConstraint baseTableName="UsersRoles"
                              baseColumnNames="UserId"
                              constraintName="UsersRolesUserFk"
                              referencedTableName="Users"
                              referencedColumnNames="Id"/>
-
-    <dropForeignKeyConstraint baseTableName="UsersRoles"
-                              constraintName="users_roles_role_fk"/>
-
     <addForeignKeyConstraint baseTableName="UsersRoles"
                              baseColumnNames="RoleId"
                              constraintName="UsersRolesRoleFk"
                              referencedTableName="Roles"
                              referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="ScrapingCacheEntries"
+                             baseColumnNames="ScrapingCacheId"
+                             constraintName="ScrapingCacheEntriesScrapingCacheFk"
+                             referencedTableName="ScrapingCache"
+                             referencedColumnNames="Id"/>
+    <addForeignKeyConstraint baseTableName="UserPreferences"
+                             baseColumnNames="UserId"
+                             constraintName="UserPreferencesUserFk"
+                             referencedTableName="Users"
+                             referencedColumnNames="Id"/>
 
-    <dropIndex tableName="WebAuditLogEntries"
-               indexName="rest_audit_log_start_time_idx"/>
-    <createIndex tableName="WebAuditLogEntries"
-                 indexName="WebAuditLogEntryStartTimeIdx">
-      <column name="StartTime"/>
-    </createIndex>
-
-    <dropIndex tableName="WebAuditLogEntries"
-               indexName="rest_audit_log_successful_idx"/>
   </changeSet>
 </databaseChangeLog>

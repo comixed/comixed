@@ -78,14 +78,14 @@ public class WebAuditLogEntry {
   @JsonView(View.AuditLogEntryList.class)
   private String email;
 
-  @Column(name = "StartTime", nullable = false, updatable = false)
+  @Column(name = "StartedAt", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date startTime = new Date();
 
-  @Column(name = "EndTime", nullable = false, updatable = false)
+  @Column(name = "EndedAt", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonView(View.AuditLogEntryList.class)

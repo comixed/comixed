@@ -68,7 +68,7 @@ public class LastReadDate {
   @Setter
   private Date lastRead = new Date();
 
-  @Column(name = "FirstReadOn", updatable = false, nullable = false)
+  @Column(name = "CreatedOn", updatable = false, nullable = false)
   @CreatedDate
   @JsonProperty("createdOn")
   @JsonView({View.UserDetailsView.class, View.ComicDetailsView.class})
