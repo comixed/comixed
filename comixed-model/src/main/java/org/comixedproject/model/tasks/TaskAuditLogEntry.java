@@ -42,7 +42,7 @@ public class TaskAuditLogEntry {
   @Setter
   private Long id;
 
-  @Column(name = "StartTime", nullable = false, updatable = false)
+  @Column(name = "StartedAt", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonProperty("startTime")
@@ -50,7 +50,7 @@ public class TaskAuditLogEntry {
   @JsonView(View.AuditLogEntryList.class)
   private Date startTime = new Date();
 
-  @Column(name = "EndTime", nullable = false, updatable = false)
+  @Column(name = "EndedAt", nullable = false, updatable = false)
   @Getter
   @Setter
   @JsonProperty("endTime")
