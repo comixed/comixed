@@ -21,7 +21,7 @@ import { Comic, Page } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { setPageBlock } from '@app/library/actions/blocked-page.actions';
+import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
 
 @Component({
   selector: 'cx-comic-pages',
@@ -52,6 +52,6 @@ export class ComicPagesComponent implements OnInit {
 
   onSetPageBlocked(page: Page, blocked: boolean): void {
     this.logger.debug('Updating page blocked state:', page, blocked);
-    this.store.dispatch(setPageBlock({ page, blocked }));
+    this.store.dispatch(setBlockedState({ page, blocked }));
   }
 }

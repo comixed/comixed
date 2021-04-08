@@ -16,15 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.library;
+package org.comixedproject.repositories.blockedpage;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixedproject.model.library.BlockedPageHash;
+import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,43 +46,39 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class BlockedPageHashRepositoryTest {
-  private static final String BLOCKED_PAGE_HASH_1 = "0123456789ABCDEF0123456789ABCDEF";
-  private static final String BLOCKED_PAGE_HASH_2 = "ABCDEF0123456789ABCDEF0123456789";
-  private static final String BLOCKED_PAGE_HASH_3 = "9876543210FEDCBA9876543210FEDCBA";
+public class BlockedPageRepositoryTest {
+  private static final String TEST_HASH_IN_DATABASE = "0123456789ABCDEF0123456789ABCDEF";
+  private static final String TEST_HASH_NOT_IN_DATABASE =
+      new StringBuilder(TEST_HASH_IN_DATABASE).reverse().toString();
 
-  @Autowired private BlockedPageHashRepository repository;
+  @Autowired private BlockedPageRepository repository;
 
   @Test
-  public void testAddBlockedHash() {
-    BlockedPageHash hash = new BlockedPageHash(BLOCKED_PAGE_HASH_3);
-
-    repository.save(hash);
-
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH_3);
-
-    assertNotNull(result);
-    assertEquals(BLOCKED_PAGE_HASH_3, result.getHash());
+  public void testFindByHashNotFound() {
+    assertNull(repository.findByHash(TEST_HASH_NOT_IN_DATABASE));
   }
 
   @Test
-  public void testRemoveBlockedHash() {
-    BlockedPageHash result = repository.findByHash(BLOCKED_PAGE_HASH_1);
+  public void tetFindByHash() {
+    final BlockedPage result = repository.findByHash(TEST_HASH_IN_DATABASE);
 
     assertNotNull(result);
-
-    repository.delete(result);
-
-    result = repository.findByHash(BLOCKED_PAGE_HASH_1);
-
-    assertNull(result);
+    assertEquals(TEST_HASH_IN_DATABASE, result.getHash());
   }
 
   @Test
-  public void testGetAllHashes() {
-    List<String> result = repository.getAllHashes();
+  public void testGetAll() {
+    final List<BlockedPage> result = repository.getAll();
 
-    assertTrue(result.contains(BLOCKED_PAGE_HASH_1));
-    assertTrue(result.contains(BLOCKED_PAGE_HASH_2));
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetHashes() {
+    final List<String> result = repository.getHashes();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
   }
 }

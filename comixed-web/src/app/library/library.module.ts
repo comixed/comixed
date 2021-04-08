@@ -90,11 +90,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
-import {
-  BLOCKED_PAGE_FEATURE_KEY,
-  reducer as blockedPageReducer
-} from '@app/library/reducers/blocked-page.reducer';
-import { BlockedPageEffects } from '@app/library/effects/blocked-page.effects';
 import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
 import { ComicDetailCardComponent } from '@app/library/components/comic-detail-card/comic-detail-card.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -161,7 +156,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
-    StoreModule.forFeature(BLOCKED_PAGE_FEATURE_KEY, blockedPageReducer),
     StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
     StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
@@ -171,7 +165,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
       ComicImportEffects,
       LibraryEffects,
       ScrapingEffects,
-      BlockedPageEffects,
       ScanTypeEffects,
       ComicFormatEffects,
       ComicListEffects,

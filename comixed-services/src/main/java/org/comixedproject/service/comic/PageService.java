@@ -245,4 +245,19 @@ public class PageService {
     log.debug("Saving page: filename={} index={}", page.getFilename(), page.getIndex());
     return this.pageRepository.save(page);
   }
+
+  /**
+   * Finds one page with the given hash
+   *
+   * @param hash the hash
+   * @return the page
+   */
+  public Page getOneForHash(final String hash) {
+    log.debug("Finding pages with hash: {}", hash);
+    final List<Page> pages = this.pageRepository.getPagesWithHash(hash);
+    if (pages.isEmpty()) {
+      log.debug("No pages found");
+    }
+    return pages.get(0);
+  }
 }

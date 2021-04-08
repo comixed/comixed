@@ -19,52 +19,49 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  pageBlockSet,
-  setPageBlock,
-  setPageBlockFailed
-} from '@app/library/actions/blocked-page.actions';
-import { PageService } from '@app/library/services/page.service';
+  blockedPageListLoaded,
+  loadBlockedPageList,
+  loadBlockedPageListFailed
+} from '@app/blocked-pages/actions/blocked-page-list.actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
 import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/logger';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { BlockedPage } from '@app/blocked-pages';
 import { of } from 'rxjs';
 
 @Injectable()
-export class BlockedPageEffects {
-  setBlockedState$ = createEffect(() => {
+export class BlockedPageListEffects {
+  loadAll$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setPageBlock),
+      ofType(loadBlockedPageList),
       tap(action =>
-        this.logger.debug('Effect: set blocked state for page:', action)
+        this.logger.debug('Effect: loading blocked page list:', action)
       ),
       switchMap(action =>
-        this.pageService
-          .setBlockedState({ page: action.page, blocked: action.blocked })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            map(() => pageBlockSet()),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'blocked-pages.set-blocked.effect-failure',
-                  {
-                    blocked: action.blocked,
-                    hash: action.page.hash
-                  }
-                )
-              );
-              return of(setPageBlockFailed());
-            })
-          )
+        this.blockedPageService.loadAll().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map((response: BlockedPage[]) =>
+            blockedPageListLoaded({ entries: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'blocked-page-list.load-effect-failure'
+              )
+            );
+            return of(loadBlockedPageListFailed());
+          })
+        )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(setPageBlockFailed());
+        return of(loadBlockedPageListFailed());
       })
     );
   });
@@ -72,7 +69,7 @@ export class BlockedPageEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private pageService: PageService,
+    private blockedPageService: BlockedPageService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

@@ -30,7 +30,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
-import { setPageBlock } from '@app/library/actions/blocked-page.actions';
+import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;
@@ -99,7 +99,7 @@ describe('ComicPagesComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setPageBlock({ page: PAGE, blocked: BLOCKED })
+        setBlockedState({ page: PAGE, blocked: BLOCKED })
       );
     });
   });

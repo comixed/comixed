@@ -17,17 +17,27 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Page } from '@app/library';
+import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
 
-export const setPageBlock = createAction(
-  '[Blocked Page] Sets the blocked state for a page',
-  props<{ page: Page; blocked: boolean }>()
+export const loadBlockedPageList = createAction(
+  '[Blocked Page List] Loads the blocked page list'
 );
 
-export const pageBlockSet = createAction(
-  '[Blocked Page] Blocked state for a page was set'
+export const blockedPageListLoaded = createAction(
+  '[Blocked Page List] Blocked page list loaded',
+  props<{ entries: BlockedPage[] }>()
 );
 
-export const setPageBlockFailed = createAction(
-  '[Blocked Page] Failed to set the blocked state for a page'
+export const loadBlockedPageListFailed = createAction(
+  '[Blocked Page List] Loading the blocked page list failed'
+);
+
+export const blockedPageListUpdated = createAction(
+  '[Blocked Page List] An updated entry was received',
+  props<{ entry: BlockedPage }>()
+);
+
+export const blockedPageListRemoval = createAction(
+  '[Blocked Page List] A blocked page was removed',
+  props<{ entry: BlockedPage }>()
 );

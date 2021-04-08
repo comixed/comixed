@@ -17,20 +17,12 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-
 import { PageService } from './page.service';
 import { PAGE_1 } from '@app/library/library.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { HttpResponse } from '@angular/common/http';
-import { interpolate } from '@app/core';
-import {
-  CLEAR_BLOCKED_PAGE_HASH_URL,
-  SET_BLOCKED_PAGE_HASH_URL
-} from '@app/library/library.constants';
-import { AddBlockedPageRequest } from '@app/library/models/net/add-blocked-page-request';
 import { LoggerModule } from '@angular-ru/logger';
 
 describe('PageService', () => {
@@ -50,40 +42,5 @@ describe('PageService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  it('can block a page', () => {
-    service
-      .setBlockedState({
-        page: PAGE,
-        blocked: true
-      })
-      .subscribe((response: HttpResponse<any>) =>
-        expect(response.status).toEqual(200)
-      );
-
-    const req = httpMock.expectOne(interpolate(SET_BLOCKED_PAGE_HASH_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      hash: PAGE.hash
-    } as AddBlockedPageRequest);
-    req.flush(new HttpResponse({ status: 200 }));
-  });
-
-  it('can unblock a page', () => {
-    service
-      .setBlockedState({
-        page: PAGE,
-        blocked: false
-      })
-      .subscribe((response: HttpResponse<any>) =>
-        expect(response.status).toEqual(200)
-      );
-
-    const req = httpMock.expectOne(
-      interpolate(CLEAR_BLOCKED_PAGE_HASH_URL, { hash: PAGE.hash })
-    );
-    expect(req.request.method).toEqual('DELETE');
-    req.flush(new HttpResponse({ status: 200 }));
   });
 });

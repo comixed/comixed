@@ -32,8 +32,6 @@ export const STORIES_GROUP = 'stories';
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
-export const SET_BLOCKED_PAGE_HASH_URL = `${API_ROOT_URL}/pages/blocked`;
-export const CLEAR_BLOCKED_PAGE_HASH_URL = `${API_ROOT_URL}/pages/blocked/\${hash}`;
 
 export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 

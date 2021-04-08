@@ -203,6 +203,10 @@ $cx-column-large: 325px;
 
 // buttons
 
+.cx-toolbar-button {
+  margin-right: 5px !important;
+}
+
 .cx-action-button {
   min-width: 100px !important;
   padding-bottom: 5px !important;

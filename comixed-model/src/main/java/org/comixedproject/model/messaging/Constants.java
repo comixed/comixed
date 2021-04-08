@@ -20,4 +20,10 @@ public interface Constants {
 
   /** Topic which receives comic updates in real time. */
   String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
+
+  /** Topic which receives blocked page updates in real time. */
+  String BLOCKED_PAGE_LIST_UPDATE_TOPIC = "/topic/blocked-page-list.update";
+
+  /** Topic which receives blocked page removals in real time. */
+  String BLOCKED_PAGE_LIST_REMOVAL_TOPIC = "/topic/blocked-page-list.removal";
 }

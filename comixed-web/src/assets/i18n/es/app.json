@@ -27,6 +27,7 @@
     "deselect": "Deselect",
     "deselect-all": "Deselect All",
     "download": "Download",
+    "edit": "Edit",
     "load": "Load",
     "login": "Login",
     "logout": "Logout",
@@ -90,6 +91,7 @@
     },
     "option": {
       "all-comics": "All comics",
+      "blocked-pages": "Blocked Pages",
       "build-details": "Build Details",
       "deleted-comics": "Deleted comics",
       "import-comics": "Import Comics",

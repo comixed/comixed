@@ -1,0 +1,24 @@
+@import '~styles';
+
+.mat-column-selected {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
+.mat-column-label {
+}
+
+.mat-column-hash {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+}
+
+.mat-column-comic-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-created-on {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+}
