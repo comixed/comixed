@@ -45,6 +45,9 @@
     <h3 *ngIf="isAdmin" matSubheader>
       {{ "navigation.heading.admin" | translate }}
     </h3>
+    <a *ngIf="isAdmin" mat-list-item routerLink="/admin/pages/blocked">
+      {{ "navigation.option.blocked-pages" | translate }}
+    </a>
     <a
       *ngIf="isAdmin"
       mat-list-item

@@ -16,27 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
-  pageBlockSet,
-  setPageBlock,
-  setPageBlockFailed
-} from '../actions/blocked-page.actions';
+  BLOCKED_PAGE_LIST_FEATURE_KEY,
+  BlockedPageListState
+} from '../reducers/blocked-page-list.reducer';
 
-export const BLOCKED_PAGE_FEATURE_KEY = 'blocked_page_state';
+/**
+ * Selects the blocked page list feature state.
+ */
+export const selectBlockedPageListState = createFeatureSelector<BlockedPageListState>(
+  BLOCKED_PAGE_LIST_FEATURE_KEY
+);
 
-export interface BlockedPageState {
-  saving: boolean;
-}
-
-export const initialState: BlockedPageState = {
-  saving: false
-};
-
-export const reducer = createReducer(
-  initialState,
-
-  on(setPageBlock, state => ({ ...state, saving: true })),
-  on(pageBlockSet, state => ({ ...state, saving: false })),
-  on(setPageBlockFailed, state => ({ ...state, saving: false }))
+/**
+ * Selects the list of blocked pages.
+ */
+export const selectBlockedPageList = createSelector(
+  selectBlockedPageListState,
+  state => state.entries
 );

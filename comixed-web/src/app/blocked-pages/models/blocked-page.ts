@@ -16,15 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import * as fromBlockedPage from '../reducers/blocked-page.reducer';
-import { selectBlockedPageState } from './blocked-page.selectors';
-
-describe('BlockedPage Selectors', () => {
-  it('should select the feature state', () => {
-    const result = selectBlockedPageState({
-      [fromBlockedPage.BLOCKED_PAGE_FEATURE_KEY]: {}
-    });
-
-    // expect(result).toEqual({});
-  });
-});
+export interface BlockedPage {
+  id: number;
+  label: string;
+  hash: string;
+  createdOn: number;
+  comicCount: number;
+}

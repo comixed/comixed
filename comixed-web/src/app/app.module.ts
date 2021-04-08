@@ -63,6 +63,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { MatListModule } from '@angular/material/list';
+import { BlockedPagesModule } from '@app/blocked-pages/blocked-pages.module';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { MatListModule } from '@angular/material/list';
     MessagingModule,
     UserModule,
     LibraryModule,
+    BlockedPagesModule,
     BrowserModule,
     AppRouting,
     BrowserAnimationsModule,

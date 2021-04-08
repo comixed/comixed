@@ -31,14 +31,11 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.model.net.SetDeletedStateRequest;
 import org.comixedproject.model.net.SetPageTypeRequest;
-import org.comixedproject.model.net.library.AddBlockedPageHashRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.comic.PageException;
 import org.comixedproject.service.comic.PageService;
-import org.comixedproject.service.library.BlockedPageHashService;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,20 +57,17 @@ public class PageControllerTest {
   private static final String TEST_PAGE_HASH = "12345";
   private static final String TEST_PAGE_CONTENT_TYPE = "application";
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
-  private static final Boolean TEST_DELETED = false;
   private static final String TEST_PAGE_TYPE_NAME = "Story";
   private static final String TEST_PAGE_FILENAME = "page01.jpg";
 
   @InjectMocks private PageController pageController;
   @Mock private PageService pageService;
-  @Mock private BlockedPageHashService blockedPageHashService;
   @Mock private PageCacheService pageCacheService;
   @Mock private Page page;
   @Mock private List<Page> pageList;
   @Mock private Comic comic;
   @Mock private List<PageType> pageTypes;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
-  @Mock private List<DuplicatePage> duplicatePageList;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private List<String> pageHashList;
@@ -103,35 +97,6 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1))
         .updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-  }
-
-  @Test
-  public void testAddBlockedPageHash() {
-    Mockito.doNothing().when(blockedPageHashService).addHash(Mockito.anyString());
-
-    pageController.addBlockedPageHash(new AddBlockedPageHashRequest(TEST_PAGE_HASH));
-
-    Mockito.verify(blockedPageHashService, Mockito.times(1)).addHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testDeleteBlockedPageHash() {
-    Mockito.doNothing().when(blockedPageHashService).deleteHash(Mockito.anyString());
-
-    pageController.deleteBlockedPageHash(TEST_PAGE_HASH);
-
-    Mockito.verify(blockedPageHashService, Mockito.times(1)).deleteHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testGetBlockedPageHashes() {
-    Mockito.when(blockedPageHashService.getAllHashes()).thenReturn(pageHashList);
-
-    List<String> result = pageController.getAllBlockedPageHashes();
-
-    assertSame(pageHashList, result);
-
-    Mockito.verify(blockedPageHashService, Mockito.times(1)).getAllHashes();
   }
 
   @Test
@@ -288,32 +253,5 @@ public class PageControllerTest {
     assertEquals(TEST_DELETED_PAGE_COUNT, result);
 
     Mockito.verify(pageService, Mockito.times(1)).deleteAllWithHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testUndeletePagesByHash() {
-    Mockito.when(pageService.undeleteAllWithHash(Mockito.anyString()))
-        .thenReturn(TEST_DELETED_PAGE_COUNT);
-
-    int result = pageController.undeleteAllWithHash(TEST_PAGE_HASH);
-
-    assertEquals(TEST_DELETED_PAGE_COUNT, result);
-
-    Mockito.verify(pageService, Mockito.times(1)).undeleteAllWithHash(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testSetDeletedState() {
-    Mockito.doNothing().when(pageService).setDeletedState(Mockito.anyList(), Mockito.anyBoolean());
-    Mockito.when(pageService.getDuplicatePages()).thenReturn(duplicatePageList);
-
-    final List<DuplicatePage> result =
-        pageController.setDeletedState(new SetDeletedStateRequest(pageHashList, TEST_DELETED));
-
-    assertNotNull(result);
-    assertSame(duplicatePageList, result);
-
-    Mockito.verify(pageService, Mockito.times(1)).setDeletedState(pageHashList, TEST_DELETED);
-    Mockito.verify(pageService, Mockito.times(1)).getDuplicatePages();
   }
 }

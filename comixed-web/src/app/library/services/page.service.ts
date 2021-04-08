@@ -17,40 +17,12 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Page } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
-import { interpolate } from '@app/core';
-import {
-  CLEAR_BLOCKED_PAGE_HASH_URL,
-  SET_BLOCKED_PAGE_HASH_URL
-} from '@app/library/library.constants';
-import { AddBlockedPageRequest } from '@app/library/models/net/add-blocked-page-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
-
-  /**
-   * Sets or clears the blacked state for a page's hsah.
-   *
-   * @param args.page the page
-   * @param args.blocked the blocked state
-   */
-  setBlockedState(args: { page: Page; blocked: boolean }): Observable<any> {
-    if (args.blocked) {
-      this.logger.debug('Service: setting blocked page state:', args);
-      return this.http.post(interpolate(SET_BLOCKED_PAGE_HASH_URL), {
-        hash: args.page.hash
-      } as AddBlockedPageRequest);
-    } else {
-      this.logger.debug('Service: clearing blocked page state:', args);
-      return this.http.delete(
-        interpolate(CLEAR_BLOCKED_PAGE_HASH_URL, { hash: args.page.hash })
-      );
-    }
-  }
 }

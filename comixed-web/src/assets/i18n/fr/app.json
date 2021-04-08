@@ -27,6 +27,7 @@
     "deselect": "Déselectionner",
     "deselect-all": "Tout déselectionner",
     "download": "Télécharger",
+    "edit": "Edit",
     "load": "Charger",
     "login": "Se connecter",
     "logout": "Se déconnecter",
@@ -89,6 +90,15 @@
       "reading-lists-section": "Reading Lists",
       "unread-comics": "Unread Comics",
       "system-status-section": "System"
+    },
+    "option": {
+      "all-comics": "All comics",
+      "blocked-pages": "Blocked Pages",
+      "build-details": "Build Details",
+      "deleted-comics": "Deleted comics",
+      "import-comics": "Import Comics",
+      "unread-comics": "Unread Comics",
+      "web-audit-log": "Web Audit Log"
     }
   },
   "session": {

@@ -1204,6 +1204,13 @@
     semver "7.3.2"
     semver-intersect "1.4.0"
 
+"@tragically-slick/edit-in-place@^0.1.0-2":
+  version "0.1.0-2"
+  resolved "https://registry.yarnpkg.com/@tragically-slick/edit-in-place/-/edit-in-place-0.1.0-2.tgz#13510ccb16d277ecaff151e940235205000ff066"
+  integrity sha512-XoKNTAhT4BdmeenVfHgMfXdMks29gn+RW684OZM4EUDvlRaVPf+JuXyoerg+XpIikWOUtsmvXgUEDUbyacfBwA==
+  dependencies:
+    tslib "^2.0.0"
+
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.0.tgz#4792816e31119ebd506902a482caec4951fabd86"

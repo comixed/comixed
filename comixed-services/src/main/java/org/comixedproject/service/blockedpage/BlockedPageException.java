@@ -16,9 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromBlockedPage from '../reducers/blocked-page.reducer';
+package org.comixedproject.service.blockedpage;
 
-export const selectBlockedPageState = createFeatureSelector<fromBlockedPage.BlockedPageState>(
-  fromBlockedPage.BLOCKED_PAGE_FEATURE_KEY
-);
+/**
+ * <code>BlockedPageException</code> is thrown when an error occurs while working with instances of
+ * {@link org.comixedproject.model.blockedpage.BlockedPage}.
+ *
+ * @author Darryl L. Pierce
+ */
+public class BlockedPageException extends Exception {
+  public BlockedPageException(final String message) {
+    super(message);
+  }
+}

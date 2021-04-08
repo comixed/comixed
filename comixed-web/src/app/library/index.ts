@@ -40,11 +40,6 @@ import {
   ScrapingState
 } from '@app/library/reducers/scraping.reducer';
 import {
-  BLOCKED_PAGE_FEATURE_KEY,
-  BlockedPageState,
-  reducer as blockedPageReducer
-} from '@app/library/reducers/blocked-page.reducer';
-import {
   reducer as scanTypeReducer,
   SCAN_TYPE_FEATURE_KEY,
   ScanTypeState
@@ -90,7 +85,6 @@ export interface LibraryModuleState {
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
   [SCRAPING_FEATURE_KEY]: ScrapingState;
-  [BLOCKED_PAGE_FEATURE_KEY]: BlockedPageState;
   [SCAN_TYPE_FEATURE_KEY]: ScanTypeState;
   [COMIC_FORMAT_FEATURE_KEY]: ComicFormatState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
@@ -105,7 +99,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [SCRAPING_FEATURE_KEY]: scrapingReducer,
-  [BLOCKED_PAGE_FEATURE_KEY]: blockedPageReducer,
   [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer,
   [COMIC_FORMAT_FEATURE_KEY]: comicFormatReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,

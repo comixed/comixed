@@ -1,0 +1,59 @@
+<mat-toolbar class="cx-primary-light-background">
+  <mat-paginator class="cx-primary-light-background"></mat-paginator>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="selected">
+    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-checkbox
+        [checked]="entry.item.selected"
+        (change)="onChangeSelection(entry, $event.checked)"
+      ></mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="label">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "blocked-page-list.header.label" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.label }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hash">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "blocked-page-list.header.hash" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.hash }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "blocked-page-list.header.comic-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.comicCount }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="created-on">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "blocked-page-list.header.created-on" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">
+        {{ entry.item.createdOn | date: "medium" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onOpenBlockedPageDetails(row)"
+  ></mat-row>
+</mat-table>

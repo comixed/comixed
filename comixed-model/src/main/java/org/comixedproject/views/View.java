@@ -25,36 +25,34 @@ package org.comixedproject.views;
  * @author Darryl L. Pierce
  */
 public class View {
-  /** Show minimal details for more than one comic. */
+  /** Used when viewing a list of comics. */
   public interface ComicListView {}
 
-  /** Show full details on a single comic. */
+  /** Used when viewing the details of comics. */
   public interface ComicDetailsView extends ComicListView {}
 
-  /** Used when deleting comics. */
+  /** Used when viewing a list of deleted comics. */
   public interface DeletedComicList {}
 
-  /** Show full details on a single page. */
+  /** Used when viewing the details of a deleted comic. */
   public interface PageDetails extends PageList {}
 
-  /** Show minimal information for more than one page. */
+  /** Used when viewing a list of pages. */
   public interface PageList {}
 
+  /** Used when viewing a list of users. */
   public interface UserList {}
 
-  /** Show full details on a user. */
+  /** Used when viewing the details of a user. */
   public interface UserDetailsView extends UserList {}
 
-  /** Used when doing a database backup. */
-  public interface DatabaseBackup {}
-
-  /** Used when fetching a reading list. */
+  /** Used when viewing the list of reading lists. */
   public interface ReadingList {}
 
-  /** Used when fetching a smart reading list. */
+  /** Used when viewing the list of smart reading lists. */
   public interface SmartReadingList {}
 
-  /** Used when fetching the list of duplicate pages. */
+  /** Used when viewing the list of duplicate pages. */
   public interface DuplicatePageList {}
 
   /** Used when fetching library updates. */
@@ -69,6 +67,12 @@ public class View {
   /** Used when viewing a list of comic files. */
   public interface ComicFileList {}
 
-  /** Uses when viewing the build details for the server. */
+  /** Used when viewing the build details for the server. */
   public interface BuildDetails {}
+
+  /** Used when viewing a list of blocked pages. */
+  public interface BlockedPageList {}
+
+  /** Used when viewing the details of a blocked page. */
+  public interface BlockedPageDetail extends BlockedPageList {}
 }

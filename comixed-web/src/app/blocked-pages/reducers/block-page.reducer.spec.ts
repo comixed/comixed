@@ -16,23 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { BlockPageState, initialState, reducer } from './block-page.reducer';
+import { PAGE_2 } from '@app/library/library.fixtures';
 import {
-  BlockedPageState,
-  initialState,
-  reducer
-} from './blocked-page.reducer';
-import {
-  pageBlockSet,
-  setPageBlock,
-  setPageBlockFailed
-} from '@app/library/actions/blocked-page.actions';
-import { PAGE_1 } from '@app/library/library.fixtures';
+  blockedStateSet,
+  setBlockedState,
+  setBlockedStateFailed
+} from '@app/blocked-pages/actions/block-page.actions';
 
-describe('BlockedPage Reducer', () => {
-  const PAGE = PAGE_1;
-  const BLOCKED = Math.random() > 0.5;
+describe('BlockPage Reducer', () => {
+  const PAGE = PAGE_2;
 
-  let state: BlockedPageState;
+  let state: BlockPageState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -48,11 +43,11 @@ describe('BlockedPage Reducer', () => {
     });
   });
 
-  describe('setting the blocked state for a page', () => {
+  describe('setting the blocked state', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, saving: false },
-        setPageBlock({ page: PAGE, blocked: BLOCKED })
+        setBlockedState({ page: PAGE, blocked: true })
       );
     });
 
@@ -63,7 +58,7 @@ describe('BlockedPage Reducer', () => {
 
   describe('successfully setting the blocked state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, saving: true }, pageBlockSet());
+      state = reducer({ ...state, saving: true }, blockedStateSet());
     });
 
     it('clears the saving flag', () => {
@@ -71,9 +66,9 @@ describe('BlockedPage Reducer', () => {
     });
   });
 
-  describe('failure to set the blocked state', () => {
+  describe('failure setting the blocked state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, saving: true }, setPageBlockFailed());
+      state = reducer({ ...state, saving: true }, setBlockedStateFailed());
     });
 
     it('clears the saving flag', () => {
