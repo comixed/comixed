@@ -163,12 +163,12 @@ public class Comic {
   @Setter
   private ComicFormat format;
 
-  @Formula(value = "(SELECT COUNT(*) FROM pages p WHERE p.ComicId = id)")
+  @Formula(value = "(SELECT COUNT(*) FROM Pages p WHERE p.ComicId = id)")
   @JsonIgnore
   @Transient
   private Integer calculatedPageCount;
 
-  @Formula(value = "(SELECT COUNT(*) FROM pages p where p.ComicId = id AND p.deleted = true)")
+  @Formula(value = "(SELECT COUNT(*) FROM Pages p where p.ComicId = id AND p.Deleted = true)")
   @JsonIgnore
   @Getter
   private Integer calculatedDeletedPageCount;
@@ -295,7 +295,7 @@ public class Comic {
   private String comicVineURL;
 
   @Formula(
-      "(SELECT COUNT(*) FROM comics c WHERE c.Series = series AND c.Volume = volume AND c.IssueNumber = IssueNumber AND c.CoverDate = CoverDate)")
+      "(SELECT COUNT(*) FROM Comics c WHERE c.Series = series AND c.Volume = volume AND c.IssueNumber = IssueNumber AND c.CoverDate = CoverDate)")
   @JsonProperty("duplicateCount")
   @JsonView(View.ComicListView.class)
   private Integer duplicateCount;
