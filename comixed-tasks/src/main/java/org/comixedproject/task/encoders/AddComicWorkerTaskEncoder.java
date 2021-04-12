@@ -21,7 +21,7 @@ package org.comixedproject.task.encoders;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.task.model.AddComicWorkerTask;
+import org.comixedproject.task.AddComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -29,7 +29,7 @@ jobs:
           -Dsonar.organization=comixed
           -Dsonar.projectKey=comixed_comixed
           -Dsonar.sources=./src
-          -Dsonar.exclusions=**/*test*/**,**/*spec.ts
+          -Dsonar.exclusions=**/model/**,**/ComiXedApp,**/*test*/**,**/*spec.ts
           -Dsonar.test.inclusions=**/*test*/**,**/*spec.ts
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
           -Pci

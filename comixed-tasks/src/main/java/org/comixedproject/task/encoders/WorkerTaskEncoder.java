@@ -19,7 +19,7 @@
 package org.comixedproject.task.encoders;
 
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.task.model.WorkerTask;
+import org.comixedproject.task.WorkerTask;
 
 /**
  * <code>WorkerTaskEncoder</code> defines a type that can encode and decode the details for a @{link

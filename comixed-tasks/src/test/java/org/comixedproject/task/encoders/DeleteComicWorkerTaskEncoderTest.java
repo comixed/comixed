@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.task.model.DeleteComicWorkerTask;
+import org.comixedproject.task.DeleteComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

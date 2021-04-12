@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.task.encoders;
-
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.task.AbstractWorkerTask;
+package org.comixedproject.task;
 
 /**
- * <code>AbstractWorkerTaskEncoder</code> provides a foundation for building new {@link
- * WorkerTaskEncoder} types.
+ * <code>WorkerTaskException</code> is raised when an error occurs while performing a {@link
+ * WorkerTask}.
  *
  * @author Darryl L. Pierce
  */
-@Log4j2
-public abstract class AbstractWorkerTaskEncoder<T extends AbstractWorkerTask>
-    implements WorkerTaskEncoder<T> {}
+public class WorkerTaskException extends Exception {
+  private static final long serialVersionUID = 7919030698664175776L;
+
+  public WorkerTaskException(String message) {
+    super(message);
+  }
+
+  public WorkerTaskException(String message, Exception cause) {
+    super(message, cause);
+  }
+}

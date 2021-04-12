@@ -24,7 +24,7 @@ import static junit.framework.TestCase.assertSame;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.RescanComicWorkerTask;
+import org.comixedproject.task.RescanComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

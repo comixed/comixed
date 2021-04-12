@@ -23,7 +23,7 @@ import static junit.framework.TestCase.*;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.MoveComicWorkerTask;
+import org.comixedproject.task.MoveComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
