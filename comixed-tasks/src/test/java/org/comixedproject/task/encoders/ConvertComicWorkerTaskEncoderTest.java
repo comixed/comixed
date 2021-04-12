@@ -27,7 +27,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.model.ConvertComicWorkerTask;
+import org.comixedproject.task.ConvertComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

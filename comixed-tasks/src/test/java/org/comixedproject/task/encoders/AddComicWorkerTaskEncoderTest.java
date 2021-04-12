@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.util.Random;
 import org.comixedproject.model.tasks.Task;
-import org.comixedproject.task.model.AddComicWorkerTask;
+import org.comixedproject.task.AddComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

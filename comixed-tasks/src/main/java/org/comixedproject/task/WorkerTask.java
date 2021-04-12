@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.task.encoders;
-
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.task.AbstractWorkerTask;
+package org.comixedproject.task;
 
 /**
- * <code>AbstractWorkerTaskEncoder</code> provides a foundation for building new {@link
- * WorkerTaskEncoder} types.
+ * <code>WorkerTask</code> defines a type that is executed.
  *
  * @author Darryl L. Pierce
  */
-@Log4j2
-public abstract class AbstractWorkerTaskEncoder<T extends AbstractWorkerTask>
-    implements WorkerTaskEncoder<T> {}
+public interface WorkerTask {
+  /**
+   * Invoked when the task can begin processing.
+   *
+   * @throws WorkerTaskException if an error occurs
+   */
+  void startTask() throws WorkerTaskException;
+
+  /**
+   * Return a description of the task for use in status and error messages.
+   *
+   * @return the description
+   */
+  String getDescription();
+
+  /** Called after the task has completed execution. */
+  void afterExecution();
+}

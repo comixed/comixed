@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.task.model.ProcessComicWorkerTask;
+import org.comixedproject.task.ProcessComicWorkerTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -24,7 +24,7 @@ import java.util.Random;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.Task;
 import org.comixedproject.model.tasks.TaskType;
-import org.comixedproject.task.model.ProcessComicWorkerTask;
+import org.comixedproject.task.ProcessComicWorkerTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;

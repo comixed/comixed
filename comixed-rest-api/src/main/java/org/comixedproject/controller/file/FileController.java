@@ -33,7 +33,7 @@ import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.model.QueueComicsWorkerTask;
+import org.comixedproject.task.QueueComicsWorkerTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.ComicFileUtils;
 import org.comixedproject.views.View;

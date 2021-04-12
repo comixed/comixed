@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.task.encoders;
-
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.task.AbstractWorkerTask;
+package org.comixedproject.task;
 
 /**
- * <code>AbstractWorkerTaskEncoder</code> provides a foundation for building new {@link
- * WorkerTaskEncoder} types.
+ * <code>AbstractWorkerTask</code> provides a foundation for creating new {@link WorkerTask} types.
  *
  * @author Darryl L. Pierce
  */
-@Log4j2
-public abstract class AbstractWorkerTaskEncoder<T extends AbstractWorkerTask>
-    implements WorkerTaskEncoder<T> {}
+public abstract class AbstractWorkerTask implements WorkerTask {
+  private String description;
+
+  protected AbstractWorkerTask() {}
+
+  @Override
+  public String getDescription() {
+    if (this.description == null) {
+      this.description = this.createDescription();
+    }
+
+    return this.description;
+  }
+
+  /**
+   * Must be overridden by child classes to provide a description.
+   *
+   * @return the description
+   */
+  protected abstract String createDescription();
+
+  @Override
+  public void afterExecution() {}
+}
