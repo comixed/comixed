@@ -51,10 +51,6 @@
       "message": "Are you sure you want to manual changes to this comic?",
       "title": "Save Changes To Comic"
     },
-    "send-comic-files": {
-      "effect-failure": "Failed to send comic files for import.",
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
-    },
     "text": {
       "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}"
@@ -71,21 +67,13 @@
     }
   },
   "import-comic-files": {
-    "tab-title": "Import Comics",
-    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
     "busy-title": "There Are Comics Importing Now",
-    "load-comic-files": {
-      "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
-      "effect-failure": "Failed to find any comic files."
-    },
+    "confirm-start-title": "Import Comic Files?",
+    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?",
     "header": {
       "cover": "Cover Image",
       "filename": "Filename",
       "size": "File Size (kb)"
-    },
-    "text": {
-      "file-size": "{size} bytes",
-      "selected-for-import": "This file will be imported."
     },
     "label": {
       "delete-blocked-pages": "Mark blocked pages as delete",
@@ -100,18 +88,30 @@
       "maximum-100-files": "100 files",
       "maximum-1000-files": "1000 files"
     },
+    "load-comic-files": {
+      "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
+      "effect-failure": "Failed to find any comic files."
+    },
+    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
+    "placeholder": {
+      "root-directory": "Root Directory To Search..."
+    },
+    "send-comic-files": {
+      "effect-failure": "Failed to send comic files for import.",
+      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
+    },
+    "tab-title": "Import Comics",
+    "text": {
+      "file-size": "{size} bytes",
+      "selected-for-import": "This file will be imported."
+    },
     "tooltip": {
       "ignore-metadata-on": "Will import any metadata in the comic files.",
       "ignore-metadata-off": "Will not import any metadata in the comic files.",
       "select-all": "Select all comic files for import.",
       "deselect-all": "Clear the comic file selections.",
       "start-import": "Start importing the selected comic files."
-    },
-    "placeholder": {
-      "root-directory": "Root Directory To Search..."
-    },
-    "confirm-start-title": "Import Comic Files?",
-    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?"
+    }
   },
   "blocked-pages": {
     "set-state": {

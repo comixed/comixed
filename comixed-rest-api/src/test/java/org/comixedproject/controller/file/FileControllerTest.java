@@ -32,8 +32,8 @@ import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.QueueComicsWorkerTask;
-import org.comixedproject.task.WorkerTask;
+import org.comixedproject.task.QueueComicsTask;
+import org.comixedproject.task.Task;
 import org.comixedproject.task.runner.TaskManager;
 import org.json.JSONException;
 import org.junit.Test;
@@ -69,8 +69,8 @@ public class FileControllerTest {
   @InjectMocks private FileController controller;
   @Mock private FileService fileService;
   @Mock private List<ComicFile> comicFileList;
-  @Mock private ObjectFactory<QueueComicsWorkerTask> queueComicsWorkerTaskObjectFactory;
-  @Mock private QueueComicsWorkerTask queueComicsWorkerTask;
+  @Mock private ObjectFactory<QueueComicsTask> queueComicsWorkerTaskObjectFactory;
+  @Mock private QueueComicsTask queueComicsWorkerTask;
   @Mock private TaskManager taskManager;
 
   @Test
@@ -116,7 +116,7 @@ public class FileControllerTest {
   @Test
   public void testImportComicFiles() throws UnsupportedEncodingException {
     Mockito.when(queueComicsWorkerTaskObjectFactory.getObject()).thenReturn(queueComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
 
     controller.importComicFiles(
         new ImportComicFilesRequest(

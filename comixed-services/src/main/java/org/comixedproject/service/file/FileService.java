@@ -29,7 +29,7 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.file.ComicFile;
-import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.utils.ComicFileUtils;
@@ -125,7 +125,7 @@ public class FileService {
   }
 
   public int getImportStatus() throws InterruptedException {
-    return this.taskService.getTaskCount(TaskType.ADD_COMIC)
-        + this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
+    return this.taskService.getTaskCount(PersistedTaskType.ADD_COMIC)
+        + this.taskService.getTaskCount(PersistedTaskType.PROCESS_COMIC);
   }
 }

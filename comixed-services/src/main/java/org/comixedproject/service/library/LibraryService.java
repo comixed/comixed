@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.tasks.TaskType;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -59,7 +59,7 @@ public class LibraryService {
 
   public long getProcessingCount() {
     log.debug("Getting processing count");
-    return this.taskService.getTaskCount(TaskType.PROCESS_COMIC);
+    return this.taskService.getTaskCount(PersistedTaskType.PROCESS_COMIC);
   }
 
   @Transactional

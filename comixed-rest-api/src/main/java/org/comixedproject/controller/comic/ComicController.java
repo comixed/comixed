@@ -45,9 +45,9 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
 import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.task.DeleteComicsWorkerTask;
-import org.comixedproject.task.RescanComicsWorkerTask;
-import org.comixedproject.task.UndeleteComicsWorkerTask;
+import org.comixedproject.task.DeleteComicsTask;
+import org.comixedproject.task.RescanComicsTask;
+import org.comixedproject.task.UndeleteComicsTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.comixedproject.views.View;
@@ -81,9 +81,9 @@ public class ComicController {
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private TaskManager taskManager;
   @Autowired private ScanTypeRepository scanTypeRepository;
-  @Autowired private ObjectFactory<DeleteComicsWorkerTask> deleteComicsWorkerTaskFactory;
-  @Autowired private ObjectFactory<UndeleteComicsWorkerTask> undeleteComicsWorkerTaskObjectFactory;
-  @Autowired private ObjectFactory<RescanComicsWorkerTask> rescanComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<DeleteComicsTask> deleteComicsWorkerTaskFactory;
+  @Autowired private ObjectFactory<UndeleteComicsTask> undeleteComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<RescanComicsTask> rescanComicsWorkerTaskObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
 
   /**
@@ -153,7 +153,7 @@ public class ComicController {
   public boolean deleteMultipleComics(@RequestParam("comic_ids") List<Long> comicIds) {
     log.debug("Deleting multiple comics: ids={}", comicIds.toArray());
 
-    DeleteComicsWorkerTask task = this.deleteComicsWorkerTaskFactory.getObject();
+    DeleteComicsTask task = this.deleteComicsWorkerTaskFactory.getObject();
 
     log.debug("Setting comic ids");
     task.setComicIds(comicIds);
@@ -314,7 +314,7 @@ public class ComicController {
     final List<Long> ids = request.getIds();
     log.debug("Undeleting {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
 
-    final UndeleteComicsWorkerTask task = this.undeleteComicsWorkerTaskObjectFactory.getObject();
+    final UndeleteComicsTask task = this.undeleteComicsWorkerTaskObjectFactory.getObject();
     task.setIds(ids);
     this.taskManager.runTask(task);
 
