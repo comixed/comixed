@@ -1,0 +1,6 @@
+@import '~theme';
+
+.mat-nav-list a.active {
+  background: var(--accent-color) !important;
+  color: var(--text-accent-color) !important;
+}

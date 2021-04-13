@@ -271,7 +271,7 @@ describe('NavigationBarComponent', () => {
   describe('changing the comic view', () => {
     it('can show all comics', () => {
       component.onComicViewChange(ComicViewMode.ALL);
-      expect(router.navigate).toHaveBeenCalledWith(['/library']);
+      expect(router.navigate).toHaveBeenCalledWith(['/library/comics/all']);
     });
   });
 
