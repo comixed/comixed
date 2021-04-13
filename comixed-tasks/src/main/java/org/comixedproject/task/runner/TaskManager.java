@@ -22,11 +22,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.tasks.Task;
+import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.MonitorTaskQueueWorkerTask;
-import org.comixedproject.task.WorkerTask;
+import org.comixedproject.task.MonitorTaskQueueTask;
+import org.comixedproject.task.Task;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +34,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>TaskManager</code> handles running instances of {@link WorkerTask}.
+ * <code>TaskManager</code> handles running instances of {@link Task}.
  *
  * @author Darryl L. Pierce
  */
@@ -50,10 +50,10 @@ public class TaskManager implements InitializingBean {
   /**
    * Enqueues a task, then deletes it upon successful completion.
    *
-   * @param workerTask the worker task
+   * @param task the worker task
    * @param persistedTask the persisted task
    */
-  public void runTask(final WorkerTask workerTask, final Task persistedTask) {
+  public void runTask(final Task task, final PersistedTask persistedTask) {
     if (persistedTask != null) {
       if (this.taskService.getRunningTasks().containsKey(persistedTask.getId())) {
         log.debug("Rejecting task: already running");
@@ -63,19 +63,19 @@ public class TaskManager implements InitializingBean {
     }
     this.taskExecutor.execute(
         () -> {
-          final String description = workerTask.getDescription();
+          final String description = task.getDescription();
           log.debug("Preparing to run task: {}", description);
           final Date started = new Date();
           try {
-            workerTask.startTask();
-            if (!(workerTask instanceof MonitorTaskQueueWorkerTask))
+            task.startTask();
+            if (!(task instanceof MonitorTaskQueueTask))
               this.updateAuditLog(true, started, description, null);
           } catch (Exception error) {
             log.error("Error executing task: {}" + description, description, error);
-            if (!(workerTask instanceof MonitorTaskQueueWorkerTask))
+            if (!(task instanceof MonitorTaskQueueTask))
               this.updateAuditLog(false, started, description, error);
           } finally {
-            workerTask.afterExecution();
+            task.afterExecution();
             if (persistedTask != null) {
               log.debug("Deleting persisted task");
               this.taskService.getRunningTasks().remove(persistedTask.getId());
@@ -88,10 +88,10 @@ public class TaskManager implements InitializingBean {
   /**
    * Enqueue and execute the given task.
    *
-   * @param workerTask the task
+   * @param task the task
    */
-  public void runTask(final WorkerTask workerTask) {
-    this.runTask(workerTask, null);
+  public void runTask(final Task task) {
+    this.runTask(task, null);
   }
 
   /**
@@ -124,7 +124,7 @@ public class TaskManager implements InitializingBean {
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     this.taskExecutor.setThreadNamePrefix("Jarvis-");
     this.taskExecutor.setCorePoolSize(5);
     this.taskExecutor.setMaxPoolSize(10);

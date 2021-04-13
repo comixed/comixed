@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.tasks.Task;
+import org.comixedproject.model.tasks.PersistedTask;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
-import org.comixedproject.model.tasks.TaskType;
 import org.comixedproject.repositories.tasks.TaskAuditLogRepository;
 import org.comixedproject.repositories.tasks.TaskRepository;
 import org.comixedproject.service.ComiXedServiceException;
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>TaskService</code> provides functions for working with instances of {@link Task}.
+ * <code>TaskService</code> provides functions for working with instances of {@link PersistedTask}.
  *
  * @author Darryl L. Pierce
  */
@@ -48,21 +48,21 @@ public class TaskService {
   @Autowired private TaskRepository taskRepository;
   @Autowired private TaskAuditLogRepository taskAuditLogRepository;
 
-  private Map<Long, TaskType> runningTasks = new HashMap<>();
+  private Map<Long, PersistedTaskType> runningTasks = new HashMap<>();
 
   /**
    * Returns the current number of records with the given task type.
    *
-   * @param targetTaskType the task type
+   * @param targetPersistedTaskType the task type
    * @return the record count
    */
-  public int getTaskCount(final TaskType targetTaskType) {
+  public int getTaskCount(final PersistedTaskType targetPersistedTaskType) {
     final long result =
-        this.taskRepository.getTaskCount(targetTaskType)
+        this.taskRepository.getTaskCount(targetPersistedTaskType)
             + this.runningTasks.values().stream()
-                .filter(taskType -> taskType == targetTaskType)
+                .filter(taskType -> taskType == targetPersistedTaskType)
                 .count();
-    log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", targetTaskType);
+    log.debug("Found {} instance{} of {}", result, result == 1 ? "" : "s", targetPersistedTaskType);
     return (int) result;
   }
 
@@ -103,26 +103,26 @@ public class TaskService {
   }
 
   /**
-   * Deletes the specified task.
+   * Deletes the specified persistedTask.
    *
-   * @param task the task
+   * @param persistedTask the persistedTask
    */
   @Transactional
-  public void delete(final Task task) {
-    log.debug("Deleting task: id={}", task.getId());
-    this.taskRepository.delete(task);
+  public void delete(final PersistedTask persistedTask) {
+    log.debug("Deleting persistedTask: id={}", persistedTask.getId());
+    this.taskRepository.delete(persistedTask);
   }
 
   /**
-   * Saves the specified task.
+   * Saves the specified persistedTask.
    *
-   * @param task the task
-   * @return the saved task
+   * @param persistedTask the persistedTask
+   * @return the saved persistedTask
    */
   @Transactional
-  public Task save(final Task task) {
-    log.debug("Saving task: type={}", task.getTaskType());
-    return this.taskRepository.save(task);
+  public PersistedTask save(final PersistedTask persistedTask) {
+    log.debug("Saving task: type={}", persistedTask.getTaskType());
+    return this.taskRepository.save(persistedTask);
   }
 
   /**
@@ -131,7 +131,7 @@ public class TaskService {
    * @param max the maximum number of taks
    * @return the tasks
    */
-  public List<Task> getTasksToRun(final int max) {
+  public List<PersistedTask> getTasksToRun(final int max) {
     log.debug("Fetching next task to run");
     return this.taskRepository.getTasksToRun(PageRequest.of(0, max));
   }
@@ -154,7 +154,7 @@ public class TaskService {
     this.taskAuditLogRepository.deleteAll();
   }
 
-  public Map<Long, TaskType> getRunningTasks() {
+  public Map<Long, PersistedTaskType> getRunningTasks() {
     return this.runningTasks;
   }
 

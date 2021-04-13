@@ -33,7 +33,7 @@ import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.QueueComicsWorkerTask;
+import org.comixedproject.task.QueueComicsTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.ComicFileUtils;
 import org.comixedproject.views.View;
@@ -56,7 +56,7 @@ public class FileController {
   @Autowired private ComicService comicService;
   @Autowired private FileService fileService;
   @Autowired private TaskManager taskManager;
-  @Autowired private ObjectFactory<QueueComicsWorkerTask> queueComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<QueueComicsTask> queueComicsWorkerTaskObjectFactory;
 
   private int requestId = 0;
 
@@ -160,7 +160,7 @@ public class FileController {
         deleteBlockedPages,
         ignoreMetadata);
 
-    final QueueComicsWorkerTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
+    final QueueComicsTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
     task.setFilenames(filenames);
     task.setDeleteBlockedPages(deleteBlockedPages);
     task.setIgnoreMetadata(ignoreMetadata);

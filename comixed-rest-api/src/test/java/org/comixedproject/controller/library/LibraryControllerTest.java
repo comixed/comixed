@@ -38,9 +38,9 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.task.ConvertComicsWorkerTask;
-import org.comixedproject.task.MoveComicsWorkerTask;
-import org.comixedproject.task.WorkerTask;
+import org.comixedproject.task.ConvertComicsTask;
+import org.comixedproject.task.MoveComicsTask;
+import org.comixedproject.task.Task;
 import org.comixedproject.task.runner.TaskManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,10 +72,10 @@ public class LibraryControllerTest {
   @Mock private Principal principal;
   @Mock private List<Long> idList;
   @Mock private TaskManager taskManager;
-  @Mock private ObjectFactory<ConvertComicsWorkerTask> convertComicsWorkerTaskObjectFactory;
-  @Mock private ConvertComicsWorkerTask convertComicsWorkerTask;
-  @Mock private ObjectFactory<MoveComicsWorkerTask> moveComicsWorkerTaskObjectFactory;
-  @Mock private MoveComicsWorkerTask moveComicsWorkerTask;
+  @Mock private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
+  @Mock private ConvertComicsTask convertComicsWorkerTask;
+  @Mock private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
+  @Mock private MoveComicsTask moveComicsWorkerTask;
   @Mock private List<Long> comicIdList;
   @Mock private Comic comic;
   @Mock private Comic lastComic;
@@ -90,7 +90,7 @@ public class LibraryControllerTest {
   public void testConvertComics() {
     Mockito.when(convertComicsWorkerTaskObjectFactory.getObject())
         .thenReturn(convertComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
 
     libraryController.convertComics(
         new ConvertComicsRequest(
@@ -152,7 +152,7 @@ public class LibraryControllerTest {
   @Test
   public void testMoveLibrary() {
     Mockito.when(moveComicsWorkerTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(WorkerTask.class));
+    Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
 
     libraryController.moveComics(
         new MoveComicsRequest(

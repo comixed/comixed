@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,18 @@
 package org.comixedproject.task;
 
 /**
- * <code>TaskException</code> is thrown when an error occurs during the operation of a task.
+ * <code>TaskException</code> is raised when an error occurs while performing a {@link Task}.
  *
  * @author Darryl L. Pierce
  */
 public class TaskException extends Exception {
-  public TaskException(final String message) {
+  private static final long serialVersionUID = 7919030698664175776L;
+
+  public TaskException(String message) {
     super(message);
+  }
+
+  public TaskException(String message, Exception cause) {
+    super(message, cause);
   }
 }

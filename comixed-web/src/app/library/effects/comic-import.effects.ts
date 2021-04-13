@@ -119,7 +119,7 @@ export class ComicImportEffects {
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
-                  'send-comic-files.effect-success',
+                  'import-comic-files.send-comic-files.effect-success',
                   { count: action.files.length }
                 )
               )
@@ -138,7 +138,9 @@ export class ComicImportEffects {
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
-                this.translateService.instant('send-comic-files.effect-failure')
+                this.translateService.instant(
+                  'import-comic-files.send-comic-files.effect-failure'
+                )
               );
               return of(sendComicFilesFailed());
             })

@@ -30,7 +30,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.model.tasks.Task;
+import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
@@ -309,7 +309,7 @@ public class Comic {
   private Set<ReadingList> readingLists = new HashSet<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
-  private List<Task> tasks = new ArrayList<>();
+  private List<PersistedTask> persistedTasks = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @JsonIgnore
