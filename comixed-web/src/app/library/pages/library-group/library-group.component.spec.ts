@@ -179,7 +179,7 @@ describe('LibraryGroupComponent', () => {
       });
 
       it('sends the user to the library page', () => {
-        expect(router.navigate).toHaveBeenCalledWith(['/library']);
+        expect(router.navigate).toHaveBeenCalledWith(['/library/comics/all']);
       });
     });
 

@@ -160,7 +160,7 @@ export class NavigationBarComponent {
     this.logger.debug('Toggling view mode:', viewMode);
     switch (viewMode) {
       case ComicViewMode.ALL:
-        this.router.navigate(['/library']);
+        this.router.navigate(['/library/comics/all']);
         break;
     }
   }

@@ -80,7 +80,7 @@ export class LibraryGroupComponent implements OnInit, OnDestroy {
             { name: this.groupType }
           )
         );
-        this.router.navigate(['/library']);
+        this.router.navigate(['/library/comics/all']);
       } else {
         this.subscribeToUpdates();
       }

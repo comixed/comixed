@@ -1,45 +1,62 @@
 <div fxLayout="column">
-  <div *ngIf="!!user">
-    <h3>{{ "navigation.heading.comics" | translate }}</h3>
-    <mat-nav-list>
-      <a mat-list-item routerLink="/library">
-        {{ "navigation.option.all-comics" | translate }}
-      </a>
-      <a mat-list-item routerLink="/library/comics/unread">
-        {{ "navigation.option.unread-comics" | translate }}
-      </a>
-      <a mat-list-item routerLink="/library/comics/deleted">
-        {{ "navigation.option.deleted-comics" | translate }}
-      </a>
-      <a *ngIf="isAdmin" mat-list-item routerLink="/admin/import">
-        {{ "navigation.option.import-comics" | translate }}
-      </a>
-    </mat-nav-list>
-  </div>
+  <mat-nav-list>
+    <h3 matSubheader>{{ "navigation.heading.comics" | translate }}</h3>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/comics/all"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.all-comics" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/comics/unread"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.unread-comics" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/comics/deleted"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.deleted-comics" | translate }}
+    </a>
+    <a
+      *ngIf="isAdmin"
+      mat-list-item
+      routerLink="/admin/import"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.import-comics" | translate }}
+    </a>
 
-  <div *ngIf="!!user">
-    <h3>{{ "navigation.heading.reading-lists" | translate }}</h3>
-  </div>
+    <h3 *ngIf="!!user" matSubheader>
+      {{ "navigation.heading.reading-lists" | translate }}
+    </h3>
 
-  <div *ngIf="!!user">
-    <h3>{{ "navigation.heading.account" | translate }}</h3>
-  </div>
+    <h3 *ngIf="!!user" matSubheader>
+      {{ "navigation.heading.account" | translate }}
+    </h3>
 
-  <div *ngIf="isAdmin">
-    <h3>{{ "navigation.heading.admin" | translate }}</h3>
-    <mat-nav-list>
-      <a mat-list-item routerLink="/admin/audit/web">
-        {{ "navigation.option.web-audit-log" | translate }}
-      </a>
-    </mat-nav-list>
-  </div>
+    <h3 *ngIf="isAdmin" matSubheader>
+      {{ "navigation.heading.admin" | translate }}
+    </h3>
+    <a
+      *ngIf="isAdmin"
+      mat-list-item
+      routerLink="/admin/audit/web"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.web-audit-log" | translate }}
+    </a>
 
-  <div>
-    <h3>{{ "navigation.heading.system-status" | translate }}</h3>
-    <mat-nav-list>
-      <a mat-list-item [routerLink]="['/build']">
-        {{ "navigation.option.build-details" | translate }}
-      </a>
-    </mat-nav-list>
-  </div>
+    <h3 matSubheader>{{ "navigation.heading.system-status" | translate }}</h3>
+    <a mat-list-item [routerLink]="['/build']" routerLinkActive="active">
+      {{ "navigation.option.build-details" | translate }}
+    </a>
+  </mat-nav-list>
 </div>

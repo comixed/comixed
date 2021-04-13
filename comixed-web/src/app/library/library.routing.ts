@@ -32,6 +32,11 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
+    path: 'library/comics/all',
+    component: LibraryPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
     path: 'library/comics/unread',
     component: LibraryPageComponent,
     canActivate: [ReaderGuard],
@@ -51,11 +56,6 @@ const routes: Routes = [
   {
     path: 'library/:type/:name',
     component: LibraryGroupComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'library',
-    component: LibraryPageComponent,
     canActivate: [ReaderGuard]
   },
   {
