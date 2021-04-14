@@ -35,6 +35,59 @@
     </a>
 
     <h3 *ngIf="!!user" matSubheader>
+      {{ "navigation.heading.collections" | translate }}
+    </h3>
+
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/collections/publishers"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.publisher-collection" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/collections/series"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.series-collection" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/collections/characters"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.character-collection" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/collections/teams"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.team-collection" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/collections/locations"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.location-collection" | translate }}
+    </a>
+    <a
+      *ngIf="!!user"
+      mat-list-item
+      routerLink="/library/collections/stories"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.story-collection" | translate }}
+    </a>
+
+    <h3 *ngIf="!!user" matSubheader>
       {{ "navigation.heading.reading-lists" | translate }}
     </h3>
 

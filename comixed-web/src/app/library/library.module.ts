@@ -82,7 +82,6 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
-import { LibraryGroupComponent } from './pages/library-group/library-group.component';
 import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
 import { ScrapingComponent } from './pages/scraping/scraping.component';
 import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
@@ -136,7 +135,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     ScrapingIssueTitlePipe,
     MatchabilityPipe,
     ComicCoversComponent,
-    LibraryGroupComponent,
     LibraryToolbarComponent,
     ScrapingComponent,
     SelectedComicsComponent,
@@ -193,6 +191,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     MatMenuModule,
     MatProgressBarModule
   ],
-  exports: [CommonModule, CoreModule]
+  exports: [CommonModule, CoreModule, ComicCoversComponent]
 })
 export class LibraryModule {}

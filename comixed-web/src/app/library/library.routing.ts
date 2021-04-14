@@ -22,7 +22,6 @@ import { ImportComicsComponent } from './pages/import-comics/import-comics.compo
 import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
 import { AdminGuard, ReaderGuard } from '@app/user';
 import { LibraryPageComponent } from '@app/library/pages/library-page/library-page.component';
-import { LibraryGroupComponent } from '@app/library/pages/library-group/library-group.component';
 import { ScrapingComponent } from '@app/library/pages/scraping/scraping.component';
 
 const routes: Routes = [
@@ -51,11 +50,6 @@ const routes: Routes = [
   {
     path: 'library/comics/:comicId',
     component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
-    path: 'library/:type/:name',
-    component: LibraryGroupComponent,
     canActivate: [ReaderGuard]
   },
   {
