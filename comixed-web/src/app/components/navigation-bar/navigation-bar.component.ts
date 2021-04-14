@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '@app/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { Router } from '@angular/router';
@@ -32,7 +32,6 @@ import {
   LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
 import { ComicViewMode } from '@app/library';
-import { ComicCollection } from '@app/library/models/comic-collection.enum';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -60,14 +59,6 @@ export class NavigationBarComponent {
   ];
   stacked = false;
   readingLists: string[] = [];
-  readonly collectionOptions: SelectionOption<ComicCollection>[] = [
-    { label: 'publishers', value: ComicCollection.PUBLISHERS },
-    { label: 'series', value: ComicCollection.SERIES },
-    { label: 'characters', value: ComicCollection.CHARACTERS },
-    { label: 'teams', value: ComicCollection.TEAMS },
-    { label: 'locations', value: ComicCollection.LOCATIONS },
-    { label: 'stories', value: ComicCollection.STORIES }
-  ];
 
   constructor(
     private logger: LoggerService,

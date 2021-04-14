@@ -82,14 +82,28 @@
     }
   },
   "navigation": {
+    "heading": {
+      "account": "My Account",
+      "admin": "Administration",
+      "collections": "Collections",
+      "comics": "Comics",
+      "reading-lists": "Reading Lists",
+      "system-status": "System"
+    },
     "label": {
       "all-comics": "All comics",
       "build-details": "Build Details",
-      "deleted-comics": "Deleted comics",
+      "character-collection": "Characters",
       "comics-section": "Comics",
+      "deleted-comics": "Deleted comics",
+      "location-collection": "Locations",
+      "publisher-collection": "Publishers",
       "reading-lists-section": "Reading Lists",
-      "unread-comics": "Unread Comics",
-      "system-status-section": "System"
+      "series-collection": "Series",
+      "story-collection": "Stories",
+      "system-status-section": "System",
+      "team-collection": "Teams",
+      "unread-comics": "Unread Comics"
     },
     "option": {
       "all-comics": "All comics",

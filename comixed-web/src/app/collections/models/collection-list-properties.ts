@@ -16,11 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export enum ComicCollection {
-  CHARACTERS,
-  LOCATIONS,
-  PUBLISHERS,
-  SERIES,
-  STORIES,
-  TEAMS
+import { CollectionType } from './comic-collection.enum';
+
+export interface CollectionListProperties {
+  collectionType: CollectionType;
 }

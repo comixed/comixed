@@ -1,6 +1,11 @@
 @import '~theme';
 
+.mat-subheader {
+  background: var(--primary-lighter-color) !important;
+  color: var(--text-primary-lighter-color) !important;
+}
+
 .mat-nav-list a.active {
-  background: var(--accent-color) !important;
-  color: var(--text-accent-color) !important;
+  background: var(--primary-darker-color) !important;
+  color: var(--text-primary-darker-color) !important;
 }

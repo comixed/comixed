@@ -1,0 +1,29 @@
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collection-list.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.name || "collection-list.text.undefined" | translate }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collection-list.label.comic-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.comicCount | number }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onShowCollection(row)"
+  ></mat-row>
+</mat-table>

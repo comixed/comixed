@@ -22,12 +22,14 @@ import {
 } from '../reducers/comic-list.reducer';
 import {
   selectComicList,
+  selectComicListCollection,
   selectComicListCount,
   selectComicListDeletedCount,
   selectComicListReadCount,
   selectComicListState
 } from './comic-list.selectors';
 import { COMIC_1, COMIC_3, COMIC_5 } from '@app/library/library.fixtures';
+import { CollectionType } from '@app/collections/models/comic-collection.enum';
 
 describe('Comic List Selectors', () => {
   let state: ComicListState;
@@ -75,5 +77,61 @@ describe('Comic List Selectors', () => {
     expect(
       selectComicListDeletedCount({ [COMIC_LIST_FEATURE_KEY]: state })
     ).toEqual(state.comics.filter(comic => !!comic.deletedDate).length);
+  });
+
+  describe('collection types', () => {
+    it('can select for publishers', () => {
+      expect(
+        selectComicListCollection(
+          { [COMIC_LIST_FEATURE_KEY]: state },
+          { collectionType: CollectionType.PUBLISHERS }
+        )
+      ).not.toEqual([]);
+    });
+
+    it('can select for series', () => {
+      expect(
+        selectComicListCollection(
+          { [COMIC_LIST_FEATURE_KEY]: state },
+          { collectionType: CollectionType.SERIES }
+        )
+      ).not.toEqual([]);
+    });
+
+    it('can select for characters', () => {
+      expect(
+        selectComicListCollection(
+          { [COMIC_LIST_FEATURE_KEY]: state },
+          { collectionType: CollectionType.CHARACTERS }
+        )
+      ).not.toEqual([]);
+    });
+
+    it('can select for teams', () => {
+      expect(
+        selectComicListCollection(
+          { [COMIC_LIST_FEATURE_KEY]: state },
+          { collectionType: CollectionType.TEAMS }
+        )
+      ).not.toEqual([]);
+    });
+
+    it('can select for locations', () => {
+      expect(
+        selectComicListCollection(
+          { [COMIC_LIST_FEATURE_KEY]: state },
+          { collectionType: CollectionType.LOCATIONS }
+        )
+      ).not.toEqual([]);
+    });
+
+    it('can select for stories', () => {
+      expect(
+        selectComicListCollection(
+          { [COMIC_LIST_FEATURE_KEY]: state },
+          { collectionType: CollectionType.STORIES }
+        )
+      ).not.toEqual([]);
+    });
   });
 });

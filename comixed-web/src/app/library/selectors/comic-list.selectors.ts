@@ -21,6 +21,10 @@ import {
   COMIC_LIST_FEATURE_KEY,
   ComicListState
 } from '../reducers/comic-list.reducer';
+import { CollectionType } from '@app/collections/models/comic-collection.enum';
+import { Comic } from '@app/library';
+import { CollectionListProperties } from '@app/collections/models/collection-list-properties';
+import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 
 export const selectComicListState = createFeatureSelector<ComicListState>(
   COMIC_LIST_FEATURE_KEY
@@ -44,4 +48,42 @@ export const selectComicListReadCount = createSelector(
 export const selectComicListDeletedCount = createSelector(
   selectComicListState,
   state => state.comics.filter(comic => !!comic.deletedDate).length
+);
+
+export const selectComicListCollection = createSelector(
+  selectComicList,
+  (state: Comic[], props: CollectionListProperties) => {
+    let entries = [];
+    state.forEach(comic => {
+      switch (props.collectionType) {
+        case CollectionType.PUBLISHERS:
+          entries.push(comic.publisher);
+          break;
+        case CollectionType.SERIES:
+          entries.push(comic.series);
+          break;
+        case CollectionType.CHARACTERS:
+          entries = entries.concat(comic.characters);
+          break;
+        case CollectionType.TEAMS:
+          entries = entries.concat(comic.teams);
+          break;
+        case CollectionType.LOCATIONS:
+          entries = entries.concat(comic.locations);
+          break;
+        case CollectionType.STORIES:
+          entries = entries.concat(comic.storyArcs);
+          break;
+      }
+    });
+
+    return entries
+      .filter((entry, index, self) => self.indexOf(entry) === index)
+      .map(name => {
+        return {
+          name,
+          comicCount: entries.filter(entry => entry === name).length
+        } as CollectionListEntry;
+      });
+  }
 );
