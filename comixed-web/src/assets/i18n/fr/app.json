@@ -74,6 +74,10 @@
     "options-menu": {
       "root": "Options",
       "show-options-panel": "Paramétrer les options utilisateur..."
+    },
+    "user-menu": {
+      "root": "Account",
+      "show-options-panel": "Set User Options..."
     }
   },
   "session": {
@@ -86,6 +90,8 @@
     "yes": "Oui"
   },
   "validation": {
-    "field-required": "Ce champ est obligatoire"
+    "field-required": "Ce champ est obligatoire",
+    "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
+    "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."
   }
 }

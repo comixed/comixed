@@ -21,11 +21,13 @@ package org.comixedproject.service.user;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.repositories.ComiXedUserRepository;
 import org.comixedproject.repositories.RoleRepository;
 import org.comixedproject.utils.Utils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -197,5 +199,45 @@ public class UserService implements InitializingBean {
     } catch (ComiXedUserException error) {
       error.printStackTrace();
     }
+  }
+
+  /**
+   * Updates the specified user account with the given values. If the password is null then it is
+   * not updated.
+   *
+   * @param id the user record id
+   * @param email the email
+   * @param password the password
+   * @return the updated user
+   * @throws ComiXedUserException if an error occurs
+   */
+  @Transactional
+  public ComiXedUser updateCurrentUser(final long id, final String email, String password)
+      throws ComiXedUserException {
+    log.debug("Loading user: id={}", id);
+    final ComiXedUser user = this.doGetById(id);
+
+    if (password != null) {
+      password = StringUtils.trim(password);
+    }
+
+    log.trace("Updating user details");
+    user.setEmail(email);
+    if (StringUtils.isNotEmpty(password)) {
+      user.setPasswordHash(this.utils.createHash(password.getBytes()));
+    }
+
+    log.trace("Saving updated user");
+    try {
+      return this.userRepository.save(user);
+    } catch (ConstraintViolationException error) {
+      throw new ComiXedUserException("Failed to save user", error);
+    }
+  }
+
+  private ComiXedUser doGetById(final long id) throws ComiXedUserException {
+    final ComiXedUser result = this.userRepository.getById(id);
+    if (result == null) throw new ComiXedUserException("No such user: id=" + id);
+    return result;
   }
 }

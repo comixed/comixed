@@ -20,10 +20,21 @@ package org.comixedproject.repositories;
 
 import java.util.List;
 import org.comixedproject.model.user.ComiXedUser;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface ComiXedUserRepository extends CrudRepository<ComiXedUser, Long> {
   List<ComiXedUser> findAll();
 
   ComiXedUser findByEmail(String email);
+
+  /**
+   * Retrieves a user by record id.
+   *
+   * @param id the record id.
+   * @return the user record
+   */
+  @Query("SELECT u FROM ComiXedUser u WHERE u.id = :id")
+  ComiXedUser getById(@Param("id") long id);
 }

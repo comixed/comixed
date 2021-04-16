@@ -26,12 +26,14 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.net.SaveUserRequest;
 import org.comixedproject.model.net.user.SaveUserPreferenceRequest;
 import org.comixedproject.model.net.user.SaveUserPreferenceResponse;
+import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Preference;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.utils.Utils;
+import org.comixedproject.views.View;
 import org.comixedproject.views.View.UserDetailsView;
 import org.comixedproject.views.View.UserList;
 import org.springframework.beans.factory.InitializingBean;
@@ -259,5 +261,29 @@ public class UserController implements InitializingBean {
 
   void setAdminRole(final Role role) {
     this.adminRole = role;
+  }
+
+  /**
+   * Updates the current user.
+   *
+   * @param id the user record id
+   * @param request the request body
+   * @return the updated user
+   * @throws ComiXedUserException if an error occurs
+   */
+  @PutMapping(
+      value = "/api/user/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.UserDetailsView.class)
+  @AuditableEndpoint
+  public ComiXedUser updateCurrentUser(
+      @PathVariable("id") final long id, @RequestBody() final UpdateCurrentUserRequest request)
+      throws ComiXedUserException {
+    final String email = request.getEmail();
+    final String password = request.getPassword();
+    log.info("Updated user account: id={} email={}", id, email);
+    final ComiXedUser response = this.userService.updateCurrentUser(id, email, password);
+    return response;
   }
 }

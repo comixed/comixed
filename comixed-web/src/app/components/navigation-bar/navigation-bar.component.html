@@ -14,17 +14,17 @@
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-label class="cx-spacer">ComiXed</mat-label>
-  <mat-label *ngIf="!!user">
+  <a *ngIf="!!user" routerLink="/account">
     {{ "app.logged-in" | translate: { email: user.email } }}
-    <button
-      mat-icon-button
-      color="warn"
-      [matTooltip]="'user.login-user.logout-tooltip' | translate"
-      (click)="onLogout()"
-    >
-      <mat-icon>logout</mat-icon>
-    </button>
-  </mat-label>
+  </a>
+  <button
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'user.login-user.logout-tooltip' | translate"
+    (click)="onLogout()"
+  >
+    <mat-icon>logout</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-menu #menu="matMenu">
@@ -79,8 +79,8 @@
   >
     <mat-icon *ngIf="currentLanguage === language">check_box</mat-icon>
     <mat-icon *ngIf="currentLanguage !== language"
-      >check_box_outline_blank</mat-icon
-    >
+      >check_box_outline_blank
+    </mat-icon>
     <mat-label>{{ "menu.language-menu." + language | translate }}</mat-label>
   </button>
 </mat-menu>

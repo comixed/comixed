@@ -25,9 +25,12 @@ import {
   DELETE_USER_PREFERENCE_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
-  SAVE_USER_PREFERENCE_URL
+  SAVE_USER_PREFERENCE_URL,
+  SAVE_CURRENT_USER_URL
 } from '@app/user/user.constants';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import { User } from '@app/user';
+import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -80,5 +83,24 @@ export class UserService {
         interpolate(DELETE_USER_PREFERENCE_URL, { name: args.name })
       );
     }
+  }
+
+  /**
+   * Saves the specified user and password.
+   *
+   * If the password is excluded the the user's password is not updated.
+   *
+   * @param args.user the user
+   * @param args.password the password
+   */
+  saveUser(args: { user: User; password: string }): Observable<any> {
+    this.logger.debug('Service: saving user:', args);
+    return this.http.put(
+      interpolate(SAVE_CURRENT_USER_URL, { id: args.user.id }),
+      {
+        email: args.user.email,
+        password: args.password
+      } as SaveCurrentUserRequest
+    );
   }
 }

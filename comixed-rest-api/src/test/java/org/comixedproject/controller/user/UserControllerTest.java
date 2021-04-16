@@ -20,11 +20,13 @@ package org.comixedproject.controller.user;
 
 import static org.junit.Assert.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.security.Principal;
 import java.util.List;
 import org.comixedproject.model.net.SaveUserRequest;
 import org.comixedproject.model.net.user.SaveUserPreferenceRequest;
 import org.comixedproject.model.net.user.SaveUserPreferenceResponse;
+import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -347,5 +349,39 @@ public class UserControllerTest {
 
     Mockito.verify(userService, Mockito.times(1))
         .createUser(TEST_EMAIL, TEST_PASSWORD, TEST_IS_ADMIN);
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testSaveCurrentUserServiceThrowsException() throws ComiXedUserException {
+    Mockito.when(
+            userService.updateCurrentUser(
+                Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      controller.updateCurrentUser(
+          TEST_USER_ID, new UpdateCurrentUserRequest(TEST_EMAIL, TEST_PASSWORD));
+    } finally {
+      Mockito.verify(userService, Mockito.times(1))
+          .updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
+    }
+  }
+
+  @Test
+  public void testSaveCurrentUser() throws JsonProcessingException, ComiXedUserException {
+    Mockito.when(
+            userService.updateCurrentUser(
+                Mockito.anyLong(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(user);
+
+    final ComiXedUser response =
+        controller.updateCurrentUser(
+            TEST_USER_ID, new UpdateCurrentUserRequest(TEST_EMAIL, TEST_PASSWORD));
+
+    assertNotNull(response);
+    assertSame(user, response);
+
+    Mockito.verify(userService, Mockito.times(1))
+        .updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
   }
 }

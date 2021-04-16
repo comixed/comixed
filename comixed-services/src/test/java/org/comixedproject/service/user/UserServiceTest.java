@@ -52,6 +52,7 @@ public class UserServiceTest {
   @Mock private ComiXedUserRepository userRepository;
   @Mock private RoleRepository roleRepository;
   @Mock private ComiXedUser user;
+  @Mock private ComiXedUser userRecord;
   @Captor private ArgumentCaptor<ComiXedUser> userCaptor;
   @Mock private List<ComiXedUser> userList;
   @Mock private Role role;
@@ -267,5 +268,79 @@ public class UserServiceTest {
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(utils, Mockito.times(1)).createHash(TEST_PASSWORD.getBytes());
     Mockito.verify(userRepository, Mockito.times(1)).save(userCaptor.getValue());
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testUpdateCurrentUserInvalidId() throws ComiXedUserException {
+    Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).getById(TEST_USER_ID);
+    }
+  }
+
+  @Test(expected = ComiXedUserException.class)
+  public void testUpdateCurrentUserSaveThrowsException() throws ComiXedUserException {
+    Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
+    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(userRepository.save(user)).thenThrow(ConstraintViolationException.class);
+
+    try {
+      service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
+    } finally {
+      Mockito.verify(userRepository, Mockito.times(1)).getById(TEST_USER_ID);
+      Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    }
+  }
+
+  @Test
+  public void testUpdateCurrentUser() throws ComiXedUserException {
+    Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
+    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(userRepository.save(user)).thenReturn(userRecord);
+
+    final ComiXedUser result = service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).getById(TEST_USER_ID);
+    Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).setPasswordHash(TEST_PASSWORD_HASH);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
+
+  @Test
+  public void testUpdateCurrentUserNullPassword() throws ComiXedUserException {
+    Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
+    Mockito.when(userRepository.save(user)).thenReturn(userRecord);
+
+    final ComiXedUser result = service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, null);
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).getById(TEST_USER_ID);
+    Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.never()).setPasswordHash(Mockito.anyString());
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+  }
+
+  @Test
+  public void testUpdateCurrentUserEmptyPassword() throws ComiXedUserException {
+    Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
+    Mockito.when(userRepository.save(user)).thenReturn(userRecord);
+
+    final ComiXedUser result = service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, " ");
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).getById(TEST_USER_ID);
+    Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.never()).setPasswordHash(Mockito.anyString());
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
   }
 }

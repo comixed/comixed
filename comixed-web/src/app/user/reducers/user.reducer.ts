@@ -24,6 +24,8 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveCurrentUser,
+  saveCurrentUserFailed,
   saveUserPreference,
   saveUserPreferenceFailed,
   userLoggedIn,
@@ -64,6 +66,7 @@ export const reducer = createReducer(
     ...state,
     initializing: false,
     loading: false,
+    saving: false,
     authenticated: true,
     user: action.user
   })),
@@ -98,5 +101,7 @@ export const reducer = createReducer(
     saving: false,
     user: action.user
   })),
-  on(saveUserPreferenceFailed, state => ({ ...state, saving: false }))
+  on(saveUserPreferenceFailed, state => ({ ...state, saving: false })),
+  on(saveCurrentUser, state => ({ ...state, saving: true })),
+  on(saveCurrentUserFailed, state => ({ ...state, saving: false }))
 );

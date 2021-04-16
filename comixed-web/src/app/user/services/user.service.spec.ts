@@ -28,13 +28,15 @@ import {
   DELETE_USER_PREFERENCE_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
-  SAVE_USER_PREFERENCE_URL
+  SAVE_USER_PREFERENCE_URL,
+  SAVE_CURRENT_USER_URL
 } from '@app/user/user.constants';
 import { LoggerModule } from '@angular-ru/logger';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 
 describe('UserService', () => {
   const USER = USER_READER;
@@ -114,5 +116,21 @@ describe('UserService', () => {
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush({ user: USER } as SaveUserPreferenceResponse);
+  });
+
+  it('can save changes to a user', () => {
+    service
+      .saveUser({ user: USER, password: PASSWORD })
+      .subscribe(response => expect(response).toEqual(USER));
+
+    const req = httpMock.expectOne(
+      interpolate(SAVE_CURRENT_USER_URL, { id: USER.id })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      email: USER.email,
+      password: PASSWORD
+    } as SaveCurrentUserRequest);
+    req.flush(USER);
   });
 });

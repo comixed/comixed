@@ -86,6 +86,8 @@
     "yes": "Yes"
   },
   "validation": {
-    "field-required": "This field is required"
+    "field-required": "This field is required",
+    "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
+    "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."
   }
 }

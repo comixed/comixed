@@ -6,6 +6,18 @@
     "load-current-user": {
       "effect-failure": "Impossible de charger le compte de l'utilisateur actuel."
     },
+    "edit-current-user": {
+      "label": {
+        "email": "Email Address",
+        "password": "Password",
+        "password-verify": "Verify The Password"
+      },
+      "page-title": "Edit User Account",
+      "tab-title": "Account: {email}",
+      "validation": {
+        "passwords-dont-match": "Passwords do not match..."
+      }
+    },
     "login-user": {
       "page-title": "Veuillez saisir vous authentifier",
       "email-placeholder": "Votre adresse email",
@@ -17,6 +29,16 @@
     "logout": {
       "confirmation-title": "Déconnexion",
       "confirmation-message": "Êtes-vous sûr de vouloir vous déconnecter ?"
+    },
+    "reset-user-changes": {
+      "confirmation-message": "Discard changes to your account?",
+      "conformation-title": "Revert Changes"
+    },
+    "save-current-user": {
+      "confirmation-message": "Are you sure you want to save the changes to your user account?",
+      "confirmation-title": "Save Account Changes",
+      "effect-failure": "Failed to save changes to account.",
+      "effect-success": "Saved changes to account."
     }
   }
 }

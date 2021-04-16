@@ -26,6 +26,8 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveCurrentUser,
+  saveCurrentUserFailed,
   saveUserPreference,
   saveUserPreferenceFailed,
   userLoggedIn,
@@ -154,6 +156,44 @@ export class UserEffects {
       catchError(error => {
         this.logger.error('General failure:', error);
         return of(saveUserPreferenceFailed());
+      })
+    );
+  });
+
+  saveCurrentUser$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(saveCurrentUser),
+      tap(action => this.logger.debug('Effect: save current user:', action)),
+      switchMap(action =>
+        this.userService
+          .saveUser({ user: action.user, password: action.password })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'user.save-current-user.effect-success'
+                )
+              )
+            ),
+            map((response: User) => currentUserLoaded({ user: response })),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'user.save-current-user.effect-failure'
+                )
+              );
+              return of(saveCurrentUserFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(saveCurrentUserFailed());
       })
     );
   });
