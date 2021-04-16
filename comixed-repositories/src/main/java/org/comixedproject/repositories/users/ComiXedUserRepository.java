@@ -19,7 +19,9 @@
 package org.comixedproject.repositories.users;
 
 import org.comixedproject.model.user.ComiXedUser;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * <code>ComiXedUserRepository</code> provides APIs for working with persistenced instances of
@@ -35,4 +37,13 @@ public interface ComiXedUserRepository extends CrudRepository<ComiXedUser, Long>
    * @return the user, or null if not found
    */
   ComiXedUser findByEmail(String email);
+
+  /**
+   * Retrieves a user by record id.
+   *
+   * @param id the record id.
+   * @return the user record
+   */
+  @Query("SELECT u FROM ComiXedUser u WHERE u.id = :id")
+  ComiXedUser getById(@Param("id") long id);
 }

@@ -11,6 +11,15 @@
   <span id="cx-logo">ComiXed</span>
   <div class="cx-spacer"></div>
   <button
+    *ngIf="!!user"
+    mat-icon-button
+    [matTooltip]="'navigation.tooltip.account' | translate"
+    [routerLink]="'/account'"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+
+  <button
     id="toolbar-menu-trigger-button"
     mat-flat-button
     color="primary"

@@ -29,6 +29,8 @@ import {
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveCurrentUser,
+  saveCurrentUserFailed,
   saveUserPreference,
   saveUserPreferenceFailed,
   userLoggedIn,
@@ -75,7 +77,8 @@ describe('UserEffects', () => {
             loginUser: jasmine.createSpy('UserService.loginUser()'),
             saveUserPreference: jasmine.createSpy(
               'UserService.saveUserPreference()'
-            )
+            ),
+            saveUser: jasmine.createSpy('UserService.saveUser()')
           }
         }
       ]
@@ -84,6 +87,7 @@ describe('UserEffects', () => {
     effects = TestBed.inject(UserEffects);
     userService = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
     alertService = TestBed.inject(AlertService);
+    spyOn(alertService, 'info');
     spyOn(alertService, 'error');
     tokenService = TestBed.inject(TokenService);
     spyOn(tokenService, 'setAuthToken');
@@ -237,6 +241,46 @@ describe('UserEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.saveUserPreference$).toBeObservable(expected);
+    });
+  });
+
+  describe('saving a user account', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = USER;
+      const action = saveCurrentUser({ user: USER, password: PASSWORD });
+      const outcome = currentUserLoaded({ user: USER });
+
+      actions$ = hot('-a', { a: action });
+      userService.saveUser.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.saveCurrentUser$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = saveCurrentUser({ user: USER, password: PASSWORD });
+      const outcome = saveCurrentUserFailed();
+
+      actions$ = hot('-a', { a: action });
+      userService.saveUser.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.saveCurrentUser$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = saveCurrentUser({ user: USER, password: PASSWORD });
+      const outcome = saveCurrentUserFailed();
+
+      actions$ = hot('-a', { a: action });
+      userService.saveUser.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.saveCurrentUser$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });

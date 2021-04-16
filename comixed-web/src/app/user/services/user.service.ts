@@ -25,6 +25,7 @@ import {
   DELETE_PREFERENCE_MESSAGE,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
+  SAVE_CURRENT_USER_URL,
   SAVE_PREFERENCE_MESSAGE,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
@@ -32,13 +33,11 @@ import { Store } from '@ngrx/store';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { Subscription } from 'webstomp-client';
 import { WebSocketService } from '@app/messaging';
-import {
-  currentUserLoaded,
-  loadCurrentUser
-} from '@app/user/actions/user.actions';
+import { currentUserLoaded } from '@app/user/actions/user.actions';
 import { SetUserPreference } from '@app/user/models/messaging/set-user-preference';
 import { DeleteUserPreference } from '@app/user/models/messaging/delete-user-preference';
 import { User } from '@app/user';
+import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -122,5 +121,24 @@ export class UserService {
         );
       });
     }
+  }
+
+  /**
+   * Saves the specified user and password.
+   *
+   * If the password is excluded the the user's password is not updated.
+   *
+   * @param args.user the user
+   * @param args.password the password
+   */
+  saveUser(args: { user: User; password: string }): Observable<any> {
+    this.logger.debug('Service: saving user:', args);
+    return this.http.put(
+      interpolate(SAVE_CURRENT_USER_URL, { id: args.user.id }),
+      {
+        email: args.user.email,
+        password: args.password
+      } as SaveCurrentUserRequest
+    );
   }
 }

@@ -26,4 +26,7 @@ public interface Constants {
 
   /** Topic which receives blocked page removals in real time. */
   String BLOCKED_PAGE_LIST_REMOVAL_TOPIC = "/topic/blocked-page-list.removal";
+
+  /** Topic which receives updates on the current user." */
+  String CURRENT_USER_UPDATE_TOPIC = "/topic/user/current";
 }

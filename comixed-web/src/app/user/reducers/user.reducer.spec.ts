@@ -20,9 +20,12 @@ import { initialState, reducer, UserState } from './user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import {
   currentUserLoaded,
+  loadCurrentUser,
   loginUser,
   loginUserFailed,
   logoutUser,
+  saveCurrentUser,
+  saveCurrentUserFailed,
   saveUserPreference,
   saveUserPreferenceFailed,
   userLoggedIn,
@@ -72,6 +75,23 @@ describe('User Reducer', () => {
     });
   });
 
+  describe('loading the current user', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, initializing: false, loading: false },
+        loadCurrentUser()
+      );
+    });
+
+    it('sets the initializing flag', () => {
+      expect(state.initializing).toBeTrue();
+    });
+
+    it('sets the loading flag', () => {
+      expect(state.loading).toBeTrue();
+    });
+  });
+
   describe('when the current user is loaded', () => {
     beforeEach(() => {
       state = reducer(
@@ -80,7 +100,8 @@ describe('User Reducer', () => {
           initializing: true,
           loading: true,
           authenticated: false,
-          user: null
+          user: null,
+          saving: true
         },
         currentUserLoaded({ user: USER })
       );
@@ -96,6 +117,10 @@ describe('User Reducer', () => {
 
     it('sets the authenticated flag', () => {
       expect(state.authenticated).toBeTrue();
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
     });
 
     it('sets the current user', () => {
@@ -218,6 +243,29 @@ describe('User Reducer', () => {
   describe('failure to save a user preference', () => {
     beforeEach(() => {
       state = reducer({ ...state, saving: true }, saveUserPreferenceFailed());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
+    });
+  });
+
+  describe('saving the current user', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, saving: false },
+        saveCurrentUser({ user: USER, password: PASSWORD })
+      );
+    });
+
+    it('sets the saving flag', () => {
+      expect(state.saving).toBeTrue();
+    });
+  });
+
+  describe('failure to save the current user', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, saveCurrentUserFailed());
     });
 
     it('clears the saving flag', () => {
