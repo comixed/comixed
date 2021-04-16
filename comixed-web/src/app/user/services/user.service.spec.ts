@@ -28,6 +28,7 @@ import {
   DELETE_PREFERENCE_MESSAGE,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
+  SAVE_CURRENT_USER_URL,
   SAVE_PREFERENCE_MESSAGE,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
@@ -44,6 +45,7 @@ import {
 import { Subscription } from 'webstomp-client';
 import { currentUserLoaded } from '@app/user/actions/user.actions';
 import { WebSocketService } from '@app/messaging';
+import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 
 describe('UserService', () => {
   const USER = USER_READER;
@@ -202,5 +204,21 @@ describe('UserService', () => {
     it('clears the subscription reference', () => {
       expect(service.subscription).toBeNull();
     });
+  });
+
+  it('can save changes to a user', () => {
+    service
+      .saveUser({ user: USER, password: PASSWORD })
+      .subscribe(response => expect(response).toEqual(USER));
+
+    const req = httpMock.expectOne(
+      interpolate(SAVE_CURRENT_USER_URL, { id: USER.id })
+    );
+    expect(req.request.method).toEqual('PUT');
+    expect(req.request.body).toEqual({
+      email: USER.email,
+      password: PASSWORD
+    } as SaveCurrentUserRequest);
+    req.flush(USER);
   });
 });

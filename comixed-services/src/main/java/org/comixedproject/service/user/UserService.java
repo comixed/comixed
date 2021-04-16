@@ -20,9 +20,11 @@ package org.comixedproject.service.user;
 
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.repositories.RoleRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
+import org.comixedproject.utils.Utils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class UserService {
   @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private RoleRepository roleRepository;
+  @Autowired private Utils utils;
 
   /**
    * Finds a user by email address.
@@ -106,5 +108,45 @@ public class UserService {
     log.debug("Updating last logged in date for user: {}", user.getEmail());
     user.setLastLoginDate(new Date());
     return this.userRepository.save(user);
+  }
+
+  /**
+   * Updates the specified user account with the given values. If the password is null then it is
+   * not updated.
+   *
+   * @param id the user record id
+   * @param email the email
+   * @param password the password
+   * @return the updated user
+   * @throws ComiXedUserException if an error occurs
+   */
+  @Transactional
+  public ComiXedUser updateCurrentUser(final long id, final String email, String password)
+      throws ComiXedUserException {
+    log.debug("Loading user: id={}", id);
+    final ComiXedUser user = this.doGetById(id);
+
+    if (password != null) {
+      password = StringUtils.trim(password);
+    }
+
+    log.trace("Updating user details");
+    user.setEmail(email);
+    if (StringUtils.isNotEmpty(password)) {
+      user.setPasswordHash(this.utils.createHash(password.getBytes()));
+    }
+
+    log.trace("Saving updated user");
+    try {
+      return this.userRepository.save(user);
+    } catch (ConstraintViolationException error) {
+      throw new ComiXedUserException("Failed to save user", error);
+    }
+  }
+
+  private ComiXedUser doGetById(final long id) throws ComiXedUserException {
+    final ComiXedUser result = this.userRepository.getById(id);
+    if (result == null) throw new ComiXedUserException("No such user: id=" + id);
+    return result;
   }
 }

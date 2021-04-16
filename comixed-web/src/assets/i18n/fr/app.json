@@ -76,9 +76,9 @@
     "tooltip": {
       "toggle-sidenav": "Shows/Hides the side navigation panel..."
     },
-    "options-menu": {
-      "root": "Options",
-      "show-options-panel": "Paramétrer les options utilisateur..."
+    "user-menu": {
+      "root": "Account",
+      "show-options-panel": "Set User Options..."
     }
   },
   "navigation": {
@@ -99,6 +99,9 @@
       "import-comics": "Import Comics",
       "unread-comics": "Unread Comics",
       "web-audit-log": "Web Audit Log"
+    },
+    "tooltip": {
+      "account": "View account details."
     }
   },
   "session": {
@@ -111,6 +114,8 @@
     "yes": "Oui"
   },
   "validation": {
-    "field-required": "Ce champ est obligatoire"
+    "field-required": "Ce champ est obligatoire",
+    "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
+    "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."
   }
 }
