@@ -27,6 +27,8 @@ export const LOAD_BUILD_DETAILS_URL = `${API_ROOT_URL}/build-details`;
 export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 
+export const QUERY_PARAM_SIDEBAR = 'sidebar';
+
 // messaging constants
 
 export const IMPORT_COUNT_TOPIC = '/topic/import.count';
