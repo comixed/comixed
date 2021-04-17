@@ -164,12 +164,6 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     }
   }
 
-  /**
-   * Loads all archive entries.
-   *
-   * @param comic the comic
-   * @param archiveReference the archive
-   */
   protected abstract void loadAllFiles(
       final Comic comic, final I archiveReference, final boolean ignoreMetadata)
       throws ArchiveAdaptorException;

@@ -70,7 +70,7 @@ public interface ArchiveAdaptor {
    * @param filename the archive name
    * @param entryName the entry name
    * @return the content
-   * @throws ArchiveAdaptorException
+   * @throws ArchiveAdaptorException if an error occurs
    */
   byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException;
 
@@ -86,6 +86,7 @@ public interface ArchiveAdaptor {
    * @param renamePages true rename pages
    * @return the new comic
    * @throws ArchiveAdaptorException if an error occurs
+   * @throws IOException if an error occurs
    */
   Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException, IOException;
 
