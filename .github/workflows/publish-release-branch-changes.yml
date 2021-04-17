@@ -32,6 +32,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 0.8.1-1.0
+          title: Changes For 0.8.1-1.1
           files: |
-            release/comixed-release-0.8.1-1.0-RELEASE.zip
+            release/comixed-release-0.8.1-1.1-RELEASE.zip
