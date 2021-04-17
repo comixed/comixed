@@ -22,11 +22,11 @@ import { LoggerService } from '@angular-ru/logger';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
-  DELETE_PREFERENCE_MESSAGE,
+  DELETE_USER_PREFERENCE_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
   SAVE_CURRENT_USER_URL,
-  SAVE_PREFERENCE_MESSAGE,
+  SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
 import { Store } from '@ngrx/store';
@@ -34,10 +34,9 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { Subscription } from 'webstomp-client';
 import { WebSocketService } from '@app/messaging';
 import { currentUserLoaded } from '@app/user/actions/user.actions';
-import { SetUserPreference } from '@app/user/models/messaging/set-user-preference';
-import { DeleteUserPreference } from '@app/user/models/messaging/delete-user-preference';
 import { User } from '@app/user';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
+import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.
@@ -103,23 +102,15 @@ export class UserService {
   saveUserPreference(args: { name: string; value: string }): Observable<any> {
     if (!!args.value && args.value.length > 0) {
       this.logger.trace('Service: saving user preference:', args);
-      return new Observable<void>(() => {
-        this.webSocketService.send(
-          SAVE_PREFERENCE_MESSAGE,
-          JSON.stringify({
-            name: args.name,
-            value: args.value
-          } as SetUserPreference)
-        );
-      });
+      return this.http.post(
+        interpolate(SAVE_USER_PREFERENCE_URL, { name: args.name }),
+        { value: args.value } as SaveUserPreferenceRequest
+      );
     } else {
       this.logger.trace('Service: deleting user preference:', args);
-      return new Observable<void>(() => {
-        this.webSocketService.send(
-          DELETE_PREFERENCE_MESSAGE,
-          JSON.stringify({ name: args.name } as DeleteUserPreference)
-        );
-      });
+      return this.http.delete(
+        interpolate(DELETE_USER_PREFERENCE_URL, { name: args.name })
+      );
     }
   }
 

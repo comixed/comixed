@@ -26,8 +26,7 @@ import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.messaging.Constants;
-import org.comixedproject.model.messaging.user.DeleteUserPropertyMessage;
-import org.comixedproject.model.messaging.user.SetUserPropertyMessage;
+import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
 import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -35,10 +34,7 @@ import org.comixedproject.service.user.UserService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,41 +70,67 @@ public class UserController {
    * Sets a preference name and value for a user.
    *
    * @param principal the user principal
-   * @param message the message body
+   * @param name the property name
+   * @param request the request body
    * @return the updated user
    * @throws ComiXedUserException if the user is invalid
    */
-  @MessageMapping("user.preference.save")
-  @SendToUser(Constants.CURRENT_USER_UPDATE_TOPIC)
-  public ComiXedUser saveCurrentUserProperty(
-      @NotNull final Principal principal, @Payload SetUserPropertyMessage message)
+  @PostMapping(
+      value = "/api/user/preferences/{name}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.UserDetailsView.class)
+  public ComiXedUser saveCurrentUserPreference(
+      @NotNull final Principal principal,
+      @PathVariable("name") final String name,
+      @RequestBody() final SaveCurrentUserPreferenceRequest request)
       throws ComiXedUserException {
     final String email = principal.getName();
-    final String name = message.getName();
-    final String value = message.getValue();
+    final String value = request.getValue();
 
     log.info("Setting user preference: {} {}=\"{}\"", email, name, value);
-    return this.userService.setUserProperty(email, name, value);
+    final ComiXedUser response = this.userService.setUserProperty(email, name, value);
+    try {
+      this.messagingTemplate.convertAndSend(
+          Constants.CURRENT_USER_UPDATE_TOPIC,
+          this.objectMapper
+              .writerWithView(View.UserDetailsView.class)
+              .writeValueAsString(response));
+    } catch (JsonProcessingException error) {
+      log.error("Failed to publish current user changes", error);
+    }
+    return response;
   }
 
   /**
    * Deletes a user property.
    *
    * @param principal the user principal
-   * @param message the message body
+   * @param name the property name
    * @return the updated user
    * @throws ComiXedUserException if the user is invalid
    */
-  @MessageMapping("user.preference.delete")
-  @SendToUser(Constants.CURRENT_USER_UPDATE_TOPIC)
+  @DeleteMapping(
+      value = "/api/user/preferences/{name}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.UserDetailsView.class)
   public ComiXedUser deleteCurrentUserProperty(
-      @NotNull final Principal principal, @Payload DeleteUserPropertyMessage message)
+      @NotNull final Principal principal, @PathVariable("name") final String name)
       throws ComiXedUserException {
     final String email = principal.getName();
-    final String name = message.getName();
 
-    log.info("Deleting user preference: {} {}", principal.getName(), message.getName());
-    return this.userService.deleteUserProperty(email, name);
+    log.info("Deleting user preference: {} {}", principal.getName(), name);
+    final ComiXedUser response = this.userService.deleteUserProperty(email, name);
+    try {
+      this.messagingTemplate.convertAndSend(
+          Constants.CURRENT_USER_UPDATE_TOPIC,
+          this.objectMapper
+              .writerWithView(View.UserDetailsView.class)
+              .writeValueAsString(response));
+    } catch (JsonProcessingException error) {
+      log.error("Failed to publish current user changes", error);
+    }
+    return response;
   }
 
   /**

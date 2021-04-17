@@ -25,19 +25,17 @@ import {
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
 import {
-  DELETE_PREFERENCE_MESSAGE,
+  DELETE_USER_PREFERENCE_URL,
   LOAD_CURRENT_USER_URL,
   LOGIN_USER_URL,
   SAVE_CURRENT_USER_URL,
-  SAVE_PREFERENCE_MESSAGE,
+  SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
 import { LoggerModule } from '@angular-ru/logger';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { SetUserPreference } from '@app/user/models/messaging/set-user-preference';
-import { DeleteUserPreference } from '@app/user/models/messaging/delete-user-preference';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -46,6 +44,7 @@ import { Subscription } from 'webstomp-client';
 import { currentUserLoaded } from '@app/user/actions/user.actions';
 import { WebSocketService } from '@app/messaging';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
+import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
 
 describe('UserService', () => {
   const USER = USER_READER;
@@ -114,41 +113,53 @@ describe('UserService', () => {
     req.flush(serviceResponse);
   });
 
-  describe('saving a user preferences', () => {
-    beforeEach(() => {
-      webSocketService.send.and.stub();
+  describe('user preferences', () => {
+    it('saves when the value is non-null and has length', () => {
       service
         .saveUserPreference({
           name: PREFERENCE_NAME,
           value: PREFERENCE_VALUE
         })
-        .subscribe(() => {});
-    });
+        .subscribe(response => expect(response).toEqual(USER));
 
-    it('sends a message', () => {
-      expect(webSocketService.send).toHaveBeenCalledWith(
-        SAVE_PREFERENCE_MESSAGE,
-        JSON.stringify({
-          name: PREFERENCE_NAME,
-          value: PREFERENCE_VALUE
-        } as SetUserPreference)
+      const req = httpMock.expectOne(
+        interpolate(SAVE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
       );
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({
+        value: PREFERENCE_VALUE
+      } as SaveUserPreferenceRequest);
+      req.flush(USER);
     });
-  });
 
-  describe('can delete a user preferences', () => {
-    beforeEach(() => {
-      webSocketService.send.and.stub();
+    it('deletes when the value is null', () => {
       service
-        .saveUserPreference({ name: PREFERENCE_NAME, value: null })
-        .subscribe(() => {});
+        .saveUserPreference({
+          name: PREFERENCE_NAME,
+          value: null
+        })
+        .subscribe(response => expect(response).toEqual(USER));
+
+      const req = httpMock.expectOne(
+        interpolate(DELETE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
+      );
+      expect(req.request.method).toEqual('DELETE');
+      req.flush(USER);
     });
 
-    it('sends a message', () => {
-      expect(webSocketService.send).toHaveBeenCalledWith(
-        DELETE_PREFERENCE_MESSAGE,
-        JSON.stringify({ name: PREFERENCE_NAME } as DeleteUserPreference)
+    it('deletes when the value is an empty string', () => {
+      service
+        .saveUserPreference({
+          name: PREFERENCE_NAME,
+          value: ''
+        })
+        .subscribe(response => expect(response).toEqual(USER));
+
+      const req = httpMock.expectOne(
+        interpolate(DELETE_USER_PREFERENCE_URL, { name: PREFERENCE_NAME })
       );
+      expect(req.request.method).toEqual('DELETE');
+      req.flush(USER);
     });
   });
 

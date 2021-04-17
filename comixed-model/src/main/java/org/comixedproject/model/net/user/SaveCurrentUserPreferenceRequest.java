@@ -16,25 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.messaging.user;
+package org.comixedproject.model.net.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * <code>SetUserPropertyMessage</code> represents the message body when setting a user preference.
- *
- * @author Darryl L. Pierce
- */
 @AllArgsConstructor
 @NoArgsConstructor
-public class SetUserPropertyMessage {
-  @JsonProperty("name")
-  @Getter
-  private String name;
-
+public class SaveCurrentUserPreferenceRequest {
   @JsonProperty("value")
   @Getter
   private String value;
