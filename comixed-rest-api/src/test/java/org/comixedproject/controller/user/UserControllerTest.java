@@ -26,8 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.security.Principal;
 import org.comixedproject.model.messaging.Constants;
-import org.comixedproject.model.messaging.user.DeleteUserPropertyMessage;
-import org.comixedproject.model.messaging.user.SetUserPropertyMessage;
+import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
 import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -101,8 +100,8 @@ public class UserControllerTest {
         .thenThrow(ComiXedUserException.class);
 
     try {
-      controller.saveCurrentUserProperty(
-          principal, new SetUserPropertyMessage(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE));
+      controller.saveCurrentUserPreference(
+          principal, TEST_PROPERTY_NAME, new SaveCurrentUserPreferenceRequest(TEST_PROPERTY_VALUE));
     } finally {
       Mockito.verify(userService, Mockito.times(1))
           .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
@@ -110,21 +109,55 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testSetUserPropertySuccess() throws ComiXedUserException {
+  public void testSetUserPropertyJsonProcessingException()
+      throws ComiXedUserException, JsonProcessingException {
     Mockito.when(
             userService.setUserProperty(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenThrow(JsonProcessingException.class);
 
     final ComiXedUser result =
-        controller.saveCurrentUserProperty(
-            principal, new SetUserPropertyMessage(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE));
+        controller.saveCurrentUserPreference(
+            principal,
+            TEST_PROPERTY_NAME,
+            new SaveCurrentUserPreferenceRequest(TEST_PROPERTY_VALUE));
 
     assertNotNull(result);
     assertSame(user, result);
 
     Mockito.verify(userService, Mockito.times(1))
         .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
+    Mockito.verify(messagingTemplate, Mockito.never())
+        .convertAndSend(Mockito.anyString(), Mockito.anyString());
+  }
+
+  @Test
+  public void testSetUserProperty() throws ComiXedUserException, JsonProcessingException {
+    Mockito.when(
+            userService.setUserProperty(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(user);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_USER_AS_JSON);
+
+    final ComiXedUser result =
+        controller.saveCurrentUserPreference(
+            principal,
+            TEST_PROPERTY_NAME,
+            new SaveCurrentUserPreferenceRequest(TEST_PROPERTY_VALUE));
+
+    assertNotNull(result);
+    assertSame(user, result);
+
+    Mockito.verify(userService, Mockito.times(1))
+        .setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSend(Constants.CURRENT_USER_UPDATE_TOPIC, TEST_USER_AS_JSON);
   }
 
   @Test(expected = ComiXedUserException.class)
@@ -133,8 +166,7 @@ public class UserControllerTest {
         .thenThrow(ComiXedUserException.class);
 
     try {
-      controller.deleteCurrentUserProperty(
-          principal, new DeleteUserPropertyMessage(TEST_PROPERTY_NAME));
+      controller.deleteCurrentUserProperty(principal, TEST_PROPERTY_NAME);
     } finally {
       Mockito.verify(userService, Mockito.times(1))
           .deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
@@ -142,19 +174,43 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testDeleteUserPropertySuccess() throws ComiXedUserException {
+  public void testDeleteUserPropertyJsonProcessingException()
+      throws ComiXedUserException, JsonProcessingException {
     Mockito.when(userService.deleteUserProperty(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(user);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenThrow(JsonProcessingException.class);
 
-    final ComiXedUser result =
-        controller.deleteCurrentUserProperty(
-            principal, new DeleteUserPropertyMessage(TEST_PROPERTY_NAME));
+    final ComiXedUser result = controller.deleteCurrentUserProperty(principal, TEST_PROPERTY_NAME);
 
     assertNotNull(result);
     assertSame(user, result);
 
     Mockito.verify(userService, Mockito.times(1))
         .deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
+    Mockito.verify(messagingTemplate, Mockito.never())
+        .convertAndSend(Mockito.anyString(), Mockito.anyString());
+  }
+
+  @Test
+  public void testDeleteUserProperty() throws ComiXedUserException, JsonProcessingException {
+    Mockito.when(userService.deleteUserProperty(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(user);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_USER_AS_JSON);
+
+    final ComiXedUser result = controller.deleteCurrentUserProperty(principal, TEST_PROPERTY_NAME);
+
+    assertNotNull(result);
+    assertSame(user, result);
+
+    Mockito.verify(userService, Mockito.times(1))
+        .deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.UserDetailsView.class);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(user);
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSend(Constants.CURRENT_USER_UPDATE_TOPIC, TEST_USER_AS_JSON);
   }
 
   @Test(expected = ComiXedUserException.class)

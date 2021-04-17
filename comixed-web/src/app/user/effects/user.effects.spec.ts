@@ -44,7 +44,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
 import { resetDisplayOptions } from '@app/library/actions/display.actions';
 
 describe('UserEffects', () => {
@@ -198,7 +197,7 @@ describe('UserEffects', () => {
 
   describe('saving a user preference', () => {
     it('fires an action on success', () => {
-      const serviceResponse = { user: USER } as SaveUserPreferenceResponse;
+      const serviceResponse = USER;
       const action = saveUserPreference({
         name: PREFERENCE_NAME,
         value: PREFERENCE_VALUE

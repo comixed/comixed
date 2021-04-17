@@ -888,6 +888,9 @@
     <addAutoIncrement tableName="Teams"
                       columnName="Id"
                       columnDataType="bigint"/>
+    <addAutoIncrement tableName="UserPreferences"
+                      columnName="Id"
+                      columnDataType="bigint"/>
     <addAutoIncrement tableName="Users"
                       columnName="Id"
                       columnDataType="bigint"/>

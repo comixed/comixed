@@ -40,7 +40,6 @@ import { AlertService, TokenService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LoginResponse } from '@app/user/models/net/login-response';
-import { SaveUserPreferenceResponse } from '@app/user/models/net/save-user-preference-response';
 import { resetDisplayOptions } from '@app/library/actions/display.actions';
 import { User } from '@app/user';
 
@@ -106,6 +105,7 @@ export class UserEffects {
       })
     );
   });
+
   logoutUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(logoutUser),
@@ -126,9 +126,7 @@ export class UserEffects {
           .saveUserPreference({ name: action.name, value: action.value })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
-            map((response: SaveUserPreferenceResponse) =>
-              userPreferenceSaved({ user: response.user })
-            ),
+            map((response: User) => userPreferenceSaved({ user: response })),
             catchError(error => {
               this.logger.error('Service failure:', error);
               return of(saveUserPreferenceFailed());
