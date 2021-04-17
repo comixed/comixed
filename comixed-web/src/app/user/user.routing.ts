@@ -31,7 +31,7 @@ const routes: Routes = [
   {
     path: 'account',
     component: AccountEditPageComponent,
-    canActivate: [ReaderGuard, AdminGuard]
+    canActivate: [ReaderGuard]
   }
 ];
 
