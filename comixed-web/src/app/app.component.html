@@ -10,7 +10,8 @@
 <div id="cx-navigation-bar" class="cx-width-100 cx-height-100">
   <cx-navigation-bar
     [user]="user"
-    (toggleSidebar)="sidenav.toggle()"
+    [sidebarOpened]="sidenav.opened"
+    (toggleSidebar)="sidenav.toggle($event)"
   ></cx-navigation-bar>
   <mat-sidenav-container class="cx-width-100 cx-height-100">
     <mat-sidenav #sidenav mode="side">

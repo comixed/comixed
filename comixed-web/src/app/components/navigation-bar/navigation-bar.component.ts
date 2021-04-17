@@ -16,11 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '@app/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
-import { Router } from '@angular/router';
-import { ConfirmationService, SelectionOption } from '@app/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ConfirmationService,
+  SelectionOption,
+  updateQueryParam
+} from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
@@ -29,7 +33,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ComicDisplayOptionsComponent } from '@app/library/components/comic-display-options/comic-display-options.component';
 import {
   LANGUAGE_PREFERENCE,
-  LOGGER_LEVEL_PREFERENCE
+  LOGGER_LEVEL_PREFERENCE,
+  QUERY_PARAM_SIDEBAR
 } from '@app/app.constants';
 import { ComicViewMode } from '@app/library';
 import { ComicCollection } from '@app/library/models/comic-collection.enum';
@@ -40,8 +45,7 @@ import { ComicCollection } from '@app/library/models/comic-collection.enum';
   styleUrls: ['./navigation-bar.component.scss']
 })
 export class NavigationBarComponent {
-  @Output() toggleSidebar = new EventEmitter<void>();
-
+  @Output() toggleSidebar = new EventEmitter<boolean>();
   isReader = false;
   isAdmin = false;
   readonly languages = ['en', 'fr', 'es', 'pt'];
@@ -75,12 +79,28 @@ export class NavigationBarComponent {
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private activatedRoute: ActivatedRoute
   ) {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (!!params[QUERY_PARAM_SIDEBAR]) {
+        this.toggleSidebar.emit(params[QUERY_PARAM_SIDEBAR] === 'true');
+      }
+    });
     this.translateService.onLangChange.subscribe(language => {
       this.logger.debug('Active language changed:', language.lang);
       this.currentLanguage = language.lang;
     });
+  }
+
+  private _sidebarOpened = false;
+
+  get sidebarOpened(): boolean {
+    return this._sidebarOpened;
+  }
+
+  @Input() set sidebarOpened(opened: boolean) {
+    this._sidebarOpened = opened;
   }
 
   private _user: User;
@@ -172,6 +192,12 @@ export class NavigationBarComponent {
 
   onToggleSidebar(): void {
     this.logger.trace('Toggling sidebar');
-    this.toggleSidebar.emit();
+    this.toggleSidebar.emit(!this.sidebarOpened);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_SIDEBAR,
+      `${!this.sidebarOpened}`
+    );
   }
 }
