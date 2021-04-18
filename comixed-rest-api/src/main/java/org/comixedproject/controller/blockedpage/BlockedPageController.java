@@ -24,10 +24,12 @@ import static org.comixedproject.model.messaging.Constants.BLOCKED_PAGE_LIST_UPD
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.blockedpage.BlockedPage;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.views.View;
@@ -149,5 +151,17 @@ public class BlockedPageController {
         log.error("Failed to publish blocked page remove", error);
       }
     }
+  }
+
+  /**
+   * Generates and downloads a file containing the blocked page list.
+   *
+   * @return the blocked page file
+   */
+  @GetMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  public DownloadDocument downloadFile() throws IOException {
+    log.info("Downloading blocked page file");
+    return this.blockedPageService.createFile();
   }
 }

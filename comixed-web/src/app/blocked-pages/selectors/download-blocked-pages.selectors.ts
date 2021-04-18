@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DownloadDocument } from './models/download-document';
-export { SelectableListItem } from './models/ui/selectable-list-item';
-export { SelectionOption } from './models/ui/selection-option';
-export { SortableListItem } from './models/ui/sortable-list-item';
-export { TokenService } from './services/token.service';
-export { AlertService } from './services/alert.service';
-export { ConfirmationService } from './services/confirmation.service';
-export { TitleService } from './services/title.service';
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
+  DownloadBlockedPagesState
+} from '../reducers/download-blocked-pages.reducer';
+
+export const selectDownloadBlockedPagesState = createFeatureSelector<DownloadBlockedPagesState>(
+  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY
+);

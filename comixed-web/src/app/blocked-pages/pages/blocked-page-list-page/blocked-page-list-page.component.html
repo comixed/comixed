@@ -1,5 +1,15 @@
 <mat-toolbar class="cx-primary-light-background">
   <mat-paginator class="cx-primary-light-background"></mat-paginator>
+  <div class="cx-spacer"></div>
+  <button
+    id="download-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'blocked-page-list.tooltip.download-file' | translate"
+    (click)="onDownloadFile()"
+  >
+    <mat-icon>download</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-table [dataSource]="dataSource" matSort>

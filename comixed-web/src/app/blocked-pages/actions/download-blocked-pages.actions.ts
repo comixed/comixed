@@ -16,11 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DownloadDocument } from './models/download-document';
-export { SelectableListItem } from './models/ui/selectable-list-item';
-export { SelectionOption } from './models/ui/selection-option';
-export { SortableListItem } from './models/ui/sortable-list-item';
-export { TokenService } from './services/token.service';
-export { AlertService } from './services/alert.service';
-export { ConfirmationService } from './services/confirmation.service';
-export { TitleService } from './services/title.service';
+import { createAction, props } from '@ngrx/store';
+import { DownloadDocument } from '@app/core';
+
+export const downloadBlockedPages = createAction(
+  '[Download Blocked Pages] Downloads the blocked page list'
+);
+
+export const blockedPagesDownloaded = createAction(
+  '[Download Blocked Pages] Blocked pages downloaded',
+  props<{ document: DownloadDocument }>()
+);
+
+export const downloadBlockedPagesFailed = createAction(
+  '[Download Blocked Pages] Failed to download blocked pages'
+);

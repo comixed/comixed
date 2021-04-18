@@ -26,9 +26,11 @@ import static org.comixedproject.model.messaging.Constants.BLOCKED_PAGE_LIST_UPD
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.io.IOException;
 import java.util.List;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.views.View;
@@ -56,6 +58,7 @@ public class BlockedPageControllerTest {
   @Mock private BlockedPage blockedPage;
   @Mock private BlockedPage blockedPageRecord;
   @Mock private Page page;
+  @Mock private DownloadDocument downloadDocument;
 
   @Before
   public void setUp() {
@@ -228,5 +231,17 @@ public class BlockedPageControllerTest {
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(blockedPageRecord);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(BLOCKED_PAGE_LIST_REMOVAL_TOPIC, TEST_BLOCKED_PAGE_AS_JSON);
+  }
+
+  @Test
+  public void testDownloadFile() throws IOException {
+    Mockito.when(blockedPageService.createFile()).thenReturn(downloadDocument);
+
+    final DownloadDocument response = controller.downloadFile();
+
+    assertNotNull(response);
+    assertSame(downloadDocument, response);
+
+    Mockito.verify(blockedPageService, Mockito.times(1)).createFile();
   }
 }

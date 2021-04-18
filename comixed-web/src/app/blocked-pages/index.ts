@@ -34,6 +34,11 @@ import {
   BlockPageState,
   reducer as blockPageReducer
 } from '@app/blocked-pages/reducers/block-page.reducer';
+import {
+  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
+  DownloadBlockedPagesState,
+  reducer as downloadBlockedPagesReducer
+} from '@app/blocked-pages/reducers/download-blocked-pages.reducer';
 
 export * from './blocked-pages.model';
 
@@ -48,6 +53,7 @@ export interface BlockedPagesModuleState {
   [BLOCKED_PAGE_LIST_FEATURE_KEY]: BlockedPageListState;
   [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: BlockedPageDetailState;
   [BLOCK_PAGE_FEATURE_KEY]: BlockPageState;
+  [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: DownloadBlockedPagesState;
 }
 
 export type ModuleState = BlockedPagesModuleState;
@@ -56,5 +62,6 @@ export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   router: routerReducer,
   [BLOCKED_PAGE_LIST_FEATURE_KEY]: blockedPageListReducer,
   [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: blockedPageDetailReducer,
-  [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer
+  [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer,
+  [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: downloadBlockedPagesReducer
 };

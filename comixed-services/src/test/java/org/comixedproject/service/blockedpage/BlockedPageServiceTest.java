@@ -19,9 +19,14 @@
 package org.comixedproject.service.blockedpage;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.service.blockedpage.BlockedPageService.*;
 
+import java.io.IOException;
 import java.util.List;
+import org.comixedproject.adaptors.CsvAdaptor;
+import org.comixedproject.adaptors.CsvRowHandler;
 import org.comixedproject.model.blockedpage.BlockedPage;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,19 +38,25 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class BlockedPageServiceTest {
   private static final String TEST_PAGE_HASH = "The page hash";
   private static final String TEST_PAGE_LABEL = "The blocked page label";
+  private static final String TEST_PAGE_SNAPSHOT = "The blocked page content encoded";
+  private static final byte[] TEST_CSV_ROW = "The CSV file".getBytes();
 
   @InjectMocks private BlockedPageService service;
   @Mock private BlockedPageRepository blockedPageRepository;
-  @Mock private List<BlockedPage> blockedPageList;
+  @Mock private CsvAdaptor csvAdaptor;
   @Mock private List<String> blockedPageHashList;
   @Mock private BlockedPage blockedPage;
   @Mock private BlockedPage blockedPageRecord;
+  @Mock private List<BlockedPage> blockedPageList;
 
   @Captor private ArgumentCaptor<BlockedPage> blockedPageArgumentCaptor;
+  @Captor private ArgumentCaptor<CsvRowHandler> csvRowHandlerArgumentCaptor;
 
   @Before
   public void setUp() {
     Mockito.when(blockedPage.getLabel()).thenReturn(TEST_PAGE_LABEL);
+    Mockito.when(blockedPage.getHash()).thenReturn(TEST_PAGE_HASH);
+    Mockito.when(blockedPage.getSnapshot()).thenReturn(TEST_PAGE_SNAPSHOT);
   }
 
   @Test
@@ -179,5 +190,34 @@ public class BlockedPageServiceTest {
 
     Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(blockedPageRepository, Mockito.times(1)).delete(blockedPageRecord);
+  }
+
+  @Test
+  public void testCreateFile() throws IOException {
+    Mockito.when(blockedPageRepository.findAll()).thenReturn(blockedPageList);
+    Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), csvRowHandlerArgumentCaptor.capture()))
+        .thenReturn(TEST_CSV_ROW);
+
+    final DownloadDocument result = service.createFile();
+
+    assertNotNull(result);
+    assertNotNull(result.getFilename());
+    assertEquals("text/csv", result.getMediaType());
+    assertEquals(TEST_CSV_ROW, result.getContent());
+
+    final String[] headers = csvRowHandlerArgumentCaptor.getAllValues().get(0).createRow(0, null);
+    assertEquals(PAGE_LABEL_HEADER, headers[0]);
+    assertEquals(PAGE_HASH_HEADER, headers[1]);
+    assertEquals(PAGE_SNAPSHOT_HEADER, headers[2]);
+
+    final String[] row =
+        csvRowHandlerArgumentCaptor.getAllValues().get(0).createRow(1, blockedPage);
+    assertEquals(TEST_PAGE_LABEL, row[0]);
+    assertEquals(TEST_PAGE_HASH, row[1]);
+    assertEquals(TEST_PAGE_SNAPSHOT, row[2]);
+
+    assertEquals(blockedPageList.size() + 1, csvRowHandlerArgumentCaptor.getAllValues().size());
+
+    Mockito.verify(blockedPageRepository, Mockito.times(1)).findAll();
   }
 }

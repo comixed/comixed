@@ -18,10 +18,14 @@
 
 package org.comixedproject.service.blockedpage;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.comixedproject.adaptors.CsvAdaptor;
 import org.comixedproject.model.blockedpage.BlockedPage;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +39,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Log4j2
 public class BlockedPageService {
+  static final String PAGE_LABEL_HEADER = "Page Label";
+  static final String PAGE_HASH_HEADER = "Hash Value";
+  static final String PAGE_SNAPSHOT_HEADER = "Encoded Snapshot";
+
   @Autowired private BlockedPageRepository blockedPageRepository;
+  @Autowired private CsvAdaptor csvAdaptor;
 
   /**
    * Returns all blocked pages.
@@ -132,5 +141,30 @@ public class BlockedPageService {
     log.trace("Deleting record");
     this.blockedPageRepository.delete(result);
     return result;
+  }
+
+  /**
+   * Creates a CSV file containing the list of all blocked pages.
+   *
+   * @return the document
+   */
+  public DownloadDocument createFile() throws IOException {
+    log.debug("Retrieving blocked pages");
+    final List<BlockedPage> entries = this.blockedPageRepository.findAll();
+    final byte[] content =
+        this.csvAdaptor.encodeRecords(
+            entries,
+            (index, model) -> {
+              if (index == 0) {
+                return new String[] {PAGE_LABEL_HEADER, PAGE_HASH_HEADER, PAGE_SNAPSHOT_HEADER};
+              } else {
+                return new String[] {model.getLabel(), model.getHash(), model.getSnapshot()};
+              }
+            });
+    return new DownloadDocument(
+        String.format(
+            "ComiXed Blocked Pages For %s.csv", DateFormatUtils.format(new Date(), "yyyy-MM-dd")),
+        "text/csv",
+        content);
   }
 }

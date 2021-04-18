@@ -27,6 +27,7 @@ import { selectBlockedPageList } from '@app/blocked-pages/selectors/blocked-page
 import { SelectableListItem } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocked-pages.actions';
 
 @Component({
   selector: 'cx-blocked-page-list',
@@ -82,5 +83,10 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
   onOpenBlockedPageDetails(entry: SelectableListItem<BlockedPage>): void {
     this.logger.debug('Opening blocked page:', entry.item);
     this.router.navigate(['/admin', 'pages', 'blocked', entry.item.hash]);
+  }
+
+  onDownloadFile(): void {
+    this.logger.debug('Download blocked pages file');
+    this.store.dispatch(downloadBlockedPages());
   }
 }

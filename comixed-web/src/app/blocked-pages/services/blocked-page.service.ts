@@ -28,6 +28,7 @@ import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
 import {
   BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
   BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+  DOWNLOAD_BLOCKED_PAGE_FILE_URL,
   LOAD_ALL_BLOCKED_PAGES_URL,
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
@@ -143,5 +144,13 @@ export class BlockedPageService {
         interpolate(REMOVE_BLOCKED_STATE_URL, { hash: args.page.hash })
       );
     }
+  }
+
+  /**
+   * Downloads a file of blocked pages.
+   */
+  downloadFile(): Observable<any> {
+    this.logger.debug('Service: download blocked pages file');
+    return this.http.get(interpolate(DOWNLOAD_BLOCKED_PAGE_FILE_URL));
   }
 }
