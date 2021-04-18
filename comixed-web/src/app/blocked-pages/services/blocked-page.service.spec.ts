@@ -24,7 +24,8 @@ import {
   BLOCKED_PAGE_2,
   BLOCKED_PAGE_3,
   BLOCKED_PAGE_4,
-  BLOCKED_PAGE_5
+  BLOCKED_PAGE_5,
+  BLOCKED_PAGE_FILE
 } from '@app/blocked-pages/blocked-pages.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import {
@@ -40,6 +41,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
   BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+  DOWNLOAD_BLOCKED_PAGE_FILE_URL,
   LOAD_ALL_BLOCKED_PAGES_URL,
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
@@ -61,6 +63,7 @@ describe('BlockedPageService', () => {
   const UPDATED = BLOCKED_PAGE_2;
   const REMOVED = BLOCKED_PAGE_3;
   const PAGE = PAGE_2;
+  const FILE = BLOCKED_PAGE_FILE;
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -241,5 +244,15 @@ describe('BlockedPageService', () => {
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can download a blocked page file', () => {
+    service
+      .downloadFile()
+      .subscribe(response => expect(response).toEqual(FILE));
+
+    const req = httpMock.expectOne(interpolate(DOWNLOAD_BLOCKED_PAGE_FILE_URL));
+    expect(req.request.method).toEqual('GET');
+    req.flush(FILE);
   });
 });

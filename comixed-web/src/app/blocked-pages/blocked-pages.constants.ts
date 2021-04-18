@@ -23,6 +23,7 @@ export const LOAD_BLOCKED_PAGE_BY_HASH_URL = `${API_ROOT_URL}/pages/blocked/\${h
 export const SAVE_BLOCKED_PAGE_URL = `${API_ROOT_URL}/pages/blocked/\${hash}`;
 export const SET_BLOCKED_STATE_URL = `${API_ROOT_URL}/pages/blocked/\${hash}`;
 export const REMOVE_BLOCKED_STATE_URL = `${API_ROOT_URL}/pages/blocked/\${hash}`;
+export const DOWNLOAD_BLOCKED_PAGE_FILE_URL = `${API_ROOT_URL}/pages/blocked/file`;
 
 export const BLOCKED_PAGE_LIST_UPDATE_TOPIC = '/topic/blocked-page-list.update';
 export const BLOCKED_PAGE_LIST_REMOVAL_TOPIC =

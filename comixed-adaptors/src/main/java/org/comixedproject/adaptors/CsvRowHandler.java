@@ -16,11 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DownloadDocument } from './models/download-document';
-export { SelectableListItem } from './models/ui/selectable-list-item';
-export { SelectionOption } from './models/ui/selection-option';
-export { SortableListItem } from './models/ui/sortable-list-item';
-export { TokenService } from './services/token.service';
-export { AlertService } from './services/alert.service';
-export { ConfirmationService } from './services/confirmation.service';
-export { TitleService } from './services/title.service';
+package org.comixedproject.adaptors;
+
+/**
+ * <code>CsvRowHandler</code> defines a type that processes a single row of data for a CSV file
+ * being created.
+ *
+ * @param <T> the type for each row
+ */
+@FunctionalInterface
+public interface CsvRowHandler<T> {
+  /**
+   * Takes a row from the data model and returns a row for generated document.
+   *
+   * <p>When the index is 0 then the return value is expected to be the set of headers.
+   *
+   * @param index the row index
+   * @param model the row model
+   * @return the CSV data
+   */
+  String[] createRow(int index, T model);
+}

@@ -17,6 +17,7 @@
  */
 
 import { BlockedPage } from './models/blocked-page';
+import { DownloadDocument } from '@app/core';
 
 export const BLOCKED_PAGE_1: BlockedPage = {
   id: 1,
@@ -56,4 +57,10 @@ export const BLOCKED_PAGE_5: BlockedPage = {
   hash: '9C5E632CD9F33A991B11B9115FDBDC84',
   comicCount: 5,
   createdOn: new Date().getTime()
+};
+
+export const BLOCKED_PAGE_FILE: DownloadDocument = {
+  filename: 'Blocked pages.csv',
+  mediaType: 'text/csv',
+  content: 'blahblahblahblahblahblahblahblahblah'
 };

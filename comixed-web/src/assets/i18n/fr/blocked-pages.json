@@ -22,12 +22,18 @@
     "page-title": "Blocked Page Details: {hash}"
   },
   "blocked-page-list": {
+    "download-file": {
+      "effect-failure": "Failed to download blocked pages file."
+    },
     "header": {
       "comic-count": "Comics Affected",
       "created-on": "Entry Added",
       "hash": "Page Hash",
       "label": "Label"
     },
-    "load-effect-failure": "Failed to load blocked pages."
+    "load-effect-failure": "Failed to load blocked pages.",
+    "tooltip": {
+      "download-file": "Download blocked pages files."
+    }
   }
 }

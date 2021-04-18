@@ -39,6 +39,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocked-pages.actions';
 
 describe('BlockedPageListPageComponent', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -71,6 +72,7 @@ describe('BlockedPageListPageComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     fixture.detectChanges();
   }));
 
@@ -143,6 +145,16 @@ describe('BlockedPageListPageComponent', () => {
         'blocked',
         ENTRY.hash
       ]);
+    });
+  });
+
+  describe('downloading the blocked pages file', () => {
+    beforeEach(() => {
+      component.onDownloadFile();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(downloadBlockedPages());
     });
   });
 });

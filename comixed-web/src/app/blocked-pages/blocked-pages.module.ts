@@ -50,6 +50,12 @@ import {
   reducer as blockPageReducer
 } from '@app/blocked-pages/reducers/block-page.reducer';
 import { BlockPageEffects } from '@app/blocked-pages/effects/block-page.effects';
+import {
+  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
+  reducer as downloadBlockedPagesReducer
+} from '@app/blocked-pages/reducers/download-blocked-pages.reducer';
+import { DownloadBlockedPagesEffects } from '@app/blocked-pages/effects/download-blocked-pages.effects';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [BlockedPageListPageComponent, BlockedPageDetailPageComponent],
@@ -66,10 +72,15 @@ import { BlockPageEffects } from '@app/blocked-pages/effects/block-page.effects'
       blockedPageDetailReducer
     ),
     StoreModule.forFeature(BLOCK_PAGE_FEATURE_KEY, blockPageReducer),
+    StoreModule.forFeature(
+      DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
+      downloadBlockedPagesReducer
+    ),
     EffectsModule.forFeature([
       BlockedPageListEffects,
       BlockedPageDetailEffects,
-      BlockPageEffects
+      BlockPageEffects,
+      DownloadBlockedPagesEffects
     ]),
     MatTableModule,
     MatCheckboxModule,
@@ -81,7 +92,8 @@ import { BlockPageEffects } from '@app/blocked-pages/effects/block-page.effects'
     TragicallySlickEditInPlaceModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ],
   exports: [CommonModule]
 })

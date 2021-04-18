@@ -16,11 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export { DownloadDocument } from './models/download-document';
-export { SelectableListItem } from './models/ui/selectable-list-item';
-export { SelectionOption } from './models/ui/selection-option';
-export { SortableListItem } from './models/ui/sortable-list-item';
-export { TokenService } from './services/token.service';
-export { AlertService } from './services/alert.service';
-export { ConfirmationService } from './services/confirmation.service';
-export { TitleService } from './services/title.service';
+package org.comixedproject.model.net;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * <code>DownloadDocument</code> describes a file that is downloaded to the frontend.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class DownloadDocument {
+  @JsonProperty("filename")
+  @Getter
+  private String filename;
+
+  @JsonProperty("mediaType")
+  @Getter
+  private String mediaType;
+
+  @JsonProperty("content")
+  @Getter
+  private byte[] content;
+}
