@@ -26,7 +26,7 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { SelectableListItem } from '@app/core';
+import { ConfirmationService, SelectableListItem } from '@app/core';
 import { BlockedPage } from '@app/blocked-pages';
 import {
   BLOCKED_PAGE_1,
@@ -40,6 +40,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocked-pages.actions';
+import { MatDialogModule } from '@angular/material/dialog';
+import { Confirmation } from '@app/core/models/confirmation';
+import { uploadBlockedPages } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
 
 describe('BlockedPageListPageComponent', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -51,6 +54,7 @@ describe('BlockedPageListPageComponent', () => {
   let fixture: ComponentFixture<BlockedPageListPageComponent>;
   let router: Router;
   let store: MockStore<any>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -62,9 +66,10 @@ describe('BlockedPageListPageComponent', () => {
         MatToolbarModule,
         MatTableModule,
         MatPaginatorModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatDialogModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BlockedPageListPageComponent);
@@ -73,6 +78,7 @@ describe('BlockedPageListPageComponent', () => {
     spyOn(router, 'navigate');
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
 
@@ -155,6 +161,48 @@ describe('BlockedPageListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(downloadBlockedPages());
+    });
+  });
+
+  describe('clicking the upload file button', () => {
+    beforeEach(() => {
+      component.showUploadRow = false;
+      component.onShowUploadRow();
+    });
+
+    it('sets the show upload row flag', () => {
+      expect(component.showUploadRow).toBeTrue();
+    });
+  });
+
+  describe('when a file is selected', () => {
+    const FILE = new File([], 'test');
+    const EVENT = {
+      stopPropagation: jasmine.createSpy(),
+      target: { files: [FILE] }
+    };
+
+    beforeEach(() => {
+      component.showUploadRow = true;
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      component.onFileSelected(EVENT);
+    });
+
+    it('hides the upload row', () => {
+      expect(component.showUploadRow).toBeFalse();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        uploadBlockedPages({ file: FILE })
+      );
     });
   });
 });

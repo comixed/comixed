@@ -24,10 +24,12 @@ import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
 import { selectBlockedPageList } from '@app/blocked-pages/selectors/blocked-page-list.selectors';
-import { SelectableListItem } from '@app/core';
+import { ConfirmationService, SelectableListItem } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocked-pages.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { uploadBlockedPages } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
 
 @Component({
   selector: 'cx-blocked-page-list',
@@ -46,11 +48,14 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     'comic-count',
     'created-on'
   ];
+  showUploadRow = false;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {
     this.pageSubscription = this.store
       .select(selectBlockedPageList)
@@ -88,5 +93,29 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
   onDownloadFile(): void {
     this.logger.debug('Download blocked pages file');
     this.store.dispatch(downloadBlockedPages());
+  }
+
+  onShowUploadRow(): void {
+    this.logger.debug('Showing upload row');
+    this.showUploadRow = true;
+  }
+
+  onFileSelected(event: any): void {
+    event.stopPropagation();
+    this.showUploadRow = false;
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'blocked-page-list.upload-file.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'blocked-page-list.upload-file.confirmation-message'
+      ),
+      confirm: () => {
+        const file = event.target.files[0];
+        this.logger.debug('Uploading blocked pages file:', file);
+        this.store.dispatch(uploadBlockedPages({ file }));
+        this.store.dispatch(uploadBlockedPages({ file }));
+      }
+    });
   }
 }

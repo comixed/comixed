@@ -33,7 +33,8 @@ import {
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
   SAVE_BLOCKED_PAGE_URL,
-  SET_BLOCKED_STATE_URL
+  SET_BLOCKED_STATE_URL,
+  UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/blocked-pages/blocked-pages.constants';
 import {
   blockedPageListRemoval,
@@ -152,5 +153,17 @@ export class BlockedPageService {
   downloadFile(): Observable<any> {
     this.logger.debug('Service: download blocked pages file');
     return this.http.get(interpolate(DOWNLOAD_BLOCKED_PAGE_FILE_URL));
+  }
+
+  /**
+   * Uploads a file of blocked pages.
+   *
+   * @param args.file the blocked page file
+   */
+  uploadFile(args: { file: File }): Observable<any> {
+    this.logger.debug('Service: uploading blocked pages file:', args);
+    const formData = new FormData();
+    formData.append('file', args.file);
+    return this.http.post(interpolate(UPLOAD_BLOCKED_PAGE_FILE_URL), formData);
   }
 }

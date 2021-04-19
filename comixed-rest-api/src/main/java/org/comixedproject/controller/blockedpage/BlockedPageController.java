@@ -36,7 +36,9 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <code>BlockedPageController</code> provides endpoints for working with instances of {@link
@@ -163,5 +165,23 @@ public class BlockedPageController {
   public DownloadDocument downloadFile() throws IOException {
     log.info("Downloading blocked page file");
     return this.blockedPageService.createFile();
+  }
+
+  /**
+   * Processes an uploaded blocked page file.
+   *
+   * @param file the uploaded file
+   * @return the updated blocked page list
+   * @throws BlockedPageException if a service exception occurs
+   * @throws IOException if a file exception occurs
+   */
+  @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  @JsonView(View.BlockedPageList.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<BlockedPage> uploadFile(final MultipartFile file)
+      throws BlockedPageException, IOException {
+    log.info("Received uploaded blocked page file: {}", file.getOriginalFilename());
+    return this.blockedPageService.uploadFile(file.getInputStream());
   }
 }

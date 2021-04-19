@@ -33,7 +33,14 @@
     },
     "load-effect-failure": "Failed to load blocked pages.",
     "tooltip": {
-      "download-file": "Download blocked pages files."
+      "download-file": "Download blocked pages file.",
+      "upload-file": "Upload a blocked pages file."
+    },
+    "upload-file": {
+      "confirmation-message": "Are you sure you want to upload this file?",
+      "confirmation-title": "Upload Blocked Pages File",
+      "effect-failure": "Failed to upload blocked page file.",
+      "effect-success": "Blocked pages now contains {count, plural, =1{one entry} other{# entries}}."
     }
   }
 }
