@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors;
+package org.comixedproject.adaptors.csv;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,16 +44,32 @@ public class CsvAdaptor {
    * @return the CSV data
    * @throws IOException if an error occurs
    */
-  public <T> byte[] encodeRecords(List<T> records, CsvRowHandler<T> handler) throws IOException {
-    final ByteArrayOutputStream result = new ByteArrayOutputStream();
-    final OutputStreamWriter output = new OutputStreamWriter(result);
-    final CSVPrinter printer =
+  public <T> byte[] encodeRecords(List<T> records, CsvRowEncoder<T> handler) throws IOException {
+    final var result = new ByteArrayOutputStream();
+    final var output = new OutputStreamWriter(result);
+    final var printer =
         new CSVPrinter(output, CSVFormat.DEFAULT.withHeader(handler.createRow(0, null)));
-    for (int index = 0; index < records.size(); index++) {
+
+    for (var index = 0; index < records.size(); index++) {
       printer.printRecord(handler.createRow(index + 1, records.get(index)));
     }
     printer.flush();
     printer.close();
     return result.toByteArray();
+  }
+
+  public void decodeRecords(
+      final InputStream inputStream, final String[] header, CsvRowDecoder handler)
+      throws IOException {
+    final List<CSVRecord> records =
+        CSVFormat.DEFAULT.withHeader(header).parse(new InputStreamReader(inputStream)).getRecords();
+
+    for (var index = 0; index < records.size(); index++) {
+      log.info("Processing row: index={}", index);
+      final CSVRecord row = records.get(index);
+      List<String> values = new ArrayList<>();
+      for (var which = 0; which < row.size(); which++) values.add(row.get(which));
+      handler.processRow(index, values);
+    }
   }
 }

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
+import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

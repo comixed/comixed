@@ -16,16 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors;
+package org.comixedproject.adaptors.csv;
 
 /**
- * <code>CsvRowHandler</code> defines a type that processes a single row of data for a CSV file
+ * <code>CsvRowEncoder</code> defines a type that processes a single row of data for a CSV file
  * being created.
  *
  * @param <T> the type for each row
+ * @author Darryl L. Pierce
  */
 @FunctionalInterface
-public interface CsvRowHandler<T> {
+public interface CsvRowEncoder<T> {
   /**
    * Takes a row from the data model and returns a row for generated document.
    *

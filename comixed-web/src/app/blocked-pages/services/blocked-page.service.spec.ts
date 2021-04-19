@@ -46,7 +46,8 @@ import {
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
   SAVE_BLOCKED_PAGE_URL,
-  SET_BLOCKED_STATE_URL
+  SET_BLOCKED_STATE_URL,
+  UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/blocked-pages/blocked-pages.constants';
 import { interpolate } from '@app/core';
 import {
@@ -63,7 +64,8 @@ describe('BlockedPageService', () => {
   const UPDATED = BLOCKED_PAGE_2;
   const REMOVED = BLOCKED_PAGE_3;
   const PAGE = PAGE_2;
-  const FILE = BLOCKED_PAGE_FILE;
+  const DOWNLOADED_FILE = BLOCKED_PAGE_FILE;
+  const UPLOADED_FILE = new File([], 'testing');
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -249,10 +251,21 @@ describe('BlockedPageService', () => {
   it('can download a blocked page file', () => {
     service
       .downloadFile()
-      .subscribe(response => expect(response).toEqual(FILE));
+      .subscribe(response => expect(response).toEqual(DOWNLOADED_FILE));
 
     const req = httpMock.expectOne(interpolate(DOWNLOAD_BLOCKED_PAGE_FILE_URL));
     expect(req.request.method).toEqual('GET');
-    req.flush(FILE);
+    req.flush(DOWNLOADED_FILE);
+  });
+
+  it('can upload a blocked page file', () => {
+    service
+      .uploadFile({ file: UPLOADED_FILE })
+      .subscribe(response => expect(response).toEqual(ENTRIES));
+
+    const req = httpMock.expectOne(interpolate(UPLOAD_BLOCKED_PAGE_FILE_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).not.toBeNull();
+    req.flush(ENTRIES);
   });
 });

@@ -56,6 +56,11 @@ import {
 } from '@app/blocked-pages/reducers/download-blocked-pages.reducer';
 import { DownloadBlockedPagesEffects } from '@app/blocked-pages/effects/download-blocked-pages.effects';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  reducer as uploadBlockedPagesReducer,
+  UPLOAD_BLOCKED_PAGES_FEATURE_KEY
+} from '@app/blocked-pages/reducers/upload-blocked-pages.reducer';
+import { UploadBlockedPagesEffects } from '@app/blocked-pages/effects/upload-blocked-pages.effects';
 
 @NgModule({
   declarations: [BlockedPageListPageComponent, BlockedPageDetailPageComponent],
@@ -76,11 +81,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY,
       downloadBlockedPagesReducer
     ),
+    StoreModule.forFeature(
+      UPLOAD_BLOCKED_PAGES_FEATURE_KEY,
+      uploadBlockedPagesReducer
+    ),
     EffectsModule.forFeature([
       BlockedPageListEffects,
       BlockedPageDetailEffects,
       BlockPageEffects,
-      DownloadBlockedPagesEffects
+      DownloadBlockedPagesEffects,
+      UploadBlockedPagesEffects
     ]),
     MatTableModule,
     MatCheckboxModule,

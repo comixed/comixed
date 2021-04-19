@@ -19,11 +19,12 @@
 package org.comixedproject.service.blockedpage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.comixedproject.adaptors.CsvAdaptor;
+import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
@@ -166,5 +167,40 @@ public class BlockedPageService {
             "ComiXed Blocked Pages For %s.csv", DateFormatUtils.format(new Date(), "yyyy-MM-dd")),
         "text/csv",
         content);
+  }
+
+  /**
+   * Processes a received file of blocked pages.
+   *
+   * @param inputStream the data stream
+   * @return the updated list of blocked pages
+   * @throws IOException if an error occurs with the data stream.
+   */
+  @Transactional
+  public List<BlockedPage> uploadFile(final InputStream inputStream) throws IOException {
+    this.csvAdaptor.decodeRecords(
+        inputStream,
+        new String[] {PAGE_LABEL_HEADER, PAGE_HASH_HEADER, PAGE_SNAPSHOT_HEADER},
+        (index, row) -> {
+          if (index > 0) {
+            final String label = row.get(0);
+            final String hash = row.get(1);
+            final String snapshot = row.get(2);
+
+            log.debug("Checking if blocked page already exists: hash={}", hash);
+            final BlockedPage blockedPage = this.blockedPageRepository.findByHash(hash);
+            if (blockedPage == null) {
+              log.debug("Creating new blocked page record");
+              this.doSaveRecord(label, hash, snapshot);
+            }
+          }
+        });
+    return this.blockedPageRepository.findAll();
+  }
+
+  @Transactional
+  public void doSaveRecord(final String label, final String hash, final String snapshot) {
+    final var blockedPage = new BlockedPage(label, hash, snapshot);
+    this.blockedPageRepository.save(blockedPage);
   }
 }

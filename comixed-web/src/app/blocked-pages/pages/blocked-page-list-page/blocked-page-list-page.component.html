@@ -1,15 +1,29 @@
 <mat-toolbar class="cx-primary-light-background">
-  <mat-paginator class="cx-primary-light-background"></mat-paginator>
-  <div class="cx-spacer"></div>
-  <button
-    id="download-button"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'blocked-page-list.tooltip.download-file' | translate"
-    (click)="onDownloadFile()"
-  >
-    <mat-icon>download</mat-icon>
-  </button>
+  <mat-toolbar-row>
+    <mat-paginator class="cx-primary-light-background"></mat-paginator>
+    <div class="cx-spacer"></div>
+    <button
+      id="upload-button"
+      mat-icon-button
+      color="primary"
+      [matTooltip]="'blocked-page-list.tooltip.upload-file' | translate"
+      (click)="onShowUploadRow()"
+    >
+      <mat-icon>upload</mat-icon>
+    </button>
+    <button
+      id="download-button"
+      mat-icon-button
+      color="primary"
+      [matTooltip]="'blocked-page-list.tooltip.download-file' | translate"
+      (click)="onDownloadFile()"
+    >
+      <mat-icon>download</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="showUploadRow">
+    <input id="fileUpload" type="file" (change)="onFileSelected($event)" />
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-table [dataSource]="dataSource" matSort>

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.comic.Page;
@@ -42,6 +43,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BlockedPageControllerTest {
@@ -59,6 +61,8 @@ public class BlockedPageControllerTest {
   @Mock private BlockedPage blockedPageRecord;
   @Mock private Page page;
   @Mock private DownloadDocument downloadDocument;
+  @Mock private MultipartFile uploadedFile;
+  @Mock private InputStream inputStream;
 
   @Before
   public void setUp() {
@@ -243,5 +247,32 @@ public class BlockedPageControllerTest {
     assertSame(downloadDocument, response);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).createFile();
+  }
+
+  @Test(expected = IOException.class)
+  public void testUploadFileServiceException() throws BlockedPageException, IOException {
+    Mockito.when(uploadedFile.getInputStream()).thenReturn(inputStream);
+    Mockito.when(blockedPageService.uploadFile(Mockito.any(InputStream.class)))
+        .thenThrow(IOException.class);
+
+    try {
+      controller.uploadFile(uploadedFile);
+    } finally {
+      Mockito.verify(blockedPageService, Mockito.times(1)).uploadFile(inputStream);
+    }
+  }
+
+  @Test
+  public void testUploadFile() throws BlockedPageException, IOException {
+    Mockito.when(uploadedFile.getInputStream()).thenReturn(inputStream);
+    Mockito.when(blockedPageService.uploadFile(Mockito.any(InputStream.class)))
+        .thenReturn(blockedPageList);
+
+    final List<BlockedPage> response = controller.uploadFile(uploadedFile);
+
+    assertNotNull(response);
+    assertSame(blockedPageList, response);
+
+    Mockito.verify(blockedPageService, Mockito.times(1)).uploadFile(inputStream);
   }
 }

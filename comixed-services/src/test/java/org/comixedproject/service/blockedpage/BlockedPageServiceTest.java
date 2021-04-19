@@ -22,9 +22,12 @@ import static junit.framework.TestCase.*;
 import static org.comixedproject.service.blockedpage.BlockedPageService.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.adaptors.CsvAdaptor;
-import org.comixedproject.adaptors.CsvRowHandler;
+import org.comixedproject.adaptors.csv.CsvAdaptor;
+import org.comixedproject.adaptors.csv.CsvRowDecoder;
+import org.comixedproject.adaptors.csv.CsvRowEncoder;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
@@ -40,6 +43,7 @@ public class BlockedPageServiceTest {
   private static final String TEST_PAGE_LABEL = "The blocked page label";
   private static final String TEST_PAGE_SNAPSHOT = "The blocked page content encoded";
   private static final byte[] TEST_CSV_ROW = "The CSV file".getBytes();
+  private static final List<String> TEST_DECODED_ROW = new ArrayList<>();
 
   @InjectMocks private BlockedPageService service;
   @Mock private BlockedPageRepository blockedPageRepository;
@@ -48,15 +52,20 @@ public class BlockedPageServiceTest {
   @Mock private BlockedPage blockedPage;
   @Mock private BlockedPage blockedPageRecord;
   @Mock private List<BlockedPage> blockedPageList;
+  @Mock private InputStream inputStream;
 
   @Captor private ArgumentCaptor<BlockedPage> blockedPageArgumentCaptor;
-  @Captor private ArgumentCaptor<CsvRowHandler> csvRowHandlerArgumentCaptor;
+  @Captor private ArgumentCaptor<CsvRowEncoder> csvRowHandlerArgumentCaptor;
+  @Captor private ArgumentCaptor<CsvRowDecoder> csvRowDecoderArgumentCaptor;
 
   @Before
   public void setUp() {
     Mockito.when(blockedPage.getLabel()).thenReturn(TEST_PAGE_LABEL);
     Mockito.when(blockedPage.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(blockedPage.getSnapshot()).thenReturn(TEST_PAGE_SNAPSHOT);
+    TEST_DECODED_ROW.add(TEST_PAGE_LABEL);
+    TEST_DECODED_ROW.add(TEST_PAGE_HASH);
+    TEST_DECODED_ROW.add(TEST_PAGE_SNAPSHOT);
   }
 
   @Test
@@ -219,5 +228,37 @@ public class BlockedPageServiceTest {
     assertEquals(blockedPageList.size() + 1, csvRowHandlerArgumentCaptor.getAllValues().size());
 
     Mockito.verify(blockedPageRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testUploadFile() throws IOException {
+    Mockito.when(blockedPageRepository.findAll()).thenReturn(blockedPageList);
+    Mockito.doNothing()
+        .when(csvAdaptor)
+        .decodeRecords(
+            Mockito.any(InputStream.class), Mockito.any(), csvRowDecoderArgumentCaptor.capture());
+    Mockito.when(blockedPageRepository.save(blockedPageArgumentCaptor.capture()))
+        .thenReturn(blockedPageRecord);
+
+    final List<BlockedPage> result = service.uploadFile(inputStream);
+
+    assertNotNull(result);
+    assertSame(blockedPageList, result);
+    assertNotNull(csvRowDecoderArgumentCaptor.getValue());
+
+    csvRowDecoderArgumentCaptor.getValue().processRow(1, TEST_DECODED_ROW);
+    assertNotNull(blockedPageArgumentCaptor.getValue());
+    assertEquals(TEST_PAGE_LABEL, blockedPageArgumentCaptor.getValue().getLabel());
+    assertEquals(TEST_PAGE_HASH, blockedPageArgumentCaptor.getValue().getHash());
+    assertEquals(TEST_PAGE_SNAPSHOT, blockedPageArgumentCaptor.getValue().getSnapshot());
+
+    Mockito.verify(blockedPageRepository, Mockito.times(1)).findAll();
+    Mockito.verify(csvAdaptor, Mockito.times(1))
+        .decodeRecords(
+            inputStream,
+            new String[] {PAGE_LABEL_HEADER, PAGE_HASH_HEADER, PAGE_SNAPSHOT_HEADER},
+            csvRowDecoderArgumentCaptor.getValue());
+    Mockito.verify(blockedPageRepository, Mockito.times(1))
+        .save(blockedPageArgumentCaptor.getValue());
   }
 }
