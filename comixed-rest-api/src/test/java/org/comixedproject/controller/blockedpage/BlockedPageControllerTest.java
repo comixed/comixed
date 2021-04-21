@@ -18,8 +18,7 @@
 
 package org.comixedproject.controller.blockedpage;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 import static org.comixedproject.model.messaging.Constants.BLOCKED_PAGE_LIST_REMOVAL_TOPIC;
 import static org.comixedproject.model.messaging.Constants.BLOCKED_PAGE_LIST_UPDATE_TOPIC;
 
@@ -28,10 +27,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.views.View;
@@ -63,10 +64,14 @@ public class BlockedPageControllerTest {
   @Mock private DownloadDocument downloadDocument;
   @Mock private MultipartFile uploadedFile;
   @Mock private InputStream inputStream;
+  @Mock private List<String> hashList;
+
+  private List<BlockedPage> blockedPages = new ArrayList<>();
 
   @Before
   public void setUp() {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
+    Mockito.when(blockedPage.getHash()).thenReturn(TEST_PAGE_HASH);
   }
 
   @Test
@@ -274,5 +279,51 @@ public class BlockedPageControllerTest {
     assertSame(blockedPageList, response);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).uploadFile(inputStream);
+  }
+
+  @Test
+  public void testDeleteBlockedPagesJsonProcessingException() throws JsonProcessingException {
+    for (int index = 0; index < 25; index++) blockedPages.add(blockedPage);
+
+    Mockito.when(blockedPageService.deleteBlockedPages(Mockito.anyList())).thenReturn(blockedPages);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenThrow(JsonProcessingException.class);
+
+    final List<String> response =
+        controller.deleteBlockedPages(new DeleteBlockedPagesRequest(hashList));
+
+    assertNotNull(response);
+    response.forEach(entry -> assertEquals(TEST_PAGE_HASH, entry));
+
+    Mockito.verify(blockedPageService, Mockito.times(1)).deleteBlockedPages(hashList);
+    Mockito.verify(objectMapper, Mockito.times(blockedPages.size()))
+        .writerWithView(View.BlockedPageDetail.class);
+    Mockito.verify(objectWriter, Mockito.times(blockedPages.size()))
+        .writeValueAsString(blockedPage);
+    Mockito.verify(messagingTemplate, Mockito.never())
+        .convertAndSend(BLOCKED_PAGE_LIST_REMOVAL_TOPIC, TEST_BLOCKED_PAGE_AS_JSON);
+  }
+
+  @Test
+  public void testDeleteBlockedPages() throws JsonProcessingException {
+    for (int index = 0; index < 25; index++) blockedPages.add(blockedPage);
+
+    Mockito.when(blockedPageService.deleteBlockedPages(Mockito.anyList())).thenReturn(blockedPages);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenReturn(TEST_BLOCKED_PAGE_AS_JSON);
+
+    final List<String> response =
+        controller.deleteBlockedPages(new DeleteBlockedPagesRequest(hashList));
+
+    assertNotNull(response);
+    response.forEach(entry -> assertEquals(TEST_PAGE_HASH, entry));
+
+    Mockito.verify(blockedPageService, Mockito.times(1)).deleteBlockedPages(hashList);
+    Mockito.verify(objectMapper, Mockito.times(blockedPages.size()))
+        .writerWithView(View.BlockedPageDetail.class);
+    Mockito.verify(objectWriter, Mockito.times(blockedPages.size()))
+        .writeValueAsString(blockedPage);
+    Mockito.verify(messagingTemplate, Mockito.times(blockedPages.size()))
+        .convertAndSend(BLOCKED_PAGE_LIST_REMOVAL_TOPIC, TEST_BLOCKED_PAGE_AS_JSON);
   }
 }

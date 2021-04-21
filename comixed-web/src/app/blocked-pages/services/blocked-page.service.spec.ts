@@ -41,6 +41,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
   BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+  DELETE_BLOCKED_PAGES_URL,
   DOWNLOAD_BLOCKED_PAGE_FILE_URL,
   LOAD_ALL_BLOCKED_PAGES_URL,
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
@@ -57,6 +58,7 @@ import {
 import { Subscription } from 'webstomp-client';
 import { PAGE_2 } from '@app/library/library.fixtures';
 import { HttpResponse } from '@angular/common/http';
+import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
 
 describe('BlockedPageService', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -266,6 +268,19 @@ describe('BlockedPageService', () => {
     const req = httpMock.expectOne(interpolate(UPLOAD_BLOCKED_PAGE_FILE_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).not.toBeNull();
+    req.flush(ENTRIES);
+  });
+
+  it('can delete blocked pages', () => {
+    service
+      .deleteEntries({ entries: ENTRIES })
+      .subscribe(response => expect(response).toEqual(ENTRIES));
+
+    const req = httpMock.expectOne(interpolate(DELETE_BLOCKED_PAGES_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      hashes: ENTRIES.map(entry => entry.hash)
+    } as DeleteBlockedPagesRequest);
     req.flush(ENTRIES);
   });
 });

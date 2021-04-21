@@ -44,6 +44,11 @@ import {
   UploadedBlockedPagesState,
   reducer as uploadBlockedPagesReducer
 } from '@app/blocked-pages/reducers/upload-blocked-pages.reducer';
+import {
+  DELETE_BLOCKED_PAGES_FEATURE_KEY,
+  DeleteBlockedPagesState,
+  reducer as deleteBlockedPagesReducer
+} from '@app/blocked-pages/reducers/delete-blocked-pages.reducer';
 
 export * from './blocked-pages.model';
 
@@ -60,6 +65,7 @@ export interface BlockedPagesModuleState {
   [BLOCK_PAGE_FEATURE_KEY]: BlockPageState;
   [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: DownloadBlockedPagesState;
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: UploadedBlockedPagesState;
+  [DELETE_BLOCKED_PAGES_FEATURE_KEY]: DeleteBlockedPagesState;
 }
 
 export type ModuleState = BlockedPagesModuleState;
@@ -70,5 +76,6 @@ export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: blockedPageDetailReducer,
   [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer,
   [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: downloadBlockedPagesReducer,
-  [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: uploadBlockedPagesReducer
+  [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: uploadBlockedPagesReducer,
+  [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer
 };

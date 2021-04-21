@@ -3,6 +3,16 @@
     <mat-paginator class="cx-primary-light-background"></mat-paginator>
     <div class="cx-spacer"></div>
     <button
+      id="delete-entries"
+      mat-icon-button
+      color="warn"
+      [matTooltip]="'blocked-page-list.tooltip.delete-entries' | translate"
+      [disabled]="!hasSelections"
+      (click)="onDeleteEntries()"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button
       id="upload-button"
       mat-icon-button
       color="primary"
@@ -32,6 +42,7 @@
     <mat-cell *matCellDef="let entry">
       <mat-checkbox
         [checked]="entry.item.selected"
+        (click)="$event.stopImmediatePropagation()"
         (change)="onChangeSelection(entry, $event.checked)"
       ></mat-checkbox>
     </mat-cell>
