@@ -28,6 +28,7 @@ import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
 import {
   BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
   BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+  DELETE_BLOCKED_PAGES_URL,
   DOWNLOAD_BLOCKED_PAGE_FILE_URL,
   LOAD_ALL_BLOCKED_PAGES_URL,
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
@@ -43,6 +44,7 @@ import {
 } from '@app/blocked-pages/actions/blocked-page-list.actions';
 import { interpolate } from '@app/core';
 import { Page } from '@app/library';
+import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
 
 @Injectable({
   providedIn: 'root'
@@ -76,7 +78,7 @@ export class BlockedPageService {
         this.removalSubscription = this.webSocketService.subscribe<BlockedPage>(
           BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
           entry => {
-            this.logger.debug('Received blocked page remove:', entry);
+            this.logger.debug('Received blocked page removal:', entry);
             this.store.dispatch(blockedPageListRemoval({ entry }));
           }
         );
@@ -165,5 +167,17 @@ export class BlockedPageService {
     const formData = new FormData();
     formData.append('file', args.file);
     return this.http.post(interpolate(UPLOAD_BLOCKED_PAGE_FILE_URL), formData);
+  }
+
+  /**
+   * Deletes a set of blocked pages.
+   *
+   * @param args.entries the blocked page entries
+   */
+  deleteEntries(args: { entries: BlockedPage[] }): Observable<any> {
+    this.logger.debug('Service: deleting blocked pages:', args);
+    return this.http.post(interpolate(DELETE_BLOCKED_PAGES_URL), {
+      hashes: args.entries.map(entry => entry.hash)
+    } as DeleteBlockedPagesRequest);
   }
 }

@@ -222,8 +222,8 @@ $cx-column-large: 325px;
   color: var(--text-accent-color);
 
   button {
-    background: var(--accent-color);
-    color: var(--text-accent-color);
+    background: var(--accent-lighter-color);
+    color: var(--text-accent-lighter-color);
     font-weight: bold;
   }
 }
@@ -232,9 +232,9 @@ $cx-column-large: 325px;
   background: var(--warn-color);
   color: var(--text-warn-color);
 
-  button: {
-    background: var(--warn-color);
-    color: var(--text-warn-color);
+  button {
+    background: var(--warn-lighter-color);
+    color: var(--text-warn-lighter-color);
     font-weight: bold;
   }
 }

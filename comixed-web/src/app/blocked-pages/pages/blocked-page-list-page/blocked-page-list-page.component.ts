@@ -30,6 +30,7 @@ import { Router } from '@angular/router';
 import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocked-pages.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { uploadBlockedPages } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
+import { deleteBlockedPages } from '@app/blocked-pages/actions/delete-blocked-pages.actions';
 
 @Component({
   selector: 'cx-blocked-page-list',
@@ -49,6 +50,7 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     'created-on'
   ];
   showUploadRow = false;
+  hasSelections = false;
 
   constructor(
     private logger: LoggerService,
@@ -66,6 +68,7 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
             oldData.find(entry => entry.item.id === item.id)?.selected || false;
           return { selected, item };
         });
+        this.hasSelections = this.dataSource.data.some(entry => entry.selected);
       });
   }
 
@@ -79,6 +82,9 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
   ): void {
     this.logger.debug('Changing selection to', checked);
     entry.selected = checked;
+    this.hasSelections = this.dataSource.data.some(
+      listEntry => listEntry.selected
+    );
   }
 
   ngAfterViewInit(): void {
@@ -115,6 +121,25 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
         this.logger.debug('Uploading blocked pages file:', file);
         this.store.dispatch(uploadBlockedPages({ file }));
         this.store.dispatch(uploadBlockedPages({ file }));
+      }
+    });
+  }
+
+  onDeleteEntries(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'blocked-page-list.delete-entries.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'blocked-page-list.delete-entries.confirmation-message',
+        { count: this.dataSource.data.filter(entry => entry.selected).length }
+      ),
+      confirm: () => {
+        const entries = this.dataSource.data
+          .filter(entry => entry.selected)
+          .map(entry => entry.item);
+        this.logger.debug('Deleting selected blocked pages:', entries);
+        this.store.dispatch(deleteBlockedPages({ entries }));
       }
     });
   }

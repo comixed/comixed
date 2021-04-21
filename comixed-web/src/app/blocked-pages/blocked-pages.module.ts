@@ -61,6 +61,11 @@ import {
   UPLOAD_BLOCKED_PAGES_FEATURE_KEY
 } from '@app/blocked-pages/reducers/upload-blocked-pages.reducer';
 import { UploadBlockedPagesEffects } from '@app/blocked-pages/effects/upload-blocked-pages.effects';
+import {
+  DELETE_BLOCKED_PAGES_FEATURE_KEY,
+  reducer as deleteBlockedPagesReducer
+} from '@app/blocked-pages/reducers/delete-blocked-pages.reducer';
+import { DeleteBlockedPagesEffects } from '@app/blocked-pages/effects/delete-blocked-pages.effects';
 
 @NgModule({
   declarations: [BlockedPageListPageComponent, BlockedPageDetailPageComponent],
@@ -85,12 +90,17 @@ import { UploadBlockedPagesEffects } from '@app/blocked-pages/effects/upload-blo
       UPLOAD_BLOCKED_PAGES_FEATURE_KEY,
       uploadBlockedPagesReducer
     ),
+    StoreModule.forFeature(
+      DELETE_BLOCKED_PAGES_FEATURE_KEY,
+      deleteBlockedPagesReducer
+    ),
     EffectsModule.forFeature([
       BlockedPageListEffects,
       BlockedPageDetailEffects,
       BlockPageEffects,
       DownloadBlockedPagesEffects,
-      UploadBlockedPagesEffects
+      UploadBlockedPagesEffects,
+      DeleteBlockedPagesEffects
     ]),
     MatTableModule,
     MatCheckboxModule,

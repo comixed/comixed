@@ -43,6 +43,7 @@ import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocke
 import { MatDialogModule } from '@angular/material/dialog';
 import { Confirmation } from '@app/core/models/confirmation';
 import { uploadBlockedPages } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
+import { deleteBlockedPages } from '@app/blocked-pages/actions/delete-blocked-pages.actions';
 
 describe('BlockedPageListPageComponent', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -121,18 +122,27 @@ describe('BlockedPageListPageComponent', () => {
   });
 
   describe('toggling a selection', () => {
-    const CHECKED = Math.random() > 0.5;
-    const entry = {
-      item: ENTRY,
-      selected: !CHECKED
-    } as SelectableListItem<BlockedPage>;
+    let entry: SelectableListItem<BlockedPage>;
 
     beforeEach(() => {
-      component.onChangeSelection(entry, CHECKED);
+      store.setState({
+        ...initialState,
+        [BLOCKED_PAGE_LIST_FEATURE_KEY]: {
+          ...initialBlockedPageListState,
+          entries: ENTRIES
+        }
+      });
+      entry = component.dataSource.data[0];
+      component.hasSelections = false;
+      component.onChangeSelection(entry, true);
     });
 
     it('sets the checked state for the item', () => {
-      expect(entry.selected).toEqual(CHECKED);
+      expect(entry.selected).toBeTrue();
+    });
+
+    it('sets the has selections flag', () => {
+      expect(component.hasSelections).toBeTrue();
     });
   });
 
@@ -202,6 +212,35 @@ describe('BlockedPageListPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         uploadBlockedPages({ file: FILE })
+      );
+    });
+  });
+
+  describe('deleting blocked pages', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [BLOCKED_PAGE_LIST_FEATURE_KEY]: {
+          ...initialBlockedPageListState,
+          entries: ENTRIES
+        }
+      });
+      component.dataSource.data.forEach(entry => (entry.selected = false));
+      component.dataSource.data[0].selected = true;
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      component.onDeleteEntries();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteBlockedPages({ entries: [ENTRIES[0]] })
       );
     });
   });

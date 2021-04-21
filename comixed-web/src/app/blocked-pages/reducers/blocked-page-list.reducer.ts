@@ -54,7 +54,9 @@ export const reducer = createReducer(
     return { ...state, entries };
   }),
   on(blockedPageListRemoval, (state, action) => {
-    const entries = state.entries.filter(entry => entry.id !== action.entry.id);
+    const entries = state.entries.filter(
+      entry => entry.hash !== action.entry.hash
+    );
     return { ...state, entries };
   })
 );

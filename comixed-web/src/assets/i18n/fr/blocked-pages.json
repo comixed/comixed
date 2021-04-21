@@ -22,6 +22,12 @@
     "page-title": "Blocked Page Details: {hash}"
   },
   "blocked-page-list": {
+    "delete-entries": {
+      "confirmation-message": "Are you sure you want to unblock the {count, plural, =1{selected entry} other{# selected entries}}?",
+      "confirmation-title": "Unblock Hashes",
+      "effect-failure": "Failed to delete blocked pages.",
+      "effect-success": "Deleted {count, plural, =1{one entry} other{# entries}}."
+    },
     "download-file": {
       "effect-failure": "Failed to download blocked pages file."
     },

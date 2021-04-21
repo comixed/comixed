@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.RandomStringUtils;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.adaptors.csv.CsvRowDecoder;
 import org.comixedproject.adaptors.csv.CsvRowEncoder;
@@ -260,5 +261,28 @@ public class BlockedPageServiceTest {
             csvRowDecoderArgumentCaptor.getValue());
     Mockito.verify(blockedPageRepository, Mockito.times(1))
         .save(blockedPageArgumentCaptor.getValue());
+  }
+
+  @Test
+  public void testDeletedBlockedPages() {
+    final List<String> blockedPageHashes = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      blockedPageHashes.add(RandomStringUtils.random(32, true, true));
+    }
+
+    Mockito.when(blockedPageRepository.findByHash(Mockito.anyString()))
+        .thenReturn(blockedPageRecord);
+    Mockito.doNothing().when(blockedPageRepository).delete(Mockito.any(BlockedPage.class));
+
+    final List<BlockedPage> result = service.deleteBlockedPages(blockedPageHashes);
+
+    assertNotNull(result);
+    assertEquals(blockedPageHashes.size(), result.size());
+    result.forEach(entry -> assertSame(blockedPageRecord, entry));
+
+    blockedPageHashes.forEach(
+        hash -> Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(hash));
+    Mockito.verify(blockedPageRepository, Mockito.times(blockedPageHashes.size()))
+        .delete(blockedPageRecord);
   }
 }

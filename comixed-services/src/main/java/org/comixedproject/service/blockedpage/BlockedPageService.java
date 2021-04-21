@@ -20,6 +20,7 @@ package org.comixedproject.service.blockedpage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -188,7 +189,7 @@ public class BlockedPageService {
             final String snapshot = row.get(2);
 
             log.debug("Checking if blocked page already exists: hash={}", hash);
-            final BlockedPage blockedPage = this.blockedPageRepository.findByHash(hash);
+            var blockedPage = this.blockedPageRepository.findByHash(hash);
             if (blockedPage == null) {
               log.debug("Creating new blocked page record");
               this.doSaveRecord(label, hash, snapshot);
@@ -202,5 +203,29 @@ public class BlockedPageService {
   public void doSaveRecord(final String label, final String hash, final String snapshot) {
     final var blockedPage = new BlockedPage(label, hash, snapshot);
     this.blockedPageRepository.save(blockedPage);
+  }
+
+  /**
+   * Deletes a set of entries based on their hashes.
+   *
+   * @param hashes the entry hashes
+   * @return the deleted entries
+   */
+  @Transactional
+  public List<BlockedPage> deleteBlockedPages(final List<String> hashes) {
+    log.debug("Deleting {} blocked page entr{}", hashes.size(), hashes.size() == 1 ? "y" : "ies");
+    List<BlockedPage> result = new ArrayList<>();
+    hashes.forEach(
+        hash -> {
+          log.trace("Loading blocked page for hash: {}", hash);
+          final BlockedPage entry = this.blockedPageRepository.findByHash(hash);
+          if (entry != null) {
+            log.trace("Deleting entry: id={}", entry.getId());
+            this.blockedPageRepository.delete(entry);
+            result.add(entry);
+          }
+        });
+    log.trace("Returning list of deleted blocked pages");
+    return result;
   }
 }
