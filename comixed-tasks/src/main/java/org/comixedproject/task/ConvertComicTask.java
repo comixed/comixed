@@ -31,9 +31,12 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
 import org.comixedproject.service.task.TaskService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>ConvertComicTask</code> converts comics from one archive type to, potentially, another. It
- * also managings renaming and deleting pages.
+ * also optionally renames and deletes pages.
  *
  * @author Darryl L. Pierce
  */
@@ -53,6 +56,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ConvertComicTask extends AbstractTask {
   @Autowired private ComicService comicService;
+  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private TaskService taskService;
 
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
@@ -88,21 +92,22 @@ public class ConvertComicTask extends AbstractTask {
 
     try {
       this.comic.removeDeletedPages(this.deletePages);
-      Comic saveComic = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
-      log.debug("Saving updated comic");
-      final Comic result = this.comicService.save(saveComic);
-      updateReadingList(this.comic, result);
+      var convertedComic = targetArchiveAdaptor.saveComic(this.comic, this.renamePages);
+      log.trace("Firing event: comic converted");
+      this.comicStateHandler.fireEvent(convertedComic, ComicEvent.archiveRecreated);
+      final var updatedComic = this.comicService.getComic(this.comic.getId());
+      updateReadingList(this.comic, updatedComic);
 
       if (this.deleteOriginal) {
         deleteOriginal();
       }
       log.debug("Queueing up a comic processing task");
       ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
-      taskEncoder.setComic(result);
+      taskEncoder.setComic(updatedComic);
       taskEncoder.setIgnoreMetadata(false);
       taskEncoder.setDeleteBlockedPages(false);
       this.taskService.save(taskEncoder.encode());
-    } catch (ArchiveAdaptorException | IOException error) {
+    } catch (ArchiveAdaptorException | IOException | ComicException error) {
       throw new TaskException("Failed to save comic", error);
     }
   }

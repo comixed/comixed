@@ -33,6 +33,8 @@ import org.comixedproject.scrapers.model.ScrapingIssueDetails;
 import org.comixedproject.scrapers.model.ScrapingVolume;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +51,7 @@ public class ScrapingService {
   @Autowired private ObjectMapper objectMapper;
   @Autowired private ScrapingCacheService scrapingCacheService;
   @Autowired private ComicService comicService;
+  @Autowired private ComicStateHandler comicStateHandler;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -247,10 +250,13 @@ public class ScrapingService {
           .getCredits()
           .forEach(
               entry -> comic.getCredits().add(new Credit(comic, entry.getName(), entry.getRole())));
-      log.debug("Saving updated comic");
-      result = this.comicService.save(comic);
+      log.trace("Updating comic state: scraped");
+      this.comicStateHandler.fireEvent(comic, ComicEvent.scraped);
     }
-
-    return result;
+    try {
+      return this.comicService.getComic(comicId);
+    } catch (ComicException error) {
+      throw new ScrapingException("failed to load comic", error);
+    }
   }
 }

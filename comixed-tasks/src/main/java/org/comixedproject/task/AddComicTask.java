@@ -26,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.comic.ComicService;
@@ -86,6 +87,7 @@ public class AddComicTask extends AbstractTask {
       this.comicFileHandler.loadComicArchiveType(result);
 
       log.debug("Saving comic");
+      result.setComicState(ComicState.ADDED);
       result = this.comicService.save(result);
 
       log.trace("Publishing updated comic");

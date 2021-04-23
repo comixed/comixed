@@ -38,7 +38,7 @@ export interface Comic {
   fileEntries: ComicFileEntry[];
   addedDate: string;
   deletedDate: number;
-  lastUpdatedDate: number;
+  lastModifiedOn: number;
   publisher: string;
   series: string;
   volume: string;

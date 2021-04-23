@@ -386,7 +386,7 @@ public class ComicRepositoryTest {
   private void testComicOrder(long id, long timestamp, List<Comic> comicList) {
     for (int index = 0; index < comicList.size(); index++) {
       long thisId = comicList.get(index).getId();
-      long thisTimestamp = comicList.get(index).getDateLastUpdated().getTime();
+      long thisTimestamp = comicList.get(index).getLastModifiedOn().getTime();
 
       if (thisTimestamp == timestamp) {
         assertTrue(id < thisId);

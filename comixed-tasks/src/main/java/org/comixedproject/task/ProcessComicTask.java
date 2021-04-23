@@ -34,7 +34,10 @@ import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.service.blockedpage.BlockedPageService;
+import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.Utils;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +62,7 @@ public class ProcessComicTask extends AbstractTask {
   @Autowired private BlockedPageService blockedPageService;
   @Autowired private SimpMessagingTemplate messagingTemplate;
   @Autowired private ObjectMapper objectMapper;
+  @Autowired private ComicStateHandler comicStateHandler;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private boolean deleteBlockedPages;
@@ -121,7 +125,14 @@ public class ProcessComicTask extends AbstractTask {
     comic.setFileDetails(fileDetails);
 
     log.debug("Updating comic");
-    final Comic result = this.comicService.save(comic);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.contentsProcessed);
+    Comic result = null;
+    try {
+      log.trace("Reloading updated comic");
+      result = this.comicService.getComic(comic.getId());
+    } catch (ComicException error) {
+      throw new TaskException("Failed to reload comic", error);
+    }
 
     log.debug("Publishing comic update");
     try {

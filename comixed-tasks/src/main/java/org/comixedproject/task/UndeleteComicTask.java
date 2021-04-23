@@ -22,7 +22,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -38,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class UndeleteComicTask extends AbstractTask {
-  @Autowired private ComicService comicService;
+  @Autowired private ComicStateHandler comicStateHandler;
 
   @Getter @Setter private Comic comic;
 
@@ -53,6 +54,6 @@ public class UndeleteComicTask extends AbstractTask {
     log.debug("Undeleting comic: id={}", this.comic.getId());
 
     this.comic.setDateDeleted(null);
-    this.comicService.save(this.comic);
+    this.comicStateHandler.fireEvent(this.comic, ComicEvent.removedFromDeleteQueue);
   }
 }

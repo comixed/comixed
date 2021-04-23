@@ -18,18 +18,26 @@
 
 package org.comixedproject.service.comic;
 
+import static org.comixedproject.state.comic.ComicStateConstants.HEADER_COMIC;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.service.user.UserService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateChangeListener;
+import org.comixedproject.state.comic.ComicStateHandler;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +48,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Log4j2
-public class ComicService {
+public class ComicService implements InitializingBean, ComicStateChangeListener {
+  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicRepository comicRepository;
-  @Autowired private UserService userService;
+  @Autowired private ComicDataAdaptor comicDataAdaptor;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -54,13 +63,7 @@ public class ComicService {
   public Comic getComic(final long id) throws ComicException {
     log.debug("Getting comic: id={}", id);
 
-    final Optional<Comic> comicRecord = this.comicRepository.findById(id);
-
-    if (!comicRecord.isPresent()) {
-      throw new ComicException("no such comic: id=" + id);
-    }
-
-    final Comic result = comicRecord.get();
+    final var result = this.doGetComic(id);
     final List<Comic> next =
         this.comicRepository.findIssuesAfterComic(
             result.getSeries(), result.getVolume(), result.getIssueNumber(), result.getCoverDate());
@@ -116,6 +119,12 @@ public class ComicService {
     return result;
   }
 
+  private Comic doGetComic(final long id) throws ComicException {
+    final Comic result = this.comicRepository.getById(id);
+    if (result == null) throw new ComicException("No such comic: id=" + id);
+    return result;
+  }
+
   /**
    * Marks a comic for deletion but does not actually delete the comic.
    *
@@ -126,19 +135,9 @@ public class ComicService {
   @Transactional
   public Comic deleteComic(final long id) throws ComicException {
     log.debug("Marking comic for deletion: id={}", id);
-
-    final Optional<Comic> record = this.comicRepository.findById(id);
-
-    if (!record.isPresent()) {
-      throw new ComicException("no such comic: id=" + id);
-    }
-
-    final Comic comic = record.get();
-    log.debug("Setting deleted date");
-    comic.setDateDeleted(new Date());
-
-    log.debug("Updating comic in the database");
-    return this.comicRepository.save(comic);
+    final var comic = this.doGetComic(id);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.addedToDeleteQueue);
+    return this.doGetComic(id);
   }
 
   /**
@@ -147,32 +146,26 @@ public class ComicService {
    * @param id the comic id
    * @param update the updated comic data
    * @return the updated comic
+   * @throws ComicException if the id is invalid
    */
   @Transactional
-  public Comic updateComic(final long id, final Comic update) {
+  public Comic updateComic(final long id, final Comic update) throws ComicException {
     log.debug("Updating comic: id={}", id);
+    final var comic = this.doGetComic(id);
 
-    final Optional<Comic> record = this.comicRepository.findById(id);
+    log.debug("Updating the comic fields");
 
-    if (record.isPresent()) {
-      final Comic comic = record.get();
-      log.debug("Updating the comic fields");
+    comic.setPublisher(update.getPublisher());
+    comic.setImprint(update.getImprint());
+    comic.setSeries(update.getSeries());
+    comic.setVolume(update.getVolume());
+    comic.setIssueNumber(update.getIssueNumber());
+    comic.setSortName(update.getSortName());
+    comic.setScanType(update.getScanType());
+    comic.setFormat(update.getFormat());
 
-      comic.setPublisher(update.getPublisher());
-      comic.setImprint(update.getImprint());
-      comic.setSeries(update.getSeries());
-      comic.setVolume(update.getVolume());
-      comic.setIssueNumber(update.getIssueNumber());
-      comic.setSortName(update.getSortName());
-      comic.setScanType(update.getScanType());
-      comic.setFormat(update.getFormat());
-
-      log.debug("Saving updated comic");
-      return this.comicRepository.save(comic);
-    }
-
-    log.debug("No such comic");
-    return null;
+    this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
+    return this.doGetComic(id);
   }
 
   /**
@@ -220,22 +213,9 @@ public class ComicService {
   @Transactional
   public Comic restoreComic(final long id) throws ComicException {
     log.debug("Restoring comic: id={}", id);
-
-    final Optional<Comic> record = this.comicRepository.findById(id);
-
-    if (!record.isPresent()) {
-      throw new ComicException("no such comic: id=" + id);
-    }
-
-    final Comic comic = record.get();
-
-    log.debug("Restoring comic: id={} originally deleted={}", id, comic.getDateDeleted());
-
-    log.debug("Clearing deleted date");
-    comic.setDateDeleted(null);
-
-    log.debug("Saving comic");
-    return this.comicRepository.save(comic);
+    final var comic = this.doGetComic(id);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.removedFromDeleteQueue);
+    return this.doGetComic(id);
   }
 
   /**
@@ -280,5 +260,42 @@ public class ComicService {
   public List<Comic> getComicsById(final long threshold, final int max) {
     log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
     return this.comicRepository.findComicsWithIdGreaterThan(threshold, PageRequest.of(0, max));
+  }
+
+  @Override
+  @Transactional
+  public void onComicStateChange(
+      final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
+    final var comic = message.getHeaders().get(HEADER_COMIC, Comic.class);
+    if (comic == null) return;
+    log.debug("Processing comic state change: [{}] =>  {}", comic.getId(), state.getId());
+    comic.setComicState(state.getId());
+    comic.setLastModifiedOn(new Date());
+    this.comicRepository.save(comic);
+  }
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    log.trace("Subscribing to comic state changes");
+    this.comicStateHandler.addListener(this);
+  }
+
+  /**
+   * Clears all metadata from the given comic.
+   *
+   * @param comicId the comic id
+   * @return the updated comic
+   * @throws ComicException if the comic id is invalid
+   */
+  @Transactional
+  public Comic deleteMetadata(final long comicId) throws ComicException {
+    log.debug("Loading comic: id={}", comicId);
+    final var comic = this.doGetComic(comicId);
+    log.trace("Clearing comic metadata");
+    this.comicDataAdaptor.clear(comic);
+    log.trace("Firing comic state event");
+    this.comicStateHandler.fireEvent(comic, ComicEvent.metadataCleared);
+    log.trace("Retrieving upated comic");
+    return this.doGetComic(comicId);
   }
 }

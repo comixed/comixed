@@ -238,8 +238,8 @@
                     </limit>
                   </limits>
                 </rule>
-                <!-- uncomment when testing has been brought up to 90%
-                <rule>
+                <!-- uncomment when testing has been brought up to 90% -->
+                <!-- rule>
                   <element>CLASS</element>
                   <limits>
                     <limit>
@@ -258,8 +258,7 @@
                       <maximum>0</maximum>
                     </limit>
                   </limits>
-                </rule>
-                -->
+                </rule -->
               </rules>
             </configuration>
           </execution>
@@ -337,6 +336,7 @@
   </build>
   <modules>
     <module>comixed-model</module>
+    <module>comixed-state</module>
     <module>comixed-repositories</module>
     <module>comixed-adaptors</module>
     <module>comixed-tasks</module>

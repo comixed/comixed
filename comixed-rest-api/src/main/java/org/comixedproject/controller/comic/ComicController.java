@@ -25,7 +25,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.auditlog.AuditableEndpoint;
@@ -67,7 +66,6 @@ public class ComicController {
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileService fileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
-  @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<DeleteComicsTask> deleteComicsWorkerTaskFactory;
   @Autowired private ObjectFactory<UndeleteComicsTask> undeleteComicsWorkerTaskObjectFactory;
@@ -117,20 +115,8 @@ public class ComicController {
   @AuditableEndpoint
   @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
-    log.debug("Updating comic: id={}", id);
-
-    Comic comic = this.comicService.getComic(id);
-
-    if (comic != null) {
-      log.debug("Clearing metadata for comic");
-      this.comicDataAdaptor.clear(comic);
-      log.debug("Saving updates to comic");
-      this.comicService.save(comic);
-    } else {
-      log.debug("No such comic found");
-    }
-
-    return comic;
+    log.debug("Deleting comic metadata: id={}", id);
+    return this.comicService.deleteMetadata(id);
   }
 
   @PostMapping(value = "/multiple/delete")
@@ -180,6 +166,7 @@ public class ComicController {
    * @param id the comic id
    * @param comic the source comic
    * @return the updated comic
+   * @throws ComicException if the id is invalid
    */
   @PutMapping(
       value = "/{id}",
@@ -187,7 +174,8 @@ public class ComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
-  public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic) {
+  public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic)
+      throws ComicException {
     log.info("Updating comic: id={}", id, comic);
 
     final Comic result = this.comicService.updateComic(id, comic);

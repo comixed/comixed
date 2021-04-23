@@ -843,6 +843,12 @@
     <addAutoIncrement tableName="Comics"
                       columnName="Id"
                       columnDataType="bigint"/>
+    <addAutoIncrement tableName="ComicFileDetails"
+                      columnName="Id"
+                      columnDataType="bigint"/>
+    <addAutoIncrement tableName="ComicFileEntries"
+                      columnName="Id"
+                      columnDataType="bigint"/>
     <addAutoIncrement tableName="ComicFormats"
                       columnName="Id"
                       columnDataType="bigint"/>
@@ -867,6 +873,9 @@
     <addAutoIncrement tableName="Roles"
                       columnName="Id"
                       columnDataType="bigint"/>
+    <addAutoIncrement tableName="ScanTypes"
+                      columnName="Id"
+                      columnDataType="bigint"/>
     <addAutoIncrement tableName="ScrapingCache"
                       columnName="Id"
                       columnDataType="bigint"/>
@@ -883,6 +892,9 @@
                       columnName="Id"
                       columnDataType="bigint"/>
     <addAutoIncrement tableName="Tasks"
+                      columnName="Id"
+                      columnDataType="bigint"/>
+    <addAutoIncrement tableName="TaskAuditLog"
                       columnName="Id"
                       columnDataType="bigint"/>
     <addAutoIncrement tableName="TaskProperties"

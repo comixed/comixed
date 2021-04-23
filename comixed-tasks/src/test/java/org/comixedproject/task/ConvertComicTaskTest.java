@@ -32,11 +32,15 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.tasks.PersistedTask;
+import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
 import org.comixedproject.service.task.TaskService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -55,11 +59,12 @@ public class ConvertComicTaskTest {
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
-  private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
   private static final String TEST_ORIGINAL_COMIC_FILENAME = "src/test/resources/original.cbz";
+  private static final Long TEST_COMIC_ID = 17L;
 
   @InjectMocks private ConvertComicTask task;
   @Mock private ComicService comicService;
+  @Mock private ComicStateHandler comicStateHandler;
   @Mock private Comic sourceComic;
   @Mock private Comic savedComic;
   @Mock private Comic convertedComic;
@@ -72,6 +77,14 @@ public class ConvertComicTaskTest {
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ReadingListService readingListService;
 
+  @Before
+  public void setUp() throws IOException, ArchiveAdaptorException, ComicException {
+    Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
+        .thenReturn(convertedComic);
+    Mockito.when(sourceComic.getId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(savedComic);
+  }
+
   @Test
   public void testCreateDescription() {
     task.setComic(sourceComic);
@@ -80,7 +93,7 @@ public class ConvertComicTaskTest {
 
   @Test
   public void testStartTaskWithoutDeleteOriginal()
-      throws IOException, ArchiveAdaptorException, TaskException {
+      throws IOException, ArchiveAdaptorException, TaskException, ComicException {
     task.setComic(sourceComic);
     task.setTargetArchiveType(targetArchiveType);
     task.setRenamePages(TEST_RENAME_PAGES);
@@ -95,9 +108,7 @@ public class ConvertComicTaskTest {
 
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
-    Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
-        .thenReturn(convertedComic);
-    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(savedComic);
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(savedComic);
     Mockito.when(processComicTaskEncoderObjectFactory.getObject())
         .thenReturn(processComicTaskEncoder);
     Mockito.when(processComicTaskEncoder.encode()).thenReturn(processComicPersistedTask);
@@ -112,7 +123,9 @@ public class ConvertComicTaskTest {
     Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
         .saveComic(sourceComic, TEST_RENAME_PAGES);
-    Mockito.verify(comicService, Mockito.times(1)).save(convertedComic);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(convertedComic, ComicEvent.archiveRecreated);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
@@ -142,9 +155,6 @@ public class ConvertComicTaskTest {
 
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
-    Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
-        .thenReturn(convertedComic);
-    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(savedComic);
     Mockito.when(processComicTaskEncoderObjectFactory.getObject())
         .thenReturn(processComicTaskEncoder);
     Mockito.when(processComicTaskEncoder.encode()).thenReturn(processComicPersistedTask);
@@ -164,7 +174,8 @@ public class ConvertComicTaskTest {
     Mockito.verify(sourceComic, Mockito.times(1)).removeDeletedPages(TEST_DELETE_PAGES);
     Mockito.verify(targetArchiveAdaptor, Mockito.times(1))
         .saveComic(sourceComic, TEST_RENAME_PAGES);
-    Mockito.verify(comicService, Mockito.times(1)).save(convertedComic);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(convertedComic, ComicEvent.archiveRecreated);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(savedComic);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);

@@ -376,4 +376,13 @@ public class ComicControllerTest {
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
   }
+
+  @Test
+  public void testDeleteMetadata() throws ComicException {
+    Mockito.when(comicService.deleteMetadata(Mockito.anyLong())).thenReturn(comic);
+
+    final Comic result = controller.deleteMetadata(TEST_COMIC_ID);
+
+    Mockito.verify(comicService, Mockito.times(1)).deleteMetadata(TEST_COMIC_ID);
+  }
 }
