@@ -50,6 +50,9 @@ import {
   selectComic,
   selectComicBusy
 } from '@app/library/selectors/comic.selectors';
+import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
+import { updateComicReadStatus } from '@app/last-read/actions/update-read-status.actions';
+import { LastRead } from '@app/last-read';
 
 @Component({
   selector: 'cx-comic-details',
@@ -78,6 +81,10 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   scrapingIssueNumber = '';
   langChangeSubscription: Subscription;
   comicBusySubscription: Subscription;
+  lastReadSubscription: Subscription;
+  lastReadDates: LastRead[] = [];
+  isRead = false;
+  lastRead: LastRead = null;
 
   constructor(
     private logger: LoggerService,
@@ -142,6 +149,14 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.volumesSubscription = this.store
       .select(selectScrapingVolumes)
       .subscribe(volumes => (this.volumes = volumes));
+    this.lastReadSubscription = this.store
+      .select(selectLastReadEntries)
+      .subscribe(entries => {
+        this.isRead = entries
+          .map(entry => entry.comic.id)
+          .includes(this.comicId);
+        this.lastRead = entries.find(entry => entry.comic.id === this.comicId);
+      });
   }
 
   ngOnInit(): void {
@@ -156,6 +171,7 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.comicBusySubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.volumesSubscription.unsubscribe();
+    this.lastReadSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -197,6 +213,11 @@ export class ComicDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(
       loadScrapingVolumes({ apiKey, series, maximumRecords, skipCache })
     );
+  }
+
+  setReadState(status: boolean): void {
+    this.logger.debug(`Marking comic as ${status ? 'read' : 'unread'}`);
+    this.store.dispatch(updateComicReadStatus({ comic: this.comic, status }));
   }
 
   private routeToComic(id: number): void {

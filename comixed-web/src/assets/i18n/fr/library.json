@@ -59,7 +59,9 @@
       "blocked-page": "Les pages comme celle-ci sont bloquées...",
       "download-comic": "Télécharger cette Bande Dessinée...",
       "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
-      "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série..."
+      "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",
+      "mark-read": "Mark this comic as read.",
+      "mark-unread": "Mark this comic as unread."
     },
     "undo-changes": {
       "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",

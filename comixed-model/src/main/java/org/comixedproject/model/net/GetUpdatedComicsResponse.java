@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.views.View;
 
 public class GetUpdatedComicsResponse {
@@ -44,9 +44,9 @@ public class GetUpdatedComicsResponse {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   private Date mostRecentUpdate;
 
-  @JsonProperty("lastReadDates")
+  @JsonProperty("lastReads")
   @JsonView(View.LibraryUpdate.class)
-  private List<LastReadDate> lastReadDates;
+  private List<LastRead> lastReads;
 
   @JsonProperty("readingLists")
   @JsonView(View.LibraryUpdate.class)
@@ -66,14 +66,14 @@ public class GetUpdatedComicsResponse {
       List<Comic> comics,
       Long lastComicId,
       Date mostRecentUpdate,
-      List<LastReadDate> lastReadDates,
+      List<LastRead> lastReads,
       List<ReadingList> readingLists,
       boolean moreUpdates,
       long processingCount) {
     this.comics = comics;
     this.lastComicId = lastComicId;
     this.mostRecentUpdate = mostRecentUpdate;
-    this.lastReadDates = lastReadDates;
+    this.lastReads = lastReads;
     this.readingLists = readingLists;
     this.moreUpdates = moreUpdates;
     this.processingCount = processingCount;
@@ -91,8 +91,8 @@ public class GetUpdatedComicsResponse {
     return mostRecentUpdate;
   }
 
-  public List<LastReadDate> getLastReadDates() {
-    return lastReadDates;
+  public List<LastRead> getLastReadDates() {
+    return lastReads;
   }
 
   public boolean hasMoreUpdates() {

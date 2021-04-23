@@ -9,5 +9,6 @@
   <include file="/db/migrations/0.9.0/001_682_add_created_dates_to_comics.xml"/>
   <include file="/db/migrations/0.9.0/002_593_migrate_to_camel_case.xml"/>
   <include file="/db/migrations/0.9.0/003_154_rename_blocked_page_hash_table.xml"/>
+  <include file="/db/migrations/0.9.0/004_698_rename_last_read_columns.xml"/>
 
 </databaseChangeLog>

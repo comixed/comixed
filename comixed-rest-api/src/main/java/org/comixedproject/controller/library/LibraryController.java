@@ -19,7 +19,6 @@
 package org.comixedproject.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
@@ -31,13 +30,9 @@ import org.comixedproject.model.net.ConvertComicsRequest;
 import org.comixedproject.model.net.library.LoadLibraryRequest;
 import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.MoveComicsRequest;
-import org.comixedproject.model.net.library.SetReadStateRequest;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
-import org.comixedproject.service.library.ReadingListService;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
 import org.comixedproject.task.ConvertComicsTask;
 import org.comixedproject.task.MoveComicsTask;
 import org.comixedproject.task.runner.TaskManager;
@@ -56,8 +51,6 @@ public class LibraryController {
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
-  @Autowired private UserService userService;
-  @Autowired private ReadingListService readingListService;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
@@ -144,31 +137,10 @@ public class LibraryController {
   }
 
   /**
-   * Sets the read state for a set of comics.
-   *
-   * @param principal the user principal
-   * @param request the request body
-   * @throws LibraryException if an error occurs
-   */
-  @PostMapping(value = "/library/read", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
-  public void setReadState(final Principal principal, @RequestBody() SetReadStateRequest request)
-      throws LibraryException {
-    final String email = principal.getName();
-    final List<Long> ids = request.getIds();
-    final boolean read = request.getRead();
-    log.info("Marking comics as {} for {}", read ? "read" : "unread", email);
-    this.libraryService.setReadState(email, ids, read);
-  }
-
-  /**
    * Loads a batch of comics during the initial startup process.
    *
-   * @param principal the user principal
    * @param request the request
    * @return the response
-   * @throws ComiXedUserException if the email is invalid
    */
   @PostMapping(
       value = "/library",
@@ -177,14 +149,11 @@ public class LibraryController {
   @PreAuthorize("hasRole('READER')")
   @AuditableEndpoint
   @JsonView(View.ComicListView.class)
-  public LoadLibraryResponse loadLibrary(
-      final Principal principal, @RequestBody() final LoadLibraryRequest request)
-      throws ComiXedUserException {
-    final String email = principal.getName();
+  public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
     final Long lastId = request.getLastId();
-    log.info("Loading library for {}: last id was {}", email, lastId);
+    log.info("Loading library for {}: last id was {}", lastId);
 
-    List<Comic> comics = this.comicService.getComicsById(email, lastId, MAXIMUM_RECORDS + 1);
+    List<Comic> comics = this.comicService.getComicsById(lastId, MAXIMUM_RECORDS + 1);
     boolean lastPayload = true;
     if (comics.size() > MAXIMUM_RECORDS) {
       comics = comics.subList(0, MAXIMUM_RECORDS);

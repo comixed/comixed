@@ -29,4 +29,10 @@ public interface Constants {
 
   /** Topic which receives updates on the current user." */
   String CURRENT_USER_UPDATE_TOPIC = "/topic/user/current";
+
+  /** Topic which receives notices when last read entries are updated. */
+  String LAST_READ_UPDATE_TOPIC = "/topic/last-read-list.update";
+
+  /** Topic which receives notices when last read entries are removed. */
+  String LAST_READ_REMOVAL_TOPIC = "/topic/last-read-list.removal";
 }

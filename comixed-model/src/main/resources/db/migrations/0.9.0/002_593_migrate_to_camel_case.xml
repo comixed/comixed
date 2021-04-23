@@ -849,6 +849,9 @@
     <addAutoIncrement tableName="Credits"
                       columnName="Id"
                       columnDataType="bigint"/>
+    <addAutoIncrement tableName="LastReadDates"
+                      columnName="Id"
+                      columnDataType="bigint"/>
     <addAutoIncrement tableName="Locations"
                       columnName="Id"
                       columnDataType="bigint"/>

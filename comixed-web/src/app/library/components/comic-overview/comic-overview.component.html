@@ -90,6 +90,15 @@
         {{ comic.addedDate | date: "medium" }}
       </span>
       <br />
+      <span *ngIf="!!lastRead">
+        <span
+          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
+        >
+          {{ "comic.label.last-read-date" | translate }}
+        </span>
+        {{ lastRead.lastRead | date: "medium" }}
+      </span>
+      <br />
       <h3>{{ "comic.label.other-details" | translate }}</h3>
       <span>
         <span

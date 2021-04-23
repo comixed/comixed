@@ -21,10 +21,8 @@ package org.comixedproject.controller.comic;
 import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.ComicDataAdaptor;
@@ -37,20 +35,14 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
-import org.comixedproject.model.user.LastReadDate;
-import org.comixedproject.repositories.comic.ComicFormatRepository;
-import org.comixedproject.repositories.comic.ScanTypeRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.DeleteComicsTask;
-import org.comixedproject.task.RescanComicsTask;
 import org.comixedproject.task.UndeleteComicsTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
-import org.comixedproject.views.View;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,25 +63,19 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class ComicController {
   @Autowired private SimpMessagingTemplate messagingTemplate;
-  @Autowired private ObjectMapper objectMapper;
-
   @Autowired private ComicService comicService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileService fileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
-  @Autowired private ComicFormatRepository comicFormatRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private TaskManager taskManager;
-  @Autowired private ScanTypeRepository scanTypeRepository;
   @Autowired private ObjectFactory<DeleteComicsTask> deleteComicsWorkerTaskFactory;
   @Autowired private ObjectFactory<UndeleteComicsTask> undeleteComicsWorkerTaskObjectFactory;
-  @Autowired private ObjectFactory<RescanComicsTask> rescanComicsWorkerTaskObjectFactory;
   @Autowired private ComicFileHandler comicFileHandler;
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
    *
-   * @param principal the user principal
    * @param id the comic id
    * @return the comic
    * @throws ComicException if an error occurs
@@ -97,10 +83,9 @@ public class ComicController {
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
-  public Comic getComic(Principal principal, @PathVariable("id") long id) throws ComicException {
-    String email = principal.getName();
-    log.info("Getting comic for user: id={} user={}", id, email);
-    return this.comicService.getComic(id, email);
+  public Comic getComic(@PathVariable("id") long id) throws ComicException {
+    log.info("Getting comic: id={}", id);
+    return this.comicService.getComic(id);
   }
 
   /**
@@ -276,32 +261,6 @@ public class ComicController {
     log.info("Restoring comic: id={}", id);
 
     return this.comicService.restoreComic(id);
-  }
-
-  @PutMapping(
-      value = "/{id}/read",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.UserDetailsView.class)
-  @AuditableEndpoint
-  public LastReadDate markAsRead(Principal principal, @PathVariable("id") Long id)
-      throws ComicException, ComiXedUserException {
-    String email = principal.getName();
-    if (email == null) throw new ComicException("not authenticated");
-    log.info("Marking comic as read for {}: id={}", email, id);
-
-    return this.comicService.markAsRead(email, id);
-  }
-
-  @DeleteMapping(value = "/{id}/read", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public void markAsUnread(Principal principal, @PathVariable("id") Long id)
-      throws ComicException, ComiXedUserException {
-    String email = principal.getName();
-    if (email == null) throw new ComicException("not authenticated");
-    log.info("Marking comic as unread for {}: id={}", email, id);
-
-    this.comicService.markAsUnread(email, id);
   }
 
   @PostMapping(

@@ -54,11 +54,17 @@ export const reducer = createReducer(
   })),
   on(loadComicFailed, state => ({ ...state, loading: false })),
   on(updateComic, state => ({ ...state, saving: true, saved: false })),
-  on(comicUpdated, (state, action) => ({
-    ...state,
-    saving: false,
-    saved: true,
-    comic: action.comic
-  })),
+  on(comicUpdated, (state, action) => {
+    if (state.comic.id === action.comic.id) {
+      return {
+        ...state,
+        saving: false,
+        saved: true,
+        comic: action.comic
+      };
+    } else {
+      return state;
+    }
+  }),
   on(updateComicFailed, state => ({ ...state, saving: false, saved: false }))
 );

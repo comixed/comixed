@@ -19,6 +19,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Comic } from '@app/library';
+import { LastRead } from '@app/last-read';
 
 @Component({
   selector: 'cx-comic-overview',
@@ -27,6 +28,7 @@ import { Comic } from '@app/library';
 })
 export class ComicOverviewComponent implements OnInit {
   @Input() comic: Comic;
+  @Input() lastRead: LastRead;
 
   constructor(private logger: LoggerService) {}
 

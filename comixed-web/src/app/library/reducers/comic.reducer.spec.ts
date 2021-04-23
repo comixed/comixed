@@ -17,7 +17,7 @@
  */
 
 import { ComicState, initialState, reducer } from './comic.reducer';
-import { COMIC_2 } from '@app/library/library.fixtures';
+import { COMIC_2, COMIC_4 } from '@app/library/library.fixtures';
 import {
   comicLoaded,
   comicUpdated,
@@ -116,10 +116,12 @@ describe('Comic Reducer', () => {
   });
 
   describe('successfully updating a single comic', () => {
+    const UPDATED_COMIC = { ...COMIC, filename: COMIC.filename.substr(1) };
+
     beforeEach(() => {
       state = reducer(
-        { ...state, saving: true, saved: false, comic: null },
-        comicUpdated({ comic: COMIC })
+        { ...state, saving: true, saved: false, comic: COMIC },
+        comicUpdated({ comic: UPDATED_COMIC })
       );
     });
 
@@ -132,7 +134,31 @@ describe('Comic Reducer', () => {
     });
 
     it('updates the comic', () => {
-      expect(state.comic).toEqual(COMIC);
+      expect(state.comic).toEqual(UPDATED_COMIC);
+    });
+  });
+
+  describe('update received for different comic', () => {
+    const CURRENT_COMIC = COMIC_2;
+    const OTHER_COMIC = COMIC_4;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, saving: true, saved: false, comic: CURRENT_COMIC },
+        comicUpdated({ comic: OTHER_COMIC })
+      );
+    });
+
+    it('does not affect the current comic', () => {
+      expect(state.comic).toEqual(CURRENT_COMIC);
+    });
+
+    it('does not change the saving flag', () => {
+      expect(state.saving).toBeTrue();
+    });
+
+    it('does not change the saved flag', () => {
+      expect(state.saved).toBeFalse();
     });
   });
 

@@ -370,7 +370,7 @@ public class ComicRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(9, result.size());
+    assertEquals(1, result.size());
   }
 
   @Test

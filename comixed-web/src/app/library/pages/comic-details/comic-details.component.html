@@ -1,7 +1,7 @@
-<mat-toolbar *ngIf="!!comic">
+<mat-toolbar *ngIf="!!comic" class="cx-primary-light-background">
   <button
     id="previous-comic-button"
-    class="cx-action-button"
+    class="cx-toolbar-button"
     mat-flat-button
     color="accent"
     [matTooltip]="'comic.tooltip.go-to-previous-comic' | translate"
@@ -13,7 +13,7 @@
   </button>
   <button
     id="download-comic-button"
-    class="cx-action-button"
+    class="cx-toolbar-button"
     mat-flat-button
     color="primary"
     [matTooltip]="'comic.tooltip.download-comic' | translate"
@@ -23,7 +23,7 @@
   </button>
   <button
     id="next-comic-button"
-    class="cx-action-button"
+    class="cx-toolbar-button"
     mat-flat-button
     [disabled]="!comic.nextIssueId"
     color="accent"
@@ -32,6 +32,29 @@
   >
     <mat-label>{{ "button.next" | translate }}</mat-label>
     <mat-icon>arrow_forward</mat-icon>
+  </button>
+  <div class="cx-spacer"></div>
+  <button
+    *ngIf="!isRead"
+    id="mark-as-read-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'comic.tooltip.mark-read' | translate"
+    (click)="setReadState(true)"
+  >
+    <mat-icon>turned_in_not</mat-icon>
+  </button>
+  <button
+    *ngIf="isRead"
+    id="mark-as-unread-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'comic.tooltip.mark-unread' | translate"
+    (click)="setReadState(false)"
+  >
+    <mat-icon>turned_in</mat-icon>
   </button>
 </mat-toolbar>
 <mat-card *ngIf="!!comic">
@@ -50,7 +73,10 @@
           (selectedTabChange)="onTabChange($event.index)"
         >
           <mat-tab [label]="'comic.label.comic-overview' | translate">
-            <cx-comic-overview [comic]="comic"></cx-comic-overview>
+            <cx-comic-overview
+              [comic]="comic"
+              [lastRead]="lastRead"
+            ></cx-comic-overview>
           </mat-tab>
           <mat-tab [label]="'comic.label.comic-story' | translate">
             <cx-comic-story [comic]="comic"></cx-comic-story>

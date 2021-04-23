@@ -61,6 +61,10 @@ import {
   COMIC_FEATURE_KEY,
   initialState as initialComicState
 } from '@app/library/reducers/comic.reducer';
+import {
+  LAST_READ_LIST_FEATURE_KEY,
+  initialState as initialLastReadState
+} from '@app/last-read/reducers/last-read-list.reducer';
 
 describe('ComicDetailsComponent', () => {
   const COMIC = COMIC_1;
@@ -77,7 +81,8 @@ describe('ComicDetailsComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [DISPLAY_FEATURE_KEY]: { ...initialDisplayState },
     [SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
-    [COMIC_FEATURE_KEY]: { ...initialComicState }
+    [COMIC_FEATURE_KEY]: { ...initialComicState },
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
   };
 
   let component: ComicDetailsComponent;
