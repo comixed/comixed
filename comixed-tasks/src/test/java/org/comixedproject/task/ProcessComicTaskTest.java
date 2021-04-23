@@ -38,7 +38,10 @@ import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.service.blockedpage.BlockedPageService;
+import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.Utils;
 import org.comixedproject.views.View;
 import org.junit.After;
@@ -60,9 +63,11 @@ public class ProcessComicTaskTest {
   private static final String TEST_BLOCKED_PAGE_HASH = "1234567890";
   private static final String TEST_UNBLOCKED_PAGE_HASH = "0987654321";
   private static final String TEST_COMIC_AS_JSON = "This is a JSON encoded comic";
+  private static final long TEST_COMIC_ID = 17L;
 
   @InjectMocks private ProcessComicTask task;
   @Mock private Comic comic;
+  @Mock private Comic savedComic;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicService comicService;
   @Mock private Utils utils;
@@ -73,6 +78,7 @@ public class ProcessComicTaskTest {
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
+  @Mock private ComicStateHandler comicStateHandler;
 
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsCaptor;
 
@@ -81,7 +87,7 @@ public class ProcessComicTaskTest {
   private List<Page> pageList = new ArrayList<>();
 
   @Before
-  public void setUp() throws ArchiveAdaptorException, IOException {
+  public void setUp() throws ArchiveAdaptorException, IOException, ComicException {
     this.pageList.add(blockedPage);
     this.pageList.add(unblockedPage);
     this.blockedPageHashes.add(TEST_BLOCKED_PAGE_HASH);
@@ -90,14 +96,13 @@ public class ProcessComicTaskTest {
     Mockito.when(unblockedPage.getHash()).thenReturn(TEST_UNBLOCKED_PAGE_HASH);
 
     Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comic.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(archiveAdaptor);
-    Mockito.doNothing().when(archiveAdaptor).loadComic(comic);
-    Mockito.doNothing().when(archiveAdaptor).fillComic(comic);
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsCaptor.capture());
-    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(savedComic);
 
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any(Comic.class)))
@@ -127,9 +132,8 @@ public class ProcessComicTaskTest {
     Mockito.verify(blockedPage, Mockito.times(1)).setDeleted(true);
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(comicService, Mockito.times(1)).save(comic);
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comic);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
   }
@@ -147,9 +151,8 @@ public class ProcessComicTaskTest {
 
     Mockito.verify(archiveAdaptor, Mockito.times(1)).fillComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(comicService, Mockito.times(1)).save(comic);
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comic);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
   }
@@ -169,9 +172,10 @@ public class ProcessComicTaskTest {
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(blockedPage, Mockito.never()).setDeleted(true);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(comicService, Mockito.times(1)).save(comic);
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comic);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comic, ComicEvent.contentsProcessed);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
   }
@@ -218,8 +222,24 @@ public class ProcessComicTaskTest {
 
     task.startTask();
 
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comic);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
     Mockito.verify(messagingTemplate, Mockito.never())
         .convertAndSend(Mockito.anyString(), Mockito.anyString());
+  }
+
+  @Test(expected = TaskException.class)
+  public void testStartTaskExceptionOnLoadingComic()
+      throws TaskException, IOException, ComicException {
+    task.setComic(comic);
+    task.setIgnoreMetadata(false);
+    task.setDeleteBlockedPages(false);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+
+    try {
+      task.startTask();
+    } finally {
+      Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    }
   }
 }

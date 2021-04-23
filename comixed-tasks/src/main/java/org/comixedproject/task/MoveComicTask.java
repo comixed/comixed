@@ -28,6 +28,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.ComicFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,6 +52,7 @@ public class MoveComicTask extends AbstractTask {
   private static final String UNKNOWN_VALUE = "Unknown";
 
   @Autowired private ComicService comicService;
+  @Autowired private ComicStateHandler comicStateHandler;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private String targetDirectory;
@@ -89,7 +92,8 @@ public class MoveComicTask extends AbstractTask {
 
       log.debug("Updating comic in database");
       this.comic.setFilename(destFile.getAbsolutePath());
-      this.comicService.save(this.comic);
+      log.trace("Firing comic event: moved");
+      this.comicStateHandler.fireEvent(this.comic, ComicEvent.comicMoved);
     } catch (IOException error) {
       throw new TaskException("Failed to move comic", error);
     }

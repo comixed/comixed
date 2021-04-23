@@ -21,7 +21,6 @@ package org.comixedproject.task;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -81,10 +80,6 @@ public class DeleteComicTask extends AbstractTask implements Task {
       } catch (IOException error) {
         log.error("Unable to delete comic: {}", filename, error);
       }
-    } else {
-      log.debug("Marking comic for deletion: id={}", this.comic.getId());
-      comic.setDateDeleted(new Date());
-      this.comicService.save(this.comic);
     }
   }
 

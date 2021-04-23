@@ -21,7 +21,9 @@ package org.comixedproject.task;
 import static junit.framework.TestCase.assertNotNull;
 
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class UndeleteComicTaskTest {
   @InjectMocks private UndeleteComicTask task;
-  @Mock private ComicService comicService;
+  @Mock private ComicStateHandler comicStateHandler;
   @Mock private Comic comic;
 
   @Test
@@ -41,14 +43,17 @@ public class UndeleteComicTaskTest {
   }
 
   @Test
-  public void testStartTask() throws TaskException {
+  public void testStartTask() throws TaskException, ComicException {
     task.setComic(comic);
 
-    Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
+    Mockito.doNothing()
+        .when(comicStateHandler)
+        .fireEvent(Mockito.any(Comic.class), Mockito.any(ComicEvent.class));
 
     task.startTask();
 
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(null);
-    Mockito.verify(comicService, Mockito.times(1)).save(comic);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comic, ComicEvent.removedFromDeleteQueue);
   }
 }
