@@ -39,7 +39,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -77,12 +76,19 @@ public class Comic {
   @Setter
   private Long previousIssueId;
 
-  @Column(name = "filename", nullable = false, unique = true, length = 1024)
+  @Column(name = "Filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
   @JsonView(View.ComicListView.class)
   @Getter
   @Setter
   private String filename;
+
+  @Column(name = "ComicState", nullable = false, updatable = true)
+  @JsonProperty("comicState")
+  @JsonView(View.ComicListView.class)
+  @Getter
+  @Setter
+  private ComicState comicState;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)
   @JsonView(View.ComicListView.class)
@@ -191,14 +197,14 @@ public class Comic {
   @Setter
   private Date dateDeleted;
 
-  @Column(name = "LastUpdatedOn", updatable = true, nullable = false)
-  @LastModifiedDate
-  @JsonProperty("lastUpdatedDate")
+  @Column(name = "LastModifiedOn", updatable = true, nullable = false)
+  @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.ComicListView.class)
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
-  private Date dateLastUpdated = new Date();
+  @Setter
+  private Date lastModifiedOn = new Date();
 
   @Column(name = "ComicVineId", length = 16)
   @JsonProperty("comicVineId")

@@ -180,6 +180,7 @@ public class ComicController {
    * @param id the comic id
    * @param comic the source comic
    * @return the updated comic
+   * @throws ComicException if the id is invalid
    */
   @PutMapping(
       value = "/{id}",
@@ -187,7 +188,8 @@ public class ComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
-  public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic) {
+  public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic)
+      throws ComicException {
     log.info("Updating comic: id={}", id, comic);
 
     final Comic result = this.comicService.updateComic(id, comic);

@@ -25,6 +25,7 @@ import {
   ReadingList,
   ScanType
 } from '@app/library';
+import { ComicState } from '@app/library/models/comic-state.enum';
 
 export interface Comic {
   id: number;
@@ -32,13 +33,14 @@ export interface Comic {
   scanType: ScanType;
   format: ComicFormat;
   filename: string;
+  comicState: ComicState;
   baseFilename: string;
   missing: boolean;
   fileDetails: FileDetails;
   fileEntries: ComicFileEntry[];
   addedDate: string;
   deletedDate: number;
-  lastUpdatedDate: number;
+  lastModifiedOn: number;
   publisher: string;
   series: string;
   volume: string;

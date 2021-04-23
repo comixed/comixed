@@ -16,6 +16,11 @@
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-state</artifactId>
+      <version>${comixed.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-repositories</artifactId>
       <version>${comixed.version}</version>
     </dependency>
