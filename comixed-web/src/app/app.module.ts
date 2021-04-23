@@ -65,6 +65,7 @@ import { SideNavigationComponent } from './components/side-navigation/side-navig
 import { MatListModule } from '@angular/material/list';
 import { BlockedPagesModule } from '@app/blocked-pages/blocked-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
+import { LastReadModule } from '@app/last-read/last-read.module';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { CollectionsModule } from '@app/collections/collections.module';
     UserModule,
     LibraryModule,
     BlockedPagesModule,
+    LastReadModule,
     CollectionsModule,
     BrowserModule,
     AppRouting,

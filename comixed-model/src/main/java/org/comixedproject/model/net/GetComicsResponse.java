@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.user.LastReadDate;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.views.View;
 
 public class GetComicsResponse {
@@ -31,9 +31,9 @@ public class GetComicsResponse {
   @JsonView(View.ComicListView.class)
   private List<Comic> comics;
 
-  @JsonProperty("lastReadDates")
+  @JsonProperty("lastReads")
   @JsonView(View.ComicListView.class)
-  private List<LastReadDate> lastReadDates;
+  private List<LastRead> lastReads;
 
   @JsonProperty("lastUpdatedDate")
   @JsonView(View.ComicListView.class)
@@ -47,11 +47,11 @@ public class GetComicsResponse {
 
   public GetComicsResponse(
       final List<Comic> comics,
-      final List<LastReadDate> lastReadDates,
+      final List<LastRead> lastReads,
       final Date latestUpdatedDate,
       final long comicCount) {
     this.comics = comics;
-    this.lastReadDates = lastReadDates;
+    this.lastReads = lastReads;
     this.latestUpdatedDate = latestUpdatedDate;
     this.comicCount = comicCount;
   }
@@ -60,8 +60,8 @@ public class GetComicsResponse {
     return comics;
   }
 
-  public List<LastReadDate> getLastReadDates() {
-    return lastReadDates;
+  public List<LastRead> getLastReadDates() {
+    return lastReads;
   }
 
   public Date getLatestUpdatedDate() {

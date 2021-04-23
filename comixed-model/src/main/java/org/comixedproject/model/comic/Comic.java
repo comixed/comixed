@@ -29,9 +29,9 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.tasks.PersistedTask;
-import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
@@ -58,7 +58,7 @@ public class Comic {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView(View.ComicListView.class)
+  @JsonView({View.ComicListView.class, View.LastReadList.class})
   @Getter
   @Setter
   private Long id;
@@ -314,14 +314,7 @@ public class Comic {
   @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @JsonIgnore
   @Getter
-  private List<LastReadDate> lastReadDates = new ArrayList<>();
-
-  @Transient
-  @JsonView(View.ComicListView.class)
-  @JsonFormat(shape = Shape.NUMBER)
-  @Getter
-  @Setter
-  private Date lastRead;
+  private List<LastRead> lastReads = new ArrayList<>();
 
   /**
    * Adds a file entry, or replaces one if it already exists.

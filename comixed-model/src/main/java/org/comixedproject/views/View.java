@@ -75,4 +75,7 @@ public class View {
 
   /** Used when viewing the details of a blocked page. */
   public interface BlockedPageDetail extends BlockedPageList {}
+
+  /** Used when viewing the last read dates for a user. */
+  public interface LastReadList {}
 }

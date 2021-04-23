@@ -23,65 +23,32 @@ import static junit.framework.TestCase.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.repositories.library.LastReadDatesRepository;
 import org.comixedproject.service.comic.PageCacheService;
-import org.comixedproject.service.task.TaskService;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
 import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryServiceTest {
-  private static final String TEST_EMAIL = "reader@comixed.org";
-  private static final Date TEST_LAST_UPDATED_TIMESTAMP = new Date();
-  private static final int TEST_MAXIMUM_COMICS = 100;
-  private static final long TEST_LAST_COMIC_ID = 23579;
-  private static final int TEST_PROCESSING_COUNT = 273;
-  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final Random RANDOM = new Random();
-  private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
-  private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
   private static final String TEST_FILENAME = "/home/comixeduser/Library/comicfile.cbz";
-  private static final Long TEST_USER_ID = 723L;
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
-  private static final String TEST_DIRECTORY = "/home/comixedreader/Documents/comics";
-  private static final String TEST_RENAMING_RULES =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES [v$VOLUME] #$ISSUE $COVERDATE";
-  private static final boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
-  private static final boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
-  private static final Date TEST_READ_DATE = new Date();
 
   @InjectMocks private LibraryService libraryService;
   @Mock private ComicRepository comicRepository;
-  @Mock private ReadingListService readingListService;
-  @Mock private UserService userService;
-  @Mock private TaskService taskService;
-  @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
   @Mock private Comic comic;
-  @Captor private ArgumentCaptor<List<Comic>> comicListArgumentCaptor;
   @Mock private File file;
   @Mock private Utils utils;
-  @Mock private List<LastReadDate> lastReadDateList;
-  @Mock private ComiXedUser user;
-  @Mock private LastReadDatesRepository lastReadDatesRepository;
   @Mock private PageCacheService pageCacheService;
-  @Mock private LastReadDate lastReadDate;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -141,24 +108,6 @@ public class LibraryServiceTest {
   }
 
   @Test
-  public void testGetLastReadDatesForUser() throws ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(user.getId()).thenReturn(TEST_USER_ID);
-    Mockito.when(lastReadDatesRepository.findAllForUser(Mockito.anyLong(), Mockito.any(Date.class)))
-        .thenReturn(lastReadDateList);
-
-    List<LastReadDate> result =
-        libraryService.getLastReadDatesSince(TEST_EMAIL, TEST_LAST_UPDATED_TIMESTAMP);
-
-    assertNotNull(result);
-    assertSame(lastReadDateList, result);
-
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
-    Mockito.verify(lastReadDatesRepository, Mockito.times(1))
-        .findAllForUser(TEST_USER_ID, TEST_LAST_UPDATED_TIMESTAMP);
-  }
-
-  @Test
   public void testClearImageCache() throws LibraryException, IOException {
     Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
     Mockito.doNothing().when(utils).deleteDirectoryContents(Mockito.anyString());
@@ -178,42 +127,5 @@ public class LibraryServiceTest {
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
     Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
-  }
-
-  @Test
-  public void testSetReadStateOn() throws ComiXedUserException, LibraryException {
-    comicIdList.add(7L);
-    comicIdList.add(17L);
-
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(
-            lastReadDatesRepository.getForComicAndUser(
-                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
-        .thenReturn(null, lastReadDate);
-    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
-
-    libraryService.setReadState(TEST_EMAIL, comicIdList, true);
-
-    Mockito.verify(lastReadDate, Mockito.times(1)).setLastRead(Mockito.any(Date.class));
-    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).save(lastReadDate);
-  }
-
-  @Test
-  public void testSetReadStateOff() throws ComiXedUserException, LibraryException {
-    comicIdList.add(7L);
-    comicIdList.add(17L);
-
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(
-            lastReadDatesRepository.getForComicAndUser(
-                Mockito.any(Comic.class), Mockito.any(ComiXedUser.class)))
-        .thenReturn(null, lastReadDate);
-    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
-
-    libraryService.setReadState(TEST_EMAIL, comicIdList, false);
-
-    Mockito.verify(lastReadDatesRepository, Mockito.times(1)).delete(lastReadDate);
   }
 }

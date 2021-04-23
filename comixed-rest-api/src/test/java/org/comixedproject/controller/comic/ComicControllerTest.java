@@ -23,8 +23,6 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -35,17 +33,14 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
 import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
-import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.DeleteComicsTask;
 import org.comixedproject.task.UndeleteComicsTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -62,7 +57,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 public class ComicControllerTest {
   private static final long TEST_COMIC_ID = 129;
   private static final String TEST_COMIC_FILE = "src/test/resources/example.cbz";
-  private static final String TEST_EMAIL_ADDRESS = "user@testing";
   private static final byte[] TEST_COMIC_CONTENT = "This is the comic content.".getBytes();
   private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
   private static final String TEST_PAGE_CONTENT_TYPE = "application";
@@ -76,7 +70,6 @@ public class ComicControllerTest {
   @Mock private PageCacheService pageCacheService;
   @Mock private TaskManager taskManager;
   @Mock private Comic comic;
-  @Mock private Principal principal;
   @Mock private ObjectFactory<DeleteComicsTask> deleteComicsTaskFactory;
   @Mock private DeleteComicsTask deleteComicsTask;
   @Mock private ObjectFactory<UndeleteComicsTask> undeleteComicsWorkerTaskObjectFactory;
@@ -85,40 +78,32 @@ public class ComicControllerTest {
   @Mock private FileService fileService;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Mock private Page page;
-  @Mock private LastReadDate lastReadDate;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
-  private List<Comic> comicList = new ArrayList<>();
-
-  @Before()
-  public void setUp() {
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL_ADDRESS);
-  }
-
   @Test
   public void testGetComicForNonexistentComic() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(null);
 
-    Comic result = controller.getComic(principal, TEST_COMIC_ID);
+    Comic result = controller.getComic(TEST_COMIC_ID);
 
     assertNull(result);
 
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
   }
 
   @Test
   public void testGetComic() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong(), Mockito.anyString())).thenReturn(comic);
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
 
-    Comic result = controller.getComic(principal, TEST_COMIC_ID);
+    Comic result = controller.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID, TEST_EMAIL_ADDRESS);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
   }
 
   @Test
@@ -390,51 +375,5 @@ public class ComicControllerTest {
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
-  }
-
-  @Test(expected = ComicException.class)
-  public void testMarkAsReadNotAuthenticated() throws ComicException, ComiXedUserException {
-    Mockito.when(principal.getName()).thenReturn(null);
-
-    try {
-      controller.markAsRead(principal, TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(principal, Mockito.times(1)).getName();
-    }
-  }
-
-  @Test
-  public void testMarkAsRead() throws ComicException, ComiXedUserException {
-    Mockito.when(comicService.markAsRead(Mockito.anyString(), Mockito.anyLong()))
-        .thenReturn(lastReadDate);
-
-    LastReadDate result = controller.markAsRead(principal, TEST_COMIC_ID);
-
-    assertNotNull(result);
-    assertSame(lastReadDate, result);
-
-    Mockito.verify(principal, Mockito.times(1)).getName();
-    Mockito.verify(comicService, Mockito.times(1)).markAsRead(TEST_EMAIL_ADDRESS, TEST_COMIC_ID);
-  }
-
-  @Test(expected = ComicException.class)
-  public void testMarkAsUnreadNotAuthenticated() throws ComicException, ComiXedUserException {
-    Mockito.when(principal.getName()).thenReturn(null);
-
-    try {
-      controller.markAsUnread(principal, TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(principal, Mockito.times(1)).getName();
-    }
-  }
-
-  @Test
-  public void testMarkAsUnread() throws ComicException, ComiXedUserException {
-    Mockito.doNothing().when(comicService).markAsUnread(Mockito.anyString(), Mockito.anyLong());
-
-    controller.markAsUnread(principal, TEST_COMIC_ID);
-
-    Mockito.verify(principal, Mockito.times(1)).getName();
-    Mockito.verify(comicService, Mockito.times(1)).markAsUnread(TEST_EMAIL_ADDRESS, TEST_COMIC_ID);
   }
 }

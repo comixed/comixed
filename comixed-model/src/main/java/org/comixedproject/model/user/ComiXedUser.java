@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -171,5 +172,18 @@ public class ComiXedUser {
       }
     }
     this.bookmarks.add(new Bookmark(this, comic, mark));
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final ComiXedUser that = (ComiXedUser) o;
+    return Objects.equals(email, that.email);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(email);
   }
 }

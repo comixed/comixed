@@ -26,10 +26,7 @@ import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.LastReadDate;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -45,31 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicService {
   @Autowired private ComicRepository comicRepository;
-  @Autowired private LastReadService lastReadService;
   @Autowired private UserService userService;
-
-  /**
-   * Retrieves a single comic by id. Sets user-specific values for the provider user.
-   *
-   * @param id the comic record id
-   * @param email the user's email address
-   * @return the comic
-   * @throws ComicException if the comic is not found
-   */
-  public Comic getComic(final long id, final String email) throws ComicException {
-    ComiXedUser user = null;
-    try {
-      user = this.userService.findByEmail(email);
-    } catch (ComiXedUserException error) {
-      throw new ComicException("No such user: " + email, error);
-    }
-
-    Comic result = this.getComic(id);
-    log.debug("Loading last read date for comic: user id={}", user.getId());
-    result.setLastRead(this.lastReadService.getLastReadForComicAndUser(result, user));
-
-    return result;
-  }
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -266,46 +239,6 @@ public class ComicService {
   }
 
   /**
-   * Marks a comic as read by the given user.
-   *
-   * @param email the user's email
-   * @param id the comic id
-   * @return the last read date
-   * @throws ComicException if the comic id is invalid
-   * @throws ComiXedUserException if the email is invalid
-   */
-  @Transactional
-  public LastReadDate markAsRead(String email, long id)
-      throws ComicException, ComiXedUserException {
-    log.debug("Marking comic as read by {}: id={}", email, id);
-    Comic comic = this.comicRepository.getById(id);
-    if (comic == null) throw new ComicException("no such comic: id=" + id);
-
-    ComiXedUser user = this.userService.findByEmail(email);
-
-    return this.lastReadService.markComicAsRead(comic, user);
-  }
-
-  /**
-   * Marks a comic as unread by the given user.
-   *
-   * @param email the user's email
-   * @param id the comic id
-   * @throws ComicException if the comic is invalid
-   * @throws ComiXedUserException if the email is invalid
-   */
-  @Transactional
-  public void markAsUnread(String email, long id) throws ComicException, ComiXedUserException {
-    log.debug("Marking comic as not read by {}: id={}", email, id);
-    Comic comic = this.comicRepository.getById(id);
-    if (comic == null) throw new ComicException("no such comic: id=" + id);
-
-    ComiXedUser user = this.userService.findByEmail(email);
-
-    this.lastReadService.markComicAsUnread(comic, user);
-  }
-
-  /**
    * Deletes the specified comic from the library.
    *
    * @param comic the comic
@@ -335,31 +268,6 @@ public class ComicService {
    */
   public Comic findByFilename(final String filename) {
     return this.comicRepository.findByFilename(filename);
-  }
-
-  /**
-   * Returns a list of comics, including the last read date, for a given user.
-   *
-   * @param email the user's email
-   * @param lastId the last id loaded
-   * @param maximum the maximum number to return
-   * @throws ComiXedUserException if the email is invalid
-   * @return the list of comics
-   */
-  public List<Comic> getComicsById(final String email, final Long lastId, final Integer maximum)
-      throws ComiXedUserException {
-    log.debug("Loading {} comics for {} with id > {}", email, maximum, lastId);
-    final ComiXedUser user = this.userService.findByEmail(email);
-    final List<Comic> result = this.getComicsById(lastId, maximum);
-    log.debug(
-        "Loading last read date for {} comic{}", result.size(), result.size() == 1 ? "" : "s");
-    result.forEach(
-        comic -> {
-          log.trace("Loading last read date: id={} user={}", comic.getId(), email);
-          comic.setLastRead(this.lastReadService.getLastReadForComicAndUser(comic, user));
-        });
-    log.trace("Returning comics");
-    return result;
   }
 
   /**

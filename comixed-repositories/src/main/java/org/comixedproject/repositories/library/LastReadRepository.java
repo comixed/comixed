@@ -18,41 +18,41 @@
 
 package org.comixedproject.repositories.library;
 
-import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.model.user.LastReadDate;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
- * <code>LastReadDatesRepository</code> defines a type of {@link CrudRepository} for retrieving
- * {@link LastReadDate} instances.
+ * <code>LastReadRepository</code> defines a type of {@link CrudRepository} for retrieving {@link
+ * LastRead} instances.
  *
  * @author Darryl L. Pierce (mcpierce@gmail.com)
  */
-public interface LastReadDatesRepository extends CrudRepository<LastReadDate, Long> {
+public interface LastReadRepository extends CrudRepository<LastRead, Long> {
   /**
-   * Retrieves all last read dates for a single user.
+   * Retrieves a batch of last read entries.
    *
-   * @param userId the user id
-   * @param updatedSince the earliest date
-   * @return the list of last read dates
+   * @param user the user
+   * @param threshold the threshold id
+   * @param pageRequest the request constraints
+   * @return the entries
    */
-  @Query(
-      "SELECT d FROM LastReadDate d WHERE d.user.id = :userId AND d.lastUpdated >= :updatedSince")
-  List<LastReadDate> findAllForUser(
-      @Param("userId") Long userId, @Param("updatedSince") Date updatedSince);
+  @Query("SELECT e FROM LastRead e WHERE e.id > :threshold AND e.user = :user ORDER BY e.id")
+  List<LastRead> getEntriesForUser(
+      @Param("user") ComiXedUser user, @Param("threshold") long threshold, Pageable pageRequest);
 
   /**
-   * Returns the last ready entry for the specific comic by the specified user.
+   * Retrieves the last read entry for the given user and comic.
    *
-   * @param comic the comic
    * @param user the user
-   * @return the last read date entry
+   * @param comic the comic
+   * @return the entry, or null if non exists
    */
-  @Query("SELECT d FROM LastReadDate d WHERE d.user = :user AND d.comic = :comic")
-  LastReadDate getForComicAndUser(@Param("comic") Comic comic, @Param("user") ComiXedUser user);
+  @Query("SELECT e FROM LastRead e WHERE e.user = :user AND e.comic = :comic")
+  LastRead findEntryForUserAndComic(@Param("user") ComiXedUser user, @Param("comic") Comic comic);
 }
