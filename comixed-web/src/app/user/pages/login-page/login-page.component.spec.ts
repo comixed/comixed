@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoginComponent } from './login.component';
+import { LoginPageComponent } from './login-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -37,7 +37,7 @@ import { TitleService } from '@app/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('LoginComponent', () => {
+describe('LoginPageComponent', () => {
   const USER = USER_READER;
   const PASSWORD = 'this!is!my!password';
 
@@ -45,8 +45,8 @@ describe('LoginComponent', () => {
     [USER_FEATURE_KEY]: initialUserState
   };
 
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+  let component: LoginPageComponent;
+  let fixture: ComponentFixture<LoginPageComponent>;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
@@ -54,7 +54,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [LoginComponent],
+      declarations: [LoginPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -70,7 +70,7 @@ describe('LoginComponent', () => {
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(LoginPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');

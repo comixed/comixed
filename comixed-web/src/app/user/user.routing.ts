@@ -17,21 +17,26 @@
  */
 
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { NgModule } from '@angular/core';
 import { AccountEditPageComponent } from './pages/account-edit-page/account-edit-page.component';
-import { ReaderGuard } from '@app/user/guards/reader.guard';
-import { AdminGuard } from '@app/user/guards/admin.guard';
+import { UserPreferencesPageComponent } from '@app/user/pages/user-preferences-page/user-preferences-page.component';
+import { UserGuard } from '@app/user/guards/user.guard';
 
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginPageComponent
   },
   {
     path: 'account',
     component: AccountEditPageComponent,
-    canActivate: [ReaderGuard]
+    canActivate: [UserGuard]
+  },
+  {
+    path: 'account/preferences',
+    component: UserPreferencesPageComponent,
+    canActivate: [UserGuard]
   }
 ];
 
