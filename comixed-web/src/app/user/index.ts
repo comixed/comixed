@@ -27,9 +27,8 @@ import {
 
 export { getUserPreference } from '@app/user/user.functions';
 export { AdminGuard } from '@app/user/guards/admin.guard';
-export { Preference } from '@app/user/models/preference';
 export { ReaderGuard } from '@app/user/guards/reader.guard';
-export { User } from '@app/user/models/user';
+export * from './user.models';
 
 interface RouterStateUrl {
   url: string;

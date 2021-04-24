@@ -30,10 +30,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  templateUrl: './login-page.component.html',
+  styleUrls: ['./login-page.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginPageComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   userSubscription: Subscription;
   langChangeSubscription: Subscription;

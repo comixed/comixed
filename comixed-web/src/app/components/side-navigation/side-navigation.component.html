@@ -127,11 +127,25 @@
     <h3 *ngIf="!!user" matSubheader>
       {{ "navigation.heading.account" | translate }}
     </h3>
+    <mat-nav-list *ngIf="!!user">
+      <a
+        mat-list-item
+        routerLink="/account/preferences"
+        routerLinkActive="active"
+      >
+        {{ "navigation.option.user-preferences" | translate }}
+      </a>
+    </mat-nav-list>
 
     <h3 *ngIf="isAdmin" matSubheader>
       {{ "navigation.heading.admin" | translate }}
     </h3>
-    <a *ngIf="isAdmin" mat-list-item routerLink="/admin/pages/blocked">
+    <a
+      *ngIf="isAdmin"
+      mat-list-item
+      routerLink="/admin/pages/blocked"
+      routerLinkActive="active"
+    >
       {{ "navigation.option.blocked-pages" | translate }}
     </a>
     <a

@@ -25,7 +25,7 @@ import {
 } from './reducers/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './effects/user.effects';
-import { LoginComponent } from './pages/login/login.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { UserRouting } from './user.routing';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from '@app/core/core.module';
@@ -38,9 +38,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from '@app/user/services/user.service';
 import { AccountEditPageComponent } from './pages/account-edit-page/account-edit-page.component';
+import { UserPreferencesPageComponent } from './pages/user-preferences-page/user-preferences-page.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [LoginComponent, AccountEditPageComponent],
+  declarations: [
+    LoginPageComponent,
+    AccountEditPageComponent,
+    UserPreferencesPageComponent
+  ],
   providers: [UserService],
   imports: [
     CommonModule,
@@ -55,7 +63,10 @@ import { AccountEditPageComponent } from './pages/account-edit-page/account-edit
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule,
+    MatSortModule,
+    MatTooltipModule
   ],
   exports: []
 })

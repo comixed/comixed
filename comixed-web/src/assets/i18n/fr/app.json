@@ -109,9 +109,16 @@
       "all-comics": "All comics",
       "blocked-pages": "Blocked Pages",
       "build-details": "Build Details",
+      "character-collection": "Characters",
       "deleted-comics": "Deleted comics",
       "import-comics": "Import Comics",
+      "location-collection": "Locations",
+      "publisher-collection": "Publishers",
+      "series-collection": "Series",
+      "story-collection": "Stories",
+      "team-collection": "Teams",
       "unread-comics": "Unread Comics",
+      "user-preferences": "Preferences",
       "web-audit-log": "Web Audit Log"
     },
     "tooltip": {

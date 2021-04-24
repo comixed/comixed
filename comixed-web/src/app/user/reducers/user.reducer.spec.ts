@@ -21,6 +21,7 @@ import { USER_READER } from '@app/user/user.fixtures';
 import {
   currentUserLoaded,
   loadCurrentUser,
+  loadCurrentUserFailed,
   loginUser,
   loginUserFailed,
   logoutUser,
@@ -125,6 +126,37 @@ describe('User Reducer', () => {
 
     it('sets the current user', () => {
       expect(state.user).toEqual(USER);
+    });
+  });
+
+  describe('failure to load the current user', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          initializing: true,
+          loading: true,
+          user: USER,
+          authenticated: true
+        },
+        loadCurrentUserFailed()
+      );
+    });
+
+    it('clears the initializing flag', () => {
+      expect(state.initializing).toBeFalse();
+    });
+
+    it('clears the loading flag', () => {
+      expect(state.loading).toBeFalse();
+    });
+
+    it('clears the authenticated flag', () => {
+      expect(state.authenticated).toBeFalse();
+    });
+
+    it('clears the user', () => {
+      expect(state.user).toBeNull();
     });
   });
 

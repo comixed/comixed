@@ -1,0 +1,14 @@
+@import 'styles';
+
+.mat-column-name {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+}
+
+.mat-column-value {
+}
+
+.mat-column-actions {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}

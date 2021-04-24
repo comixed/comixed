@@ -19,6 +19,7 @@
 import { User } from './models/user';
 import { Role } from '@app/user/models/role';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
+import { Preference } from '@app/user/models/preference';
 
 export const ROLE_READER: Role = {
   name: ROLE_NAME_READER
@@ -26,6 +27,11 @@ export const ROLE_READER: Role = {
 
 export const ROLE_ADMIN: Role = {
   name: ROLE_NAME_ADMIN
+};
+
+export const PREFERENCE_1: Preference = {
+  name: 'preference.name',
+  value: 'Preference Value'
 };
 
 export const USER_READER: User = {
