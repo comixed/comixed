@@ -28,6 +28,9 @@ import { LoggerService } from '@angular-ru/logger';
 })
 export class SideNavigationComponent implements OnInit {
   isAdmin = false;
+  comicsCollapsed = false;
+  collectionCollapsed = false;
+  readingListsCollapsed = false;
 
   constructor(private logger: LoggerService) {}
 
@@ -44,4 +47,16 @@ export class SideNavigationComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  onCollapseComics(collapsed: boolean): void {
+    this.comicsCollapsed = collapsed;
+  }
+
+  onCollapseCollection(collapsed: boolean): void {
+    this.collectionCollapsed = collapsed;
+  }
+
+  onCollapseReadingLists(collapsed: boolean): void {
+    this.readingListsCollapsed = collapsed;
+  }
 }

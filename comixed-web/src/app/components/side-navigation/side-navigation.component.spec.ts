@@ -59,4 +59,43 @@ describe('SideNavigationComponent', () => {
       expect(component.isAdmin).toBeFalse();
     });
   });
+
+  describe('toggling the comic lists', () => {
+    const COLLAPSED = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.comicsCollapsed = !COLLAPSED;
+      component.onCollapseComics(COLLAPSED);
+    });
+
+    it('updates the flag', () => {
+      expect(component.comicsCollapsed).toEqual(COLLAPSED);
+    });
+  });
+
+  describe('toggling the collection lists', () => {
+    const COLLAPSED = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.collectionCollapsed = !COLLAPSED;
+      component.onCollapseCollection(COLLAPSED);
+    });
+
+    it('updates the flag', () => {
+      expect(component.collectionCollapsed).toEqual(COLLAPSED);
+    });
+  });
+
+  describe('toggling the reading lists', () => {
+    const COLLAPSED = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.readingListsCollapsed = !COLLAPSED;
+      component.onCollapseReadingLists(COLLAPSED);
+    });
+
+    it('updates the flag', () => {
+      expect(component.readingListsCollapsed).toEqual(COLLAPSED);
+    });
+  });
 });
