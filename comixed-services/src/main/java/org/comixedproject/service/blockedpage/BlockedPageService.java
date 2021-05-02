@@ -26,6 +26,9 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.blockedpage.PublishBlockedPageRemovalAction;
+import org.comixedproject.messaging.blockedpage.PublishBlockedPageUpdateAction;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
@@ -47,6 +50,8 @@ public class BlockedPageService {
 
   @Autowired private BlockedPageRepository blockedPageRepository;
   @Autowired private CsvAdaptor csvAdaptor;
+  @Autowired private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
+  @Autowired private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
 
   /**
    * Returns all blocked pages.
@@ -102,7 +107,13 @@ public class BlockedPageService {
     String snapshot = "";
     // here we will eventually load a snapshot of the image
     record = new BlockedPage("Blocked On " + new Date(), hash, snapshot);
-    return this.blockedPageRepository.save(record);
+    final BlockedPage result = this.blockedPageRepository.save(record);
+    try {
+      this.publishBlockedPageUpdateAction.publish(result);
+    } catch (PublishingException error) {
+      log.error("Failed to publish blocked page update", error);
+    }
+    return result;
   }
 
   /**
@@ -117,14 +128,20 @@ public class BlockedPageService {
   public BlockedPage updateBlockedPage(final String hash, final BlockedPage blockedPage)
       throws BlockedPageException {
     log.debug("Updating blocked page hash: {}", hash);
-    final BlockedPage result = this.blockedPageRepository.findByHash(hash);
+    BlockedPage result = this.blockedPageRepository.findByHash(hash);
     if (result == null) {
       throw new BlockedPageException("No such blocked page: hash=" + hash);
     }
     log.trace("Copying blocked page values");
     result.setLabel(blockedPage.getLabel());
     log.trace("Saving updated blocked page");
-    return this.blockedPageRepository.save(result);
+    result = this.blockedPageRepository.save(result);
+    try {
+      this.publishBlockedPageUpdateAction.publish(result);
+    } catch (PublishingException error) {
+      log.error("Failed to publish blocked page update", error);
+    }
+    return result;
   }
 
   /**
@@ -142,6 +159,11 @@ public class BlockedPageService {
     }
     log.trace("Deleting record");
     this.blockedPageRepository.delete(result);
+    try {
+      this.publishBlockedPageRemovalAction.publish(result);
+    } catch (PublishingException error) {
+      log.error("Failed to publish blocked page remove", error);
+    }
     return result;
   }
 
@@ -212,9 +234,9 @@ public class BlockedPageService {
    * @return the deleted entries
    */
   @Transactional
-  public List<BlockedPage> deleteBlockedPages(final List<String> hashes) {
+  public List<String> deleteBlockedPages(final List<String> hashes) {
     log.debug("Deleting {} blocked page entr{}", hashes.size(), hashes.size() == 1 ? "y" : "ies");
-    List<BlockedPage> result = new ArrayList<>();
+    List<String> result = new ArrayList<>();
     hashes.forEach(
         hash -> {
           log.trace("Loading blocked page for hash: {}", hash);
@@ -222,7 +244,7 @@ public class BlockedPageService {
           if (entry != null) {
             log.trace("Deleting entry: id={}", entry.getId());
             this.blockedPageRepository.delete(entry);
-            result.add(entry);
+            result.add(entry.getHash());
           }
         });
     log.trace("Returning list of deleted blocked pages");

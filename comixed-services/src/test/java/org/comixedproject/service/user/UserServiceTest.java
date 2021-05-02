@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.Date;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.user.PublishCurrentUserAction;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.comixedproject.utils.Utils;
@@ -46,6 +48,7 @@ public class UserServiceTest {
 
   @InjectMocks private UserService service;
   @Mock private ComiXedUserRepository userRepository;
+  @Mock private PublishCurrentUserAction publishCurrentUserAction;
   @Mock private Utils utils;
   @Mock private ComiXedUser user;
   @Mock private ComiXedUser userRecord;
@@ -74,7 +77,29 @@ public class UserServiceTest {
   }
 
   @Test
-  public void testSetUserProperty() throws ComiXedUserException {
+  public void testSetUserPropertyPublishingException()
+      throws ComiXedUserException, PublishingException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.doNothing().when(user).setProperty(Mockito.anyString(), Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(userRecord);
+    Mockito.doThrow(PublishingException.class)
+        .when(publishCurrentUserAction)
+        .publish(Mockito.any(ComiXedUser.class));
+
+    final ComiXedUser result =
+        service.setUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).setProperty(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
+  }
+
+  @Test
+  public void testSetUserProperty() throws ComiXedUserException, PublishingException {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.doNothing().when(user).setProperty(Mockito.anyString(), Mockito.anyString());
     Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(userRecord);
@@ -88,10 +113,32 @@ public class UserServiceTest {
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).setProperty(TEST_PROPERTY_NAME, TEST_PROPERTY_VALUE);
     Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
   }
 
   @Test
-  public void testDeleteUserProperty() throws ComiXedUserException {
+  public void testDeleteUserPropertyPublishingException()
+      throws ComiXedUserException, PublishingException {
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.doNothing().when(user).deleteProperty(Mockito.anyString());
+    Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(userRecord);
+    Mockito.doThrow(PublishingException.class)
+        .when(publishCurrentUserAction)
+        .publish(Mockito.any(ComiXedUser.class));
+
+    final ComiXedUser result = service.deleteUserProperty(TEST_EMAIL, TEST_PROPERTY_NAME);
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).deleteProperty(TEST_PROPERTY_NAME);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
+  }
+
+  @Test
+  public void testDeleteUserProperty() throws ComiXedUserException, PublishingException {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.doNothing().when(user).deleteProperty(Mockito.anyString());
     Mockito.when(userRepository.save(Mockito.any(ComiXedUser.class))).thenReturn(userRecord);
@@ -104,6 +151,7 @@ public class UserServiceTest {
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).deleteProperty(TEST_PROPERTY_NAME);
     Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
   }
 
   @Test
@@ -145,7 +193,29 @@ public class UserServiceTest {
   }
 
   @Test
-  public void testUpdateCurrentUser() throws ComiXedUserException {
+  public void testUpdateCurrentUserPublishingException()
+      throws ComiXedUserException, PublishingException {
+    Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
+    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(userRepository.save(user)).thenReturn(userRecord);
+    Mockito.doThrow(PublishingException.class)
+        .when(publishCurrentUserAction)
+        .publish(Mockito.any(ComiXedUser.class));
+
+    final ComiXedUser result = service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);
+
+    assertNotNull(result);
+    assertSame(userRecord, result);
+
+    Mockito.verify(userRepository, Mockito.times(1)).getById(TEST_USER_ID);
+    Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
+    Mockito.verify(user, Mockito.times(1)).setPasswordHash(TEST_PASSWORD_HASH);
+    Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
+  }
+
+  @Test
+  public void testUpdateCurrentUser() throws ComiXedUserException, PublishingException {
     Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
     Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(userRepository.save(user)).thenReturn(userRecord);
@@ -159,6 +229,7 @@ public class UserServiceTest {
     Mockito.verify(user, Mockito.times(1)).setEmail(TEST_EMAIL);
     Mockito.verify(user, Mockito.times(1)).setPasswordHash(TEST_PASSWORD_HASH);
     Mockito.verify(userRepository, Mockito.times(1)).save(user);
+    Mockito.verify(publishCurrentUserAction, Mockito.times(1)).publish(userRecord);
   }
 
   @Test

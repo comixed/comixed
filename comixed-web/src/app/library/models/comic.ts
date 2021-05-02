@@ -19,12 +19,11 @@
 import {
   ComicCredit,
   ComicFileEntry,
-  ComicFormat,
   FileDetails,
   Page,
-  ReadingList,
-  ScanType
+  ReadingList
 } from '@app/library';
+import { ComicFormat, ScanType } from '@app/comic';
 
 export interface Comic {
   id: number;

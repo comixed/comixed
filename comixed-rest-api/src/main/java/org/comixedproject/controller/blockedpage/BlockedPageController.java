@@ -18,19 +18,13 @@
 
 package org.comixedproject.controller.blockedpage;
 
-import static org.comixedproject.model.messaging.Constants.BLOCKED_PAGE_LIST_REMOVAL_TOPIC;
-import static org.comixedproject.model.messaging.Constants.BLOCKED_PAGE_LIST_UPDATE_TOPIC;
-
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.blockedpage.BlockedPage;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
 import org.comixedproject.service.blockedpage.BlockedPageException;
@@ -86,23 +80,17 @@ public class BlockedPageController {
    * Blocks a page type.
    *
    * @param hash the page hash
+   * @return the blocked page entry
    */
   @PostMapping(
       value = "/api/pages/blocked/{hash}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public void blockPage(@PathVariable("hash") final String hash) {
+  @JsonView(View.BlockedPageDetail.class)
+  public BlockedPage blockPage(@PathVariable("hash") final String hash) {
     log.info("Blocking similar pages: hash={}", hash);
-    final BlockedPage result = this.blockedPageService.blockHash(hash);
-    log.trace("Publishing blocked page update");
-    try {
-      this.messagingTemplate.convertAndSend(
-          BLOCKED_PAGE_LIST_UPDATE_TOPIC,
-          this.objectMapper.writerWithView(View.BlockedPageList.class).writeValueAsString(result));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish blocked page update", error);
-    }
+    return this.blockedPageService.blockHash(hash);
   }
 
   /**
@@ -121,17 +109,7 @@ public class BlockedPageController {
       throws BlockedPageException {
     log.info(
         "Updating blocked page: hash={} label={}", blockedPage.getHash(), blockedPage.getHash());
-    final BlockedPage response = this.blockedPageService.updateBlockedPage(hash, blockedPage);
-    try {
-      this.messagingTemplate.convertAndSend(
-          BLOCKED_PAGE_LIST_UPDATE_TOPIC,
-          this.objectMapper
-              .writerWithView(View.BlockedPageList.class)
-              .writeValueAsString(response));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish blocked page update", error);
-    }
-    return response;
+    return this.blockedPageService.updateBlockedPage(hash, blockedPage);
   }
 
   /**
@@ -139,24 +117,15 @@ public class BlockedPageController {
    *
    * @param hash the page hash
    * @throws BlockedPageException if an error occurs
+   * @return the removed blocked page entry
    */
   @DeleteMapping(value = "/api/pages/blocked/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public void unblockPage(@PathVariable("hash") final String hash) throws BlockedPageException {
+  @JsonView(View.BlockedPageDetail.class)
+  public BlockedPage unblockPage(@PathVariable("hash") final String hash)
+      throws BlockedPageException {
     log.info("Unblocked pages with hash: {}", hash);
-    final BlockedPage result = this.blockedPageService.unblockPage(hash);
-    if (result != null) {
-      log.trace("Publishing blocked page remove");
-      try {
-        this.messagingTemplate.convertAndSend(
-            BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
-            this.objectMapper
-                .writerWithView(View.BlockedPageDetail.class)
-                .writeValueAsString(result));
-      } catch (JsonProcessingException error) {
-        log.error("Failed to publish blocked page remove", error);
-      }
-    }
+    return this.blockedPageService.unblockPage(hash);
   }
 
   /**
@@ -205,23 +174,6 @@ public class BlockedPageController {
   public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Deleting {} blocked hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
-    final List<BlockedPage> removed = this.blockedPageService.deleteBlockedPages(hashes);
-    List<String> response = new ArrayList<>();
-    removed.forEach(
-        blockedPage -> {
-          log.trace("Loading response with hash: {}", blockedPage.getHash());
-          response.add(blockedPage.getHash());
-          log.trace("Publishing page hash removal");
-          try {
-            this.messagingTemplate.convertAndSend(
-                Constants.BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
-                this.objectMapper
-                    .writerWithView(View.BlockedPageDetail.class)
-                    .writeValueAsString(blockedPage));
-          } catch (JsonProcessingException error) {
-            log.error("Failed to publish blocked page remove", error);
-          }
-        });
-    return response;
+    return this.blockedPageService.deleteBlockedPages(hashes);
   }
 }

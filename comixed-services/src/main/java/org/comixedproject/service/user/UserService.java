@@ -21,6 +21,8 @@ package org.comixedproject.service.user;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.user.PublishCurrentUserAction;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.comixedproject.utils.Utils;
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   @Autowired private ComiXedUserRepository userRepository;
   @Autowired private Utils utils;
+  @Autowired private PublishCurrentUserAction publishCurrentUserAction;
 
   /**
    * Finds a user by email address.
@@ -77,7 +80,9 @@ public class UserService {
     if (user == null) throw new ComiXedUserException("Invalid user: " + email);
     user.setProperty(propertyName, propertyValue);
 
-    return this.userRepository.save(user);
+    final ComiXedUser result = this.userRepository.save(user);
+    this.doPublishUserUpdate(result);
+    return result;
   }
 
   /**
@@ -95,7 +100,17 @@ public class UserService {
     final ComiXedUser user = this.userRepository.findByEmail(email);
     if (user == null) throw new ComiXedUserException("Invalid user: " + email);
     user.deleteProperty(property);
-    return this.userRepository.save(user);
+    final ComiXedUser result = this.userRepository.save(user);
+    this.doPublishUserUpdate(result);
+    return result;
+  }
+
+  private void doPublishUserUpdate(final ComiXedUser user) {
+    try {
+      this.publishCurrentUserAction.publish(user);
+    } catch (PublishingException error) {
+      log.error("Failed to publish user update", error);
+    }
   }
 
   /**
@@ -138,7 +153,9 @@ public class UserService {
 
     log.trace("Saving updated user");
     try {
-      return this.userRepository.save(user);
+      final ComiXedUser result = this.userRepository.save(user);
+      this.doPublishUserUpdate(result);
+      return result;
     } catch (ConstraintViolationException error) {
       throw new ComiXedUserException("Failed to save user", error);
     }

@@ -27,6 +27,8 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -52,6 +54,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
+  @Autowired private PublishComicUpdateAction comicUpdatePublishAction;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -271,7 +274,13 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     log.debug("Processing comic state change: [{}] =>  {}", comic.getId(), state.getId());
     comic.setComicState(state.getId());
     comic.setLastModifiedOn(new Date());
-    this.comicRepository.save(comic);
+    final Comic updated = this.comicRepository.save(comic);
+    log.trace("Publishing updated comic");
+    try {
+      this.comicUpdatePublishAction.publish(updated);
+    } catch (PublishingException error) {
+      log.error("Failed to publish comic update", error);
+    }
   }
 
   @Override

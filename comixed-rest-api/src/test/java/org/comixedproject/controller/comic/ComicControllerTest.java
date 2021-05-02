@@ -18,7 +18,6 @@
 
 package org.comixedproject.controller.comic;
 
-import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -50,7 +49,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -65,7 +63,6 @@ public class ComicControllerTest {
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF1234567890ABCDEF";
 
   @InjectMocks private ComicController controller;
-  @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ComicService comicService;
   @Mock private PageCacheService pageCacheService;
   @Mock private TaskManager taskManager;
@@ -117,8 +114,6 @@ public class ComicControllerTest {
     assertSame(comic, result);
 
     Mockito.verify(comicService, Mockito.times(1)).updateComic(TEST_COMIC_ID, comic);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(COMIC_LIST_UPDATE_TOPIC, comic);
   }
 
   @Test

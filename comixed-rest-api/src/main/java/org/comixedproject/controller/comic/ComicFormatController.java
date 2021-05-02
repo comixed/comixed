@@ -18,15 +18,16 @@
 
 package org.comixedproject.controller.comic;
 
-import java.security.Principal;
+import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comic.ComicFormat;
-import org.comixedproject.model.messaging.Constants;
-import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.service.comic.ComicFormatService;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,28 +39,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class ComicFormatController {
-
   @Autowired private ComicFormatService comicFormatService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
 
   /**
    * Retrieves the list of all comic formats and publishes them.
    *
-   * @param principal the user principal
+   * @return the list of comic formats
    */
-  @MessageMapping(Constants.LOAD_COMIC_FORMATS)
-  public void getAll(final Principal principal) {
-    log.info("Getting all comic formats for {}", principal.getName());
-    this.comicFormatService
-        .getAll()
-        .forEach(
-            comicFormat -> {
-              log.trace("Sending comic format: {}", comicFormat.getName());
-              this.messagingTemplate.convertAndSendToUser(
-                  principal.getName(), Constants.COMIC_FORMAT_UPDATE_TOPIC, comicFormat);
-            });
-    log.trace("Sending end of list");
-    this.messagingTemplate.convertAndSendToUser(
-        principal.getName(), Constants.COMIC_FORMAT_UPDATE_TOPIC, EndOfList.MESSAGE);
+  @GetMapping(value = "/api/comics/formats", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  @JsonView(View.ComicFormatList.class)
+  public List<ComicFormat> getAll() {
+    log.info("Getting all comic formats");
+    return this.comicFormatService.getAll();
   }
 }

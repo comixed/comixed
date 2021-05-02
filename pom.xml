@@ -339,6 +339,7 @@
     <module>comixed-state</module>
     <module>comixed-repositories</module>
     <module>comixed-adaptors</module>
+    <module>comixed-messaging</module>
     <module>comixed-tasks</module>
     <module>comixed-services</module>
     <module>comixed-scrapers</module>

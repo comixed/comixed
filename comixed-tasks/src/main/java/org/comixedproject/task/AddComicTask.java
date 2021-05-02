@@ -18,16 +18,15 @@
 
 package org.comixedproject.task;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
@@ -37,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,9 +55,7 @@ public class AddComicTask extends AbstractTask {
   @Autowired private FilenameScraperAdaptor filenameScraper;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processTaskEncoderObjectFactory;
   @Autowired private TaskService taskService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
-  @Autowired private ObjectMapper objectMapper;
-
+  @Autowired private PublishComicUpdateAction publishComicUpdateAction;
   @Getter @Setter private String filename;
   @Getter @Setter private boolean deleteBlockedPages = false;
   @Getter @Setter private boolean ignoreMetadata = false;
@@ -91,7 +87,7 @@ public class AddComicTask extends AbstractTask {
       result = this.comicService.save(result);
 
       log.trace("Publishing updated comic");
-      this.messagingTemplate.convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, result);
+      this.publishComicUpdateAction.publish(result);
 
       log.debug("Encoding process comic persistedTask");
       final ProcessComicTaskEncoder taskEncoder = this.processTaskEncoderObjectFactory.getObject();

@@ -40,16 +40,6 @@ import {
   ScrapingState
 } from '@app/library/reducers/scraping.reducer';
 import {
-  reducer as scanTypeReducer,
-  SCAN_TYPE_FEATURE_KEY,
-  ScanTypeState
-} from '@app/library/reducers/scan-type.reducer';
-import {
-  COMIC_FORMAT_FEATURE_KEY,
-  ComicFormatState,
-  reducer as comicFormatReducer
-} from '@app/library/reducers/comic-format.reducer';
-import {
   COMIC_LIST_FEATURE_KEY,
   ComicListState,
   reducer as comicListReducer
@@ -63,14 +53,12 @@ import {
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
 export { ComicFile } from '@app/comic-file/models/comic-file';
-export { ComicFormat } from '@app/library/models/comic-format';
 export { ComicFileEntry } from '@app/library/models/comic-file-entry';
 export { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 export { FileDetails } from '@app/library/models/file-details';
 export { Page } from '@app/library/models/page';
 export { PageType } from '@app/library/models/page-type';
 export { ReadingList } from '@app/library/models/reading-list';
-export { ScanType } from '@app/library/models/scan-type';
 export { updateComics } from '@app/library/actions/library.actions';
 
 interface RouterStateUrl {
@@ -85,8 +73,6 @@ export interface LibraryModuleState {
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
   [SCRAPING_FEATURE_KEY]: ScrapingState;
-  [SCAN_TYPE_FEATURE_KEY]: ScanTypeState;
-  [COMIC_FORMAT_FEATURE_KEY]: ComicFormatState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
   [COMIC_FEATURE_KEY]: ComicState;
 }
@@ -99,8 +85,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [SCRAPING_FEATURE_KEY]: scrapingReducer,
-  [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer,
-  [COMIC_FORMAT_FEATURE_KEY]: comicFormatReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,
   [COMIC_FEATURE_KEY]: comicReducer
 };

@@ -34,5 +34,10 @@
       <artifactId>comixed-scrapers</artifactId>
       <version>${comixed.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-messaging</artifactId>
+      <version>${comixed.version}</version>
+    </dependency>
   </dependencies>
 </project>

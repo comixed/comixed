@@ -22,18 +22,13 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 import static org.comixedproject.controller.library.LastReadController.MAXIMUM;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import java.security.Principal;
 import java.util.List;
 import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.library.GetLastReadDatesRequest;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
-import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,20 +36,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LastReadControllerTest {
   private static final String TEST_EMAIL = "reader@domain.org";
   private static final long TEST_LAST_ID = 17L;
   private static final long TEST_COMIC_ID = 65L;
-  private static final String TEST_LAST_READ_AS_JSON = "This is the last read entry as JSON";
 
   @InjectMocks private LastReadController controller;
   @Mock private LastReadService lastReadService;
-  @Mock private SimpMessagingTemplate messagingTemplate;
-  @Mock private ObjectMapper objectMapper;
-  @Mock private ObjectWriter objectWriter;
   @Mock private Principal principal;
   @Mock private List<LastRead> lastReadEntries;
   @Mock private List<LastRead> reducedLastReadEntries;
@@ -63,7 +53,6 @@ public class LastReadControllerTest {
   @Before
   public void setUp() {
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
-    Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
   }
 
   @Test(expected = LastReadException.class)
@@ -136,14 +125,11 @@ public class LastReadControllerTest {
   }
 
   @Test
-  public void testMarkAsReadJsonProcessingException()
-      throws JsonProcessingException, LastReadException {
+  public void testMarkAsRead() throws LastReadException {
     Mockito.when(
             lastReadService.setLastReadState(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyBoolean()))
         .thenReturn(lastReadEntry);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
 
     final LastRead response = controller.markAsRead(principal, TEST_COMIC_ID);
 
@@ -152,31 +138,6 @@ public class LastReadControllerTest {
 
     Mockito.verify(lastReadService, Mockito.times(1))
         .setLastReadState(TEST_EMAIL, TEST_COMIC_ID, true);
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(lastReadEntry);
-    Mockito.verify(messagingTemplate, Mockito.never())
-        .convertAndSendToUser(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
-  }
-
-  @Test
-  public void testMarkAsRead() throws JsonProcessingException, LastReadException {
-    Mockito.when(
-            lastReadService.setLastReadState(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyBoolean()))
-        .thenReturn(lastReadEntry);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_LAST_READ_AS_JSON);
-
-    final LastRead response = controller.markAsRead(principal, TEST_COMIC_ID);
-
-    assertNotNull(response);
-    assertSame(lastReadEntry, response);
-
-    Mockito.verify(lastReadService, Mockito.times(1))
-        .setLastReadState(TEST_EMAIL, TEST_COMIC_ID, true);
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(lastReadEntry);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSendToUser(TEST_EMAIL, Constants.LAST_READ_UPDATE_TOPIC, TEST_LAST_READ_AS_JSON);
   }
 
   @Test(expected = LastReadException.class)
@@ -195,14 +156,11 @@ public class LastReadControllerTest {
   }
 
   @Test
-  public void testMarkAsUnreadJsonProcessingException()
-      throws JsonProcessingException, LastReadException {
+  public void testMarkAsUnread() throws LastReadException {
     Mockito.when(
             lastReadService.setLastReadState(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyBoolean()))
         .thenReturn(lastReadEntry);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
 
     final LastRead response = controller.markAsUnread(principal, TEST_COMIC_ID);
 
@@ -211,30 +169,5 @@ public class LastReadControllerTest {
 
     Mockito.verify(lastReadService, Mockito.times(1))
         .setLastReadState(TEST_EMAIL, TEST_COMIC_ID, false);
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
-    Mockito.verify(messagingTemplate, Mockito.never())
-        .convertAndSendToUser(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
-  }
-
-  @Test
-  public void testMarkAsUnread() throws JsonProcessingException, LastReadException {
-    Mockito.when(
-            lastReadService.setLastReadState(
-                Mockito.anyString(), Mockito.anyLong(), Mockito.anyBoolean()))
-        .thenReturn(lastReadEntry);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_LAST_READ_AS_JSON);
-
-    final LastRead response = controller.markAsUnread(principal, TEST_COMIC_ID);
-
-    assertNotNull(response);
-    assertSame(lastReadEntry, response);
-
-    Mockito.verify(lastReadService, Mockito.times(1))
-        .setLastReadState(TEST_EMAIL, TEST_COMIC_ID, false);
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(lastReadEntry);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSendToUser(
-            TEST_EMAIL, Constants.LAST_READ_REMOVAL_TOPIC, TEST_LAST_READ_AS_JSON);
   }
 }

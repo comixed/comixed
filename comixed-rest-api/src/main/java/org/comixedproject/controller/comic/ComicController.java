@@ -18,8 +18,6 @@
 
 package org.comixedproject.controller.comic;
 
-import static org.comixedproject.model.messaging.Constants.COMIC_LIST_UPDATE_TOPIC;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -48,8 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -61,7 +57,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/comics")
 @Log4j2
 public class ComicController {
-  @Autowired private SimpMessagingTemplate messagingTemplate;
   @Autowired private ComicService comicService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileService fileService;
@@ -96,10 +91,8 @@ public class ComicController {
   @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
   @AuditableEndpoint
-  @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
     log.info("Marking comic for deletion: id={}", id);
-
     return this.comicService.deleteComic(id);
   }
 
@@ -113,7 +106,6 @@ public class ComicController {
   @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
-  @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     log.debug("Deleting comic metadata: id={}", id);
     return this.comicService.deleteMetadata(id);
@@ -178,9 +170,7 @@ public class ComicController {
       throws ComicException {
     log.info("Updating comic: id={}", id, comic);
 
-    final Comic result = this.comicService.updateComic(id, comic);
-    this.messagingTemplate.convertAndSend(COMIC_LIST_UPDATE_TOPIC, result);
-    return result;
+    return this.comicService.updateComic(id, comic);
   }
 
   @GetMapping(value = "/{id}/cover/content")
@@ -244,7 +234,6 @@ public class ComicController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
-  @SendTo(COMIC_LIST_UPDATE_TOPIC)
   public Comic restoreComic(@PathVariable("id") final long id) throws ComicException {
     log.info("Restoring comic: id={}", id);
 

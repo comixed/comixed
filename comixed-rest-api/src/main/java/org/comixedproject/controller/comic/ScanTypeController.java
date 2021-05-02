@@ -18,15 +18,17 @@
 
 package org.comixedproject.controller.comic;
 
-import java.security.Principal;
+import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.messaging.Constants;
-import org.comixedproject.model.messaging.EndOfList;
+import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.model.comic.ScanType;
 import org.comixedproject.service.comic.ScanTypeService;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * <code>ScanTypeController</code> provides APIs for working with {@link
@@ -38,25 +40,19 @@ import org.springframework.stereotype.Controller;
 @Log4j2
 public class ScanTypeController {
   @Autowired private ScanTypeService scanTypeService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
 
   /**
    * Retrieves the list of all scan types and publishes them.
    *
-   * @param principal the user principal
+   * @return the scan types
    */
-  @MessageMapping(Constants.LOAD_SCAN_TYPES)
-  public void getScanTypes(final Principal principal) {
-    log.info("Getting all scan types for user: {}", principal.getName());
-    this.scanTypeService
-        .getAll()
-        .forEach(
-            scanType -> {
-              log.trace("Sending scan type to user: {}", scanType.getName());
-              this.messagingTemplate.convertAndSendToUser(
-                  principal.getName(), Constants.SCAN_TYPE_UPDATE_TOPIC, scanType);
-            });
-    this.messagingTemplate.convertAndSendToUser(
-        principal.getName(), Constants.SCAN_TYPE_UPDATE_TOPIC, EndOfList.MESSAGE);
+  @GetMapping(
+      value = "/api/comics/scantypes",
+      produces = {MediaType.APPLICATION_JSON_VALUE})
+  @AuditableEndpoint
+  @JsonView(View.ScanTypeList.class)
+  public List<ScanType> getScanTypes() {
+    log.info("Getting all scan types");
+    return this.scanTypeService.getAll();
   }
 }

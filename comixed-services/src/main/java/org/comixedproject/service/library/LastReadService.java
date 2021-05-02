@@ -21,6 +21,9 @@ package org.comixedproject.service.library;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
+import org.comixedproject.messaging.library.PublishLastReadUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
@@ -46,6 +49,8 @@ public class LastReadService {
   @Autowired private UserService userService;
   @Autowired private ComicService comicService;
   @Autowired private LastReadRepository lastReadRepository;
+  @Autowired private PublishLastReadUpdateAction publishLastReadUpdateAction;
+  @Autowired private PublishLastReadRemovedAction publishLastReadRemovedAction;
 
   /**
    * Gets a batch of last read dates for the given user. The records returned will come after the
@@ -93,6 +98,7 @@ public class LastReadService {
     log.trace("Looking for existing last read entry");
     LastRead entry = this.lastReadRepository.findEntryForUserAndComic(user, comic);
 
+    LastRead result;
     if (markRead) {
       if (entry == null) {
         log.trace("No such entry; creating new last read entry");
@@ -101,12 +107,26 @@ public class LastReadService {
       log.trace("Setting last read entry");
       entry.setLastRead(new Date());
       entry.setLastModifiedOn(new Date());
-      return this.lastReadRepository.save(entry);
+      result = this.lastReadRepository.save(entry);
     } else {
       if (entry == null) throw new LastReadException("No last read entry found");
       log.trace("Deleting entry: id={}", entry.getId());
       this.lastReadRepository.delete(entry);
-      return entry;
+      result = entry;
+    }
+    this.doPublishLastReadAction(result, markRead);
+    return result;
+  }
+
+  private void doPublishLastReadAction(final LastRead lastRead, final boolean markRead) {
+    try {
+      if (markRead) {
+        this.publishLastReadUpdateAction.publish(lastRead);
+      } else {
+        this.publishLastReadRemovedAction.publish(lastRead);
+      }
+    } catch (PublishingException error) {
+      log.error("Failed to publish last read update", error);
     }
   }
 
