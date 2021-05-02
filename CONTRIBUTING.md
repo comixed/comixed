@@ -139,6 +139,7 @@ The application is composed of several modules:
  * **comixed-model**: the domain model
  * **comixed-repositories**: the database repository interfaces,
  * **comixed-adaptors**: the various adaptors for loading archives, images, etc.,
+ * **comixed-messaging**: the messaging layer for browser/server communications,  
  * **comixed-services**: the business logic layer,
  * **comixed-scrapers**: the library for building comic data scrapers,
  * **comixed-state**: state management layer,

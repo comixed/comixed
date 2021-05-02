@@ -19,14 +19,11 @@
 package org.comixedproject.controller.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.library.GetLastReadDatesRequest;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
 import org.comixedproject.service.library.LastReadException;
@@ -34,7 +31,6 @@ import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,8 +39,6 @@ public class LastReadController {
   static final int MAXIMUM = 100;
 
   @Autowired private LastReadService lastReadService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
-  @Autowired private ObjectMapper objectMapper;
 
   /**
    * Retrieves a batch of last read entries for a given user.
@@ -93,17 +87,7 @@ public class LastReadController {
       throws LastReadException {
     final String email = principal.getName();
     log.info("Marking comic as read for {}: id={}", email, comicId);
-    final var response = this.lastReadService.setLastReadState(email, comicId, true);
-    log.trace("Publishing updated last read entry");
-    try {
-      this.messagingTemplate.convertAndSendToUser(
-          email,
-          Constants.LAST_READ_UPDATE_TOPIC,
-          this.objectMapper.writerWithView(View.LastReadList.class).writeValueAsString(response));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish last read update", error);
-    }
-    return response;
+    return this.lastReadService.setLastReadState(email, comicId, true);
   }
 
   /**
@@ -122,16 +106,6 @@ public class LastReadController {
       throws LastReadException {
     final String email = principal.getName();
     log.info("Marking comic as read for {}: id={}", email, comicId);
-    final var response = this.lastReadService.setLastReadState(email, comicId, false);
-    log.trace("Publishing updated last read entry");
-    try {
-      this.messagingTemplate.convertAndSendToUser(
-          email,
-          Constants.LAST_READ_REMOVAL_TOPIC,
-          this.objectMapper.writerWithView(View.LastReadList.class).writeValueAsString(response));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish last read removal", error);
-    }
-    return response;
+    return this.lastReadService.setLastReadState(email, comicId, false);
   }
 }

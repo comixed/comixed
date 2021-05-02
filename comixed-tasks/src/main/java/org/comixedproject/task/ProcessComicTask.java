@@ -18,8 +18,6 @@
 
 package org.comixedproject.task;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -29,21 +27,20 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.Utils;
-import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,9 +57,8 @@ public class ProcessComicTask extends AbstractTask {
   @Autowired private Utils utils;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private BlockedPageService blockedPageService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
-  @Autowired private ObjectMapper objectMapper;
   @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private PublishComicUpdateAction publishComicUpdateAction;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private boolean deleteBlockedPages;
@@ -126,21 +122,18 @@ public class ProcessComicTask extends AbstractTask {
 
     log.debug("Updating comic");
     this.comicStateHandler.fireEvent(comic, ComicEvent.contentsProcessed);
-    Comic result = null;
     try {
       log.trace("Reloading updated comic");
-      result = this.comicService.getComic(comic.getId());
+      comic = this.comicService.getComic(comic.getId());
     } catch (ComicException error) {
       throw new TaskException("Failed to reload comic", error);
     }
 
     log.debug("Publishing comic update");
     try {
-      this.messagingTemplate.convertAndSend(
-          Constants.COMIC_LIST_UPDATE_TOPIC,
-          this.objectMapper.writerWithView(View.ComicDetailsView.class).writeValueAsString(result));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish comic changes", error);
+      this.publishComicUpdateAction.publish(comic);
+    } catch (PublishingException error) {
+      throw new TaskException("Failed to publish update", error);
     }
   }
 }

@@ -1,3 +1,21 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2021, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
 package org.comixedproject.model.messaging;
 
 /**
@@ -6,18 +24,6 @@ package org.comixedproject.model.messaging;
  * @author Darryl L. Pierce
  */
 public interface Constants {
-  /** Message sent to start the process of loading comic formats for a browsers. */
-  String LOAD_COMIC_FORMATS = "comic-format.load";
-
-  /** Topic which receives the set of comic formats. */
-  String COMIC_FORMAT_UPDATE_TOPIC = "/topic/comic-format.update";
-
-  /** Message sent to start loading scan types. */
-  String LOAD_SCAN_TYPES = "scan-types.load";
-
-  /** Topic which receives scan type updates. */
-  String SCAN_TYPE_UPDATE_TOPIC = "/topic/scan-type.update";
-
   /** Topic which receives comic updates in real time. */
   String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
 

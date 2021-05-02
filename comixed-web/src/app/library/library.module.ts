@@ -85,13 +85,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {
   reducer as scanTypeReducer,
   SCAN_TYPE_FEATURE_KEY
-} from '@app/library/reducers/scan-type.reducer';
-import { ScanTypeEffects } from '@app/library/effects/scan-type.effects';
-import {
-  COMIC_FORMAT_FEATURE_KEY,
-  reducer as comicFormatReducer
-} from '@app/library/reducers/comic-format.reducer';
-import { ComicFormatEffects } from '@app/library/effects/comic-format.effects';
+} from '@app/comic/reducers/scan-type.reducer';
+import { ScanTypeEffects } from '@app/comic/effects/scan-type.effects';
 import { ComicListEffects } from '@app/library/effects/comic-list.effects';
 import {
   COMIC_LIST_FEATURE_KEY,
@@ -138,16 +133,12 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
-    StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
-    StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
     StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
       ScrapingEffects,
-      ScanTypeEffects,
-      ComicFormatEffects,
       ComicListEffects,
       ComicEffects
     ]),

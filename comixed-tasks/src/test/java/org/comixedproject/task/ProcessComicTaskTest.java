@@ -21,9 +21,6 @@ package org.comixedproject.task;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,18 +29,18 @@ import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.Utils;
-import org.comixedproject.views.View;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +48,6 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,7 +58,6 @@ public class ProcessComicTaskTest {
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
   private static final String TEST_BLOCKED_PAGE_HASH = "1234567890";
   private static final String TEST_UNBLOCKED_PAGE_HASH = "0987654321";
-  private static final String TEST_COMIC_AS_JSON = "This is a JSON encoded comic";
   private static final long TEST_COMIC_ID = 17L;
 
   @InjectMocks private ProcessComicTask task;
@@ -75,10 +70,8 @@ public class ProcessComicTaskTest {
   @Mock private BlockedPageService blockedPageService;
   @Mock private Page blockedPage;
   @Mock private Page unblockedPage;
-  @Mock private SimpMessagingTemplate messagingTemplate;
-  @Mock private ObjectMapper objectMapper;
-  @Mock private ObjectWriter objectWriter;
   @Mock private ComicStateHandler comicStateHandler;
+  @Mock private PublishComicUpdateAction publishComicUpdateAction;
 
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsCaptor;
 
@@ -103,10 +96,6 @@ public class ProcessComicTaskTest {
     Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_FILE_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsCaptor.capture());
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(savedComic);
-
-    Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any(Comic.class)))
-        .thenReturn(TEST_COMIC_AS_JSON);
   }
 
   @After
@@ -116,7 +105,7 @@ public class ProcessComicTaskTest {
 
   @Test
   public void testStartTaskCheckForBlockedPages()
-      throws TaskException, ArchiveAdaptorException, IOException {
+      throws TaskException, ArchiveAdaptorException, PublishingException {
     Mockito.when(blockedPageService.getHashes()).thenReturn(blockedPageHashes);
     Mockito.when(comic.getPages()).thenReturn(pageList);
 
@@ -132,15 +121,12 @@ public class ProcessComicTaskTest {
     Mockito.verify(blockedPage, Mockito.times(1)).setDeleted(true);
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(savedComic);
   }
 
   @Test
   public void testStartTaskIgnoreMetadata()
-      throws TaskException, ArchiveAdaptorException, IOException {
+      throws TaskException, ArchiveAdaptorException, PublishingException {
     task.setComic(comic);
     task.setIgnoreMetadata(true);
     task.setDeleteBlockedPages(false);
@@ -151,14 +137,12 @@ public class ProcessComicTaskTest {
 
     Mockito.verify(archiveAdaptor, Mockito.times(1)).fillComic(comic);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(savedComic);
   }
 
   @Test
-  public void testStartTask() throws TaskException, ArchiveAdaptorException, IOException {
+  public void testStartTask()
+      throws TaskException, ArchiveAdaptorException, IOException, PublishingException {
     task.setComic(comic);
     task.setIgnoreMetadata(false);
     task.setDeleteBlockedPages(false);
@@ -172,12 +156,9 @@ public class ProcessComicTaskTest {
     Mockito.verify(archiveAdaptor, Mockito.times(1)).loadComic(comic);
     Mockito.verify(blockedPage, Mockito.never()).setDeleted(true);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(comicFileDetailsCaptor.getValue());
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comic, ComicEvent.contentsProcessed);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(savedComic);
   }
 
   @Test(expected = TaskException.class)
@@ -212,19 +193,14 @@ public class ProcessComicTaskTest {
   }
 
   @Test
-  public void testStartTaskExceptionOnJsonEncoding() throws TaskException, IOException {
+  public void testStartTaskExceptionOnJsonEncoding() throws TaskException, PublishingException {
     task.setComic(comic);
     task.setIgnoreMetadata(false);
     task.setDeleteBlockedPages(false);
 
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
-        .thenThrow(JsonProcessingException.class);
-
     task.startTask();
 
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(savedComic);
-    Mockito.verify(messagingTemplate, Mockito.never())
-        .convertAndSend(Mockito.anyString(), Mockito.anyString());
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(savedComic);
   }
 
   @Test(expected = TaskException.class)

@@ -18,37 +18,25 @@
 
 package org.comixedproject.controller.comic;
 
-import java.security.Principal;
-import java.util.ArrayList;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
+
 import java.util.List;
 import org.comixedproject.model.comic.ComicFormat;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.service.comic.ComicFormatService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicFormatControllerTest {
-  private static final String TEST_USER_EMAIL = "user@domain.tld";
-
   @InjectMocks private ComicFormatController controller;
-  @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ComicFormatService comicFormatService;
-  @Mock private Principal principal;
   @Mock private ComicFormat comicFormat;
-
-  private List<ComicFormat> comicFormatList = new ArrayList<>();
-
-  @Before
-  public void setUp() {
-    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-  }
+  @Mock private List<ComicFormat> comicFormatList;
 
   @Test
   public void testGetAll() {
@@ -56,10 +44,11 @@ public class ComicFormatControllerTest {
 
     Mockito.when(comicFormatService.getAll()).thenReturn(comicFormatList);
 
-    controller.getAll(principal);
+    final List<ComicFormat> result = controller.getAll();
+
+    assertNotNull(result);
+    assertSame(comicFormatList, result);
 
     Mockito.verify(comicFormatService, Mockito.times(1)).getAll();
-    Mockito.verify(messagingTemplate, Mockito.times(comicFormatList.size()))
-        .convertAndSendToUser(TEST_USER_EMAIL, Constants.COMIC_FORMAT_UPDATE_TOPIC, comicFormat);
   }
 }

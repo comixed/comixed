@@ -1,0 +1,12 @@
+{
+  "comic-format": {
+    "load-formats": {
+      "effect-failure": "Failed to load comic formats."
+    }
+  },
+  "scan-type": {
+    "load-scan-types": {
+      "effect-failure": "Failed to load scan types."
+    }
+  }
+}

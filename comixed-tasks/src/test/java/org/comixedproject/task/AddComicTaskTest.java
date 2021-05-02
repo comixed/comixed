@@ -25,9 +25,10 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
@@ -40,7 +41,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,7 +59,7 @@ public class AddComicTaskTest {
   @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
   @Mock private PersistedTask workerPersistedTask;
   @Mock private TaskService taskService;
-  @Mock private SimpMessagingTemplate messagingTemplate;
+  @Mock private PublishComicUpdateAction publishComicUpdateAction;
 
   @Test
   public void testCreateDescription() {
@@ -100,7 +100,8 @@ public class AddComicTaskTest {
   }
 
   @Test
-  public void testStartTask() throws TaskException, ComicFileHandlerException, AdaptorException {
+  public void testStartTask()
+      throws TaskException, ComicFileHandlerException, AdaptorException, PublishingException {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
@@ -126,13 +127,12 @@ public class AddComicTaskTest {
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
     Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, comic);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
   }
 
   @Test
   public void testStartTaskIgnoreMetadata()
-      throws TaskException, ComicFileHandlerException, AdaptorException {
+      throws TaskException, ComicFileHandlerException, AdaptorException, PublishingException {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
@@ -158,13 +158,12 @@ public class AddComicTaskTest {
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(true);
     Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, comic);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
   }
 
   @Test
   public void testStartTaskDeleteBlockedPages()
-      throws TaskException, ComicFileHandlerException, AdaptorException {
+      throws TaskException, ComicFileHandlerException, AdaptorException, PublishingException {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
@@ -190,13 +189,12 @@ public class AddComicTaskTest {
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(true);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
     Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, comic);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
   }
 
   @Test
   public void testStartTaskDeleteBlockedPagesIgnoreMetadata()
-      throws TaskException, ComicFileHandlerException, AdaptorException {
+      throws TaskException, ComicFileHandlerException, AdaptorException, PublishingException {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
@@ -222,7 +220,6 @@ public class AddComicTaskTest {
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(true);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(true);
     Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, comic);
+    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
   }
 }

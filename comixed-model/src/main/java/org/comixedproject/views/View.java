@@ -25,6 +25,12 @@ package org.comixedproject.views;
  * @author Darryl L. Pierce
  */
 public class View {
+  /** Used when retrieving the list of comic formats. */
+  public interface ComicFormatList {}
+
+  /** Used when retrieving the list of scan types. */
+  public interface ScanTypeList {}
+
   /** Used when viewing a list of comics. */
   public interface ComicListView {}
 

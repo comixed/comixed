@@ -68,10 +68,4 @@ export const PAGINATION_PREFERENCE = 'preference.pagination';
 export const PAGINATION_DEFAULT = PAGINATION_OPTIONS[0];
 
 // messaging
-export const LOAD_SCAN_TYPES_MESSAGE = '/comixed/scan-types.load';
-export const SCAN_TYPE_UPDATE_TOPIC = '/topic/scan-type.add';
-
-export const LOAD_COMIC_FORMATS_MESSAGE = '/comixed/comic-format.load';
-export const COMIC_FORMAT_UPDATE_TOPIC = '/topic/comic-format.update';
-
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';

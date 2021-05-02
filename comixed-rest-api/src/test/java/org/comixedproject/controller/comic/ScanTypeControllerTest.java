@@ -18,52 +18,35 @@
 
 package org.comixedproject.controller.comic;
 
-import static org.comixedproject.model.messaging.Constants.SCAN_TYPE_UPDATE_TOPIC;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
-import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comic.ScanType;
-import org.comixedproject.model.messaging.EndOfList;
 import org.comixedproject.service.comic.ScanTypeService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScanTypeControllerTest {
-  private static final String TEST_USER_EMAIL = "user@domain.tld";
-
   @InjectMocks private ScanTypeController controller;
   @Mock private ScanTypeService scanTypeService;
-  @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ScanType scanType;
-  @Mock private Principal principal;
-
-  private List<ScanType> scanTypeList = new ArrayList<ScanType>();
-
-  @Before
-  public void setUp() {
-    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-  }
+  @Mock private List<ScanType> scanTypeList;
 
   @Test
   public void testGetScanTypes() {
-    scanTypeList.add(scanType);
-
     Mockito.when(scanTypeService.getAll()).thenReturn(scanTypeList);
 
-    controller.getScanTypes(principal);
+    final List<ScanType> result = controller.getScanTypes();
+
+    assertNotNull(result);
+    assertSame(scanTypeList, result);
 
     Mockito.verify(scanTypeService, Mockito.times(1)).getAll();
-    Mockito.verify(messagingTemplate, Mockito.times(scanTypeList.size()))
-        .convertAndSendToUser(TEST_USER_EMAIL, SCAN_TYPE_UPDATE_TOPIC, scanType);
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSendToUser(TEST_USER_EMAIL, SCAN_TYPE_UPDATE_TOPIC, EndOfList.MESSAGE);
   }
 }

@@ -24,8 +24,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.comixedproject.views.View.ComicListView;
-import org.comixedproject.views.View.PageList;
+import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
@@ -42,12 +41,12 @@ import org.springframework.stereotype.Component;
 public class ComicFormat {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({ComicListView.class, PageList.class})
+  @JsonView(View.ComicFormatList.class)
   @Getter
   private Long id;
 
   @Column(name = "Name", updatable = false, nullable = false)
-  @JsonView({ComicListView.class, PageList.class})
+  @JsonView(View.ComicFormatList.class)
   @Getter
   private String name;
 }

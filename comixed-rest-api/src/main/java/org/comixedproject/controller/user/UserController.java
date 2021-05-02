@@ -19,13 +19,10 @@
 package org.comixedproject.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.istack.NotNull;
 import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
 import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
@@ -34,7 +31,6 @@ import org.comixedproject.service.user.UserService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +43,6 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class UserController {
   @Autowired private UserService userService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
-  @Autowired private ObjectMapper objectMapper;
 
   /**
    * Loads the current user.
@@ -89,17 +83,7 @@ public class UserController {
     final String value = request.getValue();
 
     log.info("Setting user preference: {} {}=\"{}\"", email, name, value);
-    final ComiXedUser response = this.userService.setUserProperty(email, name, value);
-    try {
-      this.messagingTemplate.convertAndSend(
-          Constants.CURRENT_USER_UPDATE_TOPIC,
-          this.objectMapper
-              .writerWithView(View.UserDetailsView.class)
-              .writeValueAsString(response));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish current user changes", error);
-    }
-    return response;
+    return this.userService.setUserProperty(email, name, value);
   }
 
   /**
@@ -120,17 +104,7 @@ public class UserController {
     final String email = principal.getName();
 
     log.info("Deleting user preference: {} {}", principal.getName(), name);
-    final ComiXedUser response = this.userService.deleteUserProperty(email, name);
-    try {
-      this.messagingTemplate.convertAndSend(
-          Constants.CURRENT_USER_UPDATE_TOPIC,
-          this.objectMapper
-              .writerWithView(View.UserDetailsView.class)
-              .writeValueAsString(response));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish current user changes", error);
-    }
-    return response;
+    return this.userService.deleteUserProperty(email, name);
   }
 
   /**
@@ -153,16 +127,6 @@ public class UserController {
     final String email = request.getEmail();
     final String password = request.getPassword();
     log.info("Updated user account: id={} email={}", id, email);
-    final ComiXedUser response = this.userService.updateCurrentUser(id, email, password);
-    try {
-      this.messagingTemplate.convertAndSend(
-          Constants.CURRENT_USER_UPDATE_TOPIC,
-          this.objectMapper
-              .writerWithView(View.UserDetailsView.class)
-              .writeValueAsString(response));
-    } catch (JsonProcessingException error) {
-      log.error("Failed to publish user update", error);
-    }
-    return response;
+    return this.userService.updateCurrentUser(id, email, password);
   }
 }
