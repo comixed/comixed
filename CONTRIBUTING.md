@@ -141,6 +141,7 @@ The application is composed of several modules:
  * **comixed-adaptors**: the various adaptors for loading archives, images, etc.,
  * **comixed-services**: the business logic layer,
  * **comixed-scrapers**: the library for building comic data scrapers,
+ * **comixed-state**: state management layer,
  * **comixed-tasks**: the set of worker tasks that run on the server,
  * **comixed-rest-api**: the REST API processors,
  * **comixed-web**: the Angular frontend, and
