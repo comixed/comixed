@@ -21,6 +21,7 @@ package org.comixedproject.utils;
 import java.io.File;
 import java.text.MessageFormat;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicFileUtils</code> provides a set of utility methods related to comic files and
@@ -28,11 +29,20 @@ import lombok.extern.log4j.Log4j2;
  *
  * @author Darryl L. Pierce
  */
+@Component
 @Log4j2
 public class ComicFileUtils {
-  public static String findAvailableFilename(
-      String filename, int attempt, String defaultExtension) {
-    String candidate = filename;
+  /**
+   * Looks for the next available filename for a comic file.
+   *
+   * @param filename the root filename
+   * @param attempt the current attempt
+   * @param defaultExtension the extension for the file
+   * @return the filename to use
+   */
+  public String findAvailableFilename(
+      final String filename, final int attempt, final String defaultExtension) {
+    String candidate = null;
 
     if (attempt > 0) {
       candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, defaultExtension);
@@ -40,13 +50,19 @@ public class ComicFileUtils {
       candidate = MessageFormat.format("{0}.{1}", filename, defaultExtension);
     }
 
-    File file = new File(candidate);
+    var file = new File(candidate);
     return (!file.exists())
         ? candidate
-        : findAvailableFilename(filename, ++attempt, defaultExtension);
+        : findAvailableFilename(filename, attempt + 1, defaultExtension);
   }
 
-  public static boolean isComicFile(File file) {
+  /**
+   * Checks if the file is a comic file based on extension.
+   *
+   * @param file the file
+   * @return true if it's comic file
+   */
+  public boolean isComicFile(File file) {
     String name = file.getName().toUpperCase();
     boolean result = (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
     return result;

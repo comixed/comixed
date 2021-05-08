@@ -56,8 +56,8 @@ public class ComiXedUserDetailsService implements UserDetailsService {
     UserBuilder result = User.withUsername(email);
 
     result.password(user.getPasswordHash());
-    String[] roles = new String[user.getRoles().size()];
-    for (int index = 0; index < user.getRoles().size(); index++) {
+    var roles = new String[user.getRoles().size()];
+    for (var index = 0; index < user.getRoles().size(); index++) {
       roles[index] = user.getRoles().get(index).getName();
     }
     result.roles(roles);

@@ -59,14 +59,14 @@ public class AuditableEndpointAspect {
     Throwable error = null;
     Object response = null;
 
-    final Date started = new Date();
+    final var started = new Date();
     try {
       response = joinPoint.proceed();
     } catch (Throwable throwable) {
       error = throwable;
     }
-    final Date ended = new Date();
-    final WebAuditLogEntry entry = new WebAuditLogEntry();
+    final var ended = new Date();
+    final var entry = new WebAuditLogEntry();
     HttpServletRequest request =
         ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
@@ -90,8 +90,8 @@ public class AuditableEndpointAspect {
 
     if (error != null) {
       log.debug("Storing method exception stacktrace");
-      final StringWriter stringWriter = new StringWriter();
-      final PrintWriter printWriter = new PrintWriter(stringWriter);
+      final var stringWriter = new StringWriter();
+      final var printWriter = new PrintWriter(stringWriter);
       error.printStackTrace(printWriter);
       entry.setException(stringWriter.toString());
       entry.setSuccessful(false);

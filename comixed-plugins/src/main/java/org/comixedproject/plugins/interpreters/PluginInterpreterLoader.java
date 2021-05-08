@@ -59,7 +59,7 @@ public class PluginInterpreterLoader implements InitializingBean {
   public void afterPropertiesSet() throws Exception {
     this.interpreters.clear();
     log.debug("Loading plugin languages");
-    for (int index = 0; index < this.runtimes.size(); index++) {
+    for (var index = 0; index < this.runtimes.size(); index++) {
       PluginInterpreterEntry entry = this.runtimes.get(index);
 
       if (entry.isValid()) {

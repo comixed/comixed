@@ -33,7 +33,7 @@ public class ComiXedApp implements CommandLineRunner {
   public static final String FULL_NAME_AND_VERSION = FULL_NAME + " " + VERSION;
 
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(ComiXedApp.class);
+    var app = new SpringApplication(ComiXedApp.class);
     app.run(args);
   }
 

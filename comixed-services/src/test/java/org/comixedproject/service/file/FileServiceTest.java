@@ -30,6 +30,7 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.file.ComicFile;
 import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.utils.ComicFileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -54,6 +55,7 @@ public class FileServiceTest {
 
   @InjectMocks private FileService service;
   @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicFileUtils comicFileUtils;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
   @Mock private Comic comic;
@@ -120,6 +122,7 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsAlreadyImported() throws IOException {
+    Mockito.when(comicFileUtils.isComicFile(Mockito.any(File.class))).thenReturn(true);
     Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(comic);
 
     final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
@@ -133,6 +136,8 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnderWithLimit() throws IOException {
+    Mockito.when(comicFileUtils.isComicFile(Mockito.any(File.class))).thenReturn(true);
+
     final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
@@ -142,6 +147,8 @@ public class FileServiceTest {
 
   @Test
   public void testGetAllComicsUnder() throws IOException {
+    Mockito.when(comicFileUtils.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
+
     final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
 
     assertNotNull(result);

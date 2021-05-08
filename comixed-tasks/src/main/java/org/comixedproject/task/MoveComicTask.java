@@ -27,7 +27,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.ComicFileUtils;
@@ -51,8 +50,8 @@ public class MoveComicTask extends AbstractTask {
   private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>]";
   private static final String UNKNOWN_VALUE = "Unknown";
 
-  @Autowired private ComicService comicService;
   @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ComicFileUtils comicFileUtils;
 
   @Getter @Setter private Comic comic;
   @Getter @Setter private String targetDirectory;
@@ -72,7 +71,8 @@ public class MoveComicTask extends AbstractTask {
     String defaultExtension = FilenameUtils.getExtension(comic.getFilename());
     destFile =
         new File(
-            ComicFileUtils.findAvailableFilename(destFile.getAbsolutePath(), 0, defaultExtension));
+            this.comicFileUtils.findAvailableFilename(
+                destFile.getAbsolutePath(), 0, defaultExtension));
 
     // if the source and target are the same, then skip the file
     if (destFile.equals(sourceFile)) {
