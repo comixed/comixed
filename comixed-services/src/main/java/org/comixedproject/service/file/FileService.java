@@ -29,7 +29,6 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.file.ComicFile;
-import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.utils.ComicFileUtils;
@@ -42,6 +41,7 @@ public class FileService {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
   @Autowired private TaskService taskService;
+  @Autowired private ComicFileUtils comicFileUtils;
 
   private int requestId = 0;
 
@@ -116,16 +116,11 @@ public class FileService {
   }
 
   private boolean canBeImported(final File file) throws IOException {
-    boolean isComic = ComicFileUtils.isComicFile(file);
+    boolean isComic = this.comicFileUtils.isComicFile(file);
 
     final String filePath = file.getCanonicalPath();
     final Comic comic = this.comicRepository.findByFilename(filePath);
 
     return isComic && (comic == null);
-  }
-
-  public int getImportStatus() throws InterruptedException {
-    return this.taskService.getTaskCount(PersistedTaskType.ADD_COMIC)
-        + this.taskService.getTaskCount(PersistedTaskType.PROCESS_COMIC);
   }
 }

@@ -53,7 +53,6 @@ public class FileControllerTest {
   private static final byte[] IMAGE_CONTENT = new byte[65535];
   private static final String TEST_DIRECTORY = "src/test";
   private static final List<String> TEST_FILENAMES = new ArrayList<>();
-  private static final int TEST_IMPORT_STATUS = 129;
   private static final Integer TEST_LIMIT = RANDOM.nextInt();
   private static final Integer TEST_NO_LIMIT = -1;
   private static final boolean TEST_DELETE_BLOCKED_PAGES = RANDOM.nextBoolean();
@@ -72,6 +71,19 @@ public class FileControllerTest {
   @Mock private ObjectFactory<QueueComicsTask> queueComicsWorkerTaskObjectFactory;
   @Mock private QueueComicsTask queueComicsWorkerTask;
   @Mock private TaskManager taskManager;
+
+  @Test
+  public void testGetImportFileCoverServiceThrowsException()
+      throws ArchiveAdaptorException, ComicFileHandlerException {
+    Mockito.when(fileService.getImportFileCover(Mockito.anyString()))
+        .thenThrow(ComicFileHandlerException.class);
+
+    final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
+
+    assertNotNull(result);
+
+    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
+  }
 
   @Test
   public void testGetImportFileCover() throws ArchiveAdaptorException, ComicFileHandlerException {

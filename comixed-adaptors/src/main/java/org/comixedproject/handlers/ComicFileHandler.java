@@ -145,7 +145,7 @@ public class ComicFileHandler implements InitializingBean {
     }
 
     log.debug("Loading comic: " + comic.getFilename());
-    ArchiveAdaptor archiveAdaptor = this.getArchiveAdaptorFor(comic.getFilename());
+    var archiveAdaptor = this.getArchiveAdaptorFor(comic.getFilename());
 
     try {
       archiveAdaptor.loadComic(comic);
@@ -176,11 +176,11 @@ public class ComicFileHandler implements InitializingBean {
 
     if (archiveMimeSubtype == null) throw new ComicFileHandlerException("Unknown comic type");
 
-    ArchiveType archiveType = this.archiveTypes.get(archiveMimeSubtype);
+    var archiveType = this.archiveTypes.get(archiveMimeSubtype);
     log.debug("Archive type: {}", archiveType);
     comic.setArchiveType(archiveType);
 
-    ArchiveAdaptor archiveAdaptor = this.archiveAdaptors.get(archiveMimeSubtype);
+    var archiveAdaptor = this.archiveAdaptors.get(archiveMimeSubtype);
 
     if (archiveAdaptor == null)
       throw new ComicFileHandlerException(

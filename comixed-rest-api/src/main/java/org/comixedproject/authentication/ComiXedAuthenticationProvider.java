@@ -51,7 +51,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     String email = authentication.getName();
-    String password = authentication.getCredentials().toString();
+    var password = authentication.getCredentials().toString();
 
     log.debug("Attempting to authenticate: email={}", email);
 

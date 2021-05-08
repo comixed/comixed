@@ -68,7 +68,6 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
 
     assertEquals(1, comic.getPageCount());
     assertNotNull(comic.getPage(0));
-    //        assertEquals(content, comic.getPage(0).getContent());
     assertSame(pageType, comic.getPage(0).getPageType());
   }
 
@@ -84,7 +83,6 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
 
     assertEquals(1, comic.getPageCount());
     assertNotNull(comic.getPage(0));
-    //        assertEquals(content, comic.getPage(0).getContent());
     assertSame(pageType, comic.getPage(0).getPageType());
   }
 }

@@ -22,7 +22,7 @@ import org.springframework.util.DigestUtils;
 @Log4j2
 public class Utils {
   public String createHash(byte[] bytes) {
-    StringBuilder result = new StringBuilder(convertToHexString(DigestUtils.md5Digest(bytes)));
+    var result = new StringBuilder(convertToHexString(DigestUtils.md5Digest(bytes)));
     while (result.length() < 32) result = result.insert(0, "0");
     return result.toString();
   }

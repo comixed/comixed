@@ -62,8 +62,9 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   @Autowired protected FileTypeIdentifier fileTypeIdentifier;
   @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
   @Autowired protected ComicFileHandler comicFileHandler;
-  protected List<EntryLoaderForType> loaders = new ArrayList<>();
+  @Autowired private ComicFileUtils comicFileUtils;
 
+  protected List<EntryLoaderForType> loaders = new ArrayList<>();
   protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
   private Set<String> imageTypes = new HashSet<>();
   private String defaultExtension;
@@ -260,7 +261,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     this.saveComicInternal(source, tempFilename, renamePages);
 
     String filename =
-        ComicFileUtils.findAvailableFilename(
+        this.comicFileUtils.findAvailableFilename(
             FilenameUtils.removeExtension(source.getFilename()), 0, this.defaultExtension);
     var file1 = new File(tempFilename);
     var file2 = new File(filename);

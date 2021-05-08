@@ -76,7 +76,7 @@ public class PluginManager implements InitializingBean {
   public void loadPlugins() throws PluginException {
     log.debug("Clearing plugin list");
     this.plugins.clear();
-    File pluginDirectory = new File(this.pluginLocation);
+    var pluginDirectory = new File(this.pluginLocation);
     if (!pluginDirectory.exists()) {
       log.debug("Plugin directory does not exist: {}", pluginDirectory.getAbsolutePath());
       return;
@@ -87,7 +87,7 @@ public class PluginManager implements InitializingBean {
     Collection<File> pluginFiles =
         FileUtils.listFiles(pluginDirectory, new String[] {"cxp"}, false);
     log.debug("Found {} file{} to process", pluginFiles.size(), pluginFiles.size() == 1 ? "" : "s");
-    int processed = 0;
+    var processed = 0;
     for (File pluginFile : pluginFiles) {
       try (InputStream input = new BufferedInputStream(new FileInputStream(pluginFile))) {
         String fileType = this.fileTypeIdentifier.subtypeFor(input);
@@ -115,14 +115,14 @@ public class PluginManager implements InitializingBean {
     Map<String, byte[]> pluginEntries = new HashMap<>();
 
     log.debug("opening archive");
-    try (ZipFile zipfile = new ZipFile(pluginFile); ) {
+    try (var zipfile = new ZipFile(pluginFile); ) {
       log.debug("retrieving the list of archive entries");
       Enumeration<ZipArchiveEntry> zipfileEntries = zipfile.getEntries();
       while (zipfileEntries.hasMoreElements()) {
         ZipArchiveEntry zipfileEntry = zipfileEntries.nextElement();
         String filename = zipfileEntry.getName();
         long filesize = zipfileEntry.getSize();
-        byte[] content = new byte[(int) filesize];
+        var content = new byte[(int) filesize];
         log.debug("Loading plugin file: {} ({} bytes)", filename, filesize);
         IOUtils.readFully(zipfile.getInputStream(zipfileEntry), content);
         pluginEntries.put(filename, content);
@@ -132,7 +132,7 @@ public class PluginManager implements InitializingBean {
     }
 
     log.debug("storing plugin details");
-    Plugin plugin = this.pluginObjectFactory.getObject();
+    var plugin = this.pluginObjectFactory.getObject();
     plugin.setEntries(pluginEntries);
     if (this.plugins.containsKey(plugin.getName()))
       throw new PluginException("plugin already exists with name: " + plugin.getName());

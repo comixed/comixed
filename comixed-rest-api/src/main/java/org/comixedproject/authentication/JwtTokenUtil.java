@@ -58,7 +58,7 @@ public class JwtTokenUtil {
   }
 
   public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = getAllClaimsFromToken(token);
+    final var claims = getAllClaimsFromToken(token);
     return claimsResolver.apply(claims);
   }
 
@@ -67,7 +67,7 @@ public class JwtTokenUtil {
   }
 
   private Boolean isTokenExpired(String token) {
-    final Date expiration = getExpirationDateFromToken(token);
+    final var expiration = getExpirationDateFromToken(token);
     return expiration.before(new Date());
   }
 
@@ -77,7 +77,7 @@ public class JwtTokenUtil {
 
   String doGenerateToken(String email) {
 
-    Claims claims = Jwts.claims().setSubject(email);
+    var claims = Jwts.claims().setSubject(email);
     List<GrantedAuthority> authorities = new ArrayList<>();
     try {
       ComiXedUser user = this.userService.findByEmail(email);

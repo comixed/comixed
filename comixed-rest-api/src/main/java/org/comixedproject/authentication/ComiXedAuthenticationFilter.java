@@ -31,7 +31,6 @@ import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -71,7 +70,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
     } else if (StringUtils.startsWith(header, BASIC_PREFIX)) {
       String base64Credentials = header.substring(BASIC_PREFIX.length()).trim();
       byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
-      String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+      var credentials = new String(credDecoded, StandardCharsets.UTF_8);
 
       String[] userDetails = credentials.split(":", 2);
       if (!userDetails[0].equals(USER_PREFIX)) {
@@ -84,11 +83,11 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
     if (!StringUtils.isEmpty(username)
         && (SecurityContextHolder.getContext().getAuthentication() == null)) {
 
-      UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+      var userDetails = this.userDetailsService.loadUserByUsername(username);
 
       if (userDetails.getPassword().equals(password)
           || this.jwtTokenUtil.validateToken(authToken, userDetails)) {
-        UsernamePasswordAuthenticationToken authentication =
+        var authentication =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
