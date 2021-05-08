@@ -22,7 +22,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
@@ -59,7 +58,7 @@ public class FilenameScraperAdaptor {
       };
 
   private boolean applyRule(Comic comic, String filename, RuleSet ruleset) throws AdaptorException {
-    boolean result = false;
+    var result = false;
 
     if (ruleset.applies(filename)) {
       String[] elements = ruleset.process(filename);
@@ -108,10 +107,11 @@ public class FilenameScraperAdaptor {
     String filename = FilenameUtils.getName(comic.getFilename());
     log.debug("Attempting to extract comic meta-data from filename: {}", filename);
 
-    boolean done = false;
-    for (int index = 0; !done && (index < RULESET.length); index++) {
+    var done = false;
+    var index = 0;
+    while (!done) {
       log.debug("Attempting to use ruleset #{}", index);
-      done = (this.applyRule(comic, filename, RULESET[index]));
+      done = (this.applyRule(comic, filename, RULESET[index])) || ++index == RULESET.length;
     }
   }
 
@@ -150,11 +150,11 @@ public class FilenameScraperAdaptor {
 
     public String[] process(String filename) {
       log.debug("Processing filename: {}", filename);
-      Matcher matches = this.expression.matcher(filename);
-      String[] result = new String[matches.groupCount() + 1];
+      var matches = this.expression.matcher(filename);
+      var result = new String[matches.groupCount() + 1];
 
       while (matches.find()) {
-        for (int index = 0; index < result.length; index++) {
+        for (var index = 0; index < result.length; index++) {
           result[index] = matches.group(index);
           log.debug("Setting index={} to {}", index, result[index]);
         }

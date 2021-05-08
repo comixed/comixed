@@ -21,6 +21,7 @@ package org.comixedproject.adaptors;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
+import java.util.Date;
 import org.comixedproject.loaders.BaseLoaderTest;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.comic.Comic;
@@ -36,6 +37,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   private static final String TEST_COMICINFO_FILE_COMPLETE =
       "src/test/resources/ComicInfo-complete.xml";
+  private static final String TEST_COMICINFO_FILE_NOT_XML =
+      "src/test/resources/application.properties";
   private static final String TEST_PUBLISHER_NAME = "Test Publisher";
   private static final String TEST_SERIES_NAME = "Test Series";
   private static final String TEST_VOLUME_NAME = "2011";
@@ -54,6 +57,7 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(comic.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(comic.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(comic.getCoverDate()).thenReturn(new Date());
   }
 
   @Test
@@ -67,6 +71,12 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
     Mockito.verify(comic, Mockito.never()).setTitle(Mockito.anyString());
     Mockito.verify(comic, Mockito.never()).setDescription(Mockito.anyString());
+  }
+
+  @Test(expected = EntryLoaderException.class)
+  public void testLoadComicInfoXmlNotXml() throws IOException, EntryLoaderException {
+    adaptor.loadContent(
+        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_NOT_XML), false);
   }
 
   @Test

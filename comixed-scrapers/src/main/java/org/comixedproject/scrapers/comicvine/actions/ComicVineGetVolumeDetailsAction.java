@@ -69,6 +69,8 @@ public class ComicVineGetVolumeDetailsAction
       throw new ScrapingException("failed to get issue details", error);
     }
 
+    if (response == null) throw new ScrapingException("No response received");
+
     return response.getResults();
   }
 }

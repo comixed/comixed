@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ *j
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -34,7 +34,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Page;
 import org.springframework.stereotype.Component;
 
 /**
@@ -101,7 +100,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   @Override
   protected byte[] loadSingleFileInternal(ZipFile archiveReference, String entryFilename)
       throws ArchiveAdaptorException {
-    boolean done = false;
+    var done = false;
     Enumeration<ZipArchiveEntry> entries = archiveReference.getEntries();
     byte[] result = null;
 
@@ -139,7 +138,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException, IOException {
-    ArchiveAdaptor sourceArchiveAdaptor = this.getSourceArchiveAdaptor(source.getFilename());
+    var sourceArchiveAdaptor = this.getSourceArchiveAdaptor(source.getFilename());
 
     log.debug("Creating temporary file: " + filename);
 
@@ -158,8 +157,8 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       zoutput.write(content);
       zoutput.closeArchiveEntry();
 
-      for (int index = 0; index < source.getPageCount(); index++) {
-        Page page = source.getPage(index);
+      for (var index = 0; index < source.getPageCount(); index++) {
+        var page = source.getPage(index);
         if (page.isDeleted()) {
           log.debug("Skipping offset marked for deletion");
           continue;
@@ -184,7 +183,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
       throws ArchiveAdaptorException, IOException {
     log.debug("Encoding {} files", content.size());
 
-    ByteArrayOutputStream result = new ByteArrayOutputStream();
+    var result = new ByteArrayOutputStream();
 
     try (ZipArchiveOutputStream zoutput =
         (ZipArchiveOutputStream)

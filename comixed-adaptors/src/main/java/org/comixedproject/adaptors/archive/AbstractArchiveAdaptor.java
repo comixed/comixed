@@ -68,7 +68,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   private Set<String> imageTypes = new HashSet<>();
   private String defaultExtension;
 
-  public AbstractArchiveAdaptor(String defaultExtension) {
+  protected AbstractArchiveAdaptor(String defaultExtension) {
     super();
     this.defaultExtension = defaultExtension;
   }
@@ -148,7 +148,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     long started = System.currentTimeMillis();
 
     try {
-      File comicFile = this.validateFile(comic);
+      var comicFile = this.validateFile(comic);
       archiveReference = this.openArchive(comicFile);
 
       log.debug("Loading entire comic: {}", comic.getFilename());
@@ -171,7 +171,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   protected byte[] loadContent(final String filename, final long size, final InputStream input)
       throws IOException {
     log.debug("Loading entry: name={} size={}", filename, size);
-    byte[] content = new byte[(int) size];
+    var content = new byte[(int) size];
 
     IOUtils.readFully(input, content);
 
@@ -188,7 +188,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   @Override
   public byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException {
     log.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
-    I archiveReference = this.openArchive(new File(filename));
+    var archiveReference = this.openArchive(new File(filename));
     byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
     this.closeArchive(archiveReference);
 
@@ -262,8 +262,8 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     String filename =
         ComicFileUtils.findAvailableFilename(
             FilenameUtils.removeExtension(source.getFilename()), 0, this.defaultExtension);
-    File file1 = new File(tempFilename);
-    File file2 = new File(filename);
+    var file1 = new File(tempFilename);
+    var file2 = new File(filename);
     try {
       log.debug("Copying {} to {}", tempFilename, filename);
       FileUtils.copyFile(file1, file2);
@@ -271,7 +271,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       throw new ArchiveAdaptorException("Unable to copy file", error);
     }
 
-    Comic result = new Comic();
+    var result = new Comic();
 
     result.setFilename(filename);
 
@@ -297,7 +297,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       throws ArchiveAdaptorException, IOException;
 
   protected File validateFile(Comic comic) throws ArchiveAdaptorException {
-    File file = new File(comic.getFilename());
+    var file = new File(comic.getFilename());
 
     if (!file.exists())
       throw new ArchiveAdaptorException("File not found: " + file.getAbsolutePath());
@@ -309,7 +309,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   @Override
   public String getFirstImageFileName(String filename) throws ArchiveAdaptorException {
-    I archiveRef = this.openArchive(new File(filename));
+    var archiveRef = this.openArchive(new File(filename));
 
     // get the list of entries
     List<String> entries = this.getEntryFilenames(archiveRef);
@@ -333,7 +333,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   @Override
   public byte[] encodeFileToStream(Map<String, byte[]> entries)
       throws ArchiveAdaptorException, IOException {
-    throw new RuntimeException("Not supported");
+    throw new ArchiveAdaptorException("Not supported");
   }
 
   protected ArchiveAdaptor getSourceArchiveAdaptor(final String filename)
