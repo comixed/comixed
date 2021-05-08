@@ -8,6 +8,18 @@
   ></mat-paginator>
   <div class="cx-spacer"></div>
   <button
+    id="scrape-all-button"
+    mat-flat-button
+    color="primary"
+    class="cx-action-button cx-margin-right-5"
+    [disabled]="!selected.length"
+    [matTooltip]="'library.tooltip.scrape-comics' | translate"
+    (click)="onScrapeComics()"
+  >
+    <mat-icon>plagiarism</mat-icon>
+    <mat-label>{{ "button.scrape" | translate }}</mat-label>
+  </button>
+  <button
     id="select-all-button"
     mat-flat-button
     color="primary"

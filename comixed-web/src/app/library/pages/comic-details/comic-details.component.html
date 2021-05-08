@@ -2,38 +2,35 @@
   <button
     id="previous-comic-button"
     class="cx-toolbar-button"
-    mat-flat-button
-    color="accent"
+    mat-icon-button
+    color="primary"
     [matTooltip]="'comic.tooltip.go-to-previous-comic' | translate"
     [disabled]="!comic.previousIssueId"
     (click)="onPreviousComic()"
   >
-    <mat-label>{{ "button.previous" | translate }}</mat-label>
     <mat-icon>arrow_back</mat-icon>
-  </button>
-  <button
-    id="download-comic-button"
-    class="cx-toolbar-button"
-    mat-flat-button
-    color="primary"
-    [matTooltip]="'comic.tooltip.download-comic' | translate"
-  >
-    <mat-label>{{ "button.download" | translate }}</mat-label>
-    <mat-icon>arrow_downward</mat-icon>
   </button>
   <button
     id="next-comic-button"
     class="cx-toolbar-button"
-    mat-flat-button
+    mat-icon-button
     [disabled]="!comic.nextIssueId"
-    color="accent"
+    color="primary"
     [matTooltip]="'comic.tooltip.go-to-next-comic' | translate"
     (click)="onNextComic()"
   >
-    <mat-label>{{ "button.next" | translate }}</mat-label>
     <mat-icon>arrow_forward</mat-icon>
   </button>
   <div class="cx-spacer"></div>
+  <button
+    id="download-comic-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'comic.tooltip.download-comic' | translate"
+  >
+    <mat-icon>arrow_downward</mat-icon>
+  </button>
   <button
     *ngIf="!isRead"
     id="mark-as-read-button"
