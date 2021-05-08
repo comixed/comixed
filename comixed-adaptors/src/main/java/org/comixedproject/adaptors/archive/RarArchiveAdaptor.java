@@ -73,9 +73,9 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
     List<FileHeader> fileHeaders = archiveReference.getFileHeaders();
 
     for (FileHeader fileHeader : fileHeaders) {
-      String filename = fileHeader.getFileNameString();
+      var filename = fileHeader.getFileNameString();
       long fileSize = fileHeader.getFullUnpackSize();
-      byte[] content = new byte[0];
+      var content = new byte[0];
       try {
         content = this.loadContent(filename, fileSize, archiveReference.getInputStream(fileHeader));
       } catch (IOException | RarException error) {
@@ -118,7 +118,7 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
 
     try {
       archive = new Archive(new FileVolumeManager(comicFile));
-      FileHeader entry = archive.nextFileHeader();
+      var entry = archive.nextFileHeader();
 
       if (entry == null) {
         archive.close();

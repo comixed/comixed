@@ -23,8 +23,8 @@ import java.text.MessageFormat;
 import java.util.*;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.loaders.AbstractEntryLoader;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.comic.Comic;
@@ -61,7 +61,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
   }
 
   protected void loadXmlData(InputStream istream, Comic comic) throws XMLStreamException {
-    final XMLStreamReader xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
+    final var xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
     int publishedYear = -1;
     int publishedMonth = -1;
 
@@ -154,7 +154,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
 
   private List<String> commandSeparatedList(String text) {
     List<String> result = new ArrayList<>();
-    StringTokenizer tokens = new StringTokenizer(text, ",");
+    var tokens = new StringTokenizer(text, ",");
 
     while (tokens.hasMoreTokens()) {
       result.add(tokens.nextToken().trim());
@@ -172,8 +172,8 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
    */
   public byte[] saveContent(Comic comic) throws IOException {
     log.debug("Generating comic info data from comic");
-    ByteArrayOutputStream result = new ByteArrayOutputStream();
-    PrintWriter writer = new PrintWriter(new OutputStreamWriter(result));
+    var result = new ByteArrayOutputStream();
+    var writer = new PrintWriter(new OutputStreamWriter(result));
 
     writer.write(
         "<?xml version=\"1.0\"?><ComicInfo xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
@@ -185,15 +185,15 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
     this.writeEntry(writer, "Summary", comic.getDescription());
 
     if (comic.getCoverDate() != null) {
-      Calendar gc = Calendar.getInstance();
+      var gc = Calendar.getInstance();
       gc.setTime(comic.getCoverDate());
       this.writeEntry(writer, "Year", String.valueOf(gc.get(Calendar.YEAR)));
       this.writeEntry(writer, "Month", String.valueOf(gc.get(Calendar.MONTH) + 1));
     }
     this.writeEntry(writer, "PageCount", String.valueOf(comic.getPageCount()));
-    this.writeEntry(writer, "Characters", this.arrayToString(comic.getCharacters()));
-    this.writeEntry(writer, "Teams", this.arrayToString(comic.getTeams()));
-    this.writeEntry(writer, "Locations", this.arrayToString(comic.getLocations()));
+    this.writeEntry(writer, "Characters", StringUtils.join(comic.getCharacters(), ","));
+    this.writeEntry(writer, "Teams", StringUtils.join(comic.getTeams(), ","));
+    this.writeEntry(writer, "Locations", StringUtils.join(comic.getLocations(), ","));
     writer.write("</ComicInfo>");
     writer.flush();
 
@@ -204,19 +204,5 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
     if (value != null) {
       writer.write(MessageFormat.format("<{0}>{1}</{0}>", tagName, value));
     }
-  }
-
-  private String arrayToString(List<String> items) {
-    if ((items == null) || items.isEmpty()) return null;
-
-    StringBuilder result = new StringBuilder();
-
-    for (String item : items) {
-      if (result.length() > 0) {
-        result.append(",");
-      }
-      result.append(item);
-    }
-    return result.toString();
   }
 }

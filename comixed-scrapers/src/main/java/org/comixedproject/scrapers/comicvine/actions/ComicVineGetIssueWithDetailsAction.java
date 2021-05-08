@@ -71,11 +71,16 @@ public class ComicVineGetIssueWithDetailsAction
     final Mono<ComicVineGetIssueDetailsResponse> request =
         client.get().uri(url).retrieve().bodyToMono(ComicVineGetIssueDetailsResponse.class);
 
+    ComicVineGetIssueDetailsResponse result;
     try {
-      return request.block().getResults();
+      result = request.block();
     } catch (Exception error) {
       throw new ScrapingException("failed to get issue details", error);
     }
+
+    if (result == null) throw new ScrapingException("No response received");
+
+    return result.getResults();
   }
 
   private String getEndpoint() {

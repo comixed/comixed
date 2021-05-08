@@ -81,6 +81,8 @@ public class ComicVineGetIssueAction extends AbstractComicVineScrapingAction<Lis
         throw new ScrapingException("Failed to get response", error);
       }
 
+      if (response == null) throw new ScrapingException("No response received");
+
       log.debug(
           "Received: {} issue{}",
           response.getIssues().size(),

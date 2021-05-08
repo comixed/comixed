@@ -82,7 +82,7 @@ public class RarArchiveAdaptorTest {
   }
 
   @Test
-  public void testGetSingleFile() throws ArchiveAdaptorException {
+  public void testLoadSingleFile() throws ArchiveAdaptorException {
     byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1);
 
     assertNotNull(result);
@@ -90,7 +90,14 @@ public class RarArchiveAdaptorTest {
   }
 
   @Test
-  public void testGetSingleFileNotFound() throws ArchiveAdaptorException {
+  public void testLoadSingleFileException() throws ArchiveAdaptorException {
+    byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1.substring(1));
+
+    assertNull(result);
+  }
+
+  @Test
+  public void testLoadSingleFileNotFound() throws ArchiveAdaptorException {
     byte[] result = archiveAdaptor.loadSingleFile(comic, TEST_FILE_ENTRY_1.substring(1));
 
     assertNull(result);
@@ -99,14 +106,6 @@ public class RarArchiveAdaptorTest {
   @Test(expected = ArchiveAdaptorException.class)
   public void testSaveComic() throws ArchiveAdaptorException, IOException {
     archiveAdaptor.saveComic(comic, false);
-  }
-
-  @Test
-  public void testLoadSingleFile() throws ArchiveAdaptorException {
-    byte[] result = archiveAdaptor.loadSingleFile(TEST_CBR_FILE, TEST_FILE_ENTRY_1);
-
-    assertNotNull(result);
-    assertEquals(7449985, result.length);
   }
 
   @Test
