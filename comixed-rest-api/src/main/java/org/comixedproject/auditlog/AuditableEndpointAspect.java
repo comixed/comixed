@@ -56,14 +56,14 @@ public class AuditableEndpointAspect {
    */
   @Around("@annotation(org.comixedproject.auditlog.AuditableEndpoint)")
   public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-    Throwable error = null;
+    Throwable thrownError = null;
     Object response = null;
 
     final var started = new Date();
     try {
       response = joinPoint.proceed();
     } catch (Throwable throwable) {
-      error = throwable;
+      thrownError = throwable;
     }
     final var ended = new Date();
     final var entry = new WebAuditLogEntry();
@@ -82,17 +82,19 @@ public class AuditableEndpointAspect {
     entry.setEndTime(ended);
     entry.setRequestContent(
         new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
+    //    if (response != null) {
+    //      try {
+    //        entry.setResponseContent(this.objectMapper.writeValueAsString(response));
+    //      } catch (JsonProcessingException error) {
+    //        log.error("Failed to encode object as JSON", error);
+    //      }
+    //    }
 
-    if (response != null) {
-      log.debug("Storing response content");
-      entry.setResponseContent(this.objectMapper.writeValueAsString(response));
-    }
-
-    if (error != null) {
+    if (thrownError != null) {
       log.debug("Storing method exception stacktrace");
       final var stringWriter = new StringWriter();
       final var printWriter = new PrintWriter(stringWriter);
-      error.printStackTrace(printWriter);
+      thrownError.printStackTrace(printWriter);
       entry.setException(stringWriter.toString());
       entry.setSuccessful(false);
     } else {
@@ -101,7 +103,7 @@ public class AuditableEndpointAspect {
 
     this.webAuditLogService.save(entry);
 
-    if (error != null) throw error;
+    if (thrownError != null) throw thrownError;
     return response;
   }
 }
