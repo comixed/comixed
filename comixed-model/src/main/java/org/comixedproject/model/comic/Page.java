@@ -111,8 +111,6 @@ public class Page {
   @Getter
   private boolean blocked;
 
-  @Transient @Getter @Setter private byte[] content;
-
   /**
    * Returns the offset's index within the comic.
    *

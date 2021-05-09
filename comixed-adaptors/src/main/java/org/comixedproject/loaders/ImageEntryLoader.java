@@ -64,7 +64,6 @@ public class ImageEntryLoader extends AbstractEntryLoader {
         page.setHash(hash);
         page.setWidth(width);
         page.setHeight(height);
-        page.setContent(content);
         page.setComic(comic);
         comic.getPages().add(page);
         page.setPageNumber(comic.getPages().size());

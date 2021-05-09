@@ -28,7 +28,9 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import marvin.image.MarvinImage;
 import marvinplugins.MarvinPluginCollection;
+import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -54,6 +56,7 @@ public class OPDSController {
   @Autowired private ComicRepository comicRepository;
   @Autowired private ReadingListService readingListService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private ComicFileHandler comicFileHandler;
 
   @ResponseBody
   @GetMapping(value = "/opds-comics", produces = MediaType.APPLICATION_XML_VALUE)
@@ -136,14 +139,15 @@ public class OPDSController {
       @PathVariable("id") long id,
       @PathVariable("index") int index,
       @PathVariable("maxWidth") int maxWidth)
-      throws IOException {
+      throws IOException, ArchiveAdaptorException {
     log.debug("Getting the image for comic: id={} index={}", id, index);
 
     Optional<Comic> record = this.comicRepository.findById(id);
 
     if (record.isPresent() && (index < record.get().getPageCount())) {
       Page page = record.get().getPage(index);
-      byte[] content = page.getContent();
+      var adaptor = this.comicFileHandler.getArchiveAdaptorFor(page.getComic().getArchiveType());
+      var content = adaptor.loadSingleFile(page.getComic(), page.getFilename());
 
       ByteArrayInputStream bais = new ByteArrayInputStream(content);
       BufferedImage image = ImageIO.read(bais);
