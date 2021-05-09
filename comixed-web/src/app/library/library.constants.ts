@@ -33,10 +33,6 @@ export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 
-export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
-
-export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
-
 export const LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;

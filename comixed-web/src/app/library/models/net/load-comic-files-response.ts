@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicFile } from '../comic-file';
+import { ComicFile } from '../../../comic-file/models/comic-file';
 
 export interface LoadComicFilesResponse {
   files: ComicFile[];

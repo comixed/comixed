@@ -25,6 +25,7 @@ export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
     { prefix: './assets/i18n/', suffix: '/app.json' },
     { prefix: './assets/i18n/', suffix: '/blocked-pages.json' },
     { prefix: './assets/i18n/', suffix: '/collections.json' },
+    { prefix: './assets/i18n/', suffix: '/comic-file.json' },
     { prefix: './assets/i18n/', suffix: '/core.json' },
     { prefix: './assets/i18n/', suffix: '/last-read.json' },
     { prefix: './assets/i18n/', suffix: '/library.json' },

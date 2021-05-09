@@ -1,0 +1,31 @@
+<div *ngIf="importing">
+  <h2>{{ "comic-files.busy-title" | translate }}</h2>
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<div *ngIf="!importing">
+  <cx-comic-file-details
+    *ngIf="currentFile"
+    [file]="currentFile"
+    [selected]="currentFileSelected"
+    [pageSize]="pageSize"
+  ></cx-comic-file-details>
+  <cx-comic-file-toolbar
+    [user]="user"
+    [comicFiles]="files"
+    [selectedComicFiles]="selectedFiles"
+    [ignoreMetadata]="ignoreMetadata"
+    [deleteBlockedPages]="deleteBlockedPages"
+  ></cx-comic-file-toolbar>
+  <h2>
+    {{
+      "comic-files.page-title"
+        | translate: { count: files.length, selected: selectedFiles.length }
+    }}
+  </h2>
+  <cx-comic-file-list
+    *ngIf="files.length > 0"
+    [files]="files"
+    [selectedFiles]="selectedFiles"
+    (currentFile)="onCurrentFile($event)"
+  ></cx-comic-file-list>
+</div>
