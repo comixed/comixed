@@ -66,6 +66,7 @@ import { MatListModule } from '@angular/material/list';
 import { BlockedPagesModule } from '@app/blocked-pages/blocked-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
 import { LastReadModule } from '@app/last-read/last-read.module';
+import { ComicFileModule } from '@app/comic-file/comic-file.module';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { LastReadModule } from '@app/last-read/last-read.module';
     AdminModule,
     MessagingModule,
     UserModule,
+    ComicFileModule,
     LibraryModule,
     BlockedPagesModule,
     LastReadModule,

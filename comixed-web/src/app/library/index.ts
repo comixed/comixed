@@ -22,7 +22,7 @@ import {
   COMIC_IMPORT_FEATURE_KEY,
   ComicImportState,
   reducer as libraryImportReducer
-} from './reducers/comic-import.reducer';
+} from '../comic-file/reducers/comic-import.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
   LIBRARY_FEATURE_KEY,
@@ -62,7 +62,7 @@ import {
 
 export { Comic } from '@app/library/models/comic';
 export { ComicCredit } from '@app/library/models/comic-credit';
-export { ComicFile } from '@app/library/models/comic-file';
+export { ComicFile } from '@app/comic-file/models/comic-file';
 export { ComicFormat } from '@app/library/models/comic-format';
 export { ComicFileEntry } from '@app/library/models/comic-file-entry';
 export { ComicViewMode } from '@app/library/models/comic-view-mode.enum';

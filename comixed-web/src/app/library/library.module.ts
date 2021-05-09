@@ -19,8 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from '../core/core.module';
-import { ImportComicsComponent } from './pages/import-comics/import-comics.component';
-import { ComicFileToolbarComponent } from './components/comic-file-toolbar/comic-file-toolbar.component';
 import { LibraryRouting } from '@app/library/library.routing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -28,16 +26,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { StoreModule } from '@ngrx/store';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer as comicImportReducer
-} from '@app/library/reducers/comic-import.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicImportEffects } from '@app/library/effects/comic-import.effects';
-import { ComicFileListComponent } from './components/comic-file-list/comic-file-list.component';
 import { MatTableModule } from '@angular/material/table';
-import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
-import { ComicFileDetailsComponent } from './components/comic-file-details/comic-file-details.component';
 import { FlexModule } from '@angular/flex-layout';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
@@ -115,11 +105,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
 
 @NgModule({
   declarations: [
-    ImportComicsComponent,
-    ComicFileToolbarComponent,
-    ComicFileListComponent,
-    ComicFileCoverUrlPipe,
-    ComicFileDetailsComponent,
     ComicDetailsComponent,
     ComicOverviewComponent,
     ComicStoryComponent,
@@ -151,7 +136,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     ReactiveFormsModule,
     TranslateModule.forRoot(),
     StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
-    StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
@@ -160,7 +144,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
     EffectsModule.forFeature([
       DisplayEffects,
-      ComicImportEffects,
       LibraryEffects,
       ScrapingEffects,
       ScanTypeEffects,
@@ -191,6 +174,6 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     MatMenuModule,
     MatProgressBarModule
   ],
-  exports: [CommonModule, CoreModule, ComicCoversComponent]
+  exports: [CommonModule, CoreModule, ComicCoversComponent, ComicPageComponent]
 })
 export class LibraryModule {}

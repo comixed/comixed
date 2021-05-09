@@ -19,7 +19,6 @@
 import {
   Comic,
   ComicCredit,
-  ComicFile,
   ComicFormat,
   FileDetails,
   Page,
@@ -28,36 +27,6 @@ import {
 } from '@app/library';
 import { ScrapingVolume } from '@app/library/models/scraping-volume';
 import { ScrapingIssue } from '@app/library/models/scraping-issue';
-
-export const ROOT_DIRECTORY = '/home/comixedadmin/Documents/comics';
-
-export const COMIC_FILE_1: ComicFile = {
-  id: 1,
-  filename: '/Users/comixed/Documents/comics/existing-comic-file.cbz',
-  baseFilename: 'existing-comic-file',
-  size: 65535
-};
-
-export const COMIC_FILE_2: ComicFile = {
-  id: 2,
-  filename: '/Users/comixed/Documents/comics/another-comic-file.cbz',
-  baseFilename: 'another-comic-file',
-  size: 32767
-};
-
-export const COMIC_FILE_3: ComicFile = {
-  id: 3,
-  filename: '/Users/comixed/Documents/comics/this-comic-file.cbz',
-  baseFilename: 'this-comic-file',
-  size: 46787
-};
-
-export const COMIC_FILE_4: ComicFile = {
-  id: 4,
-  filename: '/Users/comixed/Documents/comics/that-comic-file.cbz',
-  baseFilename: 'that-comic-file',
-  size: 56213
-};
 
 export const FORMAT_1: ComicFormat = {
   id: 1,

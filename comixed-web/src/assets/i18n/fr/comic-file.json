@@ -1,0 +1,46 @@
+{
+  "comic-files": {
+    "busy-title": "Import de Bandes Dessinées en cours",
+    "confirm-start-title": "Import des Fichiers de Bandes Dessinées ?",
+    "confirm-start-message": "Êtes-vous sûr de vouloir importer {count, plural, =1{le fichier de Bande Dessinée} other{les # fichiers de Bandes Dessinées}} dans la bibliothèque ?",
+    "header": {
+      "cover": "Image de couverture",
+      "filename": "Nom du fichier",
+      "size": "Taille du fichier (kb)"
+    },
+    "label": {
+      "maximum-all-files": "Toutes les fichiers",
+      "maximum-10-files": "10 fichiers",
+      "maximum-50-files": "50 fichiers",
+      "maximum-100-files": "100 fichiers",
+      "maximum-1000-files": "1000 fichiers"
+    },
+    "load-comic-files": {
+      "effect-success": "{count, plural, =1{1 fichier de bande dessinée trouvé} other{# fichiers de bande dessinée trouvés}}.",
+      "effect-failure": "Impossible de trouver des fichiers de Bande Dessinées pour importation."
+    },
+    "page-title": "Import de Bandes Dessinées: {selected, plural, =1{Une} other{#}} sur {count, plural, =1{une Bande dessinée sélectionnée} other{# Bandes Dessinées sélectionnées}}",
+    "placeholder": {
+      "root-directory": "Répertoire parent pour la Recherche..."
+    },
+    "send-comic-files": {
+      "effect-failure": "Échec de l'envoi des fichiers de Bande Dessinée pour import.",
+      "effect-success": "{count, plural, =1{un fichier} other{# fichiers}} de Bandes Dessinées soumis pour import."
+    },
+    "tab-title": "Import de Bandes Dessinées",
+    "text": {
+      "file-size": "{size} bytes",
+      "selected-for-import": "Ce fichier sera importé."
+    },
+    "tooltip": {
+      "delete-blocked-pages-off": "Blocked pages will not be marked for deletion.",
+      "delete-blocked-pages-on": "Blocked pages will be marked for deletion.",
+      "deselect-all": "Annuler la sélection des fichiers de Bandes Dessinées.",
+      "ignore-metadata-on": "Metadata will be used.",
+      "ignore-metadata-off": "Metadata will not be used.",
+      "select-all": "Sélectionner tous les fichiers de Bandes Dessinées pour import.",
+      "start-import": "Commencez l'import des fichiers sélectionnés de Bandes Dessinées.",
+      "toggle-file-lookup-form": "Toggle the comic file lookup form."
+    }
+  }
+}

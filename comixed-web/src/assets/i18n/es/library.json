@@ -68,53 +68,6 @@
       "title": "Undo Changes"
     }
   },
-  "import-comic-files": {
-    "busy-title": "There Are Comics Importing Now",
-    "confirm-start-title": "Import Comic Files?",
-    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?",
-    "header": {
-      "cover": "Cover Image",
-      "filename": "Filename",
-      "size": "File Size (kb)"
-    },
-    "label": {
-      "delete-blocked-pages": "Mark blocked pages as delete",
-      "delete-blocked-pages-off": "Ignore Blocked Pages",
-      "delete-blocked-pages-on": "Mark Blocked Pages",
-      "ignore-metadata": "Ignore any metadata",
-      "ignore-metadata-off": "Use Metadata",
-      "ignore-metadata-on": "Ignore Metadata",
-      "maximum-all-files": "All files",
-      "maximum-10-files": "10 files",
-      "maximum-50-files": "50 files",
-      "maximum-100-files": "100 files",
-      "maximum-1000-files": "1000 files"
-    },
-    "load-comic-files": {
-      "effect-success": "Found {count, plural, =1{one comic file} other{# comic files}}.",
-      "effect-failure": "Failed to find any comic files."
-    },
-    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
-    "placeholder": {
-      "root-directory": "Root Directory To Search..."
-    },
-    "send-comic-files": {
-      "effect-failure": "Failed to send comic files for import.",
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
-    },
-    "tab-title": "Import Comics",
-    "text": {
-      "file-size": "{size} bytes",
-      "selected-for-import": "This file will be imported."
-    },
-    "tooltip": {
-      "ignore-metadata-on": "Will import any metadata in the comic files.",
-      "ignore-metadata-off": "Will not import any metadata in the comic files.",
-      "select-all": "Select all comic files for import.",
-      "deselect-all": "Clear the comic file selections.",
-      "start-import": "Start importing the selected comic files."
-    }
-  },
   "blocked-pages": {
     "set-state": {
       "effect-failure": "Failed to {enable, select, true{set} other{clear}} the blocked state for pages with as hash of {hash}."
