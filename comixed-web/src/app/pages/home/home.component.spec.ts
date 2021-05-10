@@ -20,13 +20,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from '@app/pages/home/home.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TitleService } from '@app/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
   initialState as initialServerStatusState,
   SERVER_STATUS_FEATURE_KEY
 } from '@app/reducers/server-status.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('HomeComponent', () => {
   const initialState = {

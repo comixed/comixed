@@ -34,7 +34,7 @@ import {
   COMIC_FILE_LIST_FEATURE_KEY,
   initialState as initialComicFileListState
 } from '@app/comic-file/reducers/comic-file-list.reducer';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/comic/components/comic-page/comic-page.component';
 
 describe('ComicFileDetailsComponent', () => {
   const FILE = COMIC_FILE_2;

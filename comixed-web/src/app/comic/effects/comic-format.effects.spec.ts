@@ -22,7 +22,6 @@ import { Observable, of, throwError } from 'rxjs';
 import { ComicFormatEffects } from './comic-format.effects';
 import { ComicFormatService } from '@app/comic/services/comic-format.service';
 import { LoggerModule } from '@angular-ru/logger';
-import { AlertService } from '@app/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { FORMAT_1, FORMAT_3, FORMAT_5 } from '@app/comic/comic.fixtures';
 import {
@@ -33,6 +32,7 @@ import {
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('ComicFormatEffects', () => {
   const FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];

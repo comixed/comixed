@@ -19,10 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { DeleteBlockedPagesEffects } from './delete-blocked-pages.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -38,6 +36,7 @@ import {
 } from '@app/blocked-pages/actions/delete-blocked-pages.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('DeleteBlockedPagesEffects', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];

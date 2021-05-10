@@ -32,9 +32,9 @@ import {
 } from '../actions/web-audit-log.actions';
 import { LoggerService } from '@angular-ru/logger';
 import { WebAuditLogService } from '@app/admin/services/web-audit-log.service';
-import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LoadWebAuditLogEntriesResponse } from '@app/admin/models/net/load-web-audit-log-entries-response';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class WebAuditLogEffects {

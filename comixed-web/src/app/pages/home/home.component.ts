@@ -20,9 +20,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
-import { TitleService } from '@app/core';
 import { selectServerStatusState } from '@app/selectors/server-status.selectors';
 import { Store } from '@ngrx/store';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-home',

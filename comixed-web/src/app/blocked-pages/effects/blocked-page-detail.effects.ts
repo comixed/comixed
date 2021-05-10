@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   blockedPageLoaded,
@@ -31,8 +30,9 @@ import {
   saveBlockedPageFailed
 } from '@app/blocked-pages/actions/blocked-page-detail.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { BlockedPage } from '@app/blocked-pages';
 import { of } from 'rxjs';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class BlockedPageDetailEffects {

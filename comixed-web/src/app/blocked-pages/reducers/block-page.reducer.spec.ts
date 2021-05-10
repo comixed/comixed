@@ -17,7 +17,7 @@
  */
 
 import { BlockPageState, initialState, reducer } from './block-page.reducer';
-import { PAGE_2 } from '@app/library/library.fixtures';
+import { PAGE_2 } from '@app/comic/comic.fixtures';
 import {
   blockedStateSet,
   setBlockedState,

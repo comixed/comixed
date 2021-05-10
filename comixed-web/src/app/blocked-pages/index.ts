@@ -50,8 +50,6 @@ import {
   reducer as deleteBlockedPagesReducer
 } from '@app/blocked-pages/reducers/delete-blocked-pages.reducer';
 
-export * from './blocked-pages.model';
-
 interface RouterStateUrl {
   url: string;
   params: Params;

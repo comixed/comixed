@@ -22,8 +22,8 @@ import { Observable } from 'rxjs';
 import { ComicFile } from '@app/comic-file/models/comic-file';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
-import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
-import { SendComicFilesRequest } from '@app/library/models/net/send-comic-files-request';
+import { LoadComicFilesRequest } from '@app/comic-file/models/net/load-comic-files-request';
+import { SendComicFilesRequest } from '@app/comic-file/models/net/send-comic-files-request';
 import {
   LOAD_COMIC_FILES_URL,
   SEND_COMIC_FILES_URL

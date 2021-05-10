@@ -28,7 +28,7 @@ import {
   selectComicListReadCount,
   selectComicListState
 } from './comic-list.selectors';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic/comic.fixtures';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 
 describe('Comic List Selectors', () => {

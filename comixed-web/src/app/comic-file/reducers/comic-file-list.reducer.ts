@@ -17,7 +17,6 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import { ComicFile } from '@app/comic-file';
 import {
   clearComicFileSelections,
   comicFilesLoaded,
@@ -25,6 +24,7 @@ import {
   loadComicFilesFailed,
   setComicFilesSelectedState
 } from '@app/comic-file/actions/comic-file-list.actions';
+import { ComicFile } from '@app/comic-file/models/comic-file';
 
 export const COMIC_FILE_LIST_FEATURE_KEY = 'comic_file_list';
 

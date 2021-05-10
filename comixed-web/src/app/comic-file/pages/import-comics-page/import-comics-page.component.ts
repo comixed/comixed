@@ -21,20 +21,16 @@ import { Subscription } from 'rxjs';
 import { ComicFile } from '@app/comic-file/models/comic-file';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { ConfirmationService, TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';
-import { getUserPreference, User } from '@app/user';
 import { Title } from '@angular/platform-browser';
 import {
   DELETE_BLOCKED_PAGES_DEFAULT,
   DELETE_BLOCKED_PAGES_PREFERENCE,
   IGNORE_METADATA_DEFAULT,
-  IGNORE_METADATA_PREFERENCE,
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
+  IGNORE_METADATA_PREFERENCE
+} from '@app/comic-file/comic-file.constants';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicFileDetailsComponent } from '@app/comic-file/components/comic-file-details/comic-file-details.component';
 import { ComicFileDetailsData } from '@app/library/models/ui/comic-file-details-data';
@@ -47,6 +43,14 @@ import { selectComicImportState } from '@app/comic-file/selectors/comic-import.s
 import { selectImportComicFilesState } from '@app/comic-file/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
+import { User } from '@app/user/models/user';
+import { getUserPreference } from '@app/user';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-import-comics',

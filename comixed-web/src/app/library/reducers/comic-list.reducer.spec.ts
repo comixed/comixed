@@ -30,7 +30,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '@app/library/library.fixtures';
+} from '@app/comic/comic.fixtures';
 
 describe('Comic List Reducer', () => {
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));

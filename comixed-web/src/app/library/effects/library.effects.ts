@@ -17,61 +17,14 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { LibraryService } from '@app/library/services/library.service';
 import { LoggerService } from '@angular-ru/logger';
-import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  readStateSet,
-  setReadState,
-  setReadStateFailed
-} from '@app/library/actions/library.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class LibraryEffects {
-  setRead$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(setReadState),
-      tap(action => this.logger.debug('Effect: set read state:', action)),
-      switchMap(action =>
-        this.comicService
-          .setRead({ comics: action.comics, read: action.read })
-          .pipe(
-            tap(response => this.logger.debug('Response receieved:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'library.set-read.effect-success',
-                  {
-                    count: action.comics.length,
-                    read: action.read
-                  }
-                )
-              )
-            ),
-            map(() => readStateSet()),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant('library.set-read.effect-failure')
-              );
-              return of(setReadStateFailed());
-            })
-          )
-      ),
-      catchError(error => {
-        this.logger.error('General failure:', error);
-        this.alertService.error(
-          this.translateService.instant('app.general-effect-failure')
-        );
-        return of(setReadStateFailed());
-      })
-    );
-  });
-
   constructor(
     private logger: LoggerService,
     private actions$: Actions,

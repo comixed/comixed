@@ -17,16 +17,10 @@
  */
 
 import { DeletedComicsPipe } from './deleted-comics.pipe';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
-} from '@app/library/library.fixtures';
-import { Comic } from '@app/library';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from '@app/comic/comic.fixtures';
 
 describe('DeletedComicsPipe', () => {
-  const DELETED_COMIC: Comic = {
+  const DELETED_COMIC = {
     ...COMIC_1,
     deletedDate: new Date().getTime()
   };

@@ -20,13 +20,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectedComicsComponent } from './selected-comics.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
-} from '@app/library/library.fixtures';
-import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from '@app/comic/comic.fixtures';
+import { ComicDetailsDialogComponent } from '@app/comic/components/comic-details-dialog/comic-details-dialog.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SelectedComicsComponent', () => {

@@ -18,10 +18,9 @@
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { ComicDetailsComponent } from '@app/library/pages/comic-details/comic-details.component';
 import { AdminGuard, ReaderGuard } from '@app/user';
 import { LibraryPageComponent } from '@app/library/pages/library-page/library-page.component';
-import { ScrapingComponent } from '@app/library/pages/scraping/scraping.component';
+import { ScrapingPageComponent } from '@app/scraping/pages/scraping-page/scraping-page.component';
 
 const routes: Routes = [
   {
@@ -42,13 +41,8 @@ const routes: Routes = [
     data: { deleted: true }
   },
   {
-    path: 'library/comics/:comicId',
-    component: ComicDetailsComponent,
-    canActivate: [ReaderGuard]
-  },
-  {
     path: 'library/scrape',
-    component: ScrapingComponent,
+    component: ScrapingPageComponent,
     canActivate: [AdminGuard]
   }
 ];

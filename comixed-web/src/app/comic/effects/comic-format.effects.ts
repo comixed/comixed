@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ComicFormatService } from '@app/comic/services/comic-format.service';
 import { LoggerService } from '@angular-ru/logger';
-import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   comicFormatsLoaded,
@@ -28,8 +27,9 @@ import {
   loadComicFormatsFailed
 } from '@app/comic/actions/comic-format.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { ComicFormat } from '@app/comic';
 import { of } from 'rxjs';
+import { ComicFormat } from '@app/comic/models/comic-format';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class ComicFormatEffects {

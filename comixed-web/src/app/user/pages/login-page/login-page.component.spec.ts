@@ -33,9 +33,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TitleService } from '@app/core';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('LoginPageComponent', () => {
   const USER = USER_READER;

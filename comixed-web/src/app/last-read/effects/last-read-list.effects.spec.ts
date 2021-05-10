@@ -19,7 +19,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { LastReadListEffects } from './last-read-list.effects';
 import {
   LAST_READ_1,
@@ -30,7 +29,6 @@ import { LastReadService } from '@app/last-read/services/last-read.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AlertService } from '@app/core';
 import { LoadLastReadEntriesResponse } from '@app/last-read/models/net/load-last-read-entries-response';
 import {
   lastReadDatesLoaded,
@@ -39,6 +37,7 @@ import {
 } from '@app/last-read/actions/last-read-list.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('LastReadListEffects', () => {
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];

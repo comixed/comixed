@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ScanType } from '@app/comic';
+import { ScanType } from '@app/comic/models/scan-type';
 
 export const loadScanTypes = createAction('[Scan Type] Load all scan types');
 

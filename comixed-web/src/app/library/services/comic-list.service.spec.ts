@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ComicListService } from './comic-list.service';
-import { COMIC_1, COMIC_2 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_2 } from '@app/comic/comic.fixtures';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY

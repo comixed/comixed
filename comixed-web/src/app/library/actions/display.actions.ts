@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { User } from '@app/user';
+import { User } from '@app/user/models/user';
 
 export const resetDisplayOptions = createAction(
   '[Display] Reset the display option state',

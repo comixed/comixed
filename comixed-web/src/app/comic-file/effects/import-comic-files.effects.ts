@@ -18,7 +18,6 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
@@ -30,12 +29,12 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   DELETE_BLOCKED_PAGES_PREFERENCE,
   IGNORE_METADATA_PREFERENCE
-} from '@app/library/library.constants';
+} from '@app/comic-file/comic-file.constants';
 import { LoggerService } from '@angular-ru/logger';
 import { ComicImportService } from '@app/comic-file/services/comic-import.service';
-import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { clearComicFileSelections } from '@app/comic-file/actions/comic-file-list.actions';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class ImportComicFilesEffects {

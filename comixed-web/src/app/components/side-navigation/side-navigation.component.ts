@@ -17,9 +17,9 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from '@app/user';
 import { isAdmin } from '@app/user/user.functions';
 import { LoggerService } from '@angular-ru/logger';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-side-navigation',

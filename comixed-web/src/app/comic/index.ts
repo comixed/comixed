@@ -29,8 +29,11 @@ import {
   SCAN_TYPE_FEATURE_KEY,
   ScanTypeState
 } from './reducers/scan-type.reducer';
-
-export * from './comic.models';
+import {
+  COMIC_FEATURE_KEY,
+  ComicState,
+  reducer as comicReducer
+} from '@app/comic/reducers/comic.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -42,6 +45,7 @@ export interface ComicModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [COMIC_FORMAT_FEATURE_KEY]: ComicFormatState;
   [SCAN_TYPE_FEATURE_KEY]: ScanTypeState;
+  [COMIC_FEATURE_KEY]: ComicState;
 }
 
 export type ModuleState = ComicModuleState;
@@ -49,5 +53,6 @@ export type ModuleState = ComicModuleState;
 export const reducers: ActionReducerMap<ComicModuleState> = {
   router: routerReducer,
   [COMIC_FORMAT_FEATURE_KEY]: comicFormatReducer,
-  [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer
+  [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer,
+  [COMIC_FEATURE_KEY]: comicReducer
 };

@@ -140,7 +140,10 @@ describe('LastReadList Reducer', () => {
 
   describe('receiving an updated last read date', () => {
     const EXISTING = ENTRIES[1];
-    const UPDATED = { ...EXISTING, lastRead: new Date().getTime() };
+    const UPDATED = {
+      ...EXISTING,
+      lastRead: EXISTING.lastRead + 24 * 60 * 60 * 1000
+    };
 
     beforeEach(() => {
       state = reducer(

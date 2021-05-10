@@ -38,17 +38,9 @@ import {
   reducer as libraryReducer
 } from '@app/library/reducers/library.reducer';
 import { LibraryEffects } from '@app/library/effects/library.effects';
-import { ComicDetailsComponent } from './pages/comic-details/comic-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
-import { ComicStoryComponent } from './components/comic-story/comic-story.component';
-import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
-import { ComicEditComponent } from './components/comic-edit/comic-edit.component';
-import { ComicCoverUrlPipe } from './pipes/comic-cover-url.pipe';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ComicTitlePipe } from './pipes/comic-title.pipe';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { ComicPageUrlPipe } from './pipes/comic-page-url.pipe';
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
 import {
   DISPLAY_FEATURE_KEY,
@@ -58,72 +50,34 @@ import { DisplayEffects } from '@app/library/effects/display.effects';
 import { ComicDisplayOptionsComponent } from './components/comic-display-options/comic-display-options.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
-import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
-import {
-  reducer as scrapingReducer,
-  SCRAPING_FEATURE_KEY
-} from '@app/library/reducers/scraping.reducer';
-import { ScrapingEffects } from '@app/library/effects/scraping.effects';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ScrapingIssueDetailComponent } from './components/scraping-issue-detail/scraping-issue-detail.component';
-import { ScrapingIssueTitlePipe } from './pipes/scraping-issue-title.pipe';
 import { MatchabilityPipe } from './pipes/matchability.pipe';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
 import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
-import { ScrapingComponent } from './pages/scraping/scraping.component';
 import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
-import { ComicDetailCardComponent } from '@app/library/components/comic-detail-card/comic-detail-card.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import {
-  reducer as scanTypeReducer,
-  SCAN_TYPE_FEATURE_KEY
-} from '@app/comic/reducers/scan-type.reducer';
-import { ScanTypeEffects } from '@app/comic/effects/scan-type.effects';
 import { ComicListEffects } from '@app/library/effects/comic-list.effects';
 import {
   COMIC_LIST_FEATURE_KEY,
   reducer as comicListReducer
 } from '@app/library/reducers/comic-list.reducer';
-import {
-  COMIC_FEATURE_KEY,
-  reducer as comicReducer
-} from '@app/library/reducers/comic.reducer';
-import { ComicEffects } from '@app/library/effects/comic.effects';
 
 @NgModule({
   declarations: [
-    ComicDetailsComponent,
-    ComicOverviewComponent,
-    ComicStoryComponent,
-    ComicPagesComponent,
-    ComicEditComponent,
-    ComicCoverUrlPipe,
-    ComicTitlePipe,
-    ComicPageUrlPipe,
     LibraryPageComponent,
     ComicDisplayOptionsComponent,
-    ComicScrapingComponent,
-    ScrapingIssueDetailComponent,
-    ScrapingIssueTitlePipe,
     MatchabilityPipe,
     ComicCoversComponent,
     LibraryToolbarComponent,
-    ScrapingComponent,
     SelectedComicsComponent,
-    ComicDetailsDialogComponent,
-    DeletedComicsPipe,
-    ComicPageComponent,
-    ComicDetailCardComponent
+    DeletedComicsPipe
   ],
-  providers: [ComicTitlePipe],
   imports: [
     CommonModule,
     CoreModule,
@@ -132,15 +86,11 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     TranslateModule.forRoot(),
     StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
-    StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
-    StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
-      ScrapingEffects,
-      ComicListEffects,
-      ComicEffects
+      ComicListEffects
     ]),
     MatInputModule,
     MatSelectModule,
@@ -165,6 +115,11 @@ import { ComicEffects } from '@app/library/effects/comic.effects';
     MatMenuModule,
     MatProgressBarModule
   ],
-  exports: [CommonModule, CoreModule, ComicCoversComponent, ComicPageComponent]
+  exports: [
+    CommonModule,
+    CoreModule,
+    ComicCoversComponent,
+    SelectedComicsComponent
+  ]
 })
 export class LibraryModule {}

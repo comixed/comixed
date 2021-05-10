@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { TokenService, WS_ROOT_URL } from '@app/core';
 import webstomp, { Client, Frame, over, Subscription } from 'webstomp-client';
 import {
   messagingStarted,
@@ -30,6 +29,8 @@ import * as SockJS from 'sockjs-client';
 import { HTTP_AUTHORIZATION_HEADER } from '@app/app.constants';
 import { Observable } from 'rxjs';
 import { securedTopic } from '@app/messaging/messaging.functions';
+import { WS_ROOT_URL } from '@app/core';
+import { TokenService } from '@app/core/services/token.service';
 
 @Injectable({
   providedIn: 'root'

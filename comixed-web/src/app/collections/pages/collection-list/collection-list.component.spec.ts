@@ -28,7 +28,7 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/library/reducers/comic-list.reducer';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic/comic.fixtures';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';

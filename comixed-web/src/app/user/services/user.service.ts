@@ -34,9 +34,9 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { Subscription } from 'webstomp-client';
 import { WebSocketService } from '@app/messaging';
 import { currentUserLoaded } from '@app/user/actions/user.actions';
-import { User } from '@app/user';
 import { SaveCurrentUserRequest } from '@app/user/models/net/save-current-user-request';
 import { SaveUserPreferenceRequest } from '@app/user/models/net/save-user-preference-request';
+import { User } from '@app/user/models/user';
 
 /**
  * Provides methods for interacting the backend REST APIs for working with users.

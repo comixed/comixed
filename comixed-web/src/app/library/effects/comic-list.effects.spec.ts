@@ -22,16 +22,17 @@ import { Observable, of, throwError } from 'rxjs';
 import { ComicListEffects } from './comic-list.effects';
 import { ComicListService } from '@app/library/services/comic-list.service';
 import { LoggerModule } from '@angular-ru/logger';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic/comic.fixtures';
 import {
   comicsReceived,
   loadComics,
   loadComicsFailed
 } from '@app/library/actions/comic-list.actions';
 import { hot } from 'jasmine-marbles';
-import { ComicService } from '@app/library/services/comic.service';
+import { ComicService } from '@app/comic/services/comic.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoadComicsResponse } from '@app/library/models/net/load-comics-response';
+import { LibraryService } from '@app/library/services/library.service';
 
 describe('ComicListEffects', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -40,8 +41,7 @@ describe('ComicListEffects', () => {
 
   let actions$: Observable<any> = null;
   let effects: ComicListEffects;
-  let comicService: jasmine.SpyObj<ComicService>;
-  let comicListService: jasmine.SpyObj<ComicListService>;
+  let libraryService: jasmine.SpyObj<LibraryService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -50,9 +50,9 @@ describe('ComicListEffects', () => {
         ComicListEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicService,
+          provide: LibraryService,
           useValue: {
-            loadBatch: jasmine.createSpy('ComicService.loadBatch()')
+            loadBatch: jasmine.createSpy('LibraryService.loadBatch()')
           }
         },
         {
@@ -63,10 +63,9 @@ describe('ComicListEffects', () => {
     });
 
     effects = TestBed.inject(ComicListEffects);
-    comicService = TestBed.inject(ComicService) as jasmine.SpyObj<ComicService>;
-    comicListService = TestBed.inject(
-      ComicListService
-    ) as jasmine.SpyObj<ComicListService>;
+    libraryService = TestBed.inject(
+      LibraryService
+    ) as jasmine.SpyObj<LibraryService>;
   });
 
   it('should be created', () => {
@@ -88,7 +87,7 @@ describe('ComicListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicService.loadBatch.and.returnValue(of(serviceResponse));
+      libraryService.loadBatch.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadBatch$).toBeObservable(expected);
@@ -100,7 +99,7 @@ describe('ComicListEffects', () => {
       const outcome = loadComicsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.loadBatch.and.returnValue(throwError(serviceResponse));
+      libraryService.loadBatch.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadBatch$).toBeObservable(expected);
@@ -111,7 +110,7 @@ describe('ComicListEffects', () => {
       const outcome = loadComicsFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.loadBatch.and.throwError('expected');
+      libraryService.loadBatch.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadBatch$).toBeObservable(expected);

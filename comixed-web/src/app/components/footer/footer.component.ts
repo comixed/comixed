@@ -20,12 +20,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { selectImportCount } from '@app/selectors/import-count.selectors';
-import { User } from '@app/user';
 import {
   selectComicListCount,
   selectComicListDeletedCount,
   selectComicListReadCount
 } from '@app/library/selectors/comic-list.selectors';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-footer',

@@ -18,33 +18,21 @@
 
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LibraryEffects } from './library.effects';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
-} from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from '@app/comic/comic.fixtures';
 import { LibraryService } from '@app/library/services/library.service';
-import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  readStateSet,
-  setReadState,
-  setReadStateFailed
-} from '@app/library/actions/library.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('LibraryEffects', () => {
   const COMIC = COMIC_1;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
   const READ = Math.random() > 0.5;
 
-  let actions$: Observable<any>;
+  const actions$: Observable<any> = null;
   let effects: LibraryEffects;
   let comicService: jasmine.SpyObj<LibraryService>;
   let alertService: AlertService;
@@ -61,10 +49,7 @@ describe('LibraryEffects', () => {
         provideMockActions(() => actions$),
         {
           provide: LibraryService,
-          useValue: {
-            loadComic: jasmine.createSpy('LibraryService.loadComic()'),
-            setRead: jasmine.createSpy('LibraryService.setRead()')
-          }
+          useValue: {}
         }
       ]
     });
@@ -80,45 +65,5 @@ describe('LibraryEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
-  });
-
-  describe('setting the read state for comics', () => {
-    it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
-      const action = setReadState({ comics: COMICS, read: READ });
-      const outcome = readStateSet();
-
-      actions$ = hot('-a', { a: action });
-      comicService.setRead.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.setRead$).toBeObservable(expected);
-      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on service failure', () => {
-      const serviceResponse = new HttpErrorResponse({});
-      const action = setReadState({ comics: COMICS, read: READ });
-      const outcome = setReadStateFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.setRead.and.returnValue(throwError(serviceResponse));
-
-      const expected = hot('-b', { b: outcome });
-      expect(effects.setRead$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on general failure', () => {
-      const action = setReadState({ comics: COMICS, read: READ });
-      const outcome = setReadStateFailed();
-
-      actions$ = hot('-a', { a: action });
-      comicService.setRead.and.throwError('expected');
-
-      const expected = hot('-(b|)', { b: outcome });
-      expect(effects.setRead$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
-    });
   });
 });

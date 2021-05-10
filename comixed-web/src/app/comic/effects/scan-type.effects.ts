@@ -20,16 +20,16 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ScanTypeService } from '@app/comic/services/scan-type.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from '@app/core';
 import {
   loadScanTypes,
   loadScanTypesFailed,
   scanTypesLoaded
 } from '@app/comic/actions/scan-type.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { ScanType } from '@app/comic';
 import { of } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
+import { ScanType } from '@app/comic/models/scan-type';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class ScanTypeEffects {

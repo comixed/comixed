@@ -23,8 +23,8 @@ import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/logger';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
-import { Comic } from '@app/library';
 import { comicListUpdateReceived } from '@app/library/actions/comic-list.actions';
+import { Comic } from '@app/comic/models/comic';
 
 @Injectable({
   providedIn: 'root'

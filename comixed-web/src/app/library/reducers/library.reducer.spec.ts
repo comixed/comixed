@@ -17,7 +17,7 @@
  */
 
 import { initialState, LibraryState, reducer } from './library.reducer';
-import { COMIC_1, COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3 } from '@app/comic/comic.fixtures';
 import {
   deselectComics,
   readStateSet,
@@ -26,7 +26,6 @@ import {
   setReadStateFailed,
   updateComics
 } from '@app/library/actions/library.actions';
-import { Comic } from '@app/library';
 
 describe('Library Reducer', () => {
   const COMIC = COMIC_1;
@@ -63,7 +62,7 @@ describe('Library Reducer', () => {
 
   describe('receiving comic updates', () => {
     const OLD_COMIC = COMIC;
-    const UPDATED_COMIC: Comic = {
+    const UPDATED_COMIC = {
       ...OLD_COMIC,
       series: OLD_COMIC.series.substr(1)
     };

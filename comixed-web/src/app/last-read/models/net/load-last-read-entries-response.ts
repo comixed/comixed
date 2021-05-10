@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LastRead } from '../../last-read.models';
+import { LastRead } from '@app/last-read/models/last-read';
 
 export interface LoadLastReadEntriesResponse {
   entries: LastRead[];

@@ -19,11 +19,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { UpdateReadStatusEffects } from './update-read-status.effects';
 import { LastReadService } from '@app/last-read/services/last-read.service';
-import { AlertService } from '@app/core';
-import { COMIC_4 } from '@app/library/library.fixtures';
+import { COMIC_4 } from '@app/comic/comic.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -39,6 +37,7 @@ import {
   lastReadDateUpdated
 } from '@app/last-read/actions/last-read-list.actions';
 import { LAST_READ_2 } from '@app/last-read/last-read.fixtures';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('UpdateReadStatusEffects', () => {
   const COMIC = COMIC_4;

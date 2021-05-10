@@ -19,14 +19,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Preference } from '@app/user';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import { Preference } from '@app/user/models/preference';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
   selector: 'cx-user-preferences-page',

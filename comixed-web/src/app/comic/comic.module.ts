@@ -30,15 +30,63 @@ import {
   SCAN_TYPE_FEATURE_KEY
 } from './reducers/scan-type.reducer';
 import { ScanTypeEffects } from './effects/scan-type.effects';
+import {
+  COMIC_FEATURE_KEY,
+  reducer as comicReducer
+} from './reducers/comic.reducer';
+import { ComicEffects } from './effects/comic.effects';
+import { ComicRouting } from './comic.routing';
+import { ComicDetailsPageComponent } from './pages/comic-details-page/comic-details-page.component';
+import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
+import { ComicEditComponent } from './components/comic-edit/comic-edit.component';
+import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
+import { ComicPageComponent } from './components/comic-page/comic-page.component';
+import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
+import { ComicStoryComponent } from './components/comic-story/comic-story.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ComicDetailCardComponent } from '@app/comic/components/comic-detail-card/comic-detail-card.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    ComicDetailsPageComponent,
+    ComicDetailsPageComponent,
+    ComicDetailsDialogComponent,
+    ComicEditComponent,
+    ComicOverviewComponent,
+    ComicPageComponent,
+    ComicPagesComponent,
+    ComicStoryComponent,
+    ComicDetailCardComponent
+  ],
   imports: [
     CommonModule,
+    ComicRouting,
     StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
     StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
-    EffectsModule.forFeature([ComicFormatEffects, ScanTypeEffects])
+    StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
+    EffectsModule.forFeature([
+      ComicFormatEffects,
+      ScanTypeEffects,
+      ComicEffects
+    ]),
+    MatToolbarModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatExpansionModule
   ],
-  exports: [CommonModule]
+  exports: [CommonModule, ComicPageComponent, ComicEditComponent]
 })
 export class ComicModule {}

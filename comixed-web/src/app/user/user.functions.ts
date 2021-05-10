@@ -17,8 +17,8 @@
  */
 
 import { Preference } from '@app/user/models/preference';
-import { User } from '@app/user';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
+import { User } from '@app/user/models/user';
 
 /** Find a specific user preference. */
 export function getUserPreference(

@@ -29,11 +29,10 @@ import {
   ROOT_DIRECTORY
 } from '@app/comic-file/comic-file.fixtures';
 import { ComicImportService } from '@app/comic-file/services/comic-import.service';
-import { AlertService } from '@app/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
+import { LoadComicFilesResponse } from '@app/comic-file/models/net/load-comic-files-response';
 import {
   comicFilesLoaded,
   loadComicFiles,
@@ -43,9 +42,10 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
   IMPORT_ROOT_DIRECTORY_PREFERENCE
-} from '@app/library/library.constants';
+} from '@app/comic-file/comic-file.constants';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('ComicFileListEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];

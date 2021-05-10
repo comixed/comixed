@@ -26,24 +26,25 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ScrapingVolume } from '@app/library/models/scraping-volume';
-import { Comic } from '@app/library';
+import { ScrapingVolume } from '@app/scraping/models/scraping-volume';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/logger';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ScrapingIssue } from '@app/library/models/scraping-issue';
+import { ScrapingIssue } from '@app/scraping/models/scraping-issue';
 import { Store } from '@ngrx/store';
 import {
   loadScrapingIssue,
   resetScraping,
   scrapeComic
-} from '@app/library/actions/scraping.actions';
+} from '@app/scraping/actions/scraping.actions';
 import { Subscription } from 'rxjs';
-import { selectScrapingIssue } from '@app/library/selectors/scraping.selectors';
-import { ConfirmationService, SortableListItem } from '@app/core';
+import { selectScrapingIssue } from '@app/scraping/selectors/scraping.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { deselectComics } from '@app/library/actions/library.actions';
+import { Comic } from '@app/comic/models/comic';
+import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;

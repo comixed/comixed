@@ -17,14 +17,8 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from '@app/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ConfirmationService,
-  SelectionOption,
-  updateQueryParam
-} from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
@@ -36,7 +30,11 @@ import {
   LOGGER_LEVEL_PREFERENCE,
   QUERY_PARAM_SIDEBAR
 } from '@app/app.constants';
-import { ComicViewMode } from '@app/library';
+import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { updateQueryParam } from '@app/core';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -110,7 +108,7 @@ export class NavigationBarComponent {
 
   onLogin(): void {
     this.logger.trace('Navigating to the login page');
-    this.router.navigate(['login']);
+    this.router.navigateByUrl('/login');
   }
 
   onLogout(): void {
@@ -123,7 +121,7 @@ export class NavigationBarComponent {
       confirm: () => {
         this.logger.debug('User logged out');
         this.store.dispatch(logoutUser());
-        this.router.navigate(['login']);
+        this.router.navigateByUrl('/login');
       }
     });
   }
@@ -171,14 +169,14 @@ export class NavigationBarComponent {
     this.logger.debug('Toggling view mode:', viewMode);
     switch (viewMode) {
       case ComicViewMode.ALL:
-        this.router.navigate(['/library/comics/all']);
+        this.router.navigateByUrl('/library/comics/all');
         break;
     }
   }
 
   onShowBuildDetails(): void {
     this.logger.trace('Showing build details');
-    this.router.navigate(['/build']);
+    this.router.navigateByUrl('/build');
   }
 
   onToggleSidebar(): void {

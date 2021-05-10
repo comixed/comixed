@@ -20,13 +20,13 @@ import { TestBed } from '@angular/core/testing';
 import { ComicImportService } from './comic-import.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
-import { LoadComicFilesResponse } from '@app/library/models/net/load-comic-files-response';
+import { LoadComicFilesResponse } from '@app/comic-file/models/net/load-comic-files-response';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-request';
-import { SendComicFilesRequest } from '@app/library/models/net/send-comic-files-request';
+import { LoadComicFilesRequest } from '@app/comic-file/models/net/load-comic-files-request';
+import { SendComicFilesRequest } from '@app/comic-file/models/net/send-comic-files-request';
 import { HttpResponse } from '@angular/common/http';
 import {
   ROOT_DIRECTORY,

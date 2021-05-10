@@ -24,7 +24,6 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import {
@@ -32,7 +31,6 @@ import {
   selectComics
 } from '@app/library/actions/library.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core';
 import { Router } from '@angular/router';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
@@ -42,6 +40,8 @@ import {
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
+import { Comic } from '@app/comic/models/comic';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
   selector: 'cx-library-toolbar',

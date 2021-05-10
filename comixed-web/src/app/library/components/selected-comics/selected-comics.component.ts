@@ -17,10 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Comic } from '@app/library';
 import { LoggerService } from '@angular-ru/logger';
 import { MatDialog } from '@angular/material/dialog';
-import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { ComicDetailsDialogComponent } from '@app/comic/components/comic-details-dialog/comic-details-dialog.component';
+import { Comic } from '@app/comic/models/comic';
 
 @Component({
   selector: 'cx-selected-comics',

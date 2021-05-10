@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic/models/comic';
 
 export const resetComicList = createAction(
   '[Comic List] Indicates the loading process is started'

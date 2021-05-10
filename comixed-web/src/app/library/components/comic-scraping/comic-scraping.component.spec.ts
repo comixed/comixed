@@ -28,15 +28,13 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  COMIC_4,
   SCRAPING_ISSUE_1,
   SCRAPING_VOLUME_3
-} from '@app/library/library.fixtures';
+} from '@app/scraping/scraping.fixtures';
 import {
   initialState as initialScrapingState,
   SCRAPING_FEATURE_KEY
-} from '@app/library/reducers/scraping.reducer';
-import { ConfirmationService, SortableListItem } from '@app/core';
+} from '@app/scraping/reducers/scraping.reducer';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -45,15 +43,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
-import { ScrapingVolume } from '@app/library/models/scraping-volume';
+import { ScrapingVolume } from '@app/scraping/models/scraping-volume';
 import {
   loadScrapingIssue,
   resetScraping,
   scrapeComic
-} from '@app/library/actions/scraping.actions';
+} from '@app/scraping/actions/scraping.actions';
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatchabilityPipe } from '@app/library/pipes/matchability.pipe';
 import { deselectComics } from '@app/library/actions/library.actions';
+import { COMIC_4 } from '@app/comic/comic.fixtures';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 
 describe('ComicScrapingComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;

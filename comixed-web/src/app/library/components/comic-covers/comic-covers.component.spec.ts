@@ -39,12 +39,7 @@ import {
 import { MatBadgeModule } from '@angular/material/badge';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
-import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
-} from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3, COMIC_4 } from '@app/comic/comic.fixtures';
 import {
   deselectComics,
   selectComics,
@@ -54,7 +49,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { ComicDetailsDialogComponent } from '@app/comic/components/comic-details-dialog/comic-details-dialog.component';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 
 describe('ComicCoversComponent', () => {

@@ -30,10 +30,11 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ConfirmationService, TitleService } from '@app/core';
 import { USER_READER } from '@app/user/user.fixtures';
 import { saveCurrentUser } from '@app/user/actions/user.actions';
 import { Confirmation } from '@app/core/models/confirmation';
+import { TitleService } from '@app/core/services/title.service';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('AccountEditPageComponent', () => {
   const USER = USER_READER;

@@ -20,3 +20,14 @@ import { API_ROOT_URL } from '../core';
 
 export const LOAD_COMIC_FILES_URL = `${API_ROOT_URL}/files/contents`;
 export const SEND_COMIC_FILES_URL = `${API_ROOT_URL}/files/import`;
+export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
+  'preference.import.root-directory';
+export const IMPORT_ROOT_DIRECTORY_DEFAULT = '';
+export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
+  'preference.import.maximum-results';
+export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
+export const IGNORE_METADATA_PREFERENCE = 'preference.import.ignore-metadata';
+export const IGNORE_METADATA_DEFAULT = `${false}`;
+export const DELETE_BLOCKED_PAGES_PREFERENCE =
+  'preference.import.delete-blocked-pages';
+export const DELETE_BLOCKED_PAGES_DEFAULT = `${false}`;

@@ -21,12 +21,8 @@ import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
-import {
-  LOAD_COMIC_URL,
-  SET_READ_STATE_URL
-} from '@app/library/library.constants';
-import { Comic } from '@app/library';
-import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
+import { LOAD_COMICS_URL } from '@app/library/library.constants';
+import { LoadComicsRequest } from '@app/library/models/net/load-comics-request';
 
 @Injectable({
   providedIn: 'root'
@@ -35,24 +31,14 @@ export class LibraryService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
   /**
-   * Loads a single comic.
-   * @param args.id the comic id
+   * Loads a batch of comics.
+   *
+   * @param args.lastId the last id received
    */
-  loadComic(args: { id: number }): Observable<any> {
-    this.logger.debug('Service: load a comic:', args);
-    return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
-  }
-
-  /**
-   * Sets the read state for a set of comics.
-   * @param args.comics the comics to be updated
-   * @param args.read the read state
-   */
-  setRead(args: { comics: Comic[]; read: boolean }): Observable<any> {
-    this.logger.debug('Service: setting comic read state:', args);
-    return this.http.post(interpolate(SET_READ_STATE_URL), {
-      ids: args.comics.map(comic => comic.id),
-      read: args.read
-    } as SetComicReadRequest);
+  loadBatch(args: { lastId: number }): Observable<any> {
+    this.logger.debug('Loading a batch of comics:', args);
+    return this.http.post(interpolate(LOAD_COMICS_URL), {
+      lastId: args.lastId
+    } as LoadComicsRequest);
   }
 }

@@ -24,7 +24,6 @@ import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';
-import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
 import {
   BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
   BLOCKED_PAGE_LIST_UPDATE_TOPIC,
@@ -43,8 +42,9 @@ import {
   loadBlockedPageList
 } from '@app/blocked-pages/actions/blocked-page-list.actions';
 import { interpolate } from '@app/core';
-import { Page } from '@app/library';
 import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
+import { Page } from '@app/comic/models/page';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 @Injectable({
   providedIn: 'root'

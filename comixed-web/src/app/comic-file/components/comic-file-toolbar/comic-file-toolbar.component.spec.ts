@@ -34,11 +34,10 @@ import {
 } from '@app/comic-file/comic-file.fixtures';
 import { MatInputModule } from '@angular/material/input';
 import { USER_ADMIN } from '@app/user/user.fixtures';
-import { Preference } from '@app/user';
 import {
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
   IMPORT_ROOT_DIRECTORY_PREFERENCE
-} from '@app/library/library.constants';
+} from '@app/comic-file/comic-file.constants';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   clearComicFileSelections,
@@ -46,6 +45,7 @@ import {
   setComicFilesSelectedState
 } from '@app/comic-file/actions/comic-file-list.actions';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
+import { Preference } from '@app/user/models/preference';
 
 describe('ComicFileToolbarComponent', () => {
   const USER = USER_ADMIN;

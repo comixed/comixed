@@ -22,7 +22,7 @@ import {
   loadScanTypesFailed,
   scanTypesLoaded
 } from '../actions/scan-type.actions';
-import { ScanType } from '@app/comic';
+import { ScanType } from '@app/comic/models/scan-type';
 
 export const SCAN_TYPE_FEATURE_KEY = 'scan_type_state';
 

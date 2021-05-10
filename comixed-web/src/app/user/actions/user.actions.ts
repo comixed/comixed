@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { User } from '@app/user';
+import { User } from '@app/user/models/user';
 
 export const loginUser = createAction(
   '[User] Submit the login credentials',

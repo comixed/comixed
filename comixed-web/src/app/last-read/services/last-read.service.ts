@@ -29,7 +29,6 @@ import {
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
 import { LoadLastReadEntriesRequest } from '@app/last-read/models/net/load-last-read-entries-request';
-import { Comic } from '@app/library';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'webstomp-client';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
@@ -40,7 +39,8 @@ import {
   loadLastReadDates
 } from '@app/last-read/actions/last-read-list.actions';
 import { WebSocketService } from '@app/messaging';
-import { LastRead } from '@app/last-read';
+import { Comic } from '@app/comic/models/comic';
+import { LastRead } from '@app/last-read/models/last-read';
 
 @Injectable({
   providedIn: 'root'

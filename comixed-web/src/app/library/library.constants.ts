@@ -19,9 +19,7 @@
 import { API_ROOT_URL } from '../core';
 
 export const QUERY_PARAM_TAB = 'tab';
-
 export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
-
 export const PUBLISHERS_GROUP = 'publishers';
 export const SERIES_GROUP = 'series';
 export const CHARACTERS_GROUP = 'characters';
@@ -29,43 +27,12 @@ export const TEAMS_GROUP = 'teams';
 export const LOCATIONS_GROUP = 'locations';
 export const STORIES_GROUP = 'stories';
 
-export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
-export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
-export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
-
 export const LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
 
-export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
-export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
-export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/scraping/volumes`;
-export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volumeId}/issues/\${issueNumber}`;
-
-export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}`;
-
-export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
-
-// import options
-export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
-  'preference.import.root-directory';
-export const IMPORT_ROOT_DIRECTORY_DEFAULT = '';
-export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
-  'preference.import.maximum-results';
-export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
-export const IGNORE_METADATA_PREFERENCE = 'preference.import.ignore-metadata';
-export const IGNORE_METADATA_DEFAULT = `${false}`;
-export const DELETE_BLOCKED_PAGES_PREFERENCE =
-  'preference.import.delete-blocked-pages';
-export const DELETE_BLOCKED_PAGES_DEFAULT = `${false}`;
-export const API_KEY_PREFERENCE = 'preference.scraping.api-key';
-export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
-export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
-
-// display options
 export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
 export const PAGE_SIZE_DEFAULT = 400;
 export const PAGINATION_OPTIONS = [10, 25, 50, 100];
 export const PAGINATION_PREFERENCE = 'preference.pagination';
 export const PAGINATION_DEFAULT = PAGINATION_OPTIONS[0];
 
-// messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';

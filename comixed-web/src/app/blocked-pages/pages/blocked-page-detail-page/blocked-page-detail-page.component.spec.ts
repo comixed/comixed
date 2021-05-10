@@ -39,7 +39,6 @@ import {
   BLOCKED_PAGE_5
 } from '@app/blocked-pages/blocked-pages.fixtures';
 import { Router } from '@angular/router';
-import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { saveBlockedPage } from '@app/blocked-pages/actions/blocked-page-detail.actions';
 import { MatCardModule } from '@angular/material/card';
@@ -47,6 +46,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('BlockedPageDetailPageComponent', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];

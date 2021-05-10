@@ -28,15 +28,16 @@ import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { User } from '@app/user';
 import {
   selectUser,
   selectUserState
 } from '@app/user/selectors/user.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { ConfirmationService, TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { saveCurrentUser } from '@app/user/actions/user.actions';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TitleService } from '@app/core/services/title.service';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-account-edit',

@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
-import { ComicService } from '@app/library/services/comic.service';
 import {
   comicsReceived,
   loadComics,
@@ -29,6 +28,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { LoadComicsResponse } from '@app/library/models/net/load-comics-response';
 import { of } from 'rxjs';
 import { ComicListService } from '@app/library/services/comic-list.service';
+import { LibraryService } from '@app/library/services/library.service';
 
 @Injectable()
 export class ComicListEffects {
@@ -37,7 +37,7 @@ export class ComicListEffects {
       ofType(loadComics),
       tap(action => this.logger.debug('Effect: load comic batch:', action)),
       switchMap(action =>
-        this.comicService.loadBatch({ lastId: action.lastId }).pipe(
+        this.libraryService.loadBatch({ lastId: action.lastId }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: LoadComicsResponse) =>
             comicsReceived({
@@ -62,10 +62,6 @@ export class ComicListEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private comicService: ComicService,
-    private comicListService: ComicListService
-  ) {
-    // done to ensure the service was injected
-    this.logger.assert(this.comicListService);
-  }
+    private libraryService: LibraryService
+  ) {}
 }

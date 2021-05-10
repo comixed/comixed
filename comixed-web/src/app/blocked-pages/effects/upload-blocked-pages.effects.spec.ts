@@ -21,7 +21,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { UploadBlockedPagesEffects } from './upload-blocked-pages.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -38,6 +37,7 @@ import {
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { blockedPageListLoaded } from '@app/blocked-pages/actions/blocked-page-list.actions';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('UploadBlockedPagesEffects', () => {
   const FILE = new File([], 'testing');

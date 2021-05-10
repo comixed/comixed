@@ -24,7 +24,6 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/library';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
@@ -37,9 +36,10 @@ import {
 } from '@app/library/actions/library.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
-import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
+import { ComicDetailsDialogComponent } from '@app/comic/components/comic-details-dialog/comic-details-dialog.component';
 import { PAGINATION_DEFAULT } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
+import { Comic } from '@app/comic/models/comic';
 
 @Component({
   selector: 'cx-comic-covers',

@@ -26,8 +26,8 @@ import {
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
 import { selectComicList } from '@app/library/selectors/comic-list.selectors';
-import { Comic } from '@app/library';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
+import { Comic } from '@app/comic/models/comic';
 
 @Component({
   selector: 'cx-collection-detail',

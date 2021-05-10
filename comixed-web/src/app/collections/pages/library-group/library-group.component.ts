@@ -21,13 +21,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
-import { Comic } from '@app/library';
 import {
   selectAllComics,
   selectSelectedComics
 } from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from '@app/core';
 import {
   CHARACTERS_GROUP,
   LOCATIONS_GROUP,
@@ -36,6 +34,8 @@ import {
   STORIES_GROUP,
   TEAMS_GROUP
 } from '@app/library/library.constants';
+import { Comic } from '@app/comic/models/comic';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Component({
   selector: 'cx-comic-group',
@@ -80,7 +80,7 @@ export class LibraryGroupComponent implements OnInit, OnDestroy {
             { name: this.groupType }
           )
         );
-        this.router.navigate(['/library/comics/all']);
+        this.router.navigateByUrl('/library/comics/all');
       } else {
         this.subscribeToUpdates();
       }

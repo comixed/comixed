@@ -17,7 +17,7 @@
  */
 
 import { BlockedPage } from './models/blocked-page';
-import { DownloadDocument } from '@app/core';
+import { DownloadDocument } from '@app/core/models/download-document';
 
 export const BLOCKED_PAGE_1: BlockedPage = {
   id: 1,

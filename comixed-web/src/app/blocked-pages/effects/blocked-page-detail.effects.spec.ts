@@ -19,10 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { BlockedPageDetailEffects } from './blocked-page-detail.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
@@ -37,6 +35,7 @@ import {
 } from '@app/blocked-pages/actions/blocked-page-detail.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('BlockedPageEffects', () => {
   const ENTRY = BLOCKED_PAGE_4;

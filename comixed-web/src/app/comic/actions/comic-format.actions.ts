@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicFormat } from '@app/comic';
+import { ComicFormat } from '@app/comic/models/comic-format';
 
 export const loadComicFormats = createAction(
   '[Comic Format] Load comic formats'

@@ -27,7 +27,6 @@ import {
   COMIC_FILE_4
 } from '@app/comic-file/comic-file.fixtures';
 import { ComicImportService } from '@app/comic-file/services/comic-import.service';
-import { AlertService } from '@app/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -41,9 +40,10 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   DELETE_BLOCKED_PAGES_PREFERENCE,
   IGNORE_METADATA_PREFERENCE
-} from '@app/library/library.constants';
+} from '@app/comic-file/comic-file.constants';
 import { hot } from 'jasmine-marbles';
 import { clearComicFileSelections } from '@app/comic-file/actions/comic-file-list.actions';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('ImportComicFilesEffects', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];

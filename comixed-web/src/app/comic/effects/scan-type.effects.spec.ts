@@ -19,10 +19,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-
 import { ScanTypeEffects } from './scan-type.effects';
 import { ScanTypeService } from '@app/comic/services/scan-type.service';
-import { AlertService } from '@app/core';
 import {
   SCAN_TYPE_1,
   SCAN_TYPE_2,
@@ -38,6 +36,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('ScanTypeEffects', () => {
   const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_2, SCAN_TYPE_3];

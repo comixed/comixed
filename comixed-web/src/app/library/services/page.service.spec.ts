@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { PageService } from './page.service';
-import { PAGE_1 } from '@app/library/library.fixtures';
+import { PAGE_1 } from '@app/comic/comic.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController

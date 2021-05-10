@@ -40,7 +40,7 @@ import {
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
 import { LoggerModule } from '@angular-ru/logger';
-import { COMIC_4 } from '@app/library/library.fixtures';
+import { COMIC_4 } from '@app/comic/comic.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { WebSocketService } from '@app/messaging';
 import {
@@ -56,7 +56,6 @@ import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
-import { Subscription } from 'webstomp-client';
 
 describe('LastReadService', () => {
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];

@@ -22,7 +22,7 @@ import {
   loadComicFormats,
   loadComicFormatsFailed
 } from '../actions/comic-format.actions';
-import { ComicFormat } from '@app/comic';
+import { ComicFormat } from '@app/comic/models/comic-format';
 
 export const COMIC_FORMAT_FEATURE_KEY = 'comic_format_state';
 

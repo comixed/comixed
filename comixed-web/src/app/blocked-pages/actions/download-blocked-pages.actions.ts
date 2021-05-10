@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { DownloadDocument } from '@app/core';
+import { DownloadDocument } from '@app/core/models/download-document';
 
 export const downloadBlockedPages = createAction(
   '[Download Blocked Pages] Downloads the blocked page list'

@@ -20,3 +20,9 @@ import { API_ROOT_URL } from '../core';
 
 export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
 export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scantypes`;
+export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
+export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
+export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
+export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
+export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;

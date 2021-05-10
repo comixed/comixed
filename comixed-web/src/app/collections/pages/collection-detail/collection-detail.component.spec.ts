@@ -53,7 +53,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '@app/library/library.fixtures';
+} from '@app/comic/comic.fixtures';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];

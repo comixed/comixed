@@ -27,7 +27,6 @@ import {
   ActivatedRouteSnapshot,
   Router
 } from '@angular/router';
-import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
@@ -49,8 +48,9 @@ import {
 } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ComicViewMode } from '@app/library';
 import { BehaviorSubject } from 'rxjs';
+import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
@@ -107,7 +107,7 @@ describe('NavigationBarComponent', () => {
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
+    spyOn(router, 'navigateByUrl');
     activatedRoute = TestBed.inject(ActivatedRoute);
     confirmationService = TestBed.inject(ConfirmationService);
     dialog = TestBed.inject(MatDialog);
@@ -129,7 +129,7 @@ describe('NavigationBarComponent', () => {
     });
 
     it('sends the browser to the login page', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['login']);
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     });
   });
 
@@ -147,7 +147,7 @@ describe('NavigationBarComponent', () => {
     });
 
     it('sends the user to the login page', () => {
-      expect(router.navigate).toHaveBeenCalledWith(['login']);
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
     });
   });
 
@@ -286,13 +286,13 @@ describe('NavigationBarComponent', () => {
   describe('changing the comic view', () => {
     it('can show all comics', () => {
       component.onComicViewChange(ComicViewMode.ALL);
-      expect(router.navigate).toHaveBeenCalledWith(['/library/comics/all']);
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/library/comics/all');
     });
   });
 
   it('can show the build details', () => {
     component.onShowBuildDetails();
-    expect(router.navigate).toHaveBeenCalledWith(['/build']);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/build');
   });
 
   describe('toggling the sidebar', () => {

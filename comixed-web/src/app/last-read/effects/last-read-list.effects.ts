@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
 import { LastReadService } from '@app/last-read/services/last-read.service';
-import { AlertService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   lastReadDatesLoaded,
@@ -30,6 +29,7 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { LoadLastReadEntriesResponse } from '@app/last-read/models/net/load-last-read-entries-response';
 import { of } from 'rxjs';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class LastReadListEffects {

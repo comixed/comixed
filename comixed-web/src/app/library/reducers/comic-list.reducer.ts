@@ -24,7 +24,7 @@ import {
   loadComicsFailed,
   resetComicList
 } from '../actions/comic-list.actions';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic/models/comic';
 
 export const COMIC_LIST_FEATURE_KEY = 'comic_list_state';
 

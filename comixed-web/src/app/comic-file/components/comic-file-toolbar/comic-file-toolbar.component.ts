@@ -20,20 +20,21 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { getUserPreference, User } from '@app/user';
-import { ComicFile } from '@app/library';
+import { getUserPreference } from '@app/user';
 import {
   IMPORT_MAXIMUM_RESULTS_DEFAULT,
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
   IMPORT_ROOT_DIRECTORY_DEFAULT,
   IMPORT_ROOT_DIRECTORY_PREFERENCE
-} from '@app/library/library.constants';
+} from '@app/comic-file/comic-file.constants';
 import {
   clearComicFileSelections,
   loadComicFiles,
   setComicFilesSelectedState
 } from '@app/comic-file/actions/comic-file-list.actions';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
+import { ComicFile } from '@app/comic-file/models/comic-file';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-comic-file-toolbar',

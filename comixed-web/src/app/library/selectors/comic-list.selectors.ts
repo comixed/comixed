@@ -22,9 +22,9 @@ import {
   ComicListState
 } from '../reducers/comic-list.reducer';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
-import { Comic } from '@app/library';
 import { CollectionListProperties } from '@app/collections/models/collection-list-properties';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
+import { Comic } from '@app/comic/models/comic';
 
 export const selectComicListState = createFeatureSelector<ComicListState>(
   COMIC_LIST_FEATURE_KEY

@@ -21,7 +21,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { DownloadBlockedPagesEffects } from './download-blocked-pages.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
 import { BLOCKED_PAGE_FILE } from '@app/blocked-pages/blocked-pages.fixtures';
 import {
   blockedPagesDownloaded,
@@ -34,6 +33,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FileSaverService } from 'ngx-filesaver';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('DownloadBlockedPagesEffects', () => {
   const DOWNLOADED_FILE = BLOCKED_PAGE_FILE;

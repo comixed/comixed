@@ -21,7 +21,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/logger';
-import { AlertService, DownloadDocument } from '@app/core';
 import {
   blockedPagesDownloaded,
   downloadBlockedPages,
@@ -30,6 +29,8 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FileSaverService } from 'ngx-filesaver';
+import { DownloadDocument } from '@app/core/models/download-document';
+import { AlertService } from '@app/core/services/alert.service';
 
 @Injectable()
 export class DownloadBlockedPagesEffects {

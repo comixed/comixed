@@ -26,8 +26,6 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { ConfirmationService, SelectableListItem } from '@app/core';
-import { BlockedPage } from '@app/blocked-pages';
 import {
   BLOCKED_PAGE_1,
   BLOCKED_PAGE_2,
@@ -44,6 +42,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { Confirmation } from '@app/core/models/confirmation';
 import { uploadBlockedPages } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/blocked-pages/actions/delete-blocked-pages.actions';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 describe('BlockedPageListPageComponent', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];

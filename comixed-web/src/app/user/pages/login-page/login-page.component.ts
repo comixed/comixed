@@ -25,8 +25,8 @@ import { Subscription } from 'rxjs';
 import { selectUserState } from '@app/user/selectors/user.selectors';
 import { loginUser } from '@app/user/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { TitleService } from '@app/core';
 import { Router } from '@angular/router';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-login',

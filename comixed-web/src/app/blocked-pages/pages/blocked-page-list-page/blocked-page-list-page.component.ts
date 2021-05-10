@@ -22,15 +22,16 @@ import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
 import { selectBlockedPageList } from '@app/blocked-pages/selectors/blocked-page-list.selectors';
-import { ConfirmationService, SelectableListItem } from '@app/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { downloadBlockedPages } from '@app/blocked-pages/actions/download-blocked-pages.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { uploadBlockedPages } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/blocked-pages/actions/delete-blocked-pages.actions';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 @Component({
   selector: 'cx-blocked-page-list',
