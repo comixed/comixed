@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
@@ -25,13 +25,13 @@ import {
   selectLibraryBusy,
   selectSelectedComics
 } from '@app/library/selectors/library.selectors';
-import { TitleService } from '@app/core';
+import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { selectComicList } from '@app/library/selectors/comic-list.selectors';
+import { selectComicList } from '@app/comic-book/selectors/comic-list.selectors';
 
 @Component({
   selector: 'cx-library-page',

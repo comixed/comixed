@@ -10,12 +10,14 @@
       [comic]="comic"
       [title]="comic | comicTitle"
       [imageUrl]="comic | comicCoverUrl"
-      [detailLink]="['/library', 'comics', comic.id]"
+      [detailLink]="['/comics', comic.id]"
       [blurred]="!comic.fileDetails"
       [busy]="!comic.fileDetails"
       [selected]="isSelected(comic)"
+      [comicChanged]="isChanged(comic)"
       (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
       (showContextMenu)="onShowContextMenu($event.comic, $event.x, $event.y)"
+      (updateComicInfo)="onUpdateComicInfo($event.comic)"
     ></cx-comic-detail-card>
   </div>
 </div>

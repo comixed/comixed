@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { LoggerService } from '@angular-ru/logger';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -28,7 +28,7 @@ import {
   uploadBlockedPagesFailed
 } from '@app/blocked-pages/actions/upload-blocked-pages.actions';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { BlockedPage } from '@app/blocked-pages';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 import { of } from 'rxjs';
 import { blockedPageListLoaded } from '@app/blocked-pages/actions/blocked-page-list.actions';
 

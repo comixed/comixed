@@ -46,14 +46,14 @@ import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/library/reducers/comic-list.reducer';
+} from '@app/comic-book/reducers/comic-list.reducer';
 import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '@app/library/library.fixtures';
+} from '@app/comic-book/comic-book.fixtures';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -122,7 +122,7 @@ describe('CollectionDetailComponent', () => {
     });
 
     it('redirects to the library', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/library/comics');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/library');
     });
   });
 

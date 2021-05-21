@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { DownloadBlockedPagesEffects } from './download-blocked-pages.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { BLOCKED_PAGE_FILE } from '@app/blocked-pages/blocked-pages.fixtures';
 import {
   blockedPagesDownloaded,

@@ -31,7 +31,7 @@ import {
   CollectionType,
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import { selectComicListCollection } from '@app/library/selectors/comic-list.selectors';
+import { selectComicListCollection } from '@app/comic-book/selectors/comic-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatSort } from '@angular/material/sort';
@@ -64,7 +64,7 @@ export class CollectionListComponent
       this.collectionType = collectionTypeFromString(this.routableTypeName);
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
-        this.router.navigateByUrl('/library/comics');
+        this.router.navigateByUrl('/library');
       } else {
         this.collectionSubscription = this.store
           .select(selectComicListCollection, {

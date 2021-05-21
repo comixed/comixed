@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Page } from '@app/library';
+import { Page } from '@app/comic-book/models/page';
 
 export const setBlockedState = createAction(
   '[Block Page] Sets the blocked state',

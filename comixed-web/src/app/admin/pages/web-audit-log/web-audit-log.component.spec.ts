@@ -39,7 +39,7 @@ import {
 } from '@app/admin/actions/web-audit-log.actions';
 import { WEB_AUDIT_LOG_ENTRY_1 } from '@app/admin/admin.fixtures';
 import { Confirmation } from '@app/core/models/confirmation';
-import { ConfirmationService } from '@app/core';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('WebAuditLogComponent', () => {
   const TIMESTAMP = new Date().getTime();

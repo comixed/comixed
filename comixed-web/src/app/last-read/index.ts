@@ -30,8 +30,6 @@ import {
   UpdateReadStatusState
 } from '@app/last-read/reducers/update-read-status.reducer';
 
-export * from './last-read.models';
-
 interface RouterStateUrl {
   url: string;
   params: Params;

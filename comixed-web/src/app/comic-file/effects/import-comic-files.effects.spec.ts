@@ -27,7 +27,7 @@ import {
   COMIC_FILE_4
 } from '@app/comic-file/comic-file.fixtures';
 import { ComicImportService } from '@app/comic-file/services/comic-import.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';

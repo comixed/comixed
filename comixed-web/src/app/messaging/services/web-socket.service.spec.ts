@@ -22,12 +22,12 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import * as WebStomp from 'webstomp-client';
 import { Client, Frame, Subscription } from 'webstomp-client';
-import { TokenService } from '@app/core';
 import {
   messagingStarted,
   messagingStopped,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
+import { TokenService } from '@app/core/services/token.service';
 
 describe('WebSocketService', () => {
   const initialState = {};

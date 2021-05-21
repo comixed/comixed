@@ -20,13 +20,13 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
-import { TokenService } from '@app/core';
 import {
   HTTP_AUTHORIZATION_HEADER,
   HTTP_REQUESTED_WITH_HEADER,
   HTTP_XML_REQUEST
 } from '@app/app.constants';
 import { retry, tap } from 'rxjs/operators';
+import { TokenService } from '@app/core/services/token.service';
 
 @Injectable()
 export class HttpInterceptor implements HttpInterceptor {

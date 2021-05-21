@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicFile } from '@app/comic-file';
+import { ComicFile } from '@app/comic-file/models/comic-file';
 
 export const sendComicFiles = createAction(
   '[Import Comic Files] Begin importing the selected comic files',

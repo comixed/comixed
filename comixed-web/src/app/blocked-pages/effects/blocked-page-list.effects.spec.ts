@@ -23,7 +23,7 @@ import { BlockedPageListEffects } from './blocked-page-list.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   BLOCKED_PAGE_1,

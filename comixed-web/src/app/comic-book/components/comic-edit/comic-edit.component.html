@@ -1,0 +1,141 @@
+<mat-toolbar>
+  <button
+    id="save-comic-changes"
+    *ngIf="!multimode"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="primary"
+    [disabled]="!comicForm.valid"
+    (click)="onSaveChanges()"
+  >
+    <mat-icon>save</mat-icon>
+    <mat-label>{{ "button.save" | translate }}</mat-label>
+  </button>
+  <button
+    id="undo-comic-changes"
+    *ngIf="!multimode"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="warn"
+    [disabled]="comicForm.untouched"
+    (click)="onUndoChanges()"
+  >
+    <mat-icon>undo</mat-icon>
+    <mat-label>{{ "button.reset" | translate }}</mat-label>
+  </button>
+  <div class="cx-spacer"></div>
+  <mat-select
+    id="maximum-records-select"
+    [(value)]="maximumRecords"
+    (selectionChange)="onMaximumRecordsChanged($event.value)"
+  >
+    <mat-option
+      *ngFor="let option of maximumRecordsOptions"
+      [value]="option.value"
+    >
+      {{ option.label | translate }}
+    </mat-option>
+  </mat-select>
+  <button
+    id="skip-cache-button"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="accent"
+    [matTooltip]="
+      'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
+    "
+    (click)="onSkipCacheToggle()"
+  >
+    <mat-icon *ngIf="skipCache">block</mat-icon>
+    <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
+    <mat-label>{{ "button.skip-cache" | translate }}</mat-label>
+  </button>
+  <button
+    id="scrape-comic"
+    class="cx-action-button cx-margin-left-5"
+    mat-flat-button
+    color="accent"
+    [disabled]="!comicForm.valid && hasApiKey"
+    (click)="onFetchScrapingVolumes()"
+  >
+    <mat-icon>cloud_circle</mat-icon>
+    <mat-label>{{ "button.scrape" | translate }}</mat-label>
+  </button>
+</mat-toolbar>
+<form [formGroup]="comicForm">
+  <mat-form-field class="cx-width-100">
+    <mat-label>{{ "comic-book.label.api-key" | translate }}</mat-label>
+    <input
+      id="api-key"
+      matInput
+      formControlName="apiKey"
+      [placeholder]="'comic-book.placeholder.api-key' | translate"
+    />
+    <button
+      id="save-api-key-button"
+      class="cx-margin-left-5"
+      mat-icon-button
+      matSuffix
+      color="primary"
+      (click)="onSaveApiKey()"
+    >
+      <mat-icon>save</mat-icon>
+    </button>
+    <button
+      id="reset-api-key-button"
+      class="cx-margin-left-5"
+      mat-icon-button
+      matSuffix
+      color="warn"
+      (click)="onResetApiKey()"
+    >
+      <mat-icon>undo</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field class="cx-width-100">
+    <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="publisher"
+      [placeholder]="'comic-book.placeholder.publisher' | translate"
+    />
+  </mat-form-field>
+  <mat-form-field class="cx-width-100">
+    <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="series"
+      [placeholder]="'comic-book.placeholder.series' | translate"
+      required
+    />
+    <mat-hint>
+      {{ "comic-book.hint.required-for-scraping" | translate }}
+    </mat-hint>
+    <mat-error *ngIf="comicForm.controls.series.errors?.required">
+      {{ "validation.field-required" | translate }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="cx-width-50">
+    <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="volume"
+      [placeholder]="'comic-book.placeholder.volume' | translate"
+    />
+  </mat-form-field>
+  <mat-form-field class="cx-width-50">
+    <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="issueNumber"
+      [placeholder]="'comic-book.placeholder.issue-number' | translate"
+      required
+    />
+    <mat-hint>
+      {{ "comic-book.hint.required-for-scraping" | translate }}
+    </mat-hint>
+    <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">
+      {{ "validation.field-required" | translate }}
+    </mat-error>
+  </mat-form-field>
+</form>

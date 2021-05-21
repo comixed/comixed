@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { BlockedPage } from '@app/blocked-pages/blocked-pages.model';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 export const loadBlockedPageList = createAction(
   '[Blocked Page List] Loads the blocked page list'

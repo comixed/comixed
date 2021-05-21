@@ -23,7 +23,7 @@ import {
   COMIC_2,
   COMIC_3,
   COMIC_4
-} from '@app/library/library.fixtures';
+} from '@app/comic-book/comic-book.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController

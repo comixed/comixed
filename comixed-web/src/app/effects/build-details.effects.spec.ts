@@ -23,7 +23,7 @@ import { BuildDetailsEffects } from './build-details.effects';
 import { BuildDetailsService } from '@app/services/build-details.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { BUILD_DETAILS } from '@app/app.fixtures';
 import {
   buildDetailsLoaded,

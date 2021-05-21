@@ -25,7 +25,7 @@ import {
   LOAD_COMIC_URL,
   SET_READ_STATE_URL
 } from '@app/library/library.constants';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 
 @Injectable({

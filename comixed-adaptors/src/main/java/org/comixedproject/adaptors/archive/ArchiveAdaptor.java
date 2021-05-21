@@ -91,6 +91,14 @@ public interface ArchiveAdaptor {
   Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException, IOException;
 
   /**
+   * Updates the metadata for the given comic.
+   *
+   * @param comic the comic
+   * @throws ArchiveAdaptorException if an error occurs
+   */
+  Comic updateComic(Comic comic) throws ArchiveAdaptorException;
+
+  /**
    * Encodes the provided comics into an encoded stream of data.
    *
    * <p>The provided map names the files with the key and the contents of the file as the value.

@@ -25,7 +25,7 @@ import {
   saveBlockedPage,
   saveBlockedPageFailed
 } from '../actions/blocked-page-detail.actions';
-import { BlockedPage } from '@app/blocked-pages';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 export const BLOCKED_PAGE_DETAIL_FEATURE_KEY = 'blocked_page_detail_state';
 

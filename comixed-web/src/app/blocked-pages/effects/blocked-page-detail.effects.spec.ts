@@ -22,7 +22,7 @@ import { Observable, of, throwError } from 'rxjs';
 
 import { BlockedPageDetailEffects } from './blocked-page-detail.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';

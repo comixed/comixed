@@ -36,12 +36,13 @@ import {
 } from '@app/user/actions/user.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '@app/user/services/user.service';
-import { AlertService, TokenService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { resetDisplayOptions } from '@app/library/actions/display.actions';
-import { User } from '@app/user';
+import { AlertService } from '@app/core/services/alert.service';
+import { TokenService } from '@app/core/services/token.service';
+import { User } from '@app/user/models/user';
 
 @Injectable()
 export class UserEffects {

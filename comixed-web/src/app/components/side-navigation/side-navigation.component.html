@@ -15,7 +15,7 @@
       <a
         *ngIf="!!user"
         mat-list-item
-        routerLink="/library/comics/all"
+        routerLink="/library/all"
         routerLinkActive="active"
       >
         {{ "navigation.option.all-comics" | translate }}
@@ -23,7 +23,7 @@
       <a
         *ngIf="!!user"
         mat-list-item
-        routerLink="/library/comics/unread"
+        routerLink="/library/unread"
         routerLinkActive="active"
       >
         {{ "navigation.option.unread-comics" | translate }}
@@ -31,7 +31,7 @@
       <a
         *ngIf="!!user"
         mat-list-item
-        routerLink="/library/comics/deleted"
+        routerLink="/library/deleted"
         routerLinkActive="active"
       >
         {{ "navigation.option.deleted-comics" | translate }}

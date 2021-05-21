@@ -1,0 +1,94 @@
+{
+  "comic-book": {
+    "hint": {
+      "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails..."
+    },
+    "label": {
+      "added-date": "Ajouté à la bibliothèque le",
+      "archive-type": "Fichier de type :",
+      "api-key": "API Key",
+      "characters": "Personnages dans ce numéro ({count})",
+      "cover-date": "Date de la couverture",
+      "comic-edit": "Éditer les détails",
+      "comic-format": "Format",
+      "comic-overview": "Aperçu",
+      "comic-pages": "Pages",
+      "coic-state": "State",
+      "comic-story": "Histoire",
+      "credits": "Équipe créative ({count})",
+      "description": "Description de ce numéro",
+      "file-details": "Détails du fichier de la Bande Dessinée",
+      "file-entries": "Nombre d'éléments",
+      "filename": "Nom du fichier",
+      "filesize": "Taille du fichier",
+      "imprint": "Mentions légales",
+      "issue-details": "Détails du numéro",
+      "issue-number": "Numéro #",
+      "last-read-date": "Dernière lecture",
+      "locations": "Lieux dans ce numéro ({count})",
+      "other-details": "Autres détails de cette Bande Dessinée",
+      "page-count": "# de pages",
+      "publisher": "Éditeur",
+      "scan-type": "Type de scan",
+      "series": "Nom de série",
+      "sort-name": "Nom pour le tri",
+      "stories": "Arcs naratifs dans ce numéro ({count})",
+      "teams": "Équipes dans ce numéro ({count})",
+      "volume": "Volume"
+    },
+    "load-comic": {
+      "effect-failure": "Échec du chargement de la Bande Dessinée."
+    },
+    "placeholder": {
+      "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
+      "issue-number": "Le numéro de cette Bande Dessinée...",
+      "publisher": "L'éditeur...",
+      "series": "Le nom de la série...",
+      "volume": "Le volume..."
+    },
+    "save-changes": {
+      "effect-failure": "Failed to save changes.",
+      "effect-success": "Changes saved.",
+      "message": "Are you sure you want to manual changes to this comic?",
+      "title": "Save Changes To Comic"
+    },
+    "text": {
+      "comic-changed": "Changed",
+      "file-entries": "Il y a {count, plural, =1{un fichier} other{# fichiers}} dans cette archive.",
+      "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
+      "state-ADDED": "Unchanged",
+      "state-CHANGED": "Changed",
+      "state-DELETED": "Marked For Deletion",
+      "state-STABLE": "Unchanged"
+    },
+    "tooltip": {
+      "blocked-page": "Les pages comme celle-ci sont bloquées...",
+      "download-comic": "Télécharger cette Bande Dessinée...",
+      "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
+      "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",
+      "mark-read": "Mark this comic as read.",
+      "mark-unread": "Mark this comic as unread.",
+      "update-comic-info": "Update the metadata in this comic file."
+    },
+    "undo-changes": {
+      "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",
+      "title": "Annuler les changements"
+    },
+    "update-comic-info": {
+      "confirmation-message": "Update the metadata in this comic book?",
+      "confirmation-title": "Update Comic Metadata",
+      "effect-failure": "Failed to update ComicInfo.xml.",
+      "effect-success": "Successfully updated ComicInfo.xml"
+    }
+  },
+  "comic-format": {
+    "load-formats": {
+      "effect-failure": "Failed to load comic formats."
+    }
+  },
+  "scan-type": {
+    "load-scan-types": {
+      "effect-failure": "Failed to load scan types."
+    }
+  }
+}

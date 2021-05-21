@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserPreferencesPageComponent } from './user-preferences-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialUserState,

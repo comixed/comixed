@@ -32,7 +32,7 @@ import {
   userLoggedOut,
   userPreferenceSaved
 } from '../actions/user.actions';
-import { User } from '@app/user';
+import { User } from '@app/user/models/user';
 
 export const USER_FEATURE_KEY = 'user_state';
 

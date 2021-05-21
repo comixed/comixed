@@ -22,8 +22,8 @@ import { Observable, of, throwError } from 'rxjs';
 
 import { UpdateReadStatusEffects } from './update-read-status.effects';
 import { LastReadService } from '@app/last-read/services/last-read.service';
-import { AlertService } from '@app/core';
-import { COMIC_4 } from '@app/library/library.fixtures';
+import { AlertService } from '@app/core/services/alert.service';
+import { COMIC_4 } from '@app/comic-book/comic-book.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';

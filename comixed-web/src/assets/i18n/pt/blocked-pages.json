@@ -1,10 +1,4 @@
 {
-  "block-page": {
-    "set-state": {
-      "effect-failure": "Failed to {block,select,true{block} other{unblock}} page hash.",
-      "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."
-    }
-  },
   "blocked-page": {
     "editing": {
       "reset-message": "Discard your changes to this blocked page type?",
@@ -19,7 +13,11 @@
       "label": "Hash Label"
     },
     "load-by-hash-effect-error": "Failed to load blocked page for hash: {hash}",
-    "page-title": "Blocked Page Details: {hash}"
+    "page-title": "Blocked Page Details: {hash}",
+    "set-state": {
+      "effect-failure": "Failed to {block,select,true{block} other{unblock}} page hash.",
+      "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."
+    }
   },
   "blocked-page-list": {
     "delete-entries": {

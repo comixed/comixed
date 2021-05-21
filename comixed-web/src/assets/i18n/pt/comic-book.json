@@ -1,0 +1,94 @@
+{
+  "comic-book": {
+    "hint": {
+      "required-for-scraping": "This value is required for scraping..."
+    },
+    "label": {
+      "added-date": "Added To Library",
+      "archive-type": "File Encoded As",
+      "api-key": "API Key",
+      "characters": "Characters In This Issue ({count})",
+      "cover-date": "Cover Date",
+      "comic-edit": "Edit Details",
+      "comic-format": "Comic Format",
+      "comic-overview": "Overview",
+      "comic-pages": "Pages",
+      "comic-state": "State",
+      "comic-story": "Story",
+      "credits": "Creative Team ({count})",
+      "description": "Issue Description",
+      "file-details": "Comic File Details",
+      "file-entries": "File Entries",
+      "filename": "Filename",
+      "filesize": "Filesize",
+      "imprint": "Imprint",
+      "issue-details": "Issue Details",
+      "issue-number": "Issue #",
+      "last-read-date": "Last Read",
+      "locations": "Locations In This Issue ({count})",
+      "other-details": "Other Comic Details",
+      "page-count": "# Of Pages",
+      "publisher": "Publisher",
+      "scan-type": "Scan Type",
+      "series": "Series Name",
+      "sort-name": "Sort Name",
+      "stories": "Story Arcs In This Issue ({count})",
+      "teams": "Teams In This Issue ({count})",
+      "volume": "Volume"
+    },
+    "load-comic": {
+      "effect-failure": "Failed to load comic."
+    },
+    "placeholder": {
+      "api-key": "The API key used when scraping comics...",
+      "issue-number": "The issue number...",
+      "publisher": "The publisher...",
+      "series": "The series name...",
+      "volume": "The volume..."
+    },
+    "save-changes": {
+      "effect-failure": "Failed to save changes.",
+      "effect-success": "Changes saved.",
+      "message": "Are you sure you want to manual changes to this comic?",
+      "title": "Save Changes To Comic"
+    },
+    "text": {
+      "comic-changed": "Changed",
+      "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
+      "filesize": "{size, plural, =1{One byte} other{# bytes}}",
+      "state-ADDED": "Unchanged",
+      "state-CHANGED": "Changed",
+      "state-DELETED": "Marked For Deletion",
+      "state-STABLE": "Unchanged"
+    },
+    "tooltip": {
+      "blocked-page": "Pages like this are blocked...",
+      "download-comic": "Download this comic...",
+      "go-to-next-comic": "Go to the next comic in this series...",
+      "go-to-previous-comic": "Go to the previous comic in this series...",
+      "mark-read": "Mark this comic as read.",
+      "mark-unread": "Mark this comic as unread.",
+      "update-comic-info": "Update the metadata in this comic file."
+    },
+    "undo-changes": {
+      "message": "Are you sure you want to undo changes to this comic?",
+      "title": "Undo Changes"
+    },
+    "update-comic-info": {
+      "confirmation-message": "Update the metadata in this comic book?",
+      "confirmation-title": "Update Comic Metadata",
+      "effect-failure": "Failed to update ComicInfo.xml.",
+      "effect-success": "Successfully updated ComicInfo.xml"
+    }
+  },
+  "comic-format": {
+    "load-formats": {
+      "effect-failure": "Failed to load comic formats."
+    }
+  },
+  "scan-type": {
+    "load-scan-types": {
+      "effect-failure": "Failed to load scan types."
+    }
+  }
+}

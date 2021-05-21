@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.comixedproject.adaptors.ComicInfoEntryAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -43,7 +44,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
  * <code>AbstractArchiveAdaptor</code> provides a foundation for creating new instances of {@link
@@ -79,20 +79,21 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     this.entryLoaders.clear();
     for (EntryLoaderForType entry : this.loaders) {
       if (entry.isValid()) {
-        if (this.context.containsBean(entry.bean)) {
-          this.entryLoaders.put(entry.type, (EntryLoader) this.context.getBean(entry.bean));
-          if (entry.entryType == ArchiveEntryType.IMAGE) {
-            log.debug("Adding image adaptor: {}={}", entry.entryType, entry.bean);
-            this.imageTypes.add(entry.type);
+        if (this.context.containsBean(entry.getBean())) {
+          this.entryLoaders.put(
+              entry.getType(), (EntryLoader) this.context.getBean(entry.getBean()));
+          if (entry.getEntryType() == ArchiveEntryType.IMAGE) {
+            log.debug("Adding image adaptor: {}={}", entry.getEntryType(), entry.getBean());
+            this.imageTypes.add(entry.getType());
           }
         } else {
-          log.debug("No such entry adaptor bean: {}", entry.bean);
+          log.debug("No such entry adaptor bean: {}", entry.getBean());
         }
       } else {
-        if ((entry.type == null) || entry.type.isEmpty()) {
+        if (StringUtils.isEmpty(entry.getType())) {
           log.debug("Missing type for entry adaptor");
         }
-        if ((entry.bean == null) || entry.bean.isEmpty()) {
+        if (StringUtils.isEmpty(entry.getBean())) {
           log.debug("Missing bean for entry adaptor");
         }
       }
@@ -244,25 +245,25 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   @Override
-  public Comic saveComic(Comic source, boolean renamePages)
+  public Comic saveComic(Comic comic, boolean renamePages)
       throws ArchiveAdaptorException, IOException {
-    log.debug("Saving comic: {}", source.getFilename());
+    log.debug("Saving comic: {}", comic.getFilename());
 
     String tempFilename;
     try {
       tempFilename =
           File.createTempFile(
-                  FilenameUtils.removeExtension(source.getFilename()) + "-temporary", "tmp")
+                  FilenameUtils.removeExtension(comic.getFilename()) + "-temporary", "tmp")
               .getAbsolutePath();
     } catch (IOException error) {
       throw new ArchiveAdaptorException("unable to write comic", error);
     }
 
-    this.saveComicInternal(source, tempFilename, renamePages);
+    this.saveComicInternal(comic, tempFilename, renamePages);
 
     String filename =
         this.comicFileUtils.findAvailableFilename(
-            FilenameUtils.removeExtension(source.getFilename()), 0, this.defaultExtension);
+            FilenameUtils.removeExtension(comic.getFilename()), 0, this.defaultExtension);
     var file1 = new File(tempFilename);
     var file2 = new File(filename);
     try {
@@ -283,6 +284,40 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     }
 
     return result;
+  }
+
+  @Override
+  public Comic updateComic(final Comic comic) throws ArchiveAdaptorException {
+    log.debug("Updating comic: {}", comic.getFilename());
+
+    String tempFilename;
+    try {
+      tempFilename =
+          File.createTempFile(
+                  FilenameUtils.removeExtension(comic.getFilename()) + "-temporary", "tmp")
+              .getAbsolutePath();
+
+      this.saveComicInternal(comic, tempFilename, false);
+    } catch (IOException error) {
+      throw new ArchiveAdaptorException("unable to write comic", error);
+    }
+
+    var file1 = new File(tempFilename);
+    var file2 = new File(comic.getFilename());
+    try {
+      log.debug("Copying {} to {}", tempFilename, comic.getFilename());
+      FileUtils.copyFile(file1, file2);
+    } catch (IOException error) {
+      throw new ArchiveAdaptorException("Unable to copy file", error);
+    }
+
+    try {
+      this.comicFileHandler.loadComic(comic);
+    } catch (ComicFileHandlerException error) {
+      throw new ArchiveAdaptorException("Error loading updated comic", error);
+    }
+
+    return comic;
   }
 
   /**
@@ -348,29 +383,5 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     }
     log.debug("Creating temporary file: " + filename);
     return result;
-  }
-
-  public static class EntryLoaderForType {
-    private String type;
-    private String bean;
-    private ArchiveEntryType entryType;
-
-    public boolean isValid() {
-      return !StringUtils.isEmpty(this.type)
-          && !StringUtils.isEmpty(this.bean)
-          && this.entryType != null;
-    }
-
-    public void setBean(String bean) {
-      this.bean = bean;
-    }
-
-    public void setType(String type) {
-      this.type = type;
-    }
-
-    public void setEntryType(ArchiveEntryType entryType) {
-      this.entryType = entryType;
-    }
   }
 }

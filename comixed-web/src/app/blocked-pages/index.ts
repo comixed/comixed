@@ -40,17 +40,15 @@ import {
   reducer as downloadBlockedPagesReducer
 } from '@app/blocked-pages/reducers/download-blocked-pages.reducer';
 import {
+  reducer as uploadBlockedPagesReducer,
   UPLOAD_BLOCKED_PAGES_FEATURE_KEY,
-  UploadedBlockedPagesState,
-  reducer as uploadBlockedPagesReducer
+  UploadedBlockedPagesState
 } from '@app/blocked-pages/reducers/upload-blocked-pages.reducer';
 import {
   DELETE_BLOCKED_PAGES_FEATURE_KEY,
   DeleteBlockedPagesState,
   reducer as deleteBlockedPagesReducer
 } from '@app/blocked-pages/reducers/delete-blocked-pages.reducer';
-
-export * from './blocked-pages.model';
 
 interface RouterStateUrl {
   url: string;
