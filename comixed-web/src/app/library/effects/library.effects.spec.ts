@@ -25,9 +25,9 @@ import {
   COMIC_2,
   COMIC_3,
   COMIC_4
-} from '@app/library/library.fixtures';
+} from '@app/comic-book/comic-book.fixtures';
 import { LibraryService } from '@app/library/services/library.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import {

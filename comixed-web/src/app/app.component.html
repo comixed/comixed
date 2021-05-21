@@ -1,13 +1,13 @@
-<div *ngIf="busy" class="cx-overlay">
-  <div class="cx-centered">
-    <mat-progress-spinner
-      diameter="100"
-      mode="indeterminate"
-      color="accent"
-    ></mat-progress-spinner>
-  </div>
-</div>
 <div id="cx-navigation-bar" class="cx-width-100 cx-height-100">
+  <div *ngIf="busy" class="cx-overlay">
+    <div class="cx-centered">
+      <mat-progress-spinner
+        diameter="100"
+        mode="indeterminate"
+        color="accent"
+      ></mat-progress-spinner>
+    </div>
+  </div>
   <cx-navigation-bar
     [user]="user"
     [sidebarOpened]="sidenav.opened"

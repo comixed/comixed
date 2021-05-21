@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { BlockedPage } from '@app/blocked-pages';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 export const deleteBlockedPages = createAction(
   '[Delete Blocked Pages] Delete blocked pages',

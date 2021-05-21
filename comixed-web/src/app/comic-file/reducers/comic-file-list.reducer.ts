@@ -17,7 +17,7 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import { ComicFile } from '@app/comic-file';
+import { ComicFile } from '@app/comic-file/models/comic-file';
 import {
   clearComicFileSelections,
   comicFilesLoaded,

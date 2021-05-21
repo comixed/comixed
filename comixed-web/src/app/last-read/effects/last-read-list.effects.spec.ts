@@ -30,7 +30,7 @@ import { LastReadService } from '@app/last-read/services/last-read.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { LoadLastReadEntriesResponse } from '@app/last-read/models/net/load-last-read-entries-response';
 import {
   lastReadDatesLoaded,

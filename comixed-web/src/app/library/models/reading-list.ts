@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 
 export interface ReadingList {
   id: number;

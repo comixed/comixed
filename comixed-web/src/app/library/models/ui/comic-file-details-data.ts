@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicFile } from '../../index';
+import { ComicFile } from '@app/comic-file/models/comic-file';
 
 export interface ComicFileDetailsData {
   file: ComicFile;

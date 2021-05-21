@@ -39,12 +39,13 @@ import {
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
 import { LoggerModule } from '@angular-ru/logger';
-import { AlertService, TokenService } from '@app/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { resetDisplayOptions } from '@app/library/actions/display.actions';
+import { TokenService } from '@app/core/services/token.service';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('UserEffects', () => {
   const USER = USER_READER;

@@ -27,13 +27,13 @@ import {
   updateComicReadStatusFailed
 } from '@app/last-read/actions/update-read-status.actions';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
 import {
   lastReadDateRemoved,
   lastReadDateUpdated
 } from '@app/last-read/actions/last-read-list.actions';
-import { LastRead } from '@app/last-read';
+import { LastRead } from '@app/last-read/models/last-read';
 
 @Injectable()
 export class UpdateReadStatusEffects {

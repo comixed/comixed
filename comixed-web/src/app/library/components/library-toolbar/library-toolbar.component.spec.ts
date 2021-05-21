@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryToolbarComponent } from './library-toolbar.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { COMIC_1, COMIC_2, COMIC_3 } from '@app/library/library.fixtures';
+import { COMIC_1, COMIC_2, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
 import {
   deselectComics,
   selectComics
@@ -33,7 +33,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { ConfirmationService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {
@@ -43,6 +42,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];

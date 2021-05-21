@@ -31,12 +31,12 @@ import {
 } from '@app/blocked-pages/selectors/blocked-page-detail.selectors';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { BlockedPage } from '@app/blocked-pages';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { filter } from 'rxjs/operators';
-import { ConfirmationService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
   selector: 'cx-blocked-page-detail-page',

@@ -21,13 +21,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 import {
   selectAllComics,
   selectSelectedComics
 } from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import {
   CHARACTERS_GROUP,
   LOCATIONS_GROUP,
@@ -80,7 +80,7 @@ export class LibraryGroupComponent implements OnInit, OnDestroy {
             { name: this.groupType }
           )
         );
-        this.router.navigate(['/library/comics/all']);
+        this.router.navigateByUrl('/library/all');
       } else {
         this.subscribeToUpdates();
       }

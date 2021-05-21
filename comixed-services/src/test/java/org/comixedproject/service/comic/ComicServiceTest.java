@@ -62,7 +62,7 @@ public class ComicServiceTest {
   private static final Date TEST_COVER_DATE = new Date();
   private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
 
-  @InjectMocks private ComicService comicService;
+  @InjectMocks private ComicService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicRepository comicRepository;
   @Mock private ComicDataAdaptor comicDataAdaptor;
@@ -119,7 +119,7 @@ public class ComicServiceTest {
                 Mockito.any(Date.class)))
         .thenReturn(nextComics);
 
-    final Comic result = comicService.getComic(TEST_COMIC_ID);
+    final Comic result = service.getComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(currentComic, result);
@@ -139,7 +139,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      comicService.deleteComic(TEST_COMIC_ID);
+      service.deleteComic(TEST_COMIC_ID);
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
@@ -149,7 +149,7 @@ public class ComicServiceTest {
   public void testDeleteComic() throws ComicException {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic, comicRecord);
 
-    final Comic result = comicService.deleteComic(TEST_COMIC_ID);
+    final Comic result = service.deleteComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comicRecord, result);
@@ -164,7 +164,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      comicService.restoreComic(TEST_COMIC_ID);
+      service.restoreComic(TEST_COMIC_ID);
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
@@ -175,7 +175,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comicRecord);
 
-    final Comic response = comicService.restoreComic(TEST_COMIC_ID);
+    final Comic response = service.restoreComic(TEST_COMIC_ID);
 
     assertNotNull(response);
     assertSame(comicRecord, response);
@@ -189,7 +189,7 @@ public class ComicServiceTest {
   public void testGetComicContentNonexistent() {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
 
-    final byte[] result = this.comicService.getComicContent(comic);
+    final byte[] result = this.service.getComicContent(comic);
 
     assertNull(result);
 
@@ -200,7 +200,7 @@ public class ComicServiceTest {
   public void testGetComicContent() {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
-    final byte[] result = this.comicService.getComicContent(comic);
+    final byte[] result = this.service.getComicContent(comic);
 
     assertNotNull(result);
     assertEquals(new File(TEST_COMIC_FILENAME).length(), result.length);
@@ -212,7 +212,7 @@ public class ComicServiceTest {
   public void testUpdateComicInvalidComic() throws ComicException {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
     try {
-      comicService.updateComic(TEST_COMIC_ID, incomingComic);
+      service.updateComic(TEST_COMIC_ID, incomingComic);
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
@@ -223,7 +223,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      comicService.updateComic(TEST_COMIC_ID, incomingComic);
+      service.updateComic(TEST_COMIC_ID, incomingComic);
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
@@ -241,7 +241,7 @@ public class ComicServiceTest {
     Mockito.when(incomingComic.getScanType()).thenReturn(TEST_SCAN_TYPE);
     Mockito.when(incomingComic.getFormat()).thenReturn(TEST_COMIC_FORMAT);
 
-    final Comic result = comicService.updateComic(TEST_COMIC_ID, incomingComic);
+    final Comic result = service.updateComic(TEST_COMIC_ID, incomingComic);
 
     assertNotNull(result);
     assertSame(comic, result);
@@ -262,7 +262,7 @@ public class ComicServiceTest {
   public void testSave() {
     Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comic);
 
-    final Comic result = this.comicService.save(comic);
+    final Comic result = this.service.save(comic);
 
     assertNotNull(result);
     assertSame(comic, result);
@@ -274,7 +274,7 @@ public class ComicServiceTest {
   public void testDelete() {
     Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
 
-    comicService.delete(comic);
+    service.delete(comic);
 
     Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
   }
@@ -286,7 +286,7 @@ public class ComicServiceTest {
                 Mockito.anyLong(), pageableCaptor.capture()))
         .thenReturn(comicList);
 
-    final List<Comic> result = comicService.getComicsById(TEST_COMIC_ID, TEST_MAXIMUM_COMICS);
+    final List<Comic> result = service.getComicsById(TEST_COMIC_ID, TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicList, result);
@@ -303,7 +303,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.findComicsToMove(pageRequestCaptor.capture()))
         .thenReturn(comicList);
 
-    final List<Comic> result = comicService.findComicsToMove(TEST_PAGE, TEST_MAXIMUM_COMICS);
+    final List<Comic> result = service.findComicsToMove(TEST_PAGE, TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicList, result);
@@ -321,7 +321,7 @@ public class ComicServiceTest {
   public void testFindByFilename() {
     Mockito.when(comicRepository.findByFilename(TEST_COMIC_FILENAME)).thenReturn(comic);
 
-    final Comic result = comicService.findByFilename(TEST_COMIC_FILENAME);
+    final Comic result = service.findByFilename(TEST_COMIC_FILENAME);
 
     assertNotNull(result);
     assertSame(comic, result);
@@ -334,7 +334,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      comicService.deleteMetadata(TEST_COMIC_ID);
+      service.deleteMetadata(TEST_COMIC_ID);
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
@@ -344,7 +344,7 @@ public class ComicServiceTest {
   public void testDeleteMetadata() throws ComicException {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic, comicRecord);
 
-    final Comic result = comicService.deleteMetadata(TEST_COMIC_ID);
+    final Comic result = service.deleteMetadata(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comicRecord, result);
@@ -353,5 +353,16 @@ public class ComicServiceTest {
     Mockito.verify(comicDataAdaptor, Mockito.times(1)).clear(comic);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comic, ComicEvent.metadataCleared);
+  }
+
+  @Test(expected = ComicException.class)
+  public void testUpdateComicInfoInvalidComicId() throws ComicException {
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      service.updateComicInfo(TEST_COMIC_ID);
+    } finally {
+      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    }
   }
 }

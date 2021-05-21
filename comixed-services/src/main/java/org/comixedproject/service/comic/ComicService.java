@@ -27,6 +27,10 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
+import org.comixedproject.adaptors.ComicInfoEntryAdaptor;
+import org.comixedproject.adaptors.archive.ArchiveAdaptor;
+import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
@@ -55,6 +59,8 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private PublishComicUpdateAction comicUpdatePublishAction;
+  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicInfoEntryAdaptor comicInfoEntryAdaptor;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -306,5 +312,44 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     this.comicStateHandler.fireEvent(comic, ComicEvent.metadataCleared);
     log.trace("Retrieving upated comic");
     return this.doGetComic(comicId);
+  }
+
+  /**
+   * Updates the metadata in the comic file.
+   *
+   * @param id the comic record id
+   * @return the updated comic
+   * @throws ComicException if the id is invalid or an archive error occurs
+   */
+  public Comic updateComicInfo(final long id) throws ComicException {
+    log.trace("Loading comic: id={}", id);
+    var comic = this.doGetComic(id);
+    log.trace("Retrieving archive adaptor");
+    final var archiveAdaptor = this.doGetArchiveAdaptor(comic);
+    try {
+      log.trace("Saving comic");
+      comic = archiveAdaptor.updateComic(comic);
+    } catch (ArchiveAdaptorException error) {
+      throw new ComicException("Failed to update comic file metadata", error);
+    }
+    log.trace("Firing comic state event: {}", ComicEvent.comicInfoUpdated);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.comicInfoUpdated);
+    log.trace("Loading updated comic");
+    final var result = this.doGetComic(id);
+    try {
+      log.trace("Publishing updated comic");
+      this.comicUpdatePublishAction.publish(comic);
+    } catch (PublishingException error) {
+      log.error("Failed to publish updated comic", error);
+    }
+    log.trace("Returning updated comic");
+    return result;
+  }
+
+  private ArchiveAdaptor doGetArchiveAdaptor(final Comic comic) throws ComicException {
+    final var result = comicFileHandler.getArchiveAdaptorFor(comic.getArchiveType());
+    if (result != null) return result;
+    throw new ComicException(
+        "No archive adaptor found for " + comic.getArchiveType().getMimeType());
   }
 }

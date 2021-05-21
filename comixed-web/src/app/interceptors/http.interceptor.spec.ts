@@ -19,7 +19,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpInterceptor } from './http.interceptor';
 import { LoggerModule } from '@angular-ru/logger';
-import { TokenService } from '@app/core';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 import {
   HttpClientTestingModule,
@@ -34,6 +33,7 @@ import {
   HTTP_REQUESTED_WITH_HEADER,
   HTTP_XML_REQUEST
 } from '@app/app.constants';
+import { TokenService } from '@app/core/services/token.service';
 
 const TEST_REQUEST_URL = 'http://localhost';
 

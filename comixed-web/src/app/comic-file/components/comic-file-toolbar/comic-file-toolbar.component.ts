@@ -20,8 +20,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { getUserPreference, User } from '@app/user';
-import { ComicFile } from '@app/library';
+import { getUserPreference } from '@app/user';
 import {
   IMPORT_MAXIMUM_RESULTS_DEFAULT,
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
@@ -34,6 +33,8 @@ import {
   setComicFilesSelectedState
 } from '@app/comic-file/actions/comic-file-list.actions';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
+import { ComicFile } from '@app/comic-file/models/comic-file';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-comic-file-toolbar',
@@ -48,7 +49,6 @@ export class ComicFileToolbarComponent {
 
   loadFilesForm: FormGroup;
 
-  const;
   maximumOptions = [
     { label: 'comic-files.label.maximum-all-files', value: 0 },
     { label: 'comic-files.label.maximum-10-files', value: 10 },

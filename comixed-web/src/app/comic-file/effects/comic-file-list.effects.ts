@@ -22,7 +22,7 @@ import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { ComicImportService } from '@app/comic-file/services/comic-import.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
   comicFilesLoaded,

@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { LastRead } from '@app/last-read';
+import { LastRead } from '@app/last-read/models/last-read';
 
 export const resetLastReadDates = createAction(
   '[Last Read List] Resets the feature state'

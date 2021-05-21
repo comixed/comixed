@@ -21,11 +21,10 @@ import { Subscription } from 'rxjs';
 import { ComicFile } from '@app/comic-file/models/comic-file';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { ConfirmationService, TitleService } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';
-import { getUserPreference, User } from '@app/user';
+import { getUserPreference } from '@app/user';
 import { Title } from '@angular/platform-browser';
 import {
   DELETE_BLOCKED_PAGES_DEFAULT,
@@ -47,6 +46,9 @@ import { selectComicImportState } from '@app/comic-file/selectors/comic-import.s
 import { selectImportComicFilesState } from '@app/comic-file/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TitleService } from '@app/core/services/title.service';
+import { User } from '@app/user/models/user';
 
 @Component({
   selector: 'cx-import-comics',

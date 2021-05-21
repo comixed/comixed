@@ -25,7 +25,7 @@ import {
   setReadStateFailed,
   updateComics
 } from '../actions/library.actions';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 

@@ -21,7 +21,7 @@ import {
   reducer,
   UpdateReadStatusState
 } from './update-read-status.reducer';
-import { COMIC_4 } from '@app/library/library.fixtures';
+import { COMIC_4 } from '@app/comic-book/comic-book.fixtures';
 import {
   comicReadStatusUpdated,
   updateComicReadStatus,

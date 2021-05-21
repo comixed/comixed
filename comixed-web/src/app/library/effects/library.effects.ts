@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LibraryService } from '@app/library/services/library.service';
 import { LoggerService } from '@angular-ru/logger';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
   readStateSet,

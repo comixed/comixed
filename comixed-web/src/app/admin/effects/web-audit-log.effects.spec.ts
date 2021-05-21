@@ -21,7 +21,6 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { WebAuditLogEffects } from './web-audit-log.effects';
 import { WebAuditLogService } from '@app/admin/services/web-audit-log.service';
-import { AlertService } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -41,6 +40,7 @@ import {
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LoadWebAuditLogEntriesResponse } from '@app/admin/models/net/load-web-audit-log-entries-response';
+import { AlertService } from '@app/core/services/alert.service';
 
 describe('WebAuditLogEffects', () => {
   const ENTRIES = [

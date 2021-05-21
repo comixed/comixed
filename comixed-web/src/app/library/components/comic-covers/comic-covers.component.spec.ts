@@ -37,14 +37,12 @@ import {
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { MatBadgeModule } from '@angular/material/badge';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
 import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
   COMIC_4
-} from '@app/library/library.fixtures';
+} from '@app/comic-book/comic-book.fixtures';
 import {
   deselectComics,
   selectComics,
@@ -56,6 +54,10 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
+import { ComicBookState } from '@app/comic-book/models/comic-book-state';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
+import { Confirmation } from '@app/core/models/confirmation';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -71,6 +73,7 @@ describe('ComicCoversComponent', () => {
   let store: MockStore<any>;
   let dialog: MatDialog;
   let translateService: TranslateService;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -91,7 +94,7 @@ describe('ComicCoversComponent', () => {
         MatDialogModule,
         MatMenuModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicCoversComponent);
@@ -101,6 +104,7 @@ describe('ComicCoversComponent', () => {
     dialog = TestBed.inject(MatDialog);
     spyOn(dialog, 'open');
     translateService = TestBed.inject(TranslateService);
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
 
@@ -224,6 +228,52 @@ describe('ComicCoversComponent', () => {
           setReadState({ comics: COMICS, read: READ })
         );
       });
+    });
+  });
+
+  describe('checking if a comic is changed', () => {
+    it('returns false when ADDED', () => {
+      expect(
+        component.isChanged({ ...COMIC, comicState: ComicBookState.ADDED })
+      ).toBeFalse();
+    });
+
+    it('returns true when CHANGED', () => {
+      expect(
+        component.isChanged({ ...COMIC, comicState: ComicBookState.CHANGED })
+      ).toBeTrue();
+    });
+
+    it('returns true when STABLE', () => {
+      expect(
+        component.isChanged({ ...COMIC, comicState: ComicBookState.STABLE })
+      ).toBeFalse();
+    });
+
+    it('returns true when DELETED', () => {
+      expect(
+        component.isChanged({ ...COMIC, comicState: ComicBookState.DELETED })
+      ).toBeFalse();
+    });
+  });
+
+  describe('updating the comic info', () => {
+    beforeEach(() => {
+      spyOn(
+        confirmationService,
+        'confirm'
+      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      component.onUpdateComicInfo(COMIC);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updateComicInfo({ comic: COMIC })
+      );
     });
   });
 });

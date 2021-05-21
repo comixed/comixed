@@ -35,8 +35,6 @@ import {
   reducer as importComicFilesReducer
 } from '@app/comic-file/reducers/import-comic-files.reducer';
 
-export * from './comic-file.models';
-
 interface RouterStateUrl {
   url: string;
   params: Params;

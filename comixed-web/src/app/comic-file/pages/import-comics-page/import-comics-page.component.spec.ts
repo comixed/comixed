@@ -40,11 +40,10 @@ import {
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/comic-file/comic-file.fixtures';
-import { ConfirmationService, TitleService } from '@app/core';
 import { Confirmation } from '@app/core/models/confirmation';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
-import { User } from '@app/user';
+import { User } from '@app/user/models/user';
 import { MatIconModule } from '@angular/material/icon';
 import { ComicFileToolbarComponent } from '@app/comic-file/components/comic-file-toolbar/comic-file-toolbar.component';
 import { ComicFileListComponent } from '@app/comic-file/components/comic-file-list/comic-file-list.component';
@@ -54,7 +53,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/comic-file/pipes/comic-file-cover-url.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { ComicPageComponent } from '@app/library/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/comic-book/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   DELETE_BLOCKED_PAGES_PREFERENCE,
@@ -70,6 +69,8 @@ import {
   IMPORT_COMIC_FILES_FEATURE_KEY,
   initialState as initialImportComicFilesState
 } from '@app/comic-file/reducers/import-comic-files.reducer';
+import { TitleService } from '@app/core/services/title.service';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;

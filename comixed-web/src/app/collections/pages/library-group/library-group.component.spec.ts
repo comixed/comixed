@@ -36,7 +36,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import {
   CHARACTERS_GROUP,
   LOCATIONS_GROUP,
@@ -45,7 +45,7 @@ import {
   STORIES_GROUP,
   TEAMS_GROUP
 } from '@app/library/library.constants';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {
   DISPLAY_FEATURE_KEY,
@@ -118,7 +118,7 @@ describe('LibraryGroupComponent', () => {
     store = TestBed.inject(MockStore);
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
+    spyOn(router, 'navigateByUrl');
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
     existingSubscription = TestBed.inject(
@@ -179,7 +179,7 @@ describe('LibraryGroupComponent', () => {
       });
 
       it('sends the user to the library page', () => {
-        expect(router.navigate).toHaveBeenCalledWith(['/library/comics/all']);
+        expect(router.navigateByUrl).toHaveBeenCalledWith('/library/all');
       });
     });
 

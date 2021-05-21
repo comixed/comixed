@@ -23,34 +23,34 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '../library/library.fixtures';
+} from '../comic-book/comic-book.fixtures';
 
 export const LAST_READ_1: LastRead = {
   id: 1,
-  comic: { id: COMIC_1.id },
+  comic: COMIC_1,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_2: LastRead = {
   id: 2,
-  comic: { id: COMIC_2.id },
+  comic: COMIC_2,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_3: LastRead = {
   id: 3,
-  comic: { id: COMIC_3.id },
+  comic: COMIC_3,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_4: LastRead = {
   id: 4,
-  comic: { id: COMIC_4.id },
+  comic: COMIC_4,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_5: LastRead = {
   id: 5,
-  comic: { id: COMIC_5.id },
+  comic: COMIC_5,
   lastRead: new Date().getTime()
 };

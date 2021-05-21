@@ -21,11 +21,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { BlockPageEffects } from './block-page.effects';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { PAGE_2 } from '@app/library/library.fixtures';
+import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
   blockedStateSet,

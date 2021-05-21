@@ -25,10 +25,10 @@ import {
 } from '@app/blocked-pages/actions/blocked-page-list.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/logger';
-import { BlockedPage } from '@app/blocked-pages';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 import { of } from 'rxjs';
 
 @Injectable()

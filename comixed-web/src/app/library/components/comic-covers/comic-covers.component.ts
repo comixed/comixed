@@ -24,7 +24,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
@@ -40,6 +40,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { PAGINATION_DEFAULT } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
+import { ComicBookState } from '@app/comic-book/models/comic-book-state';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TranslateService } from '@ngx-translate/core';
+import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -66,7 +70,9 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {}
 
   get comics(): Comic[] {
@@ -125,5 +131,24 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.toolbar.paginator;
+  }
+
+  isChanged(comic: Comic): boolean {
+    return comic.comicState === ComicBookState.CHANGED;
+  }
+
+  onUpdateComicInfo(comic: Comic): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'comic-book.update-comic-info.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'comic-book.update-comic-info.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Updating comic info:', comic);
+        this.store.dispatch(updateComicInfo({ comic }));
+      }
+    });
   }
 }

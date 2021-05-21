@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { BlockedPage } from '@app/blocked-pages';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 
 export const uploadBlockedPages = createAction(
   '[Upload Blocked Pages] Upload blocked pages',

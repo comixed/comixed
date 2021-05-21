@@ -27,7 +27,6 @@ import {
 
 export * from '@app/core/core.constants';
 export * from '@app/core/core.functions';
-export * from '@app/core/core.models';
 
 export {
   interpolate,

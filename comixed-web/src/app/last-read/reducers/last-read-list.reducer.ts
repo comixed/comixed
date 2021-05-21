@@ -25,7 +25,7 @@ import {
   loadLastReadDatesFailed,
   resetLastReadDates
 } from '../actions/last-read-list.actions';
-import { LastRead } from '@app/last-read';
+import { LastRead } from '@app/last-read/models/last-read';
 
 export const LAST_READ_LIST_FEATURE_KEY = 'last_read_list_state';
 

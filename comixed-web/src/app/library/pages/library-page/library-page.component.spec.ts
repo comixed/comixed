@@ -31,7 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
-import { TitleService } from '@app/core';
+import { TitleService } from '@app/core/services/title.service';
 import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -58,8 +58,8 @@ import { DeletedComicsPipe } from '@app/library/pipes/deleted-comics.pipe';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/library/reducers/comic-list.reducer';
-import { COMIC_1, COMIC_3 } from '@app/library/library.fixtures';
+} from '@app/comic-book/reducers/comic-list.reducer';
+import { COMIC_1, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
 
 describe('LibraryPageComponent', () => {
   const initialState = {

@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/library';
+import { Comic } from '@app/comic-book/models/comic';
 
 export const updateComics = createAction(
   '[Library] Library updates received',

@@ -67,6 +67,7 @@ import { BlockedPagesModule } from '@app/blocked-pages/blocked-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
 import { LastReadModule } from '@app/last-read/last-read.module';
 import { ComicFileModule } from '@app/comic-file/comic-file.module';
+import { ComicBookModule } from '@app/comic-book/comic-book.module';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { ComicFileModule } from '@app/comic-file/comic-file.module';
     AdminModule,
     MessagingModule,
     UserModule,
+    ComicBookModule.forRoot(),
     ComicFileModule,
     LibraryModule,
     BlockedPagesModule,

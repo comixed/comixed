@@ -20,7 +20,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from '@app/pages/home/home.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TitleService } from '@app/core';
+import { TitleService } from '@app/core/services/title.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
   initialState as initialServerStatusState,

@@ -56,7 +56,7 @@ import {
   blockedPageListUpdated
 } from '@app/blocked-pages/actions/blocked-page-list.actions';
 import { Subscription } from 'webstomp-client';
-import { PAGE_2 } from '@app/library/library.fixtures';
+import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
 

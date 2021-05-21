@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
 import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { AlertService } from '@app/core';
+import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
   blockedStateSet,
@@ -43,7 +43,7 @@ export class BlockPageEffects {
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
-                  'block-page.set-state.effect-success',
+                  'blocked-page.set-state.effect-success',
                   { blocked: action.blocked }
                 )
               )
@@ -53,7 +53,7 @@ export class BlockPageEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'block-page.set-state.effect-failure',
+                  'blocked-page.set-state.effect-failure',
                   { blocked: action.blocked }
                 )
               );
