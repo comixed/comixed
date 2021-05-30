@@ -1,27 +1,27 @@
-<mat-toolbar>
+<mat-toolbar class="cx-primary-light-background">
   <button
     id="save-comic-changes"
     *ngIf="!multimode"
-    class="cx-action-button cx-margin-left-5"
-    mat-flat-button
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
     color="primary"
+    [matTooltip]="'comic-book.tooltip.save-changes' | translate"
     [disabled]="!comicForm.valid"
     (click)="onSaveChanges()"
   >
     <mat-icon>save</mat-icon>
-    <mat-label>{{ "button.save" | translate }}</mat-label>
   </button>
   <button
     id="undo-comic-changes"
     *ngIf="!multimode"
-    class="cx-action-button cx-margin-left-5"
-    mat-flat-button
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
     color="warn"
+    [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
     [disabled]="comicForm.untouched"
     (click)="onUndoChanges()"
   >
     <mat-icon>undo</mat-icon>
-    <mat-label>{{ "button.reset" | translate }}</mat-label>
   </button>
   <div class="cx-spacer"></div>
   <mat-select
@@ -38,8 +38,8 @@
   </mat-select>
   <button
     id="skip-cache-button"
-    class="cx-action-button cx-margin-left-5"
-    mat-flat-button
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
     color="accent"
     [matTooltip]="
       'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
@@ -48,18 +48,17 @@
   >
     <mat-icon *ngIf="skipCache">block</mat-icon>
     <mat-icon *ngIf="!skipCache">remove_circle_outline</mat-icon>
-    <mat-label>{{ "button.skip-cache" | translate }}</mat-label>
   </button>
   <button
     id="scrape-comic"
-    class="cx-action-button cx-margin-left-5"
-    mat-flat-button
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
     color="accent"
+    [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
     [disabled]="!comicForm.valid && hasApiKey"
     (click)="onFetchScrapingVolumes()"
   >
     <mat-icon>cloud_circle</mat-icon>
-    <mat-label>{{ "button.scrape" | translate }}</mat-label>
   </button>
 </mat-toolbar>
 <form [formGroup]="comicForm">

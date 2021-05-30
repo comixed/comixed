@@ -67,7 +67,6 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   sendComicFilesStateSubscription: Subscription;
   selectedFilesSubscription: Subscription;
   selectedFiles: ComicFile[];
-  busy = false;
   pageSize = PAGE_SIZE_DEFAULT;
   ignoreMetadata = false;
   deleteBlockedPages = false;
@@ -122,12 +121,14 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
       .subscribe(selectedFiles => (this.selectedFiles = selectedFiles));
     this.comicFileListStateSubscription = this.store
       .select(selectComicFileListState)
-      .subscribe(state => this.setBusyState({ loading: state.loading }));
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.loading }))
+      );
     this.sendComicFilesStateSubscription = this.store
       .select(selectImportComicFilesState)
-      .subscribe(state => {
-        this.setBusyState({ sending: state.sending });
-      });
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.sending }))
+      );
     this.comicImportStateSubscription = this.store
       .select(selectComicImportState)
       .subscribe(state => (this.importing = state.importing));
@@ -148,6 +149,7 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   }
 
   onCurrentFile(file: ComicFile): void {
+    console.log('*** file:', file);
     this.logger.debug('Showing details for file:', file);
     if (!!file) {
       this.dialog.open(ComicFileDetailsComponent, {
@@ -184,16 +186,5 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('comic-files.tab-title')
     );
-  }
-
-  private setBusyState(args: { sending?: boolean; loading?: boolean }): void {
-    if (!!args.sending) {
-      this.sending = args.sending;
-    }
-    if (!!args.loading) {
-      this.loading = args.loading;
-    }
-    this.busy = this.sending || this.loading;
-    this.store.dispatch(setBusyState({ enabled: this.busy }));
   }
 }

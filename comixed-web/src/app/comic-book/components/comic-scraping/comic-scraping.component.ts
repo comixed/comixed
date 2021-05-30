@@ -46,7 +46,7 @@ import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 
-export const MATCHABILITY = 'matchability';
+export const MATCHABILITY = 'sortOrder';
 export const EXACT_MATCH = 2;
 export const EXACT_MATCH_TEXT = 'scraping.text.exact-match';
 export const NEAR_MATCH = 1;
@@ -123,6 +123,7 @@ export class ComicScrapingComponent
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (element, property) => {
       switch (property) {
         case MATCHABILITY:
@@ -131,7 +132,6 @@ export class ComicScrapingComponent
           return element.item[property];
       }
     };
-    this.dataSource.sort = this.sort;
   }
 
   onVolumeSelected(volume: ScrapingVolume): void {

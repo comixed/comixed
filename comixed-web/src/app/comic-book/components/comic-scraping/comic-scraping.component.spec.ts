@@ -51,10 +51,11 @@ import {
   scrapeComic
 } from '@app/comic-book/actions/scraping.actions';
 import { Confirmation } from '@app/core/models/confirmation';
-import { MatchabilityPipe } from '@app/comic-book/pipes/matchability.pipe';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ScrapingIssueDetailComponent } from '@app/comic-book/components/scraping-issue-detail/scraping-issue-detail.component';
 
 describe('ComicScrapingComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -77,7 +78,7 @@ describe('ComicScrapingComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicScrapingComponent, MatchabilityPipe],
+      declarations: [ComicScrapingComponent, ScrapingIssueDetailComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -88,7 +89,8 @@ describe('ComicScrapingComponent', () => {
         MatToolbarModule,
         MatIconModule,
         MatFormFieldModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();

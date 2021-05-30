@@ -3,12 +3,6 @@
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 <div *ngIf="!importing">
-  <cx-comic-file-details
-    *ngIf="currentFile"
-    [file]="currentFile"
-    [selected]="currentFileSelected"
-    [pageSize]="pageSize"
-  ></cx-comic-file-details>
   <cx-comic-file-toolbar
     [user]="user"
     [comicFiles]="files"

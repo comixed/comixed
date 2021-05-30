@@ -18,10 +18,10 @@
 
 import {
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
-  Output,
-  EventEmitter
+  Output
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -63,8 +63,18 @@ export class ComicPageComponent implements OnDestroy {
     });
   }
 
+  private _imageWidth = null;
+
   get imageWidth(): string {
-    return this.pageSize === -1 ? 'auto' : `${this.pageSize}px`;
+    return this.pageSize === -1
+      ? !!this._imageWidth
+        ? this._imageWidth
+        : 'auto'
+      : `${this.pageSize}px`;
+  }
+
+  @Input() set imageWidth(width) {
+    this._imageWidth = width;
   }
 
   ngOnDestroy(): void {

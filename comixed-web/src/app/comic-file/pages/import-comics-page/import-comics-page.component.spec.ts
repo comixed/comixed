@@ -192,7 +192,6 @@ describe('ImportComicsPageComponent', () => {
   describe('when loading files', () => {
     describe('when loading starts', () => {
       beforeEach(() => {
-        component.busy = false;
         store.setState({
           ...initialState,
           [COMIC_FILE_LIST_FEATURE_KEY]: {
@@ -200,10 +199,6 @@ describe('ImportComicsPageComponent', () => {
             loading: true
           }
         });
-      });
-
-      it('sets the busy flag', () => {
-        expect(component.busy).toBeTrue();
       });
 
       it('fires an action', () => {
@@ -215,7 +210,6 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when loading stops', () => {
       beforeEach(() => {
-        component.busy = true;
         store.setState({
           ...initialState,
           [COMIC_FILE_LIST_FEATURE_KEY]: {
@@ -223,10 +217,6 @@ describe('ImportComicsPageComponent', () => {
             loading: false
           }
         });
-      });
-
-      it('clears the busy flag', () => {
-        expect(component.busy).toBeFalse();
       });
 
       it('fires an action', () => {
@@ -264,7 +254,6 @@ describe('ImportComicsPageComponent', () => {
   describe('when sending files', () => {
     describe('when sending starts', () => {
       beforeEach(() => {
-        component.busy = false;
         store.setState({
           ...initialState,
           [IMPORT_COMIC_FILES_FEATURE_KEY]: {
@@ -272,10 +261,6 @@ describe('ImportComicsPageComponent', () => {
             sending: true
           }
         });
-      });
-
-      it('sets the busy flag', () => {
-        expect(component.busy).toBeTrue();
       });
 
       it('fires an action', () => {
@@ -287,7 +272,6 @@ describe('ImportComicsPageComponent', () => {
 
     describe('when sending stops', () => {
       beforeEach(() => {
-        component.busy = true;
         store.setState({
           ...initialState,
           [IMPORT_COMIC_FILES_FEATURE_KEY]: {
@@ -295,10 +279,6 @@ describe('ImportComicsPageComponent', () => {
             sending: false
           }
         });
-      });
-
-      it('clears the busy flag', () => {
-        expect(component.busy).toBeFalse();
       });
 
       it('fires an action', () => {

@@ -9,51 +9,47 @@
   <div class="cx-spacer"></div>
   <button
     id="scrape-all-button"
-    mat-flat-button
+    mat-icon-button
     color="primary"
-    class="cx-action-button cx-margin-right-5"
+    class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selected.length"
     [matTooltip]="'library.tooltip.scrape-comics' | translate"
     (click)="onScrapeComics()"
   >
     <mat-icon>plagiarism</mat-icon>
-    <mat-label>{{ "button.scrape" | translate }}</mat-label>
   </button>
   <button
     id="select-all-button"
-    mat-flat-button
+    mat-icon-button
     color="primary"
-    class="cx-action-button cx-margin-right-5"
+    class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!comics.length"
     [matTooltip]="'library.tooltip.select-all' | translate"
     (click)="onSelectAll()"
   >
     <mat-icon>check_box</mat-icon>
-    <mat-label>{{ "button.select-all" | translate }}</mat-label>
   </button>
   <button
     id="deselect-all-button"
-    mat-flat-button
+    mat-icon-button
     color="warn"
-    class="cx-action-button cx-margin-right-5"
+    class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selected.length"
     [matTooltip]="'library.tooltip.deselect-all' | translate"
     (click)="onDeselectAll()"
   >
     <mat-icon>check_box</mat-icon>
-    <mat-label>{{ "button.deselect-all" | translate }}</mat-label>
   </button>
   <button
     *ngIf="isAdmin"
     id="scrape-comics-button"
-    mat-flat-button
+    mat-icon-button
     color="accent"
-    class="cx-action-button cx-margin-right-5"
+    class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selected.length"
     [matTooltip]="'library.tooltip.scrape-comics' | translate"
     (click)="onScrapeComics()"
   >
     <mat-icon>cloud_queue</mat-icon>
-    <mat-label>{{ "button.scrape" | translate }}</mat-label>
   </button>
 </mat-toolbar>
