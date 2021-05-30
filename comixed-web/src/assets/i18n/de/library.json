@@ -1,0 +1,95 @@
+{
+  "library": {
+    "all-comics": {
+      "tab-title": "All Comics",
+      "tab-title-deleted": "Deleted Comics",
+      "tab-title-unread": "Unread Comics"
+    },
+    "comic-group": {
+      "invalid-grouping": "The group \"{name}\" is not valid."
+    },
+    "context-menu": {
+      "comic-details": "Show comic details...",
+      "mark-as": "Mark...",
+      "mark-one-as-read": "This Comic As Read",
+      "mark-one-as-unread": "This Comic As Unread",
+      "mark-selected-as-read": "Selected Comics As Read",
+      "mark-selected-as-unread": "Selected Comics As Unread",
+      "set-page-blocked": "Block Pages Like This",
+      "set-page-unblocked": "Don't Block Pages Like This"
+    },
+    "label": {
+      "no-publisher": "Unknown Publisher",
+      "no-series": "Unknown Series",
+      "pagination-items-per-page": "Covers Per Page"
+    },
+    "navigation": {
+      "publishers": "Publishers",
+      "series": "Series",
+      "characters": "Characters",
+      "teams": "Teams",
+      "locations": "Locations",
+      "stories": "Stories"
+    },
+    "set-read": {
+      "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
+      "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
+    },
+    "tooltip": {
+      "deselect-all": "Deselect all comics.",
+      "scrape-comics": "Start scraping comics",
+      "select-all": "Select all comics."
+    }
+  },
+  "scraping": {
+    "current-comic": {
+      "title": "Currently Comic ({count} Total)"
+    },
+    "label": {
+      "100-records": "100 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records",
+      "issue-count": "# Issues",
+      "matchability": "Match",
+      "publisher": "Publisher",
+      "series-name": "Series",
+      "start-year": "Start Year"
+    },
+    "load-scraping-volumes": {
+      "effect-failure": "Failed to load any volumes..."
+    },
+    "load-scraping-issue": {
+      "effect-failure": "Failed to load issue..."
+    },
+    "page-title": "Library Scraping",
+    "scrape-comic": {
+      "effect-success": "Comic successfully scraped!",
+      "effect-failure": "Failed to scrape comic."
+    },
+    "scrape-comic-confirmation-title": "Replace Comic Data",
+    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
+    "scraping-issue-detail-subtitle": "Cover Date: {date}",
+    "start-scraping": {
+      "confirmation-title": "Scrape Comics",
+      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
+    },
+    "text": {
+      "exact-match": "Exact",
+      "near-match": "Near",
+      "no-match": "No"
+    },
+    "tooltip": {
+      "cancel-scraping": "Stop scraping comics.",
+      "reject-scraping-issue": "Reject this issue.",
+      "select-scraping-issue": "Select this issue.",
+      "show-comic-details": "Show Details",
+      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache."
+    },
+    "volume-list": {
+      "issue-count-header": "# Of Issues",
+      "name-header": "Series Name",
+      "publisher-header": "Publisher",
+      "start-year-header": "Start Year"
+    }
+  }
+}

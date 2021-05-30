@@ -61,15 +61,15 @@
 
 <mat-menu #languageMenu="matMenu">
   <button
-    *ngFor="let language of languages"
+    *ngFor="let option of languages"
     mat-menu-item
-    (click)="onSelectLanguage(language)"
+    (click)="onSelectLanguage(option.value)"
   >
-    <mat-icon *ngIf="currentLanguage === language">check_box</mat-icon>
-    <mat-icon *ngIf="currentLanguage !== language">
+    <mat-icon *ngIf="currentLanguage === option.value">check_box</mat-icon>
+    <mat-icon *ngIf="currentLanguage !== option.value">
       check_box_outline_blank
     </mat-icon>
-    <mat-label>{{ "menu.language-menu." + language | translate }}</mat-label>
+    <mat-label>{{ option.label }}</mat-label>
   </button>
 </mat-menu>
 

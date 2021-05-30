@@ -1,0 +1,52 @@
+{
+  "login": {
+    "title": "Login"
+  },
+  "user": {
+    "edit-current-user": {
+      "label": {
+        "email": "Email Address",
+        "password": "Password",
+        "password-verify": "Verify The Password"
+      },
+      "page-title": "Edit User Account",
+      "tab-title": "Account: {email}",
+      "validation": {
+        "passwords-dont-match": "Passwords do not match..."
+      }
+    },
+    "login-user": {
+      "page-title": "Please Enter Your User Details",
+      "email-placeholder": "Your email address",
+      "password-placeholder": "Your password",
+      "effect-failure": "Email or password is invalid.",
+      "login-tooltip": "Go to the login page...",
+      "logout-tooltip": "Log out..."
+    },
+    "logout": {
+      "confirmation-title": "Logout",
+      "confirmation-message": "Are you sure you want to logout?"
+    },
+    "reset-user-changes": {
+      "confirmation-message": "Discard changes to your account?",
+      "conformation-title": "Revert Changes"
+    },
+    "save-current-user": {
+      "confirmation-message": "Are you sure you want to save the changes to your user account?",
+      "confirmation-title": "Save Account Changes",
+      "effect-failure": "Failed to save changes to account.",
+      "effect-success": "Saved changes to account."
+    },
+    "user-preferences": {
+      "delete-confirmation-message": "Are you sure you want to delete this user preference?",
+      "delete-confirmation-title": "Delete User Preference",
+      "label": {
+        "preference-name": "Preference Name",
+        "preference-value": "Value"
+      },
+      "tooltip": {
+        "delete-preference": "Delete this user preference."
+      }
+    }
+  }
+}
