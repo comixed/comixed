@@ -60,10 +60,6 @@
   },
   "menu": {
     "language-menu": {
-      "en": "Anglais",
-      "es": "Espagnol",
-      "fr": "Français",
-      "pt": "Portuguais",
       "root": "Choix de la langue"
     },
     "logging-menu": {

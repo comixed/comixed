@@ -1,0 +1,31 @@
+{
+  "web-audit-log": {
+    "clear": {
+      "confirmation-message": "Are you sure you want to clear the audit log? This action cannot be undone.",
+      "confirmation-title": "Clear Web Audit Log",
+      "effect-failure": "Failed to clear the web audit logs.",
+      "effect-success": "Web audit logs cleared."
+    },
+    "label": {
+      "actions": "Actions",
+      "bytes-sent": "Bytes Sent",
+      "bytes-received": "Bytes Received",
+      "method": "HTTP Method",
+      "pagination-items-per-page": "Entries Per Page",
+      "account": "Account",
+      "remote-ip": "Remote IP",
+      "runtime": "Duration",
+      "started": "Started",
+      "success": "Successful?",
+      "url": "URL Accessed"
+    },
+    "load-entries": {
+      "effect-failure": "Failed to load web audit log entries."
+    },
+    "request-content-title": "Request Content",
+    "response-content-title": "Response Content",
+    "text": {
+      "runtime": "{time}ms"
+    }
+  }
+}

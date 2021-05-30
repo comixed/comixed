@@ -35,6 +35,7 @@ import {
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { ListItem } from '@app/core/models/ui/list-item';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -45,7 +46,13 @@ export class NavigationBarComponent {
   @Output() toggleSidebar = new EventEmitter<boolean>();
   isReader = false;
   isAdmin = false;
-  readonly languages = ['en', 'fr', 'es', 'pt'];
+  readonly languages: ListItem<string>[] = [
+    { label: 'English', value: 'en' },
+    { label: 'Français', value: 'fr' },
+    { label: 'Español', value: 'es' },
+    { label: 'Português', value: 'pt' },
+    { label: 'Deutsche', value: 'de' }
+  ];
   currentLanguage = '';
   readonly loggingOptions = [
     LoggerLevel.INFO,
