@@ -63,11 +63,18 @@
     },
     "tooltip": {
       "blocked-page": "Les pages comme celle-ci sont bloquées...",
+      "cancel-scraping": "Stop scraping this comic.",
       "download-comic": "Télécharger cette Bande Dessinée...",
       "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
       "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",
       "mark-read": "Mark this comic as read.",
       "mark-unread": "Mark this comic as unread.",
+      "match-0": "Not a match.",
+      "match-1": "Partial match.",
+      "match-2": "Exact match.",
+      "save-changes": "Saves changes to this comic.",
+      "scrape-comic": "Scrape this comic.",
+      "undo-changes": "Undo changes to this comic.",
       "update-comic-info": "Update the metadata in this comic file."
     },
     "undo-changes": {

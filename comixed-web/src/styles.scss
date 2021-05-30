@@ -35,6 +35,10 @@ $cx-selected-comic-color: #ffffff;
   width: 25% !important;
 }
 
+.cx-width-max-25 {
+  max-width: 25% !important;
+}
+
 .cx-width-33 {
   width: 33% !important;
 }
@@ -61,6 +65,10 @@ $cx-selected-comic-color: #ffffff;
 
 .cx-height-100 {
   height: 100%;
+}
+
+.cx-overflow-y-scroll {
+  overflow-y: scroll;
 }
 
 // positioning
@@ -258,4 +266,9 @@ $cx-column-large: 325px;
 .cx-primary-light-background {
   background: var(--primary-lighter-color);
   color: var(--text-primary-lighter-color);
+}
+
+.cx-primary-dark-background {
+  background: var(--primary-darker-color);
+  color: var(--text-primary-darker-color);
 }

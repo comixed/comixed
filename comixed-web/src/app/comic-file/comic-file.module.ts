@@ -55,6 +55,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { LibraryModule } from '@app/library/library.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ComicBookModule } from '@app/comic-book/comic-book.module';
 
 @NgModule({
   declarations: [
@@ -90,7 +92,9 @@ import { LibraryModule } from '@app/library/library.module';
     MatCheckboxModule,
     MatSortModule,
     MatCardModule,
-    LibraryModule
+    LibraryModule,
+    MatProgressBarModule,
+    ComicBookModule
   ],
   exports: [CommonModule]
 })

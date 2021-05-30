@@ -81,7 +81,7 @@ import {
   UPDATE_COMIC_INFO_FEATURE_KEY
 } from '@app/comic-book/reducers/update-comic-info.reducer';
 import { UpdateComicInfoEffects } from '@app/comic-book/effects/update-comic-info.effects';
-import { MatchabilityPipe } from '@app/comic-book/pipes/matchability.pipe';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -97,7 +97,6 @@ import { MatchabilityPipe } from '@app/comic-book/pipes/matchability.pipe';
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
     ComicTitlePipe,
-    MatchabilityPipe,
     ScrapingIssueTitlePipe
   ],
   imports: [
@@ -136,7 +135,8 @@ import { MatchabilityPipe } from '@app/comic-book/pipes/matchability.pipe';
     MatMenuModule,
     MatProgressSpinnerModule,
     MatTabsModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSortModule
   ],
   exports: [
     CommonModule,

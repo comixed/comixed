@@ -1,9 +1,9 @@
 {
   "library": {
     "all-comics": {
-      "title": "Toutes les Bandes Dessinées",
-      "page-title-deleted": "Deleted Comics",
-      "page-title-unread": "All Unread Comics"
+      "tab-title": "Toutes les Bandes Dessinées",
+      "tab-title-deleted": "Deleted Comics",
+      "tab-title-unread": "Unread Comics"
     },
     "comic-group": {
       "invalid-grouping": "Le groupe \"{name}\" n'est pas valide."
@@ -36,9 +36,9 @@
       "effect-success": "{count, plural, =1{une Bande Dessinée marquée} other{# Bandes Dessinées marquées}} comme {read, select, true{lues} other{non lues}}."
     },
     "tooltip": {
-      "deselect-all": "Déselectionner toutes les Bandes Dessinées.",
+      "deselect-all": "Deselect all comics.",
       "scrape-comics": "Commencer la récupération des détails",
-      "select-all": "Sélectionner toutes les Bandes Dessinées."
+      "select-all": "Select all comics."
     }
   },
   "scraping": {
@@ -83,7 +83,7 @@
       "reject-scraping-issue": "Rejeter ce numéro.",
       "select-scraping-issue": "Sélectionner ce numéro.",
       "show-comic-details": "Afficher les détails",
-      "skip-cache": "Si activée, ignoer le cache de la récupération des données, cette option est actuellement {enabled, select, true{ACTIVÉE} other{DÉSACTIVÉE}}"
+      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache."
     },
     "volume-list": {
       "issue-count-header": "# Numéros",

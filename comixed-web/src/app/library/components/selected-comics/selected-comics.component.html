@@ -1,9 +1,7 @@
-<div
-  class="cx-vertical-container cx-height-100 cx-padding-left-15 cx-padding-right-15"
->
+<div class="cx-vertical-container cx-height-100 cx-overflow-y-scroll">
   <div *ngFor="let comic of comics" class="cx-vertical-container">
-    <mat-card (click)="onSelectionChanged(comic)">
-      <mat-card-title class="cx-width-100 cx-text-nowrap">
+    <mat-card class="cx-width-100" (click)="onSelectionChanged(comic)">
+      <mat-card-title>
         <button
           mat-icon-button
           color="accent"
@@ -12,10 +10,14 @@
         >
           <mat-icon>details</mat-icon>
         </button>
-        {{ comic.filename }}
+        <span class="cx-width-100 cx-text-nowrap">
+          {{ comic | comicTitle }}
+        </span>
       </mat-card-title>
-      <mat-card-subtitle class="cx-width-100 cx-text-nowrap">
-        {{ comic.baseFilename }}
+      <mat-card-subtitle>
+        <span class="cx-width-100 cx-text-nowrap">
+          {{ comic.baseFilename }}
+        </span>
       </mat-card-subtitle>
     </mat-card>
   </div>

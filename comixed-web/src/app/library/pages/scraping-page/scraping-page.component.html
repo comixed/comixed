@@ -1,7 +1,7 @@
 <div class="cx-horizontal-container cx-width-100">
-  <div>
-    <div class="cx-vertical-container">
-      <div *ngIf="!!currentComic" class="cx-grow-1">
+  <div class="cx-width-max-25">
+    <div class="cx-vertical-container cx-primary-light-background cx-width-100">
+      <div *ngIf="!!currentComic" class="cx-grow-1 cx-width-100">
         <h3 class="cx-text-nowrap">
           {{
             "scraping.current-comic.title" | translate: { count: comics.length }
@@ -9,6 +9,8 @@
         </h3>
         <cx-comic-page
           [imageUrl]="currentComic | comicCoverUrl"
+          [pageSize]="-1"
+          [imageWidth]="'100%'"
           [imageHeight]="'auto'"
         ></cx-comic-page>
       </div>
@@ -20,7 +22,7 @@
       </div>
     </div>
   </div>
-  <div class="cx-grow-1 cx-margin-left-5 cx-margin-right-5">
+  <div class="cx-grow-1">
     <cx-comic-edit
       *ngIf="!!currentComic && scrapingVolumes.length === 0"
       [comic]="currentComic"

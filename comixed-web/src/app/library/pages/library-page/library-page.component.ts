@@ -116,15 +116,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Setting page title');
     if (this.deletedOnly) {
       this.titleService.setTitle(
-        this.translateService.instant('library.all-comics.page-title-deleted')
+        this.translateService.instant('library.all-comics.tab-title-deleted')
       );
     } else if (this.unreadOnly) {
       this.titleService.setTitle(
-        this.translateService.instant('library.all-comics.page-title-unread')
+        this.translateService.instant('library.all-comics.tab-title-unread')
       );
     } else {
       this.titleService.setTitle(
-        this.translateService.instant('library.all-comics.page-title')
+        this.translateService.instant('library.all-comics.tab-title')
       );
     }
   }
