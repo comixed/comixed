@@ -16,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses>
 
-ME=$(realpath -s $0)
+realpath() {
+  [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+ME=$(realpath $0)
 BINDIR=$(dirname ${ME})
-LIBDIR=$(realpath -s ${BINDIR}/../lib)
+LIBDIR=$(realpath ${BINDIR}/../lib)
 
 JAVA=$(which java)
 JAROPTIONS=''
