@@ -141,6 +141,13 @@ public class Comic {
   @Setter
   private String imprint;
 
+  @Column(name = "Notes", length = 128, nullable = true, updatable = true)
+  @JsonProperty("notes")
+  @JsonView(View.ComicListView.class)
+  @Getter
+  @Setter
+  private String notes;
+
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "PageNumber")
   @JsonProperty("pages")

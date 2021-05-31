@@ -1,149 +1,100 @@
 <h3>{{ "comic-book.label.issue-details" | translate }}</h3>
-<span>
-  <span
-    class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-  >
-    {{ "comic-book.label.publisher" | translate }}
-  </span>
-  <span>{{ comic.publisher }}</span>
-  <br />
-  <span>
-    <span
-      class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-    >
-      {{ "comic-book.label.series" | translate }}
-    </span>
-    <span>{{ comic.series }}</span>
-    <br />
-    <span>
-      <span
-        class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-      >
-        {{ "comic-book.label.volume" | translate }}
-      </span>
-      <span>{{ comic.volume }}</span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.issue-number" | translate }}
-        </span>
-        {{ comic.issueNumber }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.cover-date" | translate }}
-        </span>
-        {{ comic.coverDate | date: "MM/dd/yyyy" }}
-      </span>
-      <br />
-      <h3>{{ "comic-book.label.file-details" | translate }}</h3>
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.comic-state" | translate }}
-        </span>
-        {{ "comic-book.text.state-" + comic.comicState | translate }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.filename" | translate }}
-        </span>
-        {{ comic.filename }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.filesize" | translate }}
-        </span>
-        {{ "comic-book.text.filesize" | translate: { size: 0 } }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.file-entries" | translate }}
-        </span>
-        {{
-          "comic-book.text.file-entries"
-            | translate: { count: comic.fileEntries.length }
-        }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.archive-type" | translate }}
-        </span>
-        {{ "text.archive-type" | translate: { type: comic.archiveType } }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.added-date" | translate }}
-        </span>
-        {{ comic.addedDate | date: "medium" }}
-      </span>
-      <br />
-      <span *ngIf="!!lastRead">
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.last-read-date" | translate }}
-        </span>
-        {{ lastRead.lastRead | date: "medium" }}
-      </span>
-      <br />
-      <h3>{{ "comic-book.label.other-details" | translate }}</h3>
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.sort-name" | translate }}
-        </span>
-        {{ comic.sortName }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.scan-type" | translate }}
-        </span>
-        {{ comic.scanType }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.comic-format" | translate }}
-        </span>
-        {{ comic.format }}
-      </span>
-      <br />
-      <span>
-        <span
-          class="cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5"
-        >
-          {{ "comic-book.label.imprint" | translate }}
-        </span>
-        {{ comic.imprint }}
-      </span>
-    </span>
-  </span>
-</span>
+<cx-label-and-value
+  [label]="'comic-book.label.publisher' | translate"
+  [value]="comic.publisher"
+></cx-label-and-value>
+<cx-label-and-value
+  [label]="'comic-book.label.series' | translate"
+  [value]="comic.series"
+></cx-label-and-value>
+<cx-label-and-value
+  [label]="'comic-book.label.volume' | translate"
+  [value]="comic.volume"
+></cx-label-and-value>
+<cx-label-and-value
+  [label]="'comic-book.label.issue-number' | translate"
+  [value]="comic.issueNumber"
+></cx-label-and-value>
+<cx-label-and-value
+  [label]="'comic-book.label.cover-date' | translate"
+  [value]="comic.coverDate"
+></cx-label-and-value>
+
+<h3>{{ "comic-book.label.file-details" | translate }}</h3>
+<div>
+  <cx-label-and-value
+    [label]="'comic-book.label.comic-state' | translate"
+    [value]="'comic-book.text.state-' + comic.comicState | translate"
+  ></cx-label-and-value>
+</div>
+<div>
+  <cx-label-and-value
+    [label]="'comic-book.label.filename' | translate"
+    [value]="comic.filename"
+  ></cx-label-and-value>
+</div>
+<div>
+  <cx-label-and-value
+    [label]="'comic-book.label.filesize' | translate"
+    [value]="'comic-book.text.filesize' | translate: { size: 0 }"
+  ></cx-label-and-value>
+</div>
+<div>
+  <cx-label-and-value
+    [label]="'comic-book.label.file-entries' | translate"
+    [value]="
+      'comic-book.text.file-entries'
+        | translate: { count: comic.fileEntries.length }
+    "
+  ></cx-label-and-value>
+</div>
+<div>
+  <cx-label-and-value
+    [label]="'comic-book.label.filesize' | translate"
+    [value]="'text.archive-type' | translate: { type: comic.archiveType }"
+  ></cx-label-and-value>
+</div>
+<div>
+  <cx-label-and-value
+    [label]="'comic-book.label.added-date' | translate"
+    [value]="comic.addedDate | date: 'medium'"
+  ></cx-label-and-value>
+</div>
+<div *ngIf="!!lastRead">
+  <cx-label-and-value
+    [label]="'comic-book.label.last-read-date' | translate"
+    [value]="lastRead.lastRead | date: 'medium'"
+  ></cx-label-and-value>
+</div>
+<div *ngIf="comic.notes?.length > 0">
+  <cx-label-and-value
+    [label]="'comic-book.label.scraping-notes' | translate"
+    [value]="comic.notes"
+  ></cx-label-and-value>
+</div>
+
+<h3>{{ "comic-book.label.other-details" | translate }}</h3>
+<div *ngIf="comic.sortName?.length > 0">
+  <cx-label-and-value
+    [label]="'comic-book.label.sort-name' | translate"
+    [value]="comic.sortName"
+  ></cx-label-and-value>
+</div>
+<div *ngIf="!!comic.scanType">
+  <cx-label-and-value
+    [label]="'comic-book.label.scan-type' | translate"
+    [value]="comic.scanType"
+  ></cx-label-and-value>
+</div>
+<div *ngIf="!!comic.format">
+  <cx-label-and-value
+    [label]="'comic-book.label.comic-format' | translate"
+    [value]="comic.format"
+  ></cx-label-and-value>
+</div>
+<div *ngIf="!!comic.imprint">
+  <cx-label-and-value
+    [label]="'comic-book.label.imprint' | translate"
+    [value]="comic.imprint"
+  ></cx-label-and-value>
+</div>

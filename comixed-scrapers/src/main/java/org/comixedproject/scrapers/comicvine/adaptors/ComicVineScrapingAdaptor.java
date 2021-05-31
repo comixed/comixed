@@ -51,7 +51,7 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
   private ObjectFactory<ComicVineGetIssueDetailsAction> getIssueDetailsActionObjectFactory;
 
   public ComicVineScrapingAdaptor() {
-    super("comicvine");
+    super("ComiXed ComicVine Scraper", "comicvine");
   }
 
   @Override

@@ -30,6 +30,7 @@
       "page-count": "# de pages",
       "publisher": "Éditeur",
       "scan-type": "Type de scan",
+      "scraping-notes": "Scraping Notes",
       "series": "Nom de série",
       "sort-name": "Nom pour le tri",
       "stories": "Arcs naratifs dans ce numéro ({count})",

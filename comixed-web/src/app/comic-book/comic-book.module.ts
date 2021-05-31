@@ -82,6 +82,7 @@ import {
 } from '@app/comic-book/reducers/update-comic-info.reducer';
 import { UpdateComicInfoEffects } from '@app/comic-book/effects/update-comic-info.effects';
 import { MatSortModule } from '@angular/material/sort';
+import { CoreModule } from '@app/core/core.module';
 
 @NgModule({
   declarations: [
@@ -136,7 +137,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatProgressSpinnerModule,
     MatTabsModule,
     MatChipsModule,
-    MatSortModule
+    MatSortModule,
+    CoreModule
   ],
   exports: [
     CommonModule,

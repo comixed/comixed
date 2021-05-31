@@ -34,9 +34,10 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { LabelAndValueComponent } from './components/label-and-value/label-and-value.component';
 
 @NgModule({
-  declarations: [ConfirmationComponent, YesNoPipe],
+  declarations: [ConfirmationComponent, YesNoPipe, LabelAndValueComponent],
   imports: [
     CommonModule,
     TranslateModule.forRoot(),
@@ -55,7 +56,8 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     MatDialogModule,
     MatIconModule,
     MatFormFieldModule,
-    YesNoPipe
+    YesNoPipe,
+    LabelAndValueComponent
   ],
   providers: []
 })

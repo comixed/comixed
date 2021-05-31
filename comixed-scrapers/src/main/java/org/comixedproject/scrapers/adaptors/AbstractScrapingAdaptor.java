@@ -20,6 +20,7 @@ package org.comixedproject.scrapers.adaptors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.model.ScrapingIssue;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Darryl L. Pierce
  */
 @Log4j2
+@RequiredArgsConstructor
 public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
   private static final String VOLUMES_KEY = "volumes[%s]";
   private static final String ISSUE_KEY = "issues[%d-%s]";
@@ -39,11 +41,8 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
 
   @Autowired protected ObjectMapper objectMapper;
 
+  @Getter private final String identifier;
   @Getter private final String source;
-
-  public AbstractScrapingAdaptor(final String source) {
-    this.source = source;
-  }
 
   /**
    * Generates a consistent key for storing and fetching volume data.

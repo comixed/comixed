@@ -30,6 +30,7 @@
       "page-count": "# Of Pages",
       "publisher": "Publisher",
       "scan-type": "Scan Type",
+      "scraping-notes": "Scraping Notes",
       "series": "Series Name",
       "sort-name": "Sort Name",
       "stories": "Story Arcs In This Issue ({count})",
