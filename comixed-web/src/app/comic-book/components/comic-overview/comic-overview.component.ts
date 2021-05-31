@@ -32,6 +32,14 @@ export class ComicOverviewComponent implements OnInit {
   @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 
+  readonly labelClasses = [
+    'cx-detail-label',
+    'cx-float-left',
+    'cx-align-text-right',
+    'cx-padding-right-5'
+  ];
+  readonly valueClasses = [];
+
   constructor(private logger: LoggerService) {}
 
   ngOnInit(): void {}

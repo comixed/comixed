@@ -89,6 +89,9 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
           case "Summary":
             comic.setDescription(xmlInputReader.getElementText());
             break;
+          case "Notes":
+            comic.setNotes(xmlInputReader.getElementText());
+            break;
           case "Year":
             publishedYear = Integer.valueOf(xmlInputReader.getElementText());
             break;

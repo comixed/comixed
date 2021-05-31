@@ -60,7 +60,7 @@ export interface Comic {
   blockedPageCount: number;
   deletedPageCount: number;
   description?: string;
-  notes?: string;
+  notes: string;
   comicVineURL?: string;
   pages?: Page[];
   duplicateCount?: number;

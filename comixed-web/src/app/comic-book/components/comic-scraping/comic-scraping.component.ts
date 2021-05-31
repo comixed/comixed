@@ -40,11 +40,15 @@ import {
   scrapeComic
 } from '@app/comic-book/actions/scraping.actions';
 import { Subscription } from 'rxjs';
-import { selectScrapingIssue } from '@app/comic-book/selectors/scraping.selectors';
+import {
+  selectScrapingIssue,
+  selectScrapingState
+} from '@app/comic-book/selectors/scraping.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 export const MATCHABILITY = 'sortOrder';
 export const EXACT_MATCH = 2;
@@ -77,6 +81,7 @@ export class ComicScrapingComponent
 
   issueSubscription: Subscription;
   issue: ScrapingIssue;
+  scrapingStateSubscription: Subscription;
 
   dataSource = new MatTableDataSource<SortableListItem<ScrapingVolume>>();
   displayedColumns = [
@@ -96,6 +101,11 @@ export class ComicScrapingComponent
     this.issueSubscription = this.store
       .select(selectScrapingIssue)
       .subscribe(issue => (this.issue = issue));
+    this.scrapingStateSubscription = this.store
+      .select(selectScrapingState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
+      );
   }
 
   @Input() set volumes(volumes: ScrapingVolume[]) {
@@ -119,6 +129,7 @@ export class ComicScrapingComponent
 
   ngOnDestroy(): void {
     this.issueSubscription.unsubscribe();
+    this.scrapingStateSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {

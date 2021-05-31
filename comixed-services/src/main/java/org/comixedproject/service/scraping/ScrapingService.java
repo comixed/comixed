@@ -239,17 +239,19 @@ public class ScrapingService {
       comic.setDescription(issueDetails.getDescription());
       comic.getCharacters().clear();
       issueDetails.getCharacters().forEach(character -> comic.getCharacters().add(character));
-      result.getTeams().clear();
+      comic.getTeams().clear();
       issueDetails.getTeams().forEach(team -> comic.getTeams().add(team));
-      result.getLocations().clear();
+      comic.getLocations().clear();
       issueDetails.getLocations().forEach(location -> comic.getLocations().add(location));
-      result.getStoryArcs().clear();
+      comic.getStoryArcs().clear();
       issueDetails.getStories().forEach(story -> comic.getStoryArcs().add(story));
-      result.getCredits().clear();
+      comic.getCredits().clear();
       issueDetails
           .getCredits()
           .forEach(
               entry -> comic.getCredits().add(new Credit(comic, entry.getName(), entry.getRole())));
+      comic.setNotes(
+          String.format("Comic details scraped by %s", this.scrapingAdaptor.getIdentifier()));
       log.trace("Updating comic state: scraped");
       this.comicStateHandler.fireEvent(comic, ComicEvent.scraped);
     }

@@ -73,7 +73,7 @@ public class ScrapingCacheService {
       entry.getEntries().add(index, cachedValue);
     }
 
-    log.debug("Saving cache entry");
+    log.debug("Saving cache entry: key={}", entry.getCacheKey());
     this.scrapingCacheRepository.save(entry);
   }
 

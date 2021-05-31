@@ -11,5 +11,6 @@
   <include file="/db/migrations/0.9.0/003_154_rename_blocked_page_hash_table.xml"/>
   <include file="/db/migrations/0.9.0/004_698_rename_last_read_columns.xml"/>
   <include file="/db/migrations/0.9.0/005_720_add_comic_state.xml"/>
+  <include file="/db/migrations/0.9.0/006_746_add_comic_notes_column.xml"/>
 
 </databaseChangeLog>

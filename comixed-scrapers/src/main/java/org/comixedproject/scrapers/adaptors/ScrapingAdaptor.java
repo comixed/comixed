@@ -32,6 +32,13 @@ import org.comixedproject.scrapers.model.ScrapingVolume;
  */
 public interface ScrapingAdaptor {
   /**
+   * Returns the version identifier for this scraper.
+   *
+   * @return the identifier
+   */
+  String getIdentifier();
+
+  /**
    * Returns a list of volumes for the given series name.
    *
    * <p>If <code>maxRecords</code> is a non-positive value then all records are returned.
