@@ -1,0 +1,11 @@
+{
+  "collection-list": {
+    "label": {
+      "comic-count": "# Comics",
+      "name": "Collection Name"
+    },
+    "text": {
+      "undefined": "[UNDEFINED]"
+    }
+  }
+}
