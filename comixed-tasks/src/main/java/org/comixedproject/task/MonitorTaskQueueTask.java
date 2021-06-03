@@ -49,6 +49,10 @@ public class MonitorTaskQueueTask extends AbstractTask implements InitializingBe
   @Autowired private TaskAdaptor taskAdaptor;
   @Autowired private SimpMessagingTemplate messagingTemplate;
 
+  public MonitorTaskQueueTask() {
+    super(PersistedTaskType.MONITOR_TASK_QUEUE);
+  }
+
   @Override
   protected String createDescription() {
     return "PersistedTask queue monitor";

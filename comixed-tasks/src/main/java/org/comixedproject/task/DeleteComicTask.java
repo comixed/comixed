@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,10 @@ public class DeleteComicTask extends AbstractTask implements Task {
 
   @Getter @Setter private boolean deleteFile;
   @Getter @Setter private Comic comic;
+
+  public DeleteComicTask() {
+    super(PersistedTaskType.DELETE_COMIC);
+  }
 
   @Override
   @Transactional

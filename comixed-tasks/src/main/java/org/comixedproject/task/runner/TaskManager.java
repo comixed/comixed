@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.PersistedTask;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.MonitorTaskQueueTask;
@@ -69,11 +70,11 @@ public class TaskManager implements InitializingBean {
           try {
             task.startTask();
             if (!(task instanceof MonitorTaskQueueTask))
-              this.updateAuditLog(true, started, description, null);
+              this.updateAuditLog(task.getTaskType(), true, started, description, null);
           } catch (Exception error) {
             log.error("Error executing task: {}" + description, description, error);
             if (!(task instanceof MonitorTaskQueueTask))
-              this.updateAuditLog(false, started, description, error);
+              this.updateAuditLog(task.getTaskType(), false, started, description, error);
           } finally {
             task.afterExecution();
             if (persistedTask != null) {
@@ -103,12 +104,13 @@ public class TaskManager implements InitializingBean {
    * @param exception the optional exception message
    */
   private void updateAuditLog(
+      final PersistedTaskType taskType,
       final boolean success,
       final Date started,
       final String description,
       final Exception exception) {
     log.debug("Creating audit log entry");
-    final TaskAuditLogEntry entry = new TaskAuditLogEntry();
+    final var entry = new TaskAuditLogEntry(taskType);
     entry.setStartTime(started);
     entry.setEndTime(new Date());
     entry.setSuccessful(success);

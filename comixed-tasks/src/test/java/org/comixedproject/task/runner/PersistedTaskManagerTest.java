@@ -69,7 +69,7 @@ public class PersistedTaskManagerTest {
     Mockito.doNothing().when(taskService).saveAuditLogEntry(logEntryArgumentCaptor.capture());
 
     taskManager.runTask(
-        new AbstractTask() {
+        new AbstractTask(PersistedTaskType.MONITOR_TASK_QUEUE) {
           @Override
           public void startTask() {
             assertTrue(runningTasks.containsKey(TEST_PERSISTED_TASK_ID));
@@ -112,6 +112,7 @@ public class PersistedTaskManagerTest {
 
   @Test
   public void testRunTask() throws TaskException {
+    Mockito.when(task.getTaskType()).thenReturn(TEST_PERSISTED_TASK_TYPE);
     Mockito.when(task.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());
     Mockito.doNothing().when(taskService).saveAuditLogEntry(logEntryArgumentCaptor.capture());
@@ -160,6 +161,7 @@ public class PersistedTaskManagerTest {
 
   @Test
   public void testRunTaskThrowsException() throws TaskException {
+    Mockito.when(task.getTaskType()).thenReturn(TEST_PERSISTED_TASK_TYPE);
     Mockito.when(task.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.doThrow(TaskException.class).when(task).startTask();
     Mockito.doNothing().when(taskExecutor).execute(runnableArgumentCaptor.capture());

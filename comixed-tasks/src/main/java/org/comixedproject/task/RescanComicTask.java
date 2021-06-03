@@ -23,6 +23,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -42,6 +43,10 @@ public class RescanComicTask extends AbstractTask {
   @Autowired private PageService pageService;
 
   @Getter @Setter private Comic comic;
+
+  public RescanComicTask() {
+    super(PersistedTaskType.RESCAN_COMIC);
+  }
 
   @Override
   public void startTask() {

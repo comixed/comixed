@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.MoveComicTaskEncoder;
@@ -50,6 +51,10 @@ public class MoveComicsTask extends AbstractTask {
 
   @Getter @Setter private String directory;
   @Getter @Setter private String renamingRule;
+
+  public MoveComicsTask() {
+    super(PersistedTaskType.MOVE_COMICS);
+  }
 
   @Override
   protected String createDescription() {

@@ -48,6 +48,10 @@ public class QueueComicsTask extends AbstractTask {
   @Getter @Setter private List<String> filenames;
   @Getter @Setter private boolean deleteBlockedPages = false;
 
+  public QueueComicsTask() {
+    super(PersistedTaskType.QUEUE_COMICS);
+  }
+
   /**
    * Sets whether to ignore any <code>ComicInfo.xml</code> file in the comic.
    *

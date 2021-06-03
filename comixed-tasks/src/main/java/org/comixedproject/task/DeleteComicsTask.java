@@ -50,6 +50,10 @@ public class DeleteComicsTask extends AbstractTask {
 
   @Getter @Setter private List<Long> comicIds;
 
+  public DeleteComicsTask() {
+    super(PersistedTaskType.DELETE_COMICS);
+  }
+
   @Override
   protected String createDescription() {
     return MessageFormat.format(

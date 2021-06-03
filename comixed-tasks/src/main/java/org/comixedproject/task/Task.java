@@ -18,12 +18,21 @@
 
 package org.comixedproject.task;
 
+import org.comixedproject.model.tasks.PersistedTaskType;
+
 /**
  * <code>Task</code> defines a type that is executed.
  *
  * @author Darryl L. Pierce
  */
 public interface Task {
+  /**
+   * Returns the enumerated task type.
+   *
+   * @return the task type
+   */
+  PersistedTaskType getTaskType();
+
   /**
    * Invoked when the task can begin processing.
    *

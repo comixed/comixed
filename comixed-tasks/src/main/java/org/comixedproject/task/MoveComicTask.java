@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.ComicFileUtils;
@@ -58,6 +59,10 @@ public class MoveComicTask extends AbstractTask {
   @Getter @Setter private String renamingRule;
 
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
+
+  public MoveComicTask() {
+    super(PersistedTaskType.MOVE_COMIC);
+  }
 
   @Override
   public void startTask() throws TaskException {

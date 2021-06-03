@@ -25,6 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
@@ -55,6 +56,10 @@ public class ConvertComicsTask extends AbstractTask {
   @Getter @Setter private boolean renamePages;
   @Getter @Setter private boolean deletePages;
   @Getter @Setter private boolean deleteOriginal;
+
+  public ConvertComicsTask() {
+    super(PersistedTaskType.CONVERT_COMIC);
+  }
 
   @Override
   protected String createDescription() {
