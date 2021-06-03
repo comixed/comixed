@@ -25,6 +25,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
@@ -92,7 +93,7 @@ public class PersistedTaskAuditLogRepositoryTest {
 
   @Test
   public void testSaveEntry() {
-    final TaskAuditLogEntry entry = new TaskAuditLogEntry();
+    final TaskAuditLogEntry entry = new TaskAuditLogEntry(PersistedTaskType.MONITOR_TASK_QUEUE);
     entry.setStartTime(TEST_STARTED);
     entry.setEndTime(TEST_ENDED);
     entry.setSuccessful(TEST_SUCCESSFUL);

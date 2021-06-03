@@ -24,8 +24,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.views.View;
 
 /**
@@ -35,6 +34,8 @@ import org.comixedproject.views.View;
  */
 @Entity
 @Table(name = "TaskAuditLog")
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class TaskAuditLogEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,12 +43,19 @@ public class TaskAuditLogEntry {
   @Setter
   private Long id;
 
+  @Column(name = "TaskType", nullable = false, updatable = false)
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("taskType")
+  @JsonView(View.AuditLogEntryList.class)
+  @NonNull
+  private PersistedTaskType taskType;
+
   @Column(name = "StartedAt", nullable = false, updatable = false)
-  @Getter
-  @Setter
   @JsonProperty("startTime")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @JsonView(View.AuditLogEntryList.class)
+  @Getter
+  @Setter
   private Date startTime = new Date();
 
   @Column(name = "EndedAt", nullable = false, updatable = false)

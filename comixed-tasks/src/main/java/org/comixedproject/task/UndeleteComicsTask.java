@@ -25,6 +25,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
@@ -50,6 +51,10 @@ public class UndeleteComicsTask extends AbstractTask {
   @Autowired private TaskService taskService;
 
   @Getter @Setter private List<Long> ids = new ArrayList<>();
+
+  public UndeleteComicsTask() {
+    super(PersistedTaskType.UNDELETE_COMICS);
+  }
 
   @Override
   protected String createDescription() {

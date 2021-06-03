@@ -18,15 +18,21 @@
 
 package org.comixedproject.task;
 
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.comixedproject.model.tasks.PersistedTaskType;
+
 /**
  * <code>AbstractTask</code> provides a foundation for creating new {@link Task} types.
  *
  * @author Darryl L. Pierce
  */
+@RequiredArgsConstructor
 public abstract class AbstractTask implements Task {
   private String description;
 
-  protected AbstractTask() {}
+  @Getter @NonNull private PersistedTaskType taskType;
 
   @Override
   public String getDescription() {

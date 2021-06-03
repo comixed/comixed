@@ -32,6 +32,7 @@ import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFileDetails;
 import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
@@ -63,6 +64,10 @@ public class ProcessComicTask extends AbstractTask {
   @Getter @Setter private Comic comic;
   @Getter @Setter private boolean deleteBlockedPages;
   @Getter @Setter private boolean ignoreMetadata;
+
+  public ProcessComicTask() {
+    super(PersistedTaskType.PROCESS_COMIC);
+  }
 
   @Override
   protected String createDescription() {

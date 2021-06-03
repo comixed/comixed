@@ -24,11 +24,17 @@ package org.comixedproject.model.tasks;
  * @author Darryl L. Pierce
  */
 public enum PersistedTaskType {
+  MONITOR_TASK_QUEUE,
   ADD_COMIC,
   PROCESS_COMIC,
   RESCAN_COMIC,
+  RESCAN_COMICS,
   DELETE_COMIC,
+  DELETE_COMICS,
   UNDELETE_COMIC,
+  UNDELETE_COMICS,
   MOVE_COMIC,
-  CONVERT_COMIC;
+  MOVE_COMICS,
+  CONVERT_COMIC,
+  QUEUE_COMICS;
 }

@@ -31,6 +31,7 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
@@ -69,6 +70,10 @@ public class ConvertComicTask extends AbstractTask {
   @Getter @Setter private boolean renamePages;
   @Getter @Setter private boolean deletePages;
   @Getter @Setter private boolean deleteOriginal;
+
+  public ConvertComicTask() {
+    super(PersistedTaskType.CONVERT_COMIC);
+  }
 
   @Override
   protected String createDescription() {
