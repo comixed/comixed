@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -30,6 +31,7 @@ import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +48,15 @@ public class DeleteComicTask extends AbstractTask implements Task {
   @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
 
-  @Getter @Setter private boolean deleteFile;
-  @Getter @Setter private Comic comic;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deleteFile;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private Comic comic;
 
   public DeleteComicTask() {
     super(PersistedTaskType.DELETE_COMIC);

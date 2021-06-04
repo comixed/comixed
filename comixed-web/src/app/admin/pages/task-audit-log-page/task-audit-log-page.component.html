@@ -1,0 +1,91 @@
+<mat-toolbar color="primary"></mat-toolbar>
+
+<h2>{{ "task-audit-log.page-title" | translate }}</h2>
+
+<mat-sidenav-container>
+  <mat-sidenav
+    class="cx-width-50 cx-accent-light-background"
+    mode="side"
+    position="end"
+    [opened]="!!currentEntry"
+  >
+    <mat-card *ngIf="!!currentEntry && currentEntry.description?.length">
+      <mat-card-title>
+        {{ "task-audit-log.text.details-title" | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <pre>{{ toJSON(currentEntry?.description) | json }}</pre>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="!!currentEntry && currentEntry.exception?.length">
+      <mat-card-title>
+        {{ "task-audit-log.text.exception-title" | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <pre>{{ currentEntry?.exception }}</pre>
+      </mat-card-content>
+    </mat-card>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="task-type">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "task-audit-log.label.task-type" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ "task-audit-log.text.task-type-" + entry.taskType | translate }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="start-time">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "task-audit-log.label.start-time" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-text-nowrap">
+            {{ entry.startTime | date: "medium" }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="runtime">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "task-audit-log.label.runtime" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-text-nowrap">
+            {{
+              "task-audit-log.text.runtime"
+                | translate: { duration: entry.endTime - entry.startTime }
+            }}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="successful">
+        <mat-header-cell mat-sort-header *matHeaderCellDef>
+          {{ "task-audit-log.label.successful" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.successful | yesNo | translate }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "task-audit-log.label.description" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-text-nowrap">{{ entry.description }}</span>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: displayColumns"
+        [class.selected-row]="row.id === currentEntry?.id"
+        (click)="onEntrySelected(row)"
+      ></mat-row>
+    </mat-table>
+  </mat-sidenav-content>
+</mat-sidenav-container>

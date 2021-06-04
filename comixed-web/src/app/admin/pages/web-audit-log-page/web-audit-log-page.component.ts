@@ -44,11 +44,13 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
-  selector: 'cx-web-audit-log',
-  templateUrl: './web-audit-log.component.html',
-  styleUrls: ['./web-audit-log.component.scss']
+  selector: 'cx-web-audit-log-page',
+  templateUrl: './web-audit-log-page.component.html',
+  styleUrls: ['./web-audit-log-page.component.scss']
 })
-export class WebAuditLogComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WebAuditLogPageComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 

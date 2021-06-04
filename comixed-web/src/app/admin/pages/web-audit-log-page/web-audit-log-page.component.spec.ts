@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { WebAuditLogComponent } from './web-audit-log.component';
+import { WebAuditLogPageComponent } from './web-audit-log-page.component';
 import {
   initialState as initialWebAuditLogState,
   WEB_AUDIT_LOG_FEATURE_KEY
@@ -41,13 +41,13 @@ import { WEB_AUDIT_LOG_ENTRY_1 } from '@app/admin/admin.fixtures';
 import { Confirmation } from '@app/core/models/confirmation';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 
-describe('WebAuditLogComponent', () => {
+describe('WebAuditLogPageComponent', () => {
   const TIMESTAMP = new Date().getTime();
   const ITEM = WEB_AUDIT_LOG_ENTRY_1;
   const initialState = { [WEB_AUDIT_LOG_FEATURE_KEY]: initialWebAuditLogState };
 
-  let component: WebAuditLogComponent;
-  let fixture: ComponentFixture<WebAuditLogComponent>;
+  let component: WebAuditLogPageComponent;
+  let fixture: ComponentFixture<WebAuditLogPageComponent>;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
@@ -55,7 +55,7 @@ describe('WebAuditLogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [WebAuditLogComponent],
+      declarations: [WebAuditLogPageComponent],
       imports: [
         NoopAnimationsModule,
         LoggerModule.forRoot(),
@@ -78,7 +78,7 @@ describe('WebAuditLogComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WebAuditLogComponent);
+    fixture = TestBed.createComponent(WebAuditLogPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');

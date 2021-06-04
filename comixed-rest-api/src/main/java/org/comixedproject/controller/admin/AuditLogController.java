@@ -26,6 +26,7 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
 import org.comixedproject.model.net.LoadWebAuditLogResponse;
+import org.comixedproject.model.net.audit.LoadTaskAuditLogEntriesRequest;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.ComiXedServiceException;
 import org.comixedproject.service.auditlog.WebAuditLogService;
@@ -34,10 +35,7 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>AuditLogController</code> provides REST APIs for interacting with the tasks system.
@@ -53,28 +51,35 @@ public class AuditLogController {
   /**
    * Retrieve the list of log entries after the cutoff time.
    *
-   * @param timestamp the cutoff timestamp
+   * @param request the request body
    * @return the log entries
    * @throws ComiXedServiceException if an error occurs
    */
-  @GetMapping(value = "/api/tasks/entries/{cutoff}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      value = "/api/admin/tasks/audit/entries",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.AuditLogEntryList.class)
   @AuditableEndpoint
   public GetTaskAuditLogResponse getAllTaskEntriesAfterDate(
-      @PathVariable("cutoff") final Long timestamp) throws ComiXedServiceException {
-    final Date cutoff = new Date(timestamp);
-    log.debug("Getting all task audit log entries after: {}", cutoff);
+      @RequestBody() final LoadTaskAuditLogEntriesRequest request) throws ComiXedServiceException {
+    final Date cutoff = new Date(request.getLatest());
+    final int maximum = request.getMaximum();
+    log.debug("Getting all task audit log entries after: {} maximum={}", cutoff, maximum);
 
-    final List<TaskAuditLogEntry> entries = this.taskService.getAuditLogEntriesAfter(cutoff);
+    final List<TaskAuditLogEntry> entries =
+        this.taskService.getAuditLogEntriesAfter(cutoff, maximum + 1);
     final Date latest =
         entries.isEmpty() ? new Date() : entries.get(entries.size() - 1).getStartTime();
+    final boolean lastPage = entries.isEmpty() || entries.size() > maximum;
 
-    return new GetTaskAuditLogResponse(entries, latest);
+    return new GetTaskAuditLogResponse(entries, latest, lastPage);
   }
 
   /** Endpoint for clearing the task log. */
-  @DeleteMapping(value = "/api/tasks/entries", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(
+      value = "/api/admin/tasks/audit/entries",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
   public void clearTaskAuditLog() {

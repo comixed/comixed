@@ -42,12 +42,12 @@ import org.springframework.stereotype.Component;
 public class ScanType {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView(View.ScanTypeList.class)
+  @JsonView({View.ScanTypeList.class, View.AuditLogEntryDetail.class})
   @Getter
   private long id;
 
   @Column(name = "Name", updatable = false, nullable = false)
-  @JsonView(View.ScanTypeList.class)
+  @JsonView({View.ScanTypeList.class, View.AuditLogEntryDetail.class})
   @Getter
   private String name;
 }

@@ -21,7 +21,10 @@ package org.comixedproject.repositories.tasks;
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -36,7 +39,10 @@ public interface TaskAuditLogRepository extends JpaRepository<TaskAuditLogEntry,
    * Returns the first set of entries after the specified start date.
    *
    * @param startTime the earliest startTime date
+   * @param pageRequest the response constraints
    * @return the log entries
    */
-  List<TaskAuditLogEntry> findAllByStartTimeGreaterThanOrderByStartTime(Date startTime);
+  @Query("SELECT e FROM TaskAuditLogEntry e WHERE e.startTime > :startTime ORDER BY e.startTime")
+  List<TaskAuditLogEntry> loadAllStartedAfterDate(
+      @Param("startTime") Date startTime, final Pageable pageRequest);
 }

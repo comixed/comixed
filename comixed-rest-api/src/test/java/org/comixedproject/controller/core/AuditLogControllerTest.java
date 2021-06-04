@@ -27,6 +27,7 @@ import org.comixedproject.controller.admin.AuditLogController;
 import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.model.net.GetTaskAuditLogResponse;
 import org.comixedproject.model.net.LoadWebAuditLogResponse;
+import org.comixedproject.model.net.audit.LoadTaskAuditLogEntriesRequest;
 import org.comixedproject.model.tasks.TaskAuditLogEntry;
 import org.comixedproject.service.ComiXedServiceException;
 import org.comixedproject.service.auditlog.WebAuditLogService;
@@ -42,8 +43,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AuditLogControllerTest {
   private static final Date TEST_LAST_UPDATED_DATE = new Date();
-  private static final String TEST_USER_EMAIL = "user@domain.tld";
-  public static final Date TEST_DEFAULT_CUTOFF_DATE = new Date(0);
+  private static final int TEST_MAXIMUM_RECORDS = 100;
 
   @InjectMocks private AuditLogController auditLogController;
   @Mock private TaskService taskService;
@@ -64,17 +64,20 @@ public class AuditLogControllerTest {
 
   @Test
   public void testGetAllTaskEntries() throws ComiXedServiceException {
-    Mockito.when(taskService.getAuditLogEntriesAfter(Mockito.any(Date.class)))
+    Mockito.when(taskService.getAuditLogEntriesAfter(Mockito.any(Date.class), Mockito.anyInt()))
         .thenReturn(auditLogEntries);
 
     final GetTaskAuditLogResponse result =
-        auditLogController.getAllTaskEntriesAfterDate(TEST_LAST_UPDATED_DATE.getTime());
+        auditLogController.getAllTaskEntriesAfterDate(
+            new LoadTaskAuditLogEntriesRequest(
+                TEST_LAST_UPDATED_DATE.getTime(), TEST_MAXIMUM_RECORDS));
 
     assertNotNull(result);
     assertSame(auditLogEntries, result.getEntries());
     assertEquals(TEST_LAST_UPDATED_DATE, result.getLatest());
 
-    Mockito.verify(taskService, Mockito.times(1)).getAuditLogEntriesAfter(TEST_LAST_UPDATED_DATE);
+    Mockito.verify(taskService, Mockito.times(1))
+        .getAuditLogEntriesAfter(TEST_LAST_UPDATED_DATE, TEST_MAXIMUM_RECORDS + 1);
   }
 
   @Test

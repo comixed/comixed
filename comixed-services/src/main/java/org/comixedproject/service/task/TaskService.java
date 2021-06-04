@@ -42,9 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class TaskService {
-  private static final Object SEMAPHORE = new Object();
-
-  @Autowired private TaskService taskService;
   @Autowired private TaskRepository taskRepository;
   @Autowired private TaskAuditLogRepository taskAuditLogRepository;
 
@@ -70,36 +67,14 @@ public class TaskService {
    * Return all log entries after the cutoff timestamp.
    *
    * @param cutoff the cutoff
+   * @param maximum
    * @return the log entries
    * @throws ComiXedServiceException if an error occurs
    */
-  public List<TaskAuditLogEntry> getAuditLogEntriesAfter(final Date cutoff)
+  public List<TaskAuditLogEntry> getAuditLogEntriesAfter(final Date cutoff, final int maximum)
       throws ComiXedServiceException {
-    log.debug("Finding task audit log entries after date: {}", cutoff);
-
-    List<TaskAuditLogEntry> result = null;
-    boolean done = false;
-    long started = System.currentTimeMillis();
-
-    while (!done) {
-      result = this.taskAuditLogRepository.findAllByStartTimeGreaterThanOrderByStartTime(cutoff);
-
-      if (result.isEmpty()) {
-        log.debug("Waiting for task audit log entries");
-        synchronized (SEMAPHORE) {
-          try {
-            SEMAPHORE.wait(1000L);
-          } catch (InterruptedException error) {
-            log.debug("Interrupted while getting task audit log entries", error);
-            Thread.currentThread().interrupt();
-          }
-        }
-      }
-
-      done = !result.isEmpty() || (System.currentTimeMillis() - started > 60000);
-    }
-
-    return result;
+    log.debug("Loading task audit log entries after date: {}", cutoff);
+    return this.taskAuditLogRepository.loadAllStartedAfterDate(cutoff, PageRequest.of(0, maximum));
   }
 
   /**

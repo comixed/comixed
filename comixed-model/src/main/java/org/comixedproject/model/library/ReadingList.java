@@ -45,20 +45,35 @@ public class ReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.ComicListView.class, View.ReadingList.class, View.LibraryUpdate.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingList.class,
+    View.LibraryUpdate.class,
+    View.AuditLogEntryDetail.class
+  })
   @Getter
   private Long id;
 
   @Column(name = "Name", length = 128)
   @JsonProperty("name")
-  @JsonView({View.ComicListView.class, View.ReadingList.class, View.LibraryUpdate.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingList.class,
+    View.LibraryUpdate.class,
+    View.AuditLogEntryDetail.class
+  })
   @Getter
   @Setter
   private String name;
 
   @Column(name = "Summary", length = 256, nullable = true)
   @JsonProperty("summary")
-  @JsonView({View.ComicListView.class, View.ReadingList.class, View.LibraryUpdate.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.ReadingList.class,
+    View.LibraryUpdate.class,
+    View.AuditLogEntryDetail.class
+  })
   @Getter
   @Setter
   private String summary;
@@ -74,7 +89,7 @@ public class ReadingList {
   @Column(name = "LastUpdated")
   @LastModifiedDate
   @JsonProperty("lastUpdated")
-  @JsonView({View.ComicListView.class, View.ReadingList.class})
+  @JsonView({View.ComicListView.class, View.ReadingList.class, View.AuditLogEntryDetail.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @Getter
   @Setter

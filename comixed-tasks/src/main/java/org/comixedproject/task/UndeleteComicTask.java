@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +26,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -42,7 +44,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UndeleteComicTask extends AbstractTask {
   @Autowired private ComicStateHandler comicStateHandler;
 
-  @Getter @Setter private Comic comic;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private Comic comic;
 
   public UndeleteComicTask() {
     super(PersistedTaskType.UNDELETE_COMIC);

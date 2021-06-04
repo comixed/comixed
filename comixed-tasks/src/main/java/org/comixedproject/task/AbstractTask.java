@@ -18,10 +18,12 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.comixedproject.model.tasks.PersistedTaskType;
+import org.comixedproject.views.View;
 
 /**
  * <code>AbstractTask</code> provides a foundation for creating new {@link Task} types.
@@ -32,7 +34,10 @@ import org.comixedproject.model.tasks.PersistedTaskType;
 public abstract class AbstractTask implements Task {
   private String description;
 
-  @Getter @NonNull private PersistedTaskType taskType;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @NonNull
+  private PersistedTaskType taskType;
 
   @Override
   public String getDescription() {

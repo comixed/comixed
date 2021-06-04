@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.text.MessageFormat;
 import java.util.List;
 import lombok.Getter;
@@ -30,6 +31,7 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.adaptors.TaskAdaptor;
 import org.comixedproject.task.encoders.DeleteComicTaskEncoder;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -48,7 +50,10 @@ public class DeleteComicsTask extends AbstractTask {
   @Autowired private TaskAdaptor taskAdaptor;
   @Autowired private TaskService taskService;
 
-  @Getter @Setter private List<Long> comicIds;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private List<Long> comicIds;
 
   public DeleteComicsTask() {
     super(PersistedTaskType.DELETE_COMICS);
