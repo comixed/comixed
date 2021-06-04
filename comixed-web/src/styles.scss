@@ -272,3 +272,13 @@ $cx-column-large: 325px;
   background: var(--primary-darker-color);
   color: var(--text-primary-darker-color);
 }
+
+.cx-accent-light-background {
+  background-color: var(--accent-lighter-color);
+  color: var(--text-accent-lighter-color);
+}
+
+.cx-accent-dark-background {
+  background-color: var(--accent-darker-color);
+  color: var(--text-accent-darker-color);
+}

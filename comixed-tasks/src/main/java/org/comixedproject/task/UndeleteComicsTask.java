@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -30,6 +31,7 @@ import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.UndeleteComicTaskEncoder;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -50,7 +52,10 @@ public class UndeleteComicsTask extends AbstractTask {
   @Autowired private ComicService comicService;
   @Autowired private TaskService taskService;
 
-  @Getter @Setter private List<Long> ids = new ArrayList<>();
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private List<Long> ids = new ArrayList<>();
 
   public UndeleteComicsTask() {
     super(PersistedTaskType.UNDELETE_COMICS);

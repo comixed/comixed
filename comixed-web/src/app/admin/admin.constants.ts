@@ -20,3 +20,6 @@ import { API_ROOT_URL } from '../core';
 
 export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
 export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
+
+export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
+export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;

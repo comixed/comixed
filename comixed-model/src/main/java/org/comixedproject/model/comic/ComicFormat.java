@@ -41,12 +41,12 @@ import org.springframework.stereotype.Component;
 public class ComicFormat {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView(View.ComicFormatList.class)
+  @JsonView({View.ComicFormatList.class, View.AuditLogEntryDetail.class})
   @Getter
   private Long id;
 
   @Column(name = "Name", updatable = false, nullable = false)
-  @JsonView(View.ComicFormatList.class)
+  @JsonView({View.ComicFormatList.class, View.AuditLogEntryDetail.class})
   @Getter
   private String name;
 }

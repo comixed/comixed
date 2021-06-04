@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.Utils;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -61,9 +63,20 @@ public class ProcessComicTask extends AbstractTask {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private PublishComicUpdateAction publishComicUpdateAction;
 
-  @Getter @Setter private Comic comic;
-  @Getter @Setter private boolean deleteBlockedPages;
-  @Getter @Setter private boolean ignoreMetadata;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private Comic comic;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deleteBlockedPages;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean ignoreMetadata;
 
   public ProcessComicTask() {
     super(PersistedTaskType.PROCESS_COMIC);

@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.AddComicTaskEncoder;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -44,9 +46,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueueComicsTask extends AbstractTask {
   @Autowired private TaskService taskService;
 
-  @Getter @Setter boolean ignoreMetadata = false;
-  @Getter @Setter private List<String> filenames;
-  @Getter @Setter private boolean deleteBlockedPages = false;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  boolean ignoreMetadata = false;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private List<String> filenames;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deleteBlockedPages = false;
 
   public QueueComicsTask() {
     super(PersistedTaskType.QUEUE_COMICS);

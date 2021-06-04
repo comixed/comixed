@@ -39,6 +39,8 @@ import org.comixedproject.views.View;
 public class TaskAuditLogEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView(View.AuditLogEntryList.class)
   @Getter
   @Setter
   private Long id;

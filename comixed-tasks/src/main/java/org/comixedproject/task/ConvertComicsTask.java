@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ConvertComicTaskEncoder;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -51,11 +53,30 @@ public class ConvertComicsTask extends AbstractTask {
   @Autowired private ComicService comicService;
   @Autowired private ObjectFactory<ConvertComicTaskEncoder> saveComicTaskEncoderObjectFactory;
 
-  @Getter @Setter private List<Long> idList;
-  @Getter @Setter private ArchiveType targetArchiveType;
-  @Getter @Setter private boolean renamePages;
-  @Getter @Setter private boolean deletePages;
-  @Getter @Setter private boolean deleteOriginal;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private List<Long> idList;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private ArchiveType targetArchiveType;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean renamePages;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deletePages;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deleteOriginal;
 
   public ConvertComicsTask() {
     super(PersistedTaskType.CONVERT_COMIC);

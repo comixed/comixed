@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -58,13 +59,15 @@ public class PersistedTaskAuditLogRepositoryTest {
   private static final Date TEST_ENDED = new Date();
   private static final Boolean TEST_SUCCESSFUL = RANDOM.nextBoolean();
   private static final String TEST_DESCRIPTION = "The task description";
+  private static final int TEST_MAXIMUM_RECORDS = 10;
 
   @Autowired private TaskAuditLogRepository repository;
 
   @Test
   public void testGetEntriesEarliestStartTime() {
     final List<TaskAuditLogEntry> result =
-        this.repository.findAllByStartTimeGreaterThanOrderByStartTime(new Date(0L));
+        this.repository.loadAllStartedAfterDate(
+            new Date(0L), PageRequest.of(0, TEST_MAXIMUM_RECORDS));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -79,7 +82,8 @@ public class PersistedTaskAuditLogRepositoryTest {
   @Test
   public void testGetEntriesAfterSpecifiedDate() {
     final List<TaskAuditLogEntry> result =
-        this.repository.findAllByStartTimeGreaterThanOrderByStartTime(TEST_START_TIMESTAMP);
+        this.repository.loadAllStartedAfterDate(
+            TEST_START_TIMESTAMP, PageRequest.of(0, TEST_MAXIMUM_RECORDS));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -109,7 +113,8 @@ public class PersistedTaskAuditLogRepositoryTest {
     assertEquals(TEST_DESCRIPTION, result.getDescription());
 
     final List<TaskAuditLogEntry> entries =
-        repository.findAllByStartTimeGreaterThanOrderByStartTime(TEST_START_TIMESTAMP);
+        repository.loadAllStartedAfterDate(
+            TEST_START_TIMESTAMP, PageRequest.of(0, TEST_MAXIMUM_RECORDS));
 
     assertTrue(entries.contains(result));
   }

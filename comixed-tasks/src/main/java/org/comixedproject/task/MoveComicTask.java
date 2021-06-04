@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.utils.ComicFileUtils;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -54,9 +56,20 @@ public class MoveComicTask extends AbstractTask {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicFileUtils comicFileUtils;
 
-  @Getter @Setter private Comic comic;
-  @Getter @Setter private String targetDirectory;
-  @Getter @Setter private String renamingRule;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private Comic comic;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private String targetDirectory;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private String renamingRule;
 
   private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
 

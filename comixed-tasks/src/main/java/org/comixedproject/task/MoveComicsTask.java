@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.MoveComicTaskEncoder;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -49,8 +51,15 @@ public class MoveComicsTask extends AbstractTask {
   @Autowired private TaskService taskService;
   @Autowired private ComicService comicService;
 
-  @Getter @Setter private String directory;
-  @Getter @Setter private String renamingRule;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private String directory;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private String renamingRule;
 
   public MoveComicsTask() {
     super(PersistedTaskType.MOVE_COMICS);

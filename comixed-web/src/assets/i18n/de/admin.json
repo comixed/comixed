@@ -1,4 +1,33 @@
 {
+  "task-audit-log": {
+    "label": {
+      "description": "Details",
+      "runtime": "Runtime",
+      "start-time": "Start Time",
+      "successful": "Successful",
+      "task-type": "Task Type"
+    },
+    "load-entries-effect-failure": "Error loading task audit log entries.",
+    "page-title": "Task Audit Log",
+    "tab-title": "Task Audit Log",
+    "text": {
+      "details-title": "Task Details",
+      "exception-title": "Exception Thrown",
+      "runtime": "{duration}ms",
+      "task-type-ADD_COMIC": "Add one comic",
+      "task-type-CONVERT_COMIC": "Convert one comic",
+      "task-type-DELETE_COMIC": "Delete one comic",
+      "task-type-DELETE_COMICS": "Delete multiple comics",
+      "task-type-MOVE_COMIC": "Move one comic",
+      "task-type-MOVE_COMICS": "Move multiple comics",
+      "task-type-PROCESS_COMIC": "Process one comic",
+      "task-type-QUEUE_COMICS": "Queue one comic",
+      "task-type-RESCAN_COMIC": "Rescan one comic",
+      "task-type-RESCAN_COMICS": "Rescan multiple comics",
+      "task-type-UNDELETE_COMIC": "Undelete one comic",
+      "task-type-UNDELETE_COMICS": "Undelete multiple comics"
+    }
+  },
   "web-audit-log": {
     "clear": {
       "confirmation-message": "Are you sure you want to clear the audit log? This action cannot be undone.",

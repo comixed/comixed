@@ -24,6 +24,11 @@ import {
   WebAuditLogState
 } from './reducers/web-audit-log.reducer';
 import { ActionReducerMap } from '@ngrx/store';
+import {
+  TASK_AUDIT_LOG_FEATURE_KEY,
+  TaskAuditLogState,
+  reducer as taskAuditLogReducer
+} from './reducers/task-audit-log.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -33,6 +38,7 @@ interface RouterStateUrl {
 
 export interface AdminModuleState {
   router: RouterReducerState<RouterStateUrl>;
+  [TASK_AUDIT_LOG_FEATURE_KEY]: TaskAuditLogState;
   [WEB_AUDIT_LOG_FEATURE_KEY]: WebAuditLogState;
 }
 
@@ -40,5 +46,6 @@ export type ModuleState = AdminModuleState;
 
 export const reducers: ActionReducerMap<AdminModuleState> = {
   router: routerReducer,
+  [TASK_AUDIT_LOG_FEATURE_KEY]: taskAuditLogReducer,
   [WEB_AUDIT_LOG_FEATURE_KEY]: webAuditLogReducer
 };

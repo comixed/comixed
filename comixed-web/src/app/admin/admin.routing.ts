@@ -18,13 +18,19 @@
 
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { WebAuditLogComponent } from '@app/admin/pages/web-audit-log/web-audit-log.component';
+import { WebAuditLogPageComponent } from '@app/admin/pages/web-audit-log-page/web-audit-log-page.component';
 import { AdminGuard } from '@app/user';
+import { TaskAuditLogPageComponent } from '@app/admin/pages/task-audit-log-page/task-audit-log-page.component';
 
 const routes: Routes = [
   {
+    path: 'admin/audit/tasks',
+    component: TaskAuditLogPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
     path: 'admin/audit/web',
-    component: WebAuditLogComponent,
+    component: WebAuditLogPageComponent,
     canActivate: [AdminGuard]
   }
 ];

@@ -112,8 +112,9 @@
       "publisher-collection": "Éditeurs",
       "series-collection": "Séries",
       "story-collection": "Histoires",
-      "team-collection": "Équipes",,,
-      "unread-comics": "Bandes Dessinées non lues,
+      "task-audit-log": "Task Audit Log",
+      "team-collection": "Équipes",
+      "unread-comics": "Bandes Dessinées non lues",
       "user-preferences": "Préférences",
       "web-audit-log": "journal d'Audit Web"
     },

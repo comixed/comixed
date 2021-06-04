@@ -17,6 +17,8 @@
  */
 
 import { WebAuditLogEntry } from './models/web-audit-log-entry';
+import { TaskAuditLogEntry } from '@app/admin/models/task-audit-log-entry';
+import { PersistedTaskType } from '@app/admin/models/persisted-task-type.enum';
 
 export const WEB_AUDIT_LOG_ENTRY_1: WebAuditLogEntry = {
   id: 1,
@@ -85,5 +87,55 @@ export const WEB_AUDIT_LOG_ENTRY_5: WebAuditLogEntry = {
   startTime: new Date().getTime(),
   endTime: new Date().getTime(),
   successful: true,
+  exception: null
+};
+
+export const TASK_AUDIT_LOG_ENTRY_1: TaskAuditLogEntry = {
+  id: 1,
+  taskType: PersistedTaskType.ADD_COMIC,
+  startTime: new Date().getTime() - 1 * 60 * 60 * 1000,
+  endTime: new Date().getTime(),
+  description: 'First task audit log entry',
+  successful: Math.random() > 0.5,
+  exception: null
+};
+
+export const TASK_AUDIT_LOG_ENTRY_2: TaskAuditLogEntry = {
+  id: 2,
+  taskType: PersistedTaskType.ADD_COMIC,
+  startTime: new Date().getTime() - 1 * 60 * 60 * 1000,
+  endTime: new Date().getTime(),
+  description: 'Second task audit log entry',
+  successful: Math.random() > 0.5,
+  exception: null
+};
+
+export const TASK_AUDIT_LOG_ENTRY_3: TaskAuditLogEntry = {
+  id: 3,
+  taskType: PersistedTaskType.ADD_COMIC,
+  startTime: new Date().getTime() - 1 * 60 * 60 * 1000,
+  endTime: new Date().getTime(),
+  description: 'Third task audit log entry',
+  successful: Math.random() > 0.5,
+  exception: null
+};
+
+export const TASK_AUDIT_LOG_ENTRY_4: TaskAuditLogEntry = {
+  id: 4,
+  taskType: PersistedTaskType.ADD_COMIC,
+  startTime: new Date().getTime() - 1 * 60 * 60 * 1000,
+  endTime: new Date().getTime(),
+  description: 'Fourth task audit log entry',
+  successful: Math.random() > 0.5,
+  exception: null
+};
+
+export const TASK_AUDIT_LOG_ENTRY_5: TaskAuditLogEntry = {
+  id: 5,
+  taskType: PersistedTaskType.ADD_COMIC,
+  startTime: new Date().getTime() - 1 * 60 * 60 * 1000,
+  endTime: new Date().getTime(),
+  description: 'Fifth task audit log entry',
+  successful: Math.random() > 0.5,
   exception: null
 };

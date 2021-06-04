@@ -18,6 +18,7 @@
 
 package org.comixedproject.task;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
@@ -39,6 +40,7 @@ import org.comixedproject.service.task.TaskService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -65,11 +67,30 @@ public class ConvertComicTask extends AbstractTask {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ReadingListService readingListService;
 
-  @Getter @Setter private Comic comic;
-  @Getter @Setter private ArchiveType targetArchiveType;
-  @Getter @Setter private boolean renamePages;
-  @Getter @Setter private boolean deletePages;
-  @Getter @Setter private boolean deleteOriginal;
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private Comic comic;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private ArchiveType targetArchiveType;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean renamePages;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deletePages;
+
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  @Setter
+  private boolean deleteOriginal;
 
   public ConvertComicTask() {
     super(PersistedTaskType.CONVERT_COMIC);

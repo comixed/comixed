@@ -42,14 +42,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class LastRead {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView(View.UserDetailsView.class)
+  @JsonView({View.UserDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   private Long id;
 
   @ManyToOne
   @JoinColumn(name = "ComicId", insertable = true, updatable = false, nullable = false)
   @JsonProperty("comic")
-  @JsonView(View.LastReadList.class)
+  @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull
@@ -65,7 +65,7 @@ public class LastRead {
   @Column(name = "LastReadOn", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.LastReadList.class)
+  @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   private Date lastRead = new Date();
@@ -73,12 +73,14 @@ public class LastRead {
   @Column(name = "CreatedOn", updatable = false, nullable = false)
   @CreatedDate
   @Getter
+  @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   private Date createdOn = new Date();
 
   @Column(name = "LastModifiedOn", nullable = false, updatable = true)
   @LastModifiedDate
   @Getter
   @Setter
+  @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   private Date lastModifiedOn = new Date();
 
   @Override

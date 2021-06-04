@@ -1,0 +1,27 @@
+@import '~styles';
+
+.selected-row {
+  background-color: var(--accent-lighter-color);
+  color: var(--text-accent-lighter-color);
+}
+
+.mat-column-task-type {
+}
+
+.mat-column-start-time {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-runtime {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-successful {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

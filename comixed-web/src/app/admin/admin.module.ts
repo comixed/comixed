@@ -26,7 +26,7 @@ import {
 } from '@app/admin/reducers/web-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { WebAuditLogEffects } from '@app/admin/effects/web-audit-log.effects';
-import { WebAuditLogComponent } from './pages/web-audit-log/web-audit-log.component';
+import { WebAuditLogPageComponent } from './pages/web-audit-log-page/web-audit-log-page.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -35,22 +35,31 @@ import { CoreModule } from '@app/core/core.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
+import {
+  reducer as taskAuditLogReducer,
+  TASK_AUDIT_LOG_FEATURE_KEY
+} from '@app/admin/reducers/task-audit-log.reducer';
+import { TaskAuditLogEffects } from '@app/admin/effects/task-audit-log.effects';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [WebAuditLogComponent],
+  declarations: [WebAuditLogPageComponent, TaskAuditLogPageComponent],
   imports: [
     CommonModule,
     CoreModule,
     AdminRouting,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(TASK_AUDIT_LOG_FEATURE_KEY, taskAuditLogReducer),
     StoreModule.forFeature(WEB_AUDIT_LOG_FEATURE_KEY, webAuditLogReducer),
-    EffectsModule.forFeature([WebAuditLogEffects]),
+    EffectsModule.forFeature([TaskAuditLogEffects, WebAuditLogEffects]),
     MatTableModule,
     MatToolbarModule,
     MatPaginatorModule,
     MatSortModule,
     MatButtonModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatCardModule
   ],
   exports: [CommonModule, CoreModule]
 })

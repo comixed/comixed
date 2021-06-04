@@ -21,7 +21,7 @@ package org.comixedproject.model.comic;
 import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
 import lombok.*;
-import org.comixedproject.views.View.ComicListView;
+import org.comixedproject.views.View;
 
 /**
  * <code>Credit</code> associates a name with a creative role for a single comic.
@@ -36,7 +36,7 @@ import org.comixedproject.views.View.ComicListView;
 public class Credit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView(ComicListView.class)
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   private Long id;
 
   @ManyToOne
@@ -48,7 +48,7 @@ public class Credit {
 
   @Column(name = "Name")
   @JsonProperty("name")
-  @JsonView(ComicListView.class)
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull
@@ -56,7 +56,7 @@ public class Credit {
 
   @Column(name = "Role")
   @JsonProperty("role")
-  @JsonView(ComicListView.class)
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull

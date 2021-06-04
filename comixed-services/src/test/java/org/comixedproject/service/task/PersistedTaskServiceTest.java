@@ -38,6 +38,7 @@ import org.springframework.data.domain.PageRequest;
 public class PersistedTaskServiceTest {
   private static final int TEST_TASK_COUNT = 279;
   private static final Date TEST_AUDIT_LOG_CUTOFF_DATE = new Date();
+  private static final int TEST_MAXIMUM_RECORDS = 100;
 
   @InjectMocks private TaskService taskService;
   @Mock private TaskRepository taskRepository;
@@ -46,6 +47,7 @@ public class PersistedTaskServiceTest {
   @Mock private PersistedTask persistedTask;
   @Mock private PersistedTask savedPersistedTask;
   @Mock private List<PersistedTask> persistedTaskList;
+
   @Captor private ArgumentCaptor<PageRequest> pageRequestArgumentCaptor;
 
   @Test
@@ -61,18 +63,23 @@ public class PersistedTaskServiceTest {
   @Test
   public void testGetAuditLogEntriesAfter() throws ComiXedServiceException {
     Mockito.when(
-            taskAuditLogRepository.findAllByStartTimeGreaterThanOrderByStartTime(
-                Mockito.any(Date.class)))
+            taskAuditLogRepository.loadAllStartedAfterDate(
+                Mockito.any(Date.class), pageRequestArgumentCaptor.capture()))
         .thenReturn(auditLogEntryList);
 
     final List<TaskAuditLogEntry> result =
-        taskService.getAuditLogEntriesAfter(TEST_AUDIT_LOG_CUTOFF_DATE);
+        taskService.getAuditLogEntriesAfter(TEST_AUDIT_LOG_CUTOFF_DATE, TEST_MAXIMUM_RECORDS);
 
     assertNotNull(result);
     assertSame(auditLogEntryList, result);
 
+    final PageRequest pageRequest = pageRequestArgumentCaptor.getValue();
+    assertNotNull(pageRequest);
+    assertEquals(0, pageRequest.getPageNumber());
+    assertEquals(TEST_MAXIMUM_RECORDS, pageRequest.getPageSize());
+
     Mockito.verify(taskAuditLogRepository, Mockito.times(1))
-        .findAllByStartTimeGreaterThanOrderByStartTime(TEST_AUDIT_LOG_CUTOFF_DATE);
+        .loadAllStartedAfterDate(TEST_AUDIT_LOG_CUTOFF_DATE, pageRequestArgumentCaptor.getValue());
   }
 
   @Test

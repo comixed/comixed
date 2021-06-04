@@ -20,16 +20,22 @@ import org.comixedproject.views.View;
  */
 @AllArgsConstructor
 public class GetTaskAuditLogResponse {
-  @Getter
-  @Setter
   @JsonProperty("entries")
   @JsonView(View.AuditLogEntryList.class)
-  private List<TaskAuditLogEntry> entries = new ArrayList<>();
-
   @Getter
   @Setter
+  private List<TaskAuditLogEntry> entries = new ArrayList<>();
+
   @JsonProperty("latest")
   @JsonView(View.AuditLogEntryList.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @Getter
+  @Setter
   private Date latest;
+
+  @JsonProperty("lastPage")
+  @JsonView(View.AuditLogEntryList.class)
+  @Getter
+  @Setter
+  private boolean lastPage;
 }
