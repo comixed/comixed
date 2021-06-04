@@ -20,14 +20,14 @@ realpath() {
   [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
 }
 
-ME=$(realpath $0)
-BINDIR=$(dirname ${ME})
-LIBDIR=$(realpath ${BINDIR}/../lib)
+ME=$(realpath "$0")
+BINDIR=$(dirname "${ME}")
+LIBDIR=$(realpath "${BINDIR}"/../lib)
 
 JAVA=$(which java)
 JAROPTIONS=''
 JVMOPTIONS=''
-COMIXED_JAR_FILE=${BINDIR}/comixed-app-*.jar
+COMIXED_JAR_FILE=$(echo "${BINDIR}"/comixed-app-*.jar)
 DEBUG=false
 FULL_DEBUG=false
 VERBOSE=false
@@ -74,7 +74,7 @@ if $VERBOSE; then
   set -x
 fi
 
-if [[ -f "${COMIXED_JAR_FILE}" ]]; then
+if [[ ! -f "${COMIXED_JAR_FILE}" ]]; then
   echo "Missing JAR file"
   exit 1
 fi
@@ -112,7 +112,8 @@ fi
 # build a list of JVM arguments
 
 if [[ $LIBDIR ]]; then
-  JVMOPTIONS="${JVMOPTIONS} -classpath ${LIBDIR}"
+  JVMOPTIONS="$JVMOPTIONS -classpath"
+  CLASSPATH="${LIBDIR}"
 fi
 
-$JAVA ${JVMOPTIONS} -jar ${COMIXED_JAR_FILE} ${JAROPTIONS}
+$JAVA ${JVMOPTIONS} "${CLASSPATH}" -jar "${COMIXED_JAR_FILE}" ${JAROPTIONS}
