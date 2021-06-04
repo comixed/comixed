@@ -10,3 +10,4 @@ what it is today.
  * Pidockmedia <pidockmedia@gmail.com>
  * Frédéric Fouret (BRUCELLA2) <fouretfrederic@gmail.com>
  * Arturo Pérez <theotocopulitos@gmail.com>
+ * J Fine <jfine@jfine.com>
