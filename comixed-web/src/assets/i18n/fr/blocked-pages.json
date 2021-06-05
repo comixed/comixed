@@ -1,50 +1,50 @@
 {
   "blocked-page": {
     "editing": {
-      "reset-message": "Discard your changes to this blocked page type?",
-      "reset-title": "Reset Blocked Page",
-      "save-effect-failure": "Failed to save blocked page changes...",
-      "save-effect-success": "Blocked page changes saved.",
-      "save-message": "Are you sure you want to save your changes to this blocked page?",
-      "save-title": "Save Blocked Page"
+      "reset-message": "Annuler les modifications apportées à ce type de page bloquée ?",
+      "reset-title": "Rétablir la page bloquée",
+      "save-effect-failure": "Échec de l'enregistrement des modifications de la page bloquée...",
+      "save-effect-success": "Les modifications de la page bloquée sont enregistrées.",
+      "save-message": "Êtes-vous sûr de vouloir enregistrer vos modifications pour cette page bloquée ?",
+      "save-title": "Sauvegarder la page bloquée"
     },
     "label": {
-      "hash": "Hash Value",
-      "label": "Hash Label"
+      "hash": "Valeur de hachage",
+      "label": "Libellé du hachage"
     },
-    "load-by-hash-effect-error": "Failed to load blocked page for hash: {hash}",
-    "page-title": "Blocked Page Details: {hash}",
+    "load-by-hash-effect-error": "Impossible de charger la page bloquée pour le hash : {hash}",
+    "page-title": "Détails de la page bloquée : {hash}",
     "set-state": {
-      "effect-failure": "Failed to {block,select,true{block} other{unblock}} page hash.",
-      "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."
+      "effect-failure": "Échec du hash de la page {block,select,true{bloquée} other{débloquée}}.",
+      "effect-success": "Succès du hash de la page {block, select, true{bloquée} other{débloquée}}."
     }
   },
   "blocked-page-list": {
     "delete-entries": {
-      "confirmation-message": "Are you sure you want to unblock the {count, plural, =1{selected entry} other{# selected entries}}?",
-      "confirmation-title": "Unblock Hashes",
-      "effect-failure": "Failed to delete blocked pages.",
-      "effect-success": "Deleted {count, plural, =1{one entry} other{# entries}}."
+      "confirmation-message": "Êtes-vous sûr de vouloir débloquer {count, plural, =1{l'entrée sélectionnée} other{les # entrées sélectionnées}}?",
+      "confirmation-title": "Débloquer les hachages",
+      "effect-failure": "Échec de la suppression des pages bloquées.",
+      "effect-success": "{count, plural, =1{une entrée suprrimée} other{# entrées supprimées}}."
     },
     "download-file": {
-      "effect-failure": "Failed to download blocked pages file."
+      "effect-failure": "Échec du téléchargement du fichier des pages bloquées."
     },
     "header": {
-      "comic-count": "Comics Affected",
-      "created-on": "Entry Added",
-      "hash": "Page Hash",
-      "label": "Label"
+      "comic-count": "Bandes dessinées affectées",
+      "created-on": "Entrée ajoutée",
+      "hash": "Hash de la page",
+      "label": "Libellé"
     },
-    "load-effect-failure": "Failed to load blocked pages.",
+    "load-effect-failure": "Impossible de charger les pages bloquées.",
     "tooltip": {
-      "download-file": "Download blocked pages file.",
-      "upload-file": "Upload a blocked pages file."
+      "download-file": "Télécharger le fichier des pages bloquées.",
+      "upload-file": "Uploader un fichier de pages bloquées."
     },
     "upload-file": {
-      "confirmation-message": "Are you sure you want to upload this file?",
-      "confirmation-title": "Upload Blocked Pages File",
-      "effect-failure": "Failed to upload blocked page file.",
-      "effect-success": "Blocked pages now contains {count, plural, =1{one entry} other{# entries}}."
+      "confirmation-message": "Êtes-vous sûr de vouloir uploader ce fichier ?",
+      "confirmation-title": "Uploader le fichier des pages bloquées",
+      "effect-failure": "Impossible de uploader le fichier de la page bloquée.",
+      "effect-success": "Les pages bloquées contiennent maintenant {count, plural, =1{une entrée} other{# entrées}}."
     }
   }
 }

@@ -5,14 +5,14 @@
   "user": {
     "edit-current-user": {
       "label": {
-        "email": "Email Address",
-        "password": "Password",
-        "password-verify": "Verify The Password"
+        "email": "Adresse email",
+        "password": "Mot de passe",
+        "password-verify": "Vérifiez le mot de passe"
       },
-      "page-title": "Edit User Account",
-      "tab-title": "Account: {email}",
+      "page-title": "Modifier le compte utilisateur",
+      "tab-title": "Compte: {email}",
       "validation": {
-        "passwords-dont-match": "Passwords do not match..."
+        "passwords-dont-match": "Les mots de passe ne correspondent pas..."
       }
     },
     "login-user": {
@@ -28,24 +28,24 @@
       "confirmation-message": "Êtes-vous sûr de vouloir vous déconnecter ?"
     },
     "reset-user-changes": {
-      "confirmation-message": "Discard changes to your account?",
-      "conformation-title": "Revert Changes"
+      "confirmation-message": "Annuler les modifications apportées à votre compte ?",
+      "conformation-title": "Annuler les changements"
     },
     "save-current-user": {
-      "confirmation-message": "Are you sure you want to save the changes to your user account?",
-      "confirmation-title": "Save Account Changes",
-      "effect-failure": "Failed to save changes to account.",
-      "effect-success": "Saved changes to account."
+      "confirmation-message": "Êtes-vous sûr de vouloir enregistrer les changements de votre compte utilisateur ?",
+      "confirmation-title": "Enregistrer les modifications du compte",
+      "effect-failure": "Échec de l'enregistrement des changements apportés au compte.",
+      "effect-success": "Sauvegarde des changements apportés au compte."
     },
     "user-preferences": {
-      "delete-confirmation-message": "Are you sure you want to delete this user preference?",
-      "delete-confirmation-title": "Delete User Preference",
+      "delete-confirmation-message": "Êtes-vous sûr de vouloir supprimer cette préférence utilisateur ?",
+      "delete-confirmation-title": "Supprimer les préférences de l'utilisateur",
       "label": {
-        "preference-name": "Preference Name",
-        "preference-value": "Value"
+        "preference-name": "Nom de la préférence",
+        "preference-value": "Valeur"
       },
       "tooltip": {
-        "delete-preference": "Delete this user preference."
+        "delete-preference": "Supprimer cette préférence utilisateur."
       }
     }
   }

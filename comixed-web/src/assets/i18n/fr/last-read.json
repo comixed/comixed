@@ -1,11 +1,11 @@
 {
   "last-read-list": {
     "load-entries": {
-      "effect-failure": "Failed to load last read entries."
+      "effect-failure": "Échec du chargement des dernières entrées lues."
     }
   },
   "update-read-status": {
-    "effect-failure": "Failed to mark comic as {status, select, true{read} other{unread}}.",
-    "effect-success": "Comic successfully marked as {status, select, true{read} other{unread}}."
+    "effect-failure": "Impossible de marquer la Bande Dessinée comme {status, select, true{lue} other{non lue}}.",
+    "effect-success": "La Bande Dessinée a été marquée {status, select, true{lue} other{non lue}} avec succés."
   }
 }

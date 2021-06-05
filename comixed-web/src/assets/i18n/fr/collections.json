@@ -1,11 +1,11 @@
 {
   "collection-list": {
     "label": {
-      "comic-count": "# Comics",
-      "name": "Collection Name"
+      "comic-count": "# Bandes dessinées",
+      "name": "Nom de la collection"
     },
     "text": {
-      "undefined": "[UNDEFINED]"
+      "undefined": "[NON DEFINIE]"
     }
   }
 }

@@ -2,8 +2,8 @@
   "library": {
     "all-comics": {
       "tab-title": "Toutes les Bandes Dessinées",
-      "tab-title-deleted": "Deleted Comics",
-      "tab-title-unread": "Unread Comics"
+      "tab-title-deleted": "Bandes dessinées supprimées",
+      "tab-title-unread": "Bandes dessinées non lues"
     },
     "comic-group": {
       "invalid-grouping": "Le groupe \"{name}\" n'est pas valide."
@@ -36,9 +36,9 @@
       "effect-success": "{count, plural, =1{une Bande Dessinée marquée} other{# Bandes Dessinées marquées}} comme {read, select, true{lues} other{non lues}}."
     },
     "tooltip": {
-      "deselect-all": "Deselect all comics.",
+      "deselect-all": "Désélectionner toutes les bandes dessinées.",
       "scrape-comics": "Commencer la récupération des détails",
-      "select-all": "Select all comics."
+      "select-all": "Sélectionner toutes les bandes dessinées."
     }
   },
   "scraping": {
@@ -53,7 +53,7 @@
       "matchability": "Correspondance",
       "publisher": "Éditeur",
       "series-name": "Série",
-      "start-year": "SAnnée de lancement"
+      "start-year": "Année de lancement"
     },
     "load-scraping-volumes": {
       "effect-failure": "Impossible d'obtenir des volumes..."
@@ -83,7 +83,7 @@
       "reject-scraping-issue": "Rejeter ce numéro.",
       "select-scraping-issue": "Sélectionner ce numéro.",
       "show-comic-details": "Afficher les détails",
-      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache."
+      "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération."
     },
     "volume-list": {
       "issue-count-header": "# Numéros",

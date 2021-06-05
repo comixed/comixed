@@ -13,7 +13,7 @@
       "comic-format": "Format",
       "comic-overview": "Aperçu",
       "comic-pages": "Pages",
-      "coic-state": "State",
+      "coic-state": "État",
       "comic-story": "Histoire",
       "credits": "Équipe créative ({count})",
       "description": "Description de ce numéro",
@@ -30,7 +30,7 @@
       "page-count": "# de pages",
       "publisher": "Éditeur",
       "scan-type": "Type de scan",
-      "scraping-notes": "Scraping Notes",
+      "scraping-notes": "Notes de récupération",
       "series": "Nom de série",
       "sort-name": "Nom pour le tri",
       "stories": "Arcs naratifs dans ce numéro ({count})",
@@ -48,55 +48,55 @@
       "volume": "Le volume..."
     },
     "save-changes": {
-      "effect-failure": "Failed to save changes.",
-      "effect-success": "Changes saved.",
-      "message": "Are you sure you want to manual changes to this comic?",
-      "title": "Save Changes To Comic"
+      "effect-failure": "Échec de l'enregistrement des modifications.",
+      "effect-success": "Modifications enregistrées.",
+      "message": "Êtes-vous sûr de vouloir modifier manuellement cette bande dessinée ?",
+      "title": "Enregistrer les changements dans la bande dessinée"
     },
     "text": {
-      "comic-changed": "Changed",
+      "comic-changed": "Modifiée",
       "file-entries": "Il y a {count, plural, =1{un fichier} other{# fichiers}} dans cette archive.",
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
-      "state-ADDED": "Unchanged",
-      "state-CHANGED": "Changed",
-      "state-DELETED": "Marked For Deletion",
-      "state-STABLE": "Unchanged"
+      "state-ADDED": "Non modifié",
+      "state-CHANGED": "Modifié",
+      "state-DELETED": "Marqué pour suppression",
+      "state-STABLE": "Non modifié"
     },
     "tooltip": {
       "blocked-page": "Les pages comme celle-ci sont bloquées...",
-      "cancel-scraping": "Stop scraping this comic.",
+      "cancel-scraping": "Arrêter la récupération des détails de cette Bande Dessinées.",
       "download-comic": "Télécharger cette Bande Dessinée...",
       "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
       "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",
-      "mark-read": "Mark this comic as read.",
-      "mark-unread": "Mark this comic as unread.",
-      "match-0": "Not a match.",
-      "match-1": "Partial match.",
-      "match-2": "Exact match.",
-      "save-changes": "Saves changes to this comic.",
-      "scrape-comic": "Scrape this comic.",
-      "undo-changes": "Undo changes to this comic.",
-      "update-comic-info": "Update the metadata in this comic file."
+      "mark-read": "Marquez cette Bande Dessinée comme lue.",
+      "mark-unread": "Marquez cette Bande Dessinée comme non lue.",
+      "match-0": "Pas de correspondance.",
+      "match-1": "Correspondance partielle.",
+      "match-2": "Correspondance exacte.",
+      "save-changes": "Enregistrer les modifications de cette Bande Dessinée.",
+      "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
+      "undo-changes": "Annulez les modifications de cette Bande Dessinée",
+      "update-comic-info": "Mettre à jour les métadonnées dans ce fichier de bande dessinée."
     },
     "undo-changes": {
       "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",
       "title": "Annuler les changements"
     },
     "update-comic-info": {
-      "confirmation-message": "Update the metadata in this comic book?",
-      "confirmation-title": "Update Comic Metadata",
-      "effect-failure": "Failed to update ComicInfo.xml.",
-      "effect-success": "Successfully updated ComicInfo.xml"
+      "confirmation-message": "Mettre à jour les métadonnées de cette bande dessinée ?",
+      "confirmation-title": "Mettre à jour les métadonnées de la bande dessinée.",
+      "effect-failure": "Échec de la mise à jour du fichier ComicInfo.xml.",
+      "effect-success": "Succès de la mise à jour du fichier ComicInfo.xml."
     }
   },
   "comic-format": {
     "load-formats": {
-      "effect-failure": "Failed to load comic formats."
+      "effect-failure": "Échec du chargement des formats de bande dessinée."
     }
   },
   "scan-type": {
     "load-scan-types": {
-      "effect-failure": "Failed to load scan types."
+      "effect-failure": "Échec du chargement des types de scan."
     }
   }
 }

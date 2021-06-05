@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "Un dysfonctionnement général du système s'est produit.",
     "logged-in": "Connecté avec le compte : {email}",
-    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Deleted: {deletedCount}"
+    "system-status": "Imports: {importCount} | Bandes dessinées: {comicCount} | Lues: {readCount} | Supprimées: {deletedCount}"
   },
   "build-details": {
     "label": {
@@ -54,7 +54,7 @@
   },
   "home": {
     "label": {
-      "task-count": "Task Count"
+      "task-count": "Nombre de tâches"
     },
     "title": "Home"
   },
@@ -64,61 +64,61 @@
     },
     "logging-menu": {
       "root": "Logging",
-      "1": "All (Verbose)",
-      "2": "Trace (Even More)",
-      "3": "Debug (A Lot)",
-      "4": "Informational"
+      "1": "Tout (Verbeux)",
+      "2": "Trace (Encore plus)",
+      "3": "Debug (Beaucoup)",
+      "4": "information"
     },
     "tooltip": {
-      "toggle-sidenav": "Shows/Hides the side navigation panel..."
+      "toggle-sidenav": "Afficher/Cacher le paneau de navigation latéral..."
     },
     "user-menu": {
-      "root": "Account",
-      "show-options-panel": "Set User Options..."
+      "root": "Compte",
+      "show-options-panel": "Configurer les options utilisateurs..."
     }
   },
   "navigation": {
     "heading": {
-      "account": "My Account",
+      "account": "Mon compte",
       "admin": "Administration",
       "collections": "Collections",
-      "comics": "Comics",
-      "reading-lists": "Reading Lists",
-      "system-status": "System"
+      "comics": "Bandes Dessinées",
+      "reading-lists": "Listes de lecture",
+      "system-status": "Systeme"
     },
     "label": {
-      "all-comics": "All comics",
-      "build-details": "Build Details",
-      "character-collection": "Characters",
-      "comics-section": "Comics",
-      "deleted-comics": "Deleted comics",
-      "location-collection": "Locations",
-      "publisher-collection": "Publishers",
-      "reading-lists-section": "Reading Lists",
-      "series-collection": "Series",
-      "story-collection": "Stories",
-      "system-status-section": "System",
-      "team-collection": "Teams",
-      "unread-comics": "Unread Comics"
+      "all-comics": "Toutes les bandes dessinées",
+      "build-details": "Détails du build",
+      "character-collection": "Personnages",
+      "comics-section": "Bandes Dessinées",
+      "deleted-comics": "Bandes Dessinées supprimées",
+      "location-collection": "Lieux",
+      "publisher-collection": "Éditeurs",
+      "reading-lists-section": "Listes de lecture",
+      "series-collection": "Séries",
+      "story-collection": "Histoires",
+      "system-status-section": "Systeme",
+      "team-collection": "Équipes",
+      "unread-comics": "Bandes Dessinées non lues"
     },
     "option": {
-      "all-comics": "All comics",
-      "blocked-pages": "Blocked Pages",
-      "build-details": "Build Details",
-      "character-collection": "Characters",
-      "deleted-comics": "Deleted comics",
-      "import-comics": "Import Comics",
-      "location-collection": "Locations",
-      "publisher-collection": "Publishers",
-      "series-collection": "Series",
-      "story-collection": "Stories",
-      "team-collection": "Teams",
-      "unread-comics": "Unread Comics",
-      "user-preferences": "Preferences",
-      "web-audit-log": "Web Audit Log"
+      "all-comics": "Toutes les bandes dessinées",
+      "blocked-pages": "Pages bloquées",
+      "build-details": "BDétails du build",
+      "character-collection": "Personnages",
+      "deleted-comics": "Bandes Dessinées supprimées",
+      "import-comics": "Bandes Dessinées importées",
+      "location-collection": "Lieux",
+      "publisher-collection": "Éditeurs",
+      "series-collection": "Séries",
+      "story-collection": "Histoires",
+      "team-collection": "Équipes",,,
+      "unread-comics": "Bandes Dessinées non lues,
+      "user-preferences": "Préférences",
+      "web-audit-log": "journal d'Audit Web"
     },
     "tooltip": {
-      "account": "View account details."
+      "account": "Voir les détails du compte."
     }
   },
   "session": {
@@ -132,7 +132,7 @@
   },
   "validation": {
     "field-required": "Ce champ est obligatoire",
-    "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
-    "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."
+    "value-too-long": "La longueur maximal est {length, plural, =1{un caractère} other{# caractères}}.",
+    "value-too-short": "La longueur minimal est {length, plural, =1{un caractère} other{# caractères}}."
   }
 }
