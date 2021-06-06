@@ -22,6 +22,7 @@ import {
   UploadedBlockedPagesState
 } from '../reducers/upload-blocked-pages.reducer';
 
-export const selectUploadBlockedPagesState = createFeatureSelector<UploadedBlockedPagesState>(
-  UPLOAD_BLOCKED_PAGES_FEATURE_KEY
-);
+export const selectUploadBlockedPagesState =
+  createFeatureSelector<UploadedBlockedPagesState>(
+    UPLOAD_BLOCKED_PAGES_FEATURE_KEY
+  );

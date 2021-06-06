@@ -25,9 +25,8 @@ import {
 /**
  * Selects the blocked page list feature state.
  */
-export const selectBlockedPageListState = createFeatureSelector<BlockedPageListState>(
-  BLOCKED_PAGE_LIST_FEATURE_KEY
-);
+export const selectBlockedPageListState =
+  createFeatureSelector<BlockedPageListState>(BLOCKED_PAGE_LIST_FEATURE_KEY);
 
 /**
  * Selects the list of blocked pages.

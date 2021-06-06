@@ -64,7 +64,8 @@ export const NO_MATCH_TEXT = 'scraping.text.no-match';
   styleUrls: ['./comic-scraping.component.scss']
 })
 export class ComicScrapingComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 

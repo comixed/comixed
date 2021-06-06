@@ -299,10 +299,9 @@ describe('ImportComicsPageComponent', () => {
       component.ignoreMetadata = IGNORE_METADATA;
       component.deleteBlockedPages = DELETE_BLOCKED_PAGES;
 
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirm: Confirmation) => confirm.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.confirm()
+      );
       component.onStartImport();
     });
 

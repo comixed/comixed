@@ -21,9 +21,8 @@ import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import { flattened } from '@app/core';
 
 /** Selects the feature state. */
-export const selectLibraryState = createFeatureSelector<LibraryState>(
-  LIBRARY_FEATURE_KEY
-);
+export const selectLibraryState =
+  createFeatureSelector<LibraryState>(LIBRARY_FEATURE_KEY);
 
 /** Selects the selected comics. */
 export const selectSelectedComics = createSelector(

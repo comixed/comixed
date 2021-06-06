@@ -19,6 +19,5 @@
 import { createFeatureSelector } from '@ngrx/store';
 import { BUSY_FEATURE_KEY, BusyState } from '../reducers/busy.reducer';
 
-export const selectBusyState = createFeatureSelector<BusyState>(
-  BUSY_FEATURE_KEY
-);
+export const selectBusyState =
+  createFeatureSelector<BusyState>(BUSY_FEATURE_KEY);

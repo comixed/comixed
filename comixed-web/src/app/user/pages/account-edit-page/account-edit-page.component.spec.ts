@@ -226,10 +226,9 @@ describe('AccountEditPageComponent', () => {
     const EMAIL = USER.email.substr(1);
 
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.user = USER;
       component.userForm.controls.email.setValue(EMAIL);
       component.userForm.controls.password.setValue(PASSWORD);
@@ -252,10 +251,9 @@ describe('AccountEditPageComponent', () => {
     const EMAIL = USER.email.substr(1);
 
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.user = USER;
       component.userForm.controls.email.setValue(EMAIL);
       component.userForm.controls.password.setValue(PASSWORD);

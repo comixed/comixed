@@ -291,10 +291,9 @@ describe('ComicBookPageComponent', () => {
   describe('updating the comic info', () => {
     beforeEach(() => {
       component.comic = COMIC;
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onUpdateComicInfo();
     });
 

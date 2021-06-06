@@ -102,10 +102,9 @@ describe('ComicEditComponent', () => {
 
   describe('undoing changes', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onUndoChanges();
     });
 
@@ -189,10 +188,9 @@ describe('ComicEditComponent', () => {
 
   describe('saving changes', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.comic = COMIC;
       component.onSaveChanges();
     });

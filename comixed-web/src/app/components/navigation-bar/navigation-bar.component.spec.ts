@@ -135,10 +135,9 @@ describe('NavigationBarComponent', () => {
 
   describe('on logout clicked', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirm: Confirmation) => confirm.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirm: Confirmation) => confirm.confirm()
+      );
       component.onLogout();
     });
 

@@ -23,9 +23,8 @@ import {
 } from '../reducers/scraping.reducer';
 
 /** Selects for the feature state. */
-export const selectScrapingState = createFeatureSelector<ScrapingState>(
-  SCRAPING_FEATURE_KEY
-);
+export const selectScrapingState =
+  createFeatureSelector<ScrapingState>(SCRAPING_FEATURE_KEY);
 
 /** Selects for the scraping volumes. */
 export const selectScrapingVolumes = createSelector(

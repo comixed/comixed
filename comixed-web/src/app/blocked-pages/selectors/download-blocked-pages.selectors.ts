@@ -22,6 +22,7 @@ import {
   DownloadBlockedPagesState
 } from '../reducers/download-blocked-pages.reducer';
 
-export const selectDownloadBlockedPagesState = createFeatureSelector<DownloadBlockedPagesState>(
-  DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY
-);
+export const selectDownloadBlockedPagesState =
+  createFeatureSelector<DownloadBlockedPagesState>(
+    DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY
+  );

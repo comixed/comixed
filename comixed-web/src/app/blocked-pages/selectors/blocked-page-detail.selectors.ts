@@ -23,9 +23,10 @@ import {
 } from '../reducers/blocked-page-detail.reducer';
 
 /** Loads the blocked page detail feature state. */
-export const selectBlockedPageDetailState = createFeatureSelector<BlockedPageDetailState>(
-  BLOCKED_PAGE_DETAIL_FEATURE_KEY
-);
+export const selectBlockedPageDetailState =
+  createFeatureSelector<BlockedPageDetailState>(
+    BLOCKED_PAGE_DETAIL_FEATURE_KEY
+  );
 
 export const selectBlockedPageDetail = createSelector(
   selectBlockedPageDetailState,
