@@ -49,7 +49,8 @@ import { selectDisplayState } from '@app/library/selectors/display.selectors';
   styleUrls: ['./library-toolbar.component.scss']
 })
 export class LibraryToolbarComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @Input() comics: Comic[] = [];

@@ -22,6 +22,7 @@ import {
   DeleteBlockedPagesState
 } from '../reducers/delete-blocked-pages.reducer';
 
-export const selectDeleteBlockedPagesState = createFeatureSelector<DeleteBlockedPagesState>(
-  DELETE_BLOCKED_PAGES_FEATURE_KEY
-);
+export const selectDeleteBlockedPagesState =
+  createFeatureSelector<DeleteBlockedPagesState>(
+    DELETE_BLOCKED_PAGES_FEATURE_KEY
+  );

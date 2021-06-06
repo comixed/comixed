@@ -164,10 +164,9 @@ describe('BlockedPageDetailPageComponent', () => {
 
   describe('saving the blocked page', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.blockedPage = ENTRY;
       component.onSave();
     });
@@ -185,10 +184,9 @@ describe('BlockedPageDetailPageComponent', () => {
 
   describe('resetting the form', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.blockedPage = ENTRY;
       component.editing = true;
       component.blockedPageForm.controls.label.setValue(ENTRY.label.substr(1));

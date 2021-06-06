@@ -22,6 +22,5 @@ import {
   UpdateComicInfoState
 } from '../reducers/update-comic-info.reducer';
 
-export const selectUpdateComicInfoState = createFeatureSelector<UpdateComicInfoState>(
-  UPDATE_COMIC_INFO_FEATURE_KEY
-);
+export const selectUpdateComicInfoState =
+  createFeatureSelector<UpdateComicInfoState>(UPDATE_COMIC_INFO_FEATURE_KEY);

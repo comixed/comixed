@@ -72,11 +72,8 @@ describe('UserGuard', () => {
     });
 
     it('defers access', () => {
-      (guard.canActivate(
-        null,
-        null
-      ) as Observable<boolean>).subscribe(response =>
-        expect(response).toBeTrue()
+      (guard.canActivate(null, null) as Observable<boolean>).subscribe(
+        response => expect(response).toBeTrue()
       );
     });
 

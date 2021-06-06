@@ -74,10 +74,9 @@ describe('UserPreferencesPageComponent', () => {
 
   describe('deleting a user preference', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onDeletePreference(PREFERENCE.name);
     });
 

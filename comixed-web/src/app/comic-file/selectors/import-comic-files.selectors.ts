@@ -23,6 +23,5 @@ import {
 import { createFeatureSelector } from '@ngrx/store';
 
 /** Selects the comic import feature state. */
-export const selectImportComicFilesState = createFeatureSelector<ImportComicFilesState>(
-  IMPORT_COMIC_FILES_FEATURE_KEY
-);
+export const selectImportComicFilesState =
+  createFeatureSelector<ImportComicFilesState>(IMPORT_COMIC_FILES_FEATURE_KEY);

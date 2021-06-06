@@ -19,9 +19,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { COMIC_FEATURE_KEY, ComicState } from '../reducers/comic.reducer';
 
-export const selectComicState = createFeatureSelector<ComicState>(
-  COMIC_FEATURE_KEY
-);
+export const selectComicState =
+  createFeatureSelector<ComicState>(COMIC_FEATURE_KEY);
 
 export const selectComic = createSelector(
   selectComicState,

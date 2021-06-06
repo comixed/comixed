@@ -117,10 +117,9 @@ describe('LibraryToolbarComponent', () => {
 
   describe('starting the scraping process', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.selected = COMICS;
       component.onScrapeComics();
     });

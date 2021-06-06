@@ -63,7 +63,8 @@ import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actio
   styleUrls: ['./comic-book-page.component.scss']
 })
 export class ComicBookPageComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   paramSubscription: Subscription;
   queryParamSubscription: Subscription;
   currentTab = 0;

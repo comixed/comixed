@@ -18,7 +18,7 @@
     <assembly.name>local</assembly.name>
     <comixed.version>0.9.0-SNAPSHOT</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
-    <java-version>12</java-version>
+    <java.version>11</java.version>
   </properties>
   <profiles>
     <profile>
@@ -191,10 +191,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
         <configuration>
-          <source>${java-version}</source>
-          <target>${java-version}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
           <annotationProcessorPaths>
             <path>
               <groupId>org.projectlombok</groupId>

@@ -24,9 +24,8 @@ import {
 import { selectComicImportState } from '@app/comic-file/selectors/comic-import.selectors';
 
 /** Selects the comic list feature state. */
-export const selectComicFileListState = createFeatureSelector<ComicFileListState>(
-  COMIC_FILE_LIST_FEATURE_KEY
-);
+export const selectComicFileListState =
+  createFeatureSelector<ComicFileListState>(COMIC_FILE_LIST_FEATURE_KEY);
 
 /** Selects the loaded comic files. */
 export const selectComicFiles = createSelector(

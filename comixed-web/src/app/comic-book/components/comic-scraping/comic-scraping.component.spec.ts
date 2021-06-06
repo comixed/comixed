@@ -206,10 +206,9 @@ describe('ComicScrapingComponent', () => {
 
     describe('when selected', () => {
       beforeEach(() => {
-        spyOn(
-          confirmationService,
-          'confirm'
-        ).and.callFake((confirm: Confirmation) => confirm.confirm());
+        spyOn(confirmationService, 'confirm').and.callFake(
+          (confirm: Confirmation) => confirm.confirm()
+        );
         component.onDecision(true);
       });
 

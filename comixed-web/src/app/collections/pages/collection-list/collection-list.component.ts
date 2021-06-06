@@ -42,7 +42,8 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./collection-list.component.scss']
 })
 export class CollectionListComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatSort) matSort: MatSort;
 
   typeSubscription: Subscription;

@@ -165,10 +165,9 @@ describe('WebAuditLogComponent', () => {
 
   describe('clearing the audit log', () => {
     beforeEach(() => {
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onClearLog();
     });
 

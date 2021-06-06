@@ -22,6 +22,5 @@ import {
   UpdateReadStatusState
 } from '../reducers/update-read-status.reducer';
 
-export const selectMarkComicReadState = createFeatureSelector<UpdateReadStatusState>(
-  UPDATE_READ_STATUS_FEATURE_KEY
-);
+export const selectMarkComicReadState =
+  createFeatureSelector<UpdateReadStatusState>(UPDATE_READ_STATUS_FEATURE_KEY);

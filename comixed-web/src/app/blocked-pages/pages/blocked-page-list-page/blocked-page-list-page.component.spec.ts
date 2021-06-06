@@ -195,10 +195,9 @@ describe('BlockedPageListPageComponent', () => {
 
     beforeEach(() => {
       component.showUploadRow = true;
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onFileSelected(EVENT);
     });
 
@@ -228,10 +227,9 @@ describe('BlockedPageListPageComponent', () => {
       });
       component.dataSource.data.forEach(entry => (entry.selected = false));
       component.dataSource.data[0].selected = true;
-      spyOn(
-        confirmationService,
-        'confirm'
-      ).and.callFake((confirmation: Confirmation) => confirmation.confirm());
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.onDeleteEntries();
     });
 
