@@ -1,95 +1,95 @@
 {
   "library": {
     "all-comics": {
-      "tab-title": "All Comics",
-      "tab-title-deleted": "Deleted Comics",
-      "tab-title-unread": "Unread Comics"
+      "tab-title": "Todos los cómics",
+      "tab-title-deleted": "Cómics eliminados",
+      "tab-title-unread": "Cómics no leídos"
     },
     "comic-group": {
-      "invalid-grouping": "The group \"{name}\" is not valid."
+      "invalid-grouping": "El grupo \"{name}\" no es válido."
     },
     "context-menu": {
-      "comic-details": "Show comic details...",
-      "mark-as": "Mark...",
-      "mark-one-as-read": "This Comic As Read",
-      "mark-one-as-unread": "This Comic As Unread",
-      "mark-selected-as-read": "Selected Comics As Read",
-      "mark-selected-as-unread": "Selected Comics As Unread",
-      "set-page-blocked": "Block Pages Like This",
-      "set-page-unblocked": "Don't Block Pages Like This"
+      "comic-details": "Mostrar detalles del cómic...",
+      "mark-as": "Marque...",
+      "mark-one-as-read": "Este cómic como leído",
+      "mark-one-as-unread": "Este cómic como no leído",
+      "mark-selected-as-read": "Cómics seleccionados como leídos",
+      "mark-selected-as-unread": "Cómics seleccionados como no leídos",
+      "set-page-blocked": "Bloquear páginas como esta",
+      "set-page-unblocked": "No bloquee páginas como esta"
     },
     "label": {
-      "no-publisher": "Unknown Publisher",
-      "no-series": "Unknown Series",
-      "pagination-items-per-page": "Covers Per Page"
+      "no-publisher": "Editor desconocido",
+      "no-series": "Serie desconocida",
+      "pagination-items-per-page": "Portadas por página"
     },
     "navigation": {
-      "publishers": "Publishers",
-      "series": "Series",
-      "characters": "Characters",
-      "teams": "Teams",
-      "locations": "Locations",
-      "stories": "Stories"
+      "publishers": "Editores",
+      "series": "Serie",
+      "characters": "Personajes",
+      "teams": "Equipos",
+      "locations": "Ubicaciónes",
+      "stories": "Historias"
     },
     "set-read": {
-      "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
-      "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
+      "effect-failure": "No pudo marcar los cómics como {read, select, true{read} other{unread}}.",
+      "effect-success": "{count, plural, =1{one comic} other{# comics}} marcado como {read, select, true{read} other{unread}}."
     },
     "tooltip": {
-      "deselect-all": "Deselect all comics.",
-      "scrape-comics": "Start scraping comics",
-      "select-all": "Select all comics."
+      "deselect-all": "Anular la selección de todos los cómics.",
+      "scrape-comics": "Empieza a raspar cómics",
+      "select-all": "Seleccionar todos los cómics."
     }
   },
   "scraping": {
     "current-comic": {
-      "title": "Currently Comic ({count} Total)"
+      "title": "Actualmente cómico ({count} Total)"
     },
     "label": {
-      "100-records": "100 Records",
-      "1000-records": "1000 Records",
-      "all-records": "All Records",
-      "issue-count": "# Issues",
-      "matchability": "Match",
-      "publisher": "Publisher",
-      "series-name": "Series",
-      "start-year": "Start Year"
+      "100-records": "100 registros",
+      "1000-records": "1000 registros",
+      "all-records": "Todos los registros",
+      "issue-count": "# ediciónes",
+      "matchability": "Partido",
+      "publisher": "Editor",
+      "series-name": "Serie",
+      "start-year": "Año de inicio"
     },
     "load-scraping-volumes": {
-      "effect-failure": "Failed to load any volumes..."
+      "effect-failure": "No se pudo cargar ningún volumen..."
     },
     "load-scraping-issue": {
-      "effect-failure": "Failed to load issue..."
+      "effect-failure": "No se pudo cargar la edición..."
     },
-    "page-title": "Library Scraping",
+    "page-title": "Raspado de biblioteca",
     "scrape-comic": {
-      "effect-success": "Comic successfully scraped!",
-      "effect-failure": "Failed to scrape comic."
+      "effect-success": "¡Cómic raspado con éxito!",
+      "effect-failure": "No pudo raspar el cómic."
     },
-    "scrape-comic-confirmation-title": "Replace Comic Data",
-    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
-    "scraping-issue-detail-subtitle": "Cover Date: {date}",
+    "scrape-comic-confirmation-title": "Reemplazar datos de cómics",
+    "scrape-comic-confirmation-message": "¿Estás seguro de que quieres reemplazar los detalles de este cómic?",
+    "scraping-issue-detail-subtitle": "Fecha de portada: {date}",
     "start-scraping": {
-      "confirmation-title": "Scrape Comics",
-      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
+      "confirmation-title": "Raspar cómics",
+      "confirmation-message": "¿Está seguro de que desea reemplazar los detalles de los/las {count, plural, =1{comic} other{# comics}} cómics seleccionados?"
     },
     "text": {
-      "exact-match": "Exact",
-      "near-match": "Near",
+      "exact-match": "Exacta",
+      "near-match": "Cerca",
       "no-match": "No"
     },
     "tooltip": {
-      "cancel-scraping": "Stop scraping comics.",
-      "reject-scraping-issue": "Reject this issue.",
-      "select-scraping-issue": "Select this issue.",
-      "show-comic-details": "Show Details",
-      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache."
+      "cancel-scraping": "Deja de raspar cómics.",
+      "reject-scraping-issue": "Rechazar este problema.",
+      "select-scraping-issue": "Seleccione este problema.",
+      "show-comic-details": "Mostrar detalles",
+      "skip-cache": "Raspado será {enabled, select, true{skip} other{use}} la caché de raspado."
     },
     "volume-list": {
-      "issue-count-header": "# Of Issues",
-      "name-header": "Series Name",
-      "publisher-header": "Publisher",
-      "start-year-header": "Start Year"
+      "issue-count-header": "# de ediciones",
+      "name-header": "Nombre de la serie",
+      "publisher-header": "Editor",
+      "start-year-header": "Año de inicio"
     }
   }
 }

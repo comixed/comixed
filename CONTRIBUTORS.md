@@ -11,3 +11,4 @@ what it is today.
  * Frédéric Fouret (BRUCELLA2) <fouretfrederic@gmail.com>
  * Arturo Pérez <theotocopulitos@gmail.com>
  * J Fine <jfine@jfine.com>
+ * Natalie Stroud @natastro
