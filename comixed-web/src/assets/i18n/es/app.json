@@ -1,123 +1,123 @@
 {
   "app": {
-    "general-effect-failure": "A general error has occurred.",
-    "logged-in": "Logged in: {email}",
-    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Deleted: {deletedCount}"
+    "general-effect-failure": "Se ha producido un error general.",
+    "logged-in": "Registrado en: {email}",
+    "system-status": "Importaciónes: {importCount} | Cómics: {comicCount} | Leyeron: {readCount} | Eliminaron: {deletedCount}"
   },
   "build-details": {
     "label": {
-      "branch": "The code was build from a branch named {name}",
-      "build-host": "Code was built on a machine named {name}.",
-      "build-time": "The code was built on {time}.",
-      "build-version": "The code was marked with a Build version of {version}.",
-      "commit-id": "The latest commit hash on the source branch is {id}.",
-      "commit-message": "Commit Message",
-      "commit-time": "This commit was created on {time}.",
-      "commit-user": "Commit was created by {name} <{email}>",
-      "dirty": "The branch {dirty, select, true{contains} other{does not contain}} uncommitted changes.",
-      "jdbc-url": "The database URL being used is {url}",
-      "remote-origin-url": "This branch is tracking the remote branch {url}"
+      "branch": "El código se creó a partir de una rama denominada {name}",
+      "build-host": "El código se creó en un equipo denominado {name}.",
+      "build-time": "El código se creó en {time}.",
+      "build-version": "El código se marcó con una versión de compilación de {version}.",
+      "commit-id": "El último hash de confirmación en la rama de origen es {id}.",
+      "commit-message": "Mensaje de confirmación",
+      "commit-time": "Esta confirmación se creó en {time}.",
+      "commit-user": "Confirmación fue creado por {name} <{email}>",
+      "dirty": "La bifurcación {dirty, select, true{contains} other{does not contain}} cambios no confirmados.",
+      "jdbc-url": "La dirección URL de la base de datos que se utiliza es {url}",
+      "remote-origin-url": "Esta rama está rastreando la rama remota {url}"
     },
-    "title": "Build Details",
-    "load-effect-failure": "Failed to load the build details."
+    "title": "Detalles de la compilación",
+    "load-effect-failure": "No se pudieron cargar los detalles de la compilación."
   },
   "button": {
-    "cancel": "Cancel",
-    "clear-log": "Clear Log",
-    "deselect": "Deselect",
-    "deselect-all": "Deselect All",
-    "download": "Download",
-    "edit": "Edit",
-    "load": "Load",
+    "cancel": "Cancelar",
+    "clear-log": "Borrar registro",
+    "deselect": "Anular la selección",
+    "deselect-all": "Deseleccionar todos",
+    "download": "Descargar",
+    "edit": "Editar",
+    "load": "Cargar",
     "login": "Login",
-    "logout": "Logout",
-    "next": "Next",
+    "logout": "Cierre de sesión",
+    "next": "Siguiente",
     "no": "No",
-    "previous": "Previous",
-    "reject": "Reject",
-    "reset": "Reset",
-    "save": "Save",
-    "scrape": "Scrape",
-    "select": "Select",
-    "select-all": "Select All",
-    "skip-cache": "Skip Cache",
-    "start": "Start",
-    "stop": "Stop",
-    "submit": "Submit",
-    "yes": "Yes"
+    "previous": "Anterior",
+    "reject": "Rechazar",
+    "reset": "Reajustar",
+    "save": "Guardar",
+    "scrape": "Raspar",
+    "select": "Seleccionar",
+    "select-all": "Seleccionar todo",
+    "skip-cache": "Omitir caché",
+    "start": "Comenzar",
+    "stop": "Parar",
+    "submit": "Enviar",
+    "yes": "Sí"
   },
   "display-options": {
     "label": {
-      "page-size": "Page Size"
+      "page-size": "Tamaño de página"
     },
-    "title": "Display Options"
+    "title": "Opciones de visualización"
   },
   "home": {
     "label": {
-      "task-count": "Task Count"
+      "task-count": "Recuento de tareas"
     },
-    "title": "Home"
+    "title": "Página principal"
   },
   "menu": {
     "language-menu": {
-      "root": "Select Language"
+      "root": "Seleccionar idioma"
     },
     "logging-menu": {
-      "root": "Logging",
-      "1": "All (Verbose)",
-      "2": "Trace (Even More)",
-      "3": "Debug (A Lot)",
-      "4": "Informational"
+      "root": "Registro",
+      "1": "Todo (Verboso)",
+      "2": "Traza (Aún más)",
+      "3": "Depurar (Mucho)",
+      "4": "Informativo"
     },
     "tooltip": {
-      "toggle-sidenav": "Shows/Hides the side navigation panel..."
+      "toggle-sidenav": "Muestra/Oculta el panel de navegación lateral..."
     },
     "user-menu": {
-      "root": "Account",
-      "show-options-panel": "Set User Options..."
+      "root": "Cuenta",
+      "show-options-panel": "Establecer opciones de usuario..."
     }
   },
   "navigation": {
     "heading": {
-      "account": "My Account",
-      "admin": "Administration",
-      "collections": "Collections",
-      "comics": "Comics",
-      "reading-lists": "Reading Lists",
-      "system-status": "System"
+      "account": "Mi cuenta",
+      "admin": "Administración",
+      "collections": "Colecciónes",
+      "comics": "Cómics",
+      "reading-lists": "Listas de lectura",
+      "system-status": "Sistema"
     },
     "option": {
-      "all-comics": "All comics",
-      "blocked-pages": "Blocked Pages",
-      "build-details": "Build Details",
-      "character-collection": "Characters",
-      "deleted-comics": "Deleted comics",
-      "import-comics": "Import Comics",
-      "location-collection": "Locations",
-      "publisher-collection": "Publishers",
-      "series-collection": "Series",
-      "story-collection": "Stories",
-      "team-collection": "Teams",
-      "unread-comics": "Unread Comics",
-      "user-preferences": "Preferences",
-      "web-audit-log": "Web Audit Log"
+      "all-comics": "Todos los cómics",
+      "blocked-pages": "Páginas bloqueadas",
+      "build-details": "Detalles de la compilación",
+      "character-collection": "Personajes",
+      "deleted-comics": "Cómics eliminados",
+      "import-comics": "Importar cómics",
+      "location-collection": "Ubicaciónes",
+      "publisher-collection": "Editores",
+      "series-collection": "Serie",
+      "story-collection": "Historias",
+      "team-collection": "Equipos",
+      "unread-comics": "Cómics no leídos",
+      "user-preferences": "Preferencias",
+      "web-audit-log": "Registro de auditoría web"
     },
     "tooltip": {
-      "account": "View account details."
+      "account": "Ver detalles de la cuenta."
     }
   },
   "session": {
-    "load-effect-failure": "Unable to load user session"
+    "load-effect-failure": "No se puede cargar la sesión de usuario"
   },
   "text": {
     "archive-type": "{type, select, CBZ{Zip File (CBZ)} CBR{RAR File (CBR)} CB7{7Zip File (CB7)} other{Unknown}}",
     "no": "No",
-    "view-details": "View Details",
-    "yes": "Yes"
+    "view-details": "Ver detalles",
+    "yes": "Sí"
   },
   "validation": {
-    "field-required": "This field is required",
-    "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
-    "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."
+    "field-required": "Este campo es obligatorio",
+    "value-too-long": "La longitud máxima es {length, plural, =1{one character} other{# characters}}.",
+    "value-too-short": "La longitud mínima es {length, plural, =1{one character} other{# characters}}."
   }
 }

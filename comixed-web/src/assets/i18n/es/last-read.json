@@ -1,11 +1,11 @@
 {
   "last-read-list": {
     "load-entries": {
-      "effect-failure": "Failed to load last read entries."
+      "effect-failure": "No se pudieron cargar las entradas de la última lectura."
     }
   },
   "update-read-status": {
-    "effect-failure": "Failed to mark comic as {status, select, true{read} other{unread}}.",
-    "effect-success": "Comic successfully marked as {status, select, true{read} other{unread}}."
+    "effect-failure": "No pudo marcar el cómic como {status, select, true{read} other{unread}}.",
+    "effect-success": "Cómic marcado correctamente como {status, select, true{read} other{unread}}."
   }
 }

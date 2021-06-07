@@ -1,102 +1,102 @@
 {
   "comic-book": {
     "hint": {
-      "required-for-scraping": "This value is required for scraping..."
+      "required-for-scraping": "Este valor es necesario para el raspado..."
     },
     "label": {
-      "added-date": "Added To Library",
-      "archive-type": "File Encoded As",
-      "api-key": "API Key",
-      "characters": "Characters In This Issue ({count})",
-      "cover-date": "Cover Date",
-      "comic-edit": "Edit Details",
-      "comic-format": "Comic Format",
-      "comic-overview": "Overview",
-      "comic-pages": "Pages",
-      "comic-state": "State",
-      "comic-story": "Story",
-      "credits": "Creative Team ({count})",
-      "description": "Issue Description",
-      "file-details": "Comic File Details",
-      "file-entries": "File Entries",
-      "filename": "Filename",
-      "filesize": "Filesize",
-      "imprint": "Imprint",
-      "issue-details": "Issue Details",
-      "issue-number": "Issue #",
-      "last-read-date": "Last Read",
-      "locations": "Locations In This Issue ({count})",
-      "other-details": "Other Comic Details",
-      "page-count": "# Of Pages",
-      "publisher": "Publisher",
-      "scan-type": "Scan Type",
-      "scraping-notes": "Scraping Notes",
-      "series": "Series Name",
-      "sort-name": "Sort Name",
-      "stories": "Story Arcs In This Issue ({count})",
-      "teams": "Teams In This Issue ({count})",
-      "volume": "Volume"
+      "added-date": "Agregado a la biblioteca",
+      "archive-type": "Archivo codificado como",
+      "api-key": "Clave de API",
+      "characters": "Personajes de este número ({count})",
+      "cover-date": "Fecha de portada",
+      "comic-edit": "Editar detalles",
+      "comic-format": "Formato cómico",
+      "comic-overview": "Visión de conjunto",
+      "comic-pages": "Páginas",
+      "comic-state": "Estado",
+      "comic-story": "Historia",
+      "credits": "Equipo creativo ({count})",
+      "description": "Descripción de la edición",
+      "file-details": "Detalles del archivo cómico",
+      "file-entries": "Entradas de archivos",
+      "filename": "Nombre de archivo",
+      "filesize": "Tamaño de archivo",
+      "imprint": "Marca",
+      "issue-details": "Detalles de la edición",
+      "issue-number": "Edición #",
+      "last-read-date": "Se leyó por última vez",
+      "locations": "Ubicaciones en esta edición ({count})",
+      "other-details": "Otros detalles del cómic",
+      "page-count": "# de páginas",
+      "publisher": "Editor",
+      "scan-type": "Tipo de escaneo",
+      "scraping-notes": "Notas de raspado",
+      "series": "Nombre de la serie",
+      "sort-name": "Nombre de ordenación",
+      "stories": "Arcos argumentales en esta edición ({count})",
+      "teams": "Equipos en esta edición ({count})",
+      "volume": "Volumen"
     },
     "load-comic": {
-      "effect-failure": "Failed to load comic."
+      "effect-failure": "No se pudo cargar el cómic."
     },
     "placeholder": {
-      "api-key": "The API key used when scraping comics...",
-      "issue-number": "The issue number...",
-      "publisher": "The publisher...",
-      "series": "The series name...",
-      "volume": "The volume..."
+      "api-key": "La clave de API utilizada al raspar cómics...",
+      "issue-number": "El número de emisión...",
+      "publisher": "El editor...",
+      "series": "El nombre de la serie...",
+      "volume": "El volumen..."
     },
     "save-changes": {
-      "effect-failure": "Failed to save changes.",
-      "effect-success": "Changes saved.",
-      "message": "Are you sure you want to manual changes to this comic?",
-      "title": "Save Changes To Comic"
+      "effect-failure": "No se pudieron guardar los cambios.",
+      "effect-success": "Cambios guardados.",
+      "message": "¿Estás seguro de que quieres cambios manuales a este cómic?",
+      "title": "Guardar cambios en el cómic"
     },
     "text": {
-      "comic-changed": "Changed",
-      "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
+      "comic-changed": "Cambiado",
+      "file-entries": "Hay {count, plural, =1{is one file} other{are # files}} en este archivo.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
-      "state-ADDED": "Unchanged",
-      "state-CHANGED": "Changed",
-      "state-DELETED": "Marked For Deletion",
-      "state-STABLE": "Unchanged"
+      "state-ADDED": "Igual",
+      "state-CHANGED": "Cambiado",
+      "state-DELETED": "Marcado para la eliminación",
+      "state-STABLE": "Igual"
     },
     "tooltip": {
-      "blocked-page": "Pages like this are blocked...",
-      "cancel-scraping": "Stop scraping this comic.",
-      "download-comic": "Download this comic...",
-      "go-to-next-comic": "Go to the next comic in this series...",
-      "go-to-previous-comic": "Go to the previous comic in this series...",
-      "mark-read": "Mark this comic as read.",
-      "mark-unread": "Mark this comic as unread.",
-      "match-0": "Not a match.",
-      "match-1": "Partial match.",
-      "match-2": "Exact match.",
-      "save-changes": "Saves changes to this comic.",
-      "scrape-comic": "Scrape this comic.",
-      "undo-changes": "Undo changes to this comic.",
-      "update-comic-info": "Update the metadata in this comic file."
+      "blocked-page": "Páginas como esta están bloqueadas...",
+      "cancel-scraping": "Deja de raspar este cómic.",
+      "download-comic": "Descarga este cómic...",
+      "go-to-next-comic": "Ir al siguiente cómic de esta serie...",
+      "go-to-previous-comic": "Ir al cómic anterior de esta serie...",
+      "mark-read": "Marca este cómic como leído.",
+      "mark-unread": "Marca este cómic como no leído.",
+      "match-0": "No es un partido.",
+      "match-1": "Partido parcial.",
+      "match-2": "Coincidencia exacta.",
+      "save-changes": "Guarda los cambios en este cómic.",
+      "scrape-comic": "Raspa este cómic.",
+      "undo-changes": "Deshacer cambios en este cómic.",
+      "update-comic-info": "Actualizar los metadatos de este archivo de cómic."
     },
     "undo-changes": {
-      "message": "Are you sure you want to undo changes to this comic?",
-      "title": "Undo Changes"
+      "message": "¿Estás seguro de que quieres deshacer los cambios en este cómic?",
+      "title": "Deshacer cambios"
     },
     "update-comic-info": {
-      "confirmation-message": "Update the metadata in this comic book?",
-      "confirmation-title": "Update Comic Metadata",
-      "effect-failure": "Failed to update ComicInfo.xml.",
-      "effect-success": "Successfully updated ComicInfo.xml"
+      "confirmation-message": "¿Actualizar los metadatos en este cómic?",
+      "confirmation-title": "Actualizar metadatos de cómics",
+      "effect-failure": "No se pudo actualizar ComicInfo.xml.",
+      "effect-success": "Archivo actualizado correctamente ComicInfo.xml"
     }
   },
   "comic-format": {
     "load-formats": {
-      "effect-failure": "Failed to load comic formats."
+      "effect-failure": "No se pudieron cargar los formatos de cómic."
     }
   },
   "scan-type": {
     "load-scan-types": {
-      "effect-failure": "Failed to load scan types."
+      "effect-failure": "No se pudieron cargar los tipos de análisis."
     }
   }
 }

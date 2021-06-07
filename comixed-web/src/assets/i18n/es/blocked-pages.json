@@ -1,50 +1,50 @@
 {
   "blocked-page": {
     "editing": {
-      "reset-message": "Discard your changes to this blocked page type?",
-      "reset-title": "Reset Blocked Page",
-      "save-effect-failure": "Failed to save blocked page changes...",
-      "save-effect-success": "Blocked page changes saved.",
-      "save-message": "Are you sure you want to save your changes to this blocked page?",
-      "save-title": "Save Blocked Page"
+      "reset-message": "¿Descartar los cambios en este tipo de página bloqueada?",
+      "reset-title": "Restablecer página bloqueada",
+      "save-effect-failure": "No se pudieron guardar los cambios de página bloqueados...",
+      "save-effect-success": "Cambios de página bloqueados guardados.",
+      "save-message": "¿Está seguro de que desea guardar los cambios en esta página bloqueada?",
+      "save-title": "Guardar página bloqueada"
     },
     "label": {
-      "hash": "Hash Value",
-      "label": "Hash Label"
+      "hash": "Valor hash",
+      "label": "Etiqueta hash"
     },
-    "load-by-hash-effect-error": "Failed to load blocked page for hash: {hash}",
-    "page-title": "Blocked Page Details: {hash}",
+    "load-by-hash-effect-error": "No se pudo cargar la página bloqueada para hash: {hash}",
+    "page-title": "Detalles de la página bloqueada: {hash}",
     "set-state": {
-      "effect-failure": "Failed to {block,select,true{block} other{unblock}} page hash.",
-      "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."
+      "effect-failure": "No se pudo {block,select,true{block} other{unblock}} el hash de página.",
+      "effect-success": "El hash de página {block, select, true{blocked} other{unblocked}} correctamente."
     }
   },
   "blocked-page-list": {
     "delete-entries": {
-      "confirmation-message": "Are you sure you want to unblock the {count, plural, =1{selected entry} other{# selected entries}}?",
-      "confirmation-title": "Unblock Hashes",
-      "effect-failure": "Failed to delete blocked pages.",
-      "effect-success": "Deleted {count, plural, =1{one entry} other{# entries}}."
+      "confirmation-message": "¿Está seguro de que desea desbloquear el/la {count, plural, =1{selected entry} other{# selected entries}}?",
+      "confirmation-title": "Desbloquear hashes",
+      "effect-failure": "No se pudieron eliminar las páginas bloqueadas.",
+      "effect-success": "Se eliminaron {count, plural, =1{one entry} other{# entries}}."
     },
     "download-file": {
-      "effect-failure": "Failed to download blocked pages file."
+      "effect-failure": "No se pudo descargar el archivo de páginas bloqueadas."
     },
     "header": {
-      "comic-count": "Comics Affected",
-      "created-on": "Entry Added",
-      "hash": "Page Hash",
-      "label": "Label"
+      "comic-count": "Cómics afectados",
+      "created-on": "Entrada agregada",
+      "hash": "Hash de página",
+      "label": "Etiqueta"
     },
-    "load-effect-failure": "Failed to load blocked pages.",
+    "load-effect-failure": "No se pudieron cargar las páginas bloqueadas.",
     "tooltip": {
-      "download-file": "Download blocked pages file.",
-      "upload-file": "Upload a blocked pages file."
+      "download-file": "Descargar archivo de páginas bloqueadas.",
+      "upload-file": "Cargar un archivo de páginas bloqueadas."
     },
     "upload-file": {
-      "confirmation-message": "Are you sure you want to upload this file?",
-      "confirmation-title": "Upload Blocked Pages File",
-      "effect-failure": "Failed to upload blocked page file.",
-      "effect-success": "Blocked pages now contains {count, plural, =1{one entry} other{# entries}}."
+      "confirmation-message": "¿Está seguro de que desea cargar este archivo?",
+      "confirmation-title": "Cargar archivo de páginas bloqueadas",
+      "effect-failure": "No se pudo cargar el archivo de página bloqueado.",
+      "effect-success": "Las páginas bloqueadas ahora contienen {count, plural, =1{one entry} other{# entries}}."
     }
   }
 }
