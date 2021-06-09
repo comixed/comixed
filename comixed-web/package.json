@@ -56,6 +56,7 @@
     "messageformat": "^2.3.0",
     "ngx-translate-messageformat-compiler": "^4.8.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
+    "normalize-url": "^4.5.1",
     "object-path": "^0.11.5",
     "postcss": "^8.2.10",
     "rxjs": "~6.5.5",
