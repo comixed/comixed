@@ -79,7 +79,7 @@
     "webpack-subresource-integrity": "^1.5.1",
     "webstomp-client": "^1.2.6",
     "ws": "^7.4.6",
-    "xmlhttprequest-ssl": "^1.6.2",
+    "xmlhttprequest-ssl": "^1.6.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
