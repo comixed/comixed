@@ -53,6 +53,7 @@
     "@tragically-slick/edit-in-place": "^0.1.0-2",
     "css-what": "^5.0.1",
     "file-saver": "^2.0.5",
+    "glob-parent": "^5.1.2",
     "hosted-git-info": "^3.0.8",
     "ini": "^1.3.6",
     "is-svg": "^4.2.2",
