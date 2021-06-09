@@ -46,6 +46,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "css-what": "^5.0.1",
+    "glob-parent": "^5.1.2",
     "hosted-git-info": "^3.0.8",
     "ini": "^1.3.6",
     "is-svg": "^4.2.2",
