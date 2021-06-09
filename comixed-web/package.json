@@ -65,6 +65,7 @@
     "ua-parser-js": "^0.7.24",
     "webpack": "5.4.0",
     "webpack-subresource-integrity": "^1.5.1",
+    "ws": "^7.4.6",
     "xmlhttprequest-ssl": "^1.6.2",
     "zone.js": "~0.10.3"
   },
