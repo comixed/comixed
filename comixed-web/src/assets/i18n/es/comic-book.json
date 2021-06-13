@@ -54,7 +54,7 @@
       "title": "Guardar cambios en el cómic"
     },
     "text": {
-      "comic-changed": "Cambiado",
+      "comic-changed": "Comic details have changed.",
       "file-entries": "Hay {count, plural, =1{is one file} other{are # files}} en este archivo.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "state-ADDED": "Igual",

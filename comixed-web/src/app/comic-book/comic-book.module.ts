@@ -83,6 +83,7 @@ import {
 import { UpdateComicInfoEffects } from '@app/comic-book/effects/update-comic-info.effects';
 import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -138,7 +139,8 @@ import { CoreModule } from '@app/core/core.module';
     MatTabsModule,
     MatChipsModule,
     MatSortModule,
-    CoreModule
+    CoreModule,
+    MatGridListModule
   ],
   exports: [
     CommonModule,

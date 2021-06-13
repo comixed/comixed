@@ -97,6 +97,10 @@ $cx-selected-comic-color: #ffffff;
   padding-left: 25px !important;
 }
 
+.cx-padding-right-0 {
+  padding-right: 0px !important;
+}
+
 .cx-padding-right-5 {
   padding-right: 5px !important;
 }
@@ -264,13 +268,13 @@ $cx-column-large: 325px;
 }
 
 .cx-primary-light-background {
-  background: var(--primary-lighter-color);
-  color: var(--text-primary-lighter-color);
+  background: var(--primary-lighter-color) !important;
+  color: var(--text-primary-lighter-color) !important;
 }
 
 .cx-primary-dark-background {
-  background: var(--primary-darker-color);
-  color: var(--text-primary-darker-color);
+  background: var(--primary-darker-color) !important;
+  color: var(--text-primary-darker-color) !important;
 }
 
 .cx-accent-light-background {

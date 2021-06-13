@@ -26,6 +26,12 @@ import {
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
 import { COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicDetailCardComponent', () => {
   const COMIC = COMIC_3;
@@ -38,7 +44,16 @@ describe('ComicDetailCardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicDetailCardComponent],
-      imports: [LoggerModule.forRoot(), MatCardModule],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatCardModule,
+        MatGridListModule,
+        MatExpansionModule,
+        MatChipsModule,
+        MatTooltipModule
+      ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 

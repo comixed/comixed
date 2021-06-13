@@ -1,9 +1,65 @@
-<mat-card [style.width]="imageWidth" [style.height]="imageHeight">
-  <mat-card-title class="cx-text-nowrap">{{ title }}</mat-card-title>
-  <mat-card-subtitle *ngIf="detailLink">
-    <a [routerLink]="detailLink">{{ "text.view-details" | translate }}</a>
-  </mat-card-subtitle>
+<mat-card
+  class="cx-padding-left-5 cx-padding-right-0"
+  [style.width]="imageWidth"
+  [style.height]="imageHeight"
+>
   <mat-card-content>
+    <mat-accordion *ngIf="!!comic">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header
+          class="cx-primary-dark-background"
+          [matTooltip]="title"
+        >
+          <span class="cx-width-100 cx-text-nowrap">
+            {{ title }}
+          </span>
+        </mat-expansion-panel-header>
+        <mat-grid-list cols="2" rowHeight="30px">
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap cx-detail-label">
+              {{ "comic-book.label.publisher" | translate }}
+            </span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap">{{ comic.publisher }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap cx-detail-label">
+              {{ "comic-book.label.series" | translate }}
+            </span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap">{{ comic.series }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap cx-detail-label">
+              {{ "comic-book.label.volume" | translate }}
+            </span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap">{{ comic.volume }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap cx-detail-label">
+              {{ "comic-book.label.issue-number" | translate }}
+            </span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap">{{ comic.issueNumber }}</span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap cx-detail-label">
+              {{ "comic-book.label.cover-date" | translate }}
+            </span>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <span class="cx-text-nowrap">
+              {{ comic.coverDate | date: "MM/yyyy" }}
+            </span>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-expansion-panel>
+    </mat-accordion>
     <div
       class="comic-detail-card cx-padding-2 cx-margin-2"
       [class.comic-detail-card-selected]="selected"
@@ -19,9 +75,19 @@
         (contextmenu)="onContextMenu($event)"
       />
       <mat-chip-list>
-        <mat-chip *ngIf="comicChanged" (click)="onUpdateComicInfo(comic)">
+        <mat-chip
+          *ngIf="detailLink"
+          [routerLink]="detailLink"
+          [matTooltip]="'text.view-details' | translate"
+        >
+          <mat-icon>details</mat-icon>
+        </mat-chip>
+        <mat-chip
+          *ngIf="comicChanged"
+          (click)="onUpdateComicInfo(comic)"
+          [matTooltip]="'comic-book.text.comic-changed' | translate"
+        >
           <mat-icon>update</mat-icon>
-          {{ "comic-book.text.comic-changed" | translate }}
         </mat-chip>
       </mat-chip-list>
     </div>
