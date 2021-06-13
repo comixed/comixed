@@ -54,7 +54,7 @@
       "title": "Save Changes To Comic"
     },
     "text": {
-      "comic-changed": "Changed",
+      "comic-changed": "Comic details have changed.",
       "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "state-ADDED": "Unchanged",
