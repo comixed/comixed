@@ -1,13 +1,15 @@
 ---
 name: Bug report
 about: Create a report to help us improve ComiXed
-title: '[BUG] Describe the bug using a single sentence'
-labels: 'bug'
+title: 'Describe the bug using a single sentence'
+labels: 'bug, triage'
 assignees: ''
 
 ---
 
-**NOTE: If this involves a pre-release version of ComiXed and not a release, then please send an email to the mailing list rather than creating an issue here. All such bug reports will be closed.**
+## NOTICE ABOUT FILING BUGS
+1. If the issue was found in a **pre-release** of ComiXed and not a release, please **do not file a bug**. Instead, send an email to the mailing list. 
+1. Please fill in **all sections below** with as much detail as is needed to reproduce the bug. Any bug reports missing reproduction details will be closed.
 
 **Describe The Bug**
 A clear and concise description of what the bug is. Please include as much detail as possible.
