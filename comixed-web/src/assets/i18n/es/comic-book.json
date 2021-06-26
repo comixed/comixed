@@ -28,6 +28,7 @@
       "locations": "Ubicaciones en esta edición ({count})",
       "other-details": "Otros detalles del cómic",
       "page-count": "# de páginas",
+      "page-title": "Page {which} Of {count}",
       "publisher": "Editor",
       "scan-type": "Tipo de escaneo",
       "scraping-notes": "Notas de raspado",
@@ -75,6 +76,8 @@
       "match-2": "Coincidencia exacta.",
       "save-changes": "Guarda los cambios en este cómic.",
       "scrape-comic": "Raspa este cómic.",
+      "show-next-comic-page": "Go to next page...",
+      "show-previous-comic-page": "Go to previous page...",
       "undo-changes": "Deshacer cambios en este cómic.",
       "update-comic-info": "Actualizar los metadatos de este archivo de cómic."
     },

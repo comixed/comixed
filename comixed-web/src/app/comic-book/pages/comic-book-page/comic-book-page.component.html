@@ -71,9 +71,35 @@
     <div class="cx-width-100 comic-details-container">
       <div class="cx-padding-left-5">
         <cx-comic-page
-          [imageUrl]="comic | comicCoverUrl"
+          [imageUrl]="comic.pages[pageIndex] | comicPageUrl"
           [pageSize]="pageSize"
         ></cx-comic-page>
+        <div class="cx-width-100 cx-align-content-center">
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="pageIndex = pageIndex - 1"
+            [disabled]="pageIndex === 0"
+            [matTooltip]="
+              'comic-book.tooltip.show-previous-comic-page' | translate
+            "
+          >
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+          {{
+          "comic-book.label.page-title"
+            | translate: { which: pageIndex + 1, count: comic.pages.length }
+          }}
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="pageIndex = pageIndex + 1"
+            [disabled]="pageIndex === comic.pages.length - 1"
+            [matTooltip]="'comic-book.tooltip.show-next-comic-page' | translate"
+          >
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
       </div>
       <div class="cx-padding-left-5 cx-width-100">
         <mat-tab-group

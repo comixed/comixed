@@ -28,6 +28,7 @@
       "locations": "Lieux dans ce numéro ({count})",
       "other-details": "Autres détails de cette Bande Dessinée",
       "page-count": "# de pages",
+      "page-title": "Page {which} Of {count}",
       "publisher": "Éditeur",
       "scan-type": "Type de scan",
       "scraping-notes": "Notes de récupération",
@@ -75,6 +76,8 @@
       "match-2": "Correspondance exacte.",
       "save-changes": "Enregistrer les modifications de cette Bande Dessinée.",
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
+      "show-next-comic-page": "Go to next page...",
+      "show-previous-comic-page": "Go to previous page...",
       "undo-changes": "Annulez les modifications de cette Bande Dessinée",
       "update-comic-info": "Mettre à jour les métadonnées dans ce fichier de bande dessinée."
     },

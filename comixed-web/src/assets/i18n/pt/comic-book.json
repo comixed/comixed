@@ -28,6 +28,7 @@
       "locations": "Locations In This Issue ({count})",
       "other-details": "Other Comic Details",
       "page-count": "# Of Pages",
+      "page-title": "Page {which} Of {count}",
       "publisher": "Publisher",
       "scan-type": "Scan Type",
       "scraping-notes": "Scraping Notes",
@@ -75,6 +76,8 @@
       "match-2": "Exact match.",
       "save-changes": "Saves changes to this comic.",
       "scrape-comic": "Scrape this comic.",
+      "show-next-comic-page": "Go to next page...",
+      "show-previous-comic-page": "Go to previous page...",
       "undo-changes": "Undo changes to this comic.",
       "update-comic-info": "Update the metadata in this comic file."
     },
