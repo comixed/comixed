@@ -1,100 +1,221 @@
-<h3>{{ "comic-book.label.issue-details" | translate }}</h3>
-<cx-label-and-value
-  [label]="'comic-book.label.publisher' | translate"
-  [value]="comic.publisher"
-></cx-label-and-value>
-<cx-label-and-value
-  [label]="'comic-book.label.series' | translate"
-  [value]="comic.series"
-></cx-label-and-value>
-<cx-label-and-value
-  [label]="'comic-book.label.volume' | translate"
-  [value]="comic.volume"
-></cx-label-and-value>
-<cx-label-and-value
-  [label]="'comic-book.label.issue-number' | translate"
-  [value]="comic.issueNumber"
-></cx-label-and-value>
-<cx-label-and-value
-  [label]="'comic-book.label.cover-date' | translate"
-  [value]="comic.coverDate"
-></cx-label-and-value>
+<mat-grid-list cols="4" rowHeight="25px">
+  <mat-grid-tile class="cx-accent-light-background" colspan="4" rowspan="1">
+    {{ "comic-book.label.issue-details" | translate }}
+  </mat-grid-tile>
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.publisher" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.publisher }}
+    </span>
+  </mat-grid-tile>
 
-<h3>{{ "comic-book.label.file-details" | translate }}</h3>
-<div>
-  <cx-label-and-value
-    [label]="'comic-book.label.comic-state' | translate"
-    [value]="'comic-book.text.state-' + comic.comicState | translate"
-  ></cx-label-and-value>
-</div>
-<div>
-  <cx-label-and-value
-    [label]="'comic-book.label.filename' | translate"
-    [value]="comic.filename"
-  ></cx-label-and-value>
-</div>
-<div>
-  <cx-label-and-value
-    [label]="'comic-book.label.filesize' | translate"
-    [value]="'comic-book.text.filesize' | translate: { size: 0 }"
-  ></cx-label-and-value>
-</div>
-<div>
-  <cx-label-and-value
-    [label]="'comic-book.label.file-entries' | translate"
-    [value]="
-      'comic-book.text.file-entries'
-        | translate: { count: comic.fileEntries.length }
-    "
-  ></cx-label-and-value>
-</div>
-<div>
-  <cx-label-and-value
-    [label]="'comic-book.label.filesize' | translate"
-    [value]="'text.archive-type' | translate: { type: comic.archiveType }"
-  ></cx-label-and-value>
-</div>
-<div>
-  <cx-label-and-value
-    [label]="'comic-book.label.added-date' | translate"
-    [value]="comic.addedDate | date: 'medium'"
-  ></cx-label-and-value>
-</div>
-<div *ngIf="!!lastRead">
-  <cx-label-and-value
-    [label]="'comic-book.label.last-read-date' | translate"
-    [value]="lastRead.lastRead | date: 'medium'"
-  ></cx-label-and-value>
-</div>
-<div *ngIf="comic.notes?.length > 0">
-  <cx-label-and-value
-    [label]="'comic-book.label.scraping-notes' | translate"
-    [value]="comic.notes"
-  ></cx-label-and-value>
-</div>
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.series" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.series }}
+    </span>
+  </mat-grid-tile>
 
-<h3>{{ "comic-book.label.other-details" | translate }}</h3>
-<div *ngIf="comic.sortName?.length > 0">
-  <cx-label-and-value
-    [label]="'comic-book.label.sort-name' | translate"
-    [value]="comic.sortName"
-  ></cx-label-and-value>
-</div>
-<div *ngIf="!!comic.scanType">
-  <cx-label-and-value
-    [label]="'comic-book.label.scan-type' | translate"
-    [value]="comic.scanType"
-  ></cx-label-and-value>
-</div>
-<div *ngIf="!!comic.format">
-  <cx-label-and-value
-    [label]="'comic-book.label.comic-format' | translate"
-    [value]="comic.format"
-  ></cx-label-and-value>
-</div>
-<div *ngIf="!!comic.imprint">
-  <cx-label-and-value
-    [label]="'comic-book.label.imprint' | translate"
-    [value]="comic.imprint"
-  ></cx-label-and-value>
-</div>
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.volume" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.volume }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.issue-number" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.issueNumber }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.cover-date" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.coverDate | date: "MM/yyyy" }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="4" rowspan="1">
+    {{ "comic-book.label.file-details" | translate }}
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.comic-state" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ "comic-book.text.state-" + comic.comicState | translate }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.filename" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.filename }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.filesize" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ "comic-book.text.filesize" | translate: { size: 0 } }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.file-entries" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{
+        "comic-book.text.file-entries"
+          | translate: { count: comic.fileEntries.length }
+      }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.added-date" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.addedDate | date: "medium" }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    *ngIf="!!lastRead"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.last-read-date" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="!!lastRead" colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ lastRead.lastRead | date: "medium" }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    *ngIf="comic.notes?.length > 0"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.scraping-notes" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="comic.notes?.length > 0" colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.notes }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="4" rowspan="1">
+    {{ "comic-book.label.other-details" | translate }}
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    *ngIf="comic.sortName?.length > 0"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.sort-name" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="comic.sortName?.length > 0" colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.sortName }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    *ngIf="!!comic.scanType"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.scan-type" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="!!comic.scanType" colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.scanType }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    *ngIf="!!comic.format"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.comic-format" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="!!comic.format" colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.format }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile
+    *ngIf="!!comic.imprint"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.imprint" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="!!comic.imprint" colspan="3" rowspan="1">
+    <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
+      {{ comic.imprint }}
+    </span>
+  </mat-grid-tile>
+</mat-grid-list>
