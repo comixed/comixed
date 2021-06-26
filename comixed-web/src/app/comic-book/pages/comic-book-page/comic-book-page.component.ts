@@ -90,6 +90,7 @@ export class ComicBookPageComponent
   lastReadDates: LastRead[] = [];
   isRead = false;
   lastRead: LastRead = null;
+  showPages = false;
 
   constructor(
     private logger: LoggerService,
@@ -113,6 +114,7 @@ export class ComicBookPageComponent
       params => {
         if (+params[QUERY_PARAM_TAB]) {
           this.currentTab = +params[QUERY_PARAM_TAB];
+          this.updateShowPages();
         }
       }
     );
@@ -203,6 +205,11 @@ export class ComicBookPageComponent
       QUERY_PARAM_TAB,
       `${index}`
     );
+    this.updateShowPages();
+  }
+
+  private updateShowPages(): void {
+    this.showPages = this.showPages || this.currentTab === 2;
   }
 
   onLoadScrapingVolumes(

@@ -92,6 +92,7 @@
           </mat-tab>
           <mat-tab [label]="'comic-book.label.comic-pages' | translate">
             <cx-comic-pages
+              *ngIf="showPages"
               [comic]="comic"
               [pageSize]="pageSize"
             ></cx-comic-pages>
