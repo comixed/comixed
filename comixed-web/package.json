@@ -65,6 +65,7 @@
     "lodash": "^4.17.21",
     "messageformat": "^2.3.0",
     "ngx-filesaver": "^11.0.0",
+    "ngx-gravatar": "^11.0.0",
     "ngx-translate-messageformat-compiler": "^4.8.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
     "normalize-url": "^4.5.1",

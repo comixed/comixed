@@ -125,6 +125,16 @@ $cx-selected-comic-color: #ffffff;
   padding: 2px;
 }
 
+.cx-padding-5 {
+  padding: 5px;
+}
+
+.cx-border-primary-1 {
+  border-style: solid;
+  border-color: var(--primary-color);
+  border-width: 1px;
+}
+
 // margins
 
 .cx-margin-left-5 {
@@ -227,6 +237,10 @@ $cx-column-large: 325px;
 .cx-vertical-container {
   display: flex;
   flex-direction: column;
+}
+
+.cx-grow-0 {
+  flex-grow: 0;
 }
 
 .cx-grow-1 {

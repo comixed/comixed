@@ -6021,6 +6021,14 @@ ngx-filesaver@^11.0.0:
   dependencies:
     tslib "^2.0.0"
 
+ngx-gravatar@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-gravatar/-/ngx-gravatar-11.0.0.tgz#a3ce5a4440b55ce6a595db589326f7138cdccd9a"
+  integrity sha512-r01sZXl7pfgeCWjUoTfSfGG2V//q4DOnGqKXRc8VdSPhnLOJzyS7fLgjTzoi/3XTaZkcG1OInHZ9JLrgQx9XRQ==
+  dependencies:
+    ts-md5 "^1.2.7"
+    tslib "^2.0.0"
+
 ngx-translate-messageformat-compiler@^4.8.0:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/ngx-translate-messageformat-compiler/-/ngx-translate-messageformat-compiler-4.8.0.tgz#557e39c33293865658669e99d1d748ab4a335298"
@@ -8718,6 +8726,11 @@ tree-kill@1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
+
+ts-md5@^1.2.7:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/ts-md5/-/ts-md5-1.2.9.tgz#22c9fd2baafdfdebee1068ff4d2dc215ff51df77"
+  integrity sha512-/Efr7ZfGf8P+d9HXh0PLQD1CDipqD8j9apCFG96pODDoEaFLxXpV4En6tAc6y3fWyfhFGrqtNBRBS+eLVIB2uQ==
 
 ts-node@~8.3.0:
   version "8.3.0"
