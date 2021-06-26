@@ -3,7 +3,7 @@ name: "Analyze code with SonarCloud"
 on:
   push:
     branches:
-      - develop
+      - master
   pull_request:
 
 jobs:
