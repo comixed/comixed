@@ -71,6 +71,7 @@ export class ComicBookPageComponent
   scrapingStateSubscription: Subscription;
   comicSubscription: Subscription;
   comicId = -1;
+  pageIndex = 0;
   comic: Comic;
   userSubscription: Subscription;
   isAdmin = false;
