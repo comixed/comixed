@@ -22,6 +22,8 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SideNavigationComponent', () => {
   let component: SideNavigationComponent;
@@ -31,9 +33,11 @@ describe('SideNavigationComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SideNavigationComponent],
       imports: [
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatListModule
+        MatListModule,
+        MatIconModule
       ]
     }).compileComponents();
   }));

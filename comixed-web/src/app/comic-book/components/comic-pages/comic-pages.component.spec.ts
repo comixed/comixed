@@ -31,6 +31,7 @@ import {
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
 import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;
@@ -47,7 +48,17 @@ describe('ComicPagesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
-      imports: [LoggerModule.forRoot(), MatCardModule, MatMenuModule],
+      imports: [
+        RouterTestingModule.withRoutes([
+          {
+            path: '**',
+            redirectTo: ''
+          }
+        ]),
+        LoggerModule.forRoot(),
+        MatCardModule,
+        MatMenuModule
+      ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 

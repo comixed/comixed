@@ -46,6 +46,7 @@ import {
 } from '@app/comic-file/actions/comic-file-list.actions';
 import { sendComicFiles } from '@app/comic-file/actions/import-comic-files.actions';
 import { Preference } from '@app/user/models/preference';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicFileToolbarComponent', () => {
   const USER = USER_ADMIN;
@@ -70,7 +71,8 @@ describe('ComicFileToolbarComponent', () => {
         MatIconModule,
         MatSelectModule,
         MatInputModule,
-        MatToolbarModule
+        MatToolbarModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

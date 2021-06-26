@@ -26,6 +26,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicDetailCardComponent } from '@app/comic-book/components/comic-detail-card/comic-detail-card.component';
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 
 describe('ComicStoryComponent', () => {
   const COMIC = COMIC_2;
@@ -42,7 +43,8 @@ describe('ComicStoryComponent', () => {
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatExpansionModule,
-        MatCardModule
+        MatCardModule,
+        MatChipsModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

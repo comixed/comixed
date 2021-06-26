@@ -200,11 +200,15 @@ $cx-column-large: 325px;
 }
 
 .cx-align-content-center {
-  text-align: center;
+  text-align: center !important;
+}
+
+.cx-align-text-left {
+  text-align: left !important;
 }
 
 .cx-align-text-right {
-  text-align: right;
+  text-align: right !important;
 }
 
 .cx-comic-detail-card-container {
