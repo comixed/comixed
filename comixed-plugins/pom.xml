@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.10.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-plugins</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
+  <version>0.10.0-SNAPSHOT</version>
   <name>comixed-plugins</name>
   <url>http://maven.apache.org</url>
   <dependencies>
