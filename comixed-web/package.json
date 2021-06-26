@@ -51,6 +51,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "@tragically-slick/edit-in-place": "^0.1.0-2",
+    "color-string": "^1.5.5",
     "css-what": "^5.0.1",
     "file-saver": "^2.0.5",
     "glob-parent": "^5.1.2",
