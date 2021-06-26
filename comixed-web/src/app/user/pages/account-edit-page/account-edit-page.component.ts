@@ -38,6 +38,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { saveCurrentUser } from '@app/user/actions/user.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { getUserPreference } from '@app/user';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-account-edit',
@@ -49,6 +54,7 @@ export class AccountEditPageComponent implements OnInit, OnDestroy {
   userStateSubscripton: Subscription;
   userSubscription: Subscription;
   langChangeSubscription: Subscription;
+  imageSize = PAGE_SIZE_DEFAULT;
 
   constructor(
     private logger: LoggerService,
@@ -92,6 +98,14 @@ export class AccountEditPageComponent implements OnInit, OnDestroy {
     this.userForm.controls.passwordVerify.setValue('');
     this.onPasswordChanged();
     this.loadTranslations();
+    this.imageSize = parseInt(
+      getUserPreference(
+        user.preferences,
+        PAGE_SIZE_PREFERENCE,
+        `${this.imageSize}`
+      ),
+      10
+    );
   }
 
   ngOnInit(): void {}

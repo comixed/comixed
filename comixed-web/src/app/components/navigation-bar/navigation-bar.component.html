@@ -16,7 +16,7 @@
     [matTooltip]="'navigation.tooltip.account' | translate"
     [routerLink]="'/account'"
   >
-    <mat-icon>person</mat-icon>
+    <img ngxGravatar [alt]="user.email" [email]="user.email" />
   </button>
 
   <button

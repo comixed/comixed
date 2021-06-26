@@ -51,6 +51,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject } from 'rxjs';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
+import { GravatarModule } from 'ngx-gravatar';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
@@ -75,6 +76,7 @@ describe('NavigationBarComponent', () => {
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
+        GravatarModule,
         MatDialogModule,
         MatMenuModule,
         MatIconModule,

@@ -42,12 +42,16 @@ import { UserPreferencesPageComponent } from './pages/user-preferences-page/user
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { GravatarModule } from 'ngx-gravatar';
+import { UserCardComponent } from './components/user-card/user-card.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
     LoginPageComponent,
     AccountEditPageComponent,
-    UserPreferencesPageComponent
+    UserPreferencesPageComponent,
+    UserCardComponent
   ],
   providers: [UserService],
   imports: [
@@ -58,6 +62,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TranslateModule.forRoot(),
     StoreModule.forFeature(USER_FEATURE_KEY, userReducer),
     EffectsModule.forFeature([UserEffects]),
+    GravatarModule,
     MatCardModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -66,7 +71,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatTableModule,
     MatSortModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatToolbarModule
   ],
   exports: []
 })

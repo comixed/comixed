@@ -35,6 +35,9 @@ import { saveCurrentUser } from '@app/user/actions/user.actions';
 import { Confirmation } from '@app/core/models/confirmation';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { UserCardComponent } from '@app/user/components/user-card/user-card.component';
 
 describe('AccountEditPageComponent', () => {
   const USER = USER_READER;
@@ -50,13 +53,15 @@ describe('AccountEditPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AccountEditPageComponent],
+      declarations: [AccountEditPageComponent, UserCardComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatDialogModule
+        MatDialogModule,
+        MatIconModule,
+        MatToolbarModule
       ],
       providers: [
         provideMockStore({ initialState }),

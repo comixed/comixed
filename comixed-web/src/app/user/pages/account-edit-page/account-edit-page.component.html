@@ -1,3 +1,26 @@
+<mat-toolbar class="cx-light-dark-background">
+  <div class="cx-spacer"></div>
+  <button
+    id="save-button"
+    class="cx-action-button"
+    mat-icon-button
+    color="primary"
+    [disabled]="!userForm.valid"
+    (click)="onSaveChanges()"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+  <button
+    id="reset-button"
+    class="cx-action-button"
+    mat-icon-button
+    color="warn"
+    [disabled]="!userForm.dirty"
+    (click)="onResetChanges()"
+  >
+    <mat-icon>undo</mat-icon>
+  </button>
+</mat-toolbar>
 <form [formGroup]="userForm">
   <mat-card *ngIf="!!user">
     <mat-card-title>
@@ -5,97 +28,80 @@
     </mat-card-title>
     <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
     <mat-card-content>
-      <mat-form-field class="cx-width-100" appearance="fill">
-        <mat-label>
-          {{ "user.edit-current-user.label.email" | translate }}
-        </mat-label>
-        <input
-          id="email-input"
-          matInput
-          type="email"
-          formControlName="email"
-          required
-        />
-      </mat-form-field>
-      <mat-form-field class="cx-width-100" appearance="fill">
-        <mat-label>
-          {{ "user.edit-current-user.label.password" | translate }}
-        </mat-label>
-        <input
-          id="password-input"
-          matInput
-          type="password"
-          formControlName="password"
-          (keyup)="onPasswordChanged()"
-        />
-        <mat-error>
-          <span *ngIf="userForm.controls.password.errors?.minLength">
-            {{
-              "validation.value-too-short"
-                | translate
-                  : {
-                      length:
-                        userForm.controls.password.errors.minLength
-                          .requiredLength
-                    }
-            }}
-          </span>
-          <span *ngIf="userForm.controls.password.errors?.maxLength">
-            {{
-              "validation.value-too-long"
-                | translate
-                  : {
-                      length:
-                        userForm.controls.password.errors.maxLength
-                          .requiredLength
-                    }
-            }}
-          </span>
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="cx-width-100" appearance="fill">
-        <mat-label>
-          {{ "user.edit-current-user.label.password-verify" | translate }}
-        </mat-label>
-        <input
-          id="password-verify-input"
-          matInput
-          type="password"
-          formControlName="passwordVerify"
-        />
-        <mat-error>
-          <span *ngIf="userForm.errors?.passwordsDontMatch">
-            {{
-              "user.edit-current-user.validation.passwords-dont-match"
-                | translate
-            }}
-          </span>
-        </mat-error>
-      </mat-form-field>
+      <div class="cx-horizontal-container">
+        <div class="cx-grow-1 cx-padding-5">
+          <mat-form-field class="cx-width-100" appearance="fill">
+            <mat-label>
+              {{ "user.edit-current-user.label.email" | translate }}
+            </mat-label>
+            <input
+              id="email-input"
+              matInput
+              type="email"
+              formControlName="email"
+              required
+            />
+          </mat-form-field>
+          <mat-form-field class="cx-width-100" appearance="fill">
+            <mat-label>
+              {{ "user.edit-current-user.label.password" | translate }}
+            </mat-label>
+            <input
+              id="password-input"
+              matInput
+              type="password"
+              formControlName="password"
+              (keyup)="onPasswordChanged()"
+            />
+            <mat-error>
+              <span *ngIf="userForm.controls.password.errors?.minLength">
+                {{
+                  "validation.value-too-short"
+                    | translate
+                      : {
+                          length:
+                            userForm.controls.password.errors.minLength
+                              .requiredLength
+                        }
+                }}
+              </span>
+              <span *ngIf="userForm.controls.password.errors?.maxLength">
+                {{
+                  "validation.value-too-long"
+                    | translate
+                      : {
+                          length:
+                            userForm.controls.password.errors.maxLength
+                              .requiredLength
+                        }
+                }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="cx-width-100" appearance="fill">
+            <mat-label>
+              {{ "user.edit-current-user.label.password-verify" | translate }}
+            </mat-label>
+            <input
+              id="password-verify-input"
+              matInput
+              type="password"
+              formControlName="passwordVerify"
+            />
+            <mat-error>
+              <span *ngIf="userForm.errors?.passwordsDontMatch">
+                {{
+                  "user.edit-current-user.validation.passwords-dont-match"
+                    | translate
+                }}
+              </span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="cx-grow-0 cx-border-primary-1 cx-padding-5">
+          <cx-user-card [user]="user" [imageSize]="imageSize"></cx-user-card>
+        </div>
+      </div>
     </mat-card-content>
-    <mat-card-actions>
-      <button
-        id="save-button"
-        class="cx-action-button"
-        mat-raised-button
-        color="primary"
-        [disabled]="!userForm.valid"
-        (click)="onSaveChanges()"
-      >
-        <mat-icon>save</mat-icon>
-        <mat-label>{{ "button.save" | translate }}</mat-label>
-      </button>
-      <button
-        id="reset-button"
-        class="cx-action-button"
-        mat-raised-button
-        color="warn"
-        [disabled]="!userForm.dirty"
-        (click)="onResetChanges()"
-      >
-        <mat-icon>undo</mat-icon>
-        <mat-label>{{ "button.reset" | translate }}</mat-label>
-      </button>
-    </mat-card-actions>
   </mat-card>
 </form>
