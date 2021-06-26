@@ -17,7 +17,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["lodash", "sockjs-client"],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "sockjs-client",
+              "file-saver"
+            ],
             "outputPath": "target/classes/static",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -25,10 +29,7 @@
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": [
-              "src/theme.scss",
-              "src/styles.scss"
-            ],
+            "styles": ["src/theme.scss", "src/styles.scss"],
             "scripts": ["./node_modules/sockjs-client/dist/sockjs.min.js"]
           },
           "configurations": {
