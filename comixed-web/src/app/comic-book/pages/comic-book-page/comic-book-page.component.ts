@@ -188,16 +188,6 @@ export class ComicBookPageComponent
     this.store.dispatch(resetScraping());
   }
 
-  onPreviousComic(): void {
-    this.logger.trace('Loading previous comic:', this.comic.previousIssueId);
-    this.routeToComic(this.comic.previousIssueId);
-  }
-
-  onNextComic(): void {
-    this.logger.trace('Loading next comic:', this.comic.nextIssueId);
-    this.routeToComic(this.comic.nextIssueId);
-  }
-
   onTabChange(index: number): void {
     this.logger.trace('Changing active tab:', index);
     updateQueryParam(

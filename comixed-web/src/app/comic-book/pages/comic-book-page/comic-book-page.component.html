@@ -6,7 +6,7 @@
     color="primary"
     [matTooltip]="'comic-book.tooltip.go-to-previous-comic' | translate"
     [disabled]="!comic.previousIssueId"
-    (click)="onPreviousComic()"
+    [routerLink]="['/comics', comic.previousIssueId]"
   >
     <mat-icon>arrow_back</mat-icon>
   </button>
@@ -17,7 +17,7 @@
     [disabled]="!comic.nextIssueId"
     color="primary"
     [matTooltip]="'comic-book.tooltip.go-to-next-comic' | translate"
-    (click)="onNextComic()"
+    [routerLink]="['/comics', comic.nextIssueId]"
   >
     <mat-icon>arrow_forward</mat-icon>
   </button>
