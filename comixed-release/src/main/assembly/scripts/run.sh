@@ -25,8 +25,8 @@ BINDIR=$(dirname "${ME}")
 LIBDIR=$(realpath "${BINDIR}"/../lib)
 
 JAVA=$(which java)
-JAROPTIONS=''
-JVMOPTIONS=''
+JAROPTIONS=""
+JVMOPTIONS=""
 COMIXED_JAR_FILE=$(echo "${BINDIR}"/comixed-app-*.jar)
 DEBUG=false
 FULL_DEBUG=false
@@ -36,6 +36,7 @@ DBUSER=""
 DBPWRD=""
 IMGCACHEDIR=""
 LOGFILE=""
+PLUGINDIR=""
 
 usage() {
   echo "Usage: run.sh [OPTIONS]"
@@ -45,7 +46,8 @@ usage() {
   echo " -u [USERNAME]\t\t- Set the database username"
   echo " -p [PASSWORD]\t\t- Set the database password"
   echo " -i [DIR]\t\t- Set the image caching directory"
-  echo " -l [DIR]\t\t-Set the JAR library directory"
+  echo " -l [DIR]\t\t- Set the JAR library directory"
+  echo " -P [DIR]\t\t- Set the plugin directory"
   echo ""
   echo "Other options:"
   echo " -d           - Debug mode (def. false)"
@@ -55,13 +57,14 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:l:dDvL:" option; do
+while getopts "j:u:p:i:l:P:dDvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
   p) DBPWRD="${OPTARG}" ;;
   i) IMGCACHEDIR="${OPTARG}" ;;
   l) LIBDIR="${OPTARG}" ;;
+  P) PLUGINDIR="${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
   v) VERBOSE=true ;;
@@ -107,6 +110,10 @@ fi
 
 if [[ $IMGCACHEDIR ]]; then
   JAROPTIONS="${JAROPTIONS} --comixed.images.cache.location=${IMGCACHEDIR}"
+fi
+
+if [[ $PLUGINDIR ]]; then
+  JAROPTIONS="${JAROPTIONS} --comixed.plugins.location=${PLUGINDIR}"
 fi
 
 # build a list of JVM arguments
