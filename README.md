@@ -18,12 +18,13 @@ To achieve this goal, the project will:
    * converting files from one format to another between the supported types,
    * adding and removing images that make up the pages of the comic,
    * managing what type a page is (front cover, alternate cover, story, back cover, advertisement, etc.)
-   * blacklisting pages based on hash identifiers so that they are ignored,
-   * deleting blacklisted pages from comics,
+   * blocking pages based on hash identifiers so that they are ignored,
+   * sharing of blocked page files,
+   * deleting blocked pages from comics,
    * consolidating the library, including performing any or all of the following steps:
       * moving all files into a well-defined directory structure,
       * converting comics to a single archive type,
-      * removing files from each comic that have been blacklisted, and
+      * removing files from each comic that have been blocked, and
       * updating the ComicInfo.xml file within each comic with the current metadata.
 * administrators can quickly import new comics into their library,
 * scraping metadata for comics from various sources, such as [ComicVine](https://comicvine.gamespot.com/).
