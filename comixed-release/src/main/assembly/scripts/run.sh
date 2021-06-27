@@ -90,7 +90,7 @@ if $FULL_DEBUG; then
 fi
 
 if [[ $LOGFILE ]]; then
-  JAROPTIONS="${JAROPTIONS} --logging.file=${LOGFILE}"
+  JAROPTIONS="${JAROPTIONS} --logging.file.name=${LOGFILE}"
 fi
 
 if [[ $JDBCURL ]]; then

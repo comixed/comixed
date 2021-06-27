@@ -101,7 +101,7 @@ SET OPTIONS=%OPTIONS% --logging.level.root=DEBUG
 :skip_full_debug
 
 IF "%LOGFILE%" == "" GOTO :skip_logfile
-SET OPTIONS=%OPTIONS% --logging.file=%LOGFILE%
+SET OPTIONS=%OPTIONS% --logging.file.name=%LOGFILE%
 :skip_logfile
 
 IF "%JDBCURL%" == "" GOTO skip_jdbc_url
