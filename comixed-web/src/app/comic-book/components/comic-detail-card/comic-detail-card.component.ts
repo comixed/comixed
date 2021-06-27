@@ -42,6 +42,7 @@ import { UpdateComicInfoEvent } from '@app/comic-book/models/event/update-comic-
 export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() comic: Comic;
   @Input() title: string;
+  @Input() subtitle: string;
   @Input() imageUrl: string;
   @Input() description: string;
   @Input() detailLink: string;
