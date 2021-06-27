@@ -6,12 +6,6 @@ An application for managing digital comics.
 * SonarCloud Status: [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=comixed_comixed&metric=alert_status)](https://sonarcloud.io/dashboard?id=comixed_comixed)
 * You can download the latest **unsupported** release from the **Releases** tab. Every merge to the **Develop** branch triggers a new build.
 
-## NOTICE ABOUT THE USER INTERFACE
-
-The project is in the process of migrating from PrimeNG to Angular Material as the user interface toolkit.
-As a result the **DEVELOPMENT** builds will now run with the new interface, which is currently early in its
-development.
-
 ## Project Roadmap And Vision Statement
 The goals for this project are simple. It seeks to be the ultimate management tool for digital comic books.
 
