@@ -1,4 +1,4 @@
-name: "Run a sanity build whenever code is merged into master."
+name: "Sanity Build On Master"
 
 on:
   push:

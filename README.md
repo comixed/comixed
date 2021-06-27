@@ -2,8 +2,9 @@
 An application for managing digital comics.
 
 ## Status
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fcomixed%2Fcomixed%2Fbadge%3Fref%3Ddevelop&style=flat-square)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=comixed_comixed&metric=alert_status)](https://sonarcloud.io/dashboard?id=comixed_comixed)
+[![Build Status](https://github.com/comixed/comixed/actions/workflows/sanity-build.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)\
+[![Latest Release](https://github.com/comixed/comixed/actions/workflows/publish-release.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)\
+[![Code Analysis](https://github.com/comixed/comixed/actions/workflows/code-analysis.yml/badge.svg)](https://actions-badge.atrox.dev/comixed/comixed/goto?ref=master)
 
 ## Project Roadmap And Vision Statement
 The goals for this project are simple. It seeks to be the ultimate management tool for digital comic books.

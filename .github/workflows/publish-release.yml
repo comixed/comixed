@@ -1,7 +1,7 @@
 # GOAL: Create pre-releases when changes are pushed to a release branch. On success it creates a tag for the build.
 #       Such a release can then be promoted to a full release.
 
-name: "Publish release branch changes"
+name: "Latest Release Build"
 
 on:
   push:
