@@ -31,8 +31,9 @@ IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
 IF "%PARAM%" == "-i" GOTO set_image_cache_dir
-if "%PARAM%" == "-l" GOTO set_lib_dir
+IF "%PARAM%" == "-l" GOTO set_lib_dir
 IF "%PARAM%" == "-L" GOTO set_logging_file
+IF "%PARAM%" == "-P" GOTO set_plugin_dir
 GOTO process_command_line
 
 :set_jdbc_url
@@ -71,6 +72,12 @@ SHIFT
 SHIFT
 GOTO process_command_line
 
+:set_plugin_dir
+SET PLUGINDIR=%ARG%
+SHIFT
+SHIFT
+GOTO process_command_line
+
 :show_help
 ECHO Usage: run.bat [OPTIONS]
 ECHO.
@@ -80,6 +87,7 @@ ECHO  -u [USERNAME] - Set the database username
 ECHO  -p [PASSWORD] - Set the database password
 ECHO  -i [DIR]      - Set the image caching directory
 ECHO  -l [DIR]      - Set the JAR library directory
+ECHO  -P [DIR]      - Set the plugin directory
 ECHO.
 ECHO OTHER OPTIONS:
 ECHO  -d            - Enable debugging (def. off)
@@ -119,6 +127,10 @@ SET OPTIONS=%OPTIONS% --spring.datasource.password=%DBPWRD%
 IF "%IMGCACHEDIR%" == "" GOTO skip_image_cache_dir
 SET OPTIONS=%OPTIONS% --comixed.images.cache.location=%IMGCACHEDIR%
 :skip_image_cache_dir
+
+IF "%PLUGINDIR" == "" GOTO skip_plugin_dir
+SET OPTIONS=%OPTIONS% --comixed.plugins.location=%PLUGINDIR%
+:skip_plugin_dir
 
 SET JVMOPTIONS=
 
