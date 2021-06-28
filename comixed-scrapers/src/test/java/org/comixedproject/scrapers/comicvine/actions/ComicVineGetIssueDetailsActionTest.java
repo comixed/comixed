@@ -58,6 +58,7 @@ public class ComicVineGetIssueDetailsActionTest {
   private static final String TEST_STORY_NAME = "Story Name";
   private static final String TEST_CREDIT_NAME = "Credit Name";
   private static final String TEST_CREDIT_ROLE = "Credit Role";
+  private static final Long TEST_COMIC_VINE_ISSUE_ID = 71765L;
 
   @InjectMocks private ComicVineGetIssueDetailsAction scrapeComicAction;
   @Mock private ObjectFactory<ComicVineGetIssueWithDetailsAction> issueDetailsActionObjectFactory;
@@ -115,6 +116,7 @@ public class ComicVineGetIssueDetailsActionTest {
     Mockito.when(comicVinePublisher.getName()).thenReturn(TEST_PUBLISHER_NAME);
     Mockito.when(comicVinePublisher.getDetailUrl()).thenReturn(TEST_PUBLISHER_DETAILS_API);
 
+    Mockito.when(comicVineIssue.getId()).thenReturn(TEST_COMIC_VINE_ISSUE_ID);
     Mockito.when(comicVineIssue.getCharacters()).thenReturn(characters);
     Mockito.when(comicVineCharacter.getName()).thenReturn(TEST_CHARACTER_NAME);
     Mockito.when(comicVineIssue.getTeams()).thenReturn(teams);
@@ -191,6 +193,7 @@ public class ComicVineGetIssueDetailsActionTest {
     this.verifyGetVolumeDetailsAction();
     this.verifyGetPublisherDetailsAction();
 
+    assertEquals(String.valueOf(TEST_COMIC_VINE_ISSUE_ID), result.getSourceId());
     assertEquals(TEST_PUBLISHER_NAME, result.getPublisher());
     assertEquals(TEST_VOLUME_NAME, result.getSeries());
     assertEquals(TEST_START_YEAR, result.getVolume());

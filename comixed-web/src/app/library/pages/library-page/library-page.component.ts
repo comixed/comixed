@@ -49,6 +49,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   currentTab = 0;
   dataSubscription: Subscription;
   unreadOnly = false;
+  unscrapedOnly = false;
   deletedOnly = false;
 
   constructor(
@@ -61,6 +62,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ) {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
+      this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
     });
     this.libraryBusySubscription = this.store
@@ -73,6 +75,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           (this.comics = comics.filter(
             comic =>
               (!this.unreadOnly || !comic.lastRead) &&
+              (!this.unscrapedOnly || !comic.comicVineId) &&
               (!this.deletedOnly || !!comic.deletedDate)
           ))
       );

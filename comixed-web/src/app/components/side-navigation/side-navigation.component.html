@@ -31,6 +31,14 @@
       <a
         *ngIf="!!user"
         mat-list-item
+        routerLink="/library/unscraped"
+        routerLinkActive="active"
+      >
+        {{ "navigation.option.unscraped-comics" | translate }}
+      </a>
+      <a
+        *ngIf="!!user"
+        mat-list-item
         routerLink="/library/deleted"
         routerLinkActive="active"
       >

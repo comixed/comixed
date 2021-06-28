@@ -216,7 +216,7 @@ public class Comic {
 
   @Column(name = "ComicVineId", length = 16)
   @JsonProperty("comicVineId")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   private String comicVineId;

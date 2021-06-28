@@ -35,6 +35,12 @@ const routes: Routes = [
     data: { unread: true }
   },
   {
+    path: 'library/unscraped',
+    component: LibraryPageComponent,
+    canActivate: [ReaderGuard],
+    data: { unscraped: true }
+  },
+  {
     path: 'library/deleted',
     component: LibraryPageComponent,
     canActivate: [ReaderGuard],
