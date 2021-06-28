@@ -10,7 +10,7 @@ To install the application, simply place the comixed-app-\*.jar file in the dire
 
 ### A Note On Java Requirements
 
-As of v0.7, ComiXed requires Java 12 or later, and will not run with any version prior to that. Since Oracle no longer ships a JRE (Java Runtime Environment) for Java after 9, you'll instead need to download a Java Development Kit (JDK) from [here](https://www.oracle.com/java/technologies/javase/jdk12-archive-downloads.html).
+As of v0.7, ComiXed requires Java 11 or later, and will not run with any version prior to that. Since Oracle no longer ships a JRE (Java Runtime Environment) for Java after 9, you'll instead need to download a Java Development Kit (JDK) from [here](https://www.oracle.com/java/technologies/javase/jdk12-archive-downloads.html).
 
 ## Configuring The Application
 
@@ -24,10 +24,18 @@ By default, the application creates the runtime database, which contains your co
 
 ## Launching The Application
 
-To run the application use the following command line:
+To run the application use the following command line, use one of the following options from the **bin** directory. So,
+after extracting the contents of the distribution archive, do one of the following:
 
+### Linux Or Mac
 ```
- $ java -jar [path to your JAR file]
+ $ sh ./run.sh
+```
+
+
+### Windows
+```
+ C:\users\comixed> run.bat
 ```
 
 This will launch the application in the current window as a text-only application. You'll see output as the application starts, creates your library database (when run the first time). When you see the following text, the application is ready for the next step:
@@ -37,18 +45,6 @@ This will launch the application in the current window as a text-only applicatio
 2018-07-24 08:38:44.520  INFO 75198 --- [           main] o.s.c.support.DefaultLifecycleProcessor  : Starting beans in phase 0
 2018-07-24 08:38:44.640  INFO 75198 --- [           main] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 7171 (http)
 2018-07-24 08:38:44.644  INFO 75198 --- [           main] org.comixedproject.ComiXedApp            : Started ComiXedApp in 8.979 seconds (JVM running for 9.62)
-```
-
-### Enabling Extra Logging
-
-Sometimes you might want (or need) to capture some additional information to report a bug. To increase the amount of logging add the following commandline option:
-```
- $ java -jar [path to your JAR file] --logging.level.org.comixedproject=DEBUG
-```
-
-To capture the logging to a file, you can add the following commandline option:
-```
- $ java -jar [path to your JAR file] --logging.file.name=comixed.log
 ```
 
 ## Logging In And Configuring Your Account
@@ -76,15 +72,13 @@ Here you enter the root directory for where your comic library is stored. For ex
 
 ![importing comics](images/import_comics.png)
 
-This will display *only* comics not already included in your library that are found in the directory and its subdirectories. You can now select individual comics by clicking on their cover, or right-click in the cover area and select one of the popup menu items:
-
-![Select and import comics](images/select_and_import_popup_menu.png)
+This will display *only* comics not already included in your library that are found in the directory and its subdirectories.
 
 When you're ready, you can then right-click on a cover and select to begin importing comics. You can either import the selected comics **with** or **without** metadata included in a **ComicInfo.xml** file if found in any comic.
 
-![comic library view](images/comic_library.png)
-
 As each comic is imported, your browser will be updated to show the newly added comic. 
+
+![comic library view](images/comic_library_during_import.png)
 
 ### ComicInfo.xml Support
 
@@ -124,13 +118,11 @@ The core of a multi-comic scrape is described above. Here we'll describe how to 
 
 #### Selecting Comics
 
-![selecting multiple comics](images/multi_scrape_select.png)
+![selecting multiple comics](images/multi_scraping_select.png)
 
 To select comics to be scraped, simply click on the covers for comics. You can also right-click on the titles and toggle all selections on or off.
 
 When you're ready to start scraping, select the **Scrape comics...** option. You'll be taken to the following view:
-
-![start scraping](images/multi_scrape_start.png)
 
 Here you can begin scraping by clicking the **Start Scraping** button.
 
