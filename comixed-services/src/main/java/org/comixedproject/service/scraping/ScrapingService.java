@@ -230,6 +230,7 @@ public class ScrapingService {
       // have to use a final reference here due to the lambdas later in this block
       final Comic comic = result;
       log.debug("Updating comic with scraped data");
+      comic.setComicVineId(issueDetails.getSourceId());
       comic.setPublisher(issueDetails.getPublisher());
       comic.setSeries(issueDetails.getSeries());
       comic.setVolume(issueDetails.getVolume());

@@ -32,6 +32,11 @@ import lombok.Setter;
  * @author Darryl L. Pierce
  */
 public class ScrapingIssueDetails {
+  @JsonProperty("sourceId")
+  @Getter
+  @Setter
+  private String sourceId;
+
   @JsonProperty("publisher")
   @Getter
   @Setter

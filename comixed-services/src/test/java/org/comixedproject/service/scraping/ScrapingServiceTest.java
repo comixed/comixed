@@ -60,6 +60,7 @@ public class ScrapingServiceTest {
   private static final String TEST_TITLE = "The Title";
   private static final String TEST_DESCRIPTION = "This is the comic's description";
   private static final String TEST_ISSUE_DETAILS_KEY = "IssueDetailsKey";
+  private static final String TEST_SOURCE_ID = "71765";
 
   @InjectMocks private ScrapingService scrapingService;
   @Mock private ScrapingCacheService scrapingCacheService;
@@ -86,6 +87,7 @@ public class ScrapingServiceTest {
     Mockito.when(scrapingAdaptor.getIssueDetailsKey(Mockito.anyInt()))
         .thenReturn(TEST_ISSUE_DETAILS_KEY);
 
+    Mockito.when(scrapingIssueDetails.getSourceId()).thenReturn(TEST_SOURCE_ID);
     Mockito.when(scrapingIssueDetails.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(scrapingIssueDetails.getSeries()).thenReturn(TEST_SERIES_NAME);
     Mockito.when(scrapingIssueDetails.getVolume()).thenReturn(TEST_VOLUME);
@@ -456,6 +458,7 @@ public class ScrapingServiceTest {
   }
 
   private void verifyComicScraping() {
+    Mockito.verify(this.loadedComic, Mockito.times(1)).setComicVineId(TEST_SOURCE_ID);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setVolume(TEST_VOLUME);

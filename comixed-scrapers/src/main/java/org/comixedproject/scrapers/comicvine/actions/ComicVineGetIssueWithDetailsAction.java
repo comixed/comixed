@@ -52,6 +52,7 @@ public class ComicVineGetIssueWithDetailsAction
     if (StringUtils.isEmpty(this.getApiKey())) throw new ScrapingException("Missing API key");
     if (this.issueId == null) throw new ScrapingException("Missing issue id");
 
+    this.addField("id");
     this.addField("volume");
     this.addField("issue_number");
     this.addField("cover_date");
