@@ -32,6 +32,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 0.9.0-SNAPSHOT
+          title: Changes For 0.9.0-1.0
           files: |
-            release/comixed-release-0.9.0-SNAPSHOT-RELEASE.zip
+            release/comixed-release-0.9.0-1.0-RELEASE.zip
