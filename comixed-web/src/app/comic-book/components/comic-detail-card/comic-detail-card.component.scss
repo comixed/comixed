@@ -5,6 +5,12 @@
   display: inline-block;
 }
 
+.mat-card-title {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .mat-expansion-panel,
 .mat-expanded {
   background-color: var(--primary-lighter-color);

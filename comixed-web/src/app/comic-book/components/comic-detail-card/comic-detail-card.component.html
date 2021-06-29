@@ -3,11 +3,15 @@
   [style.width]="imageWidth"
   [style.height]="imageHeight"
 >
-  <mat-card-title *ngIf="!!title">
-    <span class="cx-width-100 cx-text-nowrap">{{ title }}</span>
+  <mat-card-title *ngIf="!!title" class="cx-text-nowrap" [matTooltip]="title">
+    {{ title }}
   </mat-card-title>
-  <mat-card-subtitle *ngIf="!!subtitle">
-    <span class="cx-width-100 cx-text-nowrap">{{ subtitle }}</span>
+  <mat-card-subtitle
+    *ngIf="!!subtitle"
+    class="cx-text-nowrap"
+    [matTooltip]="subtitle"
+  >
+    {{ subtitle }}
   </mat-card-subtitle>
   <mat-card-content>
     <mat-accordion *ngIf="!!comic">
