@@ -9,6 +9,7 @@
       *ngFor="let comic of comics"
       [comic]="comic"
       [title]="comic | comicTitle"
+      [subtitle]="comic.title"
       [imageUrl]="comic | comicCoverUrl"
       [detailLink]="['/comics', comic.id]"
       [blurred]="!comic.fileDetails"
