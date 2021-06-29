@@ -2,30 +2,30 @@
   "task-audit-log": {
     "label": {
       "description": "Details",
-      "runtime": "Runtime",
-      "start-time": "Start Time",
-      "successful": "Successful",
-      "task-type": "Task Type"
+      "runtime": "Exécution",
+      "start-time": "Heure de début",
+      "successful": "Succès",
+      "task-type": "Type de tâche"
     },
-    "load-entries-effect-failure": "Error loading task audit log entries.",
-    "page-title": "Task Audit Log",
-    "tab-title": "Task Audit Log",
+    "load-entries-effect-failure": "Erreur de chargement des entrées du journal d'audit des tâches.",
+    "page-title": "Journal d'audit des tâches",
+    "tab-title": "Journal d'audit des tâches",
     "text": {
-      "details-title": "Task Details",
-      "exception-title": "Exception Thrown",
+      "details-title": "Détails des tâches",
+      "exception-title": "Exception levée",
       "runtime": "{duration}ms",
-      "task-type-ADD_COMIC": "Add one comic",
-      "task-type-CONVERT_COMIC": "Convert one comic",
-      "task-type-DELETE_COMIC": "Delete one comic",
-      "task-type-DELETE_COMICS": "Delete multiple comics",
-      "task-type-MOVE_COMIC": "Move one comic",
-      "task-type-MOVE_COMICS": "Move multiple comics",
-      "task-type-PROCESS_COMIC": "Process one comic",
-      "task-type-QUEUE_COMICS": "Queue one comic",
-      "task-type-RESCAN_COMIC": "Rescan one comic",
-      "task-type-RESCAN_COMICS": "Rescan multiple comics",
-      "task-type-UNDELETE_COMIC": "Undelete one comic",
-      "task-type-UNDELETE_COMICS": "Undelete multiple comics"
+      "task-type-ADD_COMIC": "Ajouter une bande dessinée",
+      "task-type-CONVERT_COMIC": "Convertir une bande dessinée",
+      "task-type-DELETE_COMIC": "Supprimer une bande dessinée",
+      "task-type-DELETE_COMICS": "Supprimer plusieurs bandes dessinées",
+      "task-type-MOVE_COMIC": "Déplacer une bande dessinée",
+      "task-type-MOVE_COMICS": "Déplacer plusieurs bandes dessinées",
+      "task-type-PROCESS_COMIC": "Traiter une bande dessinée",
+      "task-type-QUEUE_COMICS": "Mettre en file d'attente une bande dessinée",
+      "task-type-RESCAN_COMIC": "Rescanner une bande dessinée",
+      "task-type-RESCAN_COMICS": "Rescanner plusieurs bandes dessinées",
+      "task-type-UNDELETE_COMIC": "Annuler la suppression d'une bande dessinée",
+      "task-type-UNDELETE_COMICS": "Annuler la suppression de plusieurs bandes dessinées"
     }
   },
   "web-audit-log": {
