@@ -25,10 +25,15 @@ import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { setImportingComicsState } from '@app/comic-file/actions/comic-import.actions';
-import { setPageSize } from '@app/library/actions/display.actions';
+import {
+  setPageSize,
+  setPagination
+} from '@app/library/actions/display.actions';
 import {
   PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
+  PAGE_SIZE_PREFERENCE,
+  PAGINATION_DEFAULT,
+  PAGINATION_PREFERENCE
 } from '@app/library/library.constants';
 import {
   LANGUAGE_PREFERENCE,
@@ -131,19 +136,7 @@ export class AppComponent implements OnInit {
         this.translateService.use(
           getUserPreference(this.user.preferences, LANGUAGE_PREFERENCE, 'en')
         );
-        this.store.dispatch(
-          setPageSize({
-            size: parseInt(
-              getUserPreference(
-                this.user.preferences,
-                PAGE_SIZE_PREFERENCE,
-                `${PAGE_SIZE_DEFAULT}`
-              ),
-              10
-            ),
-            save: false
-          })
-        );
+        this.loadUserDefaults();
       }
     });
     this.store
@@ -159,5 +152,33 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.logger.debug('Loading current user');
     this.store.dispatch(loadCurrentUser());
+  }
+
+  private loadUserDefaults(): void {
+    this.store.dispatch(
+      setPageSize({
+        size: parseInt(
+          getUserPreference(
+            this.user.preferences,
+            PAGE_SIZE_PREFERENCE,
+            `${PAGE_SIZE_DEFAULT}`
+          ),
+          10
+        ),
+        save: false
+      })
+    );
+    this.store.dispatch(
+      setPagination({
+        pagination: parseInt(
+          getUserPreference(
+            this.user.preferences,
+            PAGINATION_PREFERENCE,
+            `${PAGINATION_DEFAULT}`
+          ),
+          10
+        )
+      })
+    );
   }
 }
