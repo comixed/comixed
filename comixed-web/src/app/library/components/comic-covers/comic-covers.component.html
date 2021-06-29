@@ -1,10 +1,13 @@
-<div class="cx-width-100 cx-height-100">
+<div class="cx-width-100 cx-height-100 cx-top-0">
   <cx-library-toolbar
     [comics]="comics"
     [selected]="selected"
     [pagination]="pagination"
   ></cx-library-toolbar>
-  <div id="cx-all-comics" class="cx-comic-detail-card-container">
+  <div
+    id="cx-all-comics"
+    class="cx-comic-detail-card-container cx-height-100 cx-vertical-scrolling"
+  >
     <cx-comic-detail-card
       *ngFor="let comic of comics"
       [comic]="comic"
