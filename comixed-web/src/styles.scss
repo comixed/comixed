@@ -67,6 +67,10 @@ $cx-selected-comic-color: #ffffff;
   height: 100%;
 }
 
+.cx-top-0 {
+  top: 0px;
+}
+
 .cx-overflow-y-scroll {
   overflow-y: scroll;
 }
@@ -225,6 +229,10 @@ $cx-column-large: 325px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+}
+
+.cx-vertical-scrolling {
+  overflow-y: scroll;
 }
 
 // flexible containers
