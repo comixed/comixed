@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 import { Comic } from '@app/comic-book/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -44,6 +44,7 @@ import { ComicBookState } from '@app/comic-book/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
+import { selectDisplayState } from '@app/library/selectors/display.selectors';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -62,7 +63,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   comic: Comic = null;
   contextMenuX = '';
   contextMenuY = '';
-
+  displaySubscription: Subscription;
   private _comicObservable = new BehaviorSubject<Comic[]>([]);
 
   constructor(
@@ -73,7 +74,11 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) {
+    this.displaySubscription = this.store
+      .select(selectDisplayState)
+      .subscribe(state => (this.pagination = state.pagination));
+  }
 
   get comics(): Comic[] {
     return this._comicObservable.getValue();
@@ -90,6 +95,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.dataSource.disconnect();
+    this.displaySubscription.unsubscribe();
   }
 
   isSelected(comic: Comic): boolean {
