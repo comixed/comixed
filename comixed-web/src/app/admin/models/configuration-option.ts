@@ -16,15 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
-
-export const COMICVINE_API_KEY = 'comicvine.api-key';
-
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
-
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+export interface ConfigurationOption {
+  name: string;
+  value: string;
+}

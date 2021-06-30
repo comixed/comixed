@@ -19,6 +19,7 @@
 import { WebAuditLogEntry } from './models/web-audit-log-entry';
 import { TaskAuditLogEntry } from '@app/admin/models/task-audit-log-entry';
 import { PersistedTaskType } from '@app/admin/models/persisted-task-type.enum';
+import { ConfigurationOption } from '@app/admin/models/configuration-option';
 
 export const WEB_AUDIT_LOG_ENTRY_1: WebAuditLogEntry = {
   id: 1,
@@ -138,4 +139,29 @@ export const TASK_AUDIT_LOG_ENTRY_5: TaskAuditLogEntry = {
   description: 'Fifth task audit log entry',
   successful: Math.random() > 0.5,
   exception: null
+};
+
+export const CONFIGURATION_OPTION_1: ConfigurationOption = {
+  name: 'OPTION1',
+  value: 'VALUE1'
+};
+
+export const CONFIGURATION_OPTION_2: ConfigurationOption = {
+  name: 'OPTION2',
+  value: 'VALUE2'
+};
+
+export const CONFIGURATION_OPTION_3: ConfigurationOption = {
+  name: 'OPTION3',
+  value: 'VALUE3'
+};
+
+export const CONFIGURATION_OPTION_4: ConfigurationOption = {
+  name: 'OPTION4',
+  value: 'VALUE4'
+};
+
+export const CONFIGURATION_OPTION_5: ConfigurationOption = {
+  name: 'OPTION5',
+  value: 'VALUE5'
 };

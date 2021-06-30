@@ -151,6 +151,14 @@
     <a
       *ngIf="isAdmin"
       mat-list-item
+      routerLink="/admin/configuration"
+      routerLinkActive="active"
+    >
+      {{ "navigation.option.configuration" | translate }}
+    </a>
+    <a
+      *ngIf="isAdmin"
+      mat-list-item
       routerLink="/admin/pages/blocked"
       routerLinkActive="active"
     >

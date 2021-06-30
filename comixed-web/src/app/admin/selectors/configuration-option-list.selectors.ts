@@ -16,15 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  CONFIGURATION_OPTION_LIST_FEATURE_KEY,
+  ConfigurationOptionListState
+} from '../reducers/configuration-option-list.reducer';
 
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+export const selectConfigurationOptionListState =
+  createFeatureSelector<ConfigurationOptionListState>(
+    CONFIGURATION_OPTION_LIST_FEATURE_KEY
+  );
 
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
-
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+export const selectConfigurationOptions = createSelector(
+  selectConfigurationOptionListState,
+  state => state.options
+);

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="001_22_add_configuration_table.xml"
+             author="mcpierce">
+
+    <createTable tableName="ConfigurationOptions">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="Name"
+              type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="Value"
+              type="varchar(256)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="LastModifiedOn"
+              type="datetime">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="ConfigurationOptions"
+                      columnName="Id"
+                      columnDataType="bigint"/>
+
+    <insert tableName="ConfigurationOptions">
+      <column name="Name"
+              value="comicvine.api-key"/>
+      <column name="Value"
+              value=""/>
+      <column name="LastModifiedOn"
+              value="NOW()"/>
+    </insert>
+
+  </changeSet>
+</databaseChangeLog>

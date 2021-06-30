@@ -16,15 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { Component, Input, OnInit } from '@angular/core';
+import { LoggerService } from '@angular-ru/logger';
+import { FormGroup } from '@angular/forms';
 
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+@Component({
+  selector: 'cx-comic-vine-configuration',
+  templateUrl: './comic-vine-configuration.component.html',
+  styleUrls: ['./comic-vine-configuration.component.scss']
+})
+export class ComicVineConfigurationComponent implements OnInit {
+  @Input() form: FormGroup;
 
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
+  constructor(private logger: LoggerService) {}
 
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
-
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+  ngOnInit(): void {}
+}

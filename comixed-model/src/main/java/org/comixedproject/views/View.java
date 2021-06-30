@@ -87,4 +87,7 @@ public class View {
 
   /** Used when viewing the last read dates for a user. */
   public interface LastReadList {}
+
+  /** Used when retrieving the configuration list. */
+  public interface ConfigurationList {}
 }

@@ -16,15 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import {
+  SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
+  SaveConfigurationOptionsState
+} from '../reducers/save-configuration-options.reducer';
+import { selectSaveConfigurationOptionsState } from './save-configuration-options.selectors';
 
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+describe('SaveConfigurationOptions Selectors', () => {
+  let state: SaveConfigurationOptionsState;
 
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
+  beforeEach(() => {
+    state = { saving: Math.random() > 0.5 };
+  });
 
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
-
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+  it('should select the feature state', () => {
+    expect(
+      selectSaveConfigurationOptionsState({
+        [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

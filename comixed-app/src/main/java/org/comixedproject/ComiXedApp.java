@@ -25,13 +25,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 // @EnableJdbcHttpSession
 public class ComiXedApp implements CommandLineRunner {
-  private static final int VERSION_MAJOR = 0;
-  private static final int VERSION_MINOR = 1;
-  private static final int VERSION_RELEASE = 1;
-  public static final String VERSION = VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_RELEASE;
-  private static final String FULL_NAME = "ComiXed";
-  public static final String FULL_NAME_AND_VERSION = FULL_NAME + " " + VERSION;
-
   public static void main(String[] args) {
     var app = new SpringApplication(ComiXedApp.class);
     app.run(args);

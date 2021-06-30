@@ -16,15 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createReducer, on } from '@ngrx/store';
+import {
+  configurationOptionsSaved,
+  saveConfigurationOptions,
+  saveConfigurationOptionsFailed
+} from '../actions/save-configuration-options.actions';
 
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+export const SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY =
+  'save_configuration_options_state';
 
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
+export interface SaveConfigurationOptionsState {
+  saving: boolean;
+}
 
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
+export const initialState: SaveConfigurationOptionsState = {
+  saving: false
+};
 
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+export const reducer = createReducer(
+  initialState,
+
+  on(saveConfigurationOptions, state => ({ ...state, saving: true })),
+  on(configurationOptionsSaved, state => ({ ...state, saving: false })),
+  on(saveConfigurationOptionsFailed, state => ({ ...state, saving: false }))
+);

@@ -16,15 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createAction, props } from '@ngrx/store';
+import { ConfigurationOption } from '@app/admin/models/configuration-option';
 
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+export const saveConfigurationOptions = createAction(
+  '[Save Configuration Options] Save configuration options',
+  props<{ options: ConfigurationOption[] }>()
+);
 
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
+export const configurationOptionsSaved = createAction(
+  '[Save Configuration Options] Configuration options saved'
+);
 
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
-
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+export const saveConfigurationOptionsFailed = createAction(
+  '[Save Configuration Options] Failed to save configuration options'
+);

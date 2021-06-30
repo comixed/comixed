@@ -1,4 +1,23 @@
 {
+  "configuration": {
+    "label": {
+      "comicvine-api-key": "ComicVine API Key"
+    },
+    "load-all": {
+      "effect-failure": "Failed to load configuration options."
+    },
+    "tab-title": "Configuration",
+    "title": {
+      "comicvine": "ComicVine Settings",
+      "library-consolidation": "Library Consolidation"
+    }
+  },
+  "save-configuration": {
+    "confirmation-message": "Save changes to the configuration?",
+    "confirmation-title": "Save Configuration",
+    "effect-failure": "Failed to save configuration changes.",
+    "effect-success": "Configuration changes saved."
+  },
   "task-audit-log": {
     "label": {
       "description": "Details",

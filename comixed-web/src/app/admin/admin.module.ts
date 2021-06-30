@@ -42,24 +42,58 @@ import {
 } from '@app/admin/reducers/task-audit-log.reducer';
 import { TaskAuditLogEffects } from '@app/admin/effects/task-audit-log.effects';
 import { MatCardModule } from '@angular/material/card';
+import { ConfigurationPageComponent } from './pages/configuration-page/configuration-page.component';
+import { ComicVineConfigurationComponent } from './components/comic-vine-configuration/comic-vine-configuration.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import {
+  CONFIGURATION_OPTION_LIST_FEATURE_KEY,
+  reducer as configurationOptionListReducer
+} from '@app/admin/reducers/configuration-option-list.reducer';
+import { ConfigurationOptionListEffects } from '@app/admin/effects/configuration-option-list.effects';
+import {
+  reducer as saveConfigurationOptionsReducer,
+  SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY
+} from '@app/admin/reducers/save-configuration-options.reducer';
+import { SaveConfigurationOptionsEffects } from '@app/admin/effects/save-configuration-options.effects';
 
 @NgModule({
-  declarations: [WebAuditLogPageComponent, TaskAuditLogPageComponent],
+  declarations: [
+    WebAuditLogPageComponent,
+    TaskAuditLogPageComponent,
+    ConfigurationPageComponent,
+    ComicVineConfigurationComponent
+  ],
   imports: [
     CommonModule,
     CoreModule,
     AdminRouting,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(
+      CONFIGURATION_OPTION_LIST_FEATURE_KEY,
+      configurationOptionListReducer
+    ),
+    StoreModule.forFeature(
+      SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
+      saveConfigurationOptionsReducer
+    ),
     StoreModule.forFeature(TASK_AUDIT_LOG_FEATURE_KEY, taskAuditLogReducer),
     StoreModule.forFeature(WEB_AUDIT_LOG_FEATURE_KEY, webAuditLogReducer),
-    EffectsModule.forFeature([TaskAuditLogEffects, WebAuditLogEffects]),
+    EffectsModule.forFeature([
+      ConfigurationOptionListEffects,
+      SaveConfigurationOptionsEffects,
+      TaskAuditLogEffects,
+      WebAuditLogEffects
+    ]),
     MatTableModule,
     MatToolbarModule,
     MatPaginatorModule,
     MatSortModule,
     MatButtonModule,
     MatSidenavModule,
-    MatCardModule
+    MatCardModule,
+    ReactiveFormsModule,
+    MatInputModule
   ],
   exports: [CommonModule, CoreModule]
 })
