@@ -21,8 +21,14 @@ import { NgModule } from '@angular/core';
 import { WebAuditLogPageComponent } from '@app/admin/pages/web-audit-log-page/web-audit-log-page.component';
 import { AdminGuard } from '@app/user';
 import { TaskAuditLogPageComponent } from '@app/admin/pages/task-audit-log-page/task-audit-log-page.component';
+import { ConfigurationPageComponent } from '@app/admin/pages/configuration-page/configuration-page.component';
 
 const routes: Routes = [
+  {
+    path: 'admin/configuration',
+    component: ConfigurationPageComponent,
+    canActivate: [AdminGuard]
+  },
   {
     path: 'admin/audit/tasks',
     component: TaskAuditLogPageComponent,

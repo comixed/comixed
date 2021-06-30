@@ -25,10 +25,22 @@ import {
 } from './reducers/web-audit-log.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
+  reducer as taskAuditLogReducer,
   TASK_AUDIT_LOG_FEATURE_KEY,
-  TaskAuditLogState,
-  reducer as taskAuditLogReducer
+  TaskAuditLogState
 } from './reducers/task-audit-log.reducer';
+import {
+  CONFIGURATION_OPTION_LIST_FEATURE_KEY,
+  ConfigurationOptionListState,
+  reducer as configurationOptionListReducer
+} from './reducers/configuration-option-list.reducer';
+import {
+  reducer as saveConfigurationOptionsReducer,
+  SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
+  SaveConfigurationOptionsState
+} from './reducers/save-configuration-options.reducer';
+
+export * from './admin.functions';
 
 interface RouterStateUrl {
   url: string;
@@ -38,6 +50,8 @@ interface RouterStateUrl {
 
 export interface AdminModuleState {
   router: RouterReducerState<RouterStateUrl>;
+  [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: ConfigurationOptionListState;
+  [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: SaveConfigurationOptionsState;
   [TASK_AUDIT_LOG_FEATURE_KEY]: TaskAuditLogState;
   [WEB_AUDIT_LOG_FEATURE_KEY]: WebAuditLogState;
 }
@@ -46,6 +60,8 @@ export type ModuleState = AdminModuleState;
 
 export const reducers: ActionReducerMap<AdminModuleState> = {
   router: routerReducer,
+  [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: configurationOptionListReducer,
+  [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: saveConfigurationOptionsReducer,
   [TASK_AUDIT_LOG_FEATURE_KEY]: taskAuditLogReducer,
   [WEB_AUDIT_LOG_FEATURE_KEY]: webAuditLogReducer
 };

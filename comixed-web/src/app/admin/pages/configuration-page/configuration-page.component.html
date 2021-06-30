@@ -1,0 +1,16 @@
+<mat-toolbar class="cx-primary-light-background">
+  <div class="cx-spacer"></div>
+  <button
+    mat-icon-button
+    (click)="onSaveConfiguration()"
+    [disabled]="!configurationForm.valid"
+    color="primary"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-toolbar>
+<div class="cx-width-100">
+  <cx-comic-vine-configuration
+    [form]="configurationForm"
+  ></cx-comic-vine-configuration>
+</div>

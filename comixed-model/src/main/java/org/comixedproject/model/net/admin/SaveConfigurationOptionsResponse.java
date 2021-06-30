@@ -16,15 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+package org.comixedproject.model.net.admin;
 
-export const COMICVINE_API_KEY = 'comicvine.api-key';
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.comixedproject.model.admin.ConfigurationOption;
+import org.comixedproject.views.View;
 
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
-
-export const MAXIMUM_TASK_AUDIT_LOG_RECORDS = 100;
-export const LOAD_TASK_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/tasks/audit/entries`;
+/**
+ * <code>SaveConfigurationOptionsResponse</code> represents the response body when configuration
+ * options are saved.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class SaveConfigurationOptionsResponse {
+  @JsonProperty("options")
+  @JsonView(View.ConfigurationList.class)
+  @Getter
+  private List<ConfigurationOption> options;
+}
