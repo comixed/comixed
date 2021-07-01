@@ -261,6 +261,13 @@ $cx-column-large: 325px;
 
 // buttons
 
+.mat-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button {
+  overflow-y: hidden !important;
+}
+
 .cx-toolbar-button {
   margin-right: 5px !important;
 }
