@@ -28,7 +28,7 @@
       "locations": "Ubicaciones en esta edición ({count})",
       "other-details": "Otros detalles del cómic",
       "page-count": "# de páginas",
-      "page-title": "Page {which} Of {count}",
+      "page-title": "Página {which} de {count}",
       "publisher": "Editor",
       "scan-type": "Tipo de escaneo",
       "scraping-notes": "Notas de raspado",
@@ -55,7 +55,7 @@
       "title": "Guardar cambios en el cómic"
     },
     "text": {
-      "comic-changed": "Comic details have changed.",
+      "comic-changed": "Los detalles del cómic han cambiado.",
       "file-entries": "Hay {count, plural, =1{is one file} other{are # files}} en este archivo.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "state-ADDED": "Igual",
@@ -76,8 +76,8 @@
       "match-2": "Coincidencia exacta.",
       "save-changes": "Guarda los cambios en este cómic.",
       "scrape-comic": "Raspa este cómic.",
-      "show-next-comic-page": "Go to next page...",
-      "show-previous-comic-page": "Go to previous page...",
+      "show-next-comic-page": "Ir a la página siguiente...",
+      "show-previous-comic-page": "Ir a la página anterior...",
       "undo-changes": "Deshacer cambios en este cómic.",
       "update-comic-info": "Actualizar los metadatos de este archivo de cómic."
     },
