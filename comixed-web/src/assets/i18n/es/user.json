@@ -5,7 +5,7 @@
   "user": {
     "edit-current-user": {
       "label": {
-        "email": "Email",
+        "email": "Correo electrónico",
         "password": "Contraseña",
         "password-verify": "Verificar la contraseña"
       },
