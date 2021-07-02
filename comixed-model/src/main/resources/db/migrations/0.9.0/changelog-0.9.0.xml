@@ -13,5 +13,6 @@
   <include file="/db/migrations/0.9.0/005_720_add_comic_state.xml"/>
   <include file="/db/migrations/0.9.0/006_746_add_comic_notes_column.xml"/>
   <include file="/db/migrations/0.9.0/007_753_add_task_type_column.xml"/>
+  <include file="/db/migrations/0.9.0/008_793_make_task_description_a_clob.xml"/>
 
 </databaseChangeLog>

@@ -75,7 +75,8 @@ public class TaskAuditLogEntry {
   @JsonView(View.AuditLogEntryList.class)
   private Boolean successful;
 
-  @Column(name = "Description", nullable = false, updatable = false, length = 2048)
+  @Column(name = "Description", nullable = false, updatable = false)
+  @Lob
   @Getter
   @Setter
   @JsonProperty("description")
