@@ -16,11 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { Pipe, PipeTransform } from '@angular/core';
+import { Comic } from '@app/comic-book/models/comic';
+import { interpolate } from '@app/core';
+import { COMICVINE_ISSUE_LINK } from '@app/comic-book/comic-book.constants';
 
-export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
-export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scantypes`;
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/comicinfo`;
-
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
+@Pipe({
+  name: 'comicvineIssueLink'
+})
+export class ComicvineIssueLinkPipe implements PipeTransform {
+  transform(comic: Comic): string {
+    return interpolate(COMICVINE_ISSUE_LINK, { id: comic.comicVineId });
+  }
+}

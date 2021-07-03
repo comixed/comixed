@@ -16,11 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { ComicvineIssueLinkPipe } from './comicvine-issue-link.pipe';
+import { COMICVINE_ISSUE_LINK } from '@app/comic-book/comic-book.constants';
+import { COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import { interpolate } from '@app/core';
 
-export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
-export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scantypes`;
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/comicinfo`;
+describe('ComicvineIssueLinkPipe', () => {
+  const COMIC = COMIC_5;
 
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
+  let pipe: ComicvineIssueLinkPipe;
+
+  beforeEach(() => {
+    pipe = new ComicvineIssueLinkPipe();
+  });
+
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
+  });
+
+  it('returns the correct URL', () => {
+    expect(pipe.transform(COMIC)).toEqual(
+      interpolate(COMICVINE_ISSUE_LINK, { id: COMIC.comicVineId })
+    );
+  });
+});

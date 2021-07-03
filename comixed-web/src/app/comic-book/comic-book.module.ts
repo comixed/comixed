@@ -84,6 +84,7 @@ import { UpdateComicInfoEffects } from '@app/comic-book/effects/update-comic-inf
 import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { ComicvineIssueLinkPipe } from './pipes/comicvine-issue-link.pipe';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
     ComicTitlePipe,
-    ScrapingIssueTitlePipe
+    ScrapingIssueTitlePipe,
+    ComicvineIssueLinkPipe
   ],
   imports: [
     CommonModule,
