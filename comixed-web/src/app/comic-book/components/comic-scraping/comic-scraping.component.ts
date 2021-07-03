@@ -83,6 +83,7 @@ export class ComicScrapingComponent
   issueSubscription: Subscription;
   issue: ScrapingIssue;
   scrapingStateSubscription: Subscription;
+  selectedVolume: ScrapingVolume;
 
   dataSource = new MatTableDataSource<SortableListItem<ScrapingVolume>>();
   displayedColumns = [
@@ -124,6 +125,14 @@ export class ComicScrapingComponent
         sortOrder
       } as SortableListItem<ScrapingVolume>;
     });
+    this.selectedVolume = null;
+    const preselect = this.dataSource.data.find(
+      entry => entry.sortOrder === EXACT_MATCH
+    );
+    if (!!preselect) {
+      this.logger.debug('Preselecting volume:', preselect);
+      this.onVolumeSelected(preselect.item);
+    }
   }
 
   ngOnInit(): void {}
@@ -148,6 +157,7 @@ export class ComicScrapingComponent
 
   onVolumeSelected(volume: ScrapingVolume): void {
     this.logger.trace('Volume selected:', volume);
+    this.selectedVolume = volume;
     this.store.dispatch(
       loadScrapingIssue({
         apiKey: this.apiKey,

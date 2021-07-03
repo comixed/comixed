@@ -115,31 +115,81 @@ describe('ComicScrapingComponent', () => {
   describe('receiving scraping volumes', () => {
     beforeEach(() => {
       component.comicSeriesName = SCRAPING_VOLUME.name;
-      component.comicVolume = SCRAPING_VOLUME.startYear;
       component.dataSource.data = [];
-      component.volumes = VOLUMES;
     });
 
-    it('loads the datasource', () => {
-      expect(component.dataSource.data).not.toEqual([]);
+    describe('when no exact match is received', () => {
+      beforeEach(() => {
+        component.comicVolume = SCRAPING_VOLUME.startYear + '1';
+        component.volumes = VOLUMES;
+      });
+
+      it('loads the datasource', () => {
+        expect(component.dataSource.data).not.toEqual([]);
+      });
+
+      it('does not preselect a volume', () => {
+        expect(component.selectedVolume).toBeNull();
+      });
+
+      it('does not contain an exact match', () => {
+        expect(
+          component.dataSource.data.some(
+            entry => entry.sortOrder === EXACT_MATCH
+          )
+        ).toBeFalse();
+      });
+
+      it('contains a near match', () => {
+        expect(
+          component.dataSource.data.some(
+            entry => entry.sortOrder === NEAR_MATCH
+          )
+        ).toBeTrue();
+      });
+
+      it('contains non-matches', () => {
+        expect(
+          component.dataSource.data.some(entry => entry.sortOrder === NO_MATCH)
+        ).toBeTrue();
+      });
     });
 
-    it('contains an exact match', () => {
-      expect(
-        component.dataSource.data.some(entry => entry.sortOrder === EXACT_MATCH)
-      ).toBeTrue();
-    });
+    describe('when an exact match is received', () => {
+      beforeEach(() => {
+        component.comicVolume = SCRAPING_VOLUME.startYear;
+        component.volumes = VOLUMES;
+      });
 
-    it('contains a near match', () => {
-      expect(
-        component.dataSource.data.some(entry => entry.sortOrder === NEAR_MATCH)
-      ).toBeTrue();
-    });
+      it('loads the datasource', () => {
+        expect(component.dataSource.data).not.toEqual([]);
+      });
 
-    it('contains non-matches', () => {
-      expect(
-        component.dataSource.data.some(entry => entry.sortOrder === NO_MATCH)
-      ).toBeTrue();
+      it('preselects a volume', () => {
+        expect(component.selectedVolume).not.toBeNull();
+      });
+
+      it('contains an exact match', () => {
+        expect(
+          component.dataSource.data.some(
+            entry => entry.sortOrder === EXACT_MATCH
+          )
+        ).toBeTrue();
+      });
+
+      it('contains a near match', () => {
+        expect(
+          component.dataSource.data.some(
+            entry => entry.sortOrder === NEAR_MATCH
+          )
+        ).toBeTrue();
+      });
+
+      it('contains non-matches', () => {
+        expect(
+          component.dataSource.data.some(entry => entry.sortOrder === NO_MATCH)
+        ).toBeTrue();
+      });
     });
   });
 

@@ -171,6 +171,13 @@ $cx-column-small: 50px;
 $cx-column-medium: 150px;
 $cx-column-large: 325px;
 
+// table rows
+
+.cx-selected-row {
+  background-color: var(--accent-lighter-color);
+  color: var(--text-accent-lighter-color);
+}
+
 // text layout
 
 .cx-text-nowrap {
