@@ -92,7 +92,7 @@ public class ComicVineGetIssueAction extends AbstractComicVineScrapingAction<Lis
         final ComicVineIssue issue = response.getIssues().get(index);
         final ScrapingIssue entry = new ScrapingIssue();
         entry.setIssueNumber(issue.getIssueNumber());
-        entry.setId(issue.getId().intValue());
+        entry.setId(issue.getId());
         entry.setVolumeId(issue.getVolume().getId());
         entry.setName(issue.getVolume().getName());
         entry.setVolumeName(issue.getVolume().getName());

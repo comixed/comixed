@@ -56,6 +56,7 @@
     },
     "text": {
       "comic-changed": "Los detalles del cómic han cambiado.",
+      "comicvine-issue-link": "ComicVine Details Page",
       "file-entries": "Hay {count, plural, =1{is one file} other{are # files}} en este archivo.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "state-ADDED": "Igual",
