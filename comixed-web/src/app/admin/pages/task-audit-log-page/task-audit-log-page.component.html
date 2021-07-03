@@ -83,7 +83,7 @@
       <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
       <mat-row
         *matRowDef="let row; columns: displayColumns"
-        [class.selected-row]="row.id === currentEntry?.id"
+        [class.cx-selected-row]="row.id === currentEntry?.id"
         (click)="onEntrySelected(row)"
       ></mat-row>
     </mat-table>
