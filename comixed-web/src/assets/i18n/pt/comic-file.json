@@ -36,8 +36,8 @@
       "delete-blocked-pages-off": "Blocked pages will not be marked for deletion.",
       "delete-blocked-pages-on": "Blocked pages will be marked for deletion.",
       "deselect-all": "Clear the comic file selections.",
-      "ignore-metadata-on": "Metadata will be used.",
-      "ignore-metadata-off": "Metadata will not be used.",
+      "ignore-metadata-on": "Metadata will not be used.",
+      "ignore-metadata-off": "Metadata will be used.",
       "select-all": "Select all comic files for import.",
       "start-import": "Start importing the selected comic files.",
       "toggle-file-lookup-form": "Toggle the comic file lookup form."
