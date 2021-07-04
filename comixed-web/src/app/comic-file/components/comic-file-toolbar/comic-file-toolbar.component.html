@@ -41,7 +41,7 @@
     [matTooltip]="'comic-files.tooltip.ignore-metadata-on' | translate"
     (click)="onToggleIgnoreMetadata()"
   >
-    <mat-icon>thumb_down</mat-icon>
+    <mat-icon>block</mat-icon>
   </button>
   <button
     *ngIf="!ignoreMetadata"
@@ -52,7 +52,7 @@
     [matTooltip]="'comic-files.tooltip.ignore-metadata-off' | translate"
     (click)="onToggleIgnoreMetadata()"
   >
-    <mat-icon>thumb_up</mat-icon>
+    <mat-icon>remove_circle_outline</mat-icon>
   </button>
   <button
     *ngIf="deleteBlockedPages"

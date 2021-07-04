@@ -36,8 +36,8 @@
       "delete-blocked-pages-off": "Les pages bloquées ne seront pas marquées pour suppression.",
       "delete-blocked-pages-on": "Les pages bloquées seront marquées pour suppression.",
       "deselect-all": "Annuler la sélection des fichiers de Bandes Dessinées.",
-      "ignore-metadata-on": "Les métadonnées seront utilisées.",
-      "ignore-metadata-off": "Les métadonnées ne seront pas utilisées.",
+      "ignore-metadata-on": "Les métadonnées ne seront pas utilisées.",
+      "ignore-metadata-off": "Les métadonnées seront utilisées.",
       "select-all": "Sélectionner tous les fichiers de Bandes Dessinées pour import.",
       "start-import": "Commencez l'import des fichiers sélectionnés de Bandes Dessinées.",
       "toggle-file-lookup-form": "Afficher le formulaire de recherche de fichiers de bande dessinée."
