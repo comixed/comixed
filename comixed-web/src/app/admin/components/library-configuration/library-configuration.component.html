@@ -1,13 +1,12 @@
 <form [formGroup]="form">
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>
-      {{ "configuration.label.comicvine-api-key" | translate }}
+      {{ "configuration.label.consolidation-rule" | translate }}
     </mat-label>
     <input
+      id="consolidation-rule-input"
       matInput
-      id="comicvine-api-key"
-      type="text"
-      formControlName="apiKey"
+      formControlName="consolidationRule"
       required
     />
     <mat-error>

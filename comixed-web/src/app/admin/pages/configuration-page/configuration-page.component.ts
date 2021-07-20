@@ -31,8 +31,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
-import { COMICVINE_API_KEY } from '@app/admin/admin.constants';
+import {
+  COMICVINE_API_KEY,
+  LIBRARY_CONSOLIDATION_RULE
+} from '@app/admin/admin.constants';
 import { loadConfigurationOptions } from '@app/admin/actions/configuration-option-list.actions';
+import { updateQueryParam } from '@app/core';
+import { QUERY_PARAM_TAB } from '@app/library/library.constants';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cx-configuration-page',
@@ -43,8 +49,16 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   configStateSubscription: Subscription;
   langChangeSubscription: Subscription;
   optionSubscription: Subscription;
-  mappings = [{ name: COMICVINE_API_KEY, control: 'apiKey' }];
+  mappings = [
+    { name: COMICVINE_API_KEY, control: 'apiKey' },
+    {
+      name: LIBRARY_CONSOLIDATION_RULE,
+      control: 'consolidationRule'
+    }
+  ];
   configurationForm: FormGroup;
+  queryParamSubscription: Subscription;
+  currentTab = 0;
 
   constructor(
     private logger: LoggerService,
@@ -52,9 +66,23 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private translateService: TranslateService,
     private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
+    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        if (+params[QUERY_PARAM_TAB]) {
+          this.logger.debug(
+            'Setting configuration tab:',
+            params[QUERY_PARAM_TAB]
+          );
+          this.currentTab = +params[QUERY_PARAM_TAB];
+        }
+      }
+    );
     this.configurationForm = this.formBuilder.group({
+      consolidationRule: ['', [Validators.required]],
       apiKey: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{40}')]]
     });
     this.configStateSubscription = this.store
@@ -108,6 +136,16 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  onTabChange(index: number): void {
+    this.logger.trace('Tab changed:', index);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_TAB,
+      `${index}`
+    );
   }
 
   private loadTranslations(): void {

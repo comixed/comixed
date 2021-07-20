@@ -45,12 +45,25 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { MatDialogModule } from '@angular/material/dialog';
-import { COMICVINE_API_KEY } from '@app/admin/admin.constants';
+import {
+  COMICVINE_API_KEY,
+  LIBRARY_CONSOLIDATION_RULE
+} from '@app/admin/admin.constants';
+import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatTabsModule } from '@angular/material/tabs';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router
+} from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
     { ...CONFIGURATION_OPTION_1, name: COMICVINE_API_KEY },
-    CONFIGURATION_OPTION_2,
+    { ...CONFIGURATION_OPTION_2, name: LIBRARY_CONSOLIDATION_RULE },
     CONFIGURATION_OPTION_3,
     CONFIGURATION_OPTION_4,
     CONFIGURATION_OPTION_5
@@ -69,15 +82,19 @@ describe('ConfigurationPageComponent', () => {
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy;
   let confirmationService: ConfirmationService;
+  let activatedRoute: ActivatedRoute;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         ConfigurationPageComponent,
+        LibraryConfigurationComponent,
         ComicVineConfigurationComponent
       ],
       imports: [
         NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
         ReactiveFormsModule,
         LoggerModule.forRoot(),
@@ -87,12 +104,20 @@ describe('ConfigurationPageComponent', () => {
         MatIconModule,
         MatButtonModule,
         MatToolbarModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTabsModule
       ],
       providers: [
         provideMockStore({ initialState }),
         TitleService,
-        ConfirmationService
+        ConfirmationService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot
+          }
+        }
       ]
     }).compileComponents();
 
@@ -104,6 +129,9 @@ describe('ConfigurationPageComponent', () => {
     titleService = TestBed.inject(TitleService);
     setTitleSpy = spyOn(titleService, 'setTitle');
     confirmationService = TestBed.inject(ConfirmationService);
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   }));
 
@@ -123,6 +151,22 @@ describe('ConfigurationPageComponent', () => {
 
     it('updates the title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('query parameter processing', () => {
+    const TAB = 2;
+
+    it('loads the tab from the URL', () => {
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        [QUERY_PARAM_TAB]: `${TAB}`
+      });
+      expect(component.currentTab).toEqual(TAB);
+    });
+
+    it('updates the URL when the tab changes', () => {
+      component.onTabChange(TAB);
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 
@@ -152,6 +196,11 @@ describe('ConfigurationPageComponent', () => {
             {
               name: COMICVINE_API_KEY,
               value: component.configurationForm.controls.apiKey.value
+            },
+            {
+              name: LIBRARY_CONSOLIDATION_RULE,
+              value:
+                component.configurationForm.controls.consolidationRule.value
             }
           ]
         })
