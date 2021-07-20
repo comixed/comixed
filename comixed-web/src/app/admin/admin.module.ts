@@ -56,13 +56,16 @@ import {
   SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY
 } from '@app/admin/reducers/save-configuration-options.reducer';
 import { SaveConfigurationOptionsEffects } from '@app/admin/effects/save-configuration-options.effects';
+import { MatTabsModule } from '@angular/material/tabs';
+import { LibraryConfigurationComponent } from './components/library-configuration/library-configuration.component';
 
 @NgModule({
   declarations: [
     WebAuditLogPageComponent,
     TaskAuditLogPageComponent,
     ConfigurationPageComponent,
-    ComicVineConfigurationComponent
+    ComicVineConfigurationComponent,
+    LibraryConfigurationComponent
   ],
   imports: [
     CommonModule,
@@ -93,7 +96,8 @@ import { SaveConfigurationOptionsEffects } from '@app/admin/effects/save-configu
     MatSidenavModule,
     MatCardModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule
   ],
   exports: [CommonModule, CoreModule]
 })

@@ -40,5 +40,14 @@
               value="NOW()"/>
     </insert>
 
+    <insert tableName="ConfigurationOptions">
+      <column name="Name"
+              value="library.consolidation-rule"/>
+      <column name="Value"
+              value=""/>
+      <column name="LastModifiedOn"
+              value="NOW()"/>
+    </insert>
+
   </changeSet>
 </databaseChangeLog>

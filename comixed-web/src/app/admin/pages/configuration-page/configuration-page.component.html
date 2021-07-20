@@ -9,8 +9,19 @@
     <mat-icon>save</mat-icon>
   </button>
 </mat-toolbar>
-<div class="cx-width-100">
-  <cx-comic-vine-configuration
-    [form]="configurationForm"
-  ></cx-comic-vine-configuration>
-</div>
+
+<mat-tab-group
+  [selectedIndex]="currentTab"
+  (selectedTabChange)="onTabChange($event.index)"
+>
+  <mat-tab [label]="'configuration.tab.library' | translate">
+    <cx-library-configuration
+      [form]="configurationForm"
+    ></cx-library-configuration>
+  </mat-tab>
+  <mat-tab [label]="'configuration.tab.comicvine' | translate">
+    <cx-comic-vine-configuration
+      [form]="configurationForm"
+    ></cx-comic-vine-configuration>
+  </mat-tab>
+</mat-tab-group>
