@@ -1,7 +1,8 @@
 {
   "comic-book": {
     "hint": {
-      "required-for-scraping": "This value is required for scraping..."
+      "required-for-scraping": "This value is required for scraping...",
+      "useful-for-scraping": "This value is used when scraping..."
     },
     "label": {
       "added-date": "Added To Library",
@@ -15,6 +16,7 @@
       "comic-pages": "Pages",
       "comic-state": "State",
       "comic-story": "Story",
+      "comicvine-id": "ComicVine ID",
       "credits": "Creative Team ({count})",
       "description": "Issue Description",
       "file-details": "Comic File Details",

@@ -64,7 +64,8 @@ export class ComicEditComponent implements OnInit {
       publisher: [''],
       series: ['', [Validators.required]],
       volume: [''],
-      issueNumber: ['', [Validators.required]]
+      issueNumber: ['', [Validators.required]],
+      comicVineId: ['', [Validators.pattern('[0-9]+')]]
     });
   }
 
@@ -88,6 +89,7 @@ export class ComicEditComponent implements OnInit {
   @Input() set comic(comic: Comic) {
     this.logger.trace('Loading comic form:', comic);
     this._comic = comic;
+    this.setInput('comicVineId', comic.comicVineId);
     this.setInput('publisher', comic.publisher);
     this.setInput('series', comic.series);
     this.setInput('volume', comic.volume);
