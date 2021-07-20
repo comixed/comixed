@@ -62,9 +62,20 @@
   </button>
 </mat-toolbar>
 <form [formGroup]="comicForm">
-  <mat-form-field class="cx-width-100">
+  <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>{{ "comic-book.label.api-key" | translate }}</mat-label>
+    <button
+      id="reset-api-key-button"
+      class="cx-margin-left-5"
+      mat-icon-button
+      matPrefix
+      color="warn"
+      (click)="onResetApiKey()"
+    >
+      <mat-icon>undo</mat-icon>
+    </button>
     <input
+      id="api-key-input"
       id="api-key"
       matInput
       formControlName="apiKey"
@@ -80,28 +91,20 @@
     >
       <mat-icon>save</mat-icon>
     </button>
-    <button
-      id="reset-api-key-button"
-      class="cx-margin-left-5"
-      mat-icon-button
-      matSuffix
-      color="warn"
-      (click)="onResetApiKey()"
-    >
-      <mat-icon>undo</mat-icon>
-    </button>
   </mat-form-field>
-  <mat-form-field class="cx-width-100">
+  <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
     <input
+      id="publisher-input"
       matInput
       formControlName="publisher"
       [placeholder]="'comic-book.placeholder.publisher' | translate"
     />
   </mat-form-field>
-  <mat-form-field class="cx-width-100">
+  <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
     <input
+      id="series-input"
       matInput
       formControlName="series"
       [placeholder]="'comic-book.placeholder.series' | translate"
@@ -114,17 +117,22 @@
       {{ "validation.field-required" | translate }}
     </mat-error>
   </mat-form-field>
-  <mat-form-field class="cx-width-50">
+  <mat-form-field class="cx-width-33" appearance="fill">
     <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
     <input
+      id="volume-input"
       matInput
       formControlName="volume"
       [placeholder]="'comic-book.placeholder.volume' | translate"
     />
+    <mat-hint>
+      {{ "comic-book.hint.required-for-scraping" | translate }}
+    </mat-hint>
   </mat-form-field>
-  <mat-form-field class="cx-width-50">
+  <mat-form-field class="cx-width-33" appearance="fill">
     <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
     <input
+      id="issue-number-input"
       matInput
       formControlName="issueNumber"
       [placeholder]="'comic-book.placeholder.issue-number' | translate"
@@ -136,5 +144,19 @@
     <mat-error *ngIf="comicForm.controls.issueNumber.errors?.required">
       {{ "validation.field-required" | translate }}
     </mat-error>
+  </mat-form-field>
+  <mat-form-field class="cx-width-34" appearance="fill">
+    <mat-label>{{ "comic-book.label.comicvine-id" | translate }}</mat-label>
+    <input
+      id="comicvine-id-input"
+      type="number"
+      matInput
+      formControlName="comicVineId"
+      [placeholder]="'comic-book.placeholder.comicvine-id' | translate"
+      readonly
+    />
+    <mat-hint>
+      {{ "comic-book.hint.useful-for-scraping" | translate }}
+    </mat-hint>
   </mat-form-field>
 </form>

@@ -1,7 +1,8 @@
 {
   "comic-book": {
     "hint": {
-      "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails..."
+      "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails...",
+      "useful-for-scraping": "This value is used when scraping..."
     },
     "label": {
       "added-date": "Ajouté à la bibliothèque le",
@@ -15,6 +16,7 @@
       "comic-pages": "Pages",
       "coic-state": "État",
       "comic-story": "Histoire",
+      "comicvine-id": "ComicVine ID",
       "credits": "Équipe créative ({count})",
       "description": "Description de ce numéro",
       "file-details": "Détails du fichier de la Bande Dessinée",
