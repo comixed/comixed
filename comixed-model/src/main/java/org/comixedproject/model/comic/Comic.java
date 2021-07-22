@@ -301,13 +301,6 @@ public class Comic {
   @Getter
   private int blockedPageCount;
 
-  @Transient
-  @JsonProperty("comicVineURL")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private String comicVineURL;
-
   @Formula(
       "(SELECT COUNT(*) FROM Comics c WHERE c.Series = series AND c.Volume = volume AND c.IssueNumber = IssueNumber AND c.CoverDate = CoverDate)")
   @JsonProperty("duplicateCount")
