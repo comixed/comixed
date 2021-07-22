@@ -26,14 +26,14 @@ To achieve this goal, the project will:
       * converting comics to a single archive type,
       * removing files from each comic that have been blocked, and
       * updating the ComicInfo.xml file within each comic with the current metadata.
-* administrators can quickly import new comics into their library,
-* scraping metadata for comics from various sources, such as [ComicVine](https://comicvine.gamespot.com/).
+* allow administrators ti quickly import new comics into their library,
+* enable scraping metadata for comics from various sources, such as [ComicVine](https://comicvine.gamespot.com/).
 * allow managed access to the contents of the library:
    * administrative users can create/delete other users,
    * users can create reading lists,
    * users can manage their read state for all comics in the library, and
    * users can read comics using an OPDS application.
-* a plugin system allows administrators to customize the features in their application:
+* provide a plugin system that allows administrators to customize the features in their application:
    * plugins can be written by third-parties to provide new and custom functionality, and
    * administrators can easily install plugins.
 
