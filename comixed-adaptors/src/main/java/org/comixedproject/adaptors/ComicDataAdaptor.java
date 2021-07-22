@@ -30,7 +30,6 @@ public class ComicDataAdaptor {
    */
   public void clear(Comic comic) {
     comic.setComicVineId("");
-    comic.setComicVineURL("");
     comic.setPublisher("");
     comic.setImprint("");
     comic.setSeries("");

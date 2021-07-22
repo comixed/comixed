@@ -101,12 +101,6 @@ public class ComicTest {
   }
 
   @Test
-  public void testComicVineURL() {
-    this.comic.setComicVineURL(TEST_COMIC_VINE_URL);
-    assertEquals(TEST_COMIC_VINE_URL, this.comic.getComicVineURL());
-  }
-
-  @Test
   public void testArchiveType() {
     this.comic.setArchiveType(ArchiveType.CBZ);
     assertEquals(ArchiveType.CBZ, this.comic.getArchiveType());
