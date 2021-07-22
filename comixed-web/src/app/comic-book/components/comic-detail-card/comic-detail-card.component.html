@@ -93,7 +93,7 @@
           <mat-icon>details</mat-icon>
         </mat-chip>
         <mat-chip
-          *ngIf="comicChanged"
+          *ngIf="comicChanged && isAdmin"
           (click)="onUpdateComicInfo(comic)"
           [matTooltip]="'comic-book.text.comic-changed' | translate"
         >
