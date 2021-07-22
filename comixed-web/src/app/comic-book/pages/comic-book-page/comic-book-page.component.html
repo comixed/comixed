@@ -124,7 +124,7 @@
             ></cx-comic-pages>
           </mat-tab>
           <mat-tab
-            [disabled]="!isAdmin"
+            *ngIf="isAdmin"
             [label]="'comic-book.label.comic-edit' | translate"
           >
             <cx-comic-edit

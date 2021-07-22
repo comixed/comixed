@@ -56,6 +56,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
   @Input() selected: Comic[] = [];
+  @Input() isAdmin = false;
 
   pagination = PAGINATION_DEFAULT;
 
