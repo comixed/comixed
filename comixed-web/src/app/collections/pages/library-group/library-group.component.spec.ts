@@ -56,6 +56,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 describe('LibraryGroupComponent', () => {
   const initialState = {
@@ -93,7 +95,9 @@ describe('LibraryGroupComponent', () => {
         MatTooltipModule,
         MatFormFieldModule,
         MatDialogModule,
-        MatMenuModule
+        MatMenuModule,
+        MatSelectModule,
+        MatOptionModule
       ],
       providers: [
         provideMockStore({ initialState }),

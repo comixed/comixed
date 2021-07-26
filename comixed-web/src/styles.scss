@@ -330,3 +330,13 @@ $cx-column-large: 325px;
   background-color: var(--accent-darker-color);
   color: var(--text-accent-darker-color);
 }
+
+// workarounds
+
+mat-toolbar.mat-toolbar mat-form-field.mat-form-field {
+  font-size: medium;
+
+  label.mat-form-field-label {
+    font-weight: lighter;
+  }
+}

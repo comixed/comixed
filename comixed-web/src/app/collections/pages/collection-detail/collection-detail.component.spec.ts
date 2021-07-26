@@ -54,6 +54,8 @@ import {
   COMIC_4,
   COMIC_5
 } from '@app/comic-book/comic-book.fixtures';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -87,7 +89,9 @@ describe('CollectionDetailComponent', () => {
         MatPaginatorModule,
         MatFormFieldModule,
         MatTooltipModule,
-        MatToolbarModule
+        MatToolbarModule,
+        MatSelectModule,
+        MatOptionModule
       ],
       providers: [
         provideMockStore({ initialState }),

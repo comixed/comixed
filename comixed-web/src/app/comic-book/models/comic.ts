@@ -23,10 +23,11 @@ import { ComicFileEntry } from '@app/comic-book/models/comic-file-entry';
 import { ComicCredit } from '@app/comic-book/models/comic-credit';
 import { Page } from '@app/comic-book/models/page';
 import { ComicBookState } from '@app/comic-book/models/comic-book-state';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
 export interface Comic {
   id: number;
-  archiveType: string;
+  archiveType: ArchiveType;
   scanType: ScanType;
   format: ComicFormat;
   filename: string;

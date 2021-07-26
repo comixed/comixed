@@ -32,6 +32,9 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { selectComicList } from '@app/comic-book/selectors/comic-list.selectors';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
+import { updateQueryParam } from '@app/core';
 
 @Component({
   selector: 'cx-library-page',
@@ -51,6 +54,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   unreadOnly = false;
   unscrapedOnly = false;
   deletedOnly = false;
+  queryParamSubscription: Subscription;
+  archiveTypeFilter = null;
 
   constructor(
     private logger: LoggerService,
@@ -65,6 +70,30 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
     });
+    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
+      params => {
+        if (!!params[QUERY_PARAM_ARCHIVE_TYPE]) {
+          const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE];
+          this.logger.debug('Received archive type query param:', archiveType);
+          switch (archiveType) {
+            case ArchiveType.CBZ:
+              this.archiveTypeFilter = ArchiveType.CBZ;
+              break;
+            case ArchiveType.CBR:
+              this.archiveTypeFilter = ArchiveType.CBR;
+              break;
+            case ArchiveType.CB7:
+              this.archiveTypeFilter = ArchiveType.CB7;
+              break;
+            default:
+              this.archiveTypeFilter = null;
+          }
+        } else {
+          this.logger.debug('Resetting archive type filter');
+          this.archiveTypeFilter = null;
+        }
+      }
+    );
     this.libraryBusySubscription = this.store
       .select(selectLibraryBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
@@ -113,6 +142,16 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
+  }
+
+  onArchiveTypeChanged(archiveType: ArchiveType): void {
+    this.logger.trace('Archive type changed:', archiveType);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_ARCHIVE_TYPE,
+      !!archiveType ? `${archiveType}` : null
+    );
   }
 
   private loadTranslations(): void {
