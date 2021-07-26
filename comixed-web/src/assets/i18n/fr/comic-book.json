@@ -1,4 +1,13 @@
 {
+  "archive-type": {
+    "label": {
+      "all": "All",
+      "cb7": "CB7",
+      "cbr": "CBR",
+      "cbz": "CBZ",
+      "select": "Archive Type"
+    }
+  },
   "comic-book": {
     "hint": {
       "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails...",

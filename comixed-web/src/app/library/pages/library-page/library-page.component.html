@@ -1,5 +1,7 @@
 <cx-comic-covers
-  [comics]="comics"
+  [comics]="comics | archiveType: archiveTypeFilter"
   [selected]="selected"
   [isAdmin]="isAdmin"
+  [archiveType]="archiveTypeFilter"
+  (archiveTypeChanged)="onArchiveTypeChanged($event)"
 ></cx-comic-covers>

@@ -7,6 +7,20 @@
     (page)="onPaginationChange($event.pageSize)"
   ></mat-paginator>
   <div class="cx-spacer"></div>
+  <mat-form-field appearance="standard">
+    <mat-label>{{ "archive-type.label.select" | translate }}</mat-label>
+    <mat-select
+      (selectionChange)="onArchiveTypeChanged($event.value)"
+      [value]="archiveType"
+    >
+      <mat-option
+        *ngFor="let option of archiveTypeOptions"
+        [value]="option.value"
+      >
+        {{ option.label | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <button
     id="scrape-all-button"
     mat-icon-button

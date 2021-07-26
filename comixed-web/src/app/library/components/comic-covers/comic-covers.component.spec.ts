@@ -58,6 +58,9 @@ import { ComicBookState } from '@app/comic-book/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
 import { Confirmation } from '@app/core/models/confirmation';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -92,7 +95,9 @@ describe('ComicCoversComponent', () => {
         MatFormFieldModule,
         MatTooltipModule,
         MatDialogModule,
-        MatMenuModule
+        MatMenuModule,
+        MatSelectModule,
+        MatOptionModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -272,6 +277,21 @@ describe('ComicCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateComicInfo({ comic: COMIC })
+      );
+    });
+  });
+
+  describe('when the archive type changes', () => {
+    const ARCHIVE_TYPE = Math.random() > 0.5 ? ArchiveType.CBZ : null;
+
+    beforeEach(() => {
+      spyOn(component.archiveTypeChanged, 'emit');
+      component.onArchiveTypeChanged(ARCHIVE_TYPE);
+    });
+
+    it('emits an event', () => {
+      expect(component.archiveTypeChanged.emit).toHaveBeenCalledWith(
+        ARCHIVE_TYPE
       );
     });
   });

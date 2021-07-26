@@ -60,6 +60,11 @@ import {
   initialState as initialComicListState
 } from '@app/comic-book/reducers/comic-list.reducer';
 import { COMIC_1, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
 describe('LibraryPageComponent', () => {
   const initialState = {
@@ -83,7 +88,8 @@ describe('LibraryPageComponent', () => {
         LibraryPageComponent,
         LibraryToolbarComponent,
         ComicCoversComponent,
-        DeletedComicsPipe
+        DeletedComicsPipe,
+        ArchiveTypePipe
       ],
       imports: [
         NoopAnimationsModule,
@@ -99,7 +105,10 @@ describe('LibraryPageComponent', () => {
         MatFormFieldModule,
         MatTooltipModule,
         MatDialogModule,
-        MatMenuModule
+        MatMenuModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatOptionModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -136,6 +145,7 @@ describe('LibraryPageComponent', () => {
     beforeEach(() => {
       component.unreadOnly = false;
       component.deletedOnly = false;
+      component.unscrapedOnly = false;
     });
 
     describe('when showing unread comics', () => {
@@ -155,6 +165,16 @@ describe('LibraryPageComponent', () => {
 
       it('sets the deleted only flag', () => {
         expect(component.deletedOnly).toBeTrue();
+      });
+    });
+
+    describe('when showing unscraped comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ unscraped: true });
+      });
+
+      it('sets the deleted only flag', () => {
+        expect(component.unscrapedOnly).toBeTrue();
       });
     });
   });
@@ -184,11 +204,23 @@ describe('LibraryPageComponent', () => {
   });
 
   describe('loading all pages', () => {
-    const UNREAD = { ...COMIC_1, lastRead: null, deletedDate: null };
+    const UNREAD = {
+      ...COMIC_1,
+      lastRead: null,
+      deletedDate: null,
+      comicVineId: '54321'
+    };
     const DELETED = {
       ...COMIC_3,
       lastRead: new Date().getTime(),
-      deletedDate: new Date().getTime()
+      deletedDate: new Date().getTime(),
+      comicVineId: '12345'
+    };
+    const UNSCRAPED = {
+      ...COMIC_1,
+      lastRead: null,
+      deletedDate: null,
+      comicVineId: null
     };
     const COMICS = [UNREAD, DELETED];
 
@@ -223,7 +255,122 @@ describe('LibraryPageComponent', () => {
         );
       });
     });
+
+    describe('for unscraped comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = false;
+        component.deletedOnly = false;
+        component.unscrapedOnly = true;
+        store.setState({
+          ...initialState,
+          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+        });
+      });
+
+      it('only loads the unscraped comics', () => {
+        component.comics.every(comic =>
+          expect(comic.comicVineId).not.toBeNull()
+        );
+      });
+    });
   });
 
   describe('loading the translations', () => {});
+
+  describe('filtering by archive type', () => {
+    describe('when it is CBZ', () => {
+      const ARCHIVE_TYPE = ArchiveType.CBZ;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('sets the archive type filter', () => {
+        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
+      });
+    });
+
+    describe('when it is CBR', () => {
+      const ARCHIVE_TYPE = ArchiveType.CBR;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('sets the archive type filter', () => {
+        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
+      });
+    });
+
+    describe('when it is CB7', () => {
+      const ARCHIVE_TYPE = ArchiveType.CB7;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('sets the archive type filter', () => {
+        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
+      });
+    });
+
+    describe('when it is not valid', () => {
+      const ARCHIVE_TYPE = 'CBH';
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('clears the archive type filter', () => {
+        expect(component.archiveTypeFilter).toBeNull();
+      });
+    });
+
+    describe('when it is not provided', () => {
+      const ARCHIVE_TYPE = null;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({});
+      });
+
+      it('clears the archive type filter', () => {
+        expect(component.archiveTypeFilter).toBeNull();
+      });
+    });
+  });
+
+  describe('when the archive type filter is changed', () => {
+    describe('when an value is selected', () => {
+      beforeEach(() => {
+        component.onArchiveTypeChanged(ArchiveType.CB7);
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
+    });
+
+    describe('when the value is cleared', () => {
+      beforeEach(() => {
+        component.onArchiveTypeChanged(null);
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
+    });
+  });
 });

@@ -3,6 +3,8 @@
     [comics]="comics"
     [selected]="selected"
     [pagination]="pagination"
+    [archiveType]="archiveType"
+    (archiveTypeChanged)="onArchiveTypeChanged($event)"
   ></cx-library-toolbar>
   <div
     id="cx-all-comics"

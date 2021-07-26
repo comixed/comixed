@@ -26,6 +26,7 @@ import { Comic } from '@app/comic-book/models/comic';
 import { ScrapingVolume } from '@app/comic-book/models/scraping-volume';
 import { ScrapingIssue } from '@app/comic-book/models/scraping-issue';
 import { ComicBookState } from '@app/comic-book/models/comic-book-state';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
 export const FORMAT_1: ComicFormat = {
   id: 1,
@@ -188,7 +189,7 @@ export const COMIC_1: Comic = {
   description: 'The description of this comic',
   notes: '',
   missing: false,
-  archiveType: 'CBZ',
+  archiveType: ArchiveType.CBZ,
   comicVineId: '71765',
   addedDate: '2019-08-14 12:00:00',
   deletedDate: null,
@@ -228,7 +229,7 @@ export const COMIC_2: Comic = {
   description: 'The description of this comic',
   notes: '',
   missing: false,
-  archiveType: 'CBZ',
+  archiveType: ArchiveType.CBZ,
   comicVineId: '',
   addedDate: '2019-08-14 12:00:00',
   deletedDate: null,
@@ -268,7 +269,7 @@ export const COMIC_3: Comic = {
   description: 'The description of this comic',
   notes: '',
   missing: false,
-  archiveType: 'CBZ',
+  archiveType: ArchiveType.CBZ,
   comicVineId: '',
   addedDate: '2019-08-14 12:00:00',
   deletedDate: null,
@@ -308,7 +309,7 @@ export const COMIC_4: Comic = {
   description: 'The description of this comic',
   notes: '',
   missing: false,
-  archiveType: 'CBZ',
+  archiveType: ArchiveType.CBZ,
   comicVineId: '',
   addedDate: '2019-08-14 12:00:00',
   deletedDate: null,
@@ -348,7 +349,7 @@ export const COMIC_5: Comic = {
   description: 'The description of this comic',
   notes: '',
   missing: false,
-  archiveType: 'CBZ',
+  archiveType: ArchiveType.CBZ,
   comicVineId: '24601',
   addedDate: '2019-08-14 12:00:00',
   deletedDate: null,

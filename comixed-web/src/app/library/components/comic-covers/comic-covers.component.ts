@@ -19,9 +19,11 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { Comic } from '@app/comic-book/models/comic';
@@ -45,6 +47,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -57,6 +60,9 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
+  @Input() archiveType: ArchiveType;
+
+  @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
 
   pagination = PAGINATION_DEFAULT;
 
@@ -157,5 +163,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.dispatch(updateComicInfo({ comic }));
       }
     });
+  }
+
+  onArchiveTypeChanged(archiveType: ArchiveType): void {
+    this.logger.trace('Firing archive type changed event:', archiveType);
+    this.archiveTypeChanged.emit(archiveType);
   }
 }

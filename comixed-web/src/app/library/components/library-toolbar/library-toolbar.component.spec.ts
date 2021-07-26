@@ -43,6 +43,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -69,7 +72,9 @@ describe('LibraryToolbarComponent', () => {
         MatFormFieldModule,
         MatTooltipModule,
         MatDialogModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatSelectModule,
+        MatOptionModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -165,6 +170,21 @@ describe('LibraryToolbarComponent', () => {
           name: PAGINATION_PREFERENCE,
           value: `${PAGINATION}`
         })
+      );
+    });
+  });
+
+  describe('when the archive type changes', () => {
+    const ARCHIVE_TYPE = Math.random() > 0.5 ? ArchiveType.CBZ : null;
+
+    beforeEach(() => {
+      spyOn(component.archiveTypeChanged, 'emit');
+      component.onArchiveTypeChanged(ARCHIVE_TYPE);
+    });
+
+    it('emits an event', () => {
+      expect(component.archiveTypeChanged.emit).toHaveBeenCalledWith(
+        ARCHIVE_TYPE
       );
     });
   });

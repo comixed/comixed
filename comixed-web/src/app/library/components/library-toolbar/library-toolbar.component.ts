@@ -19,9 +19,11 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { Comic } from '@app/comic-book/models/comic';
@@ -42,6 +44,8 @@ import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -56,6 +60,17 @@ export class LibraryToolbarComponent
   @Input() comics: Comic[] = [];
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
+  @Input() archiveType: ArchiveType;
+
+  @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
+
+  readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
+    { label: 'archive-type.label.all', value: null },
+    { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
+    { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
+    { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
+  ];
+
   langChangSubscription: Subscription;
 
   paginationSubscription: Subscription;
@@ -133,6 +148,11 @@ export class LibraryToolbarComponent
         value: `${pagination}`
       })
     );
+  }
+
+  onArchiveTypeChanged(archiveType: ArchiveType): void {
+    this.logger.trace('Archive type selected:', archiveType);
+    this.archiveTypeChanged.emit(archiveType);
   }
 
   private loadTranslations(): void {
