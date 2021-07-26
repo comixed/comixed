@@ -18,156 +18,98 @@
 
 package org.comixedproject.adaptors;
 
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.scraping.ScrapingRule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
-@SpringBootTest
 public class FilenameScraperAdaptorTest {
-  private static final String FILE_LOCATION = "/User/home/comixed_user/";
-  private static final String SERIES_NAME = "Batman - Sins of the Father";
-  private static final String VOLUME_NAME = "2018";
-  private static final String ISSUE_NUMBER = "012";
-  private static final String COVER_DATE_1 = "May, 2018";
-  private static final String BAD_COVER_DATE = "Flg, 2018";
-  private static final String COMIC_FILENAME_RULESET_1 =
+  private static final String TEST_SCRAPING_RULE =
+      "^(([\\w[\\s][,-]]+)?(\\sVol\\.))([0-9]{4}).*\\#([0-9]{1,5}).*\\(([a-zA-Z]+, [0-9]{4})\\).*$";
+  private static final String TEST_FILE_LOCATION = "/User/home/comixedreader/";
+  private static final String TEST_DATE_FORMAT = "MMMMM, yyyy";
+  private static final String TEST_SERIES = "Batman";
+  private static final String TEST_VOLUME = "2016";
+  private static final String TEST_ISSUE_NUMBER = "65";
+  private static final String TEST_COVERDATE_1 = "April, 2019";
+  private static final String TEST_FILENAME =
       MessageFormat.format(
-          "{0}{1} Vol.{2} #{3} ({4})",
-          FILE_LOCATION, SERIES_NAME, VOLUME_NAME, ISSUE_NUMBER, COVER_DATE_1);
-  private static final String COMIC_FILENAME_RULESET_2 =
+          "{0}{1} Vol.{2} #{3} ({4}).cbz",
+          TEST_FILE_LOCATION, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_COVERDATE_1);
+  private static final String TEST_INVALID_FILENAME =
       MessageFormat.format(
-          "{0}{1} {2} ({3}) (Digital) (Blah blah blah.cbr",
-          FILE_LOCATION, SERIES_NAME, ISSUE_NUMBER, VOLUME_NAME);
-  private static final String COMIC_FILENAME_RULESET_3 =
+          "{0}{1} Vol.{2} #{3} (04-2019).cbz",
+          TEST_FILE_LOCATION, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+  private static final String TEST_FILENAME_INVALID_DATE =
       MessageFormat.format(
-          "{0}{1} ({2}) (Lots of other crap)", FILE_LOCATION, SERIES_NAME, VOLUME_NAME);
-  private static final String COMIC_FILENAME_RULESET_1_BAD_DATE =
-      MessageFormat.format(
-          "{0}{1} Vol.{2} #{3} ({4})",
-          FILE_LOCATION, SERIES_NAME, VOLUME_NAME, ISSUE_NUMBER, BAD_COVER_DATE);
-  private static final String COMIC_FILENAME_RULESET_4 =
-      MessageFormat.format(
-          "{0}{1} {2} (of {3}) ({4})",
-          FILE_LOCATION, SERIES_NAME, ISSUE_NUMBER, ISSUE_NUMBER, VOLUME_NAME);
+          "{0}{1} Vol.{2} #{3} (Farkle, 2019).cbz",
+          TEST_FILE_LOCATION, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
 
-  private FilenameScraperAdaptor adaptor = new FilenameScraperAdaptor();
-
+  @InjectMocks private FilenameScraperAdaptor adaptor;
   @Mock private Comic comic;
-  @Captor private ArgumentCaptor<Date> cover_date;
+  @Mock private ScrapingRule scrapingRule;
 
   @Before
   public void setUp() {
-    Locale.setDefault(Locale.US);
+    Mockito.when(scrapingRule.getRule()).thenReturn(TEST_SCRAPING_RULE);
+    Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME);
+    Mockito.when(scrapingRule.getDateFormat()).thenReturn(TEST_DATE_FORMAT);
+    Mockito.when(scrapingRule.getSeriesPosition()).thenReturn(2);
+    Mockito.when(scrapingRule.getVolumePosition()).thenReturn(4);
+    Mockito.when(scrapingRule.getIssueNumberPosition()).thenReturn(5);
+    Mockito.when(scrapingRule.getCoverDatePosition()).thenReturn(6);
+  }
+
+  @Test
+  public void testExecuteFilenameDoesNotApply() throws AdaptorException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_INVALID_FILENAME);
+
+    final boolean result = adaptor.execute(comic, scrapingRule);
+
+    assertFalse(result);
+
+    Mockito.verify(comic, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setCoverDate(Mockito.any(Date.class));
   }
 
   @Test(expected = AdaptorException.class)
-  public void testExecuteWithMalformedDate() throws ParseException, AdaptorException {
-    Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_1_BAD_DATE);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
-    Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
+  public void testExecuteInvalidDate() throws AdaptorException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME_INVALID_DATE);
 
     try {
-      adaptor.execute(comic);
+      adaptor.execute(comic, scrapingRule);
     } finally {
-      Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-      Mockito.verify(comic, Mockito.atLeast(1)).setSeries(SERIES_NAME);
-      Mockito.verify(comic, Mockito.atLeast(1)).setVolume(VOLUME_NAME);
-      Mockito.verify(comic, Mockito.atLeast(1)).setIssueNumber(ISSUE_NUMBER);
+      Mockito.verify(comic, Mockito.never()).setSeries(Mockito.anyString());
+      Mockito.verify(comic, Mockito.never()).setVolume(Mockito.anyString());
+      Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
+      Mockito.verify(comic, Mockito.never()).setCoverDate(Mockito.any(Date.class));
     }
   }
 
   @Test
-  public void testExecuteRuleset1FromNonUSLocale() throws ParseException, AdaptorException {
-    Locale.setDefault(Locale.FRANCE);
-    Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_1);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
-    Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
-    Mockito.doNothing().when(comic).setCoverDate(Mockito.any(Date.class));
+  public void testExecute() throws AdaptorException {
+    Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME);
 
-    adaptor.execute(comic);
+    final boolean result = adaptor.execute(comic, scrapingRule);
 
-    Locale.setDefault(Locale.US);
-    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comic, Mockito.atLeast(1)).setSeries(SERIES_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setVolume(VOLUME_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setIssueNumber(ISSUE_NUMBER);
-    Mockito.verify(comic, Mockito.atLeast(1))
-        .setCoverDate(new SimpleDateFormat("MMMMM, yyyy").parse(COVER_DATE_1));
-  }
+    assertTrue(result);
 
-  @Test
-  public void testExecuteRuleset1() throws ParseException, AdaptorException {
-    Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_1);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
-    Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
-    Mockito.doNothing().when(comic).setCoverDate(Mockito.any(Date.class));
-
-    adaptor.execute(comic);
-
-    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comic, Mockito.atLeast(1)).setSeries(SERIES_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setVolume(VOLUME_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setIssueNumber(ISSUE_NUMBER);
-    Mockito.verify(comic, Mockito.atLeast(1))
-        .setCoverDate(new SimpleDateFormat("MMMMM, yyyy").parse(COVER_DATE_1));
-  }
-
-  @Test
-  public void testExecuteRuleset2() throws AdaptorException {
-    Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_2);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
-    Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
-
-    adaptor.execute(comic);
-
-    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comic, Mockito.atLeast(1)).setSeries(SERIES_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setVolume(VOLUME_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setIssueNumber(ISSUE_NUMBER);
-  }
-
-  @Test
-  public void testExecuteRuleset3() throws AdaptorException {
-    Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_3);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
-
-    adaptor.execute(comic);
-
-    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comic, Mockito.atLeast(1)).setSeries(SERIES_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setVolume(VOLUME_NAME);
-  }
-
-  @Test
-  public void testExecuteRuleset4() throws AdaptorException {
-    Mockito.when(comic.getFilename()).thenReturn(COMIC_FILENAME_RULESET_4);
-    Mockito.doNothing().when(comic).setSeries(Mockito.anyString());
-    Mockito.doNothing().when(comic).setVolume(Mockito.anyString());
-    Mockito.doNothing().when(comic).setIssueNumber(Mockito.anyString());
-
-    adaptor.execute(comic);
-
-    Mockito.verify(comic, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comic, Mockito.atLeast(1)).setSeries(SERIES_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setVolume(VOLUME_NAME);
-    Mockito.verify(comic, Mockito.atLeast(1)).setIssueNumber(ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setCoverDate(Mockito.any(Date.class));
   }
 }

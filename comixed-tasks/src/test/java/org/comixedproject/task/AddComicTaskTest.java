@@ -21,6 +21,8 @@ package org.comixedproject.task;
 import static junit.framework.TestCase.assertFalse;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -29,10 +31,13 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
+import org.comixedproject.model.scraping.ScrapingRule;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.scraping.ScrapingRuleService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -54,12 +59,26 @@ public class AddComicTaskTest {
   @Mock private ComicService comicService;
   @Mock private ObjectFactory<Comic> comicFactory;
   @Mock private Comic comic;
+  @Mock private ScrapingRuleService scrapingRuleService;
   @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
   @Mock private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
   @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
   @Mock private PersistedTask workerPersistedTask;
   @Mock private TaskService taskService;
   @Mock private PublishComicUpdateAction publishComicUpdateAction;
+  @Mock private ScrapingRule scrapingRule1;
+  @Mock private ScrapingRule scrapingRule2;
+  @Mock private ScrapingRule scrapingRule3;
+
+  private List<ScrapingRule> scrapingRuleList = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    Mockito.when(scrapingRuleService.getAllRules()).thenReturn(scrapingRuleList);
+    scrapingRuleList.add(scrapingRule3);
+    scrapingRuleList.add(scrapingRule2);
+    scrapingRuleList.add(scrapingRule1);
+  }
 
   @Test
   public void testCreateDescription() {
@@ -119,7 +138,9 @@ public class AddComicTaskTest {
         .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
     Mockito.verify(comicFactory, Mockito.times(1)).getObject();
     Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule1);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule2);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule3);
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
@@ -150,7 +171,9 @@ public class AddComicTaskTest {
         .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
     Mockito.verify(comicFactory, Mockito.times(1)).getObject();
     Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule1);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule2);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule3);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
@@ -181,7 +204,9 @@ public class AddComicTaskTest {
         .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
     Mockito.verify(comicFactory, Mockito.times(1)).getObject();
     Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule1);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule2);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule3);
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
@@ -212,7 +237,9 @@ public class AddComicTaskTest {
         .findByFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
     Mockito.verify(comicFactory, Mockito.times(1)).getObject();
     Mockito.verify(comic, Mockito.times(1)).setFilename(new File(TEST_CBZ_FILE).getAbsolutePath());
-    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule1);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule2);
+    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(comic, scrapingRule3);
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);

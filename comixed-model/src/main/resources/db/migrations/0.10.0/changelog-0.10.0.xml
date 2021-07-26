@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/0.10.0/001_22_add_configuration_table.xml"/>
+  <include file="/db/migrations/0.10.0/002_352_filename_scraping_rules.xml"/>
 
 </databaseChangeLog>

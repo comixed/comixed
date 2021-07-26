@@ -90,4 +90,7 @@ public class View {
 
   /** Used when retrieving the configuration list. */
   public interface ConfigurationList {}
+
+  /** Used when retrieiving the filename scraping rules. */
+  public interface FilenameScrapingRuleList {}
 }
