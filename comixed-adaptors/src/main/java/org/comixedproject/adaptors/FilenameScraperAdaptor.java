@@ -20,12 +20,12 @@ package org.comixedproject.adaptors;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.scraping.ScrapingRule;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,136 +36,77 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class FilenameScraperAdaptor {
-  // SERIES Vol.VVVV #nnn (Month, YYYY)
-  private static final RuleSet RULESET1 =
-      new RuleSet(
-          "^(([\\w[\\s][,-]]+)?(\\sVol\\.))([0-9]{4}).*\\#([0-9]{1,5}).*\\(([a-zA-Z]+, [0-9]{4})\\).*$",
-          2, 4, 5, 6, "MMMMM, yyyy");
-  // SERIES nnn (VVVV)
-  private static final RuleSet RULESET2 =
-      new RuleSet("^([\\w[\\s][,-]]+)\\s([0-9]{1,5})\\s+\\(([0-9]{4})\\).*$", 1, 3, 2, -1, "");
-  // SERIES (VVVV)
-  private static final RuleSet RULESET3 =
-      new RuleSet("^([\\w[\\s][,-]]+)\\s+\\(([0-9]{4})\\).*$", 1, 2, -1, -1, "");
-  // SERIES nn (of nn) (VVVV)
-  private static final RuleSet RULESET4 =
-      new RuleSet(
-          "^([\\w[\\s][,-]]+)\\s([0-9]{1,5})\\s+\\(of.*\\)\\s+\\(([0-9]{4})\\).*$",
-          1, 3, 2, -1, "");
-  private static final RuleSet[] RULESET =
-      new RuleSet[] {
-        RULESET1, RULESET2, RULESET3, RULESET4,
-      };
+  /**
+   * Sets the meta-information on the comic based on the comic's filename.
+   *
+   * @param comic the comic to be updated @Param rule the filename scraping rule
+   * @throws AdaptorException if an error occurs
+   * @return
+   */
+  public boolean execute(final Comic comic, final ScrapingRule scrapingRule)
+      throws AdaptorException {
+    log.debug(
+        "Applying filename scraping rule: filename={} rule={}",
+        FilenameUtils.getName(comic.getFilename()),
+        scrapingRule.getRule());
+    return this.applyRule(comic, scrapingRule);
+  }
 
-  private boolean applyRule(Comic comic, String filename, RuleSet ruleset) throws AdaptorException {
-    var result = false;
+  private boolean applyRule(Comic comic, ScrapingRule scrapingRule) throws AdaptorException {
+    var expression = Pattern.compile(scrapingRule.getRule());
+    var filename = FilenameUtils.getBaseName(comic.getFilename());
 
-    if (ruleset.applies(filename)) {
-      String[] elements = ruleset.process(filename);
-      if (ruleset.series >= 0) {
-        comic.setSeries(elements[ruleset.series]);
-      }
-      if (ruleset.volume >= 0) {
-        comic.setVolume(elements[ruleset.volume]);
-      }
-      if (ruleset.issue >= 0) {
-        comic.setIssueNumber(elements[ruleset.issue]);
-      }
-      if (ruleset.coverDate != -1) {
-        if (this.parseCoverDate(comic, ruleset, elements[ruleset.coverDate], ruleset.dateFormat)
-            || this.parseCoverDate(
-                comic, ruleset, elements[ruleset.coverDate], ruleset.fallbackDateFormat)) {
-          log.debug("Cover date parsed: {}", comic.getCoverDate());
-        } else {
-          throw new AdaptorException("Failed to parse date: " + elements[ruleset.coverDate]);
+    if (this.ruleApplies(expression, filename)) {
+      log.debug("Rule applies");
+      String[] elements = this.extractElements(expression, filename);
+      if (scrapingRule.getCoverDatePosition() != null
+          && !StringUtils.isEmpty(scrapingRule.getDateFormat())) {
+        try {
+          this.parseCoverDate(comic, scrapingRule, elements[scrapingRule.getCoverDatePosition()]);
+        } catch (ParseException error) {
+          throw new AdaptorException("Failed to parse cover date", error);
         }
+      }
+      if (scrapingRule.getSeriesPosition() != null) {
+        comic.setSeries(elements[scrapingRule.getSeriesPosition()]);
+      }
+      if (scrapingRule.getVolumePosition() != null) {
+        comic.setVolume(elements[scrapingRule.getVolumePosition()]);
+      }
+      if (scrapingRule.getIssueNumberPosition() != null) {
+        comic.setIssueNumber(elements[scrapingRule.getIssueNumberPosition()]);
+      }
+      return true;
+    } else {
+      log.debug("Rule does not apply");
+      return false;
+    }
+  }
+
+  private boolean ruleApplies(final Pattern expression, final String filename) {
+    log.trace("Checking if filename matches scraping pattern");
+    return expression.matcher(filename).matches();
+  }
+
+  private String[] extractElements(final Pattern expression, final String filename) {
+    log.trace("Extracting scraping elements from filename");
+    var matches = expression.matcher(filename);
+    var result = new String[matches.groupCount() + 1];
+
+    while (matches.find()) {
+      for (var index = 0; index < result.length; index++) {
+        result[index] = matches.group(index);
+        log.debug("Setting index={} to {}", index, result[index]);
       }
     }
 
     return result;
   }
 
-  private boolean parseCoverDate(
-      Comic comic, RuleSet ruleset, String coverDate, SimpleDateFormat dateFormat) {
-    log.debug("Parsing date using: {} (locale={})", dateFormat.toPattern(), Locale.getDefault());
-    try {
-      comic.setCoverDate(ruleset.parseCoverDate(coverDate, dateFormat));
-      log.debug("Parsed cover date using {}", dateFormat);
-      return true;
-    } catch (ParseException error) {
-      return false;
-    }
-  }
-
-  /**
-   * Sets the meta-information on the comic based on the comic's filename.
-   *
-   * @param comic the comic to be updated
-   * @throws AdaptorException if an error occurs
-   */
-  public void execute(Comic comic) throws AdaptorException {
-    String filename = FilenameUtils.getName(comic.getFilename());
-    log.debug("Attempting to extract comic meta-data from filename: {}", filename);
-
-    var done = false;
-    var index = 0;
-    while (!done) {
-      log.debug("Attempting to use ruleset #{}", index);
-      done = (this.applyRule(comic, filename, RULESET[index])) || ++index == RULESET.length;
-    }
-  }
-
-  @Log4j2
-  private static class RuleSet {
-    public final Pattern expression;
-    public final int series;
-    public final int volume;
-    public final int issue;
-    public final SimpleDateFormat fallbackDateFormat;
-    public final int coverDate;
-    public final SimpleDateFormat dateFormat;
-
-    public RuleSet(
-        String expression, int series, int volume, int issue, int coverDate, String dateFormat) {
-      this.expression = Pattern.compile(expression);
-      this.series = series;
-      this.volume = volume;
-      this.issue = issue;
-      this.coverDate = coverDate;
-      this.dateFormat = new SimpleDateFormat(dateFormat);
-      this.fallbackDateFormat = new SimpleDateFormat(dateFormat, Locale.US);
-      log.debug(
-          "Creating ruleset: expression={} series={} volume={} issue={} coverDate={} dateFormat={}",
-          expression,
-          series,
-          volume,
-          issue,
-          coverDate,
-          dateFormat);
-    }
-
-    public boolean applies(String filename) {
-      return this.expression.matcher(filename).matches();
-    }
-
-    public String[] process(String filename) {
-      log.debug("Processing filename: {}", filename);
-      var matches = this.expression.matcher(filename);
-      var result = new String[matches.groupCount() + 1];
-
-      while (matches.find()) {
-        for (var index = 0; index < result.length; index++) {
-          result[index] = matches.group(index);
-          log.debug("Setting index={} to {}", index, result[index]);
-        }
-      }
-
-      return result;
-    }
-
-    public Date parseCoverDate(String dateString, SimpleDateFormat dateFormat)
-        throws ParseException {
-      return dateFormat.parse(dateString);
-    }
+  private void parseCoverDate(
+      final Comic comic, final ScrapingRule scrapingRule, final String coverDate)
+      throws ParseException {
+    var dateFormat = new SimpleDateFormat(scrapingRule.getDateFormat());
+    comic.setCoverDate(dateFormat.parse(coverDate));
   }
 }

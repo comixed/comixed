@@ -19,6 +19,7 @@
 package org.comixedproject.task;
 
 import java.io.File;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -27,9 +28,11 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
+import org.comixedproject.model.scraping.ScrapingRule;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.scraping.ScrapingRuleService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.springframework.beans.factory.ObjectFactory;
@@ -53,6 +56,7 @@ public class AddComicTask extends AbstractTask {
   @Autowired private ObjectFactory<Comic> comicFactory;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicService comicService;
+  @Autowired private ScrapingRuleService scrapingRuleService;
   @Autowired private FilenameScraperAdaptor filenameScraper;
   @Autowired private ObjectFactory<ProcessComicTaskEncoder> processTaskEncoderObjectFactory;
   @Autowired private TaskService taskService;
@@ -68,7 +72,7 @@ public class AddComicTask extends AbstractTask {
   @Override
   @Transactional
   public void startTask() throws TaskException {
-    log.debug("Adding file to library: {}", this.filename);
+    log.trace("Adding file to library: {}", this.filename);
 
     final File file = new File(this.filename);
     Comic result = this.comicService.findByFilename(file.getAbsolutePath());
@@ -80,27 +84,31 @@ public class AddComicTask extends AbstractTask {
 
     try {
       result = this.comicFactory.getObject();
-      log.debug("Setting comic filename");
+      log.trace("Setting comic filename");
       result.setFilename(file.getAbsolutePath());
-      log.debug("Scraping details from filename");
-      this.filenameScraper.execute(result);
-      log.debug("Loading comic details");
+      log.trace("Loading filename scraping rules");
+      final List<ScrapingRule> scrapingRuleList = this.scrapingRuleService.getAllRules();
+      for (int index = 0; index < scrapingRuleList.size(); index++) {
+        if (this.filenameScraper.execute(result, scrapingRuleList.get(index))) break;
+      }
+      log.trace("Loading comic details");
       this.comicFileHandler.loadComicArchiveType(result);
 
-      log.debug("Saving comic");
+      log.trace("Setting comic state");
       result.setComicState(ComicState.ADDED);
+      log.trace("Saving comic");
       result = this.comicService.save(result);
 
       log.trace("Publishing updated comic");
       this.publishComicUpdateAction.publish(result);
 
-      log.debug("Encoding process comic persistedTask");
+      log.trace("Encoding process comic persistedTask");
       final ProcessComicTaskEncoder taskEncoder = this.processTaskEncoderObjectFactory.getObject();
       taskEncoder.setComic(result);
       taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);
       taskEncoder.setIgnoreMetadata(this.ignoreMetadata);
 
-      log.debug("Saving process comic persistedTask");
+      log.trace("Saving process comic persistedTask");
       final PersistedTask persistedTask = taskEncoder.encode();
       this.taskService.save(persistedTask);
     } catch (Exception error) {
