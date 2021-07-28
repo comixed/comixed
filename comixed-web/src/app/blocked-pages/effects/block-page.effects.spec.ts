@@ -81,7 +81,7 @@ describe('BlockPageEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = setBlockedState({
-        page: PAGE,
+        hash: PAGE.hash,
         blocked: Math.random() > 0.5
       });
       const outcome = blockedStateSet();
@@ -98,7 +98,7 @@ describe('BlockPageEffects', () => {
     xit('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = setBlockedState({
-        page: PAGE,
+        hash: PAGE.hash,
         blocked: Math.random() > 0.5
       });
       const outcome = setBlockedStateFailed();
@@ -115,7 +115,7 @@ describe('BlockPageEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = setBlockedState({
-        page: PAGE,
+        hash: PAGE.hash,
         blocked: Math.random() > 0.5
       });
       const outcome = setBlockedStateFailed();

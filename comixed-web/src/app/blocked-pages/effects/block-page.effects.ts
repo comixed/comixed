@@ -38,7 +38,7 @@ export class BlockPageEffects {
       tap(action => this.logger.debug('Effect: set blocked state:', action)),
       switchMap(action =>
         this.blockedPageService
-          .setBlockedState({ page: action.page, blocked: action.blocked })
+          .setBlockedState({ hash: action.hash, blocked: action.blocked })
           .pipe(
             tap(() =>
               this.alertService.info(

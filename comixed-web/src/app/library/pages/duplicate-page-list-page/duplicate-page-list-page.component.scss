@@ -1,0 +1,34 @@
+@import '~styles';
+
+.mat-column-selection {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-thumbnail {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-hash {
+}
+
+.mat-column-comic-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-blocked {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-actions {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}

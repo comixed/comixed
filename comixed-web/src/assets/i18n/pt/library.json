@@ -1,4 +1,32 @@
 {
+  "duplicate-pages": {
+    "block-selection": {
+      "confirmation-message": "Are you sure you want to block the {count} selected {count, plural, =1{page} other{pages}}.",
+      "confirmation-title": "Block Selected Page Hashes"
+    },
+    "header": {
+      "blocked": "Is Page Blocked?",
+      "comic-count": "Comics Affected",
+      "hash": "Hash Value",
+      "thumbnail": "Thumbnail"
+    },
+    "list-page": {
+      "tab-title": "Duplicate Pages"
+    },
+    "load-comics": {
+      "effect-failure": "Failed to load comics with duplicate pages."
+    },
+    "tooltip": {
+      "block-page": "Block pages like this.",
+      "block-selections": "Block selected page hashes",
+      "unblock-page": "Unblock pages like this.",
+      "unblock-selections": "Unblock selected page hashes"
+    },
+    "unblock-selection": {
+      "confirmation-message": "Are you sure you want to unblock the {count} selected {count, plural, =1{page} other{pages}}.",
+      "confirmation-title": "Unblock Selected Page Hashes"
+    }
+  },
   "library": {
     "all-comics": {
       "tab-title": "All Comics",

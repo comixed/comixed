@@ -111,7 +111,9 @@ describe('BlockedPageDetailPageComponent', () => {
     });
 
     it('redirects to the blocked page list', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/pages/blocked');
+      expect(router.navigateByUrl).toHaveBeenCalledWith(
+        '/library/pages/blocked'
+      );
     });
   });
 
@@ -214,7 +216,9 @@ describe('BlockedPageDetailPageComponent', () => {
     });
 
     it('redirects the browsers', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/pages/blocked');
+      expect(router.navigateByUrl).toHaveBeenCalledWith(
+        '/library/pages/blocked'
+      );
     });
   });
 });

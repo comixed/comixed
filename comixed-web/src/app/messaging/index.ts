@@ -24,6 +24,7 @@ import {
   reducer as messagingReducer
 } from '@app/messaging/reducers/messaging.reducer';
 import { ActionReducerMap } from '@ngrx/store';
+import { Subscription } from 'webstomp-client';
 
 export { WebSocketService } from './services/web-socket.service';
 
@@ -39,6 +40,7 @@ export interface MessagingModuleState {
 }
 
 export type ModuleState = MessagingModuleState;
+export type MessagingSubscription = Subscription;
 
 export const reducers: ActionReducerMap<MessagingModuleState> = {
   router: routerReducer,

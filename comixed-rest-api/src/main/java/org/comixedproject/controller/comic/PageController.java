@@ -30,7 +30,6 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
-import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.SetPageTypeRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.PageCacheService;
@@ -87,15 +86,6 @@ public class PageController {
     return this.pageService.getAllPagesForComic(id);
   }
 
-  @GetMapping(value = "/pages/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.DuplicatePageList.class)
-  @AuditableEndpoint
-  public List<DuplicatePage> getDuplicatePages() {
-    log.info("Getting duplicate pages");
-
-    return this.pageService.getDuplicatePages();
-  }
-
   /**
    * Retrieves the content for a single comic page by comic id and page index.
    *
@@ -103,11 +93,11 @@ public class PageController {
    * @return the page content
    * @throws ComicException if an error occurs
    */
-  @GetMapping(value = "/pages/{pageId}/content", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/pages/{pageId}/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getPageContent(@PathVariable("pageId") long pageId)
       throws ComicException {
-    log.debug("Getting image content for page: pageId={}", pageId);
+    log.info("Getting image content for page: pageId={}", pageId);
     return this.getResponseEntityForPage(this.pageService.getForId(pageId));
   }
 
@@ -150,6 +140,21 @@ public class PageController {
         .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
         .contentType(MediaType.valueOf(type))
         .body(content);
+  }
+
+  /**
+   * Returns the page content for the given hash value.
+   *
+   * @param hash the page hash
+   * @return the page content
+   * @throws ComicException if an error occurs
+   */
+  @GetMapping(value = "/pages/hashes/{hash}/content")
+  @AuditableEndpoint
+  public ResponseEntity<byte[]> getPageForHash(@PathVariable("hash") final String hash)
+      throws ComicException {
+    log.info("Getting image content for page hash: {}", hash);
+    return this.getResponseEntityForPage(this.pageService.getOneForHash(hash));
   }
 
   /**

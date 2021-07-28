@@ -198,24 +198,22 @@ public class PageService {
 
   @Transactional(isolation = Isolation.READ_UNCOMMITTED)
   public List<DuplicatePage> getDuplicatePages() {
-    log.debug("Getting pages from repository");
+    log.trace("Getting pages from repository");
     final List<Page> pages = this.pageRepository.getDuplicatePages();
-
-    log.debug("Build duplicate page list");
+    log.trace("Build duplicate page list");
     Map<String, DuplicatePage> mapped = new HashMap<>();
     for (Page page : pages) {
+      log.trace("Looking for existing entry");
       DuplicatePage entry = mapped.get(page.getHash());
-
       if (entry == null) {
-        entry = new DuplicatePage();
-
-        entry.setHash(page.getHash());
-        entry.setBlocked(page.isBlocked());
+        log.trace("Creating new entry");
+        entry = new DuplicatePage(page.getHash(), page.isBlocked());
         mapped.put(entry.getHash(), entry);
       }
-      entry.getPages().add(page);
+      log.trace("Loading comic into entry");
+      entry.getComics().add(page.getComic());
     }
-
+    log.trace("Returning duplicate page list");
     return new ArrayList<>(mapped.values());
   }
 

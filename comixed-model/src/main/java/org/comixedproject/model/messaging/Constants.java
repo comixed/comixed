@@ -41,4 +41,7 @@ public interface Constants {
 
   /** Topic which receives notices when last read entries are removed. */
   String LAST_READ_REMOVAL_TOPIC = "/topic/last-read-list.removal";
+
+  /** Topic which receives notices when the duplicate page list is updated. */
+  String DUPLICATE_PAGE_LIST_TOPIC = "/topic/duplicate-page-list.update";
 }

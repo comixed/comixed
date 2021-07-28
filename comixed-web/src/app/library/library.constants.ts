@@ -45,6 +45,8 @@ export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}`;
 
 export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 
+export const LOAD_COMICS_WITH_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/library/pages/duplicates`;
+
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
   'preference.import.root-directory';
@@ -70,3 +72,4 @@ export const PAGINATION_DEFAULT = PAGINATION_OPTIONS[0];
 
 // messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';
+export const DUPLICATE_PAGE_LIST_TOPIC = '/topic/duplicate-page-list.update';

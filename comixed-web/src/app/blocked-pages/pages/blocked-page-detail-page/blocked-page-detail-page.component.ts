@@ -78,7 +78,7 @@ export class BlockedPageDetailPageComponent implements OnInit, OnDestroy {
         this.store.dispatch(setBusyState({ enabled: state.loading }));
         if (!state.loading && state.notFound) {
           this.logger.debug('Blocked page not found');
-          this.router.navigateByUrl('/admin/pages/blocked');
+          this.router.navigateByUrl('/library/pages/blocked');
         }
       });
     this.blockedPageSubscription = this.store
@@ -149,7 +149,7 @@ export class BlockedPageDetailPageComponent implements OnInit, OnDestroy {
   }
 
   onGoBack(): void {
-    this.router.navigateByUrl('/admin/pages/blocked');
+    this.router.navigateByUrl('/library/pages/blocked');
   }
 
   encodeForm(): BlockedPage {

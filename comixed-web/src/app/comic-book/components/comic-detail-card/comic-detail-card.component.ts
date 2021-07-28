@@ -53,6 +53,7 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() selected = false;
   @Input() comicChanged = false;
   @Input() isAdmin = false;
+  @Input() showActions = true;
 
   @Output() selectionChanged = new EventEmitter<ComicSelectEvent>();
   @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();

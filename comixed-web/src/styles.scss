@@ -186,6 +186,11 @@ $cx-column-large: 325px;
   text-overflow: ellipsis;
 }
 
+.cx-table-thumbnail {
+  height: 100%;
+  overflow-y: hidden;
+}
+
 // component position
 
 .cx-centered {

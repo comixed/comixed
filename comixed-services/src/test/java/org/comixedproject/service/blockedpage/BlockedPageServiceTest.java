@@ -32,9 +32,12 @@ import org.comixedproject.adaptors.csv.CsvRowEncoder;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.blockedpage.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.blockedpage.PublishBlockedPageUpdateAction;
+import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.blockedpage.BlockedPage;
+import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
+import org.comixedproject.service.comic.PageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,16 +53,19 @@ public class BlockedPageServiceTest {
   private static final List<String> TEST_DECODED_ROW = new ArrayList<>();
 
   @InjectMocks private BlockedPageService service;
+  @Mock private PageService pageService;
   @Mock private BlockedPageRepository blockedPageRepository;
   @Mock private CsvAdaptor csvAdaptor;
   @Mock private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
   @Mock private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
+  @Mock private PublishDuplicatePageListUpdateAction publishDuplicatePageListUpdateAction;
   @Mock private List<String> blockedPageHashList;
   @Mock private BlockedPage blockedPage;
   @Mock private BlockedPage blockedPageRecord;
   @Mock private BlockedPage savedBlockedPage;
   @Mock private List<BlockedPage> blockedPageList;
   @Mock private InputStream inputStream;
+  @Mock private List<DuplicatePage> duplicatePageList;
 
   @Captor private ArgumentCaptor<BlockedPage> blockedPageArgumentCaptor;
   @Captor private ArgumentCaptor<CsvRowEncoder> csvRowHandlerArgumentCaptor;
@@ -73,6 +79,7 @@ public class BlockedPageServiceTest {
     TEST_DECODED_ROW.add(TEST_PAGE_LABEL);
     TEST_DECODED_ROW.add(TEST_PAGE_HASH);
     TEST_DECODED_ROW.add(TEST_PAGE_SNAPSHOT);
+    Mockito.when(pageService.getDuplicatePages()).thenReturn(duplicatePageList);
   }
 
   @Test
@@ -159,10 +166,12 @@ public class BlockedPageServiceTest {
     Mockito.verify(blockedPageRepository, Mockito.times(1))
         .save(blockedPageArgumentCaptor.getValue());
     Mockito.verify(publishBlockedPageUpdateAction, Mockito.times(1)).publish(blockedPageRecord);
+    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
+        .publish(duplicatePageList);
   }
 
   @Test
-  public void testBlockPage() {
+  public void testBlockPage() throws PublishingException {
     Mockito.when(blockedPageRepository.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(blockedPageRepository.save(blockedPageArgumentCaptor.capture()))
         .thenReturn(blockedPageRecord);
@@ -178,6 +187,8 @@ public class BlockedPageServiceTest {
     Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(blockedPageRepository, Mockito.times(1))
         .save(blockedPageArgumentCaptor.getValue());
+    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
+        .publish(duplicatePageList);
   }
 
   @Test(expected = BlockedPageException.class)
@@ -210,6 +221,8 @@ public class BlockedPageServiceTest {
     Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(blockedPageRepository, Mockito.times(1)).save(blockedPageRecord);
     Mockito.verify(publishBlockedPageUpdateAction, Mockito.times(1)).publish(savedBlockedPage);
+    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
+        .publish(duplicatePageList);
   }
 
   @Test
@@ -228,6 +241,8 @@ public class BlockedPageServiceTest {
     Mockito.verify(blockedPageRecord, Mockito.times(1)).setLabel(TEST_PAGE_LABEL);
     Mockito.verify(blockedPageRepository, Mockito.times(1)).save(blockedPageRecord);
     Mockito.verify(publishBlockedPageUpdateAction, Mockito.times(1)).publish(savedBlockedPage);
+    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
+        .publish(duplicatePageList);
   }
 
   @Test(expected = BlockedPageException.class)
@@ -257,6 +272,8 @@ public class BlockedPageServiceTest {
 
     Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(1)).publish(blockedPageRecord);
+    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
+        .publish(duplicatePageList);
   }
 
   @Test
@@ -270,6 +287,8 @@ public class BlockedPageServiceTest {
     Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     Mockito.verify(blockedPageRepository, Mockito.times(1)).delete(blockedPageRecord);
     Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(1)).publish(blockedPageRecord);
+    Mockito.verify(publishDuplicatePageListUpdateAction, Mockito.times(1))
+        .publish(duplicatePageList);
   }
 
   @Test

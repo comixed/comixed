@@ -54,10 +54,31 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 public class Comic {
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "PageNumber")
+  @JsonProperty("pages")
+  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @Getter
+  List<Page> pages = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "Stories", joinColumns = @JoinColumn(name = "ComicId"))
+  @Column(name = "Name")
+  @JsonProperty("storyArcs")
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @Getter
+  List<String> storyArcs = new ArrayList<>();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.ComicListView.class, View.LastReadList.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.LastReadList.class,
+    View.AuditLogEntryDetail.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private Long id;
@@ -92,7 +113,11 @@ public class Comic {
   private ComicState comicState;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private ComicFileDetails fileDetails;
@@ -116,21 +141,33 @@ public class Comic {
 
   @Column(name = "Series", length = 128)
   @JsonProperty("series")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private String series;
 
   @Column(name = "Volume", length = 4)
   @JsonProperty("volume")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private String volume;
 
   @Column(name = "IssueNumber", length = 16)
   @JsonProperty("issueNumber")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   private String issueNumber;
 
@@ -147,13 +184,6 @@ public class Comic {
   @Getter
   @Setter
   private String notes;
-
-  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "PageNumber")
-  @JsonProperty("pages")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  List<Page> pages = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "FileNumber")
@@ -238,7 +268,11 @@ public class Comic {
 
   @Column(name = "Title", length = 128)
   @JsonProperty("title")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.DuplicatePageList.class
+  })
   @Getter
   @Setter
   private String title;
@@ -277,15 +311,6 @@ public class Comic {
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   private List<String> locations = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "Stories", joinColumns = @JoinColumn(name = "ComicId"))
-  @Column(name = "Name")
-  @JsonProperty("storyArcs")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  List<String> storyArcs = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("credits")
@@ -521,16 +546,16 @@ public class Comic {
   }
 
   @Override
+  public int hashCode() {
+    return 17 * Objects.hash(filename);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Comic comic = (Comic) o;
     return this.filename.equals(comic.getFilename());
-  }
-
-  @Override
-  public int hashCode() {
-    return 17 * Objects.hash(filename);
   }
 
   public void removeDeletedPages(final boolean deletePages) {

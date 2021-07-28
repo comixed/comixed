@@ -22,5 +22,7 @@ export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
 export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scantypes`;
 export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/comicinfo`;
 
+export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
+
 export const COMICVINE_ISSUE_LINK =
   'https://comicvine.gamespot.com/issues/4000-${id}/';

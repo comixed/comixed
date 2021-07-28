@@ -35,7 +35,7 @@ public interface PageRepository extends CrudRepository<Page, Long> {
    * @return a list of Page objects with duplicate hashes
    */
   @Query(
-      "SELECT p FROM Page p JOIN p.comic WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash")
+      "SELECT p FROM Page p JOIN FETCH p.comic WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash")
   List<Page> getDuplicatePages();
 
   /**

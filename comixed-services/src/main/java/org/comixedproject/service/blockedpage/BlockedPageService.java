@@ -29,9 +29,11 @@ import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.blockedpage.PublishBlockedPageRemovalAction;
 import org.comixedproject.messaging.blockedpage.PublishBlockedPageUpdateAction;
+import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
+import org.comixedproject.service.comic.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,8 @@ public class BlockedPageService {
   @Autowired private CsvAdaptor csvAdaptor;
   @Autowired private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
   @Autowired private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
+  @Autowired private PageService pageService;
+  @Autowired private PublishDuplicatePageListUpdateAction publishDuplicatePageListUpdateAction;
 
   /**
    * Returns all blocked pages.
@@ -113,7 +117,17 @@ public class BlockedPageService {
     } catch (PublishingException error) {
       log.error("Failed to publish blocked page update", error);
     }
+    this.doPublishDuplicatePageUpdates();
     return result;
+  }
+
+  private void doPublishDuplicatePageUpdates() {
+    try {
+      log.trace("Publishing duplicate page list");
+      this.publishDuplicatePageListUpdateAction.publish(this.pageService.getDuplicatePages());
+    } catch (PublishingException error) {
+      log.error("Failed to publish duplicate page list", error);
+    }
   }
 
   /**
@@ -141,6 +155,7 @@ public class BlockedPageService {
     } catch (PublishingException error) {
       log.error("Failed to publish blocked page update", error);
     }
+    this.doPublishDuplicatePageUpdates();
     return result;
   }
 
@@ -164,6 +179,7 @@ public class BlockedPageService {
     } catch (PublishingException error) {
       log.error("Failed to publish blocked page remove", error);
     }
+    this.doPublishDuplicatePageUpdates();
     return result;
   }
 
