@@ -84,7 +84,7 @@
         (click)="onCoverClicked()"
         (contextmenu)="onContextMenu($event)"
       />
-      <mat-chip-list>
+      <mat-chip-list *ngIf="showActions">
         <mat-chip
           *ngIf="detailLink"
           [routerLink]="detailLink"

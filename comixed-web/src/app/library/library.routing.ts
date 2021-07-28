@@ -21,6 +21,7 @@ import { NgModule } from '@angular/core';
 import { AdminGuard, ReaderGuard } from '@app/user';
 import { LibraryPageComponent } from '@app/library/pages/library-page/library-page.component';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
+import { DuplicatePageListPageComponent } from '@app/library/pages/duplicate-page-list-page/duplicate-page-list-page.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,11 @@ const routes: Routes = [
   {
     path: 'library/scrape',
     component: ScrapingPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'library/pages/duplicates',
+    component: DuplicatePageListPageComponent,
     canActivate: [AdminGuard]
   }
 ];

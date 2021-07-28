@@ -85,6 +85,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ComicvineIssueLinkPipe } from './pipes/comicvine-issue-link.pipe';
+import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { ComicvineIssueLinkPipe } from './pipes/comicvine-issue-link.pipe';
     ComicPageUrlPipe,
     ComicTitlePipe,
     ScrapingIssueTitlePipe,
-    ComicvineIssueLinkPipe
+    ComicvineIssueLinkPipe,
+    PageHashUrlPipe
   ],
   imports: [
     CommonModule,
@@ -151,7 +153,8 @@ import { ComicvineIssueLinkPipe } from './pipes/comicvine-issue-link.pipe';
     ComicScrapingComponent,
     ComicDetailCardComponent,
     ComicTitlePipe,
-    ComicCoverUrlPipe
+    ComicCoverUrlPipe,
+    PageHashUrlPipe
   ]
 })
 export class ComicBookModule {

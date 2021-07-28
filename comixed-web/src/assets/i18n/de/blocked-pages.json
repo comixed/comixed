@@ -1,5 +1,9 @@
 {
   "blocked-page": {
+    "add-page-hash": {
+      "confirmation-message": "Are you sure you want to block all pages with the hash \"{hash}\"?",
+      "confirmation-title": "Block Page Hash"
+    },
     "editing": {
       "reset-message": "Discard your changes to this blocked page type?",
       "reset-title": "Reset Blocked Page",
@@ -14,6 +18,10 @@
     },
     "load-by-hash-effect-error": "Failed to load blocked page for hash: {hash}",
     "page-title": "Blocked Page Details: {hash}",
+    "remove-page-hash": {
+      "confirmation-message": "Are you sure you want to unblock ll pages with the hash \"{hash}\"?",
+      "confirmation-title": "Unblock Page Hash"
+    },
     "set-state": {
       "effect-failure": "Failed to {block,select,true{block} other{unblock}} page hash.",
       "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."

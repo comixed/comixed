@@ -24,12 +24,12 @@ import { BlockedPageDetailPageComponent } from '@app/blocked-pages/pages/blocked
 
 const routes: Routes = [
   {
-    path: 'admin/pages/blocked',
+    path: 'library/pages/blocked',
     component: BlockedPageListPageComponent,
     canActivate: [AdminGuard]
   },
   {
-    path: 'admin/pages/blocked/:hash',
+    path: 'library/pages/blocked/:hash',
     component: BlockedPageDetailPageComponent,
     canActivate: [AdminGuard]
   }

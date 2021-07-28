@@ -66,6 +66,13 @@ import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping
 import { ComicBookModule } from '@app/comic-book/comic-book.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
 import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
+import {
+  DUPLICATE_PAGE_LIST_FEATURE_KEY,
+  reducer as comicsWithDuplicatePagesReducer
+} from '@app/library/reducers/duplicate-page-list.reducer';
+import { DuplicatePageListEffects } from '@app/library/effects/duplicate-page-list.effects';
+import { DuplicatePageListPageComponent } from './pages/duplicate-page-list-page/duplicate-page-list-page.component';
+import { ComicsWithDuplicatePageComponent } from './components/comics-with-duplicate-page/comics-with-duplicate-page.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +85,9 @@ import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
     ScrapingPageComponent,
     ComicCoversComponent,
     ArchiveTypePipe,
-    UnreadComicsPipe
+    UnreadComicsPipe,
+    DuplicatePageListPageComponent,
+    ComicsWithDuplicatePageComponent
   ],
   providers: [],
   imports: [
@@ -90,7 +99,15 @@ import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
     TranslateModule.forRoot(),
     StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
-    EffectsModule.forFeature([DisplayEffects, LibraryEffects]),
+    StoreModule.forFeature(
+      DUPLICATE_PAGE_LIST_FEATURE_KEY,
+      comicsWithDuplicatePagesReducer
+    ),
+    EffectsModule.forFeature([
+      DisplayEffects,
+      LibraryEffects,
+      DuplicatePageListEffects
+    ]),
     MatInputModule,
     MatSelectModule,
     MatButtonModule,

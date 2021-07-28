@@ -15,3 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+
+import { DuplicatePage } from './models/duplicate-page';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  PAGE_1,
+  PAGE_2,
+  PAGE_3
+} from '../comic-book/comic-book.fixtures';
+
+export const DUPLICATE_PAGE_1: DuplicatePage = {
+  hash: PAGE_1.hash,
+  blocked: false,
+  comics: [COMIC_1]
+};
+
+export const DUPLICATE_PAGE_2: DuplicatePage = {
+  hash: PAGE_2.hash,
+  blocked: false,
+  comics: [COMIC_2]
+};
+
+export const DUPLICATE_PAGE_3: DuplicatePage = {
+  hash: PAGE_3.hash,
+  blocked: false,
+  comics: [COMIC_3]
+};

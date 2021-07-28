@@ -5,6 +5,7 @@
     [pagination]="pagination"
     [archiveType]="archiveType"
     (archiveTypeChanged)="onArchiveTypeChanged($event)"
+    [showActions]="showActions"
   ></cx-library-toolbar>
   <div
     id="cx-all-comics"
@@ -22,6 +23,7 @@
       [selected]="isSelected(comic)"
       [comicChanged]="isChanged(comic)"
       [isAdmin]="isAdmin"
+      [showActions]="showActions"
       (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
       (showContextMenu)="onShowContextMenu($event.comic, $event.x, $event.y)"
       (updateComicInfo)="onUpdateComicInfo($event.comic)"

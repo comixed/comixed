@@ -1,0 +1,120 @@
+<mat-toolbar class="cx-primary-light-background">
+  <mat-paginator
+    class="cx-primary-light-background cx-height-100"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
+  <div class="cx-spacer"></div>
+  <button
+    id="block-selections-button"
+    mat-icon-button
+    color="warn"
+    [disabled]="!anySelected"
+    [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
+    (click)="onBlockSelected()"
+  >
+    <mat-icon>thumb_down</mat-icon>
+  </button>
+  <button
+    id="unblock-selections-button"
+    mat-icon-button
+    color="warn"
+    [disabled]="!anySelected"
+    [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
+    (click)="onUnblockSelected()"
+  >
+    <mat-icon>thumb_up</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="selection">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      <mat-checkbox
+        [checked]="allSelected"
+        (change)="onSelectAll($event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-checkbox
+        [checked]="row.selected"
+        (change)="onSelectOne(row, $event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hash">
+    <mat-header-cell mat-sort-header mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-pages.header.hash" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <span class="cx-text-nowrap">{{ row.item.hash }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="thumbnail">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "duplicate-pages.header.thumbnail" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <div class="cx-text-nowrap cx-table-thumbnail cx-width-100">
+        <img
+          [src]="row.item.hash | pageHashUrl"
+          alt="thumbnail"
+          width="100%"
+          height="auto"
+          (click)="onShowComicsWithPage(row)"
+        />
+      </div>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-pages.header.comic-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <span class="cx-text-nowrap">{{ row.item.comics.length }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="blocked">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-pages.header.blocked" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <span class="cx-text-nowrap">
+        {{ row.item.blocked | yesNo | translate }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <button
+        *ngIf="!row.item.blocked"
+        mat-icon-button
+        color="warn"
+        [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
+        (click)="onBlockPage(row)"
+      >
+        <mat-icon>thumb_down</mat-icon>
+      </button>
+      <button
+        *ngIf="row.item.blocked"
+        mat-icon-button
+        color="primary"
+        [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
+        (click)="onUnblockPage(row)"
+      >
+        <mat-icon>thumb_up</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
+</mat-table>

@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
@@ -30,6 +31,7 @@ import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comic.PageRepository;
 import org.comixedproject.repositories.comic.PageTypeRepository;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,12 +44,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class PageServiceTest {
   private static final long TEST_PAGE_ID = 129;
-  private static final List<Page> TEST_DUPLICATE_PAGES = new ArrayList<>();
   private static final long TEST_COMIC_ID = 1002L;
   private static final int TEST_PAGE_INDEX = 7;
   private static final int TEST_DELETED_PAGE_COUNT = 17;
   private static final String TEST_PAGE_TYPE_NAME = "front-cover";
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
+  private static final boolean TEST_IS_BLOCKED = RandomUtils.nextBoolean();
 
   @InjectMocks private PageService pageService;
   @Mock private PageRepository pageRepository;
@@ -57,8 +59,16 @@ public class PageServiceTest {
   @Mock private Page page;
   @Mock private Page savedPage;
   @Mock private Comic comic;
-  @Mock private List<Page> pageList;
   @Mock private List<PageType> pageTypeList;
+
+  private List<Page> pageList = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
+    Mockito.when(page.isBlocked()).thenReturn(TEST_IS_BLOCKED);
+    Mockito.when(page.getComic()).thenReturn(comic);
+  }
 
   @Test(expected = PageException.class)
   public void testSetPageTypeForNonexistentPage() throws PageException {
@@ -104,12 +114,17 @@ public class PageServiceTest {
 
   @Test
   public void testGetDuplicatePages() {
-    Mockito.when(pageRepository.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
+    pageList.add(page);
+
+    Mockito.when(pageRepository.getDuplicatePages()).thenReturn(pageList);
 
     List<DuplicatePage> result = pageService.getDuplicatePages();
 
     assertNotNull(result);
-    //        assertFalse(result.isEmpty());
+    assertFalse(result.isEmpty());
+    assertEquals(TEST_PAGE_HASH, result.get(0).getHash());
+    assertEquals(TEST_IS_BLOCKED, result.get(0).isBlocked());
+    assertTrue(result.get(0).getComics().contains(comic));
 
     Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
   }

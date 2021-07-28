@@ -134,17 +134,17 @@ export class BlockedPageService {
    * @param args.page the page
    * @param args.blocked the blocked state
    */
-  setBlockedState(args: { page: Page; blocked: boolean }): Observable<any> {
+  setBlockedState(args: { hash: string; blocked: boolean }): Observable<any> {
     if (args.blocked) {
       this.logger.debug('Service: blocking pages with hash:', args);
       return this.http.post(
-        interpolate(SET_BLOCKED_STATE_URL, { hash: args.page.hash }),
+        interpolate(SET_BLOCKED_STATE_URL, { hash: args.hash }),
         {}
       );
     } else {
       this.logger.debug('Service: unblocking pages with hash:', args);
       return this.http.delete(
-        interpolate(REMOVE_BLOCKED_STATE_URL, { hash: args.page.hash })
+        interpolate(REMOVE_BLOCKED_STATE_URL, { hash: args.hash })
       );
     }
   }

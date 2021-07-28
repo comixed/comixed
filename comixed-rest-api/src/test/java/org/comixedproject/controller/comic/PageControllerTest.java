@@ -21,7 +21,6 @@ package org.comixedproject.controller.comic;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -30,7 +29,6 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
-import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.SetPageTypeRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.PageCacheService;
@@ -49,7 +47,6 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest
 public class PageControllerTest {
   private static final long TEST_PAGE_ID = 129;
-  private static final List<DuplicatePage> TEST_DUPLICATE_PAGES = new ArrayList<>();
   private static final int TEST_PAGE_INDEX = 7;
   private static final long TEST_COMIC_ID = 1002L;
   private static final byte[] TEST_PAGE_CONTENT = new byte[53253];
@@ -70,17 +67,12 @@ public class PageControllerTest {
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
-  @Mock private List<String> pageHashList;
 
   @Captor private ArgumentCaptor<InputStream> inputStream;
   private ArchiveType archiveType = ArchiveType.CB7;
 
   @Before
   public void setUp() {
-    pageHashList.add("12345");
-    pageHashList.add("23456");
-    pageHashList.add("34567");
-
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
   }
 
@@ -97,19 +89,6 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1))
         .updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-  }
-
-  @Test
-  public void testGetDuplicatePages() {
-
-    Mockito.when(pageService.getDuplicatePages()).thenReturn(TEST_DUPLICATE_PAGES);
-
-    List<DuplicatePage> result = pageController.getDuplicatePages();
-
-    assertNotNull(result);
-    assertSame(TEST_DUPLICATE_PAGES, result);
-
-    Mockito.verify(pageService, Mockito.times(1)).getDuplicatePages();
   }
 
   @Test

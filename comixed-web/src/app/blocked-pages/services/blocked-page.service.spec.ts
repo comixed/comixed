@@ -227,7 +227,7 @@ describe('BlockedPageService', () => {
 
   it('can block a page', () => {
     service
-      .setBlockedState({ page: PAGE, blocked: true })
+      .setBlockedState({ hash: PAGE.hash, blocked: true })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(
@@ -240,7 +240,7 @@ describe('BlockedPageService', () => {
 
   it('can unblock a page', () => {
     service
-      .setBlockedState({ page: PAGE, blocked: false })
+      .setBlockedState({ hash: PAGE.hash, blocked: false })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(

@@ -1,5 +1,9 @@
 {
   "blocked-page": {
+    "add-page-hash": {
+      "confirmation-message": "Are you sure you want to block all pages with the hash \"{hash}\"?",
+      "confirmation-title": "Block Page With Hash"
+    },
     "editing": {
       "reset-message": "¿Descartar los cambios en este tipo de página bloqueada?",
       "reset-title": "Restablecer página bloqueada",
@@ -14,6 +18,10 @@
     },
     "load-by-hash-effect-error": "No se pudo cargar la página bloqueada para hash: {hash}",
     "page-title": "Detalles de la página bloqueada: {hash}",
+    "remove-page-hash": {
+      "confirmation-message": "Are you sure you want to unblock ll pages with the hash \"{hash}\"?",
+      "confirmation-title": "Unblock Page Hash"
+    },
     "set-state": {
       "effect-failure": "No se pudo {block,select,true{block} other{unblock}} el hash de página.",
       "effect-success": "El hash de página {block, select, true{blocked} other{unblocked}} correctamente."

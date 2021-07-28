@@ -37,7 +37,15 @@
         {{ "navigation.option.unscraped-comics" | translate }}
       </a>
       <a
-        *ngIf="!!user"
+        *ngIf="isAdmin"
+        mat-list-item
+        routerLink="/library/import"
+        routerLinkActive="active"
+      >
+        {{ "navigation.option.import-comics" | translate }}
+      </a>
+      <a
+        *ngIf="isAdmin"
         mat-list-item
         routerLink="/library/deleted"
         routerLinkActive="active"
@@ -47,10 +55,18 @@
       <a
         *ngIf="isAdmin"
         mat-list-item
-        routerLink="/library/import"
+        routerLink="/library/pages/duplicates"
         routerLinkActive="active"
       >
-        {{ "navigation.option.import-comics" | translate }}
+        {{ "navigation.option.duplicate-pages" | translate }}
+      </a>
+      <a
+        *ngIf="isAdmin"
+        mat-list-item
+        routerLink="/library/pages/blocked"
+        routerLinkActive="active"
+      >
+        {{ "navigation.option.blocked-pages" | translate }}
       </a>
     </mat-nav-list>
 
@@ -155,14 +171,6 @@
       routerLinkActive="active"
     >
       {{ "navigation.option.configuration" | translate }}
-    </a>
-    <a
-      *ngIf="isAdmin"
-      mat-list-item
-      routerLink="/admin/pages/blocked"
-      routerLinkActive="active"
-    >
-      {{ "navigation.option.blocked-pages" | translate }}
     </a>
     <a
       *ngIf="isAdmin"
