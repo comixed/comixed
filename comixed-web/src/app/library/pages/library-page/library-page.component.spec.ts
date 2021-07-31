@@ -60,13 +60,19 @@ import {
   initialState as initialComicListState
 } from '@app/comic-book/reducers/comic-list.reducer';
 import { COMIC_1, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import { UnreadComicsPipe } from '@app/library/pipes/unread-comics.pipe';
+import {
+  initialState as initialLastReadListState,
+  LAST_READ_LIST_FEATURE_KEY
+} from '@app/last-read/reducers/last-read-list.reducer';
 
 describe('LibraryPageComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
-    [COMIC_LIST_FEATURE_KEY]: initialComicListState
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
   };
 
   let component: LibraryPageComponent;
@@ -83,7 +89,8 @@ describe('LibraryPageComponent', () => {
         LibraryPageComponent,
         LibraryToolbarComponent,
         ComicCoversComponent,
-        DeletedComicsPipe
+        DeletedComicsPipe,
+        UnreadComicsPipe
       ],
       imports: [
         NoopAnimationsModule,
@@ -191,21 +198,6 @@ describe('LibraryPageComponent', () => {
       deletedDate: new Date().getTime()
     };
     const COMICS = [UNREAD, DELETED];
-
-    describe('for unread comics', () => {
-      beforeEach(() => {
-        component.unreadOnly = true;
-        component.deletedOnly = false;
-        store.setState({
-          ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
-        });
-      });
-
-      it('only loads the unread comics', () => {
-        component.comics.every(comic => expect(comic.lastRead).toBeNull());
-      });
-    });
 
     describe('for deleted comics', () => {
       beforeEach(() => {

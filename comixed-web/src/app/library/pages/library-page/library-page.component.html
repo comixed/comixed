@@ -1,5 +1,8 @@
 <cx-comic-covers
-  [comics]="comics"
+  [comics]="
+    comics
+      | unreadComics: unreadOnly:lastReadDates
+  "
   [selected]="selected"
   [isAdmin]="isAdmin"
 ></cx-comic-covers>

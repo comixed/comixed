@@ -64,6 +64,7 @@ import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { ComicBookModule } from '@app/comic-book/comic-book.module';
+import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { ComicBookModule } from '@app/comic-book/comic-book.module';
     ComicDetailsDialogComponent,
     DeletedComicsPipe,
     ScrapingPageComponent,
-    ComicCoversComponent
+    ComicCoversComponent,
+    UnreadComicsPipe
   ],
   providers: [],
   imports: [
