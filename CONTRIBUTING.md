@@ -101,7 +101,7 @@ Most editors and IDEs support formatting Typescript code. Please check the docum
 
 #### Code Formatting
 
-To ensure your code confirms to coding conventions, run the following command in the **comixed-web** module:
+To ensure your code confirms to coding conventions, run the following command in the **comixed-webui** module:
 
 ```
 $ yarn format
@@ -111,10 +111,10 @@ This will reformat all Typescript-related code.
 
 #### Lint Checks
 
-To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-web** module:
+To ensure your Angular code meets project requirements, please run the lint checks in the **comixed-webui** module:
 
 ```
-$ cd comixed-web
+$ cd comixed-webui
 $ yarn lint
 ```
 
@@ -144,8 +144,10 @@ The application is composed of several modules:
  * **comixed-scrapers**: the library for building comic data scrapers,
  * **comixed-state**: state management layer,
  * **comixed-tasks**: the set of worker tasks that run on the server,
- * **comixed-rest-api**: the REST API processors,
- * **comixed-web**: the Angular frontend, and
+ * **comixed-auth**: the authentication layer,
+ * **comixed-rest**: the REST controllers,
+ * **comixed-opds**: the OPDS controllers,
+ * **comixed-webui**: the Angular frontend, and
  * **comixed-app**: the core module, which pulls the previous pieces together in a working application.
 
 To build all of them then execute the following from the project's root directory:
@@ -197,7 +199,7 @@ commandline:
 ```
 mvn spring-boot:run -DskipTests
 ```
-Then, in the **comixed-web** subdirectory, launch it using the commandline:
+Then, in the **comixed-webui** subdirectory, launch it using the commandline:
 
 ```
 $ yarn start
