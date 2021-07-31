@@ -35,6 +35,9 @@ import { selectComicList } from '@app/comic-book/selectors/comic-list.selectors'
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
+import { LastRead } from '@app/last-read/models/last-read';
+import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
+import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-library-page',
@@ -56,6 +59,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   deletedOnly = false;
   queryParamSubscription: Subscription;
   archiveTypeFilter = null;
+  lastReadDatesSubscription: Subscription;
+  lastReadDates: LastRead[];
 
   constructor(
     private logger: LoggerService,
@@ -99,15 +104,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.comicSubscription = this.store
       .select(selectComicList)
-      .subscribe(
-        comics =>
-          (this.comics = comics.filter(
-            comic =>
-              (!this.unreadOnly || !comic.lastRead) &&
-              (!this.unscrapedOnly || !comic.comicVineId) &&
-              (!this.deletedOnly || !!comic.deletedDate)
-          ))
-      );
+      .subscribe(comics => (this.comics = comics));
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
@@ -115,6 +112,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.logger.trace('Checking if user is admin:', user);
       this.isAdmin = isAdmin(user);
     });
+    this.lastReadDatesSubscription = this.store
+      .select(selectLastReadEntries)
+      .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -128,7 +128,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   set comics(comics: Comic[]) {
     this.logger.trace('Showing all comics:', comics);
-    this._comics = comics;
+    this._comics = comics.filter(
+      comic =>
+        (!this.unscrapedOnly || !comic.comicVineId) &&
+        (!this.deletedOnly || !!comic.deletedDate)
+    );
   }
 
   ngOnInit(): void {

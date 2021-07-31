@@ -1,5 +1,9 @@
 <cx-comic-covers
-  [comics]="comics | archiveType: archiveTypeFilter"
+  [comics]="
+    comics
+      | archiveType: archiveTypeFilter
+      | unreadComics: unreadOnly:lastReadDates
+  "
   [selected]="selected"
   [isAdmin]="isAdmin"
   [archiveType]="archiveTypeFilter"
