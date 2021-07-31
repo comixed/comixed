@@ -65,6 +65,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { ComicBookModule } from '@app/comic-book/comic-book.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
+import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { ArchiveTypePipe } from './pipes/archive-type.pipe';
     DeletedComicsPipe,
     ScrapingPageComponent,
     ComicCoversComponent,
-    ArchiveTypePipe
+    ArchiveTypePipe,
+    UnreadComicsPipe
   ],
   providers: [],
   imports: [
