@@ -10,5 +10,5 @@ coverage
 .DS_Store
 .fseventsd
 yarn-error.log
-comixed-web/node/*
-comixed-web/node_modules/*
+comixed-webui/node/*
+comixed-webui/node_modules/*
