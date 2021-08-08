@@ -8,7 +8,10 @@ assignees: ''
 ---
 
 **BEFORE OPENING A TICKET, please consider posting your feature request to the user mailing list.**
-Rather than creating a feature request tickets, it's strongly recommended that you instead post your feature request to the [user list](https://www.freelists.org/list/comixed). This will allow more people to be involved in defining the feature, and help the developers understand the request bettter.
+Rather than creating a feature request tickets, it's strongly recommended that you instead post your feature request to the [user list](https://www.freelists.org/list/comixed). This will allow more people to be involved in defining the feature, and help the developers understand the request better.
+
+**If this is a question and not a feature request**
+Please **DO NOT** open a feature request to ask a question. You'll be directed to the user mailing list and the issue will be closed unanswered.
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

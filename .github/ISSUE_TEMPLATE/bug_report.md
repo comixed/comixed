@@ -8,8 +8,9 @@ assignees: ''
 ---
 
 ## NOTICE ABOUT FILING BUGS
-1. If the issue was found in a **pre-release** of ComiXed and not a release, please **do not file a bug**. Instead, send an email to the mailing list. 
-1. Please fill in **all sections below** with as much detail as is needed to reproduce the bug. Any bug reports missing reproduction details will be closed.
+1. Please **DO NOT** open a bug to ask a question. You'll be directed to the user mailing list and the issue will be closed unanswered. 
+2. If the issue was found in a **pre-release** of ComiXed and not a release, please **do not file a bug**. Instead, send an email to the mailing list. 
+3. Please fill in **all sections below** with as much detail as is needed to reproduce the bug. Any bug reports missing reproduction details will be closed.
 
 **Describe The Bug**
 A clear and concise description of what the bug is. Please include as much detail as possible.
