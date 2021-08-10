@@ -62,7 +62,7 @@ public class Page {
   @Setter
   private PageType pageType;
 
-  @Column(name = "Filename", length = 128, updatable = true, nullable = false)
+  @Column(name = "Filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
