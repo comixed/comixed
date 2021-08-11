@@ -18,6 +18,8 @@
     <assembly.name>local</assembly.name>
     <comixed.version>0.10.0-SNAPSHOT</comixed.version>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
+    <sonar.organization>comixed</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>11</java.version>
   </properties>
   <profiles>
