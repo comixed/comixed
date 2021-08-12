@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.model.net.SetBlockedPageRequest;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
@@ -99,11 +100,9 @@ public class BlockedPageControllerTest {
 
   @Test
   public void testBlockPage() {
-    Mockito.when(blockedPageService.blockHash(Mockito.anyString())).thenReturn(blockedPageRecord);
+    controller.blockPageHashes(new SetBlockedPageRequest(hashList));
 
-    controller.blockPage(TEST_PAGE_HASH);
-
-    Mockito.verify(blockedPageService, Mockito.times(1)).blockHash(TEST_PAGE_HASH);
+    Mockito.verify(blockedPageService, Mockito.times(1)).blockPages(hashList);
   }
 
   @Test(expected = BlockedPageException.class)
@@ -138,21 +137,10 @@ public class BlockedPageControllerTest {
   }
 
   @Test
-  public void testUnblockPageNoChange() throws BlockedPageException {
-    Mockito.when(blockedPageService.unblockPage(Mockito.anyString())).thenReturn(null);
-
-    controller.unblockPage(TEST_PAGE_HASH);
-
-    Mockito.verify(blockedPageService, Mockito.times(1)).unblockPage(TEST_PAGE_HASH);
-  }
-
-  @Test
   public void testUnblockPage() throws BlockedPageException {
-    Mockito.when(blockedPageService.unblockPage(Mockito.anyString())).thenReturn(blockedPageRecord);
+    controller.unblockPageHashes(new SetBlockedPageRequest(hashList));
 
-    controller.unblockPage(TEST_PAGE_HASH);
-
-    Mockito.verify(blockedPageService, Mockito.times(1)).unblockPage(TEST_PAGE_HASH);
+    Mockito.verify(blockedPageService, Mockito.times(1)).unblockPages(hashList);
   }
 
   @Test

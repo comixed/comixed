@@ -49,6 +49,8 @@ import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { DUPLICATE_PAGE_LIST_TOPIC } from '@app/library/library.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
+import { selectBlockedPageList } from '@app/blocked-pages/selectors/blocked-page-list.selectors';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -65,6 +67,8 @@ export class DuplicatePageListPageComponent
   langChangeSubscription: Subscription;
   duplicatePageSubscription: Subscription;
   duplicatePageStateSubscription: Subscription;
+  blockedPageListSubscription: Subscription;
+  blockedPages: BlockedPage[] = [];
   messagingStateSubscription: Subscription;
   pageUpdatesSubscription: MessagingSubscription;
   allSelected = false;
@@ -98,6 +102,10 @@ export class DuplicatePageListPageComponent
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loading }));
       });
+    this.logger.trace('Subscribing to blocked page list');
+    this.blockedPageListSubscription = this.store
+      .select(selectBlockedPageList)
+      .subscribe(blockedPages => (this.blockedPages = blockedPages));
     this.logger.trace('Subscribing to language changes');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -149,7 +157,7 @@ export class DuplicatePageListPageComponent
         case 'comic-count':
           return data.item.comics.length;
         case 'blocked':
-          return `${data.item.blocked}`;
+          return `${this.isBlocked(data)}`;
       }
     };
     this.loadTranslations();
@@ -158,6 +166,7 @@ export class DuplicatePageListPageComponent
   ngOnDestroy(): void {
     this.duplicatePageSubscription.unsubscribe();
     this.duplicatePageStateSubscription.unsubscribe();
+    this.blockedPageListSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.pageUpdatesSubscription.unsubscribe();
     if (!!this.pageUpdatesSubscription) {
@@ -185,7 +194,7 @@ export class DuplicatePageListPageComponent
       ),
       confirm: () => {
         this.logger.trace('Blocking all pages with hash:', hash);
-        this.store.dispatch(setBlockedState({ hash, blocked: true }));
+        this.store.dispatch(setBlockedState({ hashes: [hash], blocked: true }));
       }
     });
   }
@@ -203,7 +212,9 @@ export class DuplicatePageListPageComponent
       ),
       confirm: () => {
         this.logger.trace('Unblocking all pages with hash:', hash);
-        this.store.dispatch(setBlockedState({ hash, blocked: false }));
+        this.store.dispatch(
+          setBlockedState({ hashes: [hash], blocked: false })
+        );
       }
     });
   }
@@ -235,7 +246,10 @@ export class DuplicatePageListPageComponent
       ),
       confirm: () => {
         this.logger.trace('Blocking selected page hashes');
-        // TODO block selected pages
+        this.doSetBlockedState(
+          selection.map(entry => entry.hash),
+          true
+        );
       }
     });
   }
@@ -255,7 +269,10 @@ export class DuplicatePageListPageComponent
       ),
       confirm: () => {
         this.logger.trace('Unblocking selected page hashes');
-        // TODO block selected pages
+        this.doSetBlockedState(
+          selection.map(entry => entry.hash),
+          false
+        );
       }
     });
   }
@@ -272,5 +289,19 @@ export class DuplicatePageListPageComponent
       this.dataSource.data.every(entry => entry.selected);
     this.anySelected =
       this.allSelected || this.dataSource.data.some(entry => entry.selected);
+  }
+
+  private isBlocked(item: SelectableListItem<DuplicatePage>): boolean {
+    return this.blockedPages.map(entry => entry.hash).includes(item.item.hash);
+  }
+
+  private doSetBlockedState(hashes: string[], blocked: boolean): void {
+    this.store.dispatch(
+      setBlockedState({
+        hashes,
+        blocked
+      })
+    );
+    this.dataSource.data.forEach(item => (item.selected = false));
   }
 }

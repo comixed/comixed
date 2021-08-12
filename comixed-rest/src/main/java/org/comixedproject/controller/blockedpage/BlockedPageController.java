@@ -26,6 +26,8 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
+import org.comixedproject.model.net.GenericResponse;
+import org.comixedproject.model.net.SetBlockedPageRequest;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
@@ -77,23 +79,6 @@ public class BlockedPageController {
   }
 
   /**
-   * Blocks a page type.
-   *
-   * @param hash the page hash
-   * @return the blocked page entry
-   */
-  @PostMapping(
-      value = "/api/pages/blocked/{hash}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  @JsonView(View.BlockedPageDetail.class)
-  public BlockedPage blockPage(@PathVariable("hash") final String hash) {
-    log.info("Blocking similar pages: hash={}", hash);
-    return this.blockedPageService.blockHash(hash);
-  }
-
-  /**
    * Updates the details for a blocked page.
    *
    * @param hash the page hash
@@ -113,19 +98,43 @@ public class BlockedPageController {
   }
 
   /**
-   * Unblocks a page hash.
+   * Blocks pages by type.
    *
-   * @param hash the page hash
-   * @throws BlockedPageException if an error occurs
-   * @return the removed blocked page entry
+   * @param request the request body
+   * @return the generic response
    */
-  @DeleteMapping(value = "/api/pages/blocked/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      value = "/api/pages/blocked/add",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   @JsonView(View.BlockedPageDetail.class)
-  public BlockedPage unblockPage(@PathVariable("hash") final String hash)
+  public GenericResponse blockPageHashes(@RequestBody() final SetBlockedPageRequest request) {
+    final List<String> hashes = request.getHashes();
+    log.info("Block {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
+    this.blockedPageService.blockPages(hashes);
+    return new GenericResponse(true);
+  }
+
+  /**
+   * Unblocks pages by hash.
+   *
+   * @param request the request body
+   * @throws BlockedPageException if an error occurs
+   * @return the generic response
+   */
+  @PostMapping(
+      value = "/api/pages/blocked/remove",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  @JsonView(View.GenericResponseView.class)
+  public GenericResponse unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
       throws BlockedPageException {
-    log.info("Unblocked pages with hash: {}", hash);
-    return this.blockedPageService.unblockPage(hash);
+    final List<String> hashes = request.getHashes();
+    log.info("Unblock {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
+    this.blockedPageService.unblockPages(hashes);
+    return new GenericResponse(true);
   }
 
   /**

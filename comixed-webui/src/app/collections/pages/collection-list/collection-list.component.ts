@@ -80,7 +80,6 @@ export class CollectionListComponent
 
   set entries(entries: CollectionListEntry[]) {
     this.logger.debug('Setting collection entries:', entries);
-    console.log('Setting collection entries:', entries);
     this.dataSource.data = entries;
   }
 

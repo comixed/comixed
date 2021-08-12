@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
@@ -49,7 +48,6 @@ public class PageServiceTest {
   private static final int TEST_DELETED_PAGE_COUNT = 17;
   private static final String TEST_PAGE_TYPE_NAME = "front-cover";
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
-  private static final boolean TEST_IS_BLOCKED = RandomUtils.nextBoolean();
 
   @InjectMocks private PageService pageService;
   @Mock private PageRepository pageRepository;
@@ -66,7 +64,6 @@ public class PageServiceTest {
   @Before
   public void setUp() {
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
-    Mockito.when(page.isBlocked()).thenReturn(TEST_IS_BLOCKED);
     Mockito.when(page.getComic()).thenReturn(comic);
   }
 
@@ -123,7 +120,6 @@ public class PageServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_PAGE_HASH, result.get(0).getHash());
-    assertEquals(TEST_IS_BLOCKED, result.get(0).isBlocked());
     assertTrue(result.get(0).getComics().contains(comic));
 
     Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();

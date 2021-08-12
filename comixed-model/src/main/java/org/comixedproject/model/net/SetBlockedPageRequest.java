@@ -19,21 +19,20 @@
 package org.comixedproject.model.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * <code>SetBlockedPageRequest</code> contains the request body for marking a page as blocked.
+ * <code>SetBlockedPageRequest</code> contains the request body for marking pagees as blocked.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
 public class SetBlockedPageRequest {
-  @JsonProperty("hash")
+  @JsonProperty("hashes")
   @Getter
-  @Setter
-  private String hash;
+  private List<String> hashes;
 }

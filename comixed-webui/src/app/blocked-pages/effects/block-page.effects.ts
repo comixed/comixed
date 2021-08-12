@@ -29,6 +29,7 @@ import {
 } from '@app/blocked-pages/actions/block-page.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { GenericResponse } from '@app/core/models/net/generic-response';
 
 @Injectable()
 export class BlockPageEffects {
@@ -38,8 +39,9 @@ export class BlockPageEffects {
       tap(action => this.logger.debug('Effect: set blocked state:', action)),
       switchMap(action =>
         this.blockedPageService
-          .setBlockedState({ hash: action.hash, blocked: action.blocked })
+          .setBlockedState({ hashes: action.hashes, blocked: action.blocked })
           .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
@@ -48,7 +50,7 @@ export class BlockPageEffects {
                 )
               )
             ),
-            map(() => blockedStateSet()),
+            map((response: GenericResponse) => blockedStateSet()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -61,7 +63,6 @@ export class BlockPageEffects {
             })
           )
       ),
-      map(() => blockedStateSet()),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(

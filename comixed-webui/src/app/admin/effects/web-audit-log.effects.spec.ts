@@ -151,8 +151,7 @@ describe('WebAuditLogEffects', () => {
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    // TODO: find out why does this test failure consistently?
-    xit('fires an action on service failure', () => {
+    it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = clearWebAuditLog();
       const outcome = clearWebAuditLogFailed();

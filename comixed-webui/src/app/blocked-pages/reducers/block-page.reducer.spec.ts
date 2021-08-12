@@ -47,7 +47,7 @@ describe('BlockPage Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, saving: false },
-        setBlockedState({ hash: PAGE.hash, blocked: true })
+        setBlockedState({ hashes: [PAGE.hash], blocked: true })
       );
     });
 

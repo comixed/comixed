@@ -59,6 +59,7 @@ import { Subscription } from 'webstomp-client';
 import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
+import { SetBlockedStateRequest } from '@app/blocked-pages/models/net/set-blocked-state-request';
 
 describe('BlockedPageService', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -227,26 +228,27 @@ describe('BlockedPageService', () => {
 
   it('can block a page', () => {
     service
-      .setBlockedState({ hash: PAGE.hash, blocked: true })
+      .setBlockedState({ hashes: [PAGE.hash], blocked: true })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(
-      interpolate(SET_BLOCKED_STATE_URL, { hash: PAGE.hash })
-    );
+    const req = httpMock.expectOne(interpolate(SET_BLOCKED_STATE_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({});
+    expect(req.request.body).toEqual({
+      hashes: [PAGE.hash]
+    } as SetBlockedStateRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 
   it('can unblock a page', () => {
     service
-      .setBlockedState({ hash: PAGE.hash, blocked: false })
+      .setBlockedState({ hashes: [PAGE.hash], blocked: false })
       .subscribe(response => expect(response.status).toEqual(200));
 
-    const req = httpMock.expectOne(
-      interpolate(REMOVE_BLOCKED_STATE_URL, { hash: PAGE.hash })
-    );
-    expect(req.request.method).toEqual('DELETE');
+    const req = httpMock.expectOne(interpolate(REMOVE_BLOCKED_STATE_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      hashes: [PAGE.hash]
+    } as SetBlockedStateRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 

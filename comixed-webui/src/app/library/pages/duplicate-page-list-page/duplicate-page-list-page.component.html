@@ -86,7 +86,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
       <span class="cx-text-nowrap">
-        {{ row.item.blocked | yesNo | translate }}
+        {{ isBlocked(row) | yesNo | translate }}
       </span>
     </mat-cell>
   </ng-container>
@@ -95,7 +95,7 @@
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let row">
       <button
-        *ngIf="!row.item.blocked"
+        *ngIf="!isBlocked(row)"
         mat-icon-button
         color="warn"
         [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
@@ -104,7 +104,7 @@
         <mat-icon>thumb_down</mat-icon>
       </button>
       <button
-        *ngIf="row.item.blocked"
+        *ngIf="isBlocked(row)"
         mat-icon-button
         color="primary"
         [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
