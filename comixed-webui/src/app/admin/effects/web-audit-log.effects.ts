@@ -100,7 +100,6 @@ export class WebAuditLogEffects {
           })
         )
       ),
-      map(() => webAuditLogCleared()),
       catchError(error => {
         this.logger.error('General failure:', error);
         this.alertService.error(

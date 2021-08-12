@@ -149,7 +149,6 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   }
 
   onCurrentFile(file: ComicFile): void {
-    console.log('*** file:', file);
     this.logger.debug('Showing details for file:', file);
     if (!!file) {
       this.dialog.open(ComicFileDetailsComponent, {

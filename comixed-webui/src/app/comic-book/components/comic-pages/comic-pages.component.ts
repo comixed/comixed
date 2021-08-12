@@ -53,6 +53,6 @@ export class ComicPagesComponent implements OnInit {
 
   onSetPageBlocked(page: Page, blocked: boolean): void {
     this.logger.debug('Updating page blocked state:', page, blocked);
-    this.store.dispatch(setBlockedState({ hash: page.hash, blocked }));
+    this.store.dispatch(setBlockedState({ hashes: [page.hash], blocked }));
   }
 }

@@ -43,8 +43,8 @@ import {
   loadBlockedPageList
 } from '@app/blocked-pages/actions/blocked-page-list.actions';
 import { interpolate } from '@app/core';
-import { Page } from '@app/comic-book/models/page';
 import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
+import { SetBlockedStateRequest } from '@app/blocked-pages/models/net/set-blocked-state-request';
 
 @Injectable({
   providedIn: 'root'
@@ -134,18 +134,20 @@ export class BlockedPageService {
    * @param args.page the page
    * @param args.blocked the blocked state
    */
-  setBlockedState(args: { hash: string; blocked: boolean }): Observable<any> {
+  setBlockedState(args: {
+    hashes: string[];
+    blocked: boolean;
+  }): Observable<any> {
     if (args.blocked) {
       this.logger.debug('Service: blocking pages with hash:', args);
-      return this.http.post(
-        interpolate(SET_BLOCKED_STATE_URL, { hash: args.hash }),
-        {}
-      );
+      return this.http.post(interpolate(SET_BLOCKED_STATE_URL), {
+        hashes: args.hashes
+      } as SetBlockedStateRequest);
     } else {
       this.logger.debug('Service: unblocking pages with hash:', args);
-      return this.http.delete(
-        interpolate(REMOVE_BLOCKED_STATE_URL, { hash: args.hash })
-      );
+      return this.http.post(interpolate(REMOVE_BLOCKED_STATE_URL), {
+        hashes: args.hashes
+      } as SetBlockedStateRequest);
     }
   }
 

@@ -110,7 +110,7 @@ describe('ComicPagesComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setBlockedState({ hash: PAGE.hash, blocked: BLOCKED })
+        setBlockedState({ hashes: [PAGE.hash], blocked: BLOCKED })
       );
     });
   });

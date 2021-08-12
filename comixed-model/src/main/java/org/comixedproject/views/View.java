@@ -25,6 +25,9 @@ package org.comixedproject.views;
  * @author Darryl L. Pierce
  */
 public class View {
+  /** Used when returning the generic response. */
+  public interface GenericResponseView {}
+
   /** Used when retrieving the list of comic formats. */
   public interface ComicFormatList {}
 

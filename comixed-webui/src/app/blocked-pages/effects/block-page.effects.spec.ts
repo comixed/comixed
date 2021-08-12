@@ -26,13 +26,14 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   blockedStateSet,
   setBlockedState,
   setBlockedStateFailed
 } from '@app/blocked-pages/actions/block-page.actions';
 import { hot } from 'jasmine-marbles';
+import { GenericResponse } from '@app/core/models/net/generic-response';
 
 describe('BlockPageEffects', () => {
   const PAGE = PAGE_2;
@@ -79,9 +80,9 @@ describe('BlockPageEffects', () => {
 
   describe('setting the blocked state for a page', () => {
     it('fires an action on success', () => {
-      const serviceResponse = new HttpResponse({ status: 200 });
+      const serviceResponse = { success: true } as GenericResponse;
       const action = setBlockedState({
-        hash: PAGE.hash,
+        hashes: [PAGE.hash],
         blocked: Math.random() > 0.5
       });
       const outcome = blockedStateSet();
@@ -94,11 +95,10 @@ describe('BlockPageEffects', () => {
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
-    // TODO: find out why does this test failure consistently?
-    xit('fires an action on service failure', () => {
+    it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = setBlockedState({
-        hash: PAGE.hash,
+        hashes: [PAGE.hash],
         blocked: Math.random() > 0.5
       });
       const outcome = setBlockedStateFailed();
@@ -115,7 +115,7 @@ describe('BlockPageEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = setBlockedState({
-        hash: PAGE.hash,
+        hashes: [PAGE.hash],
         blocked: Math.random() > 0.5
       });
       const outcome = setBlockedStateFailed();

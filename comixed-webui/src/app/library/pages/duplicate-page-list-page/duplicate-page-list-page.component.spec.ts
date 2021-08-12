@@ -46,6 +46,11 @@ import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics
 import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
+import {
+  BLOCKED_PAGE_LIST_FEATURE_KEY,
+  initialState as initialBlockedPageListState
+} from '@app/blocked-pages/reducers/blocked-page-list.reducer';
+import { BLOCKED_PAGE_1 } from '@app/blocked-pages/blocked-pages.fixtures';
 
 describe('DuplicatePageListPageComponent', () => {
   const DUPLICATE_PAGES = [
@@ -55,7 +60,8 @@ describe('DuplicatePageListPageComponent', () => {
   ];
   const initialState = {
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
-    [MESSAGING_FEATURE_KEY]: initialMessagingState
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [BLOCKED_PAGE_LIST_FEATURE_KEY]: initialBlockedPageListState
   };
 
   let component: DuplicatePageListPageComponent;
@@ -193,6 +199,16 @@ describe('DuplicatePageListPageComponent', () => {
       selected: Math.random() > 0.5
     } as SelectableListItem<DuplicatePage>;
 
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [BLOCKED_PAGE_LIST_FEATURE_KEY]: {
+          ...initialBlockedPageListState,
+          entries: [{ ...BLOCKED_PAGE_1, hash: DUPLICATE_PAGES[0].hash }]
+        }
+      });
+    });
+
     it('sorts by selection status', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'selection')
@@ -214,7 +230,7 @@ describe('DuplicatePageListPageComponent', () => {
     it('sorts by blocked state', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'blocked')
-      ).toEqual(`${ENTRY.item.blocked}`);
+      ).toEqual(`${true}`);
     });
   });
 
@@ -255,7 +271,7 @@ describe('DuplicatePageListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setBlockedState({ hash: ENTRY.item.hash, blocked: true })
+        setBlockedState({ hashes: [ENTRY.item.hash], blocked: true })
       );
     });
   });
@@ -279,7 +295,7 @@ describe('DuplicatePageListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setBlockedState({ hash: ENTRY.item.hash, blocked: false })
+        setBlockedState({ hashes: [ENTRY.item.hash], blocked: false })
       );
     });
   });
@@ -391,6 +407,12 @@ describe('DuplicatePageListPageComponent', () => {
       );
     });
 
+    afterAll(() => {
+      expect(
+        component.dataSource.data.some(entry => entry.selected)
+      ).toBeFalse();
+    });
+
     describe('blocking selected items', () => {
       beforeEach(() => {
         component.onBlockSelected();
@@ -398,6 +420,15 @@ describe('DuplicatePageListPageComponent', () => {
 
       it('confirms with the user', () => {
         expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedState({
+            hashes: [DUPLICATE_PAGES[0].hash],
+            blocked: true
+          })
+        );
       });
     });
 
@@ -408,6 +439,15 @@ describe('DuplicatePageListPageComponent', () => {
 
       it('confirms with the user', () => {
         expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedState({
+            hashes: [DUPLICATE_PAGES[0].hash],
+            blocked: false
+          })
+        );
       });
     });
   });

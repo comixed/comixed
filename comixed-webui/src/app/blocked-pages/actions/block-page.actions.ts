@@ -21,7 +21,7 @@ import { Page } from '@app/comic-book/models/page';
 
 export const setBlockedState = createAction(
   '[Block Page] Sets the blocked state',
-  props<{ hash: string; blocked: boolean }>()
+  props<{ hashes: string[]; blocked: boolean }>()
 );
 
 export const blockedStateSet = createAction(

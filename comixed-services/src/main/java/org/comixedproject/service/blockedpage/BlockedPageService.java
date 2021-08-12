@@ -95,32 +95,6 @@ public class BlockedPageService {
     return this.blockedPageRepository.getHashes();
   }
 
-  /**
-   * Adds a page type to the blocked page lis.
-   *
-   * @param hash the page has
-   * @return the blocked page
-   */
-  public BlockedPage blockHash(final String hash) {
-    log.debug("Blocked pages with hash: {}", hash);
-    BlockedPage record = this.blockedPageRepository.findByHash(hash);
-    if (record != null) {
-      log.debug("Page already blocked: id={}", record.getId());
-      return record;
-    }
-    String snapshot = "";
-    // here we will eventually load a snapshot of the image
-    record = new BlockedPage("Blocked On " + new Date(), hash, snapshot);
-    final BlockedPage result = this.blockedPageRepository.save(record);
-    try {
-      this.publishBlockedPageUpdateAction.publish(result);
-    } catch (PublishingException error) {
-      log.error("Failed to publish blocked page update", error);
-    }
-    this.doPublishDuplicatePageUpdates();
-    return result;
-  }
-
   private void doPublishDuplicatePageUpdates() {
     try {
       log.trace("Publishing duplicate page list");
@@ -141,46 +115,82 @@ public class BlockedPageService {
   @Transactional
   public BlockedPage updateBlockedPage(final String hash, final BlockedPage blockedPage)
       throws BlockedPageException {
-    log.debug("Updating blocked page hash: {}", hash);
-    BlockedPage result = this.blockedPageRepository.findByHash(hash);
-    if (result == null) {
-      throw new BlockedPageException("No such blocked page: hash=" + hash);
-    }
-    log.trace("Copying blocked page values");
-    result.setLabel(blockedPage.getLabel());
-    log.trace("Saving updated blocked page");
-    result = this.blockedPageRepository.save(result);
+    final BlockedPage updatedPage = this.doBlockPageHash(hash, blockedPage);
     try {
-      this.publishBlockedPageUpdateAction.publish(result);
+      this.publishBlockedPageUpdateAction.publish(updatedPage);
     } catch (PublishingException error) {
       log.error("Failed to publish blocked page update", error);
     }
     this.doPublishDuplicatePageUpdates();
-    return result;
+    return updatedPage;
+  }
+
+  public BlockedPage doBlockPageHash(final String hash, final BlockedPage source) {
+    log.trace("Looking for existing blocked page record");
+    BlockedPage pageRecord = this.blockedPageRepository.findByHash(hash);
+    if (pageRecord == null) {
+      log.trace("Creating new blocked page record");
+      pageRecord = new BlockedPage("", hash, "");
+    }
+    if (source != null) {
+      log.trace("Copying blocked page values");
+      pageRecord.setLabel(source.getLabel());
+    }
+    log.trace("Saving updated blocked page");
+    return this.blockedPageRepository.save(pageRecord);
   }
 
   /**
-   * Unblocked a page type by hash.
+   * Adds a page type to the blocked page lis.
    *
-   * @param hash the hash
-   * @return the now-deleted record
-   * @throws BlockedPageException if the hash is not blocked
+   * @param hashes the page hashes
    */
-  public BlockedPage unblockPage(final String hash) throws BlockedPageException {
-    log.debug("Unblocked page hash: {}", hash);
-    final BlockedPage result = this.blockedPageRepository.findByHash(hash);
-    if (result == null) {
-      throw new BlockedPageException("No such blocked page: hash=" + hash);
-    }
-    log.trace("Deleting record");
-    this.blockedPageRepository.delete(result);
-    try {
-      this.publishBlockedPageRemovalAction.publish(result);
-    } catch (PublishingException error) {
-      log.error("Failed to publish blocked page remove", error);
+  @Transactional
+  public void blockPages(final List<String> hashes) {
+    for (int index = 0; index < hashes.size(); index++) {
+      final String hash = hashes.get(index);
+      final BlockedPage blockedPageRecord = this.doBlockPageHash(hash, null);
+      try {
+        this.publishBlockedPageUpdateAction.publish(blockedPageRecord);
+      } catch (PublishingException error) {
+        log.error("Failed to publish blocked page update", error);
+      }
     }
     this.doPublishDuplicatePageUpdates();
-    return result;
+  }
+
+  /**
+   * Unblocked a set of page types by hash.
+   *
+   * @param hashes the hash list
+   */
+  @Transactional
+  public void unblockPages(final List<String> hashes) {
+    for (int index = 0; index < hashes.size(); index++) {
+      final String hash = hashes.get(index);
+      log.trace("Unblocking page hash: {}", hash);
+      final BlockedPage blockedPageRecord = this.doUnblockPageHash(hash);
+      if (blockedPageRecord != null) {
+        log.trace("Publishing blocked page removal");
+        try {
+          this.publishBlockedPageRemovalAction.publish(blockedPageRecord);
+        } catch (PublishingException error) {
+          log.error("Failed to publish blocked page remove", error);
+        }
+      }
+    }
+    this.doPublishDuplicatePageUpdates();
+  }
+
+  public BlockedPage doUnblockPageHash(final String hash) {
+    final BlockedPage entry = this.blockedPageRepository.findByHash(hash);
+    if (entry == null) {
+      log.trace("Page hash not blocked: {}", hash);
+      return null;
+    }
+    log.trace("Deleting record");
+    this.blockedPageRepository.delete(entry);
+    return entry;
   }
 
   /**

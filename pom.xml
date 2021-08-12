@@ -20,6 +20,9 @@
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>11</java.version>
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.basedir}/comixed-release/target/jacoco.exec
+    </sonar.coverage.jacoco.xmlReportPaths>
   </properties>
   <profiles>
     <profile>

@@ -207,7 +207,7 @@ public class PageService {
       DuplicatePage entry = mapped.get(page.getHash());
       if (entry == null) {
         log.trace("Creating new entry");
-        entry = new DuplicatePage(page.getHash(), page.isBlocked());
+        entry = new DuplicatePage(page.getHash());
         mapped.put(entry.getHash(), entry);
       }
       log.trace("Loading comic into entry");

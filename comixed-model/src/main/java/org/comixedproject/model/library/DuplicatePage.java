@@ -41,12 +41,6 @@ public class DuplicatePage {
   @Getter
   private String hash;
 
-  @JsonProperty("blocked")
-  @JsonView(View.DuplicatePageList.class)
-  @NonNull
-  @Getter
-  private boolean blocked;
-
   @JsonProperty("comics")
   @JsonView(View.DuplicatePageList.class)
   @Getter
