@@ -19,7 +19,6 @@
 package org.comixedproject.controller.blockedpage;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -29,12 +28,13 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.GenericResponse;
 import org.comixedproject.model.net.SetBlockedPageRequest;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
+import org.comixedproject.model.net.blockedpage.SetBlockedPageDeletionFlagRequest;
+import org.comixedproject.model.net.blockedpage.SetBlockedPageDeletionFlagResponse;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,8 +49,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Log4j2
 public class BlockedPageController {
   @Autowired private BlockedPageService blockedPageService;
-  @Autowired private SimpMessagingTemplate messagingTemplate;
-  @Autowired private ObjectMapper objectMapper;
 
   /**
    * Retrieves the list of all blocked pages.
@@ -89,6 +87,7 @@ public class BlockedPageController {
   @PutMapping(value = "/api/pages/blocked/{hash}")
   @AuditableEndpoint
   @JsonView(View.BlockedPageDetail.class)
+  @PreAuthorize("hasRole('ADMIN')")
   public BlockedPage updateBlockedPage(
       @PathVariable("hash") final String hash, @RequestBody() final BlockedPage blockedPage)
       throws BlockedPageException {
@@ -109,6 +108,7 @@ public class BlockedPageController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   @JsonView(View.BlockedPageDetail.class)
+  @PreAuthorize("hasRole('ADMIN')")
   public GenericResponse blockPageHashes(@RequestBody() final SetBlockedPageRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Block {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
@@ -129,6 +129,7 @@ public class BlockedPageController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   @JsonView(View.GenericResponseView.class)
+  @PreAuthorize("hasRole('ADMIN')")
   public GenericResponse unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
       throws BlockedPageException {
     final List<String> hashes = request.getHashes();
@@ -180,9 +181,33 @@ public class BlockedPageController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   @JsonView(View.BlockedPageList.class)
+  @PreAuthorize("hasRole('ADMIN')")
   public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Deleting {} blocked hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
     return this.blockedPageService.deleteBlockedPages(hashes);
+  }
+
+  /**
+   * Sets the deleted flag for all pages that have a hash value in a given list.
+   *
+   * @param request the request body
+   * @return the response body
+   */
+  @PostMapping(value = "/api/pages/blocked/mark", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.GenericResponseView.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public SetBlockedPageDeletionFlagResponse setBlockedPageDeletionFlag(
+      @RequestBody() final SetBlockedPageDeletionFlagRequest request) {
+    final List<String> hashes = request.getHashes();
+    final boolean deleted = request.isDeleted();
+
+    log.info(
+        "{} {} page{} for deletion",
+        deleted ? "Marking" : "Clearing",
+        hashes.size(),
+        hashes.size() == 1 ? "" : "s");
+    return new SetBlockedPageDeletionFlagResponse(
+        deleted, this.blockedPageService.setBlockedPageDeletionFlag(hashes, deleted));
   }
 }

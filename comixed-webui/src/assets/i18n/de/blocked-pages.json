@@ -44,9 +44,19 @@
       "label": "Label"
     },
     "load-effect-failure": "Failed to load blocked pages.",
+    "set-deleted-flag": {
+      "confirm-clear-message": "Are you sure you want to clear the pages with this hash from deletion?",
+      "confirm-clear-title": "Don't Delete Affected Pages",
+      "confirm-mark-message": "Are you sure you want to mark the pages with this hash for deletion?",
+      "confirm-mark-title": "Mark Pages For Deletion",
+      "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
+      "effect-success": "{deleted, select, true{Marked} other{Cleared}} {count, plural, =1{one page} other{# pages}} for deletion."
+    },
     "tooltip": {
+      "clear-deleted": "Clear selected pages from deletion.",
       "download-file": "Download blocked pages file.",
-      "upload-file": "Upload a blocked pages file."
+      "upload-file": "Upload a blocked pages file.",
+      "set-deleted": "Mark selected pages for deletion."
     },
     "upload-file": {
       "confirmation-message": "Are you sure you want to upload this file?",

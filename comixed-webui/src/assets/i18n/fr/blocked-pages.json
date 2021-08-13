@@ -44,9 +44,19 @@
       "label": "Libellé"
     },
     "load-effect-failure": "Impossible de charger les pages bloquées.",
+    "set-deleted-flag": {
+      "confirm-clear-message": "Are you sure you want to clear the pages with this hash from deletion?",
+      "confirm-clear-title": "Don't Delete Affected Pages",
+      "confirm-mark-message": "Are you sure you want to mark the pages with this hash for deletion?",
+      "confirm-mark-title": "Mark Pages For Deletion",
+      "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
+      "effect-success": "{deleted, select, true{Marked} other{Cleared}} {count, plural, =1{one page} other{# pages}} for deletion."
+    },
     "tooltip": {
+      "clear-deleted": "Clear selected pages from deletion.",
       "download-file": "Télécharger le fichier des pages bloquées.",
-      "upload-file": "Uploader un fichier de pages bloquées."
+      "upload-file": "Uploader un fichier de pages bloquées.",
+      "set-deleted": "Mark selected pages for deletion."
     },
     "upload-file": {
       "confirmation-message": "Êtes-vous sûr de vouloir uploader ce fichier ?",

@@ -3,6 +3,26 @@
     <mat-paginator class="cx-primary-light-background"></mat-paginator>
     <div class="cx-spacer"></div>
     <button
+      id="set-deleted-button"
+      mat-icon-button
+      color="warn"
+      [matTooltip]="'blocked-page-list.tooltip.set-deleted' | translate"
+      [disabled]="!hasSelections"
+      (click)="onMarkSelectedForDeletion()"
+    >
+      <mat-icon>thumb_down</mat-icon>
+    </button>
+    <button
+      id="clear-deleted-button"
+      mat-icon-button
+      color="warn"
+      [matTooltip]="'blocked-page-list.tooltip.clear-deleted' | translate"
+      [disabled]="!hasSelections"
+      (click)="onClearSelectedForDeletion()"
+    >
+      <mat-icon>thumb_up</mat-icon>
+    </button>
+    <button
       id="delete-entries"
       mat-icon-button
       color="warn"

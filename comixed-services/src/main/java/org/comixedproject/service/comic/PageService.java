@@ -174,25 +174,31 @@ public class PageService {
     return this.pageTypeRepository.findPageTypes();
   }
 
+  /**
+   * Marks all pages with a specific hash for deletion.
+   *
+   * @param hash the page hash
+   * @return the number of pages affected
+   */
   @Transactional
   public int deleteAllWithHash(final String hash) {
     log.debug("Deleting pages by hash: {}", hash);
-
     final int result = this.pageRepository.updateDeleteOnAllWithHash(hash, true);
-
-    log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
-
+    log.trace("Update affected {} record{}", result, result == 1 ? "" : "s");
     return result;
   }
 
+  /**
+   * Clears all pages with a specific hash for deletion.
+   *
+   * @param hash the page hash
+   * @return the number of pages affected
+   */
   @Transactional
   public int undeleteAllWithHash(final String hash) {
     log.debug("Undeleting pages by hash: {}", hash);
-
     final int result = this.pageRepository.updateDeleteOnAllWithHash(hash, false);
-
     log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
-
     return result;
   }
 

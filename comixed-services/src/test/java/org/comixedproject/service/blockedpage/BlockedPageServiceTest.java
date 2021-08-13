@@ -51,6 +51,7 @@ public class BlockedPageServiceTest {
   private static final String TEST_PAGE_SNAPSHOT = "The blocked page content encoded";
   private static final byte[] TEST_CSV_ROW = "The CSV file".getBytes();
   private static final List<String> TEST_DECODED_ROW = new ArrayList<>();
+  private static final int TEST_PAGE_COUNT = 23;
 
   @InjectMocks private BlockedPageService service;
   @Mock private PageService pageService;
@@ -384,5 +385,33 @@ public class BlockedPageServiceTest {
         hash -> Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(hash));
     Mockito.verify(blockedPageRepository, Mockito.times(blockedPageHashes.size()))
         .delete(blockedPageRecord);
+  }
+
+  @Test
+  public void testSetBlockedPageDeleteFlagWhenDeletedIsTrue() {
+    for (int index = 0; index < 25; index++) blockedPageHashList.add(TEST_PAGE_HASH);
+
+    Mockito.when(pageService.deleteAllWithHash(Mockito.anyString())).thenReturn(TEST_PAGE_COUNT);
+
+    final int result = service.setBlockedPageDeletionFlag(blockedPageHashList, true);
+
+    assertEquals(blockedPageHashList.size() * TEST_PAGE_COUNT, result);
+
+    Mockito.verify(pageService, Mockito.times(blockedPageHashList.size()))
+        .deleteAllWithHash(TEST_PAGE_HASH);
+  }
+
+  @Test
+  public void testSetBlockedPageDeleteFlagWhenDeletedIsFalse() {
+    for (int index = 0; index < 25; index++) blockedPageHashList.add(TEST_PAGE_HASH);
+
+    Mockito.when(pageService.undeleteAllWithHash(Mockito.anyString())).thenReturn(TEST_PAGE_COUNT);
+
+    final int result = service.setBlockedPageDeletionFlag(blockedPageHashList, false);
+
+    assertEquals(blockedPageHashList.size() * TEST_PAGE_COUNT, result);
+
+    Mockito.verify(pageService, Mockito.times(blockedPageHashList.size()))
+        .undeleteAllWithHash(TEST_PAGE_HASH);
   }
 }
