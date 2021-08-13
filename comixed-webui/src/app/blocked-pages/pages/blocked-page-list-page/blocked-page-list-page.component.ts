@@ -32,6 +32,7 @@ import { deleteBlockedPages } from '@app/blocked-pages/actions/delete-blocked-pa
 import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { setBlockedPageDeletionFlags } from '@app/blocked-pages/actions/set-blocked-page-deletion-flag.actions';
 
 @Component({
   selector: 'cx-blocked-page-list',
@@ -62,15 +63,17 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
   ) {
     this.pageSubscription = this.store
       .select(selectBlockedPageList)
-      .subscribe(entries => {
-        const oldData = this.dataSource.data;
-        this.dataSource.data = entries.map(item => {
-          const selected =
-            oldData.find(entry => entry.item.id === item.id)?.selected || false;
-          return { selected, item };
-        });
-        this.hasSelections = this.dataSource.data.some(entry => entry.selected);
-      });
+      .subscribe(entries => (this.entries = entries));
+  }
+
+  set entries(entries: BlockedPage[]) {
+    const oldData = this.dataSource.data;
+    this.dataSource.data = entries.map(item => {
+      const selected =
+        oldData.find(entry => entry.item.id === item.id)?.selected || false;
+      return { selected, item };
+    });
+    this.hasSelections = this.dataSource.data.some(entry => entry.selected);
   }
 
   ngOnInit(): void {
@@ -143,5 +146,52 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
         this.store.dispatch(deleteBlockedPages({ entries }));
       }
     });
+  }
+
+  onMarkSelectedForDeletion(): void {
+    this.logger.trace('Confirming marking selected pages for deletion');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'blocked-page-list.set-deleted-flag.confirm-mark-title'
+      ),
+      message: this.translateService.instant(
+        'blocked-page-list.set-deleted-flag.confirm-mark-message'
+      ),
+      confirm: () => {
+        this.logger.trace(
+          'Firing action: mark selected blocked pages for deletion'
+        );
+        this.doSetDeletionFlag(true);
+      }
+    });
+  }
+
+  onClearSelectedForDeletion(): void {
+    this.logger.trace('Confirming clearing selected pages for deletion');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'blocked-page-list.set-deleted-flag.confirm-clear-title'
+      ),
+      message: this.translateService.instant(
+        'blocked-page-list.set-deleted-flag.confirm-clear-message'
+      ),
+      confirm: () => {
+        this.logger.trace(
+          'Firing action: clearing selected blocked pages for deletion'
+        );
+        this.doSetDeletionFlag(false);
+      }
+    });
+  }
+
+  private doSetDeletionFlag(deleted: boolean): void {
+    this.store.dispatch(
+      setBlockedPageDeletionFlags({
+        hashes: this.dataSource.data
+          .filter(entry => entry.selected)
+          .map(entry => entry.item.hash),
+        deleted
+      })
+    );
   }
 }

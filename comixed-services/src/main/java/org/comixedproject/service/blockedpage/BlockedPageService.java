@@ -276,4 +276,34 @@ public class BlockedPageService {
     log.trace("Returning list of deleted blocked pages");
     return result;
   }
+
+  /**
+   * Sets the deletion flag for pages with one of a list of hashes.
+   *
+   * @param hashes the page hashes
+   * @param deleted the deleted state
+   * @return the number of pages updated
+   */
+  @Transactional
+  public int setBlockedPageDeletionFlag(final List<String> hashes, final boolean deleted) {
+    int result = 0;
+
+    for (int index = 0; index < hashes.size(); index++) {
+      final String hash = hashes.get(index);
+      if (deleted) {
+        log.trace("Marking pages with hash for deletion: {}", hash);
+        result += this.pageService.deleteAllWithHash(hash);
+      } else {
+        log.trace("Clearing pages with hash for deletion: {}", hash);
+        result += this.pageService.undeleteAllWithHash(hash);
+      }
+    }
+
+    log.debug(
+        "{} {} page{} for deletion",
+        deleted ? "Marked" : "Cleared",
+        result,
+        result == 1 ? "" : "s");
+    return result;
+  }
 }

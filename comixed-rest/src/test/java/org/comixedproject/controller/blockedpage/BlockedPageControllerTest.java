@@ -18,17 +18,19 @@
 
 package org.comixedproject.controller.blockedpage;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.SetBlockedPageRequest;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
+import org.comixedproject.model.net.blockedpage.SetBlockedPageDeletionFlagRequest;
+import org.comixedproject.model.net.blockedpage.SetBlockedPageDeletionFlagResponse;
 import org.comixedproject.service.blockedpage.BlockedPageException;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.junit.Before;
@@ -43,6 +45,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RunWith(MockitoJUnitRunner.class)
 public class BlockedPageControllerTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
+  private static final boolean TEST_DELETED = RandomUtils.nextBoolean();
+  private static final int TEST_PAGE_COUNT = Math.abs(RandomUtils.nextInt());
 
   @InjectMocks private BlockedPageController controller;
   @Mock private BlockedPageService blockedPageService;
@@ -194,5 +198,23 @@ public class BlockedPageControllerTest {
     assertSame(updatedHashList, response);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).deleteBlockedPages(hashList);
+  }
+
+  @Test
+  public void testSetBlockedPageDeletionFlag() {
+    Mockito.when(
+            blockedPageService.setBlockedPageDeletionFlag(Mockito.anyList(), Mockito.anyBoolean()))
+        .thenReturn(TEST_PAGE_COUNT);
+
+    final SetBlockedPageDeletionFlagResponse response =
+        controller.setBlockedPageDeletionFlag(
+            new SetBlockedPageDeletionFlagRequest(hashList, TEST_DELETED));
+
+    assertNotNull(response);
+    assertEquals(TEST_DELETED, response.isDeleted());
+    assertEquals(TEST_PAGE_COUNT, response.getPageCount());
+
+    Mockito.verify(blockedPageService, Mockito.times(1))
+        .setBlockedPageDeletionFlag(hashList, TEST_DELETED);
   }
 }
