@@ -12,6 +12,9 @@
   <artifactId>comixed-webui</artifactId>
   <name>comixed-webui</name>
   <url>http://www.comixedproject.org</url>
+  <properties>
+    <sonar.sources>./src</sonar.sources>
+  </properties>
   <build>
     <resources>
       <resource>

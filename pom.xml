@@ -12,16 +12,17 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.3.1.RELEASE</version>
   </parent>
-  <name>comixed-parent</name>
+  <name>comixed</name>
   <url>http://www.comixedproject.org</url>
   <properties>
     <assembly.name>local</assembly.name>
     <maven-git-code-format.version>2.4</maven-git-code-format.version>
+    <java.version>11</java.version>
     <sonar.organization>comixed</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <java.version>11</java.version>
+    <sonar.sources>./src/main/java</sonar.sources>
     <sonar.coverage.jacoco.xmlReportPaths>
-      ${project.basedir}/comixed-release/target/jacoco.exec
+      ${project.basedir}/target/site/jacoco-aggregate/jacoco.xml
     </sonar.coverage.jacoco.xmlReportPaths>
   </properties>
   <profiles>
