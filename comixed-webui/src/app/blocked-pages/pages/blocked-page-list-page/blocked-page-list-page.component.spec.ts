@@ -47,6 +47,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { setBlockedPageDeletionFlags } from '@app/blocked-pages/actions/set-blocked-page-deletion-flag.actions';
 
 describe('BlockedPageListPageComponent', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -245,6 +246,57 @@ describe('BlockedPageListPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         deleteBlockedPages({ entries: [ENTRIES[0]] })
       );
+    });
+  });
+
+  describe('processing blocked pages', () => {
+    beforeEach(() => {
+      component.entries = ENTRIES;
+      component.dataSource.data.forEach(entry => (entry.selected = true));
+    });
+
+    describe('marking them for deletion', () => {
+      beforeEach(() => {
+        spyOn(confirmationService, 'confirm').and.callFake(
+          (confirmation: Confirmation) => confirmation.confirm()
+        );
+        component.onMarkSelectedForDeletion();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedPageDeletionFlags({
+            hashes: ENTRIES.map(entry => entry.hash),
+            deleted: true
+          })
+        );
+      });
+    });
+
+    describe('clearing them for deletion', () => {
+      beforeEach(() => {
+        spyOn(confirmationService, 'confirm').and.callFake(
+          (confirmation: Confirmation) => confirmation.confirm()
+        );
+        component.onClearSelectedForDeletion();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedPageDeletionFlags({
+            hashes: ENTRIES.map(entry => entry.hash),
+            deleted: false
+          })
+        );
+      });
     });
   });
 });

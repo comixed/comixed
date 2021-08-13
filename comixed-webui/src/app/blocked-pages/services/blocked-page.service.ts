@@ -34,6 +34,7 @@ import {
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
   SAVE_BLOCKED_PAGE_URL,
+  SET_BLOCKED_PAGE_DELETE_FLAG_URL,
   SET_BLOCKED_STATE_URL,
   UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/blocked-pages/blocked-pages.constants';
@@ -45,6 +46,7 @@ import {
 import { interpolate } from '@app/core';
 import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/blocked-pages/models/net/set-blocked-state-request';
+import { SetBlockedPageDeletionFlagRequest } from '@app/blocked-pages/models/net/set-blocked-page-deletion-flag-request';
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +70,7 @@ export class BlockedPageService {
         this.updateSubscription = this.webSocketService.subscribe<BlockedPage>(
           BLOCKED_PAGE_LIST_UPDATE_TOPIC,
           entry => {
-            this.logger.debug('Received blocked page update:', entry);
+            this.logger.trace('Received blocked page update:', entry);
             this.store.dispatch(blockedPageListUpdated({ entry }));
           }
         );
@@ -78,7 +80,7 @@ export class BlockedPageService {
         this.removalSubscription = this.webSocketService.subscribe<BlockedPage>(
           BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
           entry => {
-            this.logger.debug('Received blocked page removal:', entry);
+            this.logger.trace('Received blocked page removal:', entry);
             this.store.dispatch(blockedPageListRemoval({ entry }));
           }
         );
@@ -100,7 +102,7 @@ export class BlockedPageService {
    * Retrieves all blocked page entries.
    */
   loadAll(): Observable<any> {
-    this.logger.debug('Service: loading all blocked pages');
+    this.logger.trace('Service: loading all blocked pages');
     return this.http.get(interpolate(LOAD_ALL_BLOCKED_PAGES_URL));
   }
 
@@ -110,7 +112,7 @@ export class BlockedPageService {
    * @param args.hash the page hash
    */
   loadByHash(args: { hash: string }): Observable<any> {
-    this.logger.debug('Service: loading blocked page by hash:', args);
+    this.logger.trace('Service: loading blocked page by hash:', args);
     return this.http.get(
       interpolate(LOAD_BLOCKED_PAGE_BY_HASH_URL, { hash: args.hash })
     );
@@ -122,7 +124,7 @@ export class BlockedPageService {
    * @param args.entry the blocked page entry
    */
   save(args: { entry: BlockedPage }): Observable<any> {
-    this.logger.debug('Service: saving blocked page:', args);
+    this.logger.trace('Service: saving blocked page:', args);
     return this.http.put(
       interpolate(SAVE_BLOCKED_PAGE_URL, { hash: args.entry.hash }),
       args.entry
@@ -139,12 +141,12 @@ export class BlockedPageService {
     blocked: boolean;
   }): Observable<any> {
     if (args.blocked) {
-      this.logger.debug('Service: blocking pages with hash:', args);
+      this.logger.trace('Service: blocking pages with hash:', args);
       return this.http.post(interpolate(SET_BLOCKED_STATE_URL), {
         hashes: args.hashes
       } as SetBlockedStateRequest);
     } else {
-      this.logger.debug('Service: unblocking pages with hash:', args);
+      this.logger.trace('Service: unblocking pages with hash:', args);
       return this.http.post(interpolate(REMOVE_BLOCKED_STATE_URL), {
         hashes: args.hashes
       } as SetBlockedStateRequest);
@@ -155,7 +157,7 @@ export class BlockedPageService {
    * Downloads a file of blocked pages.
    */
   downloadFile(): Observable<any> {
-    this.logger.debug('Service: download blocked pages file');
+    this.logger.trace('Service: download blocked pages file');
     return this.http.get(interpolate(DOWNLOAD_BLOCKED_PAGE_FILE_URL));
   }
 
@@ -165,7 +167,7 @@ export class BlockedPageService {
    * @param args.file the blocked page file
    */
   uploadFile(args: { file: File }): Observable<any> {
-    this.logger.debug('Service: uploading blocked pages file:', args);
+    this.logger.trace('Service: uploading blocked pages file:', args);
     const formData = new FormData();
     formData.append('file', args.file);
     return this.http.post(interpolate(UPLOAD_BLOCKED_PAGE_FILE_URL), formData);
@@ -177,9 +179,20 @@ export class BlockedPageService {
    * @param args.entries the blocked page entries
    */
   deleteEntries(args: { entries: BlockedPage[] }): Observable<any> {
-    this.logger.debug('Service: deleting blocked pages:', args);
+    this.logger.trace('Service: deleting blocked pages:', args);
     return this.http.post(interpolate(DELETE_BLOCKED_PAGES_URL), {
       hashes: args.entries.map(entry => entry.hash)
     } as DeleteBlockedPagesRequest);
+  }
+
+  setDeletedFlag(args: {
+    hashes: string[];
+    deleted: boolean;
+  }): Observable<any> {
+    this.logger.trace('Service: setting deleted flag for blocked pages:', args);
+    return this.http.post(interpolate(SET_BLOCKED_PAGE_DELETE_FLAG_URL), {
+      hashes: args.hashes,
+      deleted: args.deleted
+    } as SetBlockedPageDeletionFlagRequest);
   }
 }

@@ -47,6 +47,7 @@ import {
   LOAD_BLOCKED_PAGE_BY_HASH_URL,
   REMOVE_BLOCKED_STATE_URL,
   SAVE_BLOCKED_PAGE_URL,
+  SET_BLOCKED_PAGE_DELETE_FLAG_URL,
   SET_BLOCKED_STATE_URL,
   UPLOAD_BLOCKED_PAGE_FILE_URL
 } from '@app/blocked-pages/blocked-pages.constants';
@@ -60,6 +61,8 @@ import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/blocked-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/blocked-pages/models/net/set-blocked-state-request';
+import { SetBlockedPageDeletionFlagRequest } from '@app/blocked-pages/models/net/set-blocked-page-deletion-flag-request';
+import { SetBlockedPageDeletionFlagResponse } from '@app/blocked-pages/models/net/set-blocked-page-deletion-flag-response';
 
 describe('BlockedPageService', () => {
   const ENTRIES = [BLOCKED_PAGE_1, BLOCKED_PAGE_3, BLOCKED_PAGE_5];
@@ -69,6 +72,8 @@ describe('BlockedPageService', () => {
   const PAGE = PAGE_2;
   const DOWNLOADED_FILE = BLOCKED_PAGE_FILE;
   const UPLOADED_FILE = new File([], 'testing');
+  const BLOCKED_PAGES = [BLOCKED_PAGE_1, BLOCKED_PAGE_2, BLOCKED_PAGE_3];
+  const DELETED = Math.random() > 0.5;
   const initialState = {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
@@ -284,5 +289,28 @@ describe('BlockedPageService', () => {
       hashes: ENTRIES.map(entry => entry.hash)
     } as DeleteBlockedPagesRequest);
     req.flush(ENTRIES);
+  });
+
+  it('can set the deleted flag for blocked pages', () => {
+    const serviceResponse = {
+      pageCount: BLOCKED_PAGES.length,
+      deleted: DELETED
+    } as SetBlockedPageDeletionFlagResponse;
+    service
+      .setDeletedFlag({
+        hashes: BLOCKED_PAGES.map(page => page.hash),
+        deleted: DELETED
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(SET_BLOCKED_PAGE_DELETE_FLAG_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      hashes: BLOCKED_PAGES.map(page => page.hash),
+      deleted: DELETED
+    } as SetBlockedPageDeletionFlagRequest);
+    req.flush(serviceResponse);
   });
 });

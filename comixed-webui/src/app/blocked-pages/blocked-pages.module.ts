@@ -66,6 +66,11 @@ import {
   reducer as deleteBlockedPagesReducer
 } from '@app/blocked-pages/reducers/delete-blocked-pages.reducer';
 import { DeleteBlockedPagesEffects } from '@app/blocked-pages/effects/delete-blocked-pages.effects';
+import {
+  SET_BLOCKED_PAGE_DELETION_FLAGS_FEATURE_KEY,
+  reducer as setBlockedPageDeletionFlagsReducer
+} from '@app/blocked-pages/reducers/set-blocked-page-deletion-flag.reducer';
+import { SetBlockedPageDeletionFlagEffects } from '@app/blocked-pages/effects/set-blocked-page-deletion-flag.effects';
 
 @NgModule({
   declarations: [BlockedPageListPageComponent, BlockedPageDetailPageComponent],
@@ -94,13 +99,18 @@ import { DeleteBlockedPagesEffects } from '@app/blocked-pages/effects/delete-blo
       DELETE_BLOCKED_PAGES_FEATURE_KEY,
       deleteBlockedPagesReducer
     ),
+    StoreModule.forFeature(
+      SET_BLOCKED_PAGE_DELETION_FLAGS_FEATURE_KEY,
+      setBlockedPageDeletionFlagsReducer
+    ),
     EffectsModule.forFeature([
       BlockedPageListEffects,
       BlockedPageDetailEffects,
       BlockPageEffects,
       DownloadBlockedPagesEffects,
       UploadBlockedPagesEffects,
-      DeleteBlockedPagesEffects
+      DeleteBlockedPagesEffects,
+      SetBlockedPageDeletionFlagEffects
     ]),
     MatTableModule,
     MatCheckboxModule,

@@ -49,6 +49,11 @@ import {
   DeleteBlockedPagesState,
   reducer as deleteBlockedPagesReducer
 } from '@app/blocked-pages/reducers/delete-blocked-pages.reducer';
+import {
+  SET_BLOCKED_PAGE_DELETION_FLAGS_FEATURE_KEY,
+  SetBlockedPageDeletionFlagsState,
+  reducer as setBlockedPageDeletionFlagsReducer
+} from './reducers/set-blocked-page-deletion-flag.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -64,6 +69,7 @@ export interface BlockedPagesModuleState {
   [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: DownloadBlockedPagesState;
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: UploadedBlockedPagesState;
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: DeleteBlockedPagesState;
+  [SET_BLOCKED_PAGE_DELETION_FLAGS_FEATURE_KEY]: SetBlockedPageDeletionFlagsState;
 }
 
 export type ModuleState = BlockedPagesModuleState;
@@ -75,5 +81,7 @@ export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer,
   [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: downloadBlockedPagesReducer,
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: uploadBlockedPagesReducer,
-  [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer
+  [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer,
+  [SET_BLOCKED_PAGE_DELETION_FLAGS_FEATURE_KEY]:
+    setBlockedPageDeletionFlagsReducer
 };
