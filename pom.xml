@@ -221,6 +221,12 @@
         </configuration>
         <executions>
           <execution>
+            <id>report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
