@@ -21,7 +21,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <java.version>11</java.version>
     <sonar.coverage.jacoco.xmlReportPaths>
-      ${project.basedir}/target/site/jacoco.xml
+      ${project.basedir}/target/site/jacoco-aggregate/jacoco.xml
     </sonar.coverage.jacoco.xmlReportPaths>
   </properties>
   <profiles>
@@ -220,12 +220,6 @@
           </excludes>
         </configuration>
         <executions>
-          <execution>
-            <id>report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
           <execution>
             <goals>
               <goal>prepare-agent</goal>
