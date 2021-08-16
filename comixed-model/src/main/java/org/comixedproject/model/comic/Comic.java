@@ -134,7 +134,11 @@ public class Comic {
 
   @Column(name = "Publisher", length = 128)
   @JsonProperty("publisher")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.AuditLogEntryDetail.class
+  })
   @Getter
   @Setter
   private String publisher;
@@ -221,7 +225,11 @@ public class Comic {
   @CreatedDate
   @JsonProperty("addedDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.AuditLogEntryDetail.class
+  })
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
   private Date dateAdded = new Date();
@@ -254,7 +262,11 @@ public class Comic {
   @Column(name = "CoverDate", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("coverDate")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.AuditLogEntryDetail.class
+  })
   @Getter
   @Setter
   private Date coverDate;

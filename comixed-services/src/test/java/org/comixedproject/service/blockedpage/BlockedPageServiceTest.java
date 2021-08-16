@@ -38,6 +38,7 @@ import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
 import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.library.DuplicatePageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,7 @@ public class BlockedPageServiceTest {
 
   @InjectMocks private BlockedPageService service;
   @Mock private PageService pageService;
+  @Mock private DuplicatePageService duplicatePageService;
   @Mock private BlockedPageRepository blockedPageRepository;
   @Mock private CsvAdaptor csvAdaptor;
   @Mock private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
@@ -81,7 +83,7 @@ public class BlockedPageServiceTest {
     TEST_DECODED_ROW.add(TEST_PAGE_LABEL);
     TEST_DECODED_ROW.add(TEST_PAGE_HASH);
     TEST_DECODED_ROW.add(TEST_PAGE_SNAPSHOT);
-    Mockito.when(pageService.getDuplicatePages()).thenReturn(duplicatePageList);
+    Mockito.when(duplicatePageService.getDuplicatePages()).thenReturn(duplicatePageList);
   }
 
   @Test

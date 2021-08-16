@@ -1,0 +1,75 @@
+<mat-toolbar class="cx-primary-light-background">
+  <button
+    id="return-to-list-button"
+    mat-icon-button
+    color="primary"
+    routerLink="/library/pages/duplicates"
+  >
+    <mat-icon>arrow_back</mat-icon>
+    <div class="cx-spacer"></div>
+  </button>
+</mat-toolbar>
+
+<div class="cx-horizontal-container">
+  <div class="cx-grow-0">
+    <cx-comic-page [imageUrl]="hash | pageHashUrl"></cx-comic-page>
+  </div>
+  <div class="cx-grow-1 cx-padding-5">
+    <h2>
+      {{ "duplicate-page-detail.page-title" | translate: { hash: hash } }}
+    </h2>
+    <mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="publisher">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.publisher" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.publisher }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="series">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.series" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.series }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="volume">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.volume" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.volume }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="issue-number">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.issue-number" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">{{ entry.issueNumber }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="cover-date">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.cover-date" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.coverDate | date: "mediumDate" }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="added-date">
+        <mat-header-cell *matHeaderCellDef>
+          {{ "comic-book.label.added-date" | translate }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let entry">
+          {{ entry.coverDate | date: "mediumDate" }}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [routerLink]="['/comics', row.id]"
+      ></mat-row>
+    </mat-table>
+  </div>
+</div>

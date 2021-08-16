@@ -1,4 +1,11 @@
 {
+  "duplicate-page-detail": {
+    "load-detail": {
+      "effect-failure": "Failed to load details for hash: {hash}"
+    },
+    "page-title": "Duplicate Page Detail: {hash}",
+    "tab-title": "Duplicate Page Detail: {hash}"
+  },
   "duplicate-pages": {
     "block-selection": {
       "confirmation-message": "Are you sure you want to block the {count} selected {count, plural, =1{page} other{pages}}.",

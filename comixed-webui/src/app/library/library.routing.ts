@@ -22,6 +22,7 @@ import { AdminGuard, ReaderGuard } from '@app/user';
 import { LibraryPageComponent } from '@app/library/pages/library-page/library-page.component';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { DuplicatePageListPageComponent } from '@app/library/pages/duplicate-page-list-page/duplicate-page-list-page.component';
+import { DuplicatePageDetailPageComponent } from '@app/library/pages/duplicate-page-detail-page/duplicate-page-detail-page.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,11 @@ const routes: Routes = [
   {
     path: 'library/pages/duplicates',
     component: DuplicatePageListPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'library/pages/duplicates/:hash',
+    component: DuplicatePageDetailPageComponent,
     canActivate: [AdminGuard]
   }
 ];

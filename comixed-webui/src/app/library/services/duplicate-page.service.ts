@@ -21,7 +21,10 @@ import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/logger';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
-import { LOAD_COMICS_WITH_DUPLICATE_PAGES_URL } from '@app/library/library.constants';
+import {
+  LOAD_COMICS_WITH_DUPLICATE_PAGES_URL,
+  LOAD_DUPLICATE_PAGE_DETAIL_URL
+} from '@app/library/library.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +35,12 @@ export class DuplicatePageService {
   loadDuplicatePages(): Observable<any> {
     this.logger.trace('Service: Load duplicate pages');
     return this.http.get(interpolate(LOAD_COMICS_WITH_DUPLICATE_PAGES_URL));
+  }
+
+  loadDuplicatePageDetail(args: { hash: string }): Observable<any> {
+    this.logger.trace('Service: Load detail for duplicate page:', args);
+    return this.http.get(
+      interpolate(LOAD_DUPLICATE_PAGE_DETAIL_URL, { hash: args.hash })
+    );
   }
 }

@@ -64,6 +64,9 @@ public class View {
   /** Used when viewing the list of duplicate pages. */
   public interface DuplicatePageList {}
 
+  /** Used when viewing the details of a duplicate page. */
+  public interface DuplicatePageDetail extends DuplicatePageList {}
+
   /** Used when fetching library updates. */
   public interface LibraryUpdate {}
 

@@ -116,5 +116,8 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayColumns"
+    [routerLink]="['/library', 'pages', 'duplicates', row.item.hash]"
+  ></mat-row>
 </mat-table>

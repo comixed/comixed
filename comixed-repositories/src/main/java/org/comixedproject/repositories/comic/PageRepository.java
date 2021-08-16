@@ -53,6 +53,12 @@ public interface PageRepository extends CrudRepository<Page, Long> {
   @Query("SELECT p FROM Page p WHERE p.comic.id = :id")
   List<Page> findAllByComicId(@Param("id") long id);
 
+  /**
+   * Returns the list of all pages with the given page hash.
+   *
+   * @param hash the hash value
+   * @return the list of pages
+   */
   @Query("SELECT p FROM Page p WHERE p.hash = :hash")
   List<Page> getPagesWithHash(@Param("hash") String hash);
 }

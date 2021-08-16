@@ -24,7 +24,10 @@ import {
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
-import { LOAD_COMICS_WITH_DUPLICATE_PAGES_URL } from '@app/library/library.constants';
+import {
+  LOAD_COMICS_WITH_DUPLICATE_PAGES_URL,
+  LOAD_DUPLICATE_PAGE_DETAIL_URL
+} from '@app/library/library.constants';
 import {
   DUPLICATE_PAGE_1,
   DUPLICATE_PAGE_2,
@@ -33,6 +36,7 @@ import {
 
 describe('DuplicatePageService', () => {
   const PAGES = [DUPLICATE_PAGE_1, DUPLICATE_PAGE_2, DUPLICATE_PAGE_3];
+  const DETAIL = DUPLICATE_PAGE_1;
 
   let service: DuplicatePageService;
   let httpMock: HttpTestingController;
@@ -60,5 +64,17 @@ describe('DuplicatePageService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(PAGES);
+  });
+
+  it('can load the detail for a single duplicate page', () => {
+    service
+      .loadDuplicatePageDetail({ hash: DETAIL.hash })
+      .subscribe(response => expect(response).toEqual(DETAIL));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_DUPLICATE_PAGE_DETAIL_URL, { hash: DETAIL.hash })
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(DETAIL);
   });
 });
