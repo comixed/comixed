@@ -34,6 +34,7 @@ import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
 import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.library.DuplicatePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +57,7 @@ public class BlockedPageService {
   @Autowired private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
   @Autowired private PageService pageService;
   @Autowired private PublishDuplicatePageListUpdateAction publishDuplicatePageListUpdateAction;
+  @Autowired private DuplicatePageService duplicatePageService;
 
   /**
    * Returns all blocked pages.
@@ -98,7 +100,8 @@ public class BlockedPageService {
   private void doPublishDuplicatePageUpdates() {
     try {
       log.trace("Publishing duplicate page list");
-      this.publishDuplicatePageListUpdateAction.publish(this.pageService.getDuplicatePages());
+      this.publishDuplicatePageListUpdateAction.publish(
+          this.duplicatePageService.getDuplicatePages());
     } catch (PublishingException error) {
       log.error("Failed to publish duplicate page list", error);
     }

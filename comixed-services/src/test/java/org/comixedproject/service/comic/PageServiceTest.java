@@ -26,7 +26,6 @@ import java.util.Optional;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
-import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comic.PageRepository;
 import org.comixedproject.repositories.comic.PageTypeRepository;
 import org.junit.Assert;
@@ -63,7 +62,6 @@ public class PageServiceTest {
 
   @Before
   public void setUp() {
-    Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(page.getComic()).thenReturn(comic);
   }
 
@@ -107,22 +105,6 @@ public class PageServiceTest {
     Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
     Mockito.verify(page, Mockito.times(1)).setPageType(pageType);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
-  }
-
-  @Test
-  public void testGetDuplicatePages() {
-    pageList.add(page);
-
-    Mockito.when(pageRepository.getDuplicatePages()).thenReturn(pageList);
-
-    List<DuplicatePage> result = pageService.getDuplicatePages();
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(TEST_PAGE_HASH, result.get(0).getHash());
-    assertTrue(result.get(0).getComics().contains(comic));
-
-    Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
   }
 
   @Test(expected = ComicException.class)

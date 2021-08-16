@@ -73,6 +73,12 @@ import {
 import { DuplicatePageListEffects } from '@app/library/effects/duplicate-page-list.effects';
 import { DuplicatePageListPageComponent } from './pages/duplicate-page-list-page/duplicate-page-list-page.component';
 import { ComicsWithDuplicatePageComponent } from './components/comics-with-duplicate-page/comics-with-duplicate-page.component';
+import { DuplicatePageDetailPageComponent } from './pages/duplicate-page-detail-page/duplicate-page-detail-page.component';
+import {
+  DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
+  reducer as duplicatePageDetailReducer
+} from '@app/library/reducers/duplicate-page-detail.reducer';
+import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
 
 @NgModule({
   declarations: [
@@ -87,7 +93,8 @@ import { ComicsWithDuplicatePageComponent } from './components/comics-with-dupli
     ArchiveTypePipe,
     UnreadComicsPipe,
     DuplicatePageListPageComponent,
-    ComicsWithDuplicatePageComponent
+    ComicsWithDuplicatePageComponent,
+    DuplicatePageDetailPageComponent
   ],
   providers: [],
   imports: [
@@ -103,10 +110,15 @@ import { ComicsWithDuplicatePageComponent } from './components/comics-with-dupli
       DUPLICATE_PAGE_LIST_FEATURE_KEY,
       comicsWithDuplicatePagesReducer
     ),
+    StoreModule.forFeature(
+      DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
+      duplicatePageDetailReducer
+    ),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
-      DuplicatePageListEffects
+      DuplicatePageListEffects,
+      DuplicatePageDetailEffects
     ]),
     MatInputModule,
     MatSelectModule,

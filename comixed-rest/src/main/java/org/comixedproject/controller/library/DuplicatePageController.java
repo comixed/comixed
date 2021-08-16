@@ -23,11 +23,14 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.library.DuplicatePageException;
+import org.comixedproject.service.library.DuplicatePageService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class DuplicatePageController {
+  @Autowired private DuplicatePageService duplicatePageService;
   @Autowired private PageService pageService;
 
   /**
@@ -51,6 +55,24 @@ public class DuplicatePageController {
   @PreAuthorize("hasRole('ADMIN')")
   public List<DuplicatePage> getDuplicatePageList() {
     log.info("Getting list of duplicate pages");
-    return this.pageService.getDuplicatePages();
+    return this.duplicatePageService.getDuplicatePages();
+  }
+
+  /**
+   * Loads a single duplicate page for the given hash.
+   *
+   * @param hash the hash
+   * @return the duplicate page
+   * @throws DuplicatePageException if the hash is invalid
+   */
+  @GetMapping(
+      value = "/api/library/pages/duplicates/{hash}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.DuplicatePageDetail.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public DuplicatePage getForHash(@PathVariable("hash") final String hash)
+      throws DuplicatePageException {
+    log.info("Loading duplicate page detail: hash={}", hash);
+    return this.duplicatePageService.getForHash(hash);
   }
 }

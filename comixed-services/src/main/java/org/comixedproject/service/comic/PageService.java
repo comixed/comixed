@@ -23,12 +23,10 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.model.comic.PageType;
-import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.repositories.comic.PageRepository;
 import org.comixedproject.repositories.comic.PageTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -200,27 +198,6 @@ public class PageService {
     final int result = this.pageRepository.updateDeleteOnAllWithHash(hash, false);
     log.debug("Update affected {} record{}", result, result == 1 ? "" : "s");
     return result;
-  }
-
-  @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-  public List<DuplicatePage> getDuplicatePages() {
-    log.trace("Getting pages from repository");
-    final List<Page> pages = this.pageRepository.getDuplicatePages();
-    log.trace("Build duplicate page list");
-    Map<String, DuplicatePage> mapped = new HashMap<>();
-    for (Page page : pages) {
-      log.trace("Looking for existing entry");
-      DuplicatePage entry = mapped.get(page.getHash());
-      if (entry == null) {
-        log.trace("Creating new entry");
-        entry = new DuplicatePage(page.getHash());
-        mapped.put(entry.getHash(), entry);
-      }
-      log.trace("Loading comic into entry");
-      entry.getComics().add(page.getComic());
-    }
-    log.trace("Returning duplicate page list");
-    return new ArrayList<>(mapped.values());
   }
 
   @Transactional
