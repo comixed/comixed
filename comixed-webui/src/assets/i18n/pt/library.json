@@ -1,10 +1,18 @@
 {
   "duplicate-page-detail": {
+    "block-page": {
+      "confirmation-message": "Are you sure you want to unblock all pages like this one?",
+      "confirmation-title": "Unblock Page Hash"
+    },
     "load-detail": {
       "effect-failure": "Failed to load details for hash: {hash}"
     },
     "page-title": "Duplicate Page Detail: {hash}",
-    "tab-title": "Duplicate Page Detail: {hash}"
+    "tab-title": "Duplicate Page Detail: {hash}",
+    "unblock-page": {
+      "confirmation-message": "Are you sure you want to unblock all pages like this one?",
+      "confirmation-title": "Unblock Page Hash"
+    }
   },
   "duplicate-pages": {
     "block-selection": {

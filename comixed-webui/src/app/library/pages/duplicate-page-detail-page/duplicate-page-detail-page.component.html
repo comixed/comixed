@@ -6,7 +6,25 @@
     routerLink="/library/pages/duplicates"
   >
     <mat-icon>arrow_back</mat-icon>
-    <div class="cx-spacer"></div>
+  </button>
+  <div class="cx-spacer"></div>
+  <button
+    id="block-page-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
+    (click)="onBlockPage()"
+  >
+    <mat-icon>block</mat-icon>
+  </button>
+  <button
+    id="unblock-page-button"
+    mat-icon-button
+    color="accent"
+    [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
+    (click)="onUnblockPage()"
+  >
+    <mat-icon>remove_circle_outline</mat-icon>
   </button>
 </mat-toolbar>
 

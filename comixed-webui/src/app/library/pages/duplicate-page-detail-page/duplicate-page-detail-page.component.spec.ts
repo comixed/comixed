@@ -42,6 +42,10 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { loadDuplicatePageDetail } from '@app/library/actions/duplicate-page-detail.actions';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { Confirmation } from '@app/core/models/confirmation';
+import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
 
 describe('DuplicatePageDetailPageComponent', () => {
   const DETAIL = DUPLICATE_PAGE_1;
@@ -60,6 +64,7 @@ describe('DuplicatePageDetailPageComponent', () => {
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy<any>;
   let translateService: TranslateService;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -75,7 +80,8 @@ describe('DuplicatePageDetailPageComponent', () => {
         MatToolbarModule,
         MatIconModule,
         MatTableModule,
-        MatCardModule
+        MatCardModule,
+        MatDialogModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -84,7 +90,8 @@ describe('DuplicatePageDetailPageComponent', () => {
           useValue: {
             params: new BehaviorSubject<{}>({})
           }
-        }
+        },
+        ConfirmationService
       ]
     }).compileComponents();
 
@@ -97,6 +104,7 @@ describe('DuplicatePageDetailPageComponent', () => {
     titleService = TestBed.inject(TitleService);
     setTitleSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
 
@@ -164,6 +172,47 @@ describe('DuplicatePageDetailPageComponent', () => {
 
       it('sets the detail reference', () => {
         expect(component.detail).toEqual(DETAIL);
+      });
+    });
+  });
+
+  describe('setting the blocked state for a page', () => {
+    beforeEach(() => {
+      component.hash = DETAIL.hash;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+    });
+
+    describe('blocking a page', () => {
+      beforeEach(() => {
+        component.onBlockPage();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedState({ hashes: [DETAIL.hash], blocked: true })
+        );
+      });
+    });
+
+    describe('unblocking a page', () => {
+      beforeEach(() => {
+        component.onUnblockPage();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setBlockedState({ hashes: [DETAIL.hash], blocked: false })
+        );
       });
     });
   });

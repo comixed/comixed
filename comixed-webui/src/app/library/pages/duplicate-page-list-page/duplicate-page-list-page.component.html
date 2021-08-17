@@ -13,17 +13,17 @@
     [matTooltip]="'duplicate-pages.tooltip.block-selections' | translate"
     (click)="onBlockSelected()"
   >
-    <mat-icon>thumb_down</mat-icon>
+    <mat-icon>block</mat-icon>
   </button>
   <button
     id="unblock-selections-button"
     mat-icon-button
-    color="warn"
+    color="accent"
     [disabled]="!anySelected"
     [matTooltip]="'duplicate-pages.tooltip.unblock-selections' | translate"
     (click)="onUnblockSelected()"
   >
-    <mat-icon>thumb_up</mat-icon>
+    <mat-icon>remove_circle_outline</mat-icon>
   </button>
 </mat-toolbar>
 
@@ -99,18 +99,18 @@
         mat-icon-button
         color="warn"
         [matTooltip]="'duplicate-pages.tooltip.block-page' | translate"
-        (click)="onBlockPage(row)"
+        (click)="onBlockPage(row); $event.stopPropagation()"
       >
-        <mat-icon>thumb_down</mat-icon>
+        <mat-icon>block</mat-icon>
       </button>
       <button
         *ngIf="isBlocked(row)"
         mat-icon-button
         color="primary"
         [matTooltip]="'duplicate-pages.tooltip.unblock-page' | translate"
-        (click)="onUnblockPage(row)"
+        (click)="onUnblockPage(row); $event.stopPropagation()"
       >
-        <mat-icon>thumb_up</mat-icon>
+        <mat-icon>remove_circle_outline</mat-icon>
       </button>
     </mat-cell>
   </ng-container>

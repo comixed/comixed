@@ -54,6 +54,7 @@
     },
     "tooltip": {
       "clear-deleted": "Clear selected pages from deletion.",
+      "delete-entries": "Delete selected blocked page entries.",
       "download-file": "Download blocked pages file.",
       "upload-file": "Upload a blocked pages file.",
       "set-deleted": "Mark selected pages for deletion."
