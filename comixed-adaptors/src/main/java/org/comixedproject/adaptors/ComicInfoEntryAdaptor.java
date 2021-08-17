@@ -103,22 +103,16 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
           case "PageCount":
             break;
           case "Characters":
-            List<String> characters = this.commandSeparatedList(xmlInputReader.getElementText());
-            for (String character : characters) {
-              comic.getCharacters().add(character);
-            }
+            this.addElementsToList(xmlInputReader.getElementText(), comic.getCharacters());
             break;
           case "Teams":
-            List<String> teams = this.commandSeparatedList(xmlInputReader.getElementText());
-            for (String team : teams) {
-              comic.getTeams().add(team);
-            }
+            this.addElementsToList(xmlInputReader.getElementText(), comic.getTeams());
             break;
           case "Locations":
-            List<String> locations = this.commandSeparatedList(xmlInputReader.getElementText());
-            for (String location : locations) {
-              comic.getLocations().add(location);
-            }
+            this.addElementsToList(xmlInputReader.getElementText(), comic.getLocations());
+            break;
+          case "AlternateSeries":
+            this.addElementsToList(xmlInputReader.getElementText(), comic.getStoryArcs());
             break;
           case "Writer":
           case "Editor":
@@ -128,15 +122,14 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
           case "Letterer":
           case "CoverArtist":
             {
-              List<String> names = this.commandSeparatedList(xmlInputReader.getElementText());
-              for (String name : names) {
-                String role = tagName.toLowerCase();
-                if (role.equals("coverartist")) {
-                  role = "cover";
-                }
-                log.debug("Adding role: {}={}", role, name);
-                comic.getCredits().add(new Credit(comic, name, role));
-              }
+              final String role =
+                  (tagName.equalsIgnoreCase("coverartist")) ? "cover" : tagName.toLowerCase();
+              this.commandSeparatedList(xmlInputReader.getElementText())
+                  .forEach(
+                      name -> {
+                        log.debug("Adding role: {}={}", role, name);
+                        comic.getCredits().add(new Credit(comic, name, role));
+                      });
             }
             break;
           default:
@@ -154,6 +147,10 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
               : new GregorianCalendar(publishedYear, 0, 1);
       comic.setCoverDate(gc.getTime());
     }
+  }
+
+  private void addElementsToList(final String elementText, final List<String> list) {
+    this.commandSeparatedList(elementText).stream().forEach(list::add);
   }
 
   private List<String> commandSeparatedList(String text) {
