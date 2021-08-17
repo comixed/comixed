@@ -97,7 +97,7 @@ public class ImprintAdaptor {
    */
   public void update(final Comic comic) {
     final String publisher = comic.getPublisher();
-    if (this.IMPRINT_MAPPINGS.containsKey(publisher)) {
+    if (IMPRINT_MAPPINGS.containsKey(publisher)) {
       final String imprint = IMPRINT_MAPPINGS.get(publisher);
       log.debug("Updating publisher and imprint: {} => {}", publisher, imprint);
       comic.setPublisher(imprint);

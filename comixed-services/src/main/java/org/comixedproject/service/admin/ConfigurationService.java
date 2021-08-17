@@ -54,24 +54,24 @@ public class ConfigurationService {
    * @return the set of all configuration options
    * @throws ConfigurationOptionException if an error occurs
    */
+  @Transactional
   public List<ConfigurationOption> saveOptions(final List<ConfigurationOption> options)
       throws ConfigurationOptionException {
     log.trace("Updating configuration {} option{}", options.size(), options.size() == 1 ? "" : "s");
-    for (int index = 0; index < options.size(); index++) this.doSaveOption(options.get(index));
+    for (int index = 0; index < options.size(); index++) {
+      var option = options.get(index);
+      log.trace("Loading existing record: name={}", option.getName());
+      final ConfigurationOption existing =
+          this.configurationRepository.findByName(option.getName());
+      if (existing == null)
+        throw new ConfigurationOptionException(
+            "No such configuration option: name=" + option.getName());
+      log.trace("Updating existing record: value={}", option.getValue());
+      existing.setValue(option.getValue());
+      log.trace("Updating existing record");
+      this.configurationRepository.save(existing);
+    }
 
     return this.getAll();
-  }
-
-  @Transactional
-  public void doSaveOption(final ConfigurationOption option) throws ConfigurationOptionException {
-    log.trace("Loading existing record: name={}", option.getName());
-    final ConfigurationOption existing = this.configurationRepository.findByName(option.getName());
-    if (existing == null)
-      throw new ConfigurationOptionException(
-          "No such configuration option: name=" + option.getName());
-    log.trace("Updating existing record: value={}", option.getValue());
-    existing.setValue(option.getValue());
-    log.trace("Updating existing record");
-    this.configurationRepository.save(existing);
   }
 }

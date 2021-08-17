@@ -23,7 +23,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-// @EnableJdbcHttpSession
 public class ComiXedApp implements CommandLineRunner {
   public static void main(String[] args) {
     var app = new SpringApplication(ComiXedApp.class);
@@ -31,5 +30,7 @@ public class ComiXedApp implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {}
+  public void run(String... args) throws Exception {
+    // process any command line arguments here
+  }
 }

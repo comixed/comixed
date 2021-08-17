@@ -43,8 +43,6 @@ public class FileService {
   @Autowired private TaskService taskService;
   @Autowired private ComicFileUtils comicFileUtils;
 
-  private int requestId = 0;
-
   public byte[] getImportFileCover(final String comicArchive)
       throws ComicFileHandlerException, ArchiveAdaptorException {
     log.debug("Getting first image from archive: {}", comicArchive);

@@ -18,12 +18,10 @@
 
 package org.comixedproject.handlers;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -101,11 +99,15 @@ public class ComicFileHandler implements InitializingBean {
     log.debug("Fetching archive adaptor for file: {}", filename);
 
     String archiveType = null;
+    final File file = new File(filename);
 
     try {
-      InputStream input = new BufferedInputStream(new FileInputStream(filename));
-      archiveType = this.fileTypeIdentifier.subtypeFor(input);
-    } catch (FileNotFoundException error) {
+      if (FileUtils.directoryContains(
+          file.getAbsoluteFile().getParentFile(), file.getAbsoluteFile())) {
+        InputStream input = new BufferedInputStream(new FileInputStream(filename));
+        archiveType = this.fileTypeIdentifier.subtypeFor(input);
+      }
+    } catch (IOException error) {
       throw new ComicFileHandlerException("Unable to load comic file", error);
     }
 

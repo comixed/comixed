@@ -77,7 +77,7 @@ public class ReadingListServiceTest {
 
   @Test(expected = ReadingListNameException.class)
   public void testCreateReadingListNameAlreadyUsed()
-      throws NoSuchReadingListException, ReadingListNameException, ComicException {
+      throws ReadingListNameException, ComicException {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.findReadingListForUser(
@@ -95,8 +95,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testCreateReadingList()
-      throws NoSuchReadingListException, ReadingListNameException, ComicException {
+  public void testCreateReadingList() throws ReadingListNameException, ComicException {
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.findReadingListForUser(
@@ -143,14 +142,12 @@ public class ReadingListServiceTest {
 
   @Test(expected = NoSuchReadingListException.class)
   public void testUpdateNonexistantReadingList() throws NoSuchReadingListException, ComicException {
-    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID)).thenReturn(Optional.empty());
 
     try {
       readingListService.updateReadingList(
           TEST_USER_EMAIL, TEST_READING_LIST_ID, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
     } finally {
-      Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
       Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
     }
   }
@@ -159,7 +156,6 @@ public class ReadingListServiceTest {
   public void testUpdateReadingList() throws NoSuchReadingListException, ComicException {
     Set<Comic> entries = new HashSet<>();
 
-    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(readingListRepository.findById(TEST_READING_LIST_ID))
         .thenReturn(Optional.of(readingList));
     Mockito.doNothing().when(readingList).setName(Mockito.anyString());
@@ -176,7 +172,6 @@ public class ReadingListServiceTest {
     assertNotNull(result);
     assertSame(readingList, result);
 
-    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
     Mockito.verify(readingList, Mockito.times(1)).setName(TEST_READING_LIST_NAME);
     Mockito.verify(readingList, Mockito.times(1)).setSummary(TEST_READING_LIST_SUMMARY);
@@ -246,7 +241,7 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testAddComicsToListNoSuchList() throws ComicException, ReadingListException {
+  public void testAddComicsToListNoSuchList() throws ReadingListException {
     List<Long> ids = new ArrayList<>();
     Mockito.when(readingListRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
@@ -258,7 +253,7 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testAddComicsToListNotOwner() throws ComicException, ReadingListException {
+  public void testAddComicsToListNotOwner() throws ReadingListException {
     List<Long> ids = new ArrayList<>();
     Mockito.when(readingListRepository.findById(Mockito.anyLong()))
         .thenReturn(Optional.of(readingList));
@@ -316,7 +311,7 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testRemoveComicsFromListNoSuchList() throws ComicException, ReadingListException {
+  public void testRemoveComicsFromListNoSuchList() throws ReadingListException {
     List<Long> ids = new ArrayList<>();
     Mockito.when(readingListRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
@@ -328,7 +323,7 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testRemoveComicsFromListNotOwner() throws ComicException, ReadingListException {
+  public void testRemoveComicsFromListNotOwner() throws ReadingListException {
     List<Long> ids = new ArrayList<>();
     Mockito.when(readingListRepository.findById(Mockito.anyLong()))
         .thenReturn(Optional.of(readingList));

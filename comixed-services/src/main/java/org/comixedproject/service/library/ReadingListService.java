@@ -89,9 +89,6 @@ public class ReadingListService {
       throws NoSuchReadingListException, ComicException {
     log.debug("Updating reading list: owner={} id={} name={}", email, id, name);
 
-    log.debug("Getting owner");
-    final ComiXedUser owner = this.userRepository.findByEmail(email);
-
     log.debug("Getting reading list");
     final Optional<ReadingList> readingList = this.readingListRepository.findById(id);
 
@@ -223,13 +220,13 @@ public class ReadingListService {
 
     int result = 0;
 
-    Optional<ReadingList> record = this.readingListRepository.findById(id);
+    Optional<ReadingList> readingListRecord = this.readingListRepository.findById(id);
 
-    if (!record.isPresent()) {
+    if (!readingListRecord.isPresent()) {
       throw new ReadingListException("no such reading list: id=" + id);
     }
 
-    ReadingList readingList = record.get();
+    ReadingList readingList = readingListRecord.get();
 
     if (!readingList.getOwner().getEmail().equals(email)) {
       throw new ReadingListException(
@@ -267,13 +264,13 @@ public class ReadingListService {
         id,
         email);
 
-    Optional<ReadingList> record = this.readingListRepository.findById(id);
+    Optional<ReadingList> readingListRecord = this.readingListRepository.findById(id);
 
-    if (!record.isPresent()) {
+    if (!readingListRecord.isPresent()) {
       throw new ReadingListException("no such reading list: id=" + id);
     }
 
-    ReadingList readingList = record.get();
+    ReadingList readingList = readingListRecord.get();
 
     if (!readingList.getOwner().getEmail().equals(email)) {
       throw new ReadingListException(

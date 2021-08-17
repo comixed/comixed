@@ -210,7 +210,7 @@ $mat-warn: (
     darker: $light-primary-text,
   )
 );
-$theme-warn: mat-palette($mat-warn, main, lighter, darker);;
+$theme-warn: mat-palette($mat-warn, main, lighter, darker);
 
 $theme: mat-light-theme($theme-primary, $theme-accent, $theme-warn);
 $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
@@ -239,8 +239,8 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
 
 .material-icons {
   font-size: 24px;
-  font-family: 'Material Icons Outlined', 'Material Icons';
+  font-family: 'Material Icons Outlined', 'Material Icons', sans-serif;
   .mat-badge-content {
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', sans-serif;
   }
 }

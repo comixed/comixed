@@ -65,7 +65,7 @@ public abstract class AbstractComicVineScrapingAction<T> extends AbstractScrapin
   @Getter @Setter private String apiKey;
   private String maskedApiKey;
 
-  public AbstractComicVineScrapingAction() {
+  protected AbstractComicVineScrapingAction() {
     this.addParameter(RESULT_LIMIT_PARAMETER, "100");
   }
 
