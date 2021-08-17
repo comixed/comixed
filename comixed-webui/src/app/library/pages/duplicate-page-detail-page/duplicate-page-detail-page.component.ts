@@ -33,6 +33,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Comic } from '@app/comic-book/models/comic';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
@@ -64,7 +66,8 @@ export class DuplicatePageDetailPageComponent
     private router: Router,
     private store: Store<any>,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.hash = params.hash;
@@ -117,6 +120,42 @@ export class DuplicatePageDetailPageComponent
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
+  }
+
+  onBlockPage(): void {
+    this.logger.trace('Confirming blocking duplicate page');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'duplicate-page-detail.block-page.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'duplicate-page-detail.block-page.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Dispatching action to block page');
+        this.store.dispatch(
+          setBlockedState({ hashes: [this.hash], blocked: true })
+        );
+      }
+    });
+  }
+
+  onUnblockPage(): void {
+    this.logger.trace('Confirming unblocking duplicate page');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'duplicate-page-detail.unblock-page.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'duplicate-page-detail.unblock-page.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Dispatching action to unblock page');
+        this.store.dispatch(
+          setBlockedState({ hashes: [this.hash], blocked: false })
+        );
+      }
+    });
   }
 
   private loadTranslation(): void {
