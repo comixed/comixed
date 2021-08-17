@@ -64,7 +64,6 @@ public class ComicFileUtils {
    */
   public boolean isComicFile(File file) {
     String name = file.getName().toUpperCase();
-    boolean result = (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
-    return result;
+    return (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
   }
 }

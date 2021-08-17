@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.plugins.runners.PluginRunner;
 import org.springframework.beans.factory.InitializingBean;
@@ -102,27 +105,10 @@ public class PluginInterpreterLoader implements InitializingBean {
     return (PluginInterpreter) this.context.getBean(language);
   }
 
+  @NoArgsConstructor
   public static class PluginInterpreterEntry {
-    private String language;
-    private String interpreter;
-
-    public PluginInterpreterEntry() {}
-
-    public String getLanguage() {
-      return language;
-    }
-
-    public void setLanguage(String language) {
-      this.language = language;
-    }
-
-    public String getInterpreter() {
-      return interpreter;
-    }
-
-    public void setInterpreter(String interpreter) {
-      this.interpreter = interpreter;
-    }
+    @Getter @Setter private String language;
+    @Getter @Setter private String interpreter;
 
     public boolean isValid() {
       return !StringUtils.isEmpty(this.language) && !StringUtils.isEmpty((this.interpreter));

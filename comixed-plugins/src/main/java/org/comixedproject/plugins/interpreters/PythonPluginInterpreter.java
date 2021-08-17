@@ -20,7 +20,6 @@ package org.comixedproject.plugins.interpreters;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.plugins.PluginException;
-import org.comixedproject.plugins.model.Plugin;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageService;
 import org.python.util.PythonInterpreter;
@@ -59,13 +58,5 @@ public class PythonPluginInterpreter extends AbstractPluginInterpreter {
     this.interpreter.set("comicService", this.comicService);
     this.interpreter.set("pageService", this.pageService);
     this.interpreter.set("logger", this.log);
-  }
-
-  @Override
-  public void start(Plugin plugin) throws PluginException {}
-
-  @Override
-  public void finish() throws PluginException {
-    super.finish();
   }
 }

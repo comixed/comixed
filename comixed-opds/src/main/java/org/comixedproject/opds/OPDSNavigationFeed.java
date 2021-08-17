@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.*;
+import lombok.Getter;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.opds.OPDSAuthor;
@@ -43,21 +44,23 @@ public class OPDSNavigationFeed implements OPDSFeed {
   public static final String OPDS_ROOT_LINK = "/opds-comics";
   public static final String START = "start";
   public static final String SELF = "self";
-  private String id;
 
-  private String title;
+  @Getter private String id;
+  @Getter private String title;
+  @Getter private String icon;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+  @Getter
   private Date updated;
-
-  private String icon;
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "link")
+  @Getter
   private List<OPDSLink> links;
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "entry")
+  @Getter
   private List<OPDSEntry> entries;
 
   public OPDSNavigationFeed() {
@@ -129,35 +132,5 @@ public class OPDSNavigationFeed implements OPDSFeed {
         Arrays.asList(
             new OPDSLink(OPDS_LINK_TYPE, "self", selfUrl),
             new OPDSLink(OPDS_LINK_TYPE, START, OPDS_ROOT_LINK));
-  }
-
-  @Override
-  public List<OPDSEntry> getEntries() {
-    return this.entries;
-  }
-
-  @Override
-  public String getId() {
-    return this.id;
-  }
-
-  @Override
-  public String getIcon() {
-    return this.icon;
-  }
-
-  @Override
-  public List<OPDSLink> getLinks() {
-    return this.links;
-  }
-
-  @Override
-  public String getTitle() {
-    return this.title;
-  }
-
-  @Override
-  public Date getUpdated() {
-    return this.updated;
   }
 }

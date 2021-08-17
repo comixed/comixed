@@ -114,22 +114,20 @@ public class RarArchiveAdaptor extends AbstractArchiveAdaptor<Archive> {
 
   @Override
   protected Archive openArchive(File comicFile) throws ArchiveAdaptorException {
-    Archive archive = null;
-
     try {
-      archive = new Archive(new FileVolumeManager(comicFile));
+      Archive archive = new Archive(new FileVolumeManager(comicFile));
       var entry = archive.nextFileHeader();
 
       if (entry == null) {
         archive.close();
         throw new ArchiveAdaptorException("Invalid or corrupt RAR file: " + comicFile.getName());
       }
+
+      return archive;
     } catch (IOException | RarException error) {
       throw new ArchiveAdaptorException(
           "Unable to open archive: " + comicFile.getAbsolutePath(), error);
     }
-
-    return archive;
   }
 
   @Override

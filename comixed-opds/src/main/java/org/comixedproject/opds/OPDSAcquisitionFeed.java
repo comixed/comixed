@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.*;
+import lombok.Getter;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.opds.OPDSEntry;
 import org.comixedproject.model.opds.OPDSLink;
@@ -34,21 +35,22 @@ import org.comixedproject.model.opds.OPDSLink;
  * @author Darryl L. Pierce
  */
 public class OPDSAcquisitionFeed implements OPDSFeed {
-  private String id;
-
-  private String title;
+  @Getter private String id;
+  @Getter private String title;
+  @Getter private String icon;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+  @Getter
   private Date updated;
-
-  private String icon;
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "link")
+  @Getter
   private List<OPDSLink> links;
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "entry")
+  @Getter
   private List<OPDSEntry> entries;
 
   public OPDSAcquisitionFeed(String selfUrl, String title, Iterable<Comic> comics) {
@@ -72,35 +74,5 @@ public class OPDSAcquisitionFeed implements OPDSFeed {
                 "application/atom+xml; profile=opds-catalog; kind=navigation",
                 "start",
                 "/opds-comics"));
-  }
-
-  @Override
-  public List<OPDSEntry> getEntries() {
-    return this.entries;
-  }
-
-  @Override
-  public String getId() {
-    return this.id;
-  }
-
-  @Override
-  public String getIcon() {
-    return this.icon;
-  }
-
-  @Override
-  public List<OPDSLink> getLinks() {
-    return this.links;
-  }
-
-  @Override
-  public String getTitle() {
-    return this.title;
-  }
-
-  @Override
-  public Date getUpdated() {
-    return this.updated;
   }
 }

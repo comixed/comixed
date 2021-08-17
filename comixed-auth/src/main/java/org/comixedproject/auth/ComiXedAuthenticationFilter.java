@@ -86,7 +86,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
       var userDetails = this.userDetailsService.loadUserByUsername(username);
 
       if (userDetails.getPassword().equals(password)
-          || this.jwtTokenUtil.validateToken(authToken, userDetails)) {
+          || this.jwtTokenUtil.validateToken(authToken, userDetails).booleanValue()) {
         var authentication =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());

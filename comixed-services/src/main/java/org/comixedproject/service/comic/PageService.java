@@ -45,12 +45,12 @@ public class PageService {
 
     if (page.isPresent()) {
       if (pageType != null) {
-        final Page record = page.get();
+        final Page pageRecord = page.get();
 
-        record.setPageType(pageType);
+        pageRecord.setPageType(pageType);
 
         log.debug("Updating page with  new type");
-        return this.pageRepository.save(record);
+        return this.pageRepository.save(pageRecord);
       } else {
         throw new PageException("Invalid page type: " + typeName);
       }
