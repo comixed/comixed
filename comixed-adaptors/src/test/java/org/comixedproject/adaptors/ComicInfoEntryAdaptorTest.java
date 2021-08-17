@@ -18,13 +18,15 @@
 
 package org.comixedproject.adaptors;
 
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 import org.comixedproject.loaders.BaseLoaderTest;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.Credit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +50,11 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
 
   @InjectMocks ComicInfoEntryAdaptor adaptor;
   @Mock private Comic comic;
+  private List<String> characterList = new ArrayList<>();
+  private List<String> teamList = new ArrayList<>();
+  private List<String> locationList = new ArrayList<>();
+  private List<String> storyList = new ArrayList<>();
+  private Set<Credit> creditList = new HashSet<>();
 
   @Before
   public void setup() {
@@ -58,6 +65,12 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.when(comic.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(comic.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.when(comic.getCoverDate()).thenReturn(new Date());
+
+    Mockito.when(comic.getCharacters()).thenReturn(characterList);
+    Mockito.when(comic.getTeams()).thenReturn(teamList);
+    Mockito.when(comic.getLocations()).thenReturn(locationList);
+    Mockito.when(comic.getStoryArcs()).thenReturn(storyList);
+    Mockito.when(comic.getCredits()).thenReturn(creditList);
   }
 
   @Test
@@ -83,6 +96,12 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   public void testLoadComicInfoXml() throws IOException, EntryLoaderException {
     adaptor.loadContent(
         comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE), false);
+
+    assertFalse(characterList.isEmpty());
+    assertFalse(teamList.isEmpty());
+    assertFalse(locationList.isEmpty());
+    assertFalse(storyList.isEmpty());
+    assertFalse(creditList.isEmpty());
 
     Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER_NAME);
     Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
