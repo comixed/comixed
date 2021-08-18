@@ -21,18 +21,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <button
-    id="scrape-all-button"
-    *ngIf="showActions"
-    mat-icon-button
-    color="primary"
-    class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selected.length"
-    [matTooltip]="'library.tooltip.scrape-comics' | translate"
-    (click)="onScrapeComics()"
-  >
-    <mat-icon>plagiarism</mat-icon>
-  </button>
+  <mat-divider vertical="true"></mat-divider>
   <button
     id="select-all-button"
     *ngIf="showActions"
@@ -57,16 +46,28 @@
   >
     <mat-icon>check_box</mat-icon>
   </button>
+  <mat-divider vertical="true"></mat-divider>
   <button
-    *ngIf="showActions && isAdmin"
-    id="scrape-comics-button"
+    id="consolidate-library-button"
+    *ngIf="isAdmin && showConsolidate"
     mat-icon-button
-    color="accent"
+    color="warn"
+    class="cx-toolbar-button cx-margin-right-5"
+    [matTooltip]="'library.tooltip.consolidate-library' | translate"
+    (click)="onConsolidateLibrary()"
+  >
+    <mat-icon>merge_type</mat-icon>
+  </button>
+  <button
+    id="scrape-all-button"
+    *ngIf="isAdmin"
+    mat-icon-button
+    color="primary"
     class="cx-toolbar-button cx-margin-right-5"
     [disabled]="!selected.length"
     [matTooltip]="'library.tooltip.scrape-comics' | translate"
     (click)="onScrapeComics()"
   >
-    <mat-icon>cloud_queue</mat-icon>
+    <mat-icon>plagiarism</mat-icon>
   </button>
 </mat-toolbar>

@@ -37,7 +37,6 @@ import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-library-page',
@@ -52,6 +51,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   isAdmin = false;
+  showConsolidate = false;
   currentTab = 0;
   dataSubscription: Subscription;
   unreadOnly = false;
@@ -74,6 +74,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.unreadOnly = !!data.unread && data.unread === true;
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
+      this.showConsolidate =
+        !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
     });
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
       params => {

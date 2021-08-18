@@ -51,6 +51,12 @@
     "comic-group": {
       "invalid-grouping": "Le groupe \"{name}\" n'est pas valide."
     },
+    "consolidate": {
+      "confirmation-message": "This process can take a long time and will move all comics based on the consolidation rules. Are you sure you want to continue?",
+      "confirmation-title": "Consolidate Library",
+      "effect-failure": "Failed to start library consolidation.",
+      "effect-success": "Library consolidation started."
+    },
     "context-menu": {
       "comic-details": "Afficher les détails de la Bande Dessinée...",
       "mark-as": "Marquer...",
@@ -79,6 +85,7 @@
       "effect-success": "{count, plural, =1{une Bande Dessinée marquée} other{# Bandes Dessinées marquées}} comme {read, select, true{lues} other{non lues}}."
     },
     "tooltip": {
+      "consolidate-library": "Consolidate the library.",
       "deselect-all": "Désélectionner toutes les bandes dessinées.",
       "scrape-comics": "Commencer la récupération des détails",
       "select-all": "Sélectionner toutes les bandes dessinées."

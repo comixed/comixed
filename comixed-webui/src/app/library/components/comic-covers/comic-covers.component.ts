@@ -60,6 +60,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
+  @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
 

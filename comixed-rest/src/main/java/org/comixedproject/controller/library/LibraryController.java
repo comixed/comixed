@@ -83,6 +83,12 @@ public class LibraryController {
     this.taskManager.runTask(task);
   }
 
+  /**
+   * Initiates the library consolidation process.
+   *
+   * @param request the request body
+   * @return all files marked for deletion
+   */
   @PostMapping(
       value = "/library/consolidate",
       consumes = MediaType.APPLICATION_JSON_VALUE,

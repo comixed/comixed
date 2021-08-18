@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+import {
+  consolidateLibraryFeatureKey,
+  ConsolidateLibraryState
+} from '../reducers/consolidate-library.reducer';
+import { selectConsolidateLibraryState } from './consolidate-library.selectors';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+describe('ConsolidateLibrary Selectors', () => {
+  let state: ConsolidateLibraryState;
 
-/**
- * <code>ConsolidateLibraryRequest</code> represents the request body for initiating library
- * consolidation.
- *
- * @author Darryl L. Piece
- */
-@NoArgsConstructor
-@AllArgsConstructor
-public class ConsolidateLibraryRequest {
-  @JsonProperty("deletePhysicalFiles")
-  @Getter
-  private Boolean deletePhysicalFiles;
-}
+  beforeEach(() => {
+    state = { sending: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectConsolidateLibraryState({
+        [consolidateLibraryFeatureKey]: state
+      })
+    ).toEqual(state);
+  });
+});

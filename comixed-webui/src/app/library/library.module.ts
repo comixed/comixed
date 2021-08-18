@@ -79,6 +79,7 @@ import {
   reducer as duplicatePageDetailReducer
 } from '@app/library/reducers/duplicate-page-detail.reducer';
 import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -141,7 +142,8 @@ import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-
     MatSidenavModule,
     OverlayModule,
     MatMenuModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDividerModule
   ],
   exports: [CommonModule, CoreModule, ComicCoversComponent]
 })
