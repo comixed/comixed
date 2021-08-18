@@ -24,7 +24,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.scrapers.ScrapingException;
-import org.comixedproject.scrapers.comicvine.model.ComicVineVolume;
 import org.comixedproject.scrapers.comicvine.model.ComicVineVolumesQueryResponse;
 import org.comixedproject.scrapers.model.ScrapingVolume;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -48,12 +47,11 @@ public class ComicVineGetVolumesAction
 
   @Getter @Setter private String series;
   @Getter @Setter private Integer maxRecords;
+  private int page;
 
   @Override
   public List<ScrapingVolume> execute() throws ScrapingException {
-    if (StringUtils.isEmpty(this.getApiKey())) throw new ScrapingException("Missing API key");
-    if (StringUtils.isEmpty(this.series)) throw new ScrapingException("Missing series name");
-    if (maxRecords == null) throw new ScrapingException("Missing maximum records");
+    this.doCheckSetup();
 
     this.addFilter(NAME_FILTER, this.series);
 
@@ -69,14 +67,10 @@ public class ComicVineGetVolumesAction
     if (maxRecords > 0) this.addParameter(LIMIT_PARAMETER, String.valueOf(this.maxRecords));
 
     List<ScrapingVolume> result = new ArrayList<>();
-    int page = 0;
     boolean done = false;
 
     while (!done) {
-      if (++page > 1) {
-        log.debug("Setting page: {}", page);
-        this.addParameter(PAGE_PARAMETER, String.valueOf(page));
-      }
+      this.doIncrementPage();
 
       log.debug("Creating url for: API key=****{} series={}", this.getMaskedApiKey(), this.series);
       final String url = this.createUrl(this.baseUrl, "search");
@@ -99,21 +93,24 @@ public class ComicVineGetVolumesAction
           response.getVolumes().size(),
           response.getVolumes().size() == 1 ? "" : "s");
 
-      for (int index = 0; index < response.getVolumes().size(); index++) {
-        log.debug("Encoding {} of {}", index + 1, response.getVolumes().size());
-        final ComicVineVolume volume = response.getVolumes().get(index);
-        final ScrapingVolume entry = new ScrapingVolume();
-        entry.setId(volume.getId());
-        entry.setName(volume.getName());
-        entry.setIssueCount(volume.getIssueCount());
-        if (!StringUtils.isEmpty(volume.getPublisher()))
-          entry.setPublisher(volume.getPublisher().getName());
-        entry.setStartYear(volume.getStartYear());
-        entry.setImageURL(volume.getImage().getScreenUrl());
-        result.add(entry);
+      if (maxRecords == 0) maxRecords = response.getVolumes().size();
 
-        if (hitMaxRecordLimit(result)) break;
-      }
+      response
+          .getVolumes()
+          .subList(0, maxRecords)
+          .forEach(
+              volume -> {
+                log.trace("Processing volume record: {}", volume.getId());
+                final ScrapingVolume entry = new ScrapingVolume();
+                entry.setId(volume.getId());
+                entry.setName(volume.getName());
+                entry.setIssueCount(volume.getIssueCount());
+                if (!StringUtils.isEmpty(volume.getPublisher()))
+                  entry.setPublisher(volume.getPublisher().getName());
+                entry.setStartYear(volume.getStartYear());
+                entry.setImageURL(volume.getImage().getScreenUrl());
+                result.add(entry);
+              });
 
       done =
           (hitMaxRecordLimit(result))
@@ -122,6 +119,21 @@ public class ComicVineGetVolumesAction
     }
 
     return result;
+  }
+
+  private void doIncrementPage() {
+    log.trace("Incremented page value: {}", this.page);
+    this.page++;
+    if (this.page > 1) {
+      log.trace("Setting page: {}", this.page);
+      this.addParameter(PAGE_PARAMETER, String.valueOf(this.page));
+    }
+  }
+
+  private void doCheckSetup() throws ScrapingException {
+    if (StringUtils.isEmpty(this.getApiKey())) throw new ScrapingException("Missing API key");
+    if (StringUtils.isEmpty(this.series)) throw new ScrapingException("Missing series name");
+    if (maxRecords == null) throw new ScrapingException("Missing maximum records");
   }
 
   private boolean hitMaxRecordLimit(final List<ScrapingVolume> records) {

@@ -61,27 +61,22 @@ public class ComicFileHandler implements InitializingBean {
     log.debug("Initializing ComicFileHandler");
     this.archiveAdaptors.clear();
     this.archiveTypes.clear();
-    for (ArchiveAdaptorEntry loader : this.adaptors) {
-      if (loader.isValid()) {
-        ArchiveAdaptor bean = (ArchiveAdaptor) this.context.getBean(loader.bean);
+    this.adaptors.stream()
+        .filter(ArchiveAdaptorEntry::isValid)
+        .forEach(
+            loader -> {
+              ArchiveAdaptor bean = (ArchiveAdaptor) this.context.getBean(loader.bean);
 
-        if (this.context.containsBean(loader.bean)) {
-          log.debug("Adding new archive adaptor: format=" + loader.format + " bean=" + loader.bean);
-          this.archiveAdaptors.put(loader.format, bean);
-          this.archiveTypes.put(loader.format, loader.archiveType);
-          this.adaptorForType.put(loader.archiveType, bean);
-        } else {
-          log.warn("No such bean: name=" + loader.bean);
-        }
-      } else {
-        if ((loader.format == null) || loader.format.isEmpty()) {
-          log.warn("Missing type for archive adaptor");
-        }
-        if ((loader.bean == null) || loader.bean.isEmpty()) {
-          log.warn("Missing name for archive adaptor");
-        }
-      }
-    }
+              if (this.context.containsBean(loader.bean)) {
+                log.debug(
+                    "Adding new archive adaptor: format=" + loader.format + " bean=" + loader.bean);
+                this.archiveAdaptors.put(loader.format, bean);
+                this.archiveTypes.put(loader.format, loader.archiveType);
+                this.adaptorForType.put(loader.archiveType, bean);
+              } else {
+                log.warn("No such bean: name=" + loader.bean);
+              }
+            });
   }
 
   public List<ArchiveAdaptorEntry> getAdaptors() {

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
@@ -73,56 +74,31 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     log.debug("Getting comic: id={}", id);
 
     final var result = this.doGetComic(id);
-    final List<Comic> next =
-        this.comicRepository.findIssuesAfterComic(
-            result.getSeries(), result.getVolume(), result.getIssueNumber(), result.getCoverDate());
-    if (!next.isEmpty()) {
-      int index = 0;
-      Comic nextComic = null;
-      while (nextComic == null && index < next.size()) {
-        Comic candidate = next.get(index);
-        if (candidate.getCoverDate().compareTo(result.getCoverDate()) > 0) {
-          log.debug("Found next issue by cover date: id={}", candidate.getId());
-          nextComic = candidate;
-        } else if ((candidate.getCoverDate().compareTo(result.getCoverDate()) == 0)
-            && (candidate.getSortableIssueNumber().compareTo(result.getSortableIssueNumber())
-                > 0)) {
-          log.debug("Found next issue by issue number: id={}", candidate.getId());
-          nextComic = candidate;
-        } else {
-          index++;
-        }
-      }
-      if (nextComic != null) {
-        log.debug("Setting the next comic: id={}", nextComic.getId());
-        result.setNextIssueId(nextComic.getId());
-      }
-    }
-    final List<Comic> prev =
-        this.comicRepository.findIssuesBeforeComic(
-            result.getSeries(), result.getVolume(), result.getIssueNumber(), result.getCoverDate());
-    if (!prev.isEmpty()) {
-      int index = prev.size() - 1;
-      Comic prevComic = null;
-      while (prevComic == null && index >= 0) {
-        Comic candidate = prev.get(index);
-        if (candidate.getCoverDate().compareTo(result.getCoverDate()) < 0) {
-          log.debug("Found previous issue by cover date: id={}", candidate.getId());
-          prevComic = candidate;
-        } else if ((candidate.getCoverDate().compareTo(result.getCoverDate()) == 0)
-            && (candidate.getSortableIssueNumber().compareTo(result.getSortableIssueNumber())
-                < 0)) {
-          log.debug("Found previous issue by issue number: id={}", candidate.getId());
-          prevComic = candidate;
-        } else {
-          index--;
-        }
-      }
-      if (prevComic != null) {
-        log.debug("Setting previous comic: id={}", prevComic.getId());
-        result.setPreviousIssueId(prevComic.getId());
-      }
-    }
+    final Optional<Comic> nextComic =
+        this.comicRepository
+            .findIssuesAfterComic(
+                result.getSeries(),
+                result.getVolume(),
+                result.getIssueNumber(),
+                result.getCoverDate())
+            .stream()
+            .filter(comic -> comic.getCoverDate().compareTo(result.getCoverDate()) >= 0)
+            .sorted((o1, o2) -> o1.getCoverDate().compareTo(o2.getCoverDate()))
+            .findFirst();
+    if (nextComic.isPresent()) result.setNextIssueId(nextComic.get().getId());
+
+    final Optional<Comic> prevComic =
+        this.comicRepository
+            .findIssuesBeforeComic(
+                result.getSeries(),
+                result.getVolume(),
+                result.getIssueNumber(),
+                result.getCoverDate())
+            .stream()
+            .filter(comic -> comic.getCoverDate().compareTo(result.getCoverDate()) <= 0)
+            .sorted((o1, o2) -> o2.getCoverDate().compareTo(o1.getCoverDate()))
+            .findFirst();
+    if (prevComic.isPresent()) result.setPreviousIssueId(prevComic.get().getId());
 
     log.debug("Returning comic: id={}", result.getId());
     return result;

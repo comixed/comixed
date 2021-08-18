@@ -74,18 +74,7 @@ public class ScrapingService {
         "Getting volumes: series={} maxRecords={} skipCache={}", series, maxRecords, skipCache);
     if (!skipCache) {
       log.debug("Fetching from the cache: source={} key={}", source, key);
-      final List<String> cachedEntries = this.scrapingCacheService.getFromCache(source, key);
-      if (cachedEntries != null && !cachedEntries.isEmpty()) {
-        log.debug(
-            "Decoding {} entr{}", cachedEntries.size(), cachedEntries.size() == 1 ? "y" : "ies");
-        for (String entry : cachedEntries) {
-          try {
-            result.add(this.objectMapper.readValue(entry, ScrapingVolume.class));
-          } catch (JsonProcessingException error) {
-            throw new ScrapingException("Failed to decode scraping volume", error);
-          }
-        }
-      }
+      result = this.doLoadScrapingVolumes(source, key);
     }
 
     if (result.isEmpty()) {
@@ -112,6 +101,22 @@ public class ScrapingService {
       }
     }
 
+    return result;
+  }
+
+  private List<ScrapingVolume> doLoadScrapingVolumes(final String source, final String key)
+      throws ScrapingException {
+    List<ScrapingVolume> result = new ArrayList<>();
+    final List<String> cachedEntries = this.scrapingCacheService.getFromCache(source, key);
+    if (cachedEntries != null && !cachedEntries.isEmpty()) {
+      for (String entry : cachedEntries) {
+        try {
+          result.add(this.objectMapper.readValue(entry, ScrapingVolume.class));
+        } catch (JsonProcessingException error) {
+          throw new ScrapingException("Failed to decode scraping volume", error);
+        }
+      }
+    }
     return result;
   }
 
@@ -197,16 +202,8 @@ public class ScrapingService {
     ScrapingIssueDetails issueDetails = null;
 
     if (!skipCache) {
-      final List<String> cachedEntries = this.scrapingCacheService.getFromCache(source, key);
-      if (cachedEntries != null && !cachedEntries.isEmpty()) {
-        log.debug("Decoding cached issue details");
-        try {
-          issueDetails =
-              this.objectMapper.readValue(cachedEntries.get(0), ScrapingIssueDetails.class);
-        } catch (JsonProcessingException error) {
-          throw new ScrapingException("Failed to decoded cached issue details", error);
-        }
-      }
+      log.trace("Loading cached issue details: source={} key={}", source, key);
+      issueDetails = this.doLoadIssueDetails(source, key);
     }
 
     if (issueDetails == null) {
@@ -261,5 +258,20 @@ public class ScrapingService {
     } catch (ComicException error) {
       throw new ScrapingException("failed to load comic", error);
     }
+  }
+
+  private ScrapingIssueDetails doLoadIssueDetails(final String source, final String key)
+      throws ScrapingException {
+    final List<String> cachedEntries = this.scrapingCacheService.getFromCache(source, key);
+    if (cachedEntries != null && !cachedEntries.isEmpty()) {
+      log.debug("Decoding cached issue details");
+      try {
+        return this.objectMapper.readValue(cachedEntries.get(0), ScrapingIssueDetails.class);
+      } catch (JsonProcessingException error) {
+        throw new ScrapingException("Failed to decoded cached issue details", error);
+      }
+    }
+    log.trace("No cached entries found");
+    return null;
   }
 }
