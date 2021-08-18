@@ -32,10 +32,12 @@ import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
 import {
   LOAD_COMIC_URL,
-  SET_READ_STATE_URL
+  SET_READ_STATE_URL,
+  START_LIBRARY_CONSOLIDATION_URL
 } from '@app/library/library.constants';
 import { HttpResponse } from '@angular/common/http';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
+import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_1;
@@ -83,5 +85,19 @@ describe('LibraryService', () => {
       read: READ
     } as SetComicReadRequest);
     req.flush(serviceResponse);
+  });
+
+  it('can start library consolidation', () => {
+    service
+      .startLibraryConsolidation()
+      .subscribe(response => expect(response).toEqual(COMICS));
+
+    const req = httpMock.expectOne(
+      interpolate(START_LIBRARY_CONSOLIDATION_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      deletePhysicalFiles: true
+    } as ConsolidateLibraryRequest);
   });
 });

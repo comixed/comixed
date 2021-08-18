@@ -48,6 +48,8 @@ export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 export const LOAD_COMICS_WITH_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/library/pages/duplicates`;
 export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/duplicates/\${hash}`;
 
+export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolidate`;
+
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
   'preference.import.root-directory';

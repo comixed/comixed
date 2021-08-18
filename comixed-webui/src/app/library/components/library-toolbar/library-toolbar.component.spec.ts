@@ -46,6 +46,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -186,6 +187,23 @@ describe('LibraryToolbarComponent', () => {
       expect(component.archiveTypeChanged.emit).toHaveBeenCalledWith(
         ARCHIVE_TYPE
       );
+    });
+  });
+
+  describe('starting library consolidation', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onConsolidateLibrary();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(startLibraryConsolidation());
     });
   });
 });

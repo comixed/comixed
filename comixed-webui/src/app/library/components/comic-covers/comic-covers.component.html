@@ -1,11 +1,13 @@
 <div class="cx-width-100 cx-height-100 cx-top-0">
   <cx-library-toolbar
     [comics]="comics"
+    [showActions]="showActions"
+    [isAdmin]="isAdmin"
+    [showConsolidate]="showConsolidate"
     [selected]="selected"
     [pagination]="pagination"
     [archiveType]="archiveType"
     (archiveTypeChanged)="onArchiveTypeChanged($event)"
-    [showActions]="showActions"
   ></cx-library-toolbar>
   <div
     id="cx-all-comics"

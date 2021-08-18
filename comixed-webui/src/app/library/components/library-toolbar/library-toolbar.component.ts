@@ -46,6 +46,7 @@ import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -60,6 +61,7 @@ export class LibraryToolbarComponent
   @Input() comics: Comic[] = [];
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
+  @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
 
@@ -154,6 +156,22 @@ export class LibraryToolbarComponent
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.trace('Archive type selected:', archiveType);
     this.archiveTypeChanged.emit(archiveType);
+  }
+
+  onConsolidateLibrary(): void {
+    this.logger.trace('Confirming with the user to consolidate the library');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.consolidate.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.consolidate.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: consolidate library');
+        this.store.dispatch(startLibraryConsolidation());
+      }
+    });
   }
 
   private loadTranslations(): void {
