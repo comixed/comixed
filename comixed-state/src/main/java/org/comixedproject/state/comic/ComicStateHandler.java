@@ -18,8 +18,6 @@
 
 package org.comixedproject.state.comic;
 
-import static org.comixedproject.state.comic.ComicStateConstants.HEADER_COMIC;
-
 import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
@@ -45,6 +43,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComicStateHandler extends LifecycleObjectSupport {
+  public static final String HEADER_COMIC = "Comic";
+
   @Autowired private StateMachine<ComicState, ComicEvent> stateMachine;
 
   private Set<ComicStateChangeListener> listeners = new HashSet<>();

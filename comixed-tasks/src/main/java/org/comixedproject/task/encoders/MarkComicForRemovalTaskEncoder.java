@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project.
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,58 +18,46 @@
 
 package org.comixedproject.task.encoders;
 
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
-import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.UndeleteComicTask;
+import org.comixedproject.task.MarkComicForRemovalTask;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>UndeleteComicTaskEncoder</code> defines a type that can encode and decode instances of
- * {@link UndeleteComicTask}.
+ * <code>MarkComicForRemovalTaskEncoder</code> handles encoding and decoding instances of {@link
+ * MarkComicForRemovalTask}.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class UndeleteComicTaskEncoder extends AbstractTaskEncoder<UndeleteComicTask> {
-  @Autowired private TaskService taskService;
-  @Autowired private ObjectFactory<UndeleteComicTask> undeleteComicWorkerTaskObjectFactory;
+public class MarkComicForRemovalTaskEncoder extends AbstractTaskEncoder<MarkComicForRemovalTask> {
+  @Autowired private ObjectFactory<MarkComicForRemovalTask> deleteComicWorkerTaskObjectFactory;
 
-  private Comic comic;
+  @Setter private Comic comic;
 
   @Override
   public PersistedTask encode() {
-    log.debug("Encoding undelete task for comic: id={}", this.comic.getId());
+    log.trace("Encoding delete comic task: comic={}", this.comic.getId());
     final PersistedTask result = new PersistedTask();
-    result.setTaskType(PersistedTaskType.UNDELETE_COMIC);
-    result.setComic(this.comic);
-    result.setProperty("noop", "noo");
+    result.setTaskType(PersistedTaskType.MARK_COMIC_FOR_REMOVAL);
+    result.setComic(comic);
     return result;
   }
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
-  public UndeleteComicTask decode(PersistedTask persistedTask) {
-    this.taskService.delete(persistedTask);
-
-    log.debug("Decoding undelete comic persistedTask: id={}", persistedTask.getId());
-
-    final UndeleteComicTask result = this.undeleteComicWorkerTaskObjectFactory.getObject();
+  public MarkComicForRemovalTask decode(final PersistedTask persistedTask) {
+    log.trace("Decoding delete comic task");
+    final MarkComicForRemovalTask result = this.deleteComicWorkerTaskObjectFactory.getObject();
     result.setComic(persistedTask.getComic());
-
     return result;
-  }
-
-  public void setComic(Comic comic) {
-    this.comic = comic;
   }
 }

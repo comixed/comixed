@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project.
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-/**
- * <code>UndeleteMultipleComicsResponse</code> represents the paylaod response to a request to
- * undelete comics.
- *
- * @author Darryl L. Pierce
- */
-public class UndeleteMultipleComicsResponse {
-  @JsonProperty("success")
-  private final boolean success;
-
-  public UndeleteMultipleComicsResponse(final boolean success) {
-    this.success = success;
-  }
-
-  public boolean isSuccess() {
-    return success;
-  }
+export interface MarkComicsDeletedRequest {
+  ids: number[];
 }

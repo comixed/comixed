@@ -16,22 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.comic;
+package org.comixedproject.model.net.comic;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
- * <code>ComicState</code> represents the current state for a comic.
+ * <code>MarkComicsDeletedRequest</code> represents the request body when setting the deleted state
+ * for comics.
  *
  * @author Darryl L. Pierce
  */
-public enum ComicState {
-  // the comic has been added to the database but has not been processed
-  ADDED,
-  // the comic has been processed and its contents match the database
-  STABLE,
-  // the details in the database have been changed but the comic has not been updated
-  CHANGED,
-  // the comic has been  marked for deletion
-  DELETED,
-  // removed from the database, comics never actually reach this state
-  REMOVED;
+@NoArgsConstructor
+@AllArgsConstructor
+public class MarkComicsDeletedRequest {
+  @JsonProperty("ids")
+  @Getter
+  private List<Long> ids;
 }

@@ -219,6 +219,7 @@
             <exclude>**/ComixedApp</exclude>
             <exclude>**/model/**</exclude>
             <exclude>**/*Exception*</exclude>
+            <exclude>**/state/comic/Comic**</exclude>
           </excludes>
         </configuration>
         <executions>

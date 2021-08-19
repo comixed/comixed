@@ -19,71 +19,73 @@
 package org.comixedproject.task;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.List;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.UndeleteComicTaskEncoder;
+import org.comixedproject.task.adaptors.TaskAdaptor;
+import org.comixedproject.task.encoders.MarkComicForRemovalTaskEncoder;
 import org.comixedproject.views.View;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>UndeleteComicsTask</code> is a task that creates multiple {@link UndeleteComicTask}
- * instances, one for each come to be undeleted.
+ * <code>MarkComicsForRemovalTask</code> handles creating persisted instances of {@link
+ * MarkComicForRemovalTask}.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class UndeleteComicsTask extends AbstractTask {
-  @Autowired private ObjectFactory<UndeleteComicTaskEncoder> undeleteComicTaskEncoderObjectFactory;
+public class MarkComicsForRemovalTask extends AbstractTask {
   @Autowired private ComicService comicService;
+  @Autowired private TaskAdaptor taskAdaptor;
   @Autowired private TaskService taskService;
 
   @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
   @Setter
-  private List<Long> ids = new ArrayList<>();
+  private List<Long> comicIds;
 
-  public UndeleteComicsTask() {
-    super(PersistedTaskType.UNDELETE_COMICS);
+  public MarkComicsForRemovalTask() {
+    super(PersistedTaskType.MARK_COMICS_FOR_REMOVAL);
   }
 
   @Override
   protected String createDescription() {
-    return String.format("Undeleting %d comic%s", this.ids.size(), this.ids.size() == 1 ? "" : "s");
+    return MessageFormat.format(
+        "Enqueuing {0} comic{1} for deletion",
+        this.comicIds.size(), this.comicIds.size() == 1 ? "" : "s");
   }
 
   @Override
   public void startTask() throws TaskException {
-    log.debug(
-        "Creating tasks to undelete {} comic{}", this.ids.size(), this.ids.size() == 1 ? "" : "s");
-    for (int index = 0; index < this.ids.size(); index++) {
-      Long id = ids.get(index);
-      Comic comic = null;
+    for (int index = 0; index < this.comicIds.size(); index++) {
+      final Long id = this.comicIds.get(index);
+      Comic comic;
       try {
         comic = this.comicService.getComic(id);
       } catch (ComicException error) {
         throw new TaskException("failed to load comic", error);
       }
-      log.debug("Creating undelete persistedTask for comic: id={}", comic.getId());
-      UndeleteComicTaskEncoder encoder = this.undeleteComicTaskEncoderObjectFactory.getObject();
-      encoder.setComic(comic);
-      log.debug("enqueueing undelete persistedTask");
-      PersistedTask persistedTask = encoder.encode();
-      this.taskService.save(persistedTask);
+
+      if (comic != null) {
+        try {
+          final MarkComicForRemovalTaskEncoder encoder;
+          encoder = this.taskAdaptor.getEncoder(PersistedTaskType.MARK_COMIC_FOR_REMOVAL);
+          encoder.setComic(comic);
+          this.taskService.save(encoder.encode());
+        } catch (TaskException error) {
+          log.error("Failed to encode delete comic task", error);
+        }
+      }
     }
   }
 }

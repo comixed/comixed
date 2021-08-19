@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project.
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,44 +16,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.task;
-
-import static junit.framework.TestCase.assertNotNull;
+package org.comixedproject.state.comic.actions;
 
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.state.comic.ComicEvent;
-import org.comixedproject.state.comic.ComicStateHandler;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UndeleteComicTaskTest {
-  @InjectMocks private UndeleteComicTask task;
-  @Mock private ComicStateHandler comicStateHandler;
+public class UnmarkComicForRemovalActionTest {
+  @InjectMocks private UnmarkComicForRemovalAction action;
+  @Mock private StateContext<ComicState, ComicEvent> context;
+  @Mock private MessageHeaders messageHeaders;
   @Mock private Comic comic;
 
-  @Test
-  public void testCreateDescription() {
-    assertNotNull(task.createDescription());
+  @Before
+  public void setUp() {
+    Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(comic);
   }
 
   @Test
-  public void testStartTask() throws TaskException, ComicException {
-    task.setComic(comic);
-
-    Mockito.doNothing()
-        .when(comicStateHandler)
-        .fireEvent(Mockito.any(Comic.class), Mockito.any(ComicEvent.class));
-
-    task.startTask();
+  public void testExecute() {
+    action.execute(context);
 
     Mockito.verify(comic, Mockito.times(1)).setDateDeleted(null);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comic, ComicEvent.removedFromDeleteQueue);
   }
 }

@@ -16,22 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.comic;
+package org.comixedproject.state.comic.actions;
+
+import static org.comixedproject.state.comic.ComicStateHandler.HEADER_COMIC;
+
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.ComicState;
+import org.comixedproject.state.comic.ComicEvent;
+import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.action.Action;
 
 /**
- * <code>ComicState</code> represents the current state for a comic.
+ * <code>AbstractComicAction</code> defines a base type for creating new actions that are executed
+ * during a comic state change.
  *
  * @author Darryl L. Pierce
  */
-public enum ComicState {
-  // the comic has been added to the database but has not been processed
-  ADDED,
-  // the comic has been processed and its contents match the database
-  STABLE,
-  // the details in the database have been changed but the comic has not been updated
-  CHANGED,
-  // the comic has been  marked for deletion
-  DELETED,
-  // removed from the database, comics never actually reach this state
-  REMOVED;
+@Log4j2
+public abstract class AbstractComicAction implements Action<ComicState, ComicEvent> {
+  protected Comic fetchComic(final StateContext<ComicState, ComicEvent> context) {
+    return context.getMessageHeaders().get(HEADER_COMIC, Comic.class);
+  }
 }

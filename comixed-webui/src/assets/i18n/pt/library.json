@@ -59,18 +59,26 @@
     },
     "context-menu": {
       "comic-details": "Show comic details...",
+      "delete-one": "This Comic As Deleted",
+      "delete-selected": "Selected Comics As Deleted",
       "mark-as": "Mark...",
       "mark-one-as-read": "This Comic As Read",
       "mark-one-as-unread": "This Comic As Unread",
       "mark-selected-as-read": "Selected Comics As Read",
       "mark-selected-as-unread": "Selected Comics As Unread",
       "set-page-blocked": "Block Pages Like This",
-      "set-page-unblocked": "Don't Block Pages Like This"
+      "set-page-unblocked": "Don't Block Pages Like This",
+      "undelete-one": "This Comic As Undeleted",
+      "undelete-selected": "Selected Comics As Undeleted"
     },
     "label": {
       "no-publisher": "Unknown Publisher",
       "no-series": "Unknown Series",
       "pagination-items-per-page": "Covers Per Page"
+    },
+    "mark-selected-as-deleted": {
+      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} the selected comics for deletion?",
+      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comics For Deletion"
     },
     "navigation": {
       "publishers": "Publishers",

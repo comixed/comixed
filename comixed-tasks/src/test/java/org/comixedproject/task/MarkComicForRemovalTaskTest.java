@@ -21,7 +21,6 @@ package org.comixedproject.task;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,15 +28,15 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
-import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -47,14 +46,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileUtils.class)
 @SpringBootTest
-public class DeleteComicTaskTest {
-  private static final String TEST_FILENAME = "/Users/comixed/Comics/comic.cbz";
-
+public class MarkComicForRemovalTaskTest {
   private static final int TEST_READING_LIST_COUNT = 25;
 
-  @InjectMocks private DeleteComicTask task;
-  @Mock private ComicService comicService;
+  @InjectMocks private MarkComicForRemovalTask task;
   @Mock private ReadingListService readingListService;
+  @Mock private ComicStateHandler comicStateHandler;
   @Mock private Comic comic;
   @Mock private ReadingList readingList;
 
@@ -63,7 +60,6 @@ public class DeleteComicTaskTest {
   @Before
   public void setUp() {
     task.setComic(comic);
-    task.setDeleteFile(true);
   }
 
   @Test
@@ -84,7 +80,6 @@ public class DeleteComicTaskTest {
     Mockito.when(comic.getReadingLists()).thenReturn(readingLists);
 
     task.setComic(comic);
-    task.setDeleteFile(false);
 
     task.startTask();
 
@@ -92,23 +87,7 @@ public class DeleteComicTaskTest {
 
     Mockito.verify(readingListService, Mockito.times(TEST_READING_LIST_COUNT))
         .save(Mockito.any(ReadingList.class));
-  }
-
-  @Test
-  public void testStartTaskDeleteFile() throws TaskException, IOException {
-    Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME);
-
-    PowerMockito.mockStatic(FileUtils.class);
-    PowerMockito.doNothing().when(FileUtils.class);
-    FileUtils.forceDelete(Mockito.any());
-
-    task.setComic(comic);
-    task.setDeleteFile(true);
-
-    task.startTask();
-
-    Mockito.verify(comicService, Mockito.times(1)).delete(comic);
-    PowerMockito.verifyStatic(FileUtils.class, Mockito.times(1));
-    FileUtils.forceDelete(Mockito.any());
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comic, ComicEvent.markedForRemoval);
   }
 }

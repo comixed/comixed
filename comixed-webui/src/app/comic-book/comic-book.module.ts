@@ -86,6 +86,11 @@ import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ComicvineIssueLinkPipe } from './pipes/comicvine-issue-link.pipe';
 import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
+import { MarkComicsDeletedEffects } from '@app/comic-book/effects/mark-comics-deleted.effects';
+import {
+  MARK_COMICS_DELETED_FEATURE_KEY,
+  reducer as markComicsDeletedReducer
+} from '@app/comic-book/reducers/mark-comics-deleted.reducer';
 
 @NgModule({
   declarations: [
@@ -117,13 +122,18 @@ import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
       UPDATE_COMIC_INFO_FEATURE_KEY,
       updateComicInfoReducer
     ),
+    StoreModule.forFeature(
+      MARK_COMICS_DELETED_FEATURE_KEY,
+      markComicsDeletedReducer
+    ),
     EffectsModule.forFeature([
       ComicFormatEffects,
       ScanTypeEffects,
       ScrapingEffects,
       ComicListEffects,
       ComicEffects,
-      UpdateComicInfoEffects
+      UpdateComicInfoEffects,
+      MarkComicsDeletedEffects
     ]),
     TranslateModule.forRoot(),
     MatCardModule,

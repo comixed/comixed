@@ -16,22 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.comic;
+package org.comixedproject.state.comic.actions;
+
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.ComicState;
+import org.comixedproject.state.comic.ComicEvent;
+import org.springframework.statemachine.StateContext;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicState</code> represents the current state for a comic.
+ * <code>UnmarkComicForRemovalAction</code> is executed when a comic is removed from the removal
+ * queue.
  *
  * @author Darryl L. Pierce
  */
-public enum ComicState {
-  // the comic has been added to the database but has not been processed
-  ADDED,
-  // the comic has been processed and its contents match the database
-  STABLE,
-  // the details in the database have been changed but the comic has not been updated
-  CHANGED,
-  // the comic has been  marked for deletion
-  DELETED,
-  // removed from the database, comics never actually reach this state
-  REMOVED;
+@Component
+@Log4j2
+public class UnmarkComicForRemovalAction extends AbstractComicAction {
+  @Override
+  public void execute(final StateContext<ComicState, ComicEvent> context) {
+    log.trace("Fetching comic");
+    final Comic comic = this.fetchComic(context);
+    log.trace("Clearing comic deleted date");
+    comic.setDateDeleted(null);
+  }
 }

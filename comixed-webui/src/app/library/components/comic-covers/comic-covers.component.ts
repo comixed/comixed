@@ -48,6 +48,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -170,5 +171,50 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.trace('Firing archive type changed event:', archiveType);
     this.archiveTypeChanged.emit(archiveType);
+  }
+
+  onMarkAsDeleted(comic: Comic, deleted: boolean): void {
+    this.logger.trace('Confirming deleted state with user:', comic, deleted);
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'comic-book.mark-as-deleted.confirmation-title',
+        {
+          deleted
+        }
+      ),
+      message: this.translateService.instant(
+        'comic-book.mark-as-deleted.confirmation-message',
+        { deleted }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing deleted state change:', comic, deleted);
+        this.store.dispatch(markComicsDeleted({ comics: [comic], deleted }));
+      }
+    });
+  }
+
+  onMarkSelectedDeleted(deleted: boolean): void {
+    this.logger.trace(
+      'Confirming selected comics deleted state with user:',
+      deleted
+    );
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.mark-selected-as-deleted.confirmation-title',
+        {
+          deleted
+        }
+      ),
+      message: this.translateService.instant(
+        'library.mark-selected-as-deleted.confirmation-message',
+        { deleted }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing selected comics  state change:', deleted);
+        this.store.dispatch(
+          markComicsDeleted({ comics: this.selected, deleted })
+        );
+      }
+    });
   }
 }

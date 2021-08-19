@@ -19,47 +19,39 @@
 package org.comixedproject.task;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.library.ReadingList;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.ReadingListService;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>DeleteComicTask</code> deletes a single comic from the library and also the underlying
- * comic file.
+ * <code>MarkComicForRemovalTask</code> marks a single comic for removal from the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class DeleteComicTask extends AbstractTask implements Task {
+public class MarkComicForRemovalTask extends AbstractTask implements Task {
   @Autowired private ComicService comicService;
   @Autowired private ReadingListService readingListService;
+  @Autowired private ComicStateHandler comicStateHandler;
 
   @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
-  @Setter
-  private boolean deleteFile;
-
-  @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
   @Setter
   private Comic comic;
 
-  public DeleteComicTask() {
-    super(PersistedTaskType.DELETE_COMIC);
+  public MarkComicForRemovalTask() {
+    super(PersistedTaskType.MARK_COMIC_FOR_REMOVAL);
   }
 
   @Override
@@ -83,23 +75,12 @@ public class DeleteComicTask extends AbstractTask implements Task {
       }
     }
 
-    if (this.deleteFile) {
-      final String filename = this.comic.getFilename();
-      log.debug("Deleting comic file: {}", filename);
-      File file = new File(filename);
-      try {
-        FileUtils.forceDelete(file);
-        log.debug("Removing comic from library: id={}", this.comic.getId());
-        this.comicService.delete(this.comic);
-      } catch (IOException error) {
-        log.error("Unable to delete comic: {}", filename, error);
-      }
-    }
+    log.trace("Fire comic event: mark comic deleted");
+    this.comicStateHandler.fireEvent(this.comic, ComicEvent.markedForRemoval);
   }
 
   @Override
   protected String createDescription() {
-    return MessageFormat.format(
-        "Deleting comic: id={0} [delete file={1}]", this.comic.getId(), this.deleteFile);
+    return MessageFormat.format("Marking comic deleted: id={0}", this.comic.getId());
   }
 }

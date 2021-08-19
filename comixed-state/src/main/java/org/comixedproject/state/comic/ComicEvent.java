@@ -31,6 +31,6 @@ public enum ComicEvent {
   comicInfoUpdated,
   archiveRecreated,
   comicMoved,
-  addedToDeleteQueue,
-  removedFromDeleteQueue;
+  markedForRemoval,
+  unmarkedForRemoval;
 }

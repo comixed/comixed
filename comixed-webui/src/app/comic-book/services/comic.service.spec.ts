@@ -38,7 +38,14 @@ import { interpolate } from '@app/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { LoadComicsResponse } from '@app/comic-book/models/net/load-comics-response';
 import { LoadComicsRequest } from '@app/comic-book/models/net/load-comics-request';
-import { UPDATE_COMIC_INFO_URL } from '@app/comic-book/comic-book.constants';
+import {
+  MARK_COMICS_DELETED_URL,
+  MARK_COMICS_UNDELETED_URL,
+  UPDATE_COMIC_INFO_URL
+} from '@app/comic-book/comic-book.constants';
+import { MarkComicsDeletedRequest } from '@app/comic-book/models/net/mark-comics-deleted-request';
+import { HttpResponse } from '@angular/common/http';
+import { MarkComicsUndeletedRequest } from '@app/comic-book/models/net/mark-comics-undeleted-request';
 
 describe('ComicService', () => {
   const COMIC = COMIC_2;
@@ -117,5 +124,37 @@ describe('ComicService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({});
     req.flush(COMIC);
+  });
+
+  it('can mark comics for deletion', () => {
+    service
+      .markComicsDeleted({
+        comics: COMICS,
+        deleted: true
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(MARK_COMICS_DELETED_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id)
+    } as MarkComicsDeletedRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can unmark comics for deletion', () => {
+    service
+      .markComicsDeleted({
+        comics: COMICS,
+        deleted: false
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(MARK_COMICS_UNDELETED_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id)
+    } as MarkComicsUndeletedRequest);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 });

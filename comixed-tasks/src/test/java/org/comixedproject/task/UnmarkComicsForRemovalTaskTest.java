@@ -27,7 +27,7 @@ import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.UndeleteComicTaskEncoder;
+import org.comixedproject.task.encoders.UnmarkComicForRemovalTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,10 +37,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UndeleteComicsTaskTest {
-  @InjectMocks private UndeleteComicsTask task;
-  @Mock private ObjectFactory<UndeleteComicTaskEncoder> undeleteComicTaskEncoderObjectFactory;
-  @Mock private UndeleteComicTaskEncoder undeleteComicTaskEncoder;
+public class UnmarkComicsForRemovalTaskTest {
+  @InjectMocks private UnmarkComicsForRemovalTask task;
+
+  @Mock
+  private ObjectFactory<UnmarkComicForRemovalTaskEncoder> undeleteComicTaskEncoderObjectFactory;
+
+  @Mock private UnmarkComicForRemovalTaskEncoder unmarkComicForRemovalTaskEncoder;
   @Mock private PersistedTask persistedTask;
   @Mock private ComicService comicService;
   @Mock private Comic comic;
@@ -58,9 +61,9 @@ public class UndeleteComicsTaskTest {
     for (long index = 0L; index < 25L; index++) ids.add(index);
 
     Mockito.when(undeleteComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(undeleteComicTaskEncoder);
+        .thenReturn(unmarkComicForRemovalTaskEncoder);
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(undeleteComicTaskEncoder.encode()).thenReturn(persistedTask);
+    Mockito.when(unmarkComicForRemovalTaskEncoder.encode()).thenReturn(persistedTask);
     Mockito.when(taskService.save(Mockito.any(PersistedTask.class))).thenReturn(persistedTask);
 
     task.setIds(ids);
@@ -71,7 +74,7 @@ public class UndeleteComicsTaskTest {
     for (int index = 0; index < ids.size(); index++) {
       Mockito.verify(comicService, Mockito.times(1)).getComic(ids.get(index));
     }
-    Mockito.verify(undeleteComicTaskEncoder, Mockito.times(ids.size())).setComic(comic);
+    Mockito.verify(unmarkComicForRemovalTaskEncoder, Mockito.times(ids.size())).setComic(comic);
     Mockito.verify(taskService, Mockito.times(ids.size())).save(persistedTask);
   }
 }

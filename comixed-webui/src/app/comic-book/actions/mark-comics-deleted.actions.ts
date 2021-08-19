@@ -16,22 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.comic;
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '@app/comic-book/models/comic';
 
-/**
- * <code>ComicState</code> represents the current state for a comic.
- *
- * @author Darryl L. Pierce
- */
-public enum ComicState {
-  // the comic has been added to the database but has not been processed
-  ADDED,
-  // the comic has been processed and its contents match the database
-  STABLE,
-  // the details in the database have been changed but the comic has not been updated
-  CHANGED,
-  // the comic has been  marked for deletion
-  DELETED,
-  // removed from the database, comics never actually reach this state
-  REMOVED;
-}
+export const markComicsDeleted = createAction(
+  '[Mark Comics Deleted] Set the deleted state for comics',
+  props<{ comics: Comic[]; deleted: boolean }>()
+);
+
+export const comicsMarkedDeleted = createAction(
+  '[Mark Comics Deleted] Deleted state set'
+);
+
+export const markComicsDeletedFailed = createAction(
+  '[Mark Comics Deleted] Set deleted state failed'
+);

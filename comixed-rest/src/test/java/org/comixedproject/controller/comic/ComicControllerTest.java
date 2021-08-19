@@ -30,14 +30,14 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
-import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
+import org.comixedproject.model.net.comic.MarkComicsDeletedRequest;
+import org.comixedproject.model.net.comic.MarkComicsUndeletedRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.DeleteComicsTask;
-import org.comixedproject.task.UndeleteComicsTask;
+import org.comixedproject.task.MarkComicsForRemovalTask;
+import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Test;
@@ -67,10 +67,10 @@ public class ComicControllerTest {
   @Mock private PageCacheService pageCacheService;
   @Mock private TaskManager taskManager;
   @Mock private Comic comic;
-  @Mock private ObjectFactory<DeleteComicsTask> deleteComicsTaskFactory;
-  @Mock private DeleteComicsTask deleteComicsTask;
-  @Mock private ObjectFactory<UndeleteComicsTask> undeleteComicsWorkerTaskObjectFactory;
-  @Mock private UndeleteComicsTask undeleteComicsWorkerTask;
+  @Mock private ObjectFactory<MarkComicsForRemovalTask> deleteComicsTaskFactory;
+  @Mock private MarkComicsForRemovalTask markComicsForRemovalTask;
+  @Mock private ObjectFactory<UnmarkComicsForRemovalTask> undeleteComicsWorkerTaskObjectFactory;
+  @Mock private UnmarkComicsForRemovalTask undeleteComicsWorkerTask;
   @Mock private List<Long> comicIds;
   @Mock private FileService fileService;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
@@ -163,28 +163,24 @@ public class ComicControllerTest {
   }
 
   @Test
-  public void testDeleteMultipleComics() {
-    Mockito.when(this.deleteComicsTaskFactory.getObject()).thenReturn(this.deleteComicsTask);
-    Mockito.doNothing().when(this.deleteComicsTask).setComicIds(Mockito.anyList());
+  public void testMarkComicsDeleted() {
+    Mockito.when(this.deleteComicsTaskFactory.getObject())
+        .thenReturn(this.markComicsForRemovalTask);
+    Mockito.doNothing().when(this.markComicsForRemovalTask).setComicIds(Mockito.anyList());
     Mockito.doNothing().when(this.taskManager).runTask(Mockito.any());
 
-    assertTrue(controller.deleteMultipleComics(this.comicIds));
+    controller.markComicsDeleted(new MarkComicsDeletedRequest(this.comicIds));
 
-    Mockito.verify(this.deleteComicsTaskFactory, Mockito.times(1)).getObject();
-    Mockito.verify(this.deleteComicsTask, Mockito.times(1)).setComicIds(this.comicIds);
-    Mockito.verify(this.taskManager, Mockito.times(1)).runTask(this.deleteComicsTask);
+    Mockito.verify(this.markComicsForRemovalTask, Mockito.times(1)).setComicIds(this.comicIds);
+    Mockito.verify(this.taskManager, Mockito.times(1)).runTask(this.markComicsForRemovalTask);
   }
 
   @Test
-  public void testUndeleteMultipleComics() {
+  public void testMarkComicsUndeleted() {
     Mockito.when(this.undeleteComicsWorkerTaskObjectFactory.getObject())
         .thenReturn(undeleteComicsWorkerTask);
 
-    UndeleteMultipleComicsResponse result =
-        controller.undeleteMultipleComics(new UndeleteMultipleComicsRequest(this.comicIds));
-
-    assertNotNull(result);
-    assertTrue(result.isSuccess());
+    controller.markComicsUndeleted(new MarkComicsUndeletedRequest(this.comicIds));
 
     Mockito.verify(undeleteComicsWorkerTask, Mockito.times(1)).setIds(this.comicIds);
     Mockito.verify(taskManager, Mockito.times(1)).runTask(undeleteComicsWorkerTask);
