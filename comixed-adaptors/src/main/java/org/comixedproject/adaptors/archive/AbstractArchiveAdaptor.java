@@ -27,7 +27,6 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.comixedproject.adaptors.ComicInfoEntryAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -77,27 +76,21 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   @Override
   public void afterPropertiesSet() throws Exception {
     this.entryLoaders.clear();
-    for (EntryLoaderForType entry : this.loaders) {
-      if (entry.isValid()) {
-        if (this.context.containsBean(entry.getBean())) {
-          this.entryLoaders.put(
-              entry.getType(), (EntryLoader) this.context.getBean(entry.getBean()));
-          if (entry.getEntryType() == ArchiveEntryType.IMAGE) {
-            log.debug("Adding image adaptor: {}={}", entry.getEntryType(), entry.getBean());
-            this.imageTypes.add(entry.getType());
-          }
-        } else {
-          log.debug("No such entry adaptor bean: {}", entry.getBean());
-        }
-      } else {
-        if (StringUtils.isEmpty(entry.getType())) {
-          log.debug("Missing type for entry adaptor");
-        }
-        if (StringUtils.isEmpty(entry.getBean())) {
-          log.debug("Missing bean for entry adaptor");
-        }
-      }
-    }
+    this.loaders.stream()
+        .filter(EntryLoaderForType::isValid)
+        .forEach(
+            entry -> {
+              if (this.context.containsBean(entry.getBean())) {
+                this.entryLoaders.put(
+                    entry.getType(), (EntryLoader) this.context.getBean(entry.getBean()));
+                if (entry.getEntryType() == ArchiveEntryType.IMAGE) {
+                  log.debug("Adding image adaptor: {}={}", entry.getEntryType(), entry.getBean());
+                  this.imageTypes.add(entry.getType());
+                }
+              } else {
+                log.debug("No such entry adaptor bean: {}", entry.getBean());
+              }
+            });
   }
 
   /**
