@@ -16,22 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.comic;
+import { createReducer, on } from '@ngrx/store';
+import {
+  comicsMarkedDeleted,
+  markComicsDeleted,
+  markComicsDeletedFailed
+} from '../actions/mark-comics-deleted.actions';
 
-/**
- * <code>ComicState</code> represents the current state for a comic.
- *
- * @author Darryl L. Pierce
- */
-public enum ComicState {
-  // the comic has been added to the database but has not been processed
-  ADDED,
-  // the comic has been processed and its contents match the database
-  STABLE,
-  // the details in the database have been changed but the comic has not been updated
-  CHANGED,
-  // the comic has been  marked for deletion
-  DELETED,
-  // removed from the database, comics never actually reach this state
-  REMOVED;
+export const MARK_COMICS_DELETED_FEATURE_KEY = 'mark_comics_deleted_state';
+
+export interface MarkComicsDeletedState {
+  updating: boolean;
 }
+
+export const initialState: MarkComicsDeletedState = { updating: false };
+
+export const reducer = createReducer(
+  initialState,
+
+  on(markComicsDeleted, state => ({ ...state, updating: true })),
+  on(comicsMarkedDeleted, state => ({ ...state, updating: false })),
+  on(markComicsDeletedFailed, state => ({ ...state, updating: false }))
+);

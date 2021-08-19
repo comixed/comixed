@@ -52,6 +52,12 @@
     "load-comic": {
       "effect-failure": "Échec du chargement de la Bande Dessinée."
     },
+    "mark-as-deleted": {
+      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic for deletion?",
+      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} For Deletion",
+      "effect-failure": "Failed to {deleted, select, true{mark} other{unmark}} for deletion.",
+      "effect-success": "{deleted, select, true{Marked} other{Unmarked}} for deletion."
+    },
     "placeholder": {
       "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
       "issue-number": "Le numéro de cette Bande Dessinée...",

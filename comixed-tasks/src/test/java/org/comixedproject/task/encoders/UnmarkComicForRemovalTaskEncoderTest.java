@@ -24,7 +24,7 @@ import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.UndeleteComicTask;
+import org.comixedproject.task.UnmarkComicForRemovalTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,10 +34,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UndeleteComicTaskEncoderTest {
-  @InjectMocks private UndeleteComicTaskEncoder encoder;
-  @Mock private ObjectFactory<UndeleteComicTask> undeleteComicTaskObjectFactory;
-  @Mock private UndeleteComicTask undeleteComicTask;
+public class UnmarkComicForRemovalTaskEncoderTest {
+  @InjectMocks private UnmarkComicForRemovalTaskEncoder encoder;
+  @Mock private ObjectFactory<UnmarkComicForRemovalTask> undeleteComicTaskObjectFactory;
+  @Mock private UnmarkComicForRemovalTask unmarkComicForRemovalTask;
   @Mock private Comic comic;
   @Mock private TaskService taskService;
 
@@ -50,23 +50,23 @@ public class UndeleteComicTaskEncoderTest {
     PersistedTask result = encoder.encode();
 
     assertNotNull(result);
-    assertEquals(PersistedTaskType.UNDELETE_COMIC, result.getTaskType());
+    assertEquals(PersistedTaskType.UNMARK_COMIC_FOR_REMOVAL, result.getTaskType());
     assertSame(comic, result.getComic());
   }
 
   @Test
   public void testDecode() {
     persistedTask.setComic(comic);
-    persistedTask.setTaskType(PersistedTaskType.UNDELETE_COMIC);
+    persistedTask.setTaskType(PersistedTaskType.UNMARK_COMIC_FOR_REMOVAL);
 
-    Mockito.when(undeleteComicTaskObjectFactory.getObject()).thenReturn(undeleteComicTask);
+    Mockito.when(undeleteComicTaskObjectFactory.getObject()).thenReturn(unmarkComicForRemovalTask);
 
-    final UndeleteComicTask result = encoder.decode(persistedTask);
+    final UnmarkComicForRemovalTask result = encoder.decode(persistedTask);
 
     assertNotNull(result);
-    assertSame(undeleteComicTask, result);
+    assertSame(unmarkComicForRemovalTask, result);
 
     Mockito.verify(taskService, Mockito.times(1)).delete(persistedTask);
-    Mockito.verify(undeleteComicTask, Mockito.times(1)).setComic(comic);
+    Mockito.verify(unmarkComicForRemovalTask, Mockito.times(1)).setComic(comic);
   }
 }

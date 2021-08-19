@@ -30,14 +30,14 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
-import org.comixedproject.model.net.UndeleteMultipleComicsRequest;
-import org.comixedproject.model.net.UndeleteMultipleComicsResponse;
+import org.comixedproject.model.net.comic.MarkComicsDeletedRequest;
+import org.comixedproject.model.net.comic.MarkComicsUndeletedRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
 import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.DeleteComicsTask;
-import org.comixedproject.task.UndeleteComicsTask;
+import org.comixedproject.task.MarkComicsForRemovalTask;
+import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.comixedproject.views.View;
@@ -56,7 +56,6 @@ import org.springframework.web.bind.annotation.*;
  * @author Darryl L. Pierce
  */
 @RestController
-@RequestMapping(value = "/api/comics")
 @Log4j2
 public class ComicController {
   @Autowired private ComicService comicService;
@@ -64,8 +63,11 @@ public class ComicController {
   @Autowired private FileService fileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
   @Autowired private TaskManager taskManager;
-  @Autowired private ObjectFactory<DeleteComicsTask> deleteComicsWorkerTaskFactory;
-  @Autowired private ObjectFactory<UndeleteComicsTask> undeleteComicsWorkerTaskObjectFactory;
+  @Autowired private ObjectFactory<MarkComicsForRemovalTask> deleteComicsWorkerTaskFactory;
+
+  @Autowired
+  private ObjectFactory<UnmarkComicsForRemovalTask> undeleteComicsWorkerTaskObjectFactory;
+
   @Autowired private ComicFileHandler comicFileHandler;
 
   /**
@@ -75,7 +77,7 @@ public class ComicController {
    * @return the comic
    * @throws ComicException if an error occurs
    */
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
   public Comic getComic(@PathVariable("id") long id) throws ComicException {
@@ -90,7 +92,7 @@ public class ComicController {
    * @return the updated comic
    * @throws ComicException if the id is invalid
    */
-  @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
   @AuditableEndpoint
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
@@ -105,7 +107,7 @@ public class ComicController {
    * @return the upddtaed comic
    * @throws ComicException if the id is invalid
    */
-  @DeleteMapping(value = "/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(value = "/api/comics/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   @AuditableEndpoint
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
@@ -113,23 +115,43 @@ public class ComicController {
     return this.comicService.deleteMetadata(id);
   }
 
-  @PostMapping(value = "/multiple/delete")
+  /**
+   * Sets the deleted flag for one or more comics.
+   *
+   * @param request the request body
+   */
+  @PostMapping(value = "/api/comics/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public boolean deleteMultipleComics(@RequestParam("comic_ids") List<Long> comicIds) {
-    log.debug("Deleting multiple comics: ids={}", comicIds.toArray());
+  public void markComicsDeleted(@RequestBody() final MarkComicsDeletedRequest request) {
+    final List<Long> ids = request.getIds();
+    log.debug("Deleting multiple comics: ids={}", ids.toArray());
 
-    DeleteComicsTask task = this.deleteComicsWorkerTaskFactory.getObject();
-
-    log.debug("Setting comic ids");
-    task.setComicIds(comicIds);
-
-    log.debug("Queueing the delete task");
+    final MarkComicsForRemovalTask task = this.deleteComicsWorkerTaskFactory.getObject();
+    log.trace("Setting comic ids");
+    task.setComicIds(ids);
+    log.trace("Queueing the delete task");
     this.taskManager.runTask(task);
-
-    return true;
   }
 
-  @GetMapping(value = "/{id}/download")
+  /**
+   * Clears the deleted flag for one or more comics.
+   *
+   * @param request the request body
+   */
+  @PostMapping(value = "/api/comics/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  public void markComicsUndeleted(@RequestBody() final MarkComicsUndeletedRequest request) {
+    final List<Long> ids = request.getIds();
+    log.debug("Undeleting multiple comic: {}", ids.toArray());
+
+    final UnmarkComicsForRemovalTask task = this.undeleteComicsWorkerTaskObjectFactory.getObject();
+    log.trace("Setting comic ids");
+    task.setIds(ids);
+    log.trace("Queueing the undelete task");
+    this.taskManager.runTask(task);
+  }
+
+  @GetMapping(value = "/api/comics/{id}/download")
   @AuditableEndpoint
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
       throws IOException, ComicException {
@@ -163,7 +185,7 @@ public class ComicController {
    * @throws ComicException if the id is invalid
    */
   @PutMapping(
-      value = "/{id}",
+      value = "/api/comics/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
@@ -175,7 +197,7 @@ public class ComicController {
     return this.comicService.updateComic(id, comic);
   }
 
-  @GetMapping(value = "/{id}/cover/content")
+  @GetMapping(value = "/api/comics/{id}/cover/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
       throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
@@ -231,7 +253,7 @@ public class ComicController {
    * @throws ComicException if the id is invalid
    */
   @PutMapping(
-      value = "/{id}/restore",
+      value = "/api/comics/{id}/restore",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
@@ -242,23 +264,6 @@ public class ComicController {
     return this.comicService.restoreComic(id);
   }
 
-  @PostMapping(
-      value = "/multiple/undelete",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public UndeleteMultipleComicsResponse undeleteMultipleComics(
-      @RequestBody() final UndeleteMultipleComicsRequest request) {
-    final List<Long> ids = request.getIds();
-    log.debug("Undeleting {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-
-    final UndeleteComicsTask task = this.undeleteComicsWorkerTaskObjectFactory.getObject();
-    task.setIds(ids);
-    this.taskManager.runTask(task);
-
-    return new UndeleteMultipleComicsResponse(true);
-  }
-
   /**
    * Updates the metadata in the comic archive.
    *
@@ -266,7 +271,7 @@ public class ComicController {
    * @return the updated comic
    * @throws ComicException if an error occurs
    */
-  @PostMapping(value = "/{id}/comicinfo", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/comics/{id}/comicinfo", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ComicDetailsView.class)
   @AuditableEndpoint
   @PreAuthorize("hasRole('ADMIN')")

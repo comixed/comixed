@@ -156,7 +156,7 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(2)).getById(TEST_COMIC_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comic, ComicEvent.addedToDeleteQueue);
+        .fireEvent(comic, ComicEvent.markedForRemoval);
   }
 
   @Test(expected = ComicException.class)
@@ -182,7 +182,7 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(2)).getById(TEST_COMIC_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicRecord, ComicEvent.removedFromDeleteQueue);
+        .fireEvent(comicRecord, ComicEvent.unmarkedForRemoval);
   }
 
   @Test

@@ -21,6 +21,9 @@ package org.comixedproject.state.comic;
 import java.util.EnumSet;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
+import org.comixedproject.state.comic.actions.MarkComicForRemovalAction;
+import org.comixedproject.state.comic.actions.UnmarkComicForRemovalAction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
@@ -37,13 +40,16 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 @EnableStateMachine
 public class ComicStateMachineConfig
     extends EnumStateMachineConfigurerAdapter<ComicState, ComicEvent> {
+  @Autowired private MarkComicForRemovalAction markComicForRemovalAction;
+  @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
+
   @Override
   public void configure(final StateMachineStateConfigurer<ComicState, ComicEvent> states)
       throws Exception {
     states
         .withStates()
         .initial(ComicState.ADDED)
-        .end(ComicState.DELETED)
+        .end(ComicState.REMOVED)
         .states(EnumSet.allOf(ComicState.class));
   }
 
@@ -131,20 +137,30 @@ public class ComicStateMachineConfig
         // the comic was marked for deletion
         .and()
         .withExternal()
+        .source(ComicState.ADDED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.markedForRemoval)
+        .action(markComicForRemovalAction)
+        // the comic was marked for deletion
+        .and()
+        .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.DELETED)
-        .event(ComicEvent.addedToDeleteQueue)
+        .event(ComicEvent.markedForRemoval)
+        .action(markComicForRemovalAction)
         // the comic was marked for deletion
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.DELETED)
-        .event(ComicEvent.addedToDeleteQueue)
+        .event(ComicEvent.markedForRemoval)
+        .action(markComicForRemovalAction)
         // the comic was unmarked for deletion
         .and()
         .withExternal()
         .source(ComicState.DELETED)
         .target(ComicState.ADDED)
-        .event(ComicEvent.removedFromDeleteQueue);
+        .event(ComicEvent.unmarkedForRemoval)
+        .action(unmarkComicForRemovalAction);
   }
 }

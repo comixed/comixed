@@ -19,7 +19,6 @@
 package org.comixedproject.task;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
@@ -34,23 +33,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>UndeleteComicTask</code> handles undeleting a single comic previously marked for deletion.
+ * <code>UnmarkComicForRemovalTask</code> handles undeleting a single comic previously marked for
+ * deletion.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
-public class UndeleteComicTask extends AbstractTask {
+public class UnmarkComicForRemovalTask extends AbstractTask {
   @Autowired private ComicStateHandler comicStateHandler;
 
   @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
   @Setter
   private Comic comic;
 
-  public UndeleteComicTask() {
-    super(PersistedTaskType.UNDELETE_COMIC);
+  public UnmarkComicForRemovalTask() {
+    super(PersistedTaskType.UNMARK_COMIC_FOR_REMOVAL);
   }
 
   @Override
@@ -63,7 +62,6 @@ public class UndeleteComicTask extends AbstractTask {
   public void startTask() {
     log.debug("Undeleting comic: id={}", this.comic.getId());
 
-    this.comic.setDateDeleted(null);
-    this.comicStateHandler.fireEvent(this.comic, ComicEvent.removedFromDeleteQueue);
+    this.comicStateHandler.fireEvent(this.comic, ComicEvent.unmarkedForRemoval);
   }
 }

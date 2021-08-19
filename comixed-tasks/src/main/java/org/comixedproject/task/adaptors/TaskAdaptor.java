@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
@@ -123,23 +125,7 @@ public class TaskAdaptor implements InitializingBean {
   }
 
   public static class TaskTypeEntry {
-    private PersistedTaskType type;
-    private String name;
-
-    public PersistedTaskType getType() {
-      return type;
-    }
-
-    public void setType(final PersistedTaskType type) {
-      this.type = type;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(final String name) {
-      this.name = name;
-    }
+    @Getter @Setter private PersistedTaskType type;
+    @Getter @Setter private String name;
   }
 }

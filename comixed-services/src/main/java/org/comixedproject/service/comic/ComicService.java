@@ -18,7 +18,7 @@
 
 package org.comixedproject.service.comic;
 
-import static org.comixedproject.state.comic.ComicStateConstants.HEADER_COMIC;
+import static org.comixedproject.state.comic.ComicStateHandler.HEADER_COMIC;
 
 import java.io.File;
 import java.io.IOException;
@@ -121,7 +121,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public Comic deleteComic(final long id) throws ComicException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.doGetComic(id);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.addedToDeleteQueue);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.markedForRemoval);
     return this.doGetComic(id);
   }
 
@@ -199,7 +199,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public Comic restoreComic(final long id) throws ComicException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.removedFromDeleteQueue);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.unmarkedForRemoval);
     return this.doGetComic(id);
   }
 

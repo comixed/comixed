@@ -28,7 +28,12 @@ import {
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
 import { LoadComicsRequest } from '@app/comic-book/models/net/load-comics-request';
-import { UPDATE_COMIC_INFO_URL } from '@app/comic-book/comic-book.constants';
+import {
+  MARK_COMICS_DELETED_URL,
+  MARK_COMICS_UNDELETED_URL,
+  UPDATE_COMIC_INFO_URL
+} from '@app/comic-book/comic-book.constants';
+import { MarkComicsDeletedRequest } from '@app/comic-book/models/net/mark-comics-deleted-request';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +47,7 @@ export class ComicService {
    * @param args.lastId the last id received
    */
   loadBatch(args: { lastId: number }): Observable<any> {
-    this.logger.debug('Loading a batch of comics:', args);
+    this.logger.trace('Service: loading a batch of comics:', args);
     return this.http.post(interpolate(LOAD_COMICS_URL), {
       lastId: args.lastId
     } as LoadComicsRequest);
@@ -54,7 +59,7 @@ export class ComicService {
    * @param args.id the comic id
    */
   loadOne(args: { id: number }): Observable<any> {
-    this.logger.debug('Loading one comic:', args);
+    this.logger.trace('Service: loading one comic:', args);
     return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
   }
 
@@ -64,7 +69,7 @@ export class ComicService {
    * @param args.comic the comic
    */
   updateOne(args: { comic: Comic }): Observable<any> {
-    this.logger.debug('Updating one comic:', args);
+    this.logger.trace('Service: updating one comic:', args);
     return this.http.put(
       interpolate(UPDATE_COMIC_URL, { id: args.comic.id }),
       args.comic
@@ -77,10 +82,34 @@ export class ComicService {
    * @param args.comic the comic
    */
   updateComicInfo(args: { comic: Comic }): Observable<any> {
-    this.logger.debug('Updating ComicInfo.xml:', args);
+    this.logger.trace('Service: updating ComicInfo.xml:', args);
     return this.http.post(
       interpolate(UPDATE_COMIC_INFO_URL, { id: args.comic.id }),
       {}
     );
+  }
+
+  /**
+   * Updates the deleted state for a set of comic.
+   *
+   * @param args.comics the comics
+   * @param args.deleted the deleted state
+   */
+  markComicsDeleted(args: {
+    comics: Comic[];
+    deleted: boolean;
+  }): Observable<any> {
+    const ids = args.comics.map(comic => comic.id);
+    if (args.deleted) {
+      this.logger.trace('Service: marking comics for deletion:', args.comics);
+      return this.http.post(interpolate(MARK_COMICS_DELETED_URL), {
+        ids
+      } as MarkComicsDeletedRequest);
+    } else {
+      this.logger.trace('Service: unmarking comics for deletion:', args.comics);
+      return this.http.post(interpolate(MARK_COMICS_UNDELETED_URL), {
+        ids
+      } as MarkComicsDeletedRequest);
+    }
   }
 }

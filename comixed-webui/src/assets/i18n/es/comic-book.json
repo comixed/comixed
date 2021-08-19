@@ -52,6 +52,12 @@
     "load-comic": {
       "effect-failure": "No se pudo cargar el cómic."
     },
+    "mark-as-deleted": {
+      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic for deletion?",
+      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} For Deletion",
+      "effect-failure": "Failed to {deleted, select, true{mark} other{unmark}} for deletion.",
+      "effect-success": "{deleted, select, true{Marked} other{Unmarked}} for deletion."
+    },
     "placeholder": {
       "api-key": "La clave de API utilizada al raspar cómics...",
       "issue-number": "El número de emisión...",

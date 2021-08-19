@@ -61,6 +61,7 @@ import { Confirmation } from '@app/core/models/confirmation';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -293,6 +294,88 @@ describe('ComicCoversComponent', () => {
       expect(component.archiveTypeChanged.emit).toHaveBeenCalledWith(
         ARCHIVE_TYPE
       );
+    });
+  });
+
+  describe('marking comics for deletion', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+    });
+
+    describe('for a single comic', () => {
+      beforeEach(() => {
+        component.onMarkAsDeleted(COMICS[0], true);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comics: [COMICS[0]], deleted: true })
+        );
+      });
+    });
+
+    describe('for multiple comics', () => {
+      beforeEach(() => {
+        component.onMarkSelectedDeleted(true);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comics: COMICS, deleted: true })
+        );
+      });
+    });
+  });
+
+  describe('unmarking comics for deletion', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+    });
+
+    describe('for a single comic', () => {
+      beforeEach(() => {
+        component.onMarkAsDeleted(COMICS[0], false);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comics: [COMICS[0]], deleted: false })
+        );
+      });
+    });
+
+    describe('for multiple comics', () => {
+      beforeEach(() => {
+        component.onMarkSelectedDeleted(false);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comics: COMICS, deleted: false })
+        );
+      });
     });
   });
 });

@@ -76,6 +76,28 @@
       {{ "library.context-menu.mark-one-as-unread" | translate }}
     </mat-label>
   </button>
+  <button
+    *ngIf="!!comic && !comic.deletedDate"
+    id="delete-one-button"
+    mat-menu-item
+    (click)="onMarkAsDeleted(comic, true)"
+  >
+    <mat-icon>delete_outline</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.delete-one" | translate }}
+    </mat-label>
+  </button>
+  <button
+    *ngIf="!!comic && !!comic.deletedDate"
+    id="undelete-one-button"
+    mat-menu-item
+    (click)="onMarkAsDeleted(comic, false)"
+  >
+    <mat-icon>restore_from_trash</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.undelete-one" | translate }}
+    </mat-label>
+  </button>
   <mat-divider *ngIf="selected.length > 0"></mat-divider>
   <button
     id="mark-selected-as-read-button"
@@ -97,6 +119,28 @@
     <mat-icon>turned_in_not</mat-icon>
     <mat-label>
       {{ "library.context-menu.mark-selected-as-unread" | translate }}
+    </mat-label>
+  </button>
+  <button
+    id="delete-selected-button"
+    *ngIf="selected.length > 0"
+    mat-menu-item
+    (click)="onMarkSelectedDeleted(true)"
+  >
+    <mat-icon>delete_outline</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.delete-selected" | translate }}
+    </mat-label>
+  </button>
+  <button
+    id="undelete-selected-button"
+    *ngIf="selected.length > 0"
+    mat-menu-item
+    (click)="onMarkSelectedDeleted(false)"
+  >
+    <mat-icon>restore_from_trash</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.undelete-selected" | translate }}
     </mat-label>
   </button>
 </mat-menu>

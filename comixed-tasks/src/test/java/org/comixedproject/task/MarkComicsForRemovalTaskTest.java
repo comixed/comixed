@@ -29,20 +29,20 @@ import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.adaptors.TaskAdaptor;
-import org.comixedproject.task.encoders.DeleteComicTaskEncoder;
+import org.comixedproject.task.encoders.MarkComicForRemovalTaskEncoder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeleteComicsTaskTest {
+public class MarkComicsForRemovalTaskTest {
   private static final Long TEST_COMIC_ID = 213L;
 
-  @InjectMocks private DeleteComicsTask task;
+  @InjectMocks private MarkComicsForRemovalTask task;
   @Mock private TaskAdaptor taskAdaptor;
   @Mock private TaskService taskService;
-  @Mock private DeleteComicTaskEncoder deleteComicTaskEncoder;
+  @Mock private MarkComicForRemovalTaskEncoder markComicForRemovalTaskEncoder;
   @Mock private ComicService comicService;
   @Mock private Comic comic;
   @Mock private PersistedTask persistedTaskRecord;
@@ -62,7 +62,7 @@ public class DeleteComicsTaskTest {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(taskAdaptor.getEncoder(Mockito.any(PersistedTaskType.class)))
-        .thenReturn(deleteComicTaskEncoder);
+        .thenReturn(markComicForRemovalTaskEncoder);
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(taskService.save(taskArgumentCaptor.capture())).thenReturn(persistedTaskRecord);
 
@@ -70,9 +70,8 @@ public class DeleteComicsTaskTest {
     task.startTask();
 
     Mockito.verify(taskAdaptor, Mockito.times(idList.size()))
-        .getEncoder(PersistedTaskType.DELETE_COMIC);
-    Mockito.verify(deleteComicTaskEncoder, Mockito.times(idList.size())).setComic(comic);
-    Mockito.verify(deleteComicTaskEncoder, Mockito.times(idList.size())).setDeleteComicFile(false);
+        .getEncoder(PersistedTaskType.MARK_COMIC_FOR_REMOVAL);
+    Mockito.verify(markComicForRemovalTaskEncoder, Mockito.times(idList.size())).setComic(comic);
     Mockito.verify(taskService, Mockito.times(idList.size())).save(taskArgumentCaptor.getValue());
   }
 }
