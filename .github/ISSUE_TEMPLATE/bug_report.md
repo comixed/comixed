@@ -1,11 +1,14 @@
 ---
 name: Bug report
 about: Create a report to help us improve ComiXed
-title: 'Describe the bug using a single sentence'
+title: 'Describe the bug using a single sentence, read instructions below'
 labels: 'bug, triage'
 assignees: ''
 
 ---
+
+**NOTE:** If you DO NOT FOLLOW the instructions below, this bug report WILL BE DELETED. It's not too much to ask
+of you to give us the details we need to try and fix bugs.
 
 ## NOTICE ABOUT FILING BUGS
 1. Please **DO NOT** open a bug to ask a question. You'll be directed to the user mailing list and the issue will be closed unanswered. 
