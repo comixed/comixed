@@ -26,6 +26,8 @@ package org.comixedproject.model.comic;
 public enum ComicState {
   // the comic has been added to the database but has not been processed
   ADDED,
+  // the comic is unprocessed and needs to be loaded
+  UNPROCESSED,
   // the comic has been processed and its contents match the database
   STABLE,
   // the details in the database have been changed but the comic has not been updated

@@ -23,9 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.views.View;
 
 /**
@@ -36,6 +34,7 @@ import org.comixedproject.views.View;
 @Entity
 @Table(name = "ComicFileDetails")
 @NoArgsConstructor
+@RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 public class ComicFileDetails {
   @Id
@@ -49,6 +48,7 @@ public class ComicFileDetails {
   @JoinColumn(name = "ComicId", nullable = false, updatable = false)
   @Getter
   @Setter
+  @NonNull
   private Comic comic;
 
   @Column(name = "FileHash", length = 32, nullable = false, updatable = true)

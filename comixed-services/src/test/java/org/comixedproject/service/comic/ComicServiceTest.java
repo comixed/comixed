@@ -26,8 +26,11 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicFormat;
+import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.model.comic.ScanType;
 import org.comixedproject.repositories.comic.ComicRepository;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -41,6 +44,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.statemachine.state.State;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -61,14 +67,20 @@ public class ComicServiceTest {
   private static final ComicFormat TEST_COMIC_FORMAT = new ComicFormat();
   private static final Date TEST_COVER_DATE = new Date();
   private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
+  private static final ComicState TEST_STATE =
+      ComicState.values()[(RandomUtils.nextInt(ComicState.values().length))];
 
   @InjectMocks private ComicService service;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicRepository comicRepository;
+  @Mock private PublishComicUpdateAction comicUpdatePublishAction;
   @Mock private ComicDataAdaptor comicDataAdaptor;
   @Mock private Comic comic;
   @Mock private Comic incomingComic;
   @Mock private Comic comicRecord;
+  @Mock private State<ComicState, ComicEvent> state;
+  @Mock private Message<ComicEvent> message;
+  @Mock private MessageHeaders messageHeaders;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -93,6 +105,48 @@ public class ComicServiceTest {
     comicsBySeries.add(nextComic);
     comicsBySeries.add(previousComic);
     comicsBySeries.add(currentComic);
+  }
+
+  @Test
+  public void testAfterPropertiesSet() throws Exception {
+    service.afterPropertiesSet();
+
+    Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(service);
+  }
+
+  @Test
+  public void testOnComicStateChange() throws PublishingException {
+    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(comic);
+    Mockito.when(state.getId()).thenReturn(TEST_STATE);
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comicRecord);
+
+    service.onComicStateChange(state, message);
+
+    Mockito.verify(comic, Mockito.times(1)).setComicState(TEST_STATE);
+    Mockito.verify(comic, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
+    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicRecord);
+  }
+
+  @Test
+  public void testOnComicStateChangePublishError() throws PublishingException {
+    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(comic);
+    Mockito.when(state.getId()).thenReturn(TEST_STATE);
+    Mockito.when(comicRepository.save(Mockito.any(Comic.class))).thenReturn(comicRecord);
+    Mockito.doThrow(PublishingException.class)
+        .when(comicUpdatePublishAction)
+        .publish(Mockito.any(Comic.class));
+
+    service.onComicStateChange(state, message);
+
+    Mockito.verify(comic, Mockito.times(1)).setComicState(TEST_STATE);
+    Mockito.verify(comic, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
+    Mockito.verify(comicRepository, Mockito.times(1)).save(comic);
+    Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicRecord);
   }
 
   @Test
@@ -364,5 +418,54 @@ public class ComicServiceTest {
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
+  }
+
+  @Test
+  public void testFindUnprocessedComicsWithoutContent() {
+    Mockito.when(comicRepository.findUnprocessedComicsWithoutContent()).thenReturn(comicList);
+
+    final List<Comic> result = service.findUnprocessedComicsWithoutContent();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsWithoutContent();
+  }
+
+  @Test
+  public void testFindUnprocessedComicsForMarkedPageBlocking() {
+    Mockito.when(comicRepository.findUnprocessedComicsForMarkedPageBlocking())
+        .thenReturn(comicList);
+
+    final List<Comic> result = service.findUnprocessedComicsForMarkedPageBlocking();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsForMarkedPageBlocking();
+  }
+
+  @Test
+  public void testFindUnprocessedComicsWithoutFileDetails() {
+    Mockito.when(comicRepository.findUnprocessedComicsWithoutFileDetails()).thenReturn(comicList);
+
+    final List<Comic> result = service.findUnprocessedComicsWithoutFileDetails();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+  }
+
+  @Test
+  public void testFindProcessedComics() {
+    Mockito.when(comicRepository.findProcessedComics()).thenReturn(comicList);
+
+    final List<Comic> result = service.findProcessedComics();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findProcessedComics();
   }
 }

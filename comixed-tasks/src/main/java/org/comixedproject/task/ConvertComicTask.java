@@ -39,9 +39,7 @@ import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.comixedproject.views.View;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -61,9 +59,6 @@ public class ConvertComicTask extends AbstractTask {
   @Autowired private ComicService comicService;
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private TaskService taskService;
-
-  @Autowired private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
-
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ReadingListService readingListService;
 
@@ -127,12 +122,6 @@ public class ConvertComicTask extends AbstractTask {
       if (this.deleteOriginal) {
         deleteOriginal();
       }
-      log.debug("Queueing up a comic processing task");
-      ProcessComicTaskEncoder taskEncoder = this.processComicTaskEncoderObjectFactory.getObject();
-      taskEncoder.setComic(updatedComic);
-      taskEncoder.setIgnoreMetadata(false);
-      taskEncoder.setDeleteBlockedPages(false);
-      this.taskService.save(taskEncoder.encode());
     } catch (ArchiveAdaptorException | IOException | ComicException error) {
       throw new TaskException("Failed to save comic", error);
     }

@@ -28,15 +28,13 @@ import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.model.scraping.ScrapingRule;
-import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.scraping.ScrapingRuleService;
-import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,15 +55,11 @@ public class AddComicTaskTest {
   @InjectMocks private AddComicTask task;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ComicService comicService;
+  @Mock private ComicStateHandler comicStateHandler;
   @Mock private ObjectFactory<Comic> comicFactory;
   @Mock private Comic comic;
   @Mock private ScrapingRuleService scrapingRuleService;
   @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
-  @Mock private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
-  @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
-  @Mock private PersistedTask workerPersistedTask;
-  @Mock private TaskService taskService;
-  @Mock private PublishComicUpdateAction publishComicUpdateAction;
   @Mock private ScrapingRule scrapingRule1;
   @Mock private ScrapingRule scrapingRule2;
   @Mock private ScrapingRule scrapingRule3;
@@ -124,9 +118,6 @@ public class AddComicTaskTest {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
-    Mockito.when(processComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(processComicTaskEncoder);
-    Mockito.when(processComicTaskEncoder.encode()).thenReturn(workerPersistedTask);
 
     task.setDeleteBlockedPages(false);
     task.setIgnoreMetadata(false);
@@ -144,11 +135,7 @@ public class AddComicTaskTest {
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
-    Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.imported);
   }
 
   @Test
@@ -157,9 +144,6 @@ public class AddComicTaskTest {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
-    Mockito.when(processComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(processComicTaskEncoder);
-    Mockito.when(processComicTaskEncoder.encode()).thenReturn(workerPersistedTask);
 
     task.setDeleteBlockedPages(false);
     task.setIgnoreMetadata(true);
@@ -177,11 +161,7 @@ public class AddComicTaskTest {
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(true);
-    Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.imported);
   }
 
   @Test
@@ -190,9 +170,6 @@ public class AddComicTaskTest {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
-    Mockito.when(processComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(processComicTaskEncoder);
-    Mockito.when(processComicTaskEncoder.encode()).thenReturn(workerPersistedTask);
 
     task.setDeleteBlockedPages(true);
     task.setIgnoreMetadata(false);
@@ -210,11 +187,7 @@ public class AddComicTaskTest {
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(true);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
-    Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.imported);
   }
 
   @Test
@@ -223,9 +196,6 @@ public class AddComicTaskTest {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicFactory.getObject()).thenReturn(comic);
     Mockito.when(comicService.save(Mockito.any(Comic.class))).thenReturn(comic);
-    Mockito.when(processComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(processComicTaskEncoder);
-    Mockito.when(processComicTaskEncoder.encode()).thenReturn(workerPersistedTask);
 
     task.setDeleteBlockedPages(true);
     task.setIgnoreMetadata(true);
@@ -243,10 +213,6 @@ public class AddComicTaskTest {
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
     Mockito.verify(comic, Mockito.times(1)).setComicState(ComicState.ADDED);
     Mockito.verify(comicService, Mockito.times(1)).save(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(comic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(true);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(true);
-    Mockito.verify(taskService, Mockito.times(1)).save(workerPersistedTask);
-    Mockito.verify(publishComicUpdateAction, Mockito.times(1)).publish(comic);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.imported);
   }
 }

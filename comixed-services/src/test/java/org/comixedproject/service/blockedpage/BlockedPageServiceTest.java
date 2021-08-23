@@ -416,4 +416,27 @@ public class BlockedPageServiceTest {
     Mockito.verify(pageService, Mockito.times(blockedPageHashList.size()))
         .undeleteAllWithHash(TEST_PAGE_HASH);
   }
+
+  @Test
+  public void testIsHashBlockedWhenFound() {
+    Mockito.when(blockedPageRepository.findByHash(Mockito.anyString()))
+        .thenReturn(blockedPageRecord);
+
+    final boolean result = service.isHashBlocked(TEST_PAGE_HASH);
+
+    assertTrue(result);
+
+    Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+  }
+
+  @Test
+  public void testIsHashBlockedWhenNotFound() {
+    Mockito.when(blockedPageRepository.findByHash(Mockito.anyString())).thenReturn(null);
+
+    final boolean result = service.isHashBlocked(TEST_PAGE_HASH);
+
+    assertFalse(result);
+
+    Mockito.verify(blockedPageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
+  }
 }

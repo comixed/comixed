@@ -10,5 +10,6 @@
   <include file="/db/migrations/0.10.0/002_352_filename_scraping_rules.xml"/>
   <include file="/db/migrations/0.10.0/003_673_make_reading_list_names_unique.xml"/>
   <include file="/db/migrations/0.10.0/004_862_add_reading_list_states.xml"/>
+  <include file="/db/migrations/0.10.0/005_852_add_comic_processing_flags.xml"/>
 
 </databaseChangeLog>

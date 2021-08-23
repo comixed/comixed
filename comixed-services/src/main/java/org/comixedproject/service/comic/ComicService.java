@@ -28,7 +28,6 @@ import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
-import org.comixedproject.adaptors.ComicInfoEntryAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
@@ -61,7 +60,6 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private PublishComicUpdateAction comicUpdatePublishAction;
   @Autowired private ComicFileHandler comicFileHandler;
-  @Autowired private ComicInfoEntryAdaptor comicInfoEntryAdaptor;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -104,10 +102,14 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     return result;
   }
 
-  private Comic doGetComic(final long id) throws ComicException {
+  private Comic doGetComic(final long id, final boolean throwIfMissing) throws ComicException {
     final Comic result = this.comicRepository.getById(id);
-    if (result == null) throw new ComicException("No such comic: id=" + id);
+    if (result == null && throwIfMissing) throw new ComicException("No such comic: id=" + id);
     return result;
+  }
+
+  private Comic doGetComic(final long id) throws ComicException {
+    return this.doGetComic(id, true);
   }
 
   /**
@@ -327,5 +329,45 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     if (result != null) return result;
     throw new ComicException(
         "No archive adaptor found for " + comic.getArchiveType().getMimeType());
+  }
+
+  /**
+   * Retrieves unprocessed comics that are waiting to have their contents loaded.
+   *
+   * @return the comics
+   */
+  public List<Comic> findUnprocessedComicsWithoutContent() {
+    log.trace("Loading unprocessed comics that need to have their contents loaded");
+    return this.comicRepository.findUnprocessedComicsWithoutContent();
+  }
+
+  /**
+   * Retrieves unprocessed comics that are waiting to have the blocked pages marked.
+   *
+   * @return the comics
+   */
+  public List<Comic> findUnprocessedComicsForMarkedPageBlocking() {
+    log.trace("Loading unprocessed comics that need to have their blocked pages marked");
+    return this.comicRepository.findUnprocessedComicsForMarkedPageBlocking();
+  }
+
+  /**
+   * Retrieves unprocessed comics that don't have file details.
+   *
+   * @return the comics
+   */
+  public List<Comic> findUnprocessedComicsWithoutFileDetails() {
+    log.trace("Loading unprocessed comics that don't have file details loaded");
+    return this.comicRepository.findUnprocessedComicsWithoutFileDetails();
+  }
+
+  /**
+   * Retrieves unprocessed comics that have had their contents processed.
+   *
+   * @return the comics
+   */
+  public List<Comic> findProcessedComics() {
+    log.trace("Loading unprocessed comics that are fully processed");
+    return this.comicRepository.findProcessedComics();
   }
 }

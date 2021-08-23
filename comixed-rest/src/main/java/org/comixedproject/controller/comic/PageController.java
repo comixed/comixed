@@ -165,13 +165,10 @@ public class PageController {
    * @return the page content
    * @throws ComicException if the comic is invalid or the page wasn't found
    */
-  @GetMapping(
-      value = "/comics/{comic_id}/pages/{index}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/comics/{id}/pages/{index}", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   public Page getPageInComicByIndex(
-      @PathVariable("comic_id") long comicId, @PathVariable("index") int index)
-      throws ComicException {
+      @PathVariable("id") long comicId, @PathVariable("index") int index) throws ComicException {
     log.info("Getting page in comic: comic id={} page index={}", comicId, index);
 
     return this.pageService.getPageInComicByIndex(comicId, index);

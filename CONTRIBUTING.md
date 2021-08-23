@@ -143,6 +143,7 @@ The application is composed of several modules:
  * **comixed-services**: the business logic layer,
  * **comixed-scrapers**: the library for building comic data scrapers,
  * **comixed-state**: state management layer,
+ * **comixed-batch**: batch processing layer,
  * **comixed-tasks**: the set of worker tasks that run on the server,
  * **comixed-auth**: the authentication layer,
  * **comixed-rest**: the REST controllers,

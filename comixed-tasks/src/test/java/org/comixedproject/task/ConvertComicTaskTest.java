@@ -18,7 +18,7 @@
 
 package org.comixedproject.task;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -38,7 +38,6 @@ import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.state.comic.ComicEvent;
 import org.comixedproject.state.comic.ComicStateHandler;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +49,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.ObjectFactory;
 
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 @RunWith(PowerMockRunner.class)
@@ -70,8 +68,6 @@ public class ConvertComicTaskTest {
   @Mock private Comic convertedComic;
   @Mock private ArchiveType targetArchiveType;
   @Mock private ArchiveAdaptor targetArchiveAdaptor;
-  @Mock private ObjectFactory<ProcessComicTaskEncoder> processComicTaskEncoderObjectFactory;
-  @Mock private ProcessComicTaskEncoder processComicTaskEncoder;
   @Mock private PersistedTask processComicPersistedTask;
   @Mock private TaskService taskService;
   @Mock private ComicFileHandler comicFileHandler;
@@ -109,9 +105,6 @@ public class ConvertComicTaskTest {
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(savedComic);
-    Mockito.when(processComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(processComicTaskEncoder);
-    Mockito.when(processComicTaskEncoder.encode()).thenReturn(processComicPersistedTask);
     Mockito.when(taskService.save(Mockito.any(PersistedTask.class)))
         .thenReturn(processComicPersistedTask);
 
@@ -127,10 +120,6 @@ public class ConvertComicTaskTest {
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(convertedComic, ComicEvent.archiveRecreated);
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(savedComic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
-    Mockito.verify(taskService, Mockito.times(1)).save(processComicPersistedTask);
     Mockito.verify(readingListService, Mockito.times(1)).saveReadingList(readingList);
 
     Assert.assertTrue(
@@ -156,9 +145,6 @@ public class ConvertComicTaskTest {
 
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
-    Mockito.when(processComicTaskEncoderObjectFactory.getObject())
-        .thenReturn(processComicTaskEncoder);
-    Mockito.when(processComicTaskEncoder.encode()).thenReturn(processComicPersistedTask);
     Mockito.when(taskService.save(Mockito.any(PersistedTask.class)))
         .thenReturn(processComicPersistedTask);
 
@@ -178,10 +164,6 @@ public class ConvertComicTaskTest {
         .saveComic(sourceComic, TEST_RENAME_PAGES);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(convertedComic, ComicEvent.archiveRecreated);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setComic(savedComic);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
-    Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
-    Mockito.verify(taskService, Mockito.times(1)).save(processComicPersistedTask);
 
     Assert.assertFalse(
         "Reading list contain original comic", readingList.getComics().contains(sourceComic));
