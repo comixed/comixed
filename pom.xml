@@ -23,7 +23,7 @@
     <sonar.links.scm>https://github.com/comixed/comixed</sonar.links.scm>
     <sonar.links.issue>https://github.com/comixed/comixed/issues</sonar.links.issue>
     <sonar.sources>./src/main/java</sonar.sources>
-    <sonar.exclusions>**/model/**,**/ComiXedApp,**/test/**</sonar.exclusions>
+    <sonar.coverage.exclusions>**/model/**,**/test/**,**/*Configuration,**/ComiXedApp</sonar.coverage.exclusions>
     <sonar.test.inclusions>**/test/**</sonar.test.inclusions>
   </properties>
   <profiles>
@@ -180,6 +180,7 @@
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4-rule</artifactId>
+
       <version>2.0.7</version>
       <scope>test</scope>
     </dependency>
@@ -190,6 +191,10 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-instrument</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -219,8 +224,9 @@
             <exclude>**/ComixedApp</exclude>
             <exclude>**/model/**</exclude>
             <exclude>**/*Exception*</exclude>
-            <exclude>**/state/comic/Comic**</exclude>
+            <exclude>**/state/comic/Comic*</exclude>
             <exclude>**/state/lists/ReadingList**</exclude>
+            <exclude>**/*Configuration</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -352,6 +358,7 @@
     <module>comixed-messaging</module>
     <module>comixed-tasks</module>
     <module>comixed-services</module>
+    <module>comixed-batch</module>
     <module>comixed-scrapers</module>
     <module>comixed-plugins</module>
     <module>comixed-auth</module>

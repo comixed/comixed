@@ -132,11 +132,18 @@ public class ComiXedUser {
    * @param name the preference name
    */
   public void deleteProperty(final String name) {
-    for (int index = 0; index < this.preferences.size(); index++) {
-      if (this.preferences.get(index).getName().equals(name)) {
-        this.preferences.get(index).setUser(null);
-        this.preferences.remove(index);
+    Preference preference = null;
+    int index = -1;
+    for (int which = 0; which < this.preferences.size(); which++) {
+      if (this.preferences.get(which).getName().equals(name)) {
+        preference = this.preferences.get(which);
+        index = which;
+        break;
       }
+    }
+    if (preference != null) {
+      preference.setUser(null);
+      this.preferences.remove(index);
     }
   }
 

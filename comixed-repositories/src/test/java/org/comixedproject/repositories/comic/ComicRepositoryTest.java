@@ -101,7 +101,7 @@ public class ComicRepositoryTest {
     }
   }
 
-  @Test(expected = DataIntegrityViolationException.class)
+  @Test(expected = NullPointerException.class)
   public void testFilenameIsRequired() {
     comic.setFilename(null);
     repository.save(comic);

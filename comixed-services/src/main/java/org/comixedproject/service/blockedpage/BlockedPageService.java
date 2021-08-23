@@ -309,4 +309,15 @@ public class BlockedPageService {
         result == 1 ? "" : "s");
     return result;
   }
+
+  /**
+   * Returns if the given has is blocked.
+   *
+   * @param hash the page hash
+   * @return true if blocked
+   */
+  public boolean isHashBlocked(final String hash) {
+    log.trace("Finding if hash is blocked: {}", hash);
+    return this.blockedPageRepository.findByHash(hash) != null;
+  }
 }

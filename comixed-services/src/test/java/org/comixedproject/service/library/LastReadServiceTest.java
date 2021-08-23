@@ -146,7 +146,7 @@ public class LastReadServiceTest {
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(lastReadRepository, Mockito.times(1)).findEntryForUserAndComic(user, comic);
-    Mockito.verify(lastReadEntry, Mockito.times(1)).setLastRead(Mockito.any(Date.class));
+    Mockito.verify(lastReadEntry, Mockito.times(1)).setLastReadOn(Mockito.any(Date.class));
     Mockito.verify(lastReadRepository, Mockito.times(1)).save(lastReadEntry);
     Mockito.verify(publishLastReadUpdateAction, Mockito.times(1)).publish(savedLastReadEntry);
   }
@@ -171,7 +171,7 @@ public class LastReadServiceTest {
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_EMAIL);
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(lastReadRepository, Mockito.times(1)).findEntryForUserAndComic(user, comic);
-    Mockito.verify(lastReadEntry, Mockito.times(1)).setLastRead(Mockito.any(Date.class));
+    Mockito.verify(lastReadEntry, Mockito.times(1)).setLastReadOn(Mockito.any(Date.class));
     Mockito.verify(lastReadRepository, Mockito.times(1)).save(lastReadEntry);
     Mockito.verify(publishLastReadUpdateAction, Mockito.times(1)).publish(savedLastReadEntry);
   }

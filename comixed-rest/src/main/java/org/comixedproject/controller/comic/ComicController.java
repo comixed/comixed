@@ -204,8 +204,8 @@ public class ComicController {
     log.info("Getting cover for comic: id={}", id);
     final Comic comic = this.comicService.getComic(id);
 
-    if (comic.isMissing()) {
-      throw new ComicException("comic file is missing: " + comic.getFilename());
+    if (comic == null || comic.isMissing()) {
+      throw new ComicException("comic file is missing");
     }
 
     if (comic.getPageCount() > 0) {

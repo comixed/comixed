@@ -21,6 +21,7 @@ package org.comixedproject.repositories.comic;
 import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comic.ComicState;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,7 +57,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   List<Comic> findBySeries(String series);
 
-  @Query("SELECT c FROM Comic c JOIN FETCH c.pages WHERE c.id = :id")
+  @Query("SELECT c FROM Comic c LEFT JOIN FETCH c.pages WHERE c.id = :id")
   Comic getById(@Param("id") long id);
 
   @Query(
@@ -107,4 +108,49 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT c FROM Comic c ORDER BY c.dateAdded")
   List<Comic> loadComicList();
+
+  /**
+   * Loads all comics with the given state, ordered by last modified date.
+   *
+   * @param state the state
+   * @return the comics
+   */
+  @Query("SELECT c FROM Comic c WHERE c.comicState = :state ORDER BY c.lastModifiedOn")
+  List<Comic> findForState(@Param("state") ComicState state);
+
+  /**
+   * Returns unprocessed comics that have their file loaded flag turned off.
+   *
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false ORDER BY c.lastModifiedOn")
+  List<Comic> findUnprocessedComicsWithoutContent();
+
+  /**
+   * Returns unprocessed comics that have their blocked pages marked flag turned off.
+   *
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false ORDER BY c.lastModifiedOn")
+  List<Comic> findUnprocessedComicsForMarkedPageBlocking();
+
+  /**
+   * Returns unprocessed comics without file details.
+   *
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.id FROM ComicFileDetails d)")
+  List<Comic> findUnprocessedComicsWithoutFileDetails();
+
+  /**
+   * Returns unprocessed comics that have been fully processed.
+   *
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id IN (SELECT d.id FROM ComicFileDetails d) ORDER BY c.lastModifiedOn")
+  List<Comic> findProcessedComics();
 }

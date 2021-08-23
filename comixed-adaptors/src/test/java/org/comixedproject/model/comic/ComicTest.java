@@ -155,10 +155,9 @@ public class ComicTest {
     assertEquals(TEST_FILENAME, this.comic.getFilename());
   }
 
-  @Test
-  public void testFilenameCanBeNull() {
+  @Test(expected = NullPointerException.class)
+  public void testFilenameCannotNull() {
     this.comic.setFilename(null);
-    assertNull(this.comic.getFilename());
   }
 
   @Test

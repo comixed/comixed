@@ -68,7 +68,7 @@ public class LastRead {
   @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
-  private Date lastRead = new Date();
+  private Date lastReadOn = new Date();
 
   @Column(name = "CreatedOn", updatable = false, nullable = false)
   @CreatedDate
@@ -90,11 +90,11 @@ public class LastRead {
     final LastRead that = (LastRead) o;
     return Objects.equals(comic, that.comic)
         && Objects.equals(user, that.user)
-        && Objects.equals(lastRead, that.lastRead);
+        && Objects.equals(lastReadOn, that.lastReadOn);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comic, user, lastRead);
+    return Objects.hash(comic, user, lastReadOn);
   }
 }

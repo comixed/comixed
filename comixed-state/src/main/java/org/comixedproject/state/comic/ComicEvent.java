@@ -24,7 +24,11 @@ package org.comixedproject.state.comic;
  * @author Darryl L. Pierce
  */
 public enum ComicEvent {
-  contentsProcessed,
+  imported, // the record has been created in the database
+  fileContentsLoaded, // the file entries have been loaded
+  blockedPagesMarked, // blocked pages have been marked
+  fileDetailsCreatedAction, // the file details have been created
+  contentsProcessed, // the contents have been processed
   scraped,
   detailsUpdated,
   metadataCleared,

@@ -25,16 +25,14 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.FilenameScraperAdaptor;
 import org.comixedproject.handlers.ComicFileHandler;
-import org.comixedproject.messaging.comic.PublishComicUpdateAction;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.ComicState;
 import org.comixedproject.model.scraping.ScrapingRule;
-import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.scraping.ScrapingRuleService;
-import org.comixedproject.service.task.TaskService;
-import org.comixedproject.task.encoders.ProcessComicTaskEncoder;
+import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comic.ComicStateHandler;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -56,11 +54,9 @@ public class AddComicTask extends AbstractTask {
   @Autowired private ObjectFactory<Comic> comicFactory;
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicService comicService;
+  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ScrapingRuleService scrapingRuleService;
   @Autowired private FilenameScraperAdaptor filenameScraper;
-  @Autowired private ObjectFactory<ProcessComicTaskEncoder> processTaskEncoderObjectFactory;
-  @Autowired private TaskService taskService;
-  @Autowired private PublishComicUpdateAction publishComicUpdateAction;
   @Getter @Setter private String filename;
   @Getter @Setter private boolean deleteBlockedPages = false;
   @Getter @Setter private boolean ignoreMetadata = false;
@@ -99,18 +95,8 @@ public class AddComicTask extends AbstractTask {
       log.trace("Saving comic");
       result = this.comicService.save(result);
 
-      log.trace("Publishing updated comic");
-      this.publishComicUpdateAction.publish(result);
-
-      log.trace("Encoding process comic persistedTask");
-      final ProcessComicTaskEncoder taskEncoder = this.processTaskEncoderObjectFactory.getObject();
-      taskEncoder.setComic(result);
-      taskEncoder.setDeleteBlockedPages(this.deleteBlockedPages);
-      taskEncoder.setIgnoreMetadata(this.ignoreMetadata);
-
-      log.trace("Saving process comic persistedTask");
-      final PersistedTask persistedTask = taskEncoder.encode();
-      this.taskService.save(persistedTask);
+      log.trace("Fire event: comic imported");
+      this.comicStateHandler.fireEvent(result, ComicEvent.imported);
     } catch (Exception error) {
       throw new TaskException("Failed to load comic", error);
     }

@@ -105,7 +105,7 @@ public class LastReadService {
         entry = new LastRead(comic, user);
       }
       log.trace("Setting last read entry");
-      entry.setLastRead(new Date());
+      entry.setLastReadOn(new Date());
       entry.setLastModifiedOn(new Date());
       result = this.lastReadRepository.save(entry);
     } else {
