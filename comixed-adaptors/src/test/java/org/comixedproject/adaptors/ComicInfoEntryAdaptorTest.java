@@ -46,7 +46,7 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   private static final String TEST_VOLUME_NAME = "2011";
   private static final String TEST_ISSUE_NUMBER = "24";
   private static final String TEST_TITLE = "Test Title";
-  private static final String TEST_DESCRIPTION = "Test summary";
+  private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
 
   @InjectMocks ComicInfoEntryAdaptor adaptor;
   @Mock private Comic comic;
@@ -113,6 +113,14 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
 
   @Test
   public void testSaveComicInfoXml() throws EntryLoaderException, IOException {
+    final Object[] roles = ComicInfoEntryAdaptor.CREDIT_TO_ROLE.keySet().toArray();
+    for (int index = 0; index < 25; index++) {
+      characterList.add("CHAR" + index);
+      teamList.add("TEAM" + index);
+      locationList.add("LOC" + index);
+      storyList.add("STORY" + index);
+      creditList.add(new Credit(comic, "NAME" + index, roles[index % roles.length].toString()));
+    }
     byte[] result = adaptor.saveContent(comic);
 
     assertNotNull(result);

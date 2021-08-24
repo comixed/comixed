@@ -18,11 +18,14 @@
 
 package org.comixedproject.adaptors;
 
-import java.io.*;
-import java.text.MessageFormat;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.*;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -33,25 +36,81 @@ import org.comixedproject.model.comic.Credit;
 import org.springframework.stereotype.Component;
 
 /**
- * * <code>ComicInfoEntryAdaptor</code> loads data from the ComicInfo.xml file created by ComicRack.
+ * <code>ComicInfoEntryAdaptor</code> loads data from the ComicInfo.xml file within a comic.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
 public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
-  private final XMLInputFactory xmlInputFactory;
-
-  public ComicInfoEntryAdaptor() {
-    this.xmlInputFactory = XMLInputFactory.newInstance();
-  }
+  private static final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+  private static final XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+  public static final String TAG_WRITER = "Writer";
+  public static final String TAG_EDITOR = "Editor";
+  public static final String TAG_PENCILLER = "Penciller";
+  public static final String TAG_INKER = "Inker";
+  public static final String TAG_COLORIST = "Colorist";
+  public static final String TAG_LETTERER = "Letterer";
+  public static final String TAG_COVER_ARTIST = "CoverArtist";
+  public static final String CREDIT_WRITER = "writer";
+  public static final String CREDIT_EDITOR = "editor";
+  public static final String CREDIT_PENCILLER = "penciller";
+  public static final String CREDIT_INKER = "inker";
+  public static final String CREDIT_COLORIST = "colorist";
+  public static final String CREDIT_LETTERER = "letterer";
+  public static final String CREDIT_COVER = "cover";
+  static final Map<String, String> CREDIT_TO_ROLE =
+      Map.of(
+          CREDIT_WRITER,
+          TAG_WRITER,
+          CREDIT_EDITOR,
+          TAG_EDITOR,
+          CREDIT_PENCILLER,
+          TAG_PENCILLER,
+          CREDIT_INKER,
+          TAG_INKER,
+          CREDIT_COLORIST,
+          TAG_COLORIST,
+          CREDIT_LETTERER,
+          TAG_LETTERER,
+          CREDIT_COVER,
+          TAG_COVER_ARTIST);
+  static final Map<String, String> TAG_TO_CREDIT =
+      Map.of(
+          TAG_WRITER,
+          CREDIT_WRITER,
+          TAG_EDITOR,
+          CREDIT_EDITOR,
+          TAG_PENCILLER,
+          CREDIT_PENCILLER,
+          TAG_INKER,
+          CREDIT_INKER,
+          TAG_COLORIST,
+          CREDIT_COLORIST,
+          TAG_LETTERER,
+          CREDIT_LETTERER,
+          TAG_COVER_ARTIST,
+          CREDIT_COVER);
+  public static final String TAG_PUBLISHER = "Publisher";
+  public static final String TAG_SERIES = "Series";
+  public static final String TAG_VOLUME = "Volume";
+  public static final String TAG_TITLE = "Title";
+  public static final String TAG_ISSUE_NUMBER = "Number";
+  public static final String TAG_SUMMARY = "Summary";
+  public static final String TAG_NOTES = "Notes";
+  public static final String TAG_PUBLISHED_YEAR = "Year";
+  public static final String TAG_PUBLISHER_MONTH = "Month";
+  public static final String TAG_CHARACTERS = "Characters";
+  public static final String TAG_TEAMS = "Teams";
+  public static final String TAG_LOCATIONS = "Locations";
+  public static final String TAG_ALTERNATE_SERIES = "AlternateSeries";
 
   @Override
   public void loadContent(
       final Comic comic, final String filename, final byte[] content, final boolean ignoreMetadata)
       throws EntryLoaderException {
     if (ignoreMetadata) {
-      log.debug("Ignoring metadata");
+      log.trace("Ignoring metadata");
       return;
     }
     try {
@@ -62,81 +121,81 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
   }
 
   protected void loadXmlData(InputStream istream, Comic comic) throws XMLStreamException {
-    final var xmlInputReader = this.xmlInputFactory.createXMLStreamReader(istream);
+    final var xmlInputReader = xmlInputFactory.createXMLStreamReader(istream);
     int publishedYear = -1;
     int publishedMonth = -1;
 
     while (xmlInputReader.hasNext()) {
       if (xmlInputReader.isStartElement()) {
         final String tagName = xmlInputReader.getLocalName();
-        log.debug("Processing tag: " + tagName);
-        switch (tagName) {
-          case "Publisher":
-            comic.setPublisher(xmlInputReader.getElementText());
-            break;
-          case "Series":
-            comic.setSeries(xmlInputReader.getElementText());
-            break;
-          case "Volume":
-            comic.setVolume(xmlInputReader.getElementText());
-            break;
-          case "Title":
-            comic.setTitle(xmlInputReader.getElementText());
-            break;
-          case "Number":
-            comic.setIssueNumber(xmlInputReader.getElementText());
-            break;
-          case "Summary":
-            comic.setDescription(xmlInputReader.getElementText());
-            break;
-          case "Notes":
-            comic.setNotes(xmlInputReader.getElementText());
-            break;
-          case "Year":
-            publishedYear = Integer.valueOf(xmlInputReader.getElementText());
-            break;
-          case "Month":
-            publishedMonth = Integer.valueOf(xmlInputReader.getElementText());
-            break;
-          case "Web":
-            break;
-          case "PageCount":
-            break;
-          case "Characters":
-            this.addElementsToList(xmlInputReader.getElementText(), comic.getCharacters());
-            break;
-          case "Teams":
-            this.addElementsToList(xmlInputReader.getElementText(), comic.getTeams());
-            break;
-          case "Locations":
-            this.addElementsToList(xmlInputReader.getElementText(), comic.getLocations());
-            break;
-          case "AlternateSeries":
-            this.addElementsToList(xmlInputReader.getElementText(), comic.getStoryArcs());
-            break;
-          case "Writer":
-          case "Editor":
-          case "Penciller":
-          case "Inker":
-          case "Colorist":
-          case "Letterer":
-          case "CoverArtist":
-            {
-              final String role =
-                  (tagName.equalsIgnoreCase("coverartist")) ? "cover" : tagName.toLowerCase();
-              this.commandSeparatedList(xmlInputReader.getElementText())
-                  .forEach(
-                      name -> {
-                        log.debug("Adding role: {}={}", role, name);
-                        comic.getCredits().add(new Credit(comic, name, role));
-                      });
-            }
-            break;
-          default:
-            log.debug("Unrecognized tag");
-            break;
+        log.trace("Processing tag: {}", tagName);
+        try {
+          switch (tagName) {
+            case TAG_PUBLISHER:
+              comic.setPublisher(xmlInputReader.getElementText());
+              break;
+            case TAG_SERIES:
+              comic.setSeries(xmlInputReader.getElementText());
+              break;
+            case TAG_VOLUME:
+              comic.setVolume(xmlInputReader.getElementText());
+              break;
+            case TAG_TITLE:
+              comic.setTitle(xmlInputReader.getElementText());
+              break;
+            case TAG_ISSUE_NUMBER:
+              comic.setIssueNumber(xmlInputReader.getElementText());
+              break;
+            case TAG_SUMMARY:
+              comic.setDescription(xmlInputReader.getElementText());
+              break;
+            case TAG_NOTES:
+              comic.setNotes(xmlInputReader.getElementText());
+              break;
+            case TAG_PUBLISHED_YEAR:
+              publishedYear = Integer.valueOf(xmlInputReader.getElementText());
+              break;
+            case TAG_PUBLISHER_MONTH:
+              publishedMonth = Integer.valueOf(xmlInputReader.getElementText());
+              break;
+            case TAG_CHARACTERS:
+              this.addElementsToList(xmlInputReader.getElementText(), comic.getCharacters());
+              break;
+            case TAG_TEAMS:
+              this.addElementsToList(xmlInputReader.getElementText(), comic.getTeams());
+              break;
+            case TAG_LOCATIONS:
+              this.addElementsToList(xmlInputReader.getElementText(), comic.getLocations());
+              break;
+            case TAG_ALTERNATE_SERIES:
+              this.addElementsToList(xmlInputReader.getElementText(), comic.getStoryArcs());
+              break;
+            case TAG_WRITER:
+            case TAG_EDITOR:
+            case TAG_PENCILLER:
+            case TAG_INKER:
+            case TAG_COLORIST:
+            case TAG_LETTERER:
+            case TAG_COVER_ARTIST:
+              {
+                final String role = TAG_TO_CREDIT.get(tagName);
+                this.commandSeparatedList(xmlInputReader.getElementText())
+                    .forEach(
+                        name -> {
+                          log.debug("Adding role: {}={}", role, name);
+                          comic.getCredits().add(new Credit(comic, name, role));
+                        });
+              }
+              break;
+            default:
+              log.trace("Unused tag");
+              break;
+          }
+        } catch (Exception error) {
+          log.error("Error processing tag: " + tagName, error);
         }
       }
+
       xmlInputReader.next();
     }
     // if we have the published year and/or month then set them
@@ -169,45 +228,65 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
    *
    * @param comic the comic
    * @return the content of the file
-   * @throws IOException if an error occurs
+   * @throws EntryLoaderException if an error occurs
    */
-  public byte[] saveContent(Comic comic) throws IOException {
+  public byte[] saveContent(Comic comic) throws EntryLoaderException {
     log.debug("Generating comic info data from comic");
     var result = new ByteArrayOutputStream();
-    var writer = new PrintWriter(new OutputStreamWriter(result));
+    try {
+      final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(result);
+      writer.writeStartElement("ComicInfo");
+      writer.writeComment(
+          String.format(
+              "ComicInfo.xml generated by ComiXed : %s",
+              DateFormatUtils.format(new Date(), "MM/dd/yyyy @ HH:mm:ss")));
+      this.writeEntry(writer, TAG_PUBLISHER, comic.getPublisher(), false);
+      this.writeEntry(writer, TAG_SERIES, comic.getSeries(), false);
+      this.writeEntry(writer, TAG_VOLUME, comic.getVolume(), false);
+      this.writeEntry(writer, TAG_ISSUE_NUMBER, comic.getIssueNumber(), false);
+      this.writeEntry(writer, TAG_TITLE, comic.getTitle(), false);
+      this.writeEntry(writer, TAG_SUMMARY, comic.getDescription(), true);
+      this.writeEntry(writer, TAG_NOTES, comic.getNotes(), true);
 
-    writer.write(
-        "<?xml version=\"1.0\"?><ComicInfo xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
-    writer.write(
-        String.format(
-            "<!-- ComicInfo.xml generated by ComiXed : %s -->",
-            DateFormatUtils.format(new Date(), "MM/dd/yyyy @ HH:mm:ss")));
-    this.writeEntry(writer, "Publisher", comic.getPublisher());
-    this.writeEntry(writer, "Series", comic.getSeries());
-    this.writeEntry(writer, "Volume", comic.getVolume());
-    this.writeEntry(writer, "Number", comic.getIssueNumber());
-    this.writeEntry(writer, "Title", comic.getTitle());
-    this.writeEntry(writer, "Summary", comic.getDescription());
+      if (comic.getCoverDate() != null) {
+        var gc = Calendar.getInstance();
+        gc.setTime(comic.getCoverDate());
+        this.writeEntry(writer, TAG_PUBLISHED_YEAR, String.valueOf(gc.get(Calendar.YEAR)), false);
+        this.writeEntry(
+            writer, TAG_PUBLISHER_MONTH, String.valueOf(gc.get(Calendar.MONTH) + 1), false);
+      }
+      this.writeEntry(writer, "PageCount", String.valueOf(comic.getPageCount()), false);
+      this.writeEntry(writer, TAG_CHARACTERS, StringUtils.join(comic.getCharacters(), ","), false);
+      this.writeEntry(writer, TAG_TEAMS, StringUtils.join(comic.getTeams(), ","), false);
+      this.writeEntry(writer, TAG_LOCATIONS, StringUtils.join(comic.getLocations(), ","), false);
+      for (Credit credit : comic.getCredits()) {
+        this.writeCreditEntry(writer, credit.getRole(), credit.getName());
+      }
+      writer.writeEndElement();
+      writer.flush();
 
-    if (comic.getCoverDate() != null) {
-      var gc = Calendar.getInstance();
-      gc.setTime(comic.getCoverDate());
-      this.writeEntry(writer, "Year", String.valueOf(gc.get(Calendar.YEAR)));
-      this.writeEntry(writer, "Month", String.valueOf(gc.get(Calendar.MONTH) + 1));
+      return result.toByteArray();
+    } catch (XMLStreamException error) {
+      throw new EntryLoaderException("Failed to create XML output writer", error);
     }
-    this.writeEntry(writer, "PageCount", String.valueOf(comic.getPageCount()));
-    this.writeEntry(writer, "Characters", StringUtils.join(comic.getCharacters(), ","));
-    this.writeEntry(writer, "Teams", StringUtils.join(comic.getTeams(), ","));
-    this.writeEntry(writer, "Locations", StringUtils.join(comic.getLocations(), ","));
-    writer.write("</ComicInfo>");
-    writer.flush();
-
-    return result.toByteArray();
   }
 
-  private void writeEntry(PrintWriter writer, String tagName, String value) {
+  private void writeEntry(
+      final XMLStreamWriter writer, final String tagName, String value, final boolean cdatafy)
+      throws XMLStreamException {
     if (value != null) {
-      writer.write(MessageFormat.format("<{0}>{1}</{0}>", tagName, value));
+      writer.writeStartElement(tagName);
+      if (cdatafy) {
+        writer.writeCData(value);
+      } else {
+        writer.writeCharacters(value);
+      }
+      writer.writeEndElement();
     }
+  }
+
+  private void writeCreditEntry(final XMLStreamWriter writer, final String role, final String name)
+      throws XMLStreamException {
+    this.writeEntry(writer, CREDIT_TO_ROLE.get(role), name, false);
   }
 }
