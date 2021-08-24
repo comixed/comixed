@@ -31,4 +31,8 @@ public class EntryLoaderException extends Exception {
   public EntryLoaderException(XMLStreamException cause) {
     super(cause);
   }
+
+  public EntryLoaderException(final String message, final Exception cause) {
+    super(message, cause);
+  }
 }

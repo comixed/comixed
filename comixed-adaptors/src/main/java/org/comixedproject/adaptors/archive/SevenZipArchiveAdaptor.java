@@ -29,6 +29,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
+import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.springframework.stereotype.Component;
@@ -160,7 +161,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
-      throws ArchiveAdaptorException, IOException {
+      throws ArchiveAdaptorException {
     log.debug("Getting archive adaptor to read comic");
     var sourceArchiveAdaptor = this.getSourceArchiveAdaptor(source.getFilename());
 
@@ -183,7 +184,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
         final byte[] content = sourceArchiveAdaptor.loadSingleFile(source, page.getFilename());
         this.addFileToArchive(sevenzcomic, pagename, content);
       }
-    } catch (IOException error) {
+    } catch (IOException | EntryLoaderException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
     }
   }
