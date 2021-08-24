@@ -6,7 +6,7 @@
   <AlternateSeries>Test Alternate Series</AlternateSeries>
   <Number>24</Number>
   <Volume>2011</Volume>
-  <Summary>Test summary</Summary>
+  <Summary>Test summary &lt;em&gt;inner tag&lt;/em&gt;</Summary>
   <Notes>Test notes</Notes>
   <Year>2013</Year>
   <Month>12</Month>

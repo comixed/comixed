@@ -32,6 +32,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comic.Comic;
 import org.springframework.stereotype.Component;
@@ -137,7 +138,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
 
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
-      throws ArchiveAdaptorException, IOException {
+      throws ArchiveAdaptorException {
     var sourceArchiveAdaptor = this.getSourceArchiveAdaptor(source.getFilename());
 
     log.debug("Creating temporary file: " + filename);
@@ -173,7 +174,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
         zoutput.write(content);
         zoutput.closeArchiveEntry();
       }
-    } catch (IOException | ArchiveException error) {
+    } catch (IOException | ArchiveException | EntryLoaderException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
     }
   }
