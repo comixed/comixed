@@ -24,7 +24,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.*;
 import lombok.Getter;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.opds.OPDSAuthor;
 import org.comixedproject.model.opds.OPDSEntry;
 import org.comixedproject.model.opds.OPDSLink;

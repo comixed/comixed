@@ -24,14 +24,13 @@ import static org.junit.Assert.assertNotNull;
 import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.service.library.NoSuchReadingListException;
-import org.comixedproject.service.library.ReadingListService;
+import org.comixedproject.service.lists.ReadingListException;
+import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -80,10 +79,9 @@ public class OPDSControllerTest {
   }
 
   @Test
-  public void testGetAllLists() throws ParseException {
+  public void testGetAllLists() throws ParseException, ReadingListException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(
-            readingListService.getReadingListsForUser(Mockito.anyString(), Mockito.any(Date.class)))
+    Mockito.when(readingListService.getReadingListsForUser(Mockito.anyString()))
         .thenReturn(readingLists);
 
     OPDSFeed result = controller.getAllLists(principal);
@@ -92,7 +90,7 @@ public class OPDSControllerTest {
   }
 
   @Test
-  public void testGetList() throws ParseException, NoSuchReadingListException {
+  public void testGetList() throws ParseException, ReadingListException, ReadingListException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(readingListService.getReadingListForUser(TEST_USER_EMAIL, TEST_ID))
         .thenReturn(readingList);

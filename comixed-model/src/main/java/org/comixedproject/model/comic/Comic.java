@@ -30,7 +30,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;

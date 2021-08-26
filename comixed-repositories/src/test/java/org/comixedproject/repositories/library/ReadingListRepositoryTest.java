@@ -22,11 +22,10 @@ import static org.junit.Assert.*;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.RepositoryContext;
 import org.comixedproject.repositories.comic.ComicRepository;
@@ -74,8 +73,7 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testFindAllReadingListsForUser() {
-    List<ReadingList> result =
-        repository.getAllReadingListsForOwnerUpdatedAfter(reader, new Date(0L));
+    List<ReadingList> result = repository.getAllReadingListsForOwner(reader);
 
     assertNotNull(result);
     assertEquals(2, result.size());
@@ -90,15 +88,6 @@ public class ReadingListRepositoryTest {
           break;
       }
     }
-  }
-
-  @Test
-  public void testFindAllReadingListsForUserNoneUpdated() {
-    List<ReadingList> result =
-        repository.getAllReadingListsForOwnerUpdatedAfter(reader, new Date());
-
-    assertNotNull(result);
-    assertTrue(result.isEmpty());
   }
 
   @Test
@@ -118,9 +107,8 @@ public class ReadingListRepositoryTest {
     list.setName(TEST_NEW_LIST_NAME);
     list.getComics().add(comic1);
     list.getComics().add(comic2);
-    repository.save(list);
 
-    ReadingList result = repository.findReadingListForUser(reader, TEST_NEW_LIST_NAME);
+    final ReadingList result = repository.save(list);
 
     assertNotNull(result);
     assertEquals(reader.getId(), result.getOwner().getId());

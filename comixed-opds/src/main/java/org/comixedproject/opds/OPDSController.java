@@ -21,7 +21,6 @@ package org.comixedproject.opds;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.security.Principal;
-import java.util.Date;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
@@ -33,8 +32,8 @@ import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Page;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.service.library.NoSuchReadingListException;
-import org.comixedproject.service.library.ReadingListService;
+import org.comixedproject.service.lists.ReadingListException;
+import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -81,11 +80,11 @@ public class OPDSController {
       produces = MediaType.APPLICATION_XML_VALUE)
   @CrossOrigin
   @AuditableEndpoint
-  public OPDSFeed getAllLists(Principal principal) {
+  public OPDSFeed getAllLists(Principal principal) throws ReadingListException {
     return new OPDSNavigationFeed(
         "/opds/all?groupByFolder=true",
         FEED_HEADER,
-        this.readingListService.getReadingListsForUser(principal.getName(), new Date(0L)));
+        this.readingListService.getReadingListsForUser(principal.getName()));
   }
 
   @ResponseBody
@@ -93,7 +92,7 @@ public class OPDSController {
   @CrossOrigin
   @AuditableEndpoint
   public OPDSFeed getList(Principal principal, @PathVariable("id") long id)
-      throws NoSuchReadingListException {
+      throws ReadingListException {
     return new OPDSNavigationFeed(
         "/opds/" + id,
         FEED_HEADER,

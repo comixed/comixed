@@ -18,10 +18,9 @@
 
 package org.comixedproject.repositories.library;
 
-import java.util.Date;
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -30,13 +29,36 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReadingListRepository extends CrudRepository<ReadingList, Long> {
-  @Query("SELECT l FROM ReadingList l WHERE l.owner = :owner AND l.lastUpdated > :lastUpdated")
-  List<ReadingList> getAllReadingListsForOwnerUpdatedAfter(
-      @Param("owner") ComiXedUser owner, @Param("lastUpdated") Date lastUpdated);
+  /**
+   * Retrieves all records for the given user.
+   *
+   * @param owner the owner
+   * @return the reading lists
+   */
+  @Query("SELECT l FROM ReadingList l WHERE l.owner = :owner ORDER BY l.lastModifiedOn")
+  List<ReadingList> getAllReadingListsForOwner(@Param("owner") ComiXedUser owner);
 
+  /**
+   * Returns the reading list with the given name and owner.
+   *
+   * @param owner the owner
+   * @param listName the list name
+   * @return the reading list
+   */
   @Query(
       "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner = :owner AND l.name = :listName")
-  ReadingList findReadingListForUser(ComiXedUser owner, String listName);
+  ReadingList findReadingListForUser(
+      @Param("owner") ComiXedUser owner, @Param("listName") String listName);
+
+  /**
+   * Retrieves the reading list with the given id owned by the specified user.
+   *
+   * @param owner the owner
+   * @param id the record id
+   * @return the reading list
+   */
+  @Query("SELECT l FROM ReadingList l WHERE l.id = :id AND l.owner = :owner")
+  ReadingList getReadingListForUserAndId(@Param("owner") ComiXedUser owner, @Param("id") long id);
 
   @Query(
       "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner.email = :email AND :comic MEMBER OF l.comics")
