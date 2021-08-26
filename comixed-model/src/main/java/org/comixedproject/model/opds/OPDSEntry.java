@@ -29,7 +29,7 @@ import lombok.extern.log4j.Log4j2;
 import org.codehaus.plexus.util.StringUtils;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.comic.Credit;
-import org.comixedproject.model.library.ReadingList;
+import org.comixedproject.model.lists.ReadingList;
 
 /**
  * <code>OPDSEntry</code> represents a single entry within an OPDS feed.

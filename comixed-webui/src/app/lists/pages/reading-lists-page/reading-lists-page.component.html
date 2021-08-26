@@ -1,0 +1,65 @@
+<mat-toolbar class="cx-primary-light-background">
+  <mat-paginator class="cx-primary-light-background"></mat-paginator>
+  <div class="cx-spacer"></div>
+  <button
+    id="add-reading-list-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'reading-lists.tooltip.add-reading-list' | translate"
+    routerLink="/lists/reading/new"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="list-name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "reading-lists.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.name }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="summary">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "reading-lists.label.summary" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.summary }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "reading-lists.label.comic-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.comics.length | number }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="created-on">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "reading-lists.label.created-on" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.createdOn | date: "medium" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="['/lists', 'reading', row.id]"
+  ></mat-row>
+</mat-table>

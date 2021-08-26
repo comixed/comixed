@@ -56,7 +56,10 @@ public class View {
   public interface UserDetailsView extends UserList {}
 
   /** Used when viewing the list of reading lists. */
-  public interface ReadingList {}
+  public interface ReadingLists {}
+
+  /** Used when viewing the details for a reading list. */
+  public interface ReadingListDetail extends ReadingLists {}
 
   /** Used when viewing the list of smart reading lists. */
   public interface SmartReadingList {}
@@ -66,9 +69,6 @@ public class View {
 
   /** Used when viewing the details of a duplicate page. */
   public interface DuplicatePageDetail extends DuplicatePageList {}
-
-  /** Used when fetching library updates. */
-  public interface LibraryUpdate {}
 
   /** Used when viewing the list of plugins. */
   public interface PluginList {}

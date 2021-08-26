@@ -1,0 +1,43 @@
+{
+  "reading-list": {
+    "load-one": {
+      "effect-failure": "Failed to load reading list."
+    },
+    "placeholder": {
+      "name": "Reading List Name",
+      "summary": "Summary Of The Reading List"
+    },
+    "save-changes": {
+      "confirmation-message": "Save changes to this reading list?",
+      "confirmation-title": "Save Changes",
+      "effect-failure": "Failed to save reading list.",
+      "effect-success": "Reading list saved."
+    },
+    "text": {
+      "no-name": "Unnamed Reading List"
+    },
+    "tooltip": {
+      "reset-reading-list": "Reset changes to the reading list.",
+      "return-to-list": "Return to the list.",
+      "save-reading-list": "Save changes to the reading list."
+    },
+    "undo-changes": {
+      "confirmation-message": "Are you sure you want to discard your changes?",
+      "confirmation-title": "Undo Reading List Changes"
+    }
+  },
+  "reading-lists": {
+    "label": {
+      "comic-count": "# Of Comics",
+      "created-on": "Created",
+      "name": "Reading List Name",
+      "summary": "Summary"
+    },
+    "load-for-user": {
+      "effect-failure": "Failed to load reading lists."
+    },
+    "tooltip": {
+      "add-reading-list": "Add a new reading list."
+    }
+  }
+}

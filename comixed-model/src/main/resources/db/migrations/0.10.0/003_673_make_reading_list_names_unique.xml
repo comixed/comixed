@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="003_673_make_reading_list_names_unique.xml"
+             author="mcpierce">
+
+    <sql>DELETE
+         FROM ReadingLists
+         WHERE Id IS NOT NULL</sql>
+
+    <addColumn tableName="ReadingLists">
+      <column name="CreatedOn"
+              type="datetime">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+
+    <renameColumn tableName="ReadingLists"
+                  oldColumnName="LastUpdated"
+                  newColumnName="LastModifiedOn"
+                  columnDataType="datetime"/>
+
+    <addUniqueConstraint tableName="ReadingLists"
+                         columnNames="OwnerId,Name"
+                         constraintName="ReadingListUniqueOwnerNameIdx"/>
+  </changeSet>
+</databaseChangeLog>

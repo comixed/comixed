@@ -1,0 +1,22 @@
+@import '~styles';
+
+.mat-column-list-name {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-summary {
+}
+
+.mat-column-comic-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-created-on {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}

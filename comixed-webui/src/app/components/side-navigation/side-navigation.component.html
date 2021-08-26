@@ -138,7 +138,6 @@
       <button
         mat-icon-button
         color="primary"
-        [disabled]="true"
         (click)="onCollapseReadingLists(!readingListsCollapsed)"
       >
         <mat-icon *ngIf="readingListsCollapsed">expand_less</mat-icon>
@@ -146,7 +145,11 @@
       </button>
       {{ "navigation.heading.reading-lists" | translate }}
     </h3>
-    <!-- mat-nav-list *ngIf="!readingListsCollapsed"></mat-nav-list -->
+    <mat-nav-list *ngIf="!readingListsCollapsed">
+      <a mat-list-item routerLink="/lists/reading" routerLinkActive="active">
+        {{ "navigation.option.reading-lists" | translate }}
+      </a>
+    </mat-nav-list>
 
     <h3 *ngIf="!!user" matSubheader>
       {{ "navigation.heading.account" | translate }}

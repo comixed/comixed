@@ -37,5 +37,5 @@ public class GenericResponse {
   @JsonView(View.GenericResponseView.class)
   @NonNull
   @Getter
-  private boolean success;
+  private Boolean success;
 }

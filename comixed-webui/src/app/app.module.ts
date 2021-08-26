@@ -69,6 +69,7 @@ import { LastReadModule } from '@app/last-read/last-read.module';
 import { ComicFileModule } from '@app/comic-file/comic-file.module';
 import { ComicBookModule } from '@app/comic-book/comic-book.module';
 import { GravatarModule } from 'ngx-gravatar';
+import { ListsModule } from '@app/lists/lists.module';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { GravatarModule } from 'ngx-gravatar';
     BlockedPagesModule,
     LastReadModule,
     CollectionsModule,
+    ListsModule,
     BrowserModule,
     AppRouting,
     BrowserAnimationsModule,
