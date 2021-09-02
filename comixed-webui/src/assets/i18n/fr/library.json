@@ -43,6 +43,10 @@
     }
   },
   "library": {
+    "add-to-reading-list": {
+      "confirmation-message": "Are you sure you want to add {count, plural, =1{one comic} other{# comics}} to {name}?",
+      "confirmation-title":  "Add Comics To Reading List"
+    },
     "all-comics": {
       "tab-title": "Toutes les Bandes Dessinées",
       "tab-title-deleted": "Bandes dessinées supprimées",
@@ -66,6 +70,7 @@
       "mark-one-as-unread": "Cette Bande Dessinée comme Non lue",
       "mark-selected-as-read": "Les Bandes Dessinées sélectionnées comme Lues",
       "mark-selected-as-unread": "Les Bandes Dessinées sélectionnées comme Non lues",
+      "reading-lists": "Add to list...",
       "set-page-blocked": "Bloquer des pages comme celle-ci",
       "set-page-unblocked": "Ne pas bloquer des pages comme celle-ci",
       "undelete-one": "This Comic As Undeleted",

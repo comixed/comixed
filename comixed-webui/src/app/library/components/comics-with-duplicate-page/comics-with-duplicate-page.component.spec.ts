@@ -18,23 +18,94 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicsWithDuplicatePageComponent } from './comics-with-duplicate-page.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
+import { LoggerModule } from '@angular-ru/logger';
+import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockStore } from '@ngrx/store/testing';
+import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDividerModule } from '@angular/material/divider';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  DISPLAY_FEATURE_KEY,
+  initialState as initialDisplayState
+} from '@app/library/reducers/display.reducer';
+import { DuplicatePage } from '@app/library/models/duplicate-page';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5,
+  PAGE_1
+} from '@app/comic-book/comic-book.fixtures';
+import { ComicDetailCardComponent } from '@app/comic-book/components/comic-detail-card/comic-detail-card.component';
+import { ComicTitlePipe } from '@app/comic-book/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '@app/comic-book/pipes/comic-cover-url.pipe';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicsWithDuplicatePageComponent', () => {
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const HASH = PAGE_1.hash;
+  const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
+
   let component: ComicsWithDuplicatePageComponent;
   let fixture: ComponentFixture<ComicsWithDuplicatePageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicsWithDuplicatePageComponent],
+      declarations: [
+        ComicsWithDuplicatePageComponent,
+        ComicCoversComponent,
+        LibraryToolbarComponent,
+        ComicDetailCardComponent,
+        ComicTitlePipe,
+        ComicCoverUrlPipe
+      ],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([
+          {
+            path: '**',
+            redirectTo: ''
+          }
+        ]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatSelectModule,
+        MatToolbarModule,
+        MatPaginatorModule,
+        MatDividerModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatTooltipModule
+      ],
       providers: [
+        provideMockStore({ initialState }),
         {
           provide: MatDialogRef,
           useValue: {}
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: {}
+          useValue: { comics: COMICS, hash: HASH } as DuplicatePage
         }
       ]
     }).compileComponents();

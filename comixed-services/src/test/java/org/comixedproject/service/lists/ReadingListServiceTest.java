@@ -20,20 +20,29 @@ package org.comixedproject.service.lists;
 
 import static org.junit.Assert.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.comixedproject.model.comic.Comic;
 import org.comixedproject.model.lists.ReadingList;
+import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.repositories.library.ReadingListRepository;
+import org.comixedproject.repositories.lists.ReadingListRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
+import org.comixedproject.state.lists.ReadingListEvent;
+import org.comixedproject.state.lists.ReadingListStateHandler;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.statemachine.state.State;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -42,36 +51,43 @@ public class ReadingListServiceTest {
   private static final String TEST_READING_LIST_SUMMARY = "Test Reading List Description";
   private static final String TEST_USER_EMAIL = "reader@localhost.com";
   private static final long TEST_READING_LIST_ID = 78;
-  private static final List<Long> TEST_READING_LIST_ENTRIES = new ArrayList<>();
+  private static final Long TEST_COMIC_ID_IN_LIST = 1000L;
+  private static final Long TEST_COMIC_ID_NOT_IN_LIST = 2000L;
+  private static final String TEST_OWNER_EMAIL = "owner@localhost.com";
+  private static final ReadingListState TEST_READING_LIST_STATE = ReadingListState.STABLE;
 
-  private static final Long TEST_COMIC_ID_1 = 1000L;
-  private static final Long TEST_COMIC_ID_2 = 1001L;
-  private static final Long TEST_COMIC_ID_3 = 1002L;
-  private static final Long TEST_COMIC_ID_4 = 1003L;
-  private static final Long TEST_COMIC_ID_5 = 1004L;
-
-  static {
-    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_1);
-    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_2);
-    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_3);
-    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_4);
-    TEST_READING_LIST_ENTRIES.add(TEST_COMIC_ID_5);
-  }
-
-  @InjectMocks private ReadingListService readingListService;
+  @InjectMocks private ReadingListService service;
+  @Mock private ReadingListStateHandler readingListStateHandler;
   @Mock private ReadingListRepository readingListRepository;
   @Mock private UserService userService;
   @Mock private ComicService comicService;
   @Mock private ReadingList readingList;
   @Mock private ReadingList savedReadingList;
+  @Mock private ReadingList loadedReadingList;
+  @Mock private ComiXedUser owner;
   @Mock private ComiXedUser user;
-  @Mock private ComiXedUser otherUser;
   @Mock private List<ReadingList> readingLists;
   @Mock private Comic comic;
+  @Mock private State<ReadingListState, ReadingListEvent> incomingState;
+  @Mock private MessageHeaders messageHeaders;
+  @Mock private Message<ReadingListEvent> incomingMessage;
+
   @Captor private ArgumentCaptor<ReadingList> readingListCaptor;
 
   private List<Comic> comicList = new ArrayList<>();
-  private List<ReadingList> readingListList = new ArrayList<>();
+  private List<Long> idList = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    Mockito.when(comic.getId()).thenReturn(TEST_COMIC_ID_IN_LIST);
+
+    idList.add(TEST_COMIC_ID_IN_LIST);
+    idList.add(TEST_COMIC_ID_NOT_IN_LIST);
+
+    Mockito.when(readingList.getComics()).thenReturn(comicList);
+    Mockito.when(readingList.getOwner()).thenReturn(owner);
+    Mockito.when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
+  }
 
   @Test(expected = ReadingListException.class)
   public void testGetReadingListsForUserInvalidEmail()
@@ -80,7 +96,7 @@ public class ReadingListServiceTest {
         .thenThrow(ComiXedUserException.class);
 
     try {
-      readingListService.getReadingListsForUser(TEST_USER_EMAIL);
+      service.getReadingListsForUser(TEST_USER_EMAIL);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     }
@@ -92,7 +108,7 @@ public class ReadingListServiceTest {
     Mockito.when(readingListRepository.getAllReadingListsForOwner(Mockito.any(ComiXedUser.class)))
         .thenReturn(readingLists);
 
-    List<ReadingList> result = readingListService.getReadingListsForUser(TEST_USER_EMAIL);
+    List<ReadingList> result = service.getReadingListsForUser(TEST_USER_EMAIL);
 
     assertNotNull(result);
     assertSame(readingLists, result);
@@ -108,8 +124,7 @@ public class ReadingListServiceTest {
         .thenThrow(ComiXedUserException.class);
 
     try {
-      readingListService.createReadingList(
-          TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
+      service.createReadingList(TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     }
@@ -125,8 +140,7 @@ public class ReadingListServiceTest {
         .thenReturn(readingList);
 
     try {
-      readingListService.createReadingList(
-          TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
+      service.createReadingList(TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
       Mockito.verify(readingListRepository, Mockito.times(1))
@@ -135,21 +149,21 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testCreateReadingList()
-      throws ReadingListException, ComicException, ComiXedUserException {
+  public void testCreateReadingList() throws ReadingListException, ComiXedUserException {
     Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.findReadingListForUser(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
         .thenReturn(null);
-    Mockito.when(readingListRepository.save(readingListCaptor.capture())).thenReturn(readingList);
+    Mockito.when(readingListRepository.save(readingListCaptor.capture()))
+        .thenReturn(savedReadingList);
 
     ReadingList result =
-        readingListService.createReadingList(
+        service.createReadingList(
             TEST_USER_EMAIL, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
 
     assertNotNull(result);
-    assertSame(readingList, result);
+    assertSame(savedReadingList, result);
     assertSame(user, readingListCaptor.getValue().getOwner());
     assertEquals(TEST_READING_LIST_NAME, readingListCaptor.getValue().getName());
     assertEquals(TEST_READING_LIST_SUMMARY, readingListCaptor.getValue().getSummary());
@@ -162,275 +176,216 @@ public class ReadingListServiceTest {
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingListCaptor.getValue());
   }
 
-  @Test(expected = ReadingListException.class)
-  public void testUpdateReadingListInvalidEmail()
-      throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(null);
+  @Test
+  public void testSave() {
+    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(loadedReadingList);
 
-    try {
-      readingListService.updateReadingList(
-          TEST_USER_EMAIL, TEST_READING_LIST_ID, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
-    } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-    }
+    final ReadingList result = service.saveReadingList(readingList);
+
+    assertNotNull(result);
+    assertSame(loadedReadingList, result);
+
+    Mockito.verify(readingListStateHandler, Mockito.times(1))
+        .fireEvent(readingList, ReadingListEvent.updated);
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
   }
 
   @Test(expected = ReadingListException.class)
   public void testUpdateReadingListInvalidId() throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(
-            readingListRepository.getReadingListForUserAndId(
-                Mockito.any(ComiXedUser.class), Mockito.anyLong()))
-        .thenReturn(null);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      readingListService.updateReadingList(
+      service.updateReadingList(
           TEST_USER_EMAIL, TEST_READING_LIST_ID, TEST_READING_LIST_NAME, TEST_READING_LIST_SUMMARY);
     } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-      Mockito.verify(readingListRepository, Mockito.times(1))
-          .getReadingListForUserAndId(user, TEST_READING_LIST_ID);
+      Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
   @Test
   public void testUpdateReadingList() throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(
-            readingListRepository.getReadingListForUserAndId(
-                Mockito.any(ComiXedUser.class), Mockito.anyLong()))
-        .thenReturn(readingList);
-    Mockito.when(readingListRepository.save(Mockito.any())).thenReturn(savedReadingList);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong()))
+        .thenReturn(readingList, loadedReadingList);
 
     ReadingList result =
-        readingListService.updateReadingList(
-            TEST_USER_EMAIL,
+        service.updateReadingList(
+            TEST_OWNER_EMAIL,
             TEST_READING_LIST_ID,
             TEST_READING_LIST_NAME,
             TEST_READING_LIST_SUMMARY);
 
     assertNotNull(result);
-    assertSame(savedReadingList, result);
+    assertSame(loadedReadingList, result);
 
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-    Mockito.verify(readingListRepository, Mockito.times(1))
-        .getReadingListForUserAndId(user, TEST_READING_LIST_ID);
+    Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
     Mockito.verify(readingList, Mockito.times(1)).setName(TEST_READING_LIST_NAME);
     Mockito.verify(readingList, Mockito.times(1)).setSummary(TEST_READING_LIST_SUMMARY);
-    Mockito.verify(readingList, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
-    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
+    Mockito.verify(readingListStateHandler, Mockito.times(1))
+        .fireEvent(readingList, ReadingListEvent.updated);
   }
 
   @Test(expected = ReadingListException.class)
   public void testGetReadingListForOtherUser() throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(
-            readingListRepository.getReadingListForUserAndId(
-                Mockito.any(ComiXedUser.class), Mockito.anyLong()))
-        .thenReturn(readingList);
-    Mockito.when(readingList.getOwner()).thenReturn(otherUser);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     try {
-      readingListService.getReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
+      service.getReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
     } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-      Mockito.verify(readingListRepository, Mockito.times(1))
-          .getReadingListForUserAndId(user, TEST_READING_LIST_ID);
+      Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
   @Test
   public void testGetReadingListForUser() throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
-    Mockito.when(
-            readingListRepository.getReadingListForUserAndId(
-                Mockito.any(ComiXedUser.class), Mockito.anyLong()))
-        .thenReturn(readingList);
-    Mockito.when(readingList.getOwner()).thenReturn(user);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     final ReadingList result =
-        readingListService.getReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
+        service.getReadingListForUser(TEST_OWNER_EMAIL, TEST_READING_LIST_ID);
 
     assertNotNull(result);
     assertSame(readingList, result);
 
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
-    Mockito.verify(readingListRepository, Mockito.times(1))
-        .getReadingListForUserAndId(user, TEST_READING_LIST_ID);
-  }
-
-  @Test
-  public void getReadingListsForComics() {
-    Set<ReadingList> comicReadingList = new HashSet<>();
-
-    for (int index = 0; index < 25; index++) {
-      comicList.add(comic);
-    }
-    readingListList.add(readingList);
-
-    Mockito.when(comic.getReadingLists()).thenReturn(comicReadingList);
-    Mockito.when(
-            readingListRepository.findByOwnerAndComic(
-                Mockito.anyString(), Mockito.any(Comic.class)))
-        .thenReturn(readingListList);
-
-    readingListService.getReadingListsForComics(TEST_USER_EMAIL, comicList);
-
-    Mockito.verify(readingListRepository, Mockito.times(comicList.size()))
-        .findByOwnerAndComic(TEST_USER_EMAIL, comic);
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
   }
 
   @Test(expected = ReadingListException.class)
   public void testAddComicsToListNoSuchList() throws ReadingListException {
     List<Long> ids = new ArrayList<>();
-    Mockito.when(readingListRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      readingListService.addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
+      service.addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
     } finally {
-      Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
+      Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
   @Test(expected = ReadingListException.class)
   public void testAddComicsToListNotOwner() throws ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    Mockito.when(readingListRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(readingList));
-    Mockito.when(readingList.getOwner()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL.substring(1));
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     try {
-      readingListService.addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
+      service.addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, idList);
     } finally {
-      Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
-    }
-  }
-
-  @Test(expected = ReadingListException.class)
-  public void testAddComicsToListComicNotFound() throws ComicException, ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    for (long index = 0L; index < 25L; index++) {
-      ids.add(index);
-    }
-    Mockito.when(readingListRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(readingList));
-    Mockito.when(readingList.getOwner()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
-
-    try {
-      readingListService.addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
-    } finally {
-      Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
-      Mockito.verify(comicService, Mockito.atLeast(1)).getComic(Mockito.anyLong());
+      Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
   @Test
+  public void testAddComicsToListComicNotFound() throws ComicException, ReadingListException {
+    Mockito.when(readingListRepository.getById(Mockito.anyLong()))
+        .thenReturn(readingList, loadedReadingList);
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+
+    final ReadingList result =
+        service.addComicsToList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
+
+    assertNotNull(result);
+    assertSame(loadedReadingList, result);
+
+    Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID_NOT_IN_LIST);
+  }
+
+  @Test
   public void testAddComicsToList() throws ComicException, ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    for (long index = 0L; index < 25L; index++) {
-      ids.add(index);
-    }
-    Mockito.when(readingListRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(readingList));
-    Mockito.when(readingList.getOwner()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong()))
+        .thenReturn(readingList, loadedReadingList);
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
-        .thenReturn(readingList);
 
-    int result = readingListService.addComicsToList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
+    ReadingList result = service.addComicsToList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
 
-    assertEquals(ids.size(), result);
+    assertEquals(loadedReadingList, result);
+    assertTrue(comicList.contains(comic));
 
-    Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
-    Mockito.verify(comicService, Mockito.times(ids.size())).getComic(Mockito.anyLong());
-    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
+    Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID_NOT_IN_LIST);
+    Mockito.verify(readingListStateHandler, Mockito.times(1))
+        .fireEvent(readingList, ReadingListEvent.comicAdded);
   }
 
   @Test(expected = ReadingListException.class)
   public void testRemoveComicsFromListNoSuchList() throws ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    Mockito.when(readingListRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      readingListService.removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
+      service.removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, idList);
     } finally {
-      Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
+      Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
   @Test(expected = ReadingListException.class)
   public void testRemoveComicsFromListNotOwner() throws ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    Mockito.when(readingListRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(readingList));
-    Mockito.when(readingList.getOwner()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL.substring(1));
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     try {
-      readingListService.removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
+      service.removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, idList);
     } finally {
-      Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
+      Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
-  @Test(expected = ReadingListException.class)
+  @Test
   public void testRemoveComicsFromListComicNotFound() throws ComicException, ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    for (long index = 0L; index < 25L; index++) {
-      ids.add(index);
-    }
-    Mockito.when(readingListRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(readingList));
-    Mockito.when(readingList.getOwner()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
+    comicList.add(comic);
+
+    Mockito.when(readingListRepository.getById(Mockito.anyLong()))
+        .thenReturn(readingList, loadedReadingList);
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
-    try {
-      readingListService.removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
-    } finally {
-      Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
-      Mockito.verify(comicService, Mockito.atLeast(1)).getComic(Mockito.anyLong());
-    }
+    final ReadingList result =
+        service.removeComicsFromList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
+
+    assertNotNull(result);
+    assertSame(loadedReadingList, result);
+    assertFalse(comicList.isEmpty());
+
+    Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID_IN_LIST);
+    Mockito.verify(readingListStateHandler, Mockito.times(1))
+        .fireEvent(readingList, ReadingListEvent.comicRemoved);
   }
 
   @Test
   public void testRemoveComicsFromList() throws ComicException, ReadingListException {
-    List<Long> ids = new ArrayList<>();
-    for (long index = 0L; index < 25L; index++) {
-      ids.add(index);
-    }
-    Mockito.when(readingListRepository.findById(Mockito.anyLong()))
-        .thenReturn(Optional.of(readingList));
-    Mockito.when(readingList.getOwner()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_USER_EMAIL);
+    comicList.add(comic);
+
+    Mockito.when(readingListRepository.getById(Mockito.anyLong()))
+        .thenReturn(readingList, loadedReadingList);
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
-        .thenReturn(readingList);
 
-    int result =
-        readingListService.removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, ids);
+    ReadingList result =
+        service.removeComicsFromList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
 
-    assertEquals(ids.size(), result);
+    assertNotNull(result);
+    assertSame(loadedReadingList, result);
+    assertTrue(comicList.isEmpty());
 
-    Mockito.verify(readingListRepository, Mockito.times(1)).findById(TEST_READING_LIST_ID);
-    Mockito.verify(comicService, Mockito.times(ids.size())).getComic(Mockito.anyLong());
-    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
+    Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID_IN_LIST);
+    Mockito.verify(readingListStateHandler, Mockito.times(1))
+        .fireEvent(readingList, ReadingListEvent.comicRemoved);
   }
 
   @Test
-  public void testSave() {
-    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
-        .thenReturn(savedReadingList);
+  public void testAfterPropertiesSet() throws Exception {
+    service.afterPropertiesSet();
 
-    final ReadingList result = readingListService.save(readingList);
+    Mockito.verify(readingListStateHandler, Mockito.times(1)).addListener(service);
+  }
 
-    assertNotNull(result);
-    assertSame(savedReadingList, result);
+  @Test
+  public void testOnStateChange() {
+    Mockito.when(incomingMessage.getHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(readingList);
+    Mockito.when(incomingState.getId()).thenReturn(TEST_READING_LIST_STATE);
 
+    service.onReadingListStateChange(incomingState, incomingMessage);
+
+    Mockito.verify(readingList, Mockito.times(1)).setReadingListState(TEST_READING_LIST_STATE);
     Mockito.verify(readingList, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
     Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
   }

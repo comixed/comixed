@@ -16,23 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { isAdmin } from '@app/user/user.functions';
 import { LoggerService } from '@angular-ru/logger';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
+import { ReadingList } from '@app/lists/models/reading-list';
 
 @Component({
   selector: 'cx-side-navigation',
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss']
 })
-export class SideNavigationComponent implements OnInit {
+export class SideNavigationComponent implements OnInit, OnDestroy {
   isAdmin = false;
   comicsCollapsed = false;
   collectionCollapsed = false;
   readingListsCollapsed = false;
+  readingListsSubscription: Subscription;
+  readingLists: ReadingList[] = [];
 
-  constructor(private logger: LoggerService) {}
+  constructor(private logger: LoggerService, private store: Store<any>) {
+    this.readingListsSubscription = this.store
+      .select(selectUserReadingLists)
+      .subscribe(lists => (this.readingLists = lists));
+  }
 
   private _user = null;
 
@@ -44,6 +54,10 @@ export class SideNavigationComponent implements OnInit {
     this.logger.debug('Setting user:', user);
     this._user = user;
     this.isAdmin = isAdmin(this.user);
+  }
+
+  ngOnDestroy(): void {
+    this.readingListsSubscription.unsubscribe();
   }
 
   ngOnInit(): void {}

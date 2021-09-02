@@ -62,11 +62,15 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
+import { MatDividerModule } from '@angular/material/divider';
+import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { READING_LIST_1 } from '@app/lists/lists.fixtures';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
   const COMIC = COMIC_2;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
+  const READING_LIST = READING_LIST_1;
   const initialState = {
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
@@ -98,7 +102,8 @@ describe('ComicCoversComponent', () => {
         MatDialogModule,
         MatMenuModule,
         MatSelectModule,
-        MatOptionModule
+        MatOptionModule,
+        MatDividerModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -376,6 +381,26 @@ describe('ComicCoversComponent', () => {
           markComicsDeleted({ comics: COMICS, deleted: false })
         );
       });
+    });
+  });
+
+  describe('adding comics to a reading list', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.addSelectedToReadingList(READING_LIST);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        addComicsToReadingList({ list: READING_LIST, comics: COMICS })
+      );
     });
   });
 });

@@ -51,6 +51,15 @@ import {
   initialState as initialBlockedPageListState
 } from '@app/blocked-pages/reducers/blocked-page-list.reducer';
 import { BLOCKED_PAGE_1 } from '@app/blocked-pages/blocked-pages.fixtures';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { PageHashUrlPipe } from '@app/comic-book/pipes/page-hash-url.pipe';
+import { YesNoPipe } from '@app/core/pipes/yes-no.pipe';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DuplicatePageListPageComponent', () => {
   const DUPLICATE_PAGES = [
@@ -76,11 +85,23 @@ describe('DuplicatePageListPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DuplicatePageListPageComponent],
+      declarations: [
+        DuplicatePageListPageComponent,
+        PageHashUrlPipe,
+        YesNoPipe
+      ],
       imports: [
+        NoopAnimationsModule,
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatDialogModule
+        MatDialogModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatToolbarModule,
+        MatPaginatorModule,
+        MatTooltipModule,
+        MatTableModule,
+        MatCheckboxModule
       ],
       providers: [
         provideMockStore({ initialState }),

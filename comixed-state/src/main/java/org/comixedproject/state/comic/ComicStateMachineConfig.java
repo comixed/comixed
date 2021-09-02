@@ -37,7 +37,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
  * @author Darryl L. Pierce
  */
 @Configuration
-@EnableStateMachine
+@EnableStateMachine(name = "comicStateMachine")
 public class ComicStateMachineConfig
     extends EnumStateMachineConfigurerAdapter<ComicState, ComicEvent> {
   @Autowired private MarkComicForRemovalAction markComicForRemovalAction;

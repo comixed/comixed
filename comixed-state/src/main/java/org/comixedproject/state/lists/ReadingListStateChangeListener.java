@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project.
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.state.lists;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.comixedproject.model.lists.ReadingListState;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 
-public class AddComicsToReadingListResponse {
-  @JsonProperty("addCount")
-  private Integer addCount;
-
-  public AddComicsToReadingListResponse(Integer addCount) {
-    this.addCount = addCount;
-  }
-
-  public Integer getAddCount() {
-    return addCount;
-  }
+/**
+ * <code>ReadingListStateChangeListener</code> defines a type that receives notification when a
+ * reading list's state has changed.
+ *
+ * @author Darryl L. Pierce
+ */
+public interface ReadingListStateChangeListener {
+  /**
+   * Invoked when a state change occurs.
+   *
+   * @param state the state
+   * @param message the event message
+   */
+  void onReadingListStateChange(
+      State<ReadingListState, ReadingListEvent> state, Message<ReadingListEvent> message);
 }

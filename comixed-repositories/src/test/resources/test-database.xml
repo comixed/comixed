@@ -543,12 +543,14 @@
                  LastReadOn="[now]"
                  LastModifiedOn="[now-1d]"/>
   <ReadingLists Id="1000"
+                ReadingListState="STABLE"
                 Name="First Reading List"
                 OwnerId="1000"
                 Summary="This is my reading list"
                 CreatedOn="[now-1d]"
                 LastModifiedOn="[now]"/>
   <ReadingLists Id="1001"
+                ReadingListState="STABLE"
                 Name="Second Reading List"
                 OwnerId="1000"
                 Summary="This is my other reading list"

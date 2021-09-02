@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.library;
+package org.comixedproject.repositories.lists;
 
 import java.util.List;
 import org.comixedproject.model.comic.Comic;
@@ -64,6 +64,12 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
       "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner.email = :email AND :comic MEMBER OF l.comics")
   List<ReadingList> findByOwnerAndComic(@Param("email") String email, @Param("comic") Comic comic);
 
-  @Query("SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.id = :id")
+  /**
+   * Returns the reading list with the given record id. Also included are any comics.
+   *
+   * @param id the record id
+   * @return the reading list
+   */
+  @Query("SELECT l FROM ReadingList l LEFT JOIN FETCH l.comics WHERE l.id = :id")
   ReadingList getById(@Param("id") Long id);
 }

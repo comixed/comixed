@@ -17,6 +17,7 @@
       "no-name": "Unnamed Reading List"
     },
     "tooltip": {
+      "remove-comics": "Remove the selected comics.",
       "reset-reading-list": "Reset changes to the reading list.",
       "return-to-list": "Return to the list.",
       "save-reading-list": "Save changes to the reading list."
@@ -38,6 +39,18 @@
     },
     "tooltip": {
       "add-reading-list": "Add a new reading list."
+    }
+  },
+  "reading-list-entries": {
+    "add-comics": {
+      "effect-failure": "Failed to add comics to reading list.",
+      "effect-success": "Added comics to reading list: {name}"
+    },
+    "remove-comics": {
+      "confirmation-message": "Are you sure you want to remove {count, plural, =1{one comic} other{# comics}} from this reading list?",
+      "confirmation-title": "Remove Comics From Reading List",
+      "effect-failure": "Failed to remove comics from reading list.",
+      "effect-success": "Removed comics from reading list: {name}"
     }
   }
 }

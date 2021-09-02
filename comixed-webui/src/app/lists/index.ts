@@ -28,6 +28,11 @@ import {
   ReadingListDetailState,
   reducer as readingListDetailReducer
 } from './reducers/reading-list-detail.reducer';
+import {
+  READING_LIST_ENTRIES_FEATURE_KEY,
+  ReadingListEntriesState,
+  reducer as readingListEntriesReducer
+} from './reducers/reading-list-entries.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -39,6 +44,7 @@ export interface ListsModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [READING_LISTS_FEATURE_KEY]: ReadingListsState;
   [READING_LIST_DETAIL_FEATURE_KEY]: ReadingListDetailState;
+  [READING_LIST_ENTRIES_FEATURE_KEY]: ReadingListEntriesState;
 }
 
 export type ModuleState = ListsModuleState;
@@ -46,5 +52,6 @@ export type ModuleState = ListsModuleState;
 export const reducers: ActionReducerMap<ListsModuleState> = {
   router: routerReducer,
   [READING_LISTS_FEATURE_KEY]: readingListListReducer,
-  [READING_LIST_DETAIL_FEATURE_KEY]: readingListDetailReducer
+  [READING_LIST_DETAIL_FEATURE_KEY]: readingListDetailReducer,
+  [READING_LIST_ENTRIES_FEATURE_KEY]: readingListEntriesReducer
 };

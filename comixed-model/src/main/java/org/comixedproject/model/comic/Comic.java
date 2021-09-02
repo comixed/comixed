@@ -54,22 +54,6 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 public class Comic {
-  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "PageNumber")
-  @JsonProperty("pages")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  List<Page> pages = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "Stories", joinColumns = @JoinColumn(name = "ComicId"))
-  @Column(name = "Name")
-  @JsonProperty("storyArcs")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  List<String> storyArcs = new ArrayList<>();
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -77,25 +61,12 @@ public class Comic {
     View.ComicListView.class,
     View.LastReadList.class,
     View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageList.class,
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
   private Long id;
-
-  @Transient
-  @JsonProperty("nextIssueId")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private Long nextIssueId;
-
-  @Transient
-  @JsonProperty("previousIssueId")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private Long previousIssueId;
 
   @Column(name = "Filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
@@ -127,7 +98,11 @@ public class Comic {
   @Column(name = "ArchiveType", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
+  })
   @Getter
   @Setter
   private ArchiveType archiveType;
@@ -137,7 +112,8 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -148,7 +124,8 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageList.class,
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -159,7 +136,8 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageList.class,
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -170,10 +148,25 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class
+    View.DuplicatePageList.class,
+    View.ReadingListDetail.class
   })
   @Getter
   private String issueNumber;
+
+  @Transient
+  @JsonProperty("nextIssueId")
+  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @Getter
+  @Setter
+  private Long nextIssueId;
+
+  @Transient
+  @JsonProperty("previousIssueId")
+  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @Getter
+  @Setter
+  private Long previousIssueId;
 
   @Column(name = "Imprint")
   @JsonProperty("imprint")
@@ -211,6 +204,17 @@ public class Comic {
   @Setter
   private ComicFormat format;
 
+  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "PageNumber")
+  @JsonProperty("pages")
+  @JsonView({
+    View.ComicDetailsView.class,
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
+  })
+  @Getter
+  List<Page> pages = new ArrayList<>();
+
   @Formula(value = "(SELECT COUNT(*) FROM Pages p WHERE p.ComicId = id)")
   @JsonIgnore
   @Transient
@@ -228,7 +232,8 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
   })
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
@@ -265,7 +270,8 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -323,6 +329,15 @@ public class Comic {
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   private List<String> locations = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "Stories", joinColumns = @JoinColumn(name = "ComicId"))
+  @Column(name = "Name")
+  @JsonProperty("storyArcs")
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @Getter
+  List<String> storyArcs = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("credits")

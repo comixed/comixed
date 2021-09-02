@@ -36,14 +36,14 @@ export interface Comic {
   missing: boolean;
   fileDetails: FileDetails;
   fileEntries: ComicFileEntry[];
-  addedDate: string;
+  addedDate: number;
   deletedDate: number;
   lastModifiedOn: number;
   publisher: string;
   series: string;
   volume: string;
   issueNumber: string;
-  coverDate: string;
+  coverDate: number;
   yearPublished: number;
   title: string;
   sortableIssueNumber: string;

@@ -37,6 +37,8 @@ import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
+import { ReadingList } from '@app/lists/models/reading-list';
+import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 
 @Component({
   selector: 'cx-library-page',
@@ -52,7 +54,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;
   isAdmin = false;
   showConsolidate = false;
-  currentTab = 0;
   dataSubscription: Subscription;
   unreadOnly = false;
   unscrapedOnly = false;
@@ -61,6 +62,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   archiveTypeFilter = null;
   lastReadDatesSubscription: Subscription;
   lastReadDates: LastRead[];
+  readingListsSubscription: Subscription;
+  readingLists: ReadingList[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -117,6 +120,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.lastReadDatesSubscription = this.store
       .select(selectLastReadEntries)
       .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
+    this.readingListsSubscription = this.store
+      .select(selectUserReadingLists)
+      .subscribe(lists => (this.readingLists = lists));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -148,6 +154,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
+    this.readingListsSubscription.unsubscribe();
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {

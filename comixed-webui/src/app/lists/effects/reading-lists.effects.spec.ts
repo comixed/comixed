@@ -36,7 +36,7 @@ import {
   loadReadingLists,
   loadReadingListsFailed,
   readingListsLoaded
-} from '@app/lists/actions/reading-lists';
+} from '@app/lists/actions/reading-lists.actions';
 
 describe('ReadingListsEffects', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];

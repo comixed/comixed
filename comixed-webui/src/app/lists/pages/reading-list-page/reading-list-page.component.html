@@ -10,6 +10,16 @@
   </button>
   <div class="cx-spacer"></div>
   <button
+    id="remove-selected-entries"
+    mat-icon-button
+    color="warn"
+    [disabled]="!selectedEntries.length"
+    [matTooltip]="'reading-list.tooltip.remove-comics' | translate"
+    (click)="onRemoveEntries()"
+  >
+    <mat-icon>clear</mat-icon>
+  </button>
+  <button
     id="reset-changes-button"
     mat-icon-button
     color="primary"
@@ -56,3 +66,8 @@
     </form>
   </mat-card-content>
 </mat-card>
+<cx-comic-list-view
+  *ngIf="!!readingList"
+  [comics]="readingList.comics"
+  (selectedEntries)="onSelectionChanged($event)"
+></cx-comic-list-view>

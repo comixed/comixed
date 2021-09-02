@@ -25,12 +25,10 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
-import org.comixedproject.model.net.AddComicsToReadingListResponse;
 import org.comixedproject.model.net.RemoveComicsFromReadingListRequest;
-import org.comixedproject.model.net.library.RemoveComicsFromReadingListResponse;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
-import org.comixedproject.repositories.library.ReadingListRepository;
+import org.comixedproject.repositories.lists.ReadingListRepository;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
@@ -150,12 +148,23 @@ public class ReadingListController {
     return this.readingListService.getReadingListForUser(email, id);
   }
 
+  /**
+   * Adds comics to a reading list.
+   *
+   * @param principal the reading list owner
+   * @param id the reading list id
+   * @param request the request body
+   * @return the updated reading list
+   * @throws ReadingListException if an error occurs
+   */
   @PostMapping(
       value = "/api/lists/reading/{id}/comics/add",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.ReadingListDetail.class)
+  @PreAuthorize("hasRole('READER')")
   @AuditableEndpoint
-  public AddComicsToReadingListResponse addComicsToList(
+  public ReadingList addComicsToList(
       Principal principal,
       @PathVariable("id") Long id,
       @RequestBody() AddComicsToReadingListRequest request)
@@ -169,18 +178,26 @@ public class ReadingListController {
         comicIds.size() == 1 ? "" : "s",
         email,
         id);
-
-    int count = this.readingListService.addComicsToList(email, id, comicIds);
-
-    return new AddComicsToReadingListResponse(count);
+    return this.readingListService.addComicsToList(email, id, comicIds);
   }
 
+  /**
+   * Removes comics from a reading list.
+   *
+   * @param principal the reading list owner
+   * @param id the reading list id
+   * @param request the request body
+   * @return the updated reading list
+   * @throws ReadingListException if an error occurs
+   */
   @PostMapping(
       value = "/api/lists/reading/{id}/comics/remove",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.ReadingListDetail.class)
+  @PreAuthorize("hasRole('READER')")
   @AuditableEndpoint
-  public RemoveComicsFromReadingListResponse removeComicsFromList(
+  public ReadingList removeComicsFromList(
       Principal principal,
       @PathVariable("id") long id,
       @RequestBody() RemoveComicsFromReadingListRequest request)
@@ -194,9 +211,6 @@ public class ReadingListController {
         comicIds.size() == 1 ? "" : "s",
         email,
         id);
-
-    int count = this.readingListService.removeComicsFromList(email, id, comicIds);
-
-    return new RemoveComicsFromReadingListResponse(count);
+    return this.readingListService.removeComicsFromList(email, id, comicIds);
   }
 }

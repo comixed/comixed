@@ -29,16 +29,22 @@ import {
 } from '@app/lists/lists.fixtures';
 import { interpolate } from '@app/core';
 import {
+  ADD_COMICS_TO_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
+  REMOVE_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST
 } from '@app/lists/lists.constants';
 import { LoggerModule } from '@angular-ru/logger';
+import { COMIC_1 } from '@app/comic-book/comic-book.fixtures';
+import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
+import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
   const READING_LIST = READING_LISTS[0];
+  const COMIC = COMIC_1;
 
   let service: ReadingListService;
   let httpMock: HttpTestingController;
@@ -101,6 +107,42 @@ describe('ReadingListService', () => {
     );
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual(READING_LIST);
+    req.flush(READING_LIST);
+  });
+
+  it('can add comics to a reading list', () => {
+    service
+      .addComics({
+        list: READING_LIST,
+        comics: [COMIC]
+      })
+      .subscribe(response => expect(response).toEqual(READING_LIST));
+
+    const req = httpMock.expectOne(
+      interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: READING_LIST.id })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: [COMIC.id]
+    } as AddComicsToReadingListRequest);
+    req.flush(READING_LIST);
+  });
+
+  it('can remove comics from a reading list', () => {
+    service
+      .removeComics({
+        list: READING_LIST,
+        comics: [COMIC]
+      })
+      .subscribe(response => expect(response).toEqual(READING_LIST));
+
+    const req = httpMock.expectOne(
+      interpolate(REMOVE_COMICS_FROM_READING_LIST_URL, { id: READING_LIST.id })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: [COMIC.id]
+    } as RemoveComicsFromReadingListRequest);
     req.flush(READING_LIST);
   });
 });

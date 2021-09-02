@@ -80,6 +80,7 @@ import {
 } from '@app/library/reducers/duplicate-page-detail.reducer';
 import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
 import { MatDividerModule } from '@angular/material/divider';
+import { ComicListViewComponent } from './components/comic-list-view/comic-list-view.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { MatDividerModule } from '@angular/material/divider';
     UnreadComicsPipe,
     DuplicatePageListPageComponent,
     ComicsWithDuplicatePageComponent,
-    DuplicatePageDetailPageComponent
+    DuplicatePageDetailPageComponent,
+    ComicListViewComponent
   ],
   providers: [],
   imports: [
@@ -145,6 +147,11 @@ import { MatDividerModule } from '@angular/material/divider';
     MatProgressBarModule,
     MatDividerModule
   ],
-  exports: [CommonModule, CoreModule, ComicCoversComponent]
+  exports: [
+    CommonModule,
+    CoreModule,
+    ComicCoversComponent,
+    ComicListViewComponent
+  ]
 })
 export class LibraryModule {}

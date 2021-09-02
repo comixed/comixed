@@ -220,6 +220,7 @@
             <exclude>**/model/**</exclude>
             <exclude>**/*Exception*</exclude>
             <exclude>**/state/comic/Comic**</exclude>
+            <exclude>**/state/lists/ReadingList**</exclude>
           </excludes>
         </configuration>
         <executions>

@@ -24,8 +24,17 @@ import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockStore } from '@ngrx/store/testing';
+import {
+  initialState as initialReadingListsState,
+  READING_LISTS_FEATURE_KEY
+} from '@app/lists/reducers/reading-lists.reducer';
 
 describe('SideNavigationComponent', () => {
+  const initialState = {
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
+  };
+
   let component: SideNavigationComponent;
   let fixture: ComponentFixture<SideNavigationComponent>;
 
@@ -38,15 +47,14 @@ describe('SideNavigationComponent', () => {
         TranslateModule.forRoot(),
         MatListModule,
         MatIconModule
-      ]
+      ],
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
-  }));
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(SideNavigationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

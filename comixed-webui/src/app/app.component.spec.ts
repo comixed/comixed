@@ -55,13 +55,14 @@ import {
   initialState as initialComicListState
 } from '@app/comic-book/reducers/comic-list.reducer';
 import { loadComics } from '@app/comic-book/actions/comic-list.actions';
-import {
-  MatSidenavContainer,
-  MatSidenavModule
-} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
 import { FooterComponent } from '@app/components/footer/footer.component';
 import { MatListModule } from '@angular/material/list';
+import {
+  initialState as initialReadingListsState,
+  READING_LISTS_FEATURE_KEY
+} from '@app/lists/reducers/reading-lists.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -75,7 +76,8 @@ describe('AppComponent', () => {
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState,
-    [COMIC_LIST_FEATURE_KEY]: initialComicListState
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
 
   let component: AppComponent;

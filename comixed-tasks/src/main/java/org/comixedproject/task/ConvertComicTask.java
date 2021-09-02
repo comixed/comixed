@@ -167,7 +167,7 @@ public class ConvertComicTask extends AbstractTask {
         }
         readingList.getComics().add(convertedComic);
         log.debug("Updating reading list: {}", readingList.getName());
-        this.readingListService.save(readingList);
+        this.readingListService.saveReadingList(readingList);
       }
     }
   }

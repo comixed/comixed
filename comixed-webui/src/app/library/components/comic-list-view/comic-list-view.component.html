@@ -1,0 +1,99 @@
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="selection">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      <mat-checkbox
+        [checked]="allSelected"
+        [disabled]="!comics.length"
+        (change)="onSetAllSelectedState($event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-checkbox
+        [checked]="entry.selected"
+        (change)="onSetOneSelectedState(entry, $event.checked)"
+      ></mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="publisher">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.publisher" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.publisher }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="series">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.series" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.series }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="volume">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.volume" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.volume }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="issue-number">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.issue-number" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.issueNumber }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="cover-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.cover-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">
+        {{ entry.item.coverDate | date: "mediumDate" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="added-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.added-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">
+        {{ entry.item.addedDate | date: "mediumDate" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="page-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.page-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.item.pages.length }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="archive-type">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-book.label.archive-type" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">
+        {{ entry.item.archiveType }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

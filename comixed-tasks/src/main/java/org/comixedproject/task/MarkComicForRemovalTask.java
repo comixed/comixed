@@ -70,7 +70,7 @@ public class MarkComicForRemovalTask extends AbstractTask implements Task {
           readingList.getComics().remove(comic);
           comic.getReadingLists().remove(readingList);
           log.debug("Updating reading list: {}", readingList.getName());
-          this.readingListService.save(readingList);
+          this.readingListService.saveReadingList(readingList);
         }
       }
     }
