@@ -28,6 +28,8 @@ import {
 import { selectComicList } from '@app/comic-book/selectors/comic-list.selectors';
 import { Comic } from '@app/comic-book/models/comic';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
+import { ReadingList } from '@app/lists/models/reading-list';
+import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -43,6 +45,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   comics: Comic[] = [];
   selectedSubscription: Subscription;
   selected: Comic[] = [];
+  readingListsSubscription: Subscription;
+  readingLists: ReadingList[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -83,6 +87,9 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
+    this.readingListsSubscription = this.store
+      .select(selectUserReadingLists)
+      .subscribe(lists => (this.readingLists = lists));
   }
 
   ngOnInit(): void {}
@@ -92,5 +99,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     if (!!this.comicSubscription) {
       this.comicSubscription.unsubscribe();
     }
+    this.readingListsSubscription.unsubscribe();
   }
 }

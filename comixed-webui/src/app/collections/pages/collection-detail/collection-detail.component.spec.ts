@@ -56,13 +56,19 @@ import {
 } from '@app/comic-book/comic-book.fixtures';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import {
+  READING_LISTS_FEATURE_KEY,
+  reducer as initialReadingListsState
+} from '@app/lists/reducers/reading-lists.reducer';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [DISPLAY_FEATURE_KEY]: initialDisplayState
+    [DISPLAY_FEATURE_KEY]: initialDisplayState,
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
 
   let component: CollectionDetailComponent;
@@ -91,14 +97,18 @@ describe('CollectionDetailComponent', () => {
         MatTooltipModule,
         MatToolbarModule,
         MatSelectModule,
-        MatOptionModule
+        MatOptionModule,
+        MatDividerModule
       ],
       providers: [
         provideMockStore({ initialState }),
         {
           provide: ActivatedRoute,
           useValue: {
-            params: new BehaviorSubject<{}>({})
+            params: new BehaviorSubject<{}>({
+              collectionType: CollectionType.CHARACTERS,
+              collectionName: 'Batman'
+            })
           }
         }
       ]

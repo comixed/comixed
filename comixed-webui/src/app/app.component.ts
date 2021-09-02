@@ -51,6 +51,7 @@ import {
   resetComicList
 } from '@app/comic-book/actions/comic-list.actions';
 import { User } from '@app/user/models/user';
+import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 
 @Component({
   selector: 'cx-root',
@@ -61,7 +62,6 @@ export class AppComponent implements OnInit {
   user: User = null;
   busy = false;
   sessionActive = false;
-  messagingActive = false;
   comicListStateSubscription: Subscription;
   comicsLoaded = false;
 
@@ -83,21 +83,10 @@ export class AppComponent implements OnInit {
         this.store.dispatch(startMessaging());
       }
       if (!!this.user && !this.comicListStateSubscription) {
-        this.logger.trace('Resetting the comic list state');
-        this.store.dispatch(resetComicList());
-        this.logger.trace('Subscribing to comic list state changes');
-        this.comicListStateSubscription = this.store
-          .select(selectComicListState)
-          .subscribe(state => {
-            if (!state.loading && state.lastPayload && !this.comicsLoaded) {
-              this.logger.debug('Finished loading comics');
-              this.comicsLoaded = true;
-            }
-            if (!state.loading && !this.comicsLoaded) {
-              this.logger.debug('Loading a batch of comics');
-              this.store.dispatch(loadComics({ lastId: state.lastId }));
-            }
-          });
+        this.logger.trace('Subscribing to comic list updates');
+        this.subscribeToComicListUpdates();
+        this.logger.trace('Loading reading lists');
+        this.store.dispatch(loadReadingLists());
       }
       if (!this.user && this.sessionActive) {
         this.logger.trace('Stopping the messaging subsystem');
@@ -180,5 +169,23 @@ export class AppComponent implements OnInit {
         )
       })
     );
+  }
+
+  private subscribeToComicListUpdates(): void {
+    this.logger.trace('Resetting the comic list state');
+    this.store.dispatch(resetComicList());
+    this.comicListStateSubscription = this.store
+      .select(selectComicListState)
+      .subscribe(state => {
+        this.logger.debug('Comic list state update:', state);
+        if (!state.loading && state.lastPayload && !this.comicsLoaded) {
+          this.logger.trace('Finished loading comics');
+          this.comicsLoaded = true;
+        }
+        if (!state.loading && !this.comicsLoaded) {
+          this.logger.trace('Loading a batch of comics');
+          this.store.dispatch(loadComics({ lastId: state.lastId }));
+        }
+      });
   }
 }

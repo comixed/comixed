@@ -134,7 +134,12 @@
       </a>
     </mat-nav-list>
 
-    <h3 *ngIf="!!user" matSubheader>
+    <h3
+      *ngIf="!!user"
+      [matBadge]="readingLists.length"
+      matBadgePosition="after"
+      matSubheader
+    >
       <button
         mat-icon-button
         color="primary"
@@ -148,6 +153,16 @@
     <mat-nav-list *ngIf="!readingListsCollapsed">
       <a mat-list-item routerLink="/lists/reading" routerLinkActive="active">
         {{ "navigation.option.reading-lists" | translate }}
+      </a>
+      <a
+        *ngFor="let list of readingLists"
+        mat-list-item
+        [routerLink]="['/lists', 'reading', list.id]"
+        routerLinkActive="active"
+      >
+        <span [matBadge]="list.comics.length" matBadgePosition="after">
+          {{ list.name }}
+        </span>
       </a>
     </mat-nav-list>
 

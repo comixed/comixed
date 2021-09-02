@@ -86,7 +86,7 @@ public class MarkComicForRemovalTaskTest {
     assertTrue(readingLists.isEmpty());
 
     Mockito.verify(readingListService, Mockito.times(TEST_READING_LIST_COUNT))
-        .save(Mockito.any(ReadingList.class));
+        .saveReadingList(Mockito.any(ReadingList.class));
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comic, ComicEvent.markedForRemoval);
   }

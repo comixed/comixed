@@ -51,6 +51,14 @@ public class ReadingList {
   @Getter
   private Long id;
 
+  @Column(name = "ReadingListState", nullable = false, updatable = true)
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("readingListState")
+  @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @Getter
+  @Setter
+  private ReadingListState readingListState = ReadingListState.STABLE;
+
   @Column(name = "Name", length = 128)
   @ColumnTransformer(write = "(UPPER(?))")
   @JsonProperty("name")
@@ -112,6 +120,7 @@ public class ReadingList {
     if (o == null || getClass() != o.getClass()) return false;
     ReadingList that = (ReadingList) o;
     return Objects.equals(id, that.id)
+        && Objects.equals(readingListState, that.readingListState)
         && Objects.equals(name, that.name)
         && Objects.equals(summary, that.summary)
         && Objects.equals(owner, that.owner)
@@ -121,6 +130,6 @@ public class ReadingList {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, summary, owner, createdOn, lastModifiedOn);
+    return Objects.hash(id, readingListState, name, summary, owner, createdOn, lastModifiedOn);
   }
 }

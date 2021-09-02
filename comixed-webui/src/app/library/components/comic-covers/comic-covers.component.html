@@ -52,6 +52,16 @@
       <mat-icon>rule</mat-icon>
       <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>
     </button>
+    <button
+      mat-menu-item
+      [matMenuTriggerFor]="readingListsMenu"
+      [disabled]="!selected.length || !readingLists.length"
+    >
+      <mat-icon>playlist_add_check</mat-icon>
+      <mat-label>
+        {{ "library.context-menu.reading-lists" | translate }}
+      </mat-label>
+    </button>
   </ng-template>
 </mat-menu>
 
@@ -142,5 +152,16 @@
     <mat-label>
       {{ "library.context-menu.undelete-selected" | translate }}
     </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #readingListsMenu="matMenu">
+  <button
+    *ngFor="let list of readingLists"
+    mat-menu-item
+    (click)="addSelectedToReadingList(list)"
+  >
+    <mat-icon>playlist_add</mat-icon>
+    <mat-label>{{ list.name }}</mat-label>
   </button>
 </mat-menu>

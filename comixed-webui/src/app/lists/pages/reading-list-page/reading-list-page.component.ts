@@ -18,7 +18,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -37,6 +37,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { Comic } from '@app/comic-book/models/comic';
+import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -47,9 +49,9 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   paramsSubscription: Subscription;
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
-  updatesSubscription: MessagingSubscription;
   readingListForm: FormGroup;
   readingListId = -1;
+  selectedEntries: Comic[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -156,6 +158,33 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         this.readingList = this._readingList;
       }
     });
+  }
+
+  onRemoveEntries(): void {
+    this.logger.trace('Confirming remove selected comics');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'reading-list-entries.remove-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'reading-list-entries.remove-comics.confirmation-message',
+        { count: this.selectedEntries.length }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: remove comics from reading list');
+        this.store.dispatch(
+          removeComicsFromReadingList({
+            list: this.readingList,
+            comics: this.selectedEntries
+          })
+        );
+      }
+    });
+  }
+
+  onSelectionChanged(selected: Comic[]): void {
+    this.logger.debug('Selected reading list comics changed:', selected);
+    this.selectedEntries = selected;
   }
 
   private encodeForm(): ReadingList {

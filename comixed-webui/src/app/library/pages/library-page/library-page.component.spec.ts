@@ -70,6 +70,11 @@ import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
+import {
+  READING_LISTS_FEATURE_KEY,
+  reducer as initialReadingListsState
+} from '@app/lists/reducers/reading-lists.reducer';
+import { MatDividerModule } from '@angular/material/divider';
 
 describe('LibraryPageComponent', () => {
   const initialState = {
@@ -77,7 +82,8 @@ describe('LibraryPageComponent', () => {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
 
   let component: LibraryPageComponent;
@@ -115,7 +121,8 @@ describe('LibraryPageComponent', () => {
         MatMenuModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatOptionModule
+        MatOptionModule,
+        MatDividerModule
       ],
       providers: [
         provideMockStore({ initialState }),

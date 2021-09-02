@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project.
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+package org.comixedproject.model.lists;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class RemoveComicsFromReadingListResponse {
-  @JsonProperty("removeCount")
-  private int removeCount;
-
-  public RemoveComicsFromReadingListResponse(int removeCount) {
-    this.removeCount = removeCount;
-  }
-
-  public int getRemoveCount() {
-    return removeCount;
-  }
+/**
+ * <code>ReadingListState</code> represents the states for a {@link ReadingList}.
+ *
+ * @author Darryl L. Piere
+ */
+public enum ReadingListState {
+  STABLE,
+  DELETED
 }

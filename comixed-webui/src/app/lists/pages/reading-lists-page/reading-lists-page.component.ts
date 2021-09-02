@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { loadReadingLists } from '@app/lists/actions/reading-lists';
+import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 import { MatSort } from '@angular/material/sort';
 import {
   selectUserReadingLists,

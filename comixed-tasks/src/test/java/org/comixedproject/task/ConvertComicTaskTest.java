@@ -116,7 +116,8 @@ public class ConvertComicTaskTest {
         .thenReturn(processComicPersistedTask);
 
     Mockito.when(sourceComic.getReadingLists()).thenReturn(readingListSet);
-    Mockito.when(readingListService.save(Mockito.any(ReadingList.class))).thenReturn(readingList);
+    Mockito.when(readingListService.saveReadingList(Mockito.any(ReadingList.class)))
+        .thenReturn(readingList);
 
     task.startTask();
 
@@ -130,7 +131,7 @@ public class ConvertComicTaskTest {
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setDeleteBlockedPages(false);
     Mockito.verify(processComicTaskEncoder, Mockito.times(1)).setIgnoreMetadata(false);
     Mockito.verify(taskService, Mockito.times(1)).save(processComicPersistedTask);
-    Mockito.verify(readingListService, Mockito.times(1)).save(readingList);
+    Mockito.verify(readingListService, Mockito.times(1)).saveReadingList(readingList);
 
     Assert.assertTrue(
         "Reading list don't contain original comic", readingList.getComics().contains(sourceComic));
@@ -162,7 +163,8 @@ public class ConvertComicTaskTest {
         .thenReturn(processComicPersistedTask);
 
     Mockito.when(sourceComic.getReadingLists()).thenReturn(readingListSet);
-    Mockito.when(readingListService.save(Mockito.any(ReadingList.class))).thenReturn(readingList);
+    Mockito.when(readingListService.saveReadingList(Mockito.any(ReadingList.class)))
+        .thenReturn(readingList);
 
     Mockito.when(sourceComic.getFilename()).thenReturn(TEST_ORIGINAL_COMIC_FILENAME);
     PowerMockito.mockStatic(FileUtils.class);

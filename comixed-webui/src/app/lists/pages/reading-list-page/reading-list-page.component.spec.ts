@@ -41,12 +41,17 @@ import {
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
+import { ComicListViewComponent } from '@app/library/components/comic-list-view/comic-list-view.component';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState
   };
+
   let component: ReadingListPageComponent;
   let fixture: ComponentFixture<ReadingListPageComponent>;
   let store: MockStore<any>;
@@ -56,7 +61,7 @@ describe('ReadingListPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ReadingListPageComponent],
+      declarations: [ReadingListPageComponent, ComicListViewComponent],
       imports: [
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         FormsModule,
@@ -248,6 +253,40 @@ describe('ReadingListPageComponent', () => {
     it('resets the summary field', () => {
       expect(component.readingListForm.controls.summary.value).toEqual(
         READING_LIST.summary
+      );
+    });
+  });
+
+  describe('setting selected entries', () => {
+    beforeEach(() => {
+      component.onSelectionChanged(COMICS);
+    });
+
+    it('stores the selection', () => {
+      expect(component.selectedEntries).toEqual(COMICS);
+    });
+  });
+
+  describe('removing selected entries', () => {
+    beforeEach(() => {
+      component.readingList = READING_LIST;
+      component.selectedEntries = COMICS;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onRemoveEntries();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        removeComicsFromReadingList({
+          list: READING_LIST,
+          comics: COMICS
+        })
       );
     });
   });

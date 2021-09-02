@@ -46,6 +46,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
 import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('DuplicatePageDetailPageComponent', () => {
   const DETAIL = DUPLICATE_PAGE_1;
@@ -81,7 +83,9 @@ describe('DuplicatePageDetailPageComponent', () => {
         MatIconModule,
         MatTableModule,
         MatCardModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTooltipModule,
+        MatButtonModule
       ],
       providers: [
         provideMockStore({ initialState }),

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.library;
+package org.comixedproject.repositories.lists;
 
 import static org.junit.Assert.*;
 
@@ -55,6 +55,10 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 public class ReadingListRepositoryTest {
   private static final String TEST_EXISTING_LIST_NAME = "First Reading List";
   private static final String TEST_NEW_LIST_NAME = "Third Reading List";
+  public static final long TEST_COMIC_ID_1 = 1000L;
+  public static final long TEST_COMIC_ID_2 = 1001L;
+  private static final long TEST_USER_ID_1 = 1000L;
+  private static final long TEST_READING_LIST_ID_1 = 1000L;
 
   @Autowired private ReadingListRepository repository;
   @Autowired private ComiXedUserRepository userRepository;
@@ -66,9 +70,9 @@ public class ReadingListRepositoryTest {
 
   @Before
   public void setUp() {
-    reader = userRepository.findById(1000L).get();
-    comic1 = comicRepository.findById(1000L).get();
-    comic2 = comicRepository.findById(1001L).get();
+    reader = userRepository.findById(TEST_USER_ID_1).get();
+    comic1 = comicRepository.findById(TEST_COMIC_ID_1).get();
+    comic2 = comicRepository.findById(TEST_COMIC_ID_2).get();
   }
 
   @Test
@@ -117,10 +121,9 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testUpdateReadingList() {
-    ReadingList list = repository.getById(1000L);
-    Comic comic = comicRepository.getById(1002L);
+    ReadingList list = repository.getById(TEST_READING_LIST_ID_1);
 
-    list.getComics().add(comic);
+    list.getComics().add(comic2);
     repository.save(list);
 
     ReadingList result = repository.getById(list.getId());
@@ -128,25 +131,25 @@ public class ReadingListRepositoryTest {
     assertEquals(list.getComics().size(), result.getComics().size());
     boolean found = false;
     for (Comic entry : result.getComics()) {
-      found |= (entry.getId().longValue() == comic.getId().longValue());
+      found |= (entry.getId().longValue() == comic2.getId().longValue());
     }
     assertTrue(found);
   }
 
   @Test
   public void testDeleteReadingList() {
-    ReadingList list = repository.findById(1000L).get();
+    ReadingList list = repository.findById(TEST_COMIC_ID_1).get();
 
     repository.delete(list);
 
-    Optional<ReadingList> result = repository.findById(1000L);
+    Optional<ReadingList> result = repository.findById(TEST_COMIC_ID_1);
 
     assertFalse(result.isPresent());
   }
 
   @Test
   public void testAddComicsToReadingList() {
-    ReadingList list = repository.getById(1000L);
+    ReadingList list = repository.getById(TEST_COMIC_ID_1);
     Comic newComic = comicRepository.getById(1021L);
 
     list.getComics().add(newComic);
@@ -158,7 +161,7 @@ public class ReadingListRepositoryTest {
 
   @Test
   public void testRemoveComicsFromReadingList() {
-    ReadingList list = repository.getById(1000L);
+    ReadingList list = repository.getById(TEST_COMIC_ID_1);
     Comic comic = comicRepository.getById(1001L);
 
     list.getComics().remove(comic);

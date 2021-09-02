@@ -49,6 +49,8 @@ import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actio
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
+import { ReadingList } from '@app/lists/models/reading-list';
+import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -60,6 +62,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
   @Input() selected: Comic[] = [];
+  @Input() readingLists: ReadingList[] = [];
   @Input() isAdmin = false;
   @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
@@ -95,7 +98,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   @Input() set comics(comics: Comic[]) {
-    this.logger.debug('Setting comics:', comics);
+    this.logger.trace('Setting comics:', comics);
     this.dataSource.data = comics;
   }
 
@@ -114,16 +117,16 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onSelectionChanged(comic: Comic, selected: boolean): void {
     if (selected) {
-      this.logger.debug('Marking comic as selected:', comic);
+      this.logger.trace('Marking comic as selected:', comic);
       this.store.dispatch(selectComics({ comics: [comic] }));
     } else {
-      this.logger.debug('Unmarking comic as selected:', comic);
+      this.logger.trace('Unmarking comic as selected:', comic);
       this.store.dispatch(deselectComics({ comics: [comic] }));
     }
   }
 
   onShowContextMenu(comic: Comic, x: string, y: string): void {
-    this.logger.debug('Popping up context menu for:', comic);
+    this.logger.trace('Popping up context menu for:', comic);
     this.comic = comic;
     this.contextMenuX = x;
     this.contextMenuY = y;
@@ -131,17 +134,17 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onShowComicDetails(comic: Comic): void {
-    this.logger.debug('Showing comic details:', comic);
+    this.logger.trace('Showing comic details:', comic);
     this.dialog.open(ComicDetailsDialogComponent, { data: comic });
   }
 
   onSetOneReadState(comic: Comic, read: boolean): void {
-    this.logger.debug('Setting one comic read state:', comic, read);
+    this.logger.trace('Setting one comic read state:', comic, read);
     this.store.dispatch(setReadState({ comics: [comic], read }));
   }
 
   onSetSelectedReadState(read: boolean): void {
-    this.logger.debug('Setting selected comics read state:', read);
+    this.logger.trace('Setting selected comics read state:', read);
     this.store.dispatch(setReadState({ comics: this.selected, read }));
   }
 
@@ -154,6 +157,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onUpdateComicInfo(comic: Comic): void {
+    this.logger.trace('Confirming updating ComicInfo.xml');
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'comic-book.update-comic-info.confirmation-title'
@@ -162,7 +166,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         'comic-book.update-comic-info.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Updating comic info:', comic);
+        this.logger.trace('Updating comic info:', comic);
         this.store.dispatch(updateComicInfo({ comic }));
       }
     });
@@ -213,6 +217,25 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         this.logger.trace('Firing selected comics  state change:', deleted);
         this.store.dispatch(
           markComicsDeleted({ comics: this.selected, deleted })
+        );
+      }
+    });
+  }
+
+  addSelectedToReadingList(list: ReadingList): void {
+    this.logger.trace('Confirming adding comics to reading list:', list);
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.add-to-reading-list.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.add-to-reading-list.confirmation-message',
+        { count: this.selected.length, name: list.name }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: add comics to reading list');
+        this.store.dispatch(
+          addComicsToReadingList({ list, comics: this.selected })
         );
       }
     });

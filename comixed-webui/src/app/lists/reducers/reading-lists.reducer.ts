@@ -21,7 +21,7 @@ import {
   loadReadingLists,
   loadReadingListsFailed,
   readingListsLoaded
-} from '../actions/reading-lists';
+} from '../actions/reading-lists.actions';
 import { ReadingList } from '@app/lists/models/reading-list';
 
 export const READING_LISTS_FEATURE_KEY = 'reading_lists_state';

@@ -21,18 +21,20 @@ package org.comixedproject.model.net;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+/**
+ * <code>AddComicsToReadingListRequest</code> represents the request body when adding comics to a
+ * reading list.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddComicsToReadingListRequest {
   @JsonProperty("ids")
+  @Getter
   private List<Long> ids = new ArrayList<>();
-
-  public AddComicsToReadingListRequest() {}
-
-  public AddComicsToReadingListRequest(List<Long> ids) {
-    this.ids = ids;
-  }
-
-  public List<Long> getIds() {
-    return ids;
-  }
 }

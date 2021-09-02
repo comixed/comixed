@@ -20,18 +20,20 @@ package org.comixedproject.model.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+/**
+ * <code>RemoveComicsFromReadingListRequest</code> represents the request body when removing comics
+ * from a reading list.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
 public class RemoveComicsFromReadingListRequest {
   @JsonProperty("ids")
+  @Getter
   private List<Long> ids;
-
-  public RemoveComicsFromReadingListRequest() {}
-
-  public RemoveComicsFromReadingListRequest(List<Long> ids) {
-    this.ids = ids;
-  }
-
-  public List<Long> getIds() {
-    return ids;
-  }
 }

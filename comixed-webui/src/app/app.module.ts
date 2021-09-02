@@ -70,6 +70,7 @@ import { ComicFileModule } from '@app/comic-file/comic-file.module';
 import { ComicBookModule } from '@app/comic-book/comic-book.module';
 import { GravatarModule } from 'ngx-gravatar';
 import { ListsModule } from '@app/lists/lists.module';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -132,7 +133,8 @@ import { ListsModule } from '@app/lists/lists.module';
     FlexLayoutModule,
     MatSidenavModule,
     MatListModule,
-    GravatarModule
+    GravatarModule,
+    MatBadgeModule
   ],
   providers: [
     [

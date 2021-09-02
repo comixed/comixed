@@ -43,6 +43,10 @@
     }
   },
   "library": {
+    "add-to-reading-list": {
+      "confirmation-message": "Are you sure you want to add {count, plural, =1{one comic} other{# comics}} to {name}?",
+      "confirmation-title":  "Add Comics To Reading List"
+    },
     "all-comics": {
       "tab-title": "All Comics",
       "tab-title-deleted": "Deleted Comics",
@@ -66,6 +70,7 @@
       "mark-one-as-unread": "This Comic As Unread",
       "mark-selected-as-read": "Selected Comics As Read",
       "mark-selected-as-unread": "Selected Comics As Unread",
+      "reading-lists": "Add to list...",
       "set-page-blocked": "Block Pages Like This",
       "set-page-unblocked": "Don't Block Pages Like This",
       "undelete-one": "This Comic As Undeleted",

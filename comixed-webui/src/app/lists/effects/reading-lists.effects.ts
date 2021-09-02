@@ -29,7 +29,7 @@ import {
   loadReadingLists,
   loadReadingListsFailed,
   readingListsLoaded
-} from '@app/lists/actions/reading-lists';
+} from '@app/lists/actions/reading-lists.actions';
 
 @Injectable()
 export class ReadingListsEffects {

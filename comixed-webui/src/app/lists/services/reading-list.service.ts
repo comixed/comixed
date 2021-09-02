@@ -22,12 +22,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
+  ADD_COMICS_TO_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
+  REMOVE_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST
 } from '@app/lists/lists.constants';
 import { ReadingList } from '@app/lists/models/reading-list';
+import { Comic } from '@app/comic-book/models/comic';
+import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
+import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +61,25 @@ export class ReadingListService {
       this.logger.trace('Saving reading list:', args);
       return this.http.post(interpolate(SAVE_READING_LIST), args.list);
     }
+  }
+
+  addComics(args: { list: ReadingList; comics: Comic[] }): Observable<any> {
+    this.logger.trace('Adding comics to reading list:', args);
+    return this.http.post(
+      interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: args.list.id }),
+      {
+        ids: args.comics.map(comic => comic.id)
+      } as AddComicsToReadingListRequest
+    );
+  }
+
+  removeComics(args: { list: ReadingList; comics: Comic[] }): Observable<any> {
+    this.logger.trace('Removing comics from reading list:', args);
+    return this.http.post(
+      interpolate(REMOVE_COMICS_FROM_READING_LIST_URL, { id: args.list.id }),
+      {
+        ids: args.comics.map(comic => comic.id)
+      } as RemoveComicsFromReadingListRequest
+    );
   }
 }
