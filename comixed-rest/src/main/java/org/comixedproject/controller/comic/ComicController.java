@@ -35,7 +35,7 @@ import org.comixedproject.model.net.comic.MarkComicsUndeletedRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
-import org.comixedproject.service.file.FileService;
+import org.comixedproject.service.comicfile.ComicFileService;
 import org.comixedproject.task.MarkComicsForRemovalTask;
 import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;
@@ -60,7 +60,7 @@ import org.springframework.web.bind.annotation.*;
 public class ComicController {
   @Autowired private ComicService comicService;
   @Autowired private PageCacheService pageCacheService;
-  @Autowired private FileService fileService;
+  @Autowired private ComicFileService comicFileService;
   @Autowired private FileTypeIdentifier fileTypeIdentifier;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<MarkComicsForRemovalTask> deleteComicsWorkerTaskFactory;
@@ -228,7 +228,7 @@ public class ComicController {
     } else {
       log.debug("Comic is unprocessed; getting the first image instead");
       return this.getResponseEntityForImage(
-          this.fileService.getImportFileCover(comic.getFilename()), "cover-image");
+          this.comicFileService.getImportFileCover(comic.getFilename()), "cover-image");
     }
   }
 

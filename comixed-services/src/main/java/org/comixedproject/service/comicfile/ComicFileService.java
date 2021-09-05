@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.file;
+package org.comixedproject.service.comicfile;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,19 +28,27 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.file.ComicFile;
+import org.comixedproject.model.comicfile.ComicFile;
+import org.comixedproject.model.comicfile.ComicFileDescriptor;
 import org.comixedproject.repositories.comic.ComicRepository;
-import org.comixedproject.service.task.TaskService;
+import org.comixedproject.repositories.comicfile.ComicFileDescriptorRepository;
 import org.comixedproject.utils.ComicFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * <code>ComicFileService</code> provides business rules when working with comic file-related
+ * objects.
+ *
+ * @author Darryl L. Pierce
+ */
 @Service
 @Log4j2
-public class FileService {
+public class ComicFileService {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
-  @Autowired private TaskService taskService;
+  @Autowired private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Autowired private ComicFileUtils comicFileUtils;
 
   public byte[] getImportFileCover(final String comicArchive)
@@ -120,5 +128,39 @@ public class FileService {
     final Comic comic = this.comicRepository.findByFilename(filePath);
 
     return isComic && (comic == null);
+  }
+
+  /**
+   * Creates records to initiate import comic files.
+   *
+   * @param filenames the comic filenames
+   */
+  @Transactional
+  public void importComicFiles(final List<String> filenames) {
+    for (int index = 0; index < filenames.size(); index++) {
+      final String filename = filenames.get(index);
+      log.trace("Saving file descriptor: {}", filename);
+      this.comicFileDescriptorRepository.save(new ComicFileDescriptor(filename));
+    }
+  }
+
+  /**
+   * Returns all comic file descriptor records.
+   *
+   * @return the descriptors
+   */
+  public List<ComicFileDescriptor> findComicFileDescriptors() {
+    log.trace("Loading all comic file descriptors");
+    return this.comicFileDescriptorRepository.findAll();
+  }
+
+  /**
+   * Deletes the descriptor for the specified filename.
+   *
+   * @param descriptor the descriptor
+   */
+  public void deleteComicFileDescriptor(final ComicFileDescriptor descriptor) {
+    log.trace("Deleting comic file descriptor: {}", descriptor);
+    this.comicFileDescriptorRepository.delete(descriptor);
   }
 }

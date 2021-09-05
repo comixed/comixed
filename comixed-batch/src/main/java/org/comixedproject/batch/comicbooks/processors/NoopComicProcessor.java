@@ -18,26 +18,22 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
-
+import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comic.Comic;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ContentsProcessedProcessorTest {
-  @InjectMocks private ContentsProcessedProcessor processor;
-  @Mock private Comic comic;
-
-  @Test
-  public void testProcess() {
-    final Comic result = processor.process(comic);
-
-    assertNotNull(result);
-    assertSame(comic, result);
+/**
+ * <code>NoopComicProcessor</code> performs no operations on a comic.
+ *
+ * @author Darryl L. Pierce
+ */
+@Component
+@Log4j2
+public class NoopComicProcessor implements ItemProcessor<Comic, Comic> {
+  @Override
+  public Comic process(final Comic comic) {
+    log.trace("Nothing to do");
+    return comic;
   }
 }

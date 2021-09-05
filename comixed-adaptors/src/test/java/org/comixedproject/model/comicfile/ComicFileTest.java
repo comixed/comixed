@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.file;
+package org.comixedproject.model.comicfile;
 
 import static org.junit.Assert.assertEquals;
 

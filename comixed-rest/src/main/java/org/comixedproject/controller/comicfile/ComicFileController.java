@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.file;
+package org.comixedproject.controller.comicfile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.IOException;
@@ -29,29 +29,24 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
-import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.QueueComicsTask;
-import org.comixedproject.task.runner.TaskManager;
+import org.comixedproject.service.comicfile.ComicFileService;
 import org.comixedproject.views.View;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * <code>FileController</code> allows the remote agent to query directories and import files, to
- * download files and work with the file system.
+ * <code>ComicFileController</code> allows the remote agent to query directories and import files,
+ * to download files and work with the file system.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @RequestMapping("/api/files")
 @Log4j2
-public class FileController {
-  @Autowired private FileService fileService;
-  @Autowired private TaskManager taskManager;
-  @Autowired private ObjectFactory<QueueComicsTask> queueComicsWorkerTaskObjectFactory;
+public class ComicFileController {
+  @Autowired private ComicFileService comicFileService;
 
   /**
    * Retrieves all comic files under the specified directory.
@@ -78,7 +73,7 @@ public class FileController {
         directory,
         maximum > 0 ? maximum : "UNLIMITED");
 
-    return new LoadComicFilesResponse(this.fileService.getAllComicsUnder(directory, maximum));
+    return new LoadComicFilesResponse(this.comicFileService.getAllComicsUnder(directory, maximum));
   }
 
   /**
@@ -99,7 +94,7 @@ public class FileController {
     byte[] result = null;
 
     try {
-      result = this.fileService.getImportFileCover(filename);
+      result = this.comicFileService.getImportFileCover(filename);
     } catch (ComicFileHandlerException | ArchiveAdaptorException error) {
       log.error("Failed to load cover from import file", error);
     }
@@ -137,12 +132,6 @@ public class FileController {
         deleteBlockedPages,
         ignoreMetadata);
 
-    final QueueComicsTask task = this.queueComicsWorkerTaskObjectFactory.getObject();
-    task.setFilenames(filenames);
-    task.setDeleteBlockedPages(deleteBlockedPages);
-    task.setIgnoreMetadata(ignoreMetadata);
-
-    log.debug("Enqueueing task");
-    this.taskManager.runTask(task);
+    this.comicFileService.importComicFiles(filenames);
   }
 }

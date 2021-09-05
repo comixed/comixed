@@ -63,11 +63,16 @@ public class ComicStateMachineConfiguration
   public void configure(final StateMachineTransitionConfigurer<ComicState, ComicEvent> transitions)
       throws Exception {
     transitions
-        // newly added comic is imported
         .withExternal()
         .source(ComicState.ADDED)
         .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.imported)
+        .event(ComicEvent.recordInserted)
+        // newly added comic is reading to be imported
+        .and()
+        .withExternal()
+        .source(ComicState.ADDED)
+        .target(ComicState.UNPROCESSED)
+        .event(ComicEvent.readyForProcessing)
         .action(prepareComicForProcessingAction)
         // rescan a stable comic
         .and()

@@ -35,7 +35,7 @@ import org.comixedproject.model.net.comic.MarkComicsUndeletedRequest;
 import org.comixedproject.service.comic.ComicException;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.comic.PageCacheService;
-import org.comixedproject.service.file.FileService;
+import org.comixedproject.service.comicfile.ComicFileService;
 import org.comixedproject.task.MarkComicsForRemovalTask;
 import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;
@@ -72,7 +72,7 @@ public class ComicControllerTest {
   @Mock private ObjectFactory<UnmarkComicsForRemovalTask> undeleteComicsWorkerTaskObjectFactory;
   @Mock private UnmarkComicsForRemovalTask undeleteComicsWorkerTask;
   @Mock private List<Long> comicIds;
-  @Mock private FileService fileService;
+  @Mock private ComicFileService comicFileService;
   @Mock private FileTypeIdentifier fileTypeIdentifier;
   @Mock private Page page;
   @Mock private ComicFileHandler comicFileHandler;
@@ -284,7 +284,8 @@ public class ComicControllerTest {
     Mockito.when(comic.isMissing()).thenReturn(false);
     Mockito.when(comic.getPageCount()).thenReturn(0);
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILE);
-    Mockito.when(fileService.getImportFileCover(Mockito.anyString())).thenReturn(TEST_PAGE_CONTENT);
+    Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
+        .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(fileTypeIdentifier.typeFor(inputStreamCaptor.capture()))
         .thenReturn(TEST_PAGE_CONTENT_TYPE);
     Mockito.when(fileTypeIdentifier.subtypeFor(inputStreamCaptor.capture()))
@@ -297,7 +298,7 @@ public class ComicControllerTest {
 
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comic, Mockito.times(1)).isMissing();
-    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(TEST_COMIC_FILE);
+    Mockito.verify(comicFileService, Mockito.times(1)).getImportFileCover(TEST_COMIC_FILE);
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStreamCaptor.getValue());
     Mockito.verify(fileTypeIdentifier, Mockito.times(1)).subtypeFor(inputStreamCaptor.getValue());
   }

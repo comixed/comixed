@@ -19,10 +19,10 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.ContentsProcessedProcessor;
 import org.comixedproject.batch.comicbooks.processors.LoadFileContentsProcessor;
 import org.comixedproject.batch.comicbooks.processors.LoadFileDetailsProcessor;
 import org.comixedproject.batch.comicbooks.processors.MarkBlockedPagesProcessor;
+import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.ContentsProcessedReader;
 import org.comixedproject.batch.comicbooks.readers.LoadFileContentsReader;
 import org.comixedproject.batch.comicbooks.readers.LoadFileDetailsReader;
@@ -47,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
@@ -55,6 +56,7 @@ import org.springframework.scheduling.annotation.Scheduled;
  * @author Darryl L. Pierce
  */
 @Configuration
+@EnableScheduling
 @Log4j2
 public class ProcessComicsConfiguration {
   private static final String KEY_STARTED = "job.started";
@@ -73,7 +75,7 @@ public class ProcessComicsConfiguration {
   @Autowired private LoadFileDetailsProcessor loadFileDetailsProcessor;
   @Autowired private LoadFileDetailsWriter loadFileDetailsWriter;
   @Autowired private ContentsProcessedReader contentsProcessedReader;
-  @Autowired private ContentsProcessedProcessor contentsProcessedProcessor;
+  @Autowired private NoopComicProcessor noopComicProcessor;
   @Autowired private ContentsProcessedWriter contentsProcessedWriter;
 
   @Value("${batch.chunk-size}")
@@ -130,7 +132,7 @@ public class ProcessComicsConfiguration {
         .get("contentsProcessedStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(contentsProcessedReader)
-        .processor(contentsProcessedProcessor)
+        .processor(noopComicProcessor)
         .writer(contentsProcessedWriter)
         .build();
   }
