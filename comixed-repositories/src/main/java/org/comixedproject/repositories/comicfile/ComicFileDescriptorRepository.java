@@ -16,27 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comic;
+package org.comixedproject.repositories.comicfile;
+
+import org.comixedproject.model.comicfile.ComicFileDescriptor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
+ * <code>ComicFileDescriptorRepository</code> provides persistence methods for instances of {@link
+ * ComicFileDescriptor}.
  *
  * @author Darryl L. Pierce
  */
-public enum ComicEvent {
-  recordInserted, // the record has been inserted into the database
-  readyForProcessing, // the record is ready for processing
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
-  scraped,
-  detailsUpdated,
-  metadataCleared,
-  comicInfoUpdated,
-  archiveRecreated,
-  comicMoved,
-  markedForRemoval,
-  unmarkedForRemoval;
-}
+@Repository
+public interface ComicFileDescriptorRepository extends JpaRepository<ComicFileDescriptor, Long> {}

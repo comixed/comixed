@@ -16,27 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comic;
+package org.comixedproject.batch.comicbooks.writers;
+
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.state.comic.ComicEvent;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
+ * <code>ReaderInsertedWriter</code> fires an event to announce that comics have been inserted into
+ * the database.
  *
  * @author Darryl L. Pierce
  */
-public enum ComicEvent {
-  recordInserted, // the record has been inserted into the database
-  readyForProcessing, // the record is ready for processing
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
-  scraped,
-  detailsUpdated,
-  metadataCleared,
-  comicInfoUpdated,
-  archiveRecreated,
-  comicMoved,
-  markedForRemoval,
-  unmarkedForRemoval;
+@Component
+@Log4j2
+public class ReaderInsertedWriter extends AbstractComicWriter {
+  public ReaderInsertedWriter() {
+    super(ComicEvent.recordInserted);
+  }
 }

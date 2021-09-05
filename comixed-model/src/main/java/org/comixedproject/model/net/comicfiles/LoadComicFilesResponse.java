@@ -25,7 +25,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixedproject.model.file.ComicFile;
+import org.comixedproject.model.comicfile.ComicFile;
 import org.comixedproject.views.View;
 
 @AllArgsConstructor

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.file;
+package org.comixedproject.model.comicfile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -33,23 +33,23 @@ public class ComicFile {
   private static int count = 0;
 
   @JsonProperty("id")
-  @Getter
   @JsonView(View.ComicFileList.class)
+  @Getter
   private int id = ++count;
 
   @JsonProperty("filename")
-  @Getter
   @JsonView(View.ComicFileList.class)
+  @Getter
   private String filename;
 
   @JsonProperty("baseFilename")
-  @Getter
   @JsonView(View.ComicFileList.class)
+  @Getter
   private String baseFilename;
 
   @JsonProperty("size")
-  @Getter
   @JsonView(View.ComicFileList.class)
+  @Getter
   private long size;
 
   public ComicFile(final String filename, final long size) {

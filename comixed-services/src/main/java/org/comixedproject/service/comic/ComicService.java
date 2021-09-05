@@ -332,6 +332,16 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   }
 
   /**
+   * Retrieves inserted comics that have not been processed.
+   *
+   * @return the comics
+   */
+  public List<Comic> findInsertedComics() {
+    log.trace("Loading newly inserted comics");
+    return this.comicRepository.findForState(ComicState.ADDED);
+  }
+
+  /**
    * Retrieves unprocessed comics that are waiting to have their contents loaded.
    *
    * @return the comics

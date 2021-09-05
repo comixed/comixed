@@ -16,20 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.file;
+package org.comixedproject.service.comicfile;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.file.ComicFile;
+import org.comixedproject.model.comicfile.ComicFile;
+import org.comixedproject.model.comicfile.ComicFileDescriptor;
 import org.comixedproject.repositories.comic.ComicRepository;
+import org.comixedproject.repositories.comicfile.ComicFileDescriptorRepository;
 import org.comixedproject.utils.ComicFileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,24 +44,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class FileServiceTest {
+public class ComicFileServiceTest {
   private static final String TEST_ARCHIVE_FILENAME = "example.cbz";
   private static final String TEST_COVER_FILENAME = "cover_image.jpg";
   private static final byte[] TEST_COVER_CONTENT = "this is image data".getBytes();
   private static final String TEST_ROOT_DIRECTORY = "src/test/resources";
   private static final String TEST_COMIC_ARCHIVE =
       TEST_ROOT_DIRECTORY + "/" + TEST_ARCHIVE_FILENAME;
-  private static final String[] TEST_FILENAMES =
-      new String[] {"First.cbz", "Second.cbz", "Third.cbr", "Fourth.cb7"};
   private static final Integer TEST_LIMIT = 2;
   private static final Integer TEST_NO_LIMIT = -1;
 
-  @InjectMocks private FileService service;
+  @InjectMocks private ComicFileService service;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ComicFileUtils comicFileUtils;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
+  @Mock private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Mock private Comic comic;
+  @Mock private ComicFileDescriptor savedComicFileDescriptor;
+  @Mock private List<ComicFileDescriptor> comicFileDescriptors;
 
   @Test
   public void testGetImportFileCoverWithNoHandler()
@@ -154,5 +158,35 @@ public class FileServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(3, result.size());
+  }
+
+  @Test
+  public void testImportComicFiles() {
+    final List<String> filenameList = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      filenameList.add(String.format("comic-file-%d.cbz", index));
+    }
+
+    Mockito.when(comicFileDescriptorRepository.save(Mockito.any(ComicFileDescriptor.class)))
+        .thenReturn(savedComicFileDescriptor);
+
+    service.importComicFiles(filenameList);
+
+    filenameList.forEach(
+        filename ->
+            Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
+                .save(new ComicFileDescriptor(filename)));
+  }
+
+  @Test
+  public void testFindComicFileDescriptors() {
+    Mockito.when(comicFileDescriptorRepository.findAll()).thenReturn(comicFileDescriptors);
+
+    final List<ComicFileDescriptor> result = service.findComicFileDescriptors();
+
+    assertNotNull(result);
+    assertSame(comicFileDescriptors, result);
+
+    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findAll();
   }
 }

@@ -34,18 +34,13 @@ import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.stereotype.Component;
 
 /**
  * <code>Comic</code> represents a single digital comic issue.
  *
  * @author Darryl L. Pierce
  */
-@Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Entity
 @Table(name = "Comics")
 @Log4j2
@@ -111,7 +106,7 @@ public class Comic {
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
-  private ComicState comicState;
+  private ComicState comicState = ComicState.ADDED;
 
   @Column(name = "FileContentsLoaded", nullable = false, updatable = true)
   @JsonIgnore

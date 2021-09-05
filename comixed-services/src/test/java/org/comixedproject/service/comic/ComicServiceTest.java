@@ -422,6 +422,18 @@ public class ComicServiceTest {
   }
 
   @Test
+  public void testFindInsertedComics() {
+    Mockito.when(comicRepository.findForState(Mockito.any(ComicState.class))).thenReturn(comicList);
+
+    final List<Comic> result = service.findInsertedComics();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findForState(ComicState.ADDED);
+  }
+
+  @Test
   public void testFindUnprocessedComicsWithoutContent() {
     Mockito.when(comicRepository.findUnprocessedComicsWithoutContent()).thenReturn(comicList);
 

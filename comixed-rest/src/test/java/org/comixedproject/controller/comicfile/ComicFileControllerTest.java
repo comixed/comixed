@@ -16,25 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.file;
+package org.comixedproject.controller.comicfile;
 
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandlerException;
-import org.comixedproject.model.file.ComicFile;
+import org.comixedproject.model.comicfile.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
-import org.comixedproject.service.file.FileService;
-import org.comixedproject.task.QueueComicsTask;
-import org.comixedproject.task.Task;
-import org.comixedproject.task.runner.TaskManager;
+import org.comixedproject.service.comicfile.ComicFileService;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,64 +37,54 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class FileControllerTest {
+public class ComicFileControllerTest {
   private static final Random RANDOM = new Random();
   private static final String COMIC_ARCHIVE = "testcomic.cbz";
   private static final byte[] IMAGE_CONTENT = new byte[65535];
   private static final String TEST_DIRECTORY = "src/test";
-  private static final List<String> TEST_FILENAMES = new ArrayList<>();
   private static final Integer TEST_LIMIT = RANDOM.nextInt();
   private static final Integer TEST_NO_LIMIT = -1;
   private static final boolean TEST_DELETE_BLOCKED_PAGES = RANDOM.nextBoolean();
   private static final boolean TEST_IGNORE_METADATA = RANDOM.nextBoolean();
 
-  static {
-    TEST_FILENAMES.add("First.cbz");
-    TEST_FILENAMES.add("Second.cbz");
-    TEST_FILENAMES.add("Third.cbr");
-    TEST_FILENAMES.add("Fourth.cb7");
-  }
-
-  @InjectMocks private FileController controller;
-  @Mock private FileService fileService;
+  @InjectMocks private ComicFileController controller;
+  @Mock private ComicFileService comicFileService;
   @Mock private List<ComicFile> comicFileList;
-  @Mock private ObjectFactory<QueueComicsTask> queueComicsWorkerTaskObjectFactory;
-  @Mock private QueueComicsTask queueComicsWorkerTask;
-  @Mock private TaskManager taskManager;
+  @Mock private List<String> filenameList;
 
   @Test
   public void testGetImportFileCoverServiceThrowsException()
-      throws ArchiveAdaptorException, ComicFileHandlerException {
-    Mockito.when(fileService.getImportFileCover(Mockito.anyString()))
+      throws ComicFileHandlerException, ArchiveAdaptorException {
+    Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
         .thenThrow(ComicFileHandlerException.class);
 
     final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
 
     assertNotNull(result);
 
-    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
+    Mockito.verify(comicFileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
   }
 
   @Test
   public void testGetImportFileCover() throws ArchiveAdaptorException, ComicFileHandlerException {
-    Mockito.when(fileService.getImportFileCover(Mockito.anyString())).thenReturn(IMAGE_CONTENT);
+    Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
+        .thenReturn(IMAGE_CONTENT);
 
     final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
 
     assertNotNull(result);
     assertEquals(IMAGE_CONTENT, result);
 
-    Mockito.verify(fileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
+    Mockito.verify(comicFileService, Mockito.times(1)).getImportFileCover(COMIC_ARCHIVE);
   }
 
   @Test
   public void testGetAllComicsUnderNoLimit() throws IOException, JSONException {
-    Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
+    Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileList);
 
     final LoadComicFilesResponse response =
@@ -108,12 +93,13 @@ public class FileControllerTest {
     assertNotNull(response);
     assertSame(comicFileList, response.getFiles());
 
-    Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_NO_LIMIT);
+    Mockito.verify(comicFileService, Mockito.times(1))
+        .getAllComicsUnder(TEST_DIRECTORY, TEST_NO_LIMIT);
   }
 
   @Test
   public void testGetAllComicsUnder() throws IOException, JSONException {
-    Mockito.when(fileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
+    Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileList);
 
     final LoadComicFilesResponse response =
@@ -122,22 +108,15 @@ public class FileControllerTest {
     assertNotNull(response);
     assertSame(comicFileList, response.getFiles());
 
-    Mockito.verify(fileService, Mockito.times(1)).getAllComicsUnder(TEST_DIRECTORY, TEST_LIMIT);
+    Mockito.verify(comicFileService, Mockito.times(1))
+        .getAllComicsUnder(TEST_DIRECTORY, TEST_LIMIT);
   }
 
   @Test
-  public void testImportComicFiles() throws UnsupportedEncodingException {
-    Mockito.when(queueComicsWorkerTaskObjectFactory.getObject()).thenReturn(queueComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
-
+  public void testImportComicFiles() throws Exception {
     controller.importComicFiles(
-        new ImportComicFilesRequest(
-            TEST_FILENAMES, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
+        new ImportComicFilesRequest(filenameList, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
 
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(queueComicsWorkerTask);
-    Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setFilenames(TEST_FILENAMES);
-    Mockito.verify(queueComicsWorkerTask, Mockito.times(1))
-        .setDeleteBlockedPages(TEST_DELETE_BLOCKED_PAGES);
-    Mockito.verify(queueComicsWorkerTask, Mockito.times(1)).setIgnoreMetadata(TEST_IGNORE_METADATA);
+    Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
   }
 }

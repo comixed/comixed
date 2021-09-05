@@ -16,27 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comic;
+package org.comixedproject.batch.comicbooks.readers;
+
+import java.util.List;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comic.Comic;
+import org.comixedproject.service.comic.ComicService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
+ * <code>RecordInsertedReader</code> loads comics that have been recently added the library.
  *
  * @author Darryl L. Pierce
  */
-public enum ComicEvent {
-  recordInserted, // the record has been inserted into the database
-  readyForProcessing, // the record is ready for processing
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
-  scraped,
-  detailsUpdated,
-  metadataCleared,
-  comicInfoUpdated,
-  archiveRecreated,
-  comicMoved,
-  markedForRemoval,
-  unmarkedForRemoval;
+@Component
+@Log4j2
+public class RecordInsertedReader extends AbstractComicReader {
+  @Autowired private ComicService comicService;
+
+  @Override
+  protected List<Comic> doLoadComics() {
+    log.trace("Loading newly inserted comics");
+    return this.comicService.findInsertedComics();
+  }
 }
