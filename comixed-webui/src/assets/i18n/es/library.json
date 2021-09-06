@@ -93,6 +93,12 @@
       "locations": "Ubicaciónes",
       "stories": "Historias"
     },
+    "rescan-comics": {
+      "confirmation-message": "Are you sure you want to rescan {count, plural, =1{one comic} other{# comics}}? This process can take a very long time",
+      "confirmation-title": "Rescan Selected Comics",
+      "effect-failure": "Failed to start rescanning comics.",
+      "effect-success": "Rescanning comics started."
+    },
     "set-read": {
       "effect-failure": "No pudo marcar los cómics como {read, select, true{read} other{unread}}.",
       "effect-success": "{count, plural, =1{one comic} other{# comics}} marcado como {read, select, true{read} other{unread}}."
@@ -100,6 +106,7 @@
     "tooltip": {
       "consolidate-library": "Consolidate the library.",
       "deselect-all": "Anular la selección de todos los cómics.",
+      "rescan-comics": "Rescan selected comics.",
       "scrape-comics": "Empieza a raspar cómics",
       "select-all": "Seleccionar todos los cómics."
     }

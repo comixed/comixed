@@ -49,6 +49,7 @@ export const LOAD_COMICS_WITH_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/library/pag
 export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/duplicates/\${hash}`;
 
 export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolidate`;
+export const RESCAN_COMICS_URL = `${API_ROOT_URL}/library/rescan`;
 
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =

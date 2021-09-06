@@ -225,12 +225,6 @@ export class ComicBookPageComponent
     this.store.dispatch(updateComicReadStatus({ comic: this.comic, status }));
   }
 
-  private routeToComic(id: number): void {
-    this.router.navigate(['library', 'comics', id], {
-      queryParamsHandling: 'preserve'
-    });
-  }
-
   private loadTranslations(): void {
     this.loadPageTitle();
   }

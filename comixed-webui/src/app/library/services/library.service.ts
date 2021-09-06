@@ -23,12 +23,14 @@ import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
   LOAD_COMIC_URL,
+  RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL
 } from '@app/library/library.constants';
 import { Comic } from '@app/comic-book/models/comic';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
+import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +43,7 @@ export class LibraryService {
    * @param args.id the comic id
    */
   loadComic(args: { id: number }): Observable<any> {
-    this.logger.trace('Service: load a comic:', args);
+    this.logger.trace('Load a comic:', args);
     return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
   }
 
@@ -51,7 +53,7 @@ export class LibraryService {
    * @param args.read the read state
    */
   setRead(args: { comics: Comic[]; read: boolean }): Observable<any> {
-    this.logger.trace('Service: setting comic read state:', args);
+    this.logger.trace('Setting comic read state:', args);
     return this.http.post(interpolate(SET_READ_STATE_URL), {
       ids: args.comics.map(comic => comic.id),
       read: args.read
@@ -59,9 +61,16 @@ export class LibraryService {
   }
 
   startLibraryConsolidation(): Observable<any> {
-    this.logger.trace('Service: start library consolidation');
+    this.logger.trace('Start library consolidation');
     return this.http.post(interpolate(START_LIBRARY_CONSOLIDATION_URL), {
       deletePhysicalFiles: true
     } as ConsolidateLibraryRequest);
+  }
+
+  rescanComics(args: { comics: Comic[] }): Observable<any> {
+    this.logger.trace('Rescan comics:', args);
+    return this.http.post(interpolate(RESCAN_COMICS_URL), {
+      ids: args.comics.map(comic => comic.id)
+    } as RescanComicsRequest);
   }
 }

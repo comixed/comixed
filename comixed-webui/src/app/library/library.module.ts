@@ -81,6 +81,11 @@ import {
 import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
 import { MatDividerModule } from '@angular/material/divider';
 import { ComicListViewComponent } from './components/comic-list-view/comic-list-view.component';
+import {
+  reducer as rescanComicsReducer,
+  RESCAN_COMICS_FEATURE_KEY
+} from '@app/library/reducers/rescan-comics.reducer';
+import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
 
 @NgModule({
   declarations: [
@@ -117,11 +122,13 @@ import { ComicListViewComponent } from './components/comic-list-view/comic-list-
       DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
       duplicatePageDetailReducer
     ),
+    StoreModule.forFeature(RESCAN_COMICS_FEATURE_KEY, rescanComicsReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
       DuplicatePageListEffects,
-      DuplicatePageDetailEffects
+      DuplicatePageDetailEffects,
+      RescanComicsEffects
     ]),
     MatInputModule,
     MatSelectModule,

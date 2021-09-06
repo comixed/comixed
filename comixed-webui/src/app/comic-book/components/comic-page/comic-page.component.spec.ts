@@ -56,6 +56,47 @@ describe('ComicPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('image width', () => {
+    const WIDTH = Math.ceil(Math.abs(Math.random() * 1024));
+
+    describe('when set', () => {
+      beforeEach(() => {
+        component.pageSize = -1;
+        component.imageWidth = `${WIDTH}`;
+      });
+
+      it('sets the width', () => {
+        expect(component.imageWidth).toEqual(`${WIDTH}`);
+      });
+    });
+
+    describe('when not set', () => {
+      beforeEach(() => {
+        component.imageWidth = null;
+      });
+
+      describe('if page size is set', () => {
+        beforeEach(() => {
+          component.pageSize = PAGE_SIZE;
+        });
+
+        it('returns the page size', () => {
+          expect(component.imageWidth).toEqual(`${PAGE_SIZE}px`);
+        });
+      });
+
+      describe('if page size is not set', () => {
+        beforeEach(() => {
+          component.pageSize = -1;
+        });
+
+        it('returns a default page size', () => {
+          expect(component.imageWidth).toEqual('auto');
+        });
+      });
+    });
+  });
+
   describe('getting the image width', () => {
     describe('when not defined', () => {
       beforeEach(() => {

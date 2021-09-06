@@ -90,6 +90,7 @@ public class ComicServiceTest {
   private Comic previousComic = new Comic();
   private Comic currentComic = new Comic();
   private Comic nextComic = new Comic();
+  private List<Long> idList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -467,5 +468,30 @@ public class ComicServiceTest {
     assertSame(comicList, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findProcessedComics();
+  }
+
+  @Test
+  public void testRescanComics() {
+    for (long index = 0L; index < 25L; index++) idList.add(index + 100);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.rescanComics(idList);
+
+    idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id));
+    Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
+        .fireEvent(comic, ComicEvent.rescanComic);
+  }
+
+  @Test
+  public void testRescanComicsNoSuchComic() {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    service.rescanComics(idList);
+
+    idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id));
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.rescanComic);
   }
 }

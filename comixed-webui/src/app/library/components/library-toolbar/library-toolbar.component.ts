@@ -47,6 +47,7 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
+import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -170,6 +171,24 @@ export class LibraryToolbarComponent
       confirm: () => {
         this.logger.trace('Firing action: consolidate library');
         this.store.dispatch(startLibraryConsolidation());
+      }
+    });
+  }
+
+  onRescanComics(): void {
+    this.logger.trace('Confirming with the user to rescan the selected comics');
+    const comics = this.selected;
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.rescan-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.rescan-comics.confirmation-message',
+        { count: comics.length }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action to rescan comics');
+        this.store.dispatch(rescanComics({ comics }));
       }
     });
   }
