@@ -70,4 +70,16 @@
   >
     <mat-icon>plagiarism</mat-icon>
   </button>
+  <button
+    id="rescan-comics-button"
+    *ngIf="isAdmin"
+    mat-icon-button
+    color="warn"
+    class="cx-toolbar-button cx-margin-right-5"
+    [disabled]="!selected.length"
+    [matTooltip]="'library.tooltip.rescan-comics' | translate"
+    (click)="onRescanComics()"
+  >
+    <mat-icon>document_scanner</mat-icon>
+  </button>
 </mat-toolbar>

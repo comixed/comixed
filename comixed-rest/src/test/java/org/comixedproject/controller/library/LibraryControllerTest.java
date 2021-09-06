@@ -32,6 +32,7 @@ import org.comixedproject.model.net.ConvertComicsRequest;
 import org.comixedproject.model.net.library.LoadLibraryRequest;
 import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.MoveComicsRequest;
+import org.comixedproject.model.net.library.RescanComicsRequest;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
@@ -61,7 +62,7 @@ public class LibraryControllerTest {
   private static final Boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
   private static final long TEST_LAST_COMIC_ID = 717L;
 
-  @InjectMocks private LibraryController libraryController;
+  @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
   @Mock private ComicService comicService;
   @Mock private List<Comic> comicList;
@@ -85,7 +86,7 @@ public class LibraryControllerTest {
         .thenReturn(convertComicsWorkerTask);
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
 
-    libraryController.convertComics(
+    controller.convertComics(
         new ConvertComicsRequest(
             idList,
             TEST_ARCHIVE_TYPE,
@@ -108,8 +109,7 @@ public class LibraryControllerTest {
     Mockito.when(libraryService.consolidateLibrary(Mockito.anyBoolean())).thenReturn(comicList);
 
     List<Comic> response =
-        libraryController.consolidateLibrary(
-            new ConsolidateLibraryRequest(TEST_DELETE_PHYSICAL_FILES));
+        controller.consolidateLibrary(new ConsolidateLibraryRequest(TEST_DELETE_PHYSICAL_FILES));
 
     assertNotNull(response);
     assertSame(comicList, response);
@@ -121,7 +121,7 @@ public class LibraryControllerTest {
   public void testClearImageCache() throws LibraryException {
     Mockito.doNothing().when(libraryService).clearImageCache();
 
-    ClearImageCacheResponse result = libraryController.clearImageCache();
+    ClearImageCacheResponse result = controller.clearImageCache();
 
     assertNotNull(result);
     assertTrue(result.isSuccess());
@@ -134,7 +134,7 @@ public class LibraryControllerTest {
   public void testClearImageCacheWithError() throws LibraryException {
     Mockito.doThrow(LibraryException.class).when(libraryService).clearImageCache();
 
-    ClearImageCacheResponse result = libraryController.clearImageCache();
+    ClearImageCacheResponse result = controller.clearImageCache();
 
     assertNotNull(result);
     assertFalse(result.isSuccess());
@@ -147,7 +147,7 @@ public class LibraryControllerTest {
     Mockito.when(moveComicsWorkerTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
     Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
 
-    libraryController.moveComics(
+    controller.moveComics(
         new MoveComicsRequest(
             TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE));
 
@@ -167,7 +167,7 @@ public class LibraryControllerTest {
         .thenReturn(comics);
 
     final LoadLibraryResponse result =
-        libraryController.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
+        controller.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
 
     assertNotNull(result);
     assertFalse(result.getComics().isEmpty());
@@ -188,7 +188,7 @@ public class LibraryControllerTest {
         .thenReturn(comics);
 
     final LoadLibraryResponse result =
-        libraryController.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
+        controller.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
 
     assertNotNull(result);
     assertFalse(result.getComics().isEmpty());
@@ -209,7 +209,7 @@ public class LibraryControllerTest {
         .thenReturn(comics);
 
     final LoadLibraryResponse result =
-        libraryController.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
+        controller.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
 
     assertNotNull(result);
     assertFalse(result.getComics().isEmpty());
@@ -218,5 +218,12 @@ public class LibraryControllerTest {
 
     Mockito.verify(comicService, Mockito.times(1))
         .getComicsById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
+  }
+
+  @Test
+  public void testRescanComics() {
+    controller.rescanComics(new RescanComicsRequest(idList));
+
+    Mockito.verify(comicService, Mockito.times(1)).rescanComics(idList);
   }
 }

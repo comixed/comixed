@@ -16,26 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comic;
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '@app/comic-book/models/comic';
 
-/**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
- *
- * @author Darryl L. Pierce
- */
-public enum ComicEvent {
-  imported, // the record has been created in the database
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
-  scraped,
-  detailsUpdated,
-  metadataCleared,
-  comicInfoUpdated,
-  archiveRecreated,
-  comicMoved,
-  markedForRemoval,
-  unmarkedForRemoval;
-}
+export const rescanComics = createAction(
+  '[Rescan Comics] Rescan selected comics',
+  props<{ comics: Comic[] }>()
+);
+
+export const comicsRescanning = createAction(
+  '[Rescan Comics] Rescanning comics has started'
+);
+
+export const rescanComicsFailed = createAction(
+  '[Rescan Comics] Failed to start rescanning comics'
+);

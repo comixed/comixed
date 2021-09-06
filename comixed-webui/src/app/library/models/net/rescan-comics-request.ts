@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comic;
-
-/**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
- *
- * @author Darryl L. Pierce
- */
-public enum ComicEvent {
-  imported, // the record has been created in the database
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
-  scraped,
-  detailsUpdated,
-  metadataCleared,
-  comicInfoUpdated,
-  archiveRecreated,
-  comicMoved,
-  markedForRemoval,
-  unmarkedForRemoval;
+export interface RescanComicsRequest {
+  ids: number[];
 }

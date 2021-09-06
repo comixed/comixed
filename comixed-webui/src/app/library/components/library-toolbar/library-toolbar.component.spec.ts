@@ -48,6 +48,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { MatDividerModule } from '@angular/material/divider';
+import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -206,6 +207,26 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(startLibraryConsolidation());
+    });
+  });
+
+  describe('rescanning selected comics', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.selected = COMICS;
+      component.onRescanComics();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        rescanComics({ comics: COMICS })
+      );
     });
   });
 });

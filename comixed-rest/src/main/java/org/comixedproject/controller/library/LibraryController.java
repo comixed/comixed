@@ -30,6 +30,7 @@ import org.comixedproject.model.net.ConvertComicsRequest;
 import org.comixedproject.model.net.library.LoadLibraryRequest;
 import org.comixedproject.model.net.library.LoadLibraryResponse;
 import org.comixedproject.model.net.library.MoveComicsRequest;
+import org.comixedproject.model.net.library.RescanComicsRequest;
 import org.comixedproject.service.comic.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
@@ -41,10 +42,12 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api")
 @Log4j2
 public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
@@ -55,7 +58,7 @@ public class LibraryController {
   @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
 
-  @PostMapping(value = "/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   public void convertComics(@RequestBody() ConvertComicsRequest request) {
     List<Long> idList = request.getComicIdList();
@@ -90,7 +93,7 @@ public class LibraryController {
    * @return all files marked for deletion
    */
   @PostMapping(
-      value = "/library/consolidate",
+      value = "/api/library/consolidate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DeletedComicList.class)
@@ -100,7 +103,7 @@ public class LibraryController {
     return this.libraryService.consolidateLibrary(request.getDeletePhysicalFiles());
   }
 
-  @DeleteMapping(value = "/library/cache/images")
+  @DeleteMapping(value = "/api/library/cache/images")
   @AuditableEndpoint
   public ClearImageCacheResponse clearImageCache() {
     log.info("Clearing the image cache");
@@ -122,7 +125,7 @@ public class LibraryController {
    * @param request the request body
    */
   @PostMapping(
-      value = "/library/move",
+      value = "/api/library/move",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
@@ -148,7 +151,7 @@ public class LibraryController {
    * @return the response
    */
   @PostMapping(
-      value = "/library",
+      value = "/api/library",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
@@ -167,5 +170,19 @@ public class LibraryController {
 
     return new LoadLibraryResponse(
         comics, comics.isEmpty() ? 0 : comics.get(comics.size() - 1).getId(), lastPayload);
+  }
+
+  /**
+   * Initials the rescan process for a set of comics.
+   *
+   * @param request the request body
+   */
+  @PostMapping(value = "/api/library/rescan", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public void rescanComics(@RequestBody() final RescanComicsRequest request) {
+    final List<Long> ids = request.getIds();
+    log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
+    this.comicService.rescanComics(ids);
   }
 }

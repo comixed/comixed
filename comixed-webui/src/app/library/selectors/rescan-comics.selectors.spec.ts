@@ -16,26 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.comic;
+import {
+  RESCAN_COMICS_FEATURE_KEY,
+  RescanComicsState
+} from '../reducers/rescan-comics.reducer';
+import { selectRescanComicsState } from './rescan-comics.selectors';
 
-/**
- * <code>ComicEvent</code> represents the events that can occur to a comic that affect its state.
- *
- * @author Darryl L. Pierce
- */
-public enum ComicEvent {
-  imported, // the record has been created in the database
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
-  scraped,
-  detailsUpdated,
-  metadataCleared,
-  comicInfoUpdated,
-  archiveRecreated,
-  comicMoved,
-  markedForRemoval,
-  unmarkedForRemoval;
-}
+describe('RescanComics Selectors', () => {
+  let state: RescanComicsState;
+
+  beforeEach(() => {
+    state = { working: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectRescanComicsState({
+        [RESCAN_COMICS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

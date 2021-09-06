@@ -370,4 +370,23 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     log.trace("Loading unprocessed comics that are fully processed");
     return this.comicRepository.findProcessedComics();
   }
+
+  /**
+   * Marks a set of comics for rescanning.
+   *
+   * @param ids the comic ids
+   */
+  public void rescanComics(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          try {
+            log.trace("Loading comic: id={}", id);
+            final Comic comic = this.doGetComic(id);
+            log.trace("Firing event: rescan comic");
+            this.comicStateHandler.fireEvent(comic, ComicEvent.rescanComic);
+          } catch (ComicException error) {
+            log.error("Error preparing comic for rescan", error);
+          }
+        });
+  }
 }

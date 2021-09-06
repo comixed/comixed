@@ -93,6 +93,12 @@
       "locations": "Locations",
       "stories": "Stories"
     },
+    "rescan-comics": {
+      "confirmation-message": "Are you sure you want to rescan {count, plural, =1{one comic} other{# comics}}? This process can take a very long time",
+      "confirmation-title": "Rescan Selected Comics",
+      "effect-failure": "Failed to start rescanning comics.",
+      "effect-success": "Rescanning comics started."
+    },
     "set-read": {
       "effect-failure": "Failed to mark comics as {read, select, true{read} other{unread}}.",
       "effect-success": "Marked {count, plural, =1{one comic} other{# comics}} as {read, select, true{read} other{unread}}."
@@ -100,6 +106,7 @@
     "tooltip": {
       "consolidate-library": "Consolidate the library.",
       "deselect-all": "Deselect all comics.",
+      "rescan-comics": "Rescan selected comics.",
       "scrape-comics": "Start scraping comics",
       "select-all": "Select all comics."
     }

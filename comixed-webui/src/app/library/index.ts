@@ -44,6 +44,11 @@ import {
   DuplicatePageDetailState,
   reducer as duplicatePageDetailReducer
 } from './reducers/duplicate-page-detail.reducer';
+import {
+  reducer as rescanComicsReducer,
+  RESCAN_COMICS_FEATURE_KEY,
+  RescanComicsState
+} from './reducers/rescan-comics.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -58,6 +63,7 @@ export interface LibraryModuleState {
   [LIBRARY_FEATURE_KEY]: LibraryState;
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: DuplicatePageListState;
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: DuplicatePageDetailState;
+  [RESCAN_COMICS_FEATURE_KEY]: RescanComicsState;
 }
 
 export type ModuleState = LibraryModuleState;
@@ -68,5 +74,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: comicsWithDuplicatePagesReducer,
-  [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer
+  [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer,
+  [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer
 };
