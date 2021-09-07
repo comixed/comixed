@@ -20,7 +20,6 @@ package org.comixedproject.task;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.state.messaging.ImportCountMessage;
 import org.comixedproject.model.state.messaging.TaskCountMessage;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
@@ -43,7 +42,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class MonitorTaskQueueTask extends AbstractTask implements InitializingBean {
   public static final String TASK_UPDATE_TARGET = "/topic/taskcount";
-  static final String IMPORT_COUNT_TOPIC = "/topic/import.count";
 
   @Autowired private TaskManager taskManager;
   @Autowired private TaskAdaptor taskAdaptor;
@@ -69,13 +67,6 @@ public class MonitorTaskQueueTask extends AbstractTask implements InitializingBe
     log.debug("Updating task counts");
     this.messagingTemplate.convertAndSend(
         TASK_UPDATE_TARGET, new TaskCountMessage(this.taskAdaptor.getTaskCount()));
-
-    log.debug("Updating import counts");
-    this.messagingTemplate.convertAndSend(
-        IMPORT_COUNT_TOPIC,
-        new ImportCountMessage(
-            this.taskAdaptor.getTaskCount(PersistedTaskType.ADD_COMIC),
-            this.taskAdaptor.getTaskCount(PersistedTaskType.PROCESS_COMIC)));
 
     log.debug("Checking queue for waiting tasks");
     final List<PersistedTask> persistedTaskQueue = this.taskAdaptor.getNextTask();

@@ -19,9 +19,11 @@
 package org.comixedproject.model.state.messaging;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.comixedproject.views.View;
 
 /**
  * <code>ImportCountMessage</code> is the message that's sent to the import count queue.
@@ -32,10 +34,12 @@ import lombok.Getter;
 public class ImportCountMessage {
   @JsonProperty("addCount")
   @Getter
+  @JsonView(View.GenericResponseView.class)
   private long addCount;
 
   @JsonProperty("processingCount")
   @Getter
+  @JsonView(View.GenericResponseView.class)
   private long processingCount;
 
   @Override

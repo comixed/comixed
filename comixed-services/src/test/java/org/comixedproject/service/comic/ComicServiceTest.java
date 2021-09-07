@@ -506,4 +506,17 @@ public class ComicServiceTest {
     idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id));
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.rescanComic);
   }
+
+  @Test
+  public void testGetCountForState() {
+    for (int index = 0; index < 50; index++) comicList.add(comic);
+
+    Mockito.when(comicRepository.findForState(Mockito.any(ComicState.class))).thenReturn(comicList);
+
+    final int result = service.getCountForState(TEST_STATE);
+
+    assertEquals(comicList.size(), result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findForState(TEST_STATE);
+  }
 }

@@ -19,12 +19,10 @@
 package org.comixedproject.task;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.task.MonitorTaskQueueTask.IMPORT_COUNT_TOPIC;
 import static org.comixedproject.task.MonitorTaskQueueTask.TASK_UPDATE_TARGET;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.state.messaging.ImportCountMessage;
 import org.comixedproject.model.state.messaging.TaskCountMessage;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
@@ -41,8 +39,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 public class MonitorTaskQueueTaskTest {
   private static final PersistedTaskType TEST_TASK_TYPE = PersistedTaskType.RESCAN_COMIC;
   private static final long TEST_TASK_COUNT = 97;
-  private static final long TEST_ADD_COMIC_COUNT = 23L;
-  private static final long TEST_PROCESS_COMIC_COUNT = 17L;
 
   @InjectMocks private MonitorTaskQueueTask task;
   @Mock private TaskManager taskManager;
@@ -108,19 +104,11 @@ public class MonitorTaskQueueTaskTest {
         .when(messagingTemplate)
         .convertAndSend(Mockito.anyString(), messageCaptor.capture());
     Mockito.when(taskAdaptor.getTaskCount()).thenReturn(TEST_TASK_COUNT);
-    Mockito.when(taskAdaptor.getTaskCount(PersistedTaskType.ADD_COMIC))
-        .thenReturn(TEST_ADD_COMIC_COUNT);
-    Mockito.when(taskAdaptor.getTaskCount(PersistedTaskType.PROCESS_COMIC))
-        .thenReturn(TEST_PROCESS_COMIC_COUNT);
 
     task.startTask();
 
     assertFalse(messageCaptor.getAllValues().isEmpty());
     assertTrue(messageCaptor.getAllValues().contains(new TaskCountMessage(TEST_TASK_COUNT)));
-    assertTrue(
-        messageCaptor
-            .getAllValues()
-            .contains(new ImportCountMessage(TEST_ADD_COMIC_COUNT, TEST_PROCESS_COMIC_COUNT)));
 
     Mockito.verify(taskAdaptor, Mockito.times(1)).getNextTask();
     Mockito.verify(persistedTask, Mockito.times(persistedTaskList.size())).getTaskType();
@@ -130,10 +118,6 @@ public class MonitorTaskQueueTaskTest {
         .runTask(workerTask, persistedTask);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(TASK_UPDATE_TARGET, new TaskCountMessage(TEST_TASK_COUNT));
-    Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(
-            IMPORT_COUNT_TOPIC,
-            new ImportCountMessage(TEST_ADD_COMIC_COUNT, TEST_PROCESS_COMIC_COUNT));
   }
 
   @Test
