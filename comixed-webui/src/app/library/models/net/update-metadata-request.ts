@@ -16,27 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
-import {
-  comicInfoUpdated,
-  updateComicInfo,
-  updateComicInfoFailed
-} from '../actions/update-comic-info.actions';
-
-export const UPDATE_COMIC_INFO_FEATURE_KEY = 'update_comic_info_state';
-
-export interface UpdateComicInfoState {
-  updating: boolean;
+export interface UpdateMetadataRequest {
+  ids: number[];
 }
-
-export const initialState: UpdateComicInfoState = {
-  updating: false
-};
-
-export const reducer = createReducer(
-  initialState,
-
-  on(updateComicInfo, state => ({ ...state, updating: true })),
-  on(comicInfoUpdated, state => ({ ...state, updating: false })),
-  on(updateComicInfoFailed, state => ({ ...state, updating: false }))
-);

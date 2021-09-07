@@ -18,7 +18,8 @@
 
 package org.comixedproject.service.library;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,13 +28,18 @@ import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.repositories.comicbooks.ComicRepository;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.PageCacheService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -43,12 +49,13 @@ public class LibraryServiceTest {
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
 
-  @InjectMocks private LibraryService libraryService;
-  @Mock private ComicRepository comicRepository;
+  @InjectMocks private LibraryService service;
+  @Mock private ComicService comicService;
   @Mock private Comic comic;
   @Mock private File file;
   @Mock private Utils utils;
   @Mock private PageCacheService pageCacheService;
+  @Mock private ComicStateHandler comicStateHandler;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -74,14 +81,14 @@ public class LibraryServiceTest {
 
   @Test
   public void testConsolidateLibraryNoDeleteFile() {
-    Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
+    Mockito.when(comicService.findAllMarkedForDeletion()).thenReturn(comicList);
 
-    List<Comic> result = libraryService.consolidateLibrary(false);
+    List<Comic> result = service.consolidateLibrary(false);
 
     assertNotNull(result);
     assertSame(comicList, result);
 
-    Mockito.verify(comicRepository, Mockito.times(comicList.size())).delete(comic);
+    Mockito.verify(comicService, Mockito.times(comicList.size())).delete(comic);
   }
 
   @Test
@@ -90,18 +97,18 @@ public class LibraryServiceTest {
       comicList.add(comic);
     }
 
-    Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
-    Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
+    Mockito.when(comicService.findAllMarkedForDeletion()).thenReturn(comicList);
+    Mockito.doNothing().when(comicService).delete(Mockito.any(Comic.class));
     Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME);
     Mockito.when(comic.getFile()).thenReturn(file);
     Mockito.when(utils.deleteFile(Mockito.any(File.class))).thenReturn(true);
 
-    List<Comic> result = libraryService.consolidateLibrary(true);
+    List<Comic> result = service.consolidateLibrary(true);
 
     assertNotNull(result);
     assertSame(comicList, result);
 
-    Mockito.verify(comicRepository, Mockito.times(comicList.size())).delete(comic);
+    Mockito.verify(comicService, Mockito.times(comicList.size())).delete(comic);
     Mockito.verify(comic, Mockito.times(comicList.size())).getFilename();
     Mockito.verify(comic, Mockito.times(comicList.size())).getFile();
     Mockito.verify(utils, Mockito.times(comicList.size())).deleteFile(file);
@@ -112,7 +119,7 @@ public class LibraryServiceTest {
     Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
     Mockito.doNothing().when(utils).deleteDirectoryContents(Mockito.anyString());
 
-    libraryService.clearImageCache();
+    service.clearImageCache();
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
     Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
@@ -123,9 +130,40 @@ public class LibraryServiceTest {
     Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
     Mockito.doThrow(IOException.class).when(utils).deleteDirectoryContents(Mockito.anyString());
 
-    libraryService.clearImageCache();
+    service.clearImageCache();
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
     Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
+  }
+
+  @Test
+  public void testUpdateMetadata() throws ComicException {
+    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMetadata(comicIdList);
+
+    for (int index = 0; index < comicIdList.size(); index++) {
+      final Long id = comicIdList.get(index);
+      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+    }
+    Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
+        .fireEvent(comic, ComicEvent.updateMetadata);
+  }
+
+  @Test
+  public void testUpdateMetadataInvalidComic() throws ComicException {
+    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+
+    service.updateMetadata(comicIdList);
+
+    for (int index = 0; index < comicIdList.size(); index++) {
+      final Long id = comicIdList.get(index);
+      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+    }
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.updateMetadata);
   }
 }

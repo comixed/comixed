@@ -45,7 +45,7 @@ import { LibraryToolbarComponent } from '@app/library/components/library-toolbar
 import { ComicBookState } from '@app/comic-book/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
-import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
@@ -156,18 +156,18 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     return comic.comicState === ComicBookState.CHANGED;
   }
 
-  onUpdateComicInfo(comic: Comic): void {
+  onUpdateMetadata(comic: Comic): void {
     this.logger.trace('Confirming updating ComicInfo.xml');
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'comic-book.update-comic-info.confirmation-title'
+        'library.update-metadata.confirmation-title'
       ),
       message: this.translateService.instant(
-        'comic-book.update-comic-info.confirmation-message'
+        'library.update-metadata.confirmation-message'
       ),
       confirm: () => {
         this.logger.trace('Updating comic info:', comic);
-        this.store.dispatch(updateComicInfo({ comic }));
+        this.store.dispatch(updateMetadata({ comics: [comic] }));
       }
     });
   }

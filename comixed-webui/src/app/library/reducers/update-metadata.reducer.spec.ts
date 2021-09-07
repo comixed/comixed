@@ -19,19 +19,19 @@
 import {
   initialState,
   reducer,
-  UpdateComicInfoState
-} from './update-comic-info.reducer';
-import { COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+  UpdateMetadataState
+} from './update-metadata.reducer';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
 import {
-  comicInfoUpdated,
-  updateComicInfo,
-  updateComicInfoFailed
-} from '@app/comic-book/actions/update-comic-info.actions';
+  metadataUpdating,
+  updateMetadata,
+  updateMetadataFailed
+} from '@app/library/actions/update-metadata.actions.ts';
 
-describe('UpdateComicInfo Reducer', () => {
-  const COMIC = COMIC_3;
+describe('UpdateMetadata Reducer', () => {
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
 
-  let state: UpdateComicInfoState;
+  let state: UpdateMetadataState;
 
   beforeEach(() => {
     state = { ...initialState };
@@ -51,7 +51,7 @@ describe('UpdateComicInfo Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateComicInfo({ comic: COMIC })
+        updateMetadata({ comics: COMICS })
       );
     });
 
@@ -62,7 +62,7 @@ describe('UpdateComicInfo Reducer', () => {
 
   describe('success updating a comic', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, comicInfoUpdated());
+      state = reducer({ ...state, updating: true }, metadataUpdating());
     });
 
     it('clears the updating flag', () => {
@@ -72,7 +72,7 @@ describe('UpdateComicInfo Reducer', () => {
 
   describe('failure updating a comic', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, updateComicInfoFailed());
+      state = reducer({ ...state, updating: true }, updateMetadataFailed());
     });
 
     it('clears the updating flag', () => {

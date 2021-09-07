@@ -16,24 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  UPDATE_COMIC_INFO_FEATURE_KEY,
-  UpdateComicInfoState
-} from '../reducers/update-comic-info.reducer';
-import { selectUpdateComicInfoState } from './update-comic-info.selectors';
+package org.comixedproject.model.net.library;
 
-describe('UpdateComicInfo Selectors', () => {
-  let state: UpdateComicInfoState;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-  beforeEach(() => {
-    state = { updating: Math.random() > 0.5 };
-  });
-
-  it('should select the feature state', () => {
-    expect(
-      selectUpdateComicInfoState({
-        [UPDATE_COMIC_INFO_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-});
+/**
+ * <code>UpdateMetadataRequest</code> represents the request body when starting the metadata update
+ * process.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateMetadataRequest {
+  @JsonProperty("ids")
+  @Getter
+  private List<Long> ids;
+}

@@ -16,28 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+package org.comixedproject.batch.comicbooks.writers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>SetReadStateRequest</code> is the request body for setting the read state for a set of
- * comics.
+ * <code>UpdateMetadataWriter</code> fires an event for comics that have had their metadata updated.
  *
  * @author Darryl L. Pierce
  */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetReadStateRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
-
-  @JsonProperty("read")
-  @Getter
-  private Boolean read;
+@Component
+@Log4j2
+public class UpdateMetadataWriter extends AbstractComicWriter {
+  public UpdateMetadataWriter() {
+    super(ComicEvent.metadataUpdated);
+  }
 }

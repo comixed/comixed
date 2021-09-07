@@ -34,12 +34,14 @@ import {
   LOAD_COMIC_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
-  START_LIBRARY_CONSOLIDATION_URL
+  START_LIBRARY_CONSOLIDATION_URL,
+  UPDATE_METADATA_URL
 } from '@app/library/library.constants';
 import { HttpResponse } from '@angular/common/http';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
+import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_1;
@@ -113,6 +115,19 @@ describe('LibraryService', () => {
     expect(req.request.body).toEqual({
       ids: COMICS.map(comic => comic.id)
     } as RescanComicsRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can start updating metadata', () => {
+    service
+      .updateMetadata({ comics: COMICS })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(UPDATE_METADATA_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id)
+    } as UpdateMetadataRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });

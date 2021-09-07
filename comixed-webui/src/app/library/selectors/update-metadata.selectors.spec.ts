@@ -16,28 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+import {
+  UPDATE_METADATA_FEATURE_KEY,
+  UpdateMetadataState
+} from '../reducers/update-metadata.reducer';
+import { selectUpdateComicInfoState } from './update-metadata.selectors';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+describe('UpdateMetadata Selectors', () => {
+  let state: UpdateMetadataState;
 
-/**
- * <code>SetReadStateRequest</code> is the request body for setting the read state for a set of
- * comics.
- *
- * @author Darryl L. Pierce
- */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetReadStateRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
+  beforeEach(() => {
+    state = { updating: Math.random() > 0.5 };
+  });
 
-  @JsonProperty("read")
-  @Getter
-  private Boolean read;
-}
+  it('should select the feature state', () => {
+    expect(
+      selectUpdateComicInfoState({
+        [UPDATE_METADATA_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

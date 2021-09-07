@@ -77,19 +77,6 @@ export class ComicService {
   }
 
   /**
-   * Updates the comicinfo.xml in a comic.
-   *
-   * @param args.comic the comic
-   */
-  updateComicInfo(args: { comic: Comic }): Observable<any> {
-    this.logger.trace('Service: updating ComicInfo.xml:', args);
-    return this.http.post(
-      interpolate(UPDATE_COMIC_INFO_URL, { id: args.comic.id }),
-      {}
-    );
-  }
-
-  /**
    * Updates the deleted state for a set of comic.
    *
    * @param args.comics the comics

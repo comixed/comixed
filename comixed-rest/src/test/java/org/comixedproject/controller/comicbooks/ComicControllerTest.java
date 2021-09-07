@@ -375,29 +375,9 @@ public class ComicControllerTest {
 
     final Comic result = controller.deleteMetadata(TEST_COMIC_ID);
 
-    Mockito.verify(comicService, Mockito.times(1)).deleteMetadata(TEST_COMIC_ID);
-  }
-
-  @Test(expected = ComicException.class)
-  public void testUpdateComicInfoServiceException() throws ComicException {
-    Mockito.when(comicService.updateComicInfo(Mockito.anyLong())).thenThrow(ComicException.class);
-
-    try {
-      controller.updateComicInfo(TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(comicService, Mockito.times(1)).updateComicInfo(TEST_COMIC_ID);
-    }
-  }
-
-  @Test
-  public void testUpdateComicInfo() throws ComicException {
-    Mockito.when(comicService.updateComicInfo(Mockito.anyLong())).thenReturn(comic);
-
-    final Comic result = controller.updateComicInfo(TEST_COMIC_ID);
-
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(comicService, Mockito.times(1)).updateComicInfo(TEST_COMIC_ID);
+    Mockito.verify(comicService, Mockito.times(1)).deleteMetadata(TEST_COMIC_ID);
   }
 }

@@ -113,19 +113,6 @@ describe('ComicService', () => {
     req.flush(COMIC);
   });
 
-  it('can update the comicinfo.xml file in a comic', () => {
-    service
-      .updateComicInfo({ comic: COMIC })
-      .subscribe(response => expect(response).toEqual(COMIC));
-
-    const req = httpMock.expectOne(
-      interpolate(UPDATE_COMIC_INFO_URL, { id: COMIC.id })
-    );
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({});
-    req.flush(COMIC);
-  });
-
   it('can mark comics for deletion', () => {
     service
       .markComicsDeleted({

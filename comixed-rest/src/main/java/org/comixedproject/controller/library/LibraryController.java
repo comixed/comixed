@@ -27,10 +27,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
-import org.comixedproject.model.net.library.LoadLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryResponse;
-import org.comixedproject.model.net.library.MoveComicsRequest;
-import org.comixedproject.model.net.library.RescanComicsRequest;
+import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
@@ -47,6 +44,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <code>LibraryController</code> provides REST APIs for working with groups of {@link Comic}
+ * objects.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
 @Log4j2
 public class LibraryController {
@@ -173,7 +176,7 @@ public class LibraryController {
   }
 
   /**
-   * Initials the rescan process for a set of comics.
+   * Initiates the rescan process for a set of comics.
    *
    * @param request the request body
    */
@@ -184,5 +187,19 @@ public class LibraryController {
     final List<Long> ids = request.getIds();
     log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.comicService.rescanComics(ids);
+  }
+
+  /**
+   * Starts the metadata update process for a set of comics.
+   *
+   * @param request the request body
+   */
+  @PostMapping(value = "/api/library/metadata", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public void updateMetadata(@RequestBody() final UpdateMetadataRequest request) {
+    final List<Long> ids = request.getIds();
+    log.info("Updating the metadata for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
+    this.libraryService.updateMetadata(ids);
   }
 }

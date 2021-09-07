@@ -48,6 +48,18 @@
   </button>
   <mat-divider vertical="true"></mat-divider>
   <button
+    id="update-metadata-button"
+    *ngIf="isAdmin"
+    mat-icon-button
+    color="accent"
+    class="cx-toolbar-button cx-margin-right-5"
+    [matTooltip]="'library.tooltip.update-metadata' | translate"
+    [disabled]="!selected.length"
+    (click)="onUpdateMetadata()"
+  >
+    <mat-icon>upgrade</mat-icon>
+  </button>
+  <button
     id="consolidate-library-button"
     *ngIf="isAdmin && showConsolidate"
     mat-icon-button

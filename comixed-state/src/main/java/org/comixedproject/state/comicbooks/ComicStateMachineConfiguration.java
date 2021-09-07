@@ -46,6 +46,8 @@ public class ComicStateMachineConfiguration
   @Autowired private BlockedPagesMarkedAction blockedPagesMarkedAction;
   @Autowired private FileDetailsCreatedGuard fileDetailsCreatedGuard;
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
+  @Autowired private UpdateMetadataAction updateMetadataAction;
+  @Autowired private MetadataUpdatedAction metadataUpdatedAction;
   @Autowired private MarkComicForRemovalAction markComicForRemovalAction;
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
 
@@ -169,12 +171,26 @@ public class ComicStateMachineConfiguration
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.metadataCleared)
-        // the comicinfo.xml file was updated
+        // start updating the metadata
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.updateMetadata)
+        .action(updateMetadataAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.updateMetadata)
+        .action(updateMetadataAction)
+        // the metadata was updated
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.STABLE)
-        .event(ComicEvent.comicInfoUpdated)
+        .event(ComicEvent.metadataUpdated)
+        .action(metadataUpdatedAction)
         // the comic archive was recreated
         .and()
         .withExternal()

@@ -120,6 +120,12 @@ public class Comic {
   @Setter
   private boolean blockedPagesMarked = false;
 
+  @Column(name = "UpdateMetadata", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean updateMetadata = false;
+
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "PageNumber")
   @JsonProperty("pages")
@@ -562,19 +568,6 @@ public class Comic {
     return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
   }
 
-  @Override
-  public int hashCode() {
-    return 17 * Objects.hash(filename);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Comic comic = (Comic) o;
-    return this.filename.equals(comic.getFilename());
-  }
-
   public void removeDeletedPages(final boolean deletePages) {
     log.debug("Remove deleted pages? {}", deletePages);
     if (deletePages) {
@@ -588,5 +581,18 @@ public class Comic {
         }
       }
     }
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final Comic comic = (Comic) o;
+    return filename.equals(comic.filename);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(filename);
   }
 }

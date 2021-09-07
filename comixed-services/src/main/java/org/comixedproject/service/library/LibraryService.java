@@ -23,8 +23,11 @@ import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.repositories.comicbooks.ComicRepository;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.PageCacheService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,19 +36,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class LibraryService {
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private Utils utils;
   @Autowired private PageCacheService pageCacheService;
+  @Autowired private ComicStateHandler comicStateHandler;
 
   @Transactional
   public List<Comic> consolidateLibrary(boolean deletePhysicalFiles) {
     log.debug("Consolidating library: delete physical files={}", deletePhysicalFiles);
 
-    List<Comic> result = this.comicRepository.findAllMarkedForDeletion();
+    List<Comic> result = this.comicService.findAllMarkedForDeletion();
 
     for (Comic comic : result) {
       log.debug("Removing deleted comics from library");
-      this.comicRepository.delete(comic);
+      this.comicService.delete(comic);
 
       if (deletePhysicalFiles) {
         String filename = comic.getFilename();
@@ -70,5 +74,23 @@ public class LibraryService {
     } catch (IOException error) {
       throw new LibraryException("failed to clean image cache directory", error);
     }
+  }
+
+  /**
+   * Fires an event to start the metadata update process for the specified comics.
+   *
+   * @param ids the comics
+   */
+  public void updateMetadata(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          try {
+            final Comic comic = this.comicService.getComic(id);
+            log.trace("Firing action to update metadata: id={}", id);
+            this.comicStateHandler.fireEvent(comic, ComicEvent.updateMetadata);
+          } catch (ComicException error) {
+            log.error("Failed to update comic", error);
+          }
+        });
   }
 }

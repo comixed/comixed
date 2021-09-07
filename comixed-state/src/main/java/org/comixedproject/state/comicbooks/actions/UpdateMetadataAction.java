@@ -16,28 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+package org.comixedproject.state.comicbooks.actions;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.statemachine.StateContext;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>SetReadStateRequest</code> is the request body for setting the read state for a set of
- * comics.
+ * <code>UpdateMetadataAction</code> is executed to prepare comics for metadata update.
  *
  * @author Darryl L. Pierce
  */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetReadStateRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
-
-  @JsonProperty("read")
-  @Getter
-  private Boolean read;
+@Component
+@Log4j2
+public class UpdateMetadataAction extends AbstractComicAction {
+  @Override
+  public void execute(final StateContext<ComicState, ComicEvent> context) {
+    log.trace("Fetching comic");
+    final Comic comic = this.fetchComic(context);
+    log.trace("Setting update metadata flag");
+    comic.setUpdateMetadata(true);
+  }
 }

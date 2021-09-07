@@ -419,17 +419,6 @@ public class ComicServiceTest {
         .fireEvent(comic, ComicEvent.metadataCleared);
   }
 
-  @Test(expected = ComicException.class)
-  public void testUpdateComicInfoInvalidComicId() throws ComicException {
-    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
-
-    try {
-      service.updateComicInfo(TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
-    }
-  }
-
   @Test
   public void testFindInsertedComics() {
     Mockito.when(comicRepository.findForState(Mockito.any(ComicState.class))).thenReturn(comicList);
@@ -527,5 +516,29 @@ public class ComicServiceTest {
     assertEquals(comicList.size(), result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findForState(TEST_STATE);
+  }
+
+  @Test
+  public void testFindComicsWithMetadataToUpdate() {
+    Mockito.when(comicRepository.findComicsWithMetadataToUpdate()).thenReturn(comicList);
+
+    final List<Comic> result = service.findComicsWithMetadataToUpdate();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsWithMetadataToUpdate();
+  }
+
+  @Test
+  public void testFindAllComicsMarkedForDeletion() {
+    Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
+
+    final List<Comic> result = service.findAllMarkedForDeletion();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllMarkedForDeletion();
   }
 }

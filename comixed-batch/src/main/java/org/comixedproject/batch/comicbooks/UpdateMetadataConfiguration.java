@@ -19,14 +19,10 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.ComicInsertProcessor;
-import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
-import org.comixedproject.batch.comicbooks.readers.ComicFileDescriptorReader;
-import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
-import org.comixedproject.batch.comicbooks.writers.ComicInsertWriter;
-import org.comixedproject.batch.comicbooks.writers.ReaderInsertedWriter;
+import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
+import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
+import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicfile.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -39,7 +35,6 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,60 +42,45 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
- * <code>AddComicsConfiguration</code> defines the batch process for adding comics to the library.
+ * <code>UpdateMetadataConfiguration</code> defines a batch process that updates the metadata within
+ * comics.
  *
- * @author Darryl L. Pierce
+ * @author Darryl L Pierce
  */
 @Configuration
 @EnableScheduling
 @Log4j2
-public class AddComicsConfiguration {
-  private static final String KEY_STARTED = "job.add-comics.started";
+public class UpdateMetadataConfiguration {
+  private static final String KEY_STARTED = "job.update-metadata.started";
 
   @Autowired public JobBuilderFactory jobBuilderFactory;
   @Autowired public StepBuilderFactory stepBuilderFactory;
   @Autowired private JobLauncher jobLauncher;
 
-  @Autowired private ComicFileDescriptorReader comicFileDescriptorReader;
-  @Autowired private ComicInsertProcessor comicInsertProcessor;
-  @Autowired private ComicInsertWriter comicInsertWriter;
-  @Autowired private RecordInsertedReader recordInsertedReader;
-  @Autowired private NoopComicProcessor noopComicProcessor;
-  @Autowired private ReaderInsertedWriter readerInsertedWriter;
+  @Autowired private UpdateMetadataReader updateMetadataReader;
+  @Autowired private UpdateMetadataProcessor updateMatadataProcessor;
+  @Autowired private UpdateMetadataWriter updateMetadataWriter;
 
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;
 
   @Bean
-  @Qualifier("addComicsToLibraryJob")
-  public Job addComicsToLibraryJob() {
+  public Job updateMetadataJob() {
     return this.jobBuilderFactory
-        .get("addComicsToLibraryJob")
+        .get("updateMetadataJob")
         .incrementer(new RunIdIncrementer())
-        .start(createInsertStep())
-        .next(recordInsertedStep())
+        .start(updateMetadataStep())
         .build();
   }
 
   @Bean
-  public Step createInsertStep() {
+  public Step updateMetadataStep() {
     return this.stepBuilderFactory
-        .get("createInsertStep")
-        .<ComicFileDescriptor, Comic>chunk(this.batchChunkSize)
-        .reader(comicFileDescriptorReader)
-        .processor(comicInsertProcessor)
-        .writer(comicInsertWriter)
-        .build();
-  }
-
-  @Bean
-  public Step recordInsertedStep() {
-    return this.stepBuilderFactory
-        .get("recordInsertedStep")
+        .get("updateMetadataStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(recordInsertedReader)
-        .processor(noopComicProcessor)
-        .writer(readerInsertedWriter)
+        .reader(updateMetadataReader)
+        .processor(updateMatadataProcessor)
+        .writer(updateMetadataWriter)
         .build();
   }
 
@@ -109,7 +89,7 @@ public class AddComicsConfiguration {
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
     this.jobLauncher.run(
-        addComicsToLibraryJob(),
+        updateMetadataJob(),
         new JobParametersBuilder()
             .addLong(KEY_STARTED, System.currentTimeMillis())
             .toJobParameters());

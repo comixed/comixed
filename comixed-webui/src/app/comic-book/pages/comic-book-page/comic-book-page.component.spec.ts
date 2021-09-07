@@ -68,7 +68,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateComicReadStatus } from '@app/last-read/actions/update-read-status.actions';
 import { Confirmation } from '@app/core/models/confirmation';
-import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 
 describe('ComicBookPageComponent', () => {
@@ -260,13 +260,13 @@ describe('ComicBookPageComponent', () => {
     });
   });
 
-  describe('updating the comic info', () => {
+  describe('updating the comic metadata', () => {
     beforeEach(() => {
       component.comic = COMIC;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onUpdateComicInfo();
+      component.onUpdateMetadata();
     });
 
     it('confirms with the user', () => {
@@ -275,7 +275,7 @@ describe('ComicBookPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateComicInfo({ comic: COMIC })
+        updateMetadata({ comics: [COMIC] })
       );
     });
   });

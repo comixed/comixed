@@ -97,18 +97,11 @@
       "match-2": "Exact match.",
       "save-changes": "Saves changes to this comic.",
       "scrape-comic": "Scrape this comic.",
-      "undo-changes": "Undo changes to this comic.",
-      "update-comic-info": "Update the metadata in this comic file."
+      "undo-changes": "Undo changes to this comic."
     },
     "undo-changes": {
       "message": "Are you sure you want to undo changes to this comic?",
       "title": "Undo Changes"
-    },
-    "update-comic-info": {
-      "confirmation-message": "Update the metadata in this comic book?",
-      "confirmation-title": "Update Comic Metadata",
-      "effect-failure": "Failed to update ComicInfo.xml.",
-      "effect-success": "Successfully updated ComicInfo.xml"
     }
   },
   "comic-format": {

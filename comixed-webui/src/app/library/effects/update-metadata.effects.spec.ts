@@ -20,28 +20,27 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
-import { UpdateComicInfoEffects } from './update-comic-info.effects';
-import { ComicService } from '@app/comic-book/services/comic.service';
+import { UpdateMetadataEffects } from './update-metadata.effects';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
 import {
-  comicInfoUpdated,
-  updateComicInfo,
-  updateComicInfoFailed
-} from '@app/comic-book/actions/update-comic-info.actions';
+  metadataUpdating,
+  updateMetadata,
+  updateMetadataFailed
+} from '@app/library/actions/update-metadata.actions.ts';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { comicUpdated } from '@app/comic-book/actions/comic.actions';
+import { LibraryService } from '@app/library/services/library.service';
 
-describe('UpdateComicInfoEffects', () => {
-  const COMIC = COMIC_3;
+describe('UpdateMetadataEffects', () => {
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
 
   let actions$: Observable<any>;
-  let effects: UpdateComicInfoEffects;
-  let comicService: jasmine.SpyObj<ComicService>;
+  let effects: UpdateMetadataEffects;
+  let libraryService: jasmine.SpyObj<LibraryService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -52,20 +51,22 @@ describe('UpdateComicInfoEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        UpdateComicInfoEffects,
+        UpdateMetadataEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicService,
+          provide: LibraryService,
           useValue: {
-            updateComicInfo: jasmine.createSpy('ComicService.updateComicInfo()')
+            updateMetadata: jasmine.createSpy('LibraryService.updateMetadata()')
           }
         },
         AlertService
       ]
     });
 
-    effects = TestBed.inject(UpdateComicInfoEffects);
-    comicService = TestBed.inject(ComicService) as jasmine.SpyObj<ComicService>;
+    effects = TestBed.inject(UpdateMetadataEffects);
+    libraryService = TestBed.inject(
+      LibraryService
+    ) as jasmine.SpyObj<LibraryService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
@@ -77,41 +78,46 @@ describe('UpdateComicInfoEffects', () => {
 
   describe('updating the comic info for a single book', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC;
-      const action = updateComicInfo({ comic: COMIC });
-      const outcome1 = comicInfoUpdated();
-      const outcome2 = comicUpdated({ comic: COMIC });
+      const serviceResponse = COMICS;
+      const action = updateMetadata({ comics: COMICS });
+      const outcome = metadataUpdating();
 
       actions$ = hot('-a', { a: action });
-      comicService.updateComicInfo.and.returnValue(of(serviceResponse));
+      libraryService.updateMetadata
+        .withArgs({ comics: COMICS })
+        .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
-      expect(effects.updateComicInfo$).toBeObservable(expected);
+      const expected = hot('-b', { b: outcome });
+      expect(effects.updateMetadata$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = updateComicInfo({ comic: COMIC });
-      const outcome = updateComicInfoFailed();
+      const action = updateMetadata({ comics: COMICS });
+      const outcome = updateMetadataFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.updateComicInfo.and.returnValue(throwError(serviceResponse));
+      libraryService.updateMetadata
+        .withArgs({ comics: COMICS })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.updateComicInfo$).toBeObservable(expected);
+      expect(effects.updateMetadata$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = updateComicInfo({ comic: COMIC });
-      const outcome = updateComicInfoFailed();
+      const action = updateMetadata({ comics: COMICS });
+      const outcome = updateMetadataFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.updateComicInfo.and.throwError('expected');
+      libraryService.updateMetadata
+        .withArgs({ comics: COMICS })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.updateComicInfo$).toBeObservable(expected);
+      expect(effects.updateMetadata$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

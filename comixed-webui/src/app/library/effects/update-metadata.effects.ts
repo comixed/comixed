@@ -19,47 +19,43 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/logger';
-import { ComicService } from '@app/comic-book/services/comic.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  comicInfoUpdated,
-  updateComicInfo,
-  updateComicInfoFailed
-} from '@app/comic-book/actions/update-comic-info.actions';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { comicUpdated } from '@app/comic-book/actions/comic.actions';
+  metadataUpdating,
+  updateMetadata,
+  updateMetadataFailed
+} from '@app/library/actions/update-metadata.actions.ts';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Comic } from '@app/comic-book/models/comic';
 import { of } from 'rxjs';
+import { LibraryService } from '@app/library/services/library.service';
 
 @Injectable()
-export class UpdateComicInfoEffects {
-  updateComicInfo$ = createEffect(() => {
+export class UpdateMetadataEffects {
+  updateMetadata$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(updateComicInfo),
+      ofType(updateMetadata),
       tap(action => this.logger.debug('Effect: updating comic info:', action)),
       switchMap(action =>
-        this.comicService.updateComicInfo({ comic: action.comic }).pipe(
+        this.libraryService.updateMetadata({ comics: action.comics }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: Comic) =>
             this.alertService.info(
               this.translateService.instant(
-                'comic-book.update-comic-info.effect-success'
+                'library.update-metadata.effect-success'
               )
             )
           ),
-          mergeMap((response: Comic) => [
-            comicInfoUpdated(),
-            comicUpdated({ comic: response })
-          ]),
+          map((response: Comic) => metadataUpdating()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'comic-book.update-comic-info.effect-failure'
+                'library.update-metadata.effect-failure'
               )
             );
-            return of(updateComicInfoFailed());
+            return of(updateMetadataFailed());
           })
         )
       ),
@@ -68,7 +64,7 @@ export class UpdateComicInfoEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(updateComicInfoFailed());
+        return of(updateMetadataFailed());
       })
     );
   });
@@ -76,7 +72,7 @@ export class UpdateComicInfoEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private comicService: ComicService,
+    private libraryService: LibraryService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

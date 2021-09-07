@@ -55,7 +55,7 @@ import { updateComicReadStatus } from '@app/last-read/actions/update-read-status
 import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -199,10 +199,6 @@ export class ComicBookPageComponent
     this.updateShowPages();
   }
 
-  private updateShowPages(): void {
-    this.showPages = this.showPages || this.currentTab === 2;
-  }
-
   onLoadScrapingVolumes(
     apiKey: string,
     series: string,
@@ -225,6 +221,25 @@ export class ComicBookPageComponent
     this.store.dispatch(updateComicReadStatus({ comic: this.comic, status }));
   }
 
+  onUpdateMetadata(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.update-metadata.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.update-metadata.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.debug('Updating comic file:', this.comic);
+        this.store.dispatch(updateMetadata({ comics: [this.comic] }));
+      }
+    });
+  }
+
+  private updateShowPages(): void {
+    this.showPages = this.showPages || this.currentTab === 2;
+  }
+
   private loadTranslations(): void {
     this.loadPageTitle();
   }
@@ -234,20 +249,5 @@ export class ComicBookPageComponent
       this.logger.trace('Updating page title');
       this.titleService.setTitle(this.comicTitlePipe.transform(this.comic));
     }
-  }
-
-  onUpdateComicInfo(): void {
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'comic-book.update-comic-info.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'comic-book.update-comic-info.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.debug('Updating comic file:', this.comic);
-        this.store.dispatch(updateComicInfo({ comic: this.comic }));
-      }
-    });
   }
 }
