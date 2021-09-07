@@ -56,7 +56,7 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-book/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { updateComicInfo } from '@app/comic-book/actions/update-comic-info.actions';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
@@ -273,7 +273,7 @@ describe('ComicCoversComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onUpdateComicInfo(COMIC);
+      component.onUpdateMetadata(COMIC);
     });
 
     it('confirms with the user', () => {
@@ -282,7 +282,7 @@ describe('ComicCoversComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateComicInfo({ comic: COMIC })
+        updateMetadata({ comics: [COMIC] })
       );
     });
   });

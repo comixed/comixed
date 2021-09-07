@@ -49,6 +49,11 @@ import {
   RESCAN_COMICS_FEATURE_KEY,
   RescanComicsState
 } from './reducers/rescan-comics.reducer';
+import {
+  reducer as updateMetadataReducer,
+  UPDATE_METADATA_FEATURE_KEY,
+  UpdateMetadataState
+} from './reducers/update-metadata.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -64,6 +69,7 @@ export interface LibraryModuleState {
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: DuplicatePageListState;
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: DuplicatePageDetailState;
   [RESCAN_COMICS_FEATURE_KEY]: RescanComicsState;
+  [UPDATE_METADATA_FEATURE_KEY]: UpdateMetadataState;
 }
 
 export type ModuleState = LibraryModuleState;
@@ -75,5 +81,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: comicsWithDuplicatePagesReducer,
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer,
-  [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer
+  [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer,
+  [UPDATE_METADATA_FEATURE_KEY]: updateMetadataReducer
 };

@@ -16,28 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '../../comic-book/models/comic';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+export const updateMetadata = createAction(
+  '[Update Metadata] Start updating metadata in comics',
+  props<{ comics: Comic[] }>()
+);
 
-/**
- * <code>SetReadStateRequest</code> is the request body for setting the read state for a set of
- * comics.
- *
- * @author Darryl L. Pierce
- */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetReadStateRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
+export const metadataUpdating = createAction(
+  '[Update Metadata] Updating metadata in comics was started'
+);
 
-  @JsonProperty("read")
-  @Getter
-  private Boolean read;
-}
+export const updateMetadataFailed = createAction(
+  '[Update Metadata] Failed to start updating metadata in comics'
+);

@@ -86,6 +86,11 @@ import {
   RESCAN_COMICS_FEATURE_KEY
 } from '@app/library/reducers/rescan-comics.reducer';
 import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
+import {
+  UPDATE_METADATA_FEATURE_KEY,
+  reducer as updateMetadataReducer
+} from '@app/library/reducers/update-metadata.reducer';
+import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effects';
 
 @NgModule({
   declarations: [
@@ -123,12 +128,14 @@ import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects'
       duplicatePageDetailReducer
     ),
     StoreModule.forFeature(RESCAN_COMICS_FEATURE_KEY, rescanComicsReducer),
+    StoreModule.forFeature(UPDATE_METADATA_FEATURE_KEY, updateMetadataReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
-      RescanComicsEffects
+      RescanComicsEffects,
+      UpdateMetadataEffects
     ]),
     MatInputModule,
     MatSelectModule,

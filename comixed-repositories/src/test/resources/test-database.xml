@@ -68,7 +68,8 @@
           imprint="Marvel Digital"
           sortname="My First Comic"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1001"
           Filename="C:/users/mcpierce/Documents/comics/example2.cbz"
           ComicState="STABLE"
@@ -85,7 +86,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1002"
           Filename="C:/users/mcpierce/Documents/comics/example3.cbz"
           ComicState="STABLE"
@@ -102,7 +104,8 @@
           ScanTypeId="1"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1003"
           Filename="C:/users/mcpierce/Documents/comics/example4.cbz"
           ComicState="STABLE"
@@ -119,7 +122,8 @@
           ScanTypeId="1"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1004"
           Filename="C:/users/mcpierce/Documents/comics/example5.cbz"
           ComicState="STABLE"
@@ -136,7 +140,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1005"
           Filename="C:/users/mcpierce/Documents/comics/example6.cbz"
           ComicState="STABLE"
@@ -153,7 +158,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1006"
           Filename="C:/users/mcpierce/Documents/comics/example7.cbz"
           ComicState="STABLE"
@@ -170,7 +176,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1010"
           Filename="C:/users/mcpierce/Documents/comics/deleted-example1.cbz"
           ComicState="DELETED"
@@ -188,7 +195,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1020"
           Filename="C:/users/mcpierce/Documents/comics/duplicate-1.cbz"
           ComicState="STABLE"
@@ -206,7 +214,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="1021"
           Filename="C:/users/mcpierce/Documents/comics/duplicate-2.cbz"
           ComicState="STABLE"
@@ -224,7 +233,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Comics Id="2000"
           Filename="C:/users/mcpierce/Documents/comics/unread-1.cbz"
           ComicState="STABLE"
@@ -242,7 +252,8 @@
           ScanTypeId="2"
           FormatId="1"
           FileContentsLoaded="true"
-          BlockedPagesMarked="true"/>
+          BlockedPagesMarked="true"
+          UpdateMetadata="true"/>
   <Tasks Id="1000"
          TaskType="ADD_COMIC"
          CreatedOn="2020-02-19 08:24:00"/>

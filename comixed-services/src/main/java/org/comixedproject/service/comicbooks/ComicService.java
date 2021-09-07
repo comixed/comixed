@@ -28,9 +28,6 @@ import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.ComicDataAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
-import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
@@ -59,7 +56,6 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private PublishComicUpdateAction comicUpdatePublishAction;
-  @Autowired private ComicFileHandler comicFileHandler;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -296,45 +292,6 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   }
 
   /**
-   * Updates the metadata in the comic file.
-   *
-   * @param id the comic record id
-   * @return the updated comic
-   * @throws ComicException if the id is invalid or an archive error occurs
-   */
-  public Comic updateComicInfo(final long id) throws ComicException {
-    log.trace("Loading comic: id={}", id);
-    var comic = this.doGetComic(id);
-    log.trace("Retrieving archive adaptor");
-    final var archiveAdaptor = this.doGetArchiveAdaptor(comic);
-    try {
-      log.trace("Saving comic");
-      comic = archiveAdaptor.updateComic(comic);
-    } catch (ArchiveAdaptorException error) {
-      throw new ComicException("Failed to update comic file metadata", error);
-    }
-    log.trace("Firing comic state event: {}", ComicEvent.comicInfoUpdated);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.comicInfoUpdated);
-    log.trace("Loading updated comic");
-    final var result = this.doGetComic(id);
-    try {
-      log.trace("Publishing updated comic");
-      this.comicUpdatePublishAction.publish(comic);
-    } catch (PublishingException error) {
-      log.error("Failed to publish updated comic", error);
-    }
-    log.trace("Returning updated comic");
-    return result;
-  }
-
-  private ArchiveAdaptor doGetArchiveAdaptor(final Comic comic) throws ComicException {
-    final var result = comicFileHandler.getArchiveAdaptorFor(comic.getArchiveType());
-    if (result != null) return result;
-    throw new ComicException(
-        "No archive adaptor found for " + comic.getArchiveType().getMimeType());
-  }
-
-  /**
    * Retrieves inserted comics that have not been processed.
    *
    * @return the comics
@@ -412,5 +369,20 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public int getCountForState(final ComicState state) {
     log.trace("Getting record count for state: {}", state);
     return this.comicRepository.findForState(state).size();
+  }
+
+  /**
+   * Returns comics that are waiting to have their metadata updated.
+   *
+   * @return the list of comics
+   */
+  public List<Comic> findComicsWithMetadataToUpdate() {
+    log.trace("Getting comics that are ready to have their metadata updated");
+    return this.comicRepository.findComicsWithMetadataToUpdate();
+  }
+
+  public List<Comic> findAllMarkedForDeletion() {
+    log.trace("Finding all comics marked for deletion");
+    return this.comicRepository.findAllMarkedForDeletion();
   }
 }

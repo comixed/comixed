@@ -287,6 +287,8 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
 
   private void writeCreditEntry(final XMLStreamWriter writer, final String role, final String name)
       throws XMLStreamException {
-    this.writeEntry(writer, CREDIT_TO_ROLE.get(role), name, false);
+    final String roleValue = CREDIT_TO_ROLE.get(role);
+    if (roleValue == null) return;
+    this.writeEntry(writer, roleValue, name, false);
   }
 }

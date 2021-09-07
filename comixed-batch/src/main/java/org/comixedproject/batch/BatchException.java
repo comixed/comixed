@@ -16,18 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-book/models/comic';
+package org.comixedproject.batch;
 
-export const updateComicInfo = createAction(
-  '[Update Comic Info] Update ComicInfo.xml in a single comic',
-  props<{ comic: Comic }>()
-);
-
-export const comicInfoUpdated = createAction(
-  '[Update Comic Info] ComicInfo.xml in a single comic was updated'
-);
-
-export const updateComicInfoFailed = createAction(
-  '[Update Comic Info] Failed to update ComicInfo.xml in a single comic'
-);
+/**
+ * <code>BatchException</code> is a generic exception type thrown during batch processing errors.
+ *
+ * @author Darryl L. Pierce
+ */
+public class BatchException extends Exception {
+  public BatchException(final String message) {
+    super(message);
+  }
+}

@@ -16,28 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+package org.comixedproject.batch.comicbooks.readers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.comicbooks.ComicService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>SetReadStateRequest</code> is the request body for setting the read state for a set of
- * comics.
+ * <code>UpdateMetadataReader</code> loads comics that are ready to have their metadat updated.
  *
  * @author Darryl L. Pierce
  */
-@NoArgsConstructor
-@AllArgsConstructor
-public class SetReadStateRequest {
-  @JsonProperty("ids")
-  @Getter
-  private List<Long> ids;
+@Component
+@Log4j2
+public class UpdateMetadataReader extends AbstractComicReader {
+  @Autowired private ComicService comicService;
 
-  @JsonProperty("read")
-  @Getter
-  private Boolean read;
+  @Override
+  protected List<Comic> doLoadComics() {
+    log.trace("Loading comics to have their metadata updated");
+    return this.comicService.findComicsWithMetadataToUpdate();
+  }
 }

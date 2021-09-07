@@ -97,18 +97,11 @@
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
       "show-next-comic-page": "Aller à la page suivante...",
       "show-previous-comic-page": "Aller à la page précédente...",
-      "undo-changes": "Annulez les modifications de cette Bande Dessinée",
-      "update-comic-info": "Mettre à jour les métadonnées dans ce fichier de bande dessinée."
+      "undo-changes": "Annulez les modifications de cette Bande Dessinée"
     },
     "undo-changes": {
       "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",
       "title": "Annuler les changements"
-    },
-    "update-comic-info": {
-      "confirmation-message": "Mettre à jour les métadonnées de cette bande dessinée ?",
-      "confirmation-title": "Mettre à jour les métadonnées de la bande dessinée.",
-      "effect-failure": "Échec de la mise à jour du fichier ComicInfo.xml.",
-      "effect-success": "Succès de la mise à jour du fichier ComicInfo.xml."
     }
   },
   "comic-format": {

@@ -30,11 +30,12 @@ public enum ComicEvent {
   blockedPagesMarked, // blocked pages have been marked
   fileDetailsCreatedAction, // the file details have been created
   contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic
+  rescanComic, // rescan a comic,
+  updateMetadata, // prepare to update the metadata within the physical comic file
+  metadataUpdated, // the metadata within the physical comic file has been updated
   scraped,
   detailsUpdated,
   metadataCleared,
-  comicInfoUpdated,
   archiveRecreated,
   comicMoved,
   markedForRemoval,

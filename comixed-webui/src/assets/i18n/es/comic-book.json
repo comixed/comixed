@@ -97,18 +97,11 @@
       "scrape-comic": "Raspa este cómic.",
       "show-next-comic-page": "Ir a la página siguiente...",
       "show-previous-comic-page": "Ir a la página anterior...",
-      "undo-changes": "Deshacer cambios en este cómic.",
-      "update-comic-info": "Actualizar los metadatos de este archivo de cómic."
+      "undo-changes": "Deshacer cambios en este cómic."
     },
     "undo-changes": {
       "message": "¿Estás seguro de que quieres deshacer los cambios en este cómic?",
       "title": "Deshacer cambios"
-    },
-    "update-comic-info": {
-      "confirmation-message": "¿Actualizar los metadatos en este cómic?",
-      "confirmation-title": "Actualizar metadatos de cómics",
-      "effect-failure": "No se pudo actualizar ComicInfo.xml.",
-      "effect-success": "Archivo actualizado correctamente ComicInfo.xml"
     }
   },
   "comic-format": {

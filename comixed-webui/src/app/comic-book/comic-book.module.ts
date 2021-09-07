@@ -76,11 +76,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
-import {
-  reducer as updateComicInfoReducer,
-  UPDATE_COMIC_INFO_FEATURE_KEY
-} from '@app/comic-book/reducers/update-comic-info.reducer';
-import { UpdateComicInfoEffects } from '@app/comic-book/effects/update-comic-info.effects';
 import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -119,10 +114,6 @@ import {
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
     StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
     StoreModule.forFeature(
-      UPDATE_COMIC_INFO_FEATURE_KEY,
-      updateComicInfoReducer
-    ),
-    StoreModule.forFeature(
       MARK_COMICS_DELETED_FEATURE_KEY,
       markComicsDeletedReducer
     ),
@@ -132,7 +123,6 @@ import {
       ScrapingEffects,
       ComicListEffects,
       ComicEffects,
-      UpdateComicInfoEffects,
       MarkComicsDeletedEffects
     ]),
     TranslateModule.forRoot(),

@@ -40,14 +40,12 @@ import org.comixedproject.task.MarkComicsForRemovalTask;
 import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.utils.FileTypeIdentifier;
-import org.comixedproject.views.View;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -262,21 +260,5 @@ public class ComicController {
     log.info("Restoring comic: id={}", id);
 
     return this.comicService.restoreComic(id);
-  }
-
-  /**
-   * Updates the metadata in the comic archive.
-   *
-   * @param id the comic id
-   * @return the updated comic
-   * @throws ComicException if an error occurs
-   */
-  @PostMapping(value = "/api/comics/{id}/comicinfo", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.ComicDetailsView.class)
-  @AuditableEndpoint
-  @PreAuthorize("hasRole('ADMIN')")
-  public Comic updateComicInfo(@PathVariable("id") final long id) throws ComicException {
-    log.info("Updating metadata in comic: id={}", id);
-    return this.comicService.updateComicInfo(id);
   }
 }

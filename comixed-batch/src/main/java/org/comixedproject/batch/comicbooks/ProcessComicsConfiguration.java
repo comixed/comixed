@@ -59,7 +59,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 @Log4j2
 public class ProcessComicsConfiguration {
-  private static final String KEY_STARTED = "job.started";
+  private static final String KEY_STARTED = "job.process-comics.started";
 
   @Autowired public JobBuilderFactory jobBuilderFactory;
   @Autowired public StepBuilderFactory stepBuilderFactory;

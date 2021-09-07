@@ -109,6 +109,12 @@
       "rescan-comics": "Rescan selected comics.",
       "scrape-comics": "Empieza a raspar cómics",
       "select-all": "Seleccionar todos los cómics."
+    },
+    "update-metadata": {
+      "confirmation-message": "Are you sure you want to update the metadata on {count, plural, =1{one comic} other{# comics}}?",
+      "confirmation-title": "Update Metadata",
+      "effect-failure": "Failed to update metadata.",
+      "effect-success": "Started updating metadata."
     }
   },
   "scraping": {

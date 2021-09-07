@@ -45,11 +45,6 @@ import {
   reducer as comicReducer
 } from './reducers/comic.reducer';
 import {
-  reducer as updateComicInfoReducer,
-  UPDATE_COMIC_INFO_FEATURE_KEY,
-  UpdateComicInfoState
-} from './reducers/update-comic-info.reducer';
-import {
   MARK_COMICS_DELETED_FEATURE_KEY,
   MarkComicsDeletedState,
   reducer as markComicsDeletedReducer
@@ -68,7 +63,6 @@ export interface ComicModuleState {
   [SCRAPING_FEATURE_KEY]: ScrapingState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
   [COMIC_FEATURE_KEY]: ComicState;
-  [UPDATE_COMIC_INFO_FEATURE_KEY]: UpdateComicInfoState;
   [MARK_COMICS_DELETED_FEATURE_KEY]: MarkComicsDeletedState;
 }
 
@@ -81,6 +75,5 @@ export const reducers: ActionReducerMap<ComicModuleState> = {
   [SCRAPING_FEATURE_KEY]: scrapingReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,
   [COMIC_FEATURE_KEY]: comicReducer,
-  [UPDATE_COMIC_INFO_FEATURE_KEY]: updateComicInfoReducer,
   [MARK_COMICS_DELETED_FEATURE_KEY]: markComicsDeletedReducer
 };

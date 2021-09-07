@@ -50,6 +50,7 @@ export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/dup
 
 export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolidate`;
 export const RESCAN_COMICS_URL = `${API_ROOT_URL}/library/rescan`;
+export const UPDATE_METADATA_URL = `${API_ROOT_URL}/library/metadata`;
 
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =

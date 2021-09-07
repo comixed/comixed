@@ -16,11 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import {
-  UPDATE_COMIC_INFO_FEATURE_KEY,
-  UpdateComicInfoState
-} from '../reducers/update-comic-info.reducer';
+  metadataUpdating,
+  updateMetadata,
+  updateMetadataFailed
+} from '@app/library/actions/update-metadata.actions';
 
-export const selectUpdateComicInfoState =
-  createFeatureSelector<UpdateComicInfoState>(UPDATE_COMIC_INFO_FEATURE_KEY);
+export const UPDATE_METADATA_FEATURE_KEY = 'update_metadata_state';
+
+export interface UpdateMetadataState {
+  updating: boolean;
+}
+
+export const initialState: UpdateMetadataState = {
+  updating: false
+};
+
+export const reducer = createReducer(
+  initialState,
+
+  on(updateMetadata, state => ({ ...state, updating: true })),
+  on(metadataUpdating, state => ({ ...state, updating: false })),
+  on(updateMetadataFailed, state => ({ ...state, updating: false }))
+);

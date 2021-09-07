@@ -29,10 +29,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
-import org.comixedproject.model.net.library.LoadLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryResponse;
-import org.comixedproject.model.net.library.MoveComicsRequest;
-import org.comixedproject.model.net.library.RescanComicsRequest;
+import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
@@ -225,5 +222,12 @@ public class LibraryControllerTest {
     controller.rescanComics(new RescanComicsRequest(idList));
 
     Mockito.verify(comicService, Mockito.times(1)).rescanComics(idList);
+  }
+
+  @Test
+  public void testUpdateMetadata() {
+    controller.updateMetadata(new UpdateMetadataRequest(idList));
+
+    Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(idList);
   }
 }
