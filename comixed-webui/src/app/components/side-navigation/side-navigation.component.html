@@ -1,6 +1,6 @@
 <div fxLayout="column">
   <mat-nav-list>
-    <h3 matSubheader>
+    <h3 matSubheader *ngIf="!!user">
       <button
         mat-icon-button
         color="primary"
@@ -11,7 +11,7 @@
       </button>
       {{ "navigation.heading.comics" | translate }}
     </h3>
-    <mat-nav-list *ngIf="!comicsCollapsed">
+    <mat-nav-list *ngIf="!!user && !comicsCollapsed">
       <a
         *ngIf="!!user"
         mat-list-item
@@ -150,7 +150,7 @@
       </button>
       {{ "navigation.heading.reading-lists" | translate }}
     </h3>
-    <mat-nav-list *ngIf="!readingListsCollapsed">
+    <mat-nav-list *ngIf="!!user && !readingListsCollapsed">
       <a mat-list-item routerLink="/lists/reading" routerLinkActive="active">
         {{ "navigation.option.reading-lists" | translate }}
       </a>
