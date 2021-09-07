@@ -399,4 +399,15 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
           }
         });
   }
+
+  /**
+   * Returns the number of records with the specified state.
+   *
+   * @param state the target state
+   * @return the number of records
+   */
+  public int getCountForState(final ComicState state) {
+    log.trace("Getting record count for state: {}", state);
+    return this.comicRepository.findForState(state).size();
+  }
 }
