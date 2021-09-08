@@ -17,22 +17,32 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpRequest
+} from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import {
   HTTP_AUTHORIZATION_HEADER,
   HTTP_REQUESTED_WITH_HEADER,
   HTTP_XML_REQUEST
 } from '@app/app.constants';
-import { retry, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { TokenService } from '@app/core/services/token.service';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { logoutUser } from '@app/user/actions/user.actions';
 
 @Injectable()
 export class HttpInterceptor implements HttpInterceptor {
   constructor(
     private logger: LoggerService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private store: Store<any>,
+    private router: Router
   ) {}
 
   intercept(
@@ -55,9 +65,20 @@ export class HttpInterceptor implements HttpInterceptor {
       });
     }
     return next.handle(requestClone).pipe(
-      retry(3),
-      tap(response => {
-        this.logger.trace('Response received:', response);
+      tap(response => this.logger.debug('Response received:', response)),
+      catchError(error => {
+        if (error instanceof HttpErrorResponse) {
+          this.logger.error('Error response received', error);
+          if (error.status !== 401) {
+            return;
+          }
+          this.logger.info('Ensuring user is logged out');
+          this.store.dispatch(logoutUser());
+          this.logger.info('Redirecting to login page');
+          this.router.navigateByUrl('/login');
+          return;
+        }
+        return of(error);
       })
     );
   }
