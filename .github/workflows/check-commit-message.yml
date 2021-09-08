@@ -1,0 +1,37 @@
+name: 'Commit Message Check'
+on:
+  push:
+    branches:
+      - pull-request-commit-message-check
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+jobs:
+  check-commit-message:
+    name: Check Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Commit Type
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '.+ \[\#[\d]+\]$'
+          flags: 'gm'
+          error: 'The first line must include an issue id.'
+      - name: Check Line Length
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '^.{74}'
+          error: 'The maximum line length of 74 characters is exceeded.'
+          excludeDescription: 'true'
+          excludeTitle: 'true'
+          checkAllCommitMessages: 'true'
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check for Resolves / Fixes
+        uses: gsactions/commit-message-checker@v1
+        with:
+          pattern: '^(Added|Changed|Deprecated|Removed|Fixed|Security)'
+          error: 'The first line must start with "Added", "Changed", "Deprecated", "Removed", "Fixed" or "Security".'
