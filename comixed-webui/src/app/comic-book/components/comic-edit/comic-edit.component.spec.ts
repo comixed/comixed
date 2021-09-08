@@ -21,7 +21,15 @@ import { ComicEditComponent } from './comic-edit.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { COMIC_2 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_2,
+  FORMAT_1,
+  FORMAT_3,
+  FORMAT_5,
+  SCAN_TYPE_1,
+  SCAN_TYPE_3,
+  SCAN_TYPE_5
+} from '@app/comic-book/comic-book.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -39,6 +47,14 @@ import {
   MAXIMUM_RECORDS_PREFERENCE
 } from '@app/library/library.constants';
 import { updateComic } from '@app/comic-book/actions/comic.actions';
+import {
+  initialState as initialScanTypeState,
+  SCAN_TYPE_FEATURE_KEY
+} from '@app/comic-book/reducers/scan-type.reducer';
+import {
+  COMIC_FORMAT_FEATURE_KEY,
+  initialState as initialComicFormatState
+} from '@app/comic-book/reducers/comic-format.reducer';
 
 describe('ComicEditComponent', () => {
   const COMIC = COMIC_2;
@@ -46,8 +62,16 @@ describe('ComicEditComponent', () => {
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
   const ISSUE_NUMBER = '27';
+  const SCAN_TYPES = [SCAN_TYPE_1, SCAN_TYPE_3, SCAN_TYPE_5];
+  const COMIC_FORMATS = [FORMAT_1, FORMAT_3, FORMAT_5];
 
-  const initialState = {};
+  const initialState = {
+    [SCAN_TYPE_FEATURE_KEY]: { ...initialScanTypeState, scanTypes: SCAN_TYPES },
+    [COMIC_FORMAT_FEATURE_KEY]: {
+      ...initialComicFormatState,
+      formats: COMIC_FORMATS
+    }
+  };
 
   let component: ComicEditComponent;
   let fixture: ComponentFixture<ComicEditComponent>;
@@ -71,7 +95,7 @@ describe('ComicEditComponent', () => {
         MatSelectModule,
         MatTooltipModule
       ],
-      providers: [provideMockStore({}), ConfirmationService]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicEditComponent);

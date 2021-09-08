@@ -20,7 +20,7 @@ package org.comixedproject.task.encoders;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.task.MarkComicForRemovalTask;

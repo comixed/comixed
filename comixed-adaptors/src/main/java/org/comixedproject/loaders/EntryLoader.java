@@ -18,7 +18,7 @@
 
 package org.comixedproject.loaders;
 
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 
 /**
  * <code>EntryLoader</code> defines a type that processes entry content and sets it on a given

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.scraping.ScrapingRule;
 import org.springframework.stereotype.Component;
 

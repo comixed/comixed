@@ -24,7 +24,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Random;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.ConvertComicTask;

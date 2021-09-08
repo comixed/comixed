@@ -18,8 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.writers;
 
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 

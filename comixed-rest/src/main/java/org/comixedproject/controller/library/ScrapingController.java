@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.library.LoadScrapingIssueRequest;
 import org.comixedproject.model.net.library.LoadScrapingVolumesRequest;
 import org.comixedproject.model.net.library.ScrapeComicRequest;

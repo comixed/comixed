@@ -22,10 +22,10 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
-import org.comixedproject.service.comic.ComicException;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.task.TaskService;
 import org.comixedproject.task.encoders.UnmarkComicForRemovalTaskEncoder;
 import org.junit.Test;

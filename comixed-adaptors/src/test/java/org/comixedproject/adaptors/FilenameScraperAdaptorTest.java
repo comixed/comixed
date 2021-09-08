@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.MessageFormat;
 import java.util.Date;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.scraping.ScrapingRule;
 import org.junit.Before;
 import org.junit.Test;

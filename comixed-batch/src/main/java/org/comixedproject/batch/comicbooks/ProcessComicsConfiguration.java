@@ -31,7 +31,7 @@ import org.comixedproject.batch.comicbooks.writers.ContentsProcessedWriter;
 import org.comixedproject.batch.comicbooks.writers.LoadFileContentsWriter;
 import org.comixedproject.batch.comicbooks.writers.LoadFileDetailsWriter;
 import org.comixedproject.batch.comicbooks.writers.MarkBlockedPagesWriter;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;

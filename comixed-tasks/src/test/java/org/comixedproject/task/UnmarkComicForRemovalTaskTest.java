@@ -20,10 +20,10 @@ package org.comixedproject.task;
 
 import static junit.framework.TestCase.assertNotNull;
 
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.service.comic.ComicException;
-import org.comixedproject.state.comic.ComicEvent;
-import org.comixedproject.state.comic.ComicStateHandler;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

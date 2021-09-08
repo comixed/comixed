@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.comicbooks.PageService;
 import org.comixedproject.service.library.DuplicatePageException;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.comixedproject.views.View;
