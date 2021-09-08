@@ -47,6 +47,7 @@
       "sort-name": "Nombre de ordenación",
       "stories": "Arcos argumentales en esta edición ({count})",
       "teams": "Equipos en esta edición ({count})",
+      "title": "Title",
       "volume": "Volumen"
     },
     "load-comic": {

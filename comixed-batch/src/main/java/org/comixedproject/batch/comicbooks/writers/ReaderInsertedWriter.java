@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.writers;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comic.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**

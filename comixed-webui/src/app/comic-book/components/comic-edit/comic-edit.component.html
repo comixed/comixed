@@ -61,7 +61,7 @@
     <mat-icon>cloud_circle</mat-icon>
   </button>
 </mat-toolbar>
-<form [formGroup]="comicForm">
+<form *ngIf="!!comic" [formGroup]="comicForm">
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>{{ "comic-book.label.api-key" | translate }}</mat-label>
     <button
@@ -158,5 +158,45 @@
     <mat-hint>
       {{ "comic-book.hint.useful-for-scraping" | translate }}
     </mat-hint>
+  </mat-form-field>
+  <mat-form-field class="cx-width-33" appearance="fill">
+    <mat-label>{{ "comic-book.label.scan-type" | translate }}</mat-label>
+    <mat-select id="scan-type-select" formControlName="scanType">
+      <mat-option *ngFor="let option of scanTypeOptions" [value]="option">
+        {{ option.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="cx-width-33" appearance="fill">
+    <mat-label>{{ "comic-book.label.comic-format" | translate }}</mat-label>
+    <mat-select id="comic-format-select" formControlName="format">
+      <mat-option *ngFor="let option of formatOptions" [value]="option">
+        {{ option.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="cx-width-34" appearance="fill">
+    <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
+    <mat-select id="imprint-select" formControlName="imprint">
+      <mat-option *ngFor="let option of imprintOptions" [value]="option">
+        {{ option.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="cx-width-100" appearance="fill">
+    <mat-label>{{ "comic-book.label.sort-name" | translate }}</mat-label>
+    <input id="sort-name-input" matInput formControlName="sortName" />
+  </mat-form-field>
+  <mat-form-field class="cx-width-100" appearance="fill">
+    <mat-label>{{ "comic-book.label.title" | translate }}</mat-label>
+    <input id="title-input" matInput formControlName="title" />
+  </mat-form-field>
+  <mat-form-field class="cx-width-100" appearance="fill">
+    <mat-label>{{ "comic-book.label.description" | translate }}</mat-label>
+    <textarea
+      id="description-input"
+      matInput
+      formControlName="description"
+    ></textarea>
   </mat-form-field>
 </form>

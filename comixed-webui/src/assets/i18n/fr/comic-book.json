@@ -47,6 +47,7 @@
       "sort-name": "Nom pour le tri",
       "stories": "Arcs naratifs dans ce numéro ({count})",
       "teams": "Équipes dans ce numéro ({count})",
+      "title": "Title",
       "volume": "Volume"
     },
     "load-comic": {

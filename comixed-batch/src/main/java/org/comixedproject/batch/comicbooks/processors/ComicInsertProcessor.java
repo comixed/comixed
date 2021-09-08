@@ -20,9 +20,9 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.handlers.ComicFileHandler;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfile.ComicFileDescriptor;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

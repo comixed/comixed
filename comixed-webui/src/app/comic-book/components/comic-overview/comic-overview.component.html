@@ -183,7 +183,7 @@
   </mat-grid-tile>
   <mat-grid-tile *ngIf="!!comic.scanType" colspan="3" rowspan="1">
     <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
-      {{ comic.scanType }}
+      {{ comic.scanType?.name }}
     </span>
   </mat-grid-tile>
 
@@ -199,7 +199,7 @@
   </mat-grid-tile>
   <mat-grid-tile *ngIf="!!comic.format" colspan="3" rowspan="1">
     <span class="cx-width-100 cx-align-text-left cx-padding-left-5">
-      {{ comic.format }}
+      {{ comic.format?.name }}
     </span>
   </mat-grid-tile>
 

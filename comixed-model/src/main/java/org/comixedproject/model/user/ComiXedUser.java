@@ -28,7 +28,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.views.View;
 
 /**

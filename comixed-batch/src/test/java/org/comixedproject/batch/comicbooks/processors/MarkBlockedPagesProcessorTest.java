@@ -23,8 +23,8 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.Page;
 import org.comixedproject.service.blockedpage.BlockedPageService;
 import org.junit.Before;
 import org.junit.Test;

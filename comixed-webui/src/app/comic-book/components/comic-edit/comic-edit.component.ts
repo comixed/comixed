@@ -16,7 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { Comic } from '@app/comic-book/models/comic';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -31,13 +38,20 @@ import {
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import { updateComic } from '@app/comic-book/actions/comic.actions';
+import { Subscription } from 'rxjs';
+import { selectScanTypes } from '@app/comic-book/selectors/scan-type.selectors';
+import { ScanType } from '@app/comic-book/models/scan-type';
+import { ComicFormat } from '@app/comic-book/models/comic-format';
+import { selectComicFormats } from '@app/comic-book/selectors/comic-format.selectors';
+import { loadScanTypes } from '@app/comic-book/actions/scan-type.actions';
+import { loadComicFormats } from '@app/comic-book/actions/comic-format.actions';
 
 @Component({
   selector: 'cx-comic-edit',
   templateUrl: './comic-edit.component.html',
   styleUrls: ['./comic-edit.component.scss']
 })
-export class ComicEditComponent implements OnInit {
+export class ComicEditComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
   @Input() multimode = false;
@@ -51,6 +65,12 @@ export class ComicEditComponent implements OnInit {
   ];
   comicForm: FormGroup;
   scrapingMode = false;
+  scanTypeSubscription: Subscription;
+  scanTypeOptions: ScanType[] = [];
+  formatSubscription: Subscription;
+  formatOptions: ComicFormat[] = [];
+  imprintSubscription: Subscription;
+  imprintOptions = [];
 
   constructor(
     private logger: LoggerService,
@@ -65,8 +85,20 @@ export class ComicEditComponent implements OnInit {
       series: ['', [Validators.required]],
       volume: [''],
       issueNumber: ['', [Validators.required]],
-      comicVineId: ['', [Validators.pattern('[0-9]+')]]
+      comicVineId: ['', [Validators.pattern('[0-9]+')]],
+      scanType: [''],
+      format: [''],
+      imprint: [''],
+      sortName: [''],
+      title: [''],
+      description: ['']
     });
+    this.scanTypeSubscription = this.store
+      .select(selectScanTypes)
+      .subscribe(scanTypes => (this.scanTypeOptions = scanTypes));
+    this.formatSubscription = this.store
+      .select(selectComicFormats)
+      .subscribe(formats => (this.formatOptions = formats));
   }
 
   private _apiKey = '';
@@ -89,11 +121,18 @@ export class ComicEditComponent implements OnInit {
   @Input() set comic(comic: Comic) {
     this.logger.trace('Loading comic form:', comic);
     this._comic = comic;
-    this.setInput('comicVineId', comic.comicVineId);
-    this.setInput('publisher', comic.publisher);
-    this.setInput('series', comic.series);
-    this.setInput('volume', comic.volume);
-    this.setInput('issueNumber', comic.issueNumber);
+    this.logger.trace('Loading form fields');
+    this.comicForm.controls.comicVineId.setValue(comic.comicVineId);
+    this.comicForm.controls.publisher.setValue(comic.publisher);
+    this.comicForm.controls.series.setValue(comic.series);
+    this.comicForm.controls.volume.setValue(comic.volume);
+    this.comicForm.controls.issueNumber.setValue(comic.issueNumber);
+    this.comicForm.controls.scanType.setValue(comic.scanType);
+    this.comicForm.controls.format.setValue(comic.format);
+    this.comicForm.controls.imprint.setValue(comic.imprint);
+    this.comicForm.controls.sortName.setValue(comic.sortName);
+    this.comicForm.controls.title.setValue(comic.title);
+    this.comicForm.controls.description.setValue(comic.description);
     this.comicForm.updateValueAndValidity();
   }
 
@@ -102,7 +141,17 @@ export class ComicEditComponent implements OnInit {
     return !!apiKey && apiKey.length > 0;
   }
 
-  ngOnInit(): void {}
+  ngOnDestroy(): void {
+    this.scanTypeSubscription.unsubscribe();
+    this.formatSubscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.logger.trace('Fetching scan types');
+    this.store.dispatch(loadScanTypes());
+    this.logger.trace('Fetching format types');
+    this.store.dispatch(loadComicFormats());
+  }
 
   onUndoChanges(): void {
     this.confirmationService.confirm({
@@ -177,11 +226,6 @@ export class ComicEditComponent implements OnInit {
     });
   }
 
-  private setInput(controlName: string, value: any): void {
-    this.logger.trace(`Setting form field: ${controlName}=${value}`);
-    this.comicForm.controls[controlName].setValue(value);
-  }
-
   private encodeForm(): Comic {
     this.logger.trace('Encoding comic format');
     return {
@@ -189,7 +233,13 @@ export class ComicEditComponent implements OnInit {
       publisher: this.comicForm.controls.publisher.value,
       series: this.comicForm.controls.series.value,
       volume: this.comicForm.controls.volume.value,
-      issueNumber: this.comicForm.controls.issueNumber.value
+      issueNumber: this.comicForm.controls.issueNumber.value,
+      scanType: this.comicForm.controls.scanType.value,
+      format: this.comicForm.controls.format.value,
+      imprint: this.comicForm.controls.imprint.value,
+      sortName: this.comicForm.controls.sortName.value,
+      title: this.comicForm.controls.title.value,
+      description: this.comicForm.controls.description.value
     } as Comic;
   }
 }

@@ -21,7 +21,7 @@ package org.comixedproject.scrapers.adaptors;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;
 
 /**

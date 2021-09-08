@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.List;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.library.LoadScrapingIssueRequest;
 import org.comixedproject.model.net.library.LoadScrapingVolumesRequest;
 import org.comixedproject.model.net.library.ScrapeComicRequest;

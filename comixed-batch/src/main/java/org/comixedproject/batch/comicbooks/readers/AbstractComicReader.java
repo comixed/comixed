@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.item.ItemReader;
 
 /**

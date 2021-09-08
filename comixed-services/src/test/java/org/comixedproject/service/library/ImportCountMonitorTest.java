@@ -23,9 +23,9 @@ import static junit.framework.TestCase.assertNotNull;
 
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishImportCountAction;
-import org.comixedproject.model.comic.ComicState;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.state.messaging.ImportCountMessage;
-import org.comixedproject.service.comic.ComicService;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;

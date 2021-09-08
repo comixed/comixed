@@ -29,7 +29,7 @@ import org.comixedproject.model.net.RemoveComicsFromReadingListRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.repositories.lists.ReadingListRepository;
-import org.comixedproject.service.comic.ComicException;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.comixedproject.views.View;

@@ -20,8 +20,8 @@ package org.comixedproject.plugins.interpreters;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.plugins.PluginException;
-import org.comixedproject.service.comic.ComicService;
-import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.PageService;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -23,7 +23,7 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.minidev.json.annotate.JsonIgnore;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.data.annotation.CreatedDate;
 
 /**

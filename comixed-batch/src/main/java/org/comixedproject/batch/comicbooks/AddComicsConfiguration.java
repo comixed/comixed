@@ -25,7 +25,7 @@ import org.comixedproject.batch.comicbooks.readers.ComicFileDescriptorReader;
 import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
 import org.comixedproject.batch.comicbooks.writers.ComicInsertWriter;
 import org.comixedproject.batch.comicbooks.writers.ReaderInsertedWriter;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfile.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
