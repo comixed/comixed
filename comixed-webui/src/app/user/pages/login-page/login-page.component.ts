@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -27,13 +27,14 @@ import { loginUser } from '@app/user/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-login',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent implements OnInit, OnDestroy {
+export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
   loginForm: FormGroup;
   userSubscription: Subscription;
   langChangeSubscription: Subscription;
@@ -64,6 +65,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.trace('Clear busy mode');
+    this.store.dispatch(setBusyState({ enabled: false }));
   }
 
   ngOnInit(): void {
