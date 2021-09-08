@@ -18,8 +18,8 @@
 
 import { API_ROOT_URL } from '../core';
 
-export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/formats`;
-export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/scantypes`;
+export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/types/format`;
+export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/types/scan`;
 export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/comicinfo`;
 export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/deleted`;
 export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/undeleted`;

@@ -31,8 +31,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.comixedproject.loaders.AbstractEntryLoader;
 import org.comixedproject.loaders.EntryLoaderException;
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Credit;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.Credit;
 import org.springframework.stereotype.Component;
 
 /**

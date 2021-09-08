@@ -25,7 +25,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.views.View;
 
 /**

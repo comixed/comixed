@@ -20,7 +20,7 @@ package org.comixedproject.task.encoders;
 
 import static junit.framework.TestCase.*;
 
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.service.task.TaskService;

@@ -26,7 +26,7 @@ import java.util.Map;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixedproject.ComiXedAdaptorsTestContext;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

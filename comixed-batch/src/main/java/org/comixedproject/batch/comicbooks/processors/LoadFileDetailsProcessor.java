@@ -20,8 +20,8 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import java.io.FileInputStream;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.ComicFileDetails;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.comixedproject.utils.Utils;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;

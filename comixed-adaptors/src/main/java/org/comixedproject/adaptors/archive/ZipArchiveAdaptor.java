@@ -34,7 +34,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixedproject.loaders.EntryLoaderException;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;
 
 /**

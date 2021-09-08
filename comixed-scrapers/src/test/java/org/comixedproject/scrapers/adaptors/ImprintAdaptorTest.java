@@ -18,7 +18,7 @@
 
 package org.comixedproject.scrapers.adaptors;
 
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

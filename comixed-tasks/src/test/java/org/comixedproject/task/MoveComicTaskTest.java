@@ -26,7 +26,7 @@ import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.Locale;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -33,7 +33,7 @@ import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction
 import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
-import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.comicbooks.PageService;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

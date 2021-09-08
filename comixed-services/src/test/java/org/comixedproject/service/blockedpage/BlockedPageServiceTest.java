@@ -37,7 +37,7 @@ import org.comixedproject.model.blockedpage.BlockedPage;
 import org.comixedproject.model.library.DuplicatePage;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.repositories.blockedpage.BlockedPageRepository;
-import org.comixedproject.service.comic.PageService;
+import org.comixedproject.service.comicbooks.PageService;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.junit.Before;
 import org.junit.Test;

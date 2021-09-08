@@ -26,7 +26,7 @@
     <sonar.exclusions>
       **/model/**,
       **/test/**,
-      **/state/comic/Comic*,
+      **/state/comicbooks/Comic*,
       **/state/lists/ReadingList*,
       **/batch/comicbooks/*Configuration,
       **/ComiXedApp
@@ -230,7 +230,7 @@
           <excludes>
             <exclude>**/model/**</exclude>
             <exclude>**/*Exception*</exclude>
-            <exclude>**/state/comic/Comic*</exclude>
+            <exclude>**/state/comicbooks/Comic*</exclude>
             <exclude>**/state/lists/ReadingList**</exclude>
             <exclude>**/batch/comicbooks/*Configuration</exclude>
             <exclude>**/ComixedApp</exclude>

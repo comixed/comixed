@@ -49,6 +49,7 @@
       "sort-name": "Sort Name",
       "stories": "Story Arcs In This Issue ({count})",
       "teams": "Teams In This Issue ({count})",
+      "title": "Title",
       "volume": "Volume"
     },
     "load-comic": {

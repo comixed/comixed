@@ -19,7 +19,7 @@
 package org.comixedproject.repositories.lists;
 
 import java.util.List;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.Query;

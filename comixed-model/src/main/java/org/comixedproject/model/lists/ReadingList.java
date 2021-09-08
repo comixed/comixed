@@ -27,7 +27,7 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.ColumnTransformer;

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.model.comic.Comic;
+import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.views.View;
 
 /**

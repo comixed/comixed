@@ -21,8 +21,8 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.*;
 
 import java.io.InputStream;
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.ComicFileDetails;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.comixedproject.utils.Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

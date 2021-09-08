@@ -5,10 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comic.Comic;
-import org.comixedproject.model.comic.Page;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.Page;
 import org.comixedproject.model.library.DuplicatePage;
-import org.comixedproject.repositories.comic.PageRepository;
+import org.comixedproject.repositories.comicbooks.PageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
