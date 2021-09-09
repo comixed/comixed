@@ -37,11 +37,7 @@ import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,14 +58,23 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
-  private static final String KEY_STARTED = "key.update-metadata.started";
+  private static final String KEY_UPDATE_METADATA_STARTED = "key.update-metadata.started";
+  private static final String KEY_RESCAN_COMICS_START = "key.rescan-comics.started";
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
-  @Autowired private JobLauncher jobLauncher;
+
+  @Autowired
+  @Qualifier("batchJobLauncher")
+  private JobLauncher jobLauncher;
+
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
+
+  @Autowired
+  @Qualifier("processComicsJob")
+  private Job processComicsJob;
 
   @Autowired
   @Qualifier("updateMetadataJob")
@@ -193,31 +198,33 @@ public class LibraryController {
    * Initiates the rescan process for a set of comics.
    *
    * @param request the request body
+   * @throws Exception if an error occurs
    */
   @PostMapping(value = "/api/library/rescan", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public void rescanComics(@RequestBody() final RescanComicsRequest request) {
+  public void rescanComics(@RequestBody() final RescanComicsRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.comicService.rescanComics(ids);
+    log.trace("Initiating a rescan batch process");
+    this.jobLauncher.run(
+        processComicsJob,
+        new JobParametersBuilder()
+            .addLong(KEY_RESCAN_COMICS_START, System.currentTimeMillis())
+            .toJobParameters());
   }
 
   /**
    * Starts the metadata update process for a set of comics.
    *
    * @param request the request body
-   * @throws JobInstanceAlreadyCompleteException if an error occurs
-   * @throws JobExecutionAlreadyRunningException if an error occurs
-   * @throws JobParametersInvalidException if an error occurs
-   * @throws JobRestartException if an error occurs
+   * @throws Exception if an error occurs
    */
   @PostMapping(value = "/api/library/metadata", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public void updateMetadata(@RequestBody() final UpdateMetadataRequest request)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+  public void updateMetadata(@RequestBody() final UpdateMetadataRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Updating the metadata for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.libraryService.updateMetadata(ids);
@@ -225,7 +232,7 @@ public class LibraryController {
     this.jobLauncher.run(
         this.updateMetadataJob,
         new JobParametersBuilder()
-            .addLong(KEY_STARTED, System.currentTimeMillis())
+            .addLong(KEY_UPDATE_METADATA_STARTED, System.currentTimeMillis())
             .toJobParameters());
   }
 }

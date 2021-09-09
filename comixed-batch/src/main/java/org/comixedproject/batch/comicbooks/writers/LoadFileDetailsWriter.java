@@ -31,6 +31,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class LoadFileDetailsWriter extends AbstractComicWriter {
   public LoadFileDetailsWriter() {
-    super(ComicEvent.fileDetailsCreatedAction);
+    super(ComicEvent.fileDetailsLoadedAction);
   }
 }

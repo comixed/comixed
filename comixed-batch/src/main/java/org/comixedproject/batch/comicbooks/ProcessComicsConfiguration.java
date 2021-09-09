@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.LoadFileContentsProcessor;
+import org.comixedproject.batch.comicbooks.processors.LoadFileDetailsProcessor;
 import org.comixedproject.batch.comicbooks.processors.MarkBlockedPagesProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.ContentsProcessedReader;
@@ -28,25 +29,19 @@ import org.comixedproject.batch.comicbooks.readers.LoadFileDetailsReader;
 import org.comixedproject.batch.comicbooks.readers.MarkBlockedPagesReader;
 import org.comixedproject.batch.comicbooks.writers.ContentsProcessedWriter;
 import org.comixedproject.batch.comicbooks.writers.LoadFileContentsWriter;
+import org.comixedproject.batch.comicbooks.writers.LoadFileDetailsWriter;
 import org.comixedproject.batch.comicbooks.writers.MarkBlockedPagesWriter;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * <code>ProcessComicsConfiguration</code> defines the batch process for importing comics.
@@ -125,6 +120,7 @@ public class ProcessComicsConfiguration {
    * @return the step
    */
   @Bean
+  @Qualifier("markBlockedPagesStep")
   public Step markBlockedPagesStep(
       final StepBuilderFactory stepBuilderFactory,
       final MarkBlockedPagesReader reader,
@@ -149,11 +145,12 @@ public class ProcessComicsConfiguration {
    * @return the step
    */
   @Bean
+  @Qualifier("loadFileDetailsStep")
   public Step loadFileDetailsStep(
       final StepBuilderFactory stepBuilderFactory,
       final LoadFileDetailsReader reader,
-      final LoadFileContentsProcessor processor,
-      final LoadFileContentsWriter writer) {
+      final LoadFileDetailsProcessor processor,
+      final LoadFileDetailsWriter writer) {
     return stepBuilderFactory
         .get("loadFileDetailsStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
@@ -173,6 +170,7 @@ public class ProcessComicsConfiguration {
    * @return the step
    */
   @Bean
+  @Qualifier("contentsProcessedStep")
   public Step contentsProcessedStep(
       final StepBuilderFactory stepBuilderFactory,
       final ContentsProcessedReader reader,
@@ -185,26 +183,5 @@ public class ProcessComicsConfiguration {
         .processor(processor)
         .writer(writer)
         .build();
-  }
-
-  /**
-   * Runs the comic processing job.
-   *
-   * @param jobLauncher the job launcher
-   * @throws JobInstanceAlreadyCompleteException if an error occurs
-   * @throws JobExecutionAlreadyRunningException if an error occurs
-   * @throws JobParametersInvalidException if an error occurs
-   * @throws JobRestartException if an error occurs
-   */
-  @Scheduled(fixedDelay = 1000)
-  public void performJob(
-      final JobLauncher jobLauncher, @Qualifier("processComicsJob") Job processComicsJob)
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
-    jobLauncher.run(
-        processComicsJob,
-        new JobParametersBuilder()
-            .addLong(KEY_STARTED, System.currentTimeMillis())
-            .toJobParameters());
   }
 }

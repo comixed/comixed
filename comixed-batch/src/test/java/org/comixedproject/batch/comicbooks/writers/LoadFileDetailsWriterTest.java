@@ -45,6 +45,6 @@ public class LoadFileDetailsWriterTest {
     writer.write(comicList);
 
     Mockito.verify(comicStateHandler, Mockito.times(comicList.size()))
-        .fireEvent(comic, ComicEvent.fileDetailsCreatedAction);
+        .fireEvent(comic, ComicEvent.fileDetailsLoadedAction);
   }
 }

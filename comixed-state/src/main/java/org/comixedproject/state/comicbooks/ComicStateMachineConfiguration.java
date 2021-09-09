@@ -108,7 +108,7 @@ public class ComicStateMachineConfiguration
         .withExternal()
         .source(ComicState.UNPROCESSED)
         .target(ComicState.UNPROCESSED)
-        .event(ComicEvent.fileDetailsCreatedAction)
+        .event(ComicEvent.fileDetailsLoadedAction)
         .guard(fileDetailsCreatedGuard)
         // all comic content has been processed
         .and()
