@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.comicfile;
+package org.comixedproject.repositories.comicfiles;
 
-import org.comixedproject.model.comicfile.ComicFileDescriptor;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

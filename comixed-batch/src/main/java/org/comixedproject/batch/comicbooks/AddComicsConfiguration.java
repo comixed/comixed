@@ -26,25 +26,17 @@ import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
 import org.comixedproject.batch.comicbooks.writers.ComicInsertWriter;
 import org.comixedproject.batch.comicbooks.writers.ReaderInsertedWriter;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicfile.ComicFileDescriptor;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * <code>AddComicsConfiguration</code> defines the batch process for adding comics to the library.
@@ -55,63 +47,78 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 @Log4j2
 public class AddComicsConfiguration {
-  private static final String KEY_STARTED = "job.add-comics.started";
-
-  @Autowired public JobBuilderFactory jobBuilderFactory;
-  @Autowired public StepBuilderFactory stepBuilderFactory;
-  @Autowired private JobLauncher jobLauncher;
-
-  @Autowired private ComicFileDescriptorReader comicFileDescriptorReader;
-  @Autowired private ComicInsertProcessor comicInsertProcessor;
-  @Autowired private ComicInsertWriter comicInsertWriter;
-  @Autowired private RecordInsertedReader recordInsertedReader;
-  @Autowired private NoopComicProcessor noopComicProcessor;
-  @Autowired private ReaderInsertedWriter readerInsertedWriter;
-
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;
 
+  /**
+   * Returns the add comics batch job.
+   *
+   * @param jobBuilderFactory the job factory
+   * @param createInsertStep the insert step
+   * @param recordInsertedStep the post-insert step
+   * @return the job
+   */
   @Bean
   @Qualifier("addComicsToLibraryJob")
-  public Job addComicsToLibraryJob() {
-    return this.jobBuilderFactory
+  public Job addComicsToLibraryJob(
+      final JobBuilderFactory jobBuilderFactory,
+      @Qualifier("createInsertStep") final Step createInsertStep,
+      @Qualifier("recordInsertedStep") Step recordInsertedStep) {
+    return jobBuilderFactory
         .get("addComicsToLibraryJob")
         .incrementer(new RunIdIncrementer())
-        .start(createInsertStep())
-        .next(recordInsertedStep())
+        .start(createInsertStep)
+        .next(recordInsertedStep)
         .build();
   }
 
+  /**
+   * Returns the insert step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step createInsertStep() {
-    return this.stepBuilderFactory
+  @Qualifier("createInsertStep")
+  public Step createInsertStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final ComicFileDescriptorReader reader,
+      final ComicInsertProcessor processor,
+      final ComicInsertWriter writer) {
+    return stepBuilderFactory
         .get("createInsertStep")
         .<ComicFileDescriptor, Comic>chunk(this.batchChunkSize)
-        .reader(comicFileDescriptorReader)
-        .processor(comicInsertProcessor)
-        .writer(comicInsertWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 
+  /**
+   * Returns the record inserted step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step recordInsertedStep() {
-    return this.stepBuilderFactory
+  @Qualifier("recordInsertedStep")
+  public Step recordInsertedStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final RecordInsertedReader reader,
+      final NoopComicProcessor processor,
+      final ReaderInsertedWriter writer) {
+    return stepBuilderFactory
         .get("recordInsertedStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(recordInsertedReader)
-        .processor(noopComicProcessor)
-        .writer(readerInsertedWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
-  }
-
-  @Scheduled(fixedDelay = 1000)
-  public void performJob()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
-    this.jobLauncher.run(
-        addComicsToLibraryJob(),
-        new JobParametersBuilder()
-            .addLong(KEY_STARTED, System.currentTimeMillis())
-            .toJobParameters());
   }
 }

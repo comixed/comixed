@@ -1,4 +1,4 @@
-package org.comixedproject.model.comicfile;
+package org.comixedproject.model.comicfiles;
 
 import java.util.Date;
 import java.util.Objects;

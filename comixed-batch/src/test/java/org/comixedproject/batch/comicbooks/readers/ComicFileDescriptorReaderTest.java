@@ -22,8 +22,8 @@ import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicfile.ComicFileDescriptor;
-import org.comixedproject.service.comicfile.ComicFileService;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
