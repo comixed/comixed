@@ -151,7 +151,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM Comic c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id IN (SELECT d.id FROM ComicFileDetails d) ORDER BY c.lastModifiedOn")
+      "SELECT c FROM Comic c JOIN FETCH c.fileDetails fd WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true ORDER BY c.lastModifiedOn")
   List<Comic> findProcessedComics();
 
   /**

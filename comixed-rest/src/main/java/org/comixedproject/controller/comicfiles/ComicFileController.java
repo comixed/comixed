@@ -57,7 +57,10 @@ public class ComicFileController {
   private static final String KEY_ADD_COMICS_STARTED = "key.add-comics.started";
 
   @Autowired private ComicFileService comicFileService;
-  @Autowired private JobLauncher jobLauncher;
+
+  @Autowired
+  @Qualifier("batchJobLauncher")
+  private JobLauncher jobLauncher;
 
   @Autowired
   @Qualifier("addComicsToLibraryJob")

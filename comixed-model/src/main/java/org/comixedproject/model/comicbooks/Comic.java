@@ -402,12 +402,12 @@ public class Comic {
     }
 
     if (replacement) {
-      log.debug("Updating existing file entry: [{}] {}", index, name);
+      log.trace("Updating existing file entry: [{}] {}", index, name);
       final ComicFileEntry existing = fileEntries.get(index);
       existing.setFileSize(size);
       existing.setFileType(type);
     } else {
-      log.debug("Adding new file entry: [{}] {}", index, name);
+      log.trace("Adding new file entry: [{}] {}", index, name);
       final ComicFileEntry fileEntry = new ComicFileEntry();
       fileEntry.setFileName(name);
       fileEntry.setFileSize(size);
@@ -435,7 +435,7 @@ public class Comic {
    * @return the cover, or <code>null</code> if the comic is empty
    */
   public Page getCover() {
-    log.debug("Getting cover for comic: filename=" + this.filename);
+    log.trace("Getting cover for comic: filename=" + this.filename);
     /*
      * if there are no pages or the underlying file is missing then show the
      * missing
@@ -480,9 +480,9 @@ public class Comic {
    * @param issueNumber the issue number
    */
   public void setIssueNumber(String issueNumber) {
-    log.debug("Setting issue number=" + issueNumber);
+    log.trace("Setting issue number=" + issueNumber);
     if ((issueNumber != null) && issueNumber.startsWith("0")) {
-      log.debug("Removing leading 0s from issue number");
+      log.trace("Removing leading 0s from issue number");
       while (issueNumber.startsWith("0") && !issueNumber.equals("0")) {
         issueNumber = issueNumber.substring(1);
       }
@@ -497,7 +497,7 @@ public class Comic {
    * @return the offset
    */
   public Page getPage(int index) {
-    log.debug("Returning offset: index=" + index);
+    log.trace("Returning offset: index=" + index);
     return this.pages.get(index);
   }
 
@@ -569,13 +569,13 @@ public class Comic {
   }
 
   public void removeDeletedPages(final boolean deletePages) {
-    log.debug("Remove deleted pages? {}", deletePages);
+    log.trace("Remove deleted pages? {}", deletePages);
     if (deletePages) {
       Page[] pageArray = this.pages.toArray(new Page[this.pages.size()]);
       for (int index = 0; index < pageArray.length; index++) {
         Page page = pageArray[index];
         if (page.isDeleted() || page.isBlocked()) {
-          log.debug("Removing page: filename={} hash={}", page.getFilename(), page.getHash());
+          log.trace("Removing page: filename={} hash={}", page.getFilename(), page.getHash());
           this.pages.remove(page);
           page.setComic(null);
         }

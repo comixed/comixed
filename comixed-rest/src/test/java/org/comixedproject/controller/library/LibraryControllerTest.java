@@ -46,12 +46,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryControllerTest {
@@ -79,7 +76,14 @@ public class LibraryControllerTest {
   @Mock private Comic lastComic;
   @Mock private JobLauncher jobLauncher;
   @Mock private JobExecution jobExecution;
-  @Mock private Job updateMetadataJob;
+
+  @Mock
+  @Qualifier("updateMetadataJob")
+  private Job updateMetadataJob;
+
+  @Mock
+  @Qualifier("processComicsJob")
+  private Job processComicsJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -229,16 +233,22 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testRescanComics() {
+  public void testRescanComics() throws Exception {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
     controller.rescanComics(new RescanComicsRequest(idList));
 
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+
     Mockito.verify(comicService, Mockito.times(1)).rescanComics(idList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(processComicsJob, jobParameters);
   }
 
   @Test
-  public void testUpdateMetadata()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
+  public void testUpdateMetadata() throws Exception {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 

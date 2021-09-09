@@ -28,7 +28,7 @@ public enum ComicEvent {
   readyForProcessing, // the record is ready for processing
   fileContentsLoaded, // the file entries have been loaded
   blockedPagesMarked, // blocked pages have been marked
-  fileDetailsCreatedAction, // the file details have been created
+  fileDetailsLoadedAction, // the file details have been created
   contentsProcessed, // the contents have been processed
   rescanComic, // rescan a comic,
   updateMetadata, // prepare to update the metadata within the physical comic file
