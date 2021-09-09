@@ -35,7 +35,7 @@ import org.comixedproject.model.net.comicbooks.MarkComicsUndeletedRequest;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.PageCacheService;
-import org.comixedproject.service.comicfile.ComicFileService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.task.MarkComicsForRemovalTask;
 import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;

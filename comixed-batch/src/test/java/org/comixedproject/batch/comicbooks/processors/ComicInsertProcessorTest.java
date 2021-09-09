@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicfile.ComicFileDescriptor;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.junit.Before;
 import org.junit.Test;

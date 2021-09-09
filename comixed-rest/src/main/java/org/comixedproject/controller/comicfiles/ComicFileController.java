@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.comicfile;
+package org.comixedproject.controller.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.io.IOException;
@@ -29,9 +29,17 @@ import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
-import org.comixedproject.service.comicfile.ComicFileService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.views.View;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +54,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/files")
 @Log4j2
 public class ComicFileController {
+  private static final String KEY_ADD_COMICS_STARTED = "key.add-comics.started";
+
   @Autowired private ComicFileService comicFileService;
+  @Autowired private JobLauncher jobLauncher;
+
+  @Autowired
+  @Qualifier("addComicsToLibraryJob")
+  private Job addComicsToLibraryJob;
 
   /**
    * Retrieves all comic files under the specified directory.
@@ -111,9 +126,13 @@ public class ComicFileController {
   }
 
   /**
-   * Begins the process of enqueueing comic files for import
+   * Begins the process of enqueueing comic files for import.
    *
    * @param request the request body
+   * @throws JobInstanceAlreadyCompleteException if an error occurs
+   * @throws JobExecutionAlreadyRunningException if an error occurs
+   * @throws JobParametersInvalidException if an error occurs
+   * @throws JobRestartException if an error occurs
    */
   @PostMapping(
       value = "/import",
@@ -121,17 +140,20 @@ public class ComicFileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public void importComicFiles(@RequestBody() ImportComicFilesRequest request) {
+  public void importComicFiles(@RequestBody() ImportComicFilesRequest request)
+      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
+          JobParametersInvalidException, JobRestartException {
     final List<String> filenames = request.getFilenames();
     final boolean deleteBlockedPages = request.isDeleteBlockedPages();
     final boolean ignoreMetadata = request.isIgnoreMetadata();
 
-    log.info(
-        "Importing {} comic files: delete blocked pages={} ignore metadata={}",
-        filenames.size(),
-        deleteBlockedPages,
-        ignoreMetadata);
-
+    log.info("Importing comic files");
     this.comicFileService.importComicFiles(filenames);
+    log.trace("Launching add comics process");
+    this.jobLauncher.run(
+        addComicsToLibraryJob,
+        new JobParametersBuilder()
+            .addLong(KEY_ADD_COMICS_STARTED, System.currentTimeMillis())
+            .toJobParameters());
   }
 }

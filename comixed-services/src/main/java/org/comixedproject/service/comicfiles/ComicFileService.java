@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.comicfile;
+package org.comixedproject.service.comicfiles;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +28,10 @@ import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicfile.ComicFile;
-import org.comixedproject.model.comicfile.ComicFileDescriptor;
+import org.comixedproject.model.comicfiles.ComicFile;
+import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
-import org.comixedproject.repositories.comicfile.ComicFileDescriptorRepository;
+import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
 import org.comixedproject.utils.ComicFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

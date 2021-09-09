@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.controller.comicfile;
+package org.comixedproject.controller.comicfiles;
 
 import static org.junit.Assert.*;
 
@@ -25,18 +25,20 @@ import java.util.List;
 import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.handlers.ComicFileHandlerException;
-import org.comixedproject.model.comicfile.ComicFile;
+import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
-import org.comixedproject.service.comicfile.ComicFileService;
+import org.comixedproject.service.comicfiles.ComicFileService;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,8 +55,13 @@ public class ComicFileControllerTest {
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
+  @Mock private Job addComicsToLibraryJob;
+  @Mock private JobLauncher jobLauncher;
   @Mock private List<ComicFile> comicFileList;
   @Mock private List<String> filenameList;
+  @Mock private JobExecution jobExecution;
+
+  @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @Test
   public void testGetImportFileCoverServiceThrowsException()
@@ -114,9 +121,17 @@ public class ComicFileControllerTest {
 
   @Test
   public void testImportComicFiles() throws Exception {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
     controller.importComicFiles(
         new ImportComicFilesRequest(filenameList, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
 
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+
     Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(addComicsToLibraryJob, jobParameters);
   }
 }
