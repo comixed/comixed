@@ -16,26 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.loaders;
-
-import org.comixedproject.model.comicbooks.Comic;
+package org.comixedproject.adaptors.handlers;
 
 /**
- * <code>EntryLoader</code> defines a type that processes entry content and sets it on a given
- * {@link Comic}.
+ * <code>ComicFileHandlerException</code> is raised when an error occurs while working with an
+ * underlying digital comic file.
  *
  * @author Darryl L. Pierce
  */
-public interface EntryLoader {
-  /**
-   * Loads content into the specified comic.
-   *
-   * @param comic the comic
-   * @param filename the content's filename
-   * @param content the content
-   * @param ignoreMetadata ignore any metadata if found
-   * @throws EntryLoaderException if an error occurs while loading the content
-   */
-  void loadContent(Comic comic, String filename, byte[] content, boolean ignoreMetadata)
-      throws EntryLoaderException;
+public class ComicFileHandlerException extends Exception {
+  private static final long serialVersionUID = -7821301633974242512L;
+
+  public ComicFileHandlerException(String message) {
+    super(message);
+  }
+
+  public ComicFileHandlerException(String message, Exception cause) {
+    super(message, cause);
+  }
 }

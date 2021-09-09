@@ -27,7 +27,7 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
-import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.loaders;
+package org.comixedproject.adaptors.loaders;
 
 import lombok.extern.log4j.Log4j2;
 

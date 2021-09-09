@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.loaders;
+package org.comixedproject.adaptors.loaders;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

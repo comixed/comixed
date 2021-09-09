@@ -23,8 +23,8 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
 import java.util.*;
-import org.comixedproject.loaders.BaseLoaderTest;
-import org.comixedproject.loaders.EntryLoaderException;
+import org.comixedproject.adaptors.loaders.BaseLoaderTest;
+import org.comixedproject.adaptors.loaders.EntryLoaderException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Credit;
 import org.junit.Before;
