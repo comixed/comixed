@@ -35,8 +35,16 @@ import org.comixedproject.task.ConvertComicsTask;
 import org.comixedproject.task.MoveComicsTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.views.View;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,12 +62,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
+  private static final String KEY_STARTED = "key.update-metadata.started";
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
+  @Autowired private JobLauncher jobLauncher;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
   @Autowired private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
+
+  @Autowired
+  @Qualifier("updateMetadataJob")
+  private Job updateMetadataJob;
 
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
@@ -193,13 +207,25 @@ public class LibraryController {
    * Starts the metadata update process for a set of comics.
    *
    * @param request the request body
+   * @throws JobInstanceAlreadyCompleteException if an error occurs
+   * @throws JobExecutionAlreadyRunningException if an error occurs
+   * @throws JobParametersInvalidException if an error occurs
+   * @throws JobRestartException if an error occurs
    */
   @PostMapping(value = "/api/library/metadata", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @AuditableEndpoint
-  public void updateMetadata(@RequestBody() final UpdateMetadataRequest request) {
+  public void updateMetadata(@RequestBody() final UpdateMetadataRequest request)
+      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
+          JobParametersInvalidException, JobRestartException {
     final List<Long> ids = request.getIds();
     log.info("Updating the metadata for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.libraryService.updateMetadata(ids);
+    log.trace("Launching batch process");
+    this.jobLauncher.run(
+        this.updateMetadataJob,
+        new JobParametersBuilder()
+            .addLong(KEY_STARTED, System.currentTimeMillis())
+            .toJobParameters());
   }
 }

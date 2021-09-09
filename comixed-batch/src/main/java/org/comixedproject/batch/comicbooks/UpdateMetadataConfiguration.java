@@ -24,22 +24,15 @@ import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
 import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * <code>UpdateMetadataConfiguration</code> defines a batch process that updates the metadata within
@@ -51,47 +44,50 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 @Log4j2
 public class UpdateMetadataConfiguration {
-  private static final String KEY_STARTED = "job.update-metadata.started";
-
-  @Autowired public JobBuilderFactory jobBuilderFactory;
-  @Autowired public StepBuilderFactory stepBuilderFactory;
-  @Autowired private JobLauncher jobLauncher;
-
-  @Autowired private UpdateMetadataReader updateMetadataReader;
-  @Autowired private UpdateMetadataProcessor updateMatadataProcessor;
-  @Autowired private UpdateMetadataWriter updateMetadataWriter;
-
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;
 
+  /**
+   * Returns the job bean to update comic metadata.
+   *
+   * @param jobBuilderFactory the job builder factory
+   * @param updateMetadataStep the update metadata step
+   * @return the job
+   */
   @Bean
-  public Job updateMetadataJob() {
-    return this.jobBuilderFactory
+  @Qualifier("updateMetadataJob")
+  public Job updateMetadataJob(
+      final JobBuilderFactory jobBuilderFactory,
+      @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
+    return jobBuilderFactory
         .get("updateMetadataJob")
         .incrementer(new RunIdIncrementer())
-        .start(updateMetadataStep())
+        .start(updateMetadataStep)
         .build();
   }
 
+  /**
+   * The update metadata step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step updateMetadataStep() {
-    return this.stepBuilderFactory
+  @Qualifier("updateMetadataStep")
+  public Step updateMetadataStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final UpdateMetadataReader reader,
+      final UpdateMetadataProcessor processor,
+      final UpdateMetadataWriter writer) {
+    return stepBuilderFactory
         .get("updateMetadataStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(updateMetadataReader)
-        .processor(updateMatadataProcessor)
-        .writer(updateMetadataWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
-  }
-
-  @Scheduled(fixedDelay = 1000)
-  public void performJob()
-      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
-          JobParametersInvalidException, JobRestartException {
-    this.jobLauncher.run(
-        updateMetadataJob(),
-        new JobParametersBuilder()
-            .addLong(KEY_STARTED, System.currentTimeMillis())
-            .toJobParameters());
   }
 }
