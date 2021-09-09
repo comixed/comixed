@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Test;
 import org.junit.runner.RunWith;

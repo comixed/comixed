@@ -19,8 +19,8 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.batch.BatchException;
-import org.comixedproject.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;

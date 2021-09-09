@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
-import org.comixedproject.handlers.ComicFileHandlerException;
+import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;

@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 
-import org.comixedproject.handlers.ComicFileHandler;
+import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.service.comicbooks.ComicService;
