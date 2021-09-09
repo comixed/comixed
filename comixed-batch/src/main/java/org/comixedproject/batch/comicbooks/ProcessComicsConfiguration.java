@@ -20,7 +20,6 @@ package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.LoadFileContentsProcessor;
-import org.comixedproject.batch.comicbooks.processors.LoadFileDetailsProcessor;
 import org.comixedproject.batch.comicbooks.processors.MarkBlockedPagesProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.ContentsProcessedReader;
@@ -29,7 +28,6 @@ import org.comixedproject.batch.comicbooks.readers.LoadFileDetailsReader;
 import org.comixedproject.batch.comicbooks.readers.MarkBlockedPagesReader;
 import org.comixedproject.batch.comicbooks.writers.ContentsProcessedWriter;
 import org.comixedproject.batch.comicbooks.writers.LoadFileContentsWriter;
-import org.comixedproject.batch.comicbooks.writers.LoadFileDetailsWriter;
 import org.comixedproject.batch.comicbooks.writers.MarkBlockedPagesWriter;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
@@ -43,7 +41,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,96 +59,150 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class ProcessComicsConfiguration {
   private static final String KEY_STARTED = "job.process-comics.started";
 
-  @Autowired public JobBuilderFactory jobBuilderFactory;
-  @Autowired public StepBuilderFactory stepBuilderFactory;
-  @Autowired private JobLauncher jobLauncher;
-
-  @Autowired private LoadFileContentsReader loadFileContentsReader;
-  @Autowired private LoadFileContentsProcessor loadFileContentsProcessor;
-  @Autowired private LoadFileContentsWriter loadFileContentsWriter;
-  @Autowired private MarkBlockedPagesReader markBlockedPagesReader;
-  @Autowired private MarkBlockedPagesProcessor markBlockedPagesProcessor;
-  @Autowired private MarkBlockedPagesWriter markBlockedPagesWriter;
-  @Autowired private LoadFileDetailsReader loadFileDetailsReader;
-  @Autowired private LoadFileDetailsProcessor loadFileDetailsProcessor;
-  @Autowired private LoadFileDetailsWriter loadFileDetailsWriter;
-  @Autowired private ContentsProcessedReader contentsProcessedReader;
-  @Autowired private NoopComicProcessor noopComicProcessor;
-  @Autowired private ContentsProcessedWriter contentsProcessedWriter;
-
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;
 
+  /**
+   * Returns the process comics job.
+   *
+   * @param jobBuilderFactory the job factory
+   * @param loadFileContentsStep the load file contents step
+   * @param markBlockedPagesStep the mark blocked pages step
+   * @param loadFileDetailsStep the load file details step
+   * @param contentsProcessedStep the mark contents processed step
+   * @return the job
+   */
   @Bean
-  public Job importComicsJob() {
-    return this.jobBuilderFactory
+  @Qualifier("processComicsJob")
+  public Job processComicsJob(
+      final JobBuilderFactory jobBuilderFactory,
+      @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
+      @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep,
+      @Qualifier("loadFileDetailsStep") final Step loadFileDetailsStep,
+      @Qualifier("contentsProcessedStep") final Step contentsProcessedStep) {
+    return jobBuilderFactory
         .get("importComicsJob")
         .incrementer(new RunIdIncrementer())
-        .start(loadFileContentsStep())
-        .next(markBlockedPagesStep())
-        .next(loadFileDetailsStep())
-        .next(contentsProcessedStep())
+        .start(loadFileContentsStep)
+        .next(markBlockedPagesStep)
+        .next(loadFileDetailsStep)
+        .next(contentsProcessedStep)
         .build();
   }
 
+  /**
+   * Returns the load file contents step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step loadFileContentsStep() {
-    return this.stepBuilderFactory
+  @Qualifier("loadFileContentsStep")
+  public Step loadFileContentsStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final LoadFileContentsReader reader,
+      final LoadFileContentsProcessor processor,
+      final LoadFileContentsWriter writer) {
+    return stepBuilderFactory
         .get("loadFileContentsStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(loadFileContentsReader)
-        .processor(loadFileContentsProcessor)
-        .writer(loadFileContentsWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 
+  /**
+   * Returns the mark blocked pages step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step markBlockedPagesStep() {
-    return this.stepBuilderFactory
+  public Step markBlockedPagesStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final MarkBlockedPagesReader reader,
+      final MarkBlockedPagesProcessor processor,
+      final MarkBlockedPagesWriter writer) {
+    return stepBuilderFactory
         .get("markBlockedPagesStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(markBlockedPagesReader)
-        .processor(markBlockedPagesProcessor)
-        .writer(markBlockedPagesWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 
+  /**
+   * Returns the load file details step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step loadFileDetailsStep() {
-    return this.stepBuilderFactory
+  public Step loadFileDetailsStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final LoadFileDetailsReader reader,
+      final LoadFileContentsProcessor processor,
+      final LoadFileContentsWriter writer) {
+    return stepBuilderFactory
         .get("loadFileDetailsStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(loadFileDetailsReader)
-        .processor(loadFileDetailsProcessor)
-        .writer(loadFileDetailsWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 
+  /**
+   * Returns the contents processed step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
   @Bean
-  public Step contentsProcessedStep() {
-    return this.stepBuilderFactory
+  public Step contentsProcessedStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final ContentsProcessedReader reader,
+      final NoopComicProcessor processor,
+      final ContentsProcessedWriter writer) {
+    return stepBuilderFactory
         .get("contentsProcessedStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
-        .reader(contentsProcessedReader)
-        .processor(noopComicProcessor)
-        .writer(contentsProcessedWriter)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
         .build();
   }
 
   /**
    * Runs the comic processing job.
    *
+   * @param jobLauncher the job launcher
    * @throws JobInstanceAlreadyCompleteException if an error occurs
    * @throws JobExecutionAlreadyRunningException if an error occurs
    * @throws JobParametersInvalidException if an error occurs
    * @throws JobRestartException if an error occurs
    */
   @Scheduled(fixedDelay = 1000)
-  public void performJob()
+  public void performJob(
+      final JobLauncher jobLauncher, @Qualifier("processComicsJob") Job processComicsJob)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
-    this.jobLauncher.run(
-        importComicsJob(),
+    jobLauncher.run(
+        processComicsJob,
         new JobParametersBuilder()
             .addLong(KEY_STARTED, System.currentTimeMillis())
             .toJobParameters());
