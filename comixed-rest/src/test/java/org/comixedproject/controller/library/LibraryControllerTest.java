@@ -41,10 +41,16 @@ import org.comixedproject.task.runner.TaskManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.ObjectFactory;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -71,6 +77,11 @@ public class LibraryControllerTest {
   @Mock private MoveComicsTask moveComicsWorkerTask;
   @Mock private Comic comic;
   @Mock private Comic lastComic;
+  @Mock private JobLauncher jobLauncher;
+  @Mock private JobExecution jobExecution;
+  @Mock private Job updateMetadataJob;
+
+  @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @Before
   public void testSetUp() {
@@ -225,9 +236,19 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testUpdateMetadata() {
+  public void testUpdateMetadata()
+      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
+          JobParametersInvalidException, JobRestartException {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
     controller.updateMetadata(new UpdateMetadataRequest(idList));
 
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+
     Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(idList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
   }
 }
