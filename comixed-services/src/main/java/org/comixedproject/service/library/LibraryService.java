@@ -18,11 +18,15 @@
 
 package org.comixedproject.service.library;
 
-import java.io.File;
+import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
+import org.apache.commons.lang.StringUtils;
+import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
@@ -31,35 +35,14 @@ import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Log4j2
 public class LibraryService {
   @Autowired private ComicService comicService;
-  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
+  @Autowired private FileAdaptor fileAdaptor;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicStateHandler comicStateHandler;
-
-  @Transactional
-  public List<Comic> consolidateLibrary(boolean deletePhysicalFiles) {
-    log.debug("Consolidating library: delete physical files={}", deletePhysicalFiles);
-
-    List<Comic> result = this.comicService.findAllMarkedForDeletion();
-
-    for (Comic comic : result) {
-      log.debug("Removing deleted comics from library");
-      this.comicService.delete(comic);
-
-      if (deletePhysicalFiles) {
-        String filename = comic.getFilename();
-        File file = comic.getFile();
-        log.debug("Deleting physical file: {}", filename);
-        this.genericUtilitiesAdaptor.deleteFile(file);
-      }
-    }
-    return result;
-  }
 
   /**
    * Removes all files in the image cache directory.
@@ -70,7 +53,7 @@ public class LibraryService {
     String directory = this.pageCacheService.getRootDirectory();
     log.debug("Clearing the image cache: {}", directory);
     try {
-      this.genericUtilitiesAdaptor.deleteDirectoryContents(directory);
+      this.fileAdaptor.deleteDirectoryContents(directory);
     } catch (IOException error) {
       throw new LibraryException("failed to clean image cache directory", error);
     }
@@ -92,5 +75,38 @@ public class LibraryService {
             log.error("Failed to update comic", error);
           }
         });
+  }
+
+  /**
+   * Updates all comics in preparation for library consolidation.
+   *
+   * @param targetDirectory the target directory
+   * @param renamingRule the renaming rule
+   * @param deleteRemovedComicFiles the delete removed comic files flag
+   * @throws LibraryException if an error occurs
+   */
+  public void prepareForConsolidation(
+      final String targetDirectory,
+      final String renamingRule,
+      final boolean deleteRemovedComicFiles)
+      throws LibraryException {
+    if (StringUtils.isEmpty(targetDirectory)) {
+      throw new LibraryException("Target directory is not configured");
+    }
+    log.trace("Preparing message headers");
+    Map<String, String> headers = new HashMap<>();
+    headers.put(HEADER_DELETE_REMOVED_COMIC_FILE, String.valueOf(deleteRemovedComicFiles));
+    headers.put(HEADER_TARGET_DIRECTORY, targetDirectory);
+    headers.put(HEADER_RENAMING_RULE, renamingRule);
+    this.comicService
+        .findAll()
+        .forEach(
+            comic -> {
+              log.trace(
+                  "Preparing comics for consolidation: [{}] {}",
+                  comic.getId(),
+                  comic.getFilename());
+              this.comicStateHandler.fireEvent(comic, ComicEvent.consolidateComic, headers);
+            });
   }
 }

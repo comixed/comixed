@@ -44,14 +44,18 @@ export class ConsolidateLibraryEffects {
           tap(response => this.logger.debug('Response received:', response)),
           map(() =>
             this.alertService.info(
-              this.translateService.instant('library.consoliate.effect-success')
+              this.translateService.instant(
+                'library.consolidate.effect-success'
+              )
             )
           ),
           map(() => libraryConsolidationStarted()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
-              this.translateService.instant('library.consoliate.effect-failure')
+              this.translateService.instant(
+                'library.consolidate.effect-failure'
+              )
             );
             return of(startLibraryConsolidationFailed());
           })

@@ -532,13 +532,37 @@ public class ComicServiceTest {
 
   @Test
   public void testFindAllComicsMarkedForDeletion() {
-    Mockito.when(comicRepository.findAllMarkedForDeletion()).thenReturn(comicList);
+    Mockito.when(comicRepository.findComicsMarkedForDeletion()).thenReturn(comicList);
 
-    final List<Comic> result = service.findAllMarkedForDeletion();
+    final List<Comic> result = service.findComicsMarkedForDeletion();
 
     assertNotNull(result);
     assertSame(comicList, result);
 
-    Mockito.verify(comicRepository, Mockito.times(1)).findAllMarkedForDeletion();
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsMarkedForDeletion();
+  }
+
+  @Test
+  public void testFindComicsToBeMoved() {
+    Mockito.when(comicRepository.findComicsToBeMoved()).thenReturn(comicList);
+
+    final List<Comic> result = service.findComicsToBeMoved();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsToBeMoved();
+  }
+
+  @Test
+  public void testFindAll() {
+    Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+
+    final List<Comic> result = service.findAll();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAll();
   }
 }

@@ -108,7 +108,8 @@
       "deselect-all": "Anular la selección de todos los cómics.",
       "rescan-comics": "Rescan selected comics.",
       "scrape-comics": "Empieza a raspar cómics",
-      "select-all": "Seleccionar todos los cómics."
+      "select-all": "Seleccionar todos los cómics.",
+      "update-metadata": "Update metadata in selected comics."
     },
     "update-metadata": {
       "confirmation-message": "Are you sure you want to update the metadata on {count, plural, =1{one comic} other{# comics}}?",

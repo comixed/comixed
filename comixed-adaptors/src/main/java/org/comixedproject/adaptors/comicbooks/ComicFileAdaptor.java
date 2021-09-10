@@ -20,8 +20,12 @@ package org.comixedproject.adaptors.comicbooks;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
+import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>ComicFileAdaptor</code> provides a set of utility methods related to comic files and
@@ -32,6 +36,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComicFileAdaptor {
+  private static final String FORBIDDEN_RULE_CHARACTERS = "[\"':\\\\*?|<>]";
+  private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>]";
+  private static final String UNKNOWN_VALUE = "Unknown";
+
+  private final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
+
   /**
    * Looks for the next available filename for a comic file.
    *
@@ -65,5 +75,58 @@ public class ComicFileAdaptor {
   public boolean isComicFile(File file) {
     String name = file.getName().toUpperCase();
     return (name.endsWith("CBZ") || name.endsWith("CBR") || name.endsWith("CB7"));
+  }
+
+  /**
+   * Generates a filename for the given comic based on the supplied rule.
+   *
+   * @param comic the comic
+   * @param renamingRule the renaming rule
+   * @return the generated filename
+   */
+  public String createFilenameFromRule(final Comic comic, final String renamingRule) {
+    if (StringUtils.isEmpty(renamingRule)) {
+      log.trace(
+          "No renaming rules: using original filename: {}",
+          FilenameUtils.getBaseName(comic.getFilename()));
+      return FilenameUtils.getBaseName(comic.getFilename());
+    }
+
+    log.trace("Scrubbing renaming rule: {}", renamingRule);
+    final String rule = this.scrub(renamingRule, FORBIDDEN_RULE_CHARACTERS);
+
+    log.trace("Generating relative filename based on renaming rule: {}", rule);
+    final String publisher =
+        StringUtils.isEmpty(comic.getPublisher()) ? UNKNOWN_VALUE : scrub(comic.getPublisher());
+    final String series =
+        StringUtils.isEmpty(comic.getSeries()) ? UNKNOWN_VALUE : scrub(comic.getSeries());
+    final String volume =
+        StringUtils.isEmpty(comic.getVolume()) ? UNKNOWN_VALUE : comic.getVolume();
+    final String issueNumber =
+        StringUtils.isEmpty(comic.getIssueNumber()) ? UNKNOWN_VALUE : scrub(comic.getIssueNumber());
+    final String coverDate =
+        comic.getCoverDate() != null
+            ? coverDateFormat.format(comic.getCoverDate())
+            : "No Cover Date";
+
+    String result =
+        rule.replace("$PUBLISHER", publisher)
+            .replace("$SERIES", series)
+            .replace("$VOLUME", volume)
+            .replace("$ISSUE", issueNumber)
+            .replace("$COVERDATE", coverDate);
+
+    log.trace("Relative comic filename: {}", result);
+
+    return String.format("%s.%s", result, comic.getArchiveType().getExtension());
+  }
+
+  private String scrub(final String text) {
+    return this.scrub(text, FORBIDDEN_PROPERTY_CHARACTERS);
+  }
+
+  private String scrub(final String text, final String forbidden) {
+    log.trace("Pre-sanitized text: {}", text);
+    return text.replaceAll(forbidden, "_");
   }
 }

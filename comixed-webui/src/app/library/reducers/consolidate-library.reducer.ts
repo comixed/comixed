@@ -23,7 +23,7 @@ import {
   startLibraryConsolidationFailed
 } from '@app/library/actions/consolidate-library.actions';
 
-export const consolidateLibraryFeatureKey = 'consolidate_library_state';
+export const CONSOLIDATE_LIBRARY_FEATURE_KEY = 'consolidate_library_state';
 
 export interface ConsolidateLibraryState {
   sending: boolean;

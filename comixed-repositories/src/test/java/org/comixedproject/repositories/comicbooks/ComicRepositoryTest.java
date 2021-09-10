@@ -458,7 +458,7 @@ public class ComicRepositoryTest {
 
   @Test
   public void testFindAllMarkedForDeletion() {
-    List<Comic> result = repository.findAllMarkedForDeletion();
+    List<Comic> result = repository.findComicsMarkedForDeletion();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

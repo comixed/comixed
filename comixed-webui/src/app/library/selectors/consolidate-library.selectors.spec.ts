@@ -17,7 +17,7 @@
  */
 
 import {
-  consolidateLibraryFeatureKey,
+  CONSOLIDATE_LIBRARY_FEATURE_KEY,
   ConsolidateLibraryState
 } from '../reducers/consolidate-library.reducer';
 import { selectConsolidateLibraryState } from './consolidate-library.selectors';
@@ -32,7 +32,7 @@ describe('ConsolidateLibrary Selectors', () => {
   it('should select the feature state', () => {
     expect(
       selectConsolidateLibraryState({
-        [consolidateLibraryFeatureKey]: state
+        [CONSOLIDATE_LIBRARY_FEATURE_KEY]: state
       })
     ).toEqual(state);
   });

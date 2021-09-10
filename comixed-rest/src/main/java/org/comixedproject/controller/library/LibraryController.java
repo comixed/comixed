@@ -18,6 +18,8 @@
 
 package org.comixedproject.controller.library;
 
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -27,12 +29,15 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
-import org.comixedproject.model.net.library.*;
+import org.comixedproject.model.net.library.LoadLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryResponse;
+import org.comixedproject.model.net.library.RescanComicsRequest;
+import org.comixedproject.model.net.library.UpdateMetadataRequest;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.task.ConvertComicsTask;
-import org.comixedproject.task.MoveComicsTask;
 import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
@@ -63,14 +68,14 @@ public class LibraryController {
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
+  @Autowired private ConfigurationService configurationService;
+
+  @Autowired private TaskManager taskManager;
+  @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
 
   @Autowired
   @Qualifier("batchJobLauncher")
   private JobLauncher jobLauncher;
-
-  @Autowired private TaskManager taskManager;
-  @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
-  @Autowired private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
 
   @Autowired
   @Qualifier("processComicsJob")
@@ -79,6 +84,10 @@ public class LibraryController {
   @Autowired
   @Qualifier("updateMetadataJob")
   private Job updateMetadataJob;
+
+  @Autowired
+  @Qualifier("consolidateLibraryJob")
+  private Job consolidateLibraryJob;
 
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
@@ -112,7 +121,7 @@ public class LibraryController {
    * Initiates the library consolidation process.
    *
    * @param request the request body
-   * @return all files marked for deletion
+   * @throws Exception if an error occurs
    */
   @PostMapping(
       value = "/api/library/consolidate",
@@ -120,9 +129,27 @@ public class LibraryController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DeletedComicList.class)
   @AuditableEndpoint
-  public List<Comic> consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request) {
-    log.info("Consolidating library: delete physic files={}", request.getDeletePhysicalFiles());
-    return this.libraryService.consolidateLibrary(request.getDeletePhysicalFiles());
+  public void consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request)
+      throws Exception {
+    final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
+    log.info("Consolidating library: delete physic files={}", deleteRemovedComicFiles);
+    log.trace("Loading target directory");
+    final String targetDirectory =
+        this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);
+    log.trace("Loading renaming rule");
+    final String renamingRule =
+        this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_RENAMING_RULE);
+    this.libraryService.prepareForConsolidation(
+        targetDirectory, renamingRule, deleteRemovedComicFiles);
+    log.trace("Launch consolidation batch process");
+    this.jobLauncher.run(
+        this.consolidateLibraryJob,
+        new JobParametersBuilder()
+            .addLong(PARAM_CONSOLIDATION_JOB_STARTED, System.currentTimeMillis())
+            .addString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(deleteRemovedComicFiles))
+            .addString(PARAM_TARGET_DIRECTORY, targetDirectory)
+            .addString(PARAM_RENAMING_RULE, renamingRule)
+            .toJobParameters());
   }
 
   @DeleteMapping(value = "/api/library/cache/images")
@@ -138,32 +165,6 @@ public class LibraryController {
     }
 
     return new ClearImageCacheResponse(true);
-  }
-
-  /**
-   * Consolidates the library, moving all comics under the specified parent directory and using
-   * given naming rules. Will delete comics marked for deletion as well.
-   *
-   * @param request the request body
-   */
-  @PostMapping(
-      value = "/api/library/move",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
-  public void moveComics(@RequestBody() MoveComicsRequest request) {
-    String targetDirectory = request.getTargetDirectory();
-    String renamingRule = request.getRenamingRule();
-
-    log.info("Moving comics: targetDirectory={}", targetDirectory);
-    log.info("             : renamingRule={}", renamingRule);
-
-    final MoveComicsTask task = this.moveComicsWorkerTaskObjectFactory.getObject();
-    task.setDirectory(targetDirectory);
-    task.setRenamingRule(renamingRule);
-
-    this.taskManager.runTask(task);
   }
 
   /**

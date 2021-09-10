@@ -33,11 +33,12 @@ public enum ComicEvent {
   rescanComic, // rescan a comic,
   updateMetadata, // prepare to update the metadata within the physical comic file
   metadataUpdated, // the metadata within the physical comic file has been updated
+  consolidateComic, // marks the comic for consolidation
+  comicConsolidated, // the comic has been consolidated
   scraped,
   detailsUpdated,
   metadataCleared,
   archiveRecreated,
-  comicMoved,
   markedForRemoval,
   unmarkedForRemoval;
 }

@@ -27,4 +27,8 @@ public class LibraryException extends Exception {
   public LibraryException(String message, Exception cause) {
     super(message, cause);
   }
+
+  public LibraryException(final String message) {
+    super(message);
+  }
 }

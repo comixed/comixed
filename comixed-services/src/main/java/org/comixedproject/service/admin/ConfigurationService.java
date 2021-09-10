@@ -35,6 +35,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class ConfigurationService {
+  public static final String CFG_LIBRARY_ROOT_DIRECTORY = "library.root-directory";
+  public static final String CFG_LIBRARY_RENAMING_RULE = "library.renaming-rule";
+
   @Autowired private ConfigurationRepository configurationRepository;
 
   /**
@@ -73,5 +76,17 @@ public class ConfigurationService {
     }
 
     return this.getAll();
+  }
+
+  /**
+   * Returns the value for the option with the given name.
+   *
+   * @param name the option name
+   * @return the option value
+   */
+  public String getOptionValue(final String name) {
+    log.trace("Loading option");
+    final ConfigurationOption option = this.configurationRepository.findByName(name);
+    return option != null ? option.getValue() : null;
   }
 }

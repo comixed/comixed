@@ -101,7 +101,7 @@ describe('LibraryService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      deletePhysicalFiles: true
+      deletePhysicalFiles: false
     } as ConsolidateLibraryRequest);
   });
 

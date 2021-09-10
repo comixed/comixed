@@ -23,6 +23,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
 import org.comixedproject.state.comicbooks.guards.ComicContentsProcessedGuard;
+import org.comixedproject.state.comicbooks.guards.ComicFilenameWillChangeGuard;
 import org.comixedproject.state.comicbooks.guards.FileDetailsCreatedGuard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +49,9 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
   @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
+  @Autowired private ConsolidateComicAction consolidateComicAction;
+  @Autowired private ComicFilenameWillChangeGuard comicFilenameWillChangeGuard;
+  @Autowired private ComicConsolidatedAction comicConsolidatedAction;
   @Autowired private MarkComicForRemovalAction markComicForRemovalAction;
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
 
@@ -123,18 +127,40 @@ public class ComicStateMachineConfiguration
         .source(ComicState.STABLE)
         .target(ComicState.STABLE)
         .event(ComicEvent.archiveRecreated)
-        // the comic was physically moved
+        // the comic is going to be consolidated
         .and()
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.STABLE)
-        .event(ComicEvent.comicMoved)
-        // the comic was physically moved
+        .event(ComicEvent.consolidateComic)
+        .guard(comicFilenameWillChangeGuard)
+        .action(consolidateComicAction)
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
-        .event(ComicEvent.comicMoved)
+        .event(ComicEvent.consolidateComic)
+        .guard(comicFilenameWillChangeGuard)
+        .action(consolidateComicAction)
+        .and()
+        .withExternal()
+        .source(ComicState.DELETED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.consolidateComic)
+        .action(consolidateComicAction)
+        // the comic was consolidated
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.comicConsolidated)
+        .action(comicConsolidatedAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.comicConsolidated)
+        .action(comicConsolidatedAction)
         // the comic details are manually changed
         .and()
         .withExternal()

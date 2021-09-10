@@ -38,11 +38,12 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class FilenameScraperAdaptor {
   /**
-   * Sets the meta-information on the comic based on the comic's filename.
+   * Attempts to set the metadata on a comic based on the comic's filename.
    *
    * @param comic the comic to be updated @Param rule the filename scraping rule
+   * @param scrapingRule the scraping rule
    * @throws AdaptorException if an error occurs
-   * @return
+   * @return tree if the rule was applied
    */
   public boolean execute(final Comic comic, final ScrapingRule scrapingRule)
       throws AdaptorException {

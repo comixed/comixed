@@ -76,9 +76,6 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
       @Param("issueNumber") String issueNumber,
       @Param("coverDate") Date coverDate);
 
-  @Query("SELECT c FROM Comic c WHERE c.dateDeleted IS NOT NULL")
-  List<Comic> findAllMarkedForDeletion();
-
   @Query("SELECT c FROM Comic c ORDER BY c.id")
   List<Comic> findComicsToMove(PageRequest page);
 
@@ -162,4 +159,21 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Query(
       "SELECT c FROM Comic c WHERE c.comicState = 'CHANGED' AND c.updateMetadata = true ORDER BY c.lastModifiedOn")
   List<Comic> findComicsWithMetadataToUpdate();
+
+  /**
+   * Returns comics that are in the deleted state.
+   *
+   * @return the list of comics
+   */
+  @Query("SELECT c FROM Comic c WHERE c.comicState = 'DELETED' ORDER BY c.lastModifiedOn")
+  List<Comic> findComicsMarkedForDeletion();
+
+  /**
+   * Returns all comics with the consolidating flag set.
+   *
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.consolidating = true AND c.dateDeleted IS NULL ORDER BY c.lastModifiedOn")
+  List<Comic> findComicsToBeMoved();
 }

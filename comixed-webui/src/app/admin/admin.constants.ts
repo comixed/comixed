@@ -19,7 +19,8 @@
 import { API_ROOT_URL } from '../core';
 
 export const COMICVINE_API_KEY = 'comicvine.api-key';
-export const LIBRARY_CONSOLIDATION_RULE = 'library.consolidation-rule';
+export const LIBRARY_ROOT_DIRECTORY = 'library.root-directory';
+export const LIBRARY_RENAMING_RULE = 'library.renaming-rule';
 
 export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;

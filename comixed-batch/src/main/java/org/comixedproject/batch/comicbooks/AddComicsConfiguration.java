@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * <code>AddComicsConfiguration</code> defines the batch process for adding comics to the library.
@@ -45,7 +44,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author Darryl L. Pierce
  */
 @Configuration
-@EnableScheduling
 @Log4j2
 public class AddComicsConfiguration {
   @Value("${batch.chunk-size}")

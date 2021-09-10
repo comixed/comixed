@@ -47,7 +47,8 @@ import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-
 import { MatDialogModule } from '@angular/material/dialog';
 import {
   COMICVINE_API_KEY,
-  LIBRARY_CONSOLIDATION_RULE
+  LIBRARY_RENAMING_RULE,
+  LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
 import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -59,11 +60,12 @@ import {
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
+import { MatCardModule } from '@angular/material/card';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
     { ...CONFIGURATION_OPTION_1, name: COMICVINE_API_KEY },
-    { ...CONFIGURATION_OPTION_2, name: LIBRARY_CONSOLIDATION_RULE },
+    { ...CONFIGURATION_OPTION_2, name: LIBRARY_RENAMING_RULE },
     CONFIGURATION_OPTION_3,
     CONFIGURATION_OPTION_4,
     CONFIGURATION_OPTION_5
@@ -105,7 +107,8 @@ describe('ConfigurationPageComponent', () => {
         MatButtonModule,
         MatToolbarModule,
         MatDialogModule,
-        MatTabsModule
+        MatTabsModule,
+        MatCardModule
       ],
       providers: [
         provideMockStore({ initialState }),
@@ -198,7 +201,11 @@ describe('ConfigurationPageComponent', () => {
               value: component.configurationForm.controls.apiKey.value
             },
             {
-              name: LIBRARY_CONSOLIDATION_RULE,
+              name: LIBRARY_ROOT_DIRECTORY,
+              value: component.configurationForm.controls.rootDirectory.value
+            },
+            {
+              name: LIBRARY_RENAMING_RULE,
               value:
                 component.configurationForm.controls.consolidationRule.value
             }

@@ -87,10 +87,15 @@ import {
 } from '@app/library/reducers/rescan-comics.reducer';
 import { RescanComicsEffects } from '@app/library/effects/rescan-comics.effects';
 import {
-  UPDATE_METADATA_FEATURE_KEY,
-  reducer as updateMetadataReducer
+  reducer as updateMetadataReducer,
+  UPDATE_METADATA_FEATURE_KEY
 } from '@app/library/reducers/update-metadata.reducer';
 import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effects';
+import {
+  CONSOLIDATE_LIBRARY_FEATURE_KEY,
+  reducer as consolidateLibraryReducer
+} from '@app/library/reducers/consolidate-library.reducer';
+import { ConsolidateLibraryEffects } from '@app/library/effects/consolidate-library.effects';
 
 @NgModule({
   declarations: [
@@ -129,13 +134,18 @@ import { UpdateMetadataEffects } from '@app/library/effects/update-metadata.effe
     ),
     StoreModule.forFeature(RESCAN_COMICS_FEATURE_KEY, rescanComicsReducer),
     StoreModule.forFeature(UPDATE_METADATA_FEATURE_KEY, updateMetadataReducer),
+    StoreModule.forFeature(
+      CONSOLIDATE_LIBRARY_FEATURE_KEY,
+      consolidateLibraryReducer
+    ),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
       RescanComicsEffects,
-      UpdateMetadataEffects
+      UpdateMetadataEffects,
+      ConsolidateLibraryEffects
     ]),
     MatInputModule,
     MatSelectModule,
