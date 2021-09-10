@@ -94,6 +94,7 @@ public interface ArchiveAdaptor {
    * Updates the metadata for the given comic.
    *
    * @param comic the comic
+   * @return the updated comic
    * @throws ArchiveAdaptorException if an error occurs
    */
   Comic updateComic(Comic comic) throws ArchiveAdaptorException;

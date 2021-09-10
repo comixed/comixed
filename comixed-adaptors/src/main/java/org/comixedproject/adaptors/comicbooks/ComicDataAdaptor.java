@@ -31,11 +31,10 @@ public class ComicDataAdaptor {
   public void clear(Comic comic) {
     comic.setComicVineId("");
     comic.setPublisher("");
-    comic.setImprint("");
     comic.setSeries("");
-    comic.setCoverDate(null);
     comic.setVolume("");
     comic.setIssueNumber("");
+    comic.setCoverDate(null);
     comic.setTitle("");
     comic.setDescription("");
     comic.getStoryArcs().clear();

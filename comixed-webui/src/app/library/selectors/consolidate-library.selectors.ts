@@ -18,9 +18,11 @@
 
 import { createFeatureSelector } from '@ngrx/store';
 import {
-  consolidateLibraryFeatureKey,
+  CONSOLIDATE_LIBRARY_FEATURE_KEY,
   ConsolidateLibraryState
 } from '../reducers/consolidate-library.reducer';
 
 export const selectConsolidateLibraryState =
-  createFeatureSelector<ConsolidateLibraryState>(consolidateLibraryFeatureKey);
+  createFeatureSelector<ConsolidateLibraryState>(
+    CONSOLIDATE_LIBRARY_FEATURE_KEY
+  );

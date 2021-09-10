@@ -65,7 +65,7 @@ export class LibraryService {
   startLibraryConsolidation(): Observable<any> {
     this.logger.trace('Start library consolidation');
     return this.http.post(interpolate(START_LIBRARY_CONSOLIDATION_URL), {
-      deletePhysicalFiles: true
+      deletePhysicalFiles: false
     } as ConsolidateLibraryRequest);
   }
 

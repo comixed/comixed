@@ -2,7 +2,8 @@
   "configuration": {
     "label": {
       "comicvine-api-key": "ComicVine API Key",
-      "consolidation-rule": "Comic Renaming Rule"
+      "renaming-rule": "Comic Renaming Rule",
+      "root-directory": "Library Root Directory"
     },
     "load-all": {
       "effect-failure": "Failed to load configuration options."
@@ -11,7 +12,10 @@
       "comicvine": "ComicVine Settings",
       "library": "Library"
     },
-    "tab-title": "Configuration"
+    "tab-title": "Configuration",
+    "text": {
+      "renaming-rules-explained": "<p>Use the following values to build your renaming rule:</p><ul><li><b>$PUBLISHER</b> - The publisher name</li><li><b>$SERIES</b> - The series name</li><li><b>$VOLUME</b> - The volume</li><li><b>$ISSUE</b> - The issue number</li><li><b>$COVERDATE</b> - The cover date</li></li>"
+    }
   },
   "save-configuration": {
     "confirmation-message": "Save changes to the configuration?",

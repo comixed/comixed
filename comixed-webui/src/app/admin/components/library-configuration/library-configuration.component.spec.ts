@@ -45,7 +45,10 @@ describe('LibraryConfigurationComponent', () => {
 
     fixture = TestBed.createComponent(LibraryConfigurationComponent);
     component = fixture.componentInstance;
-    component.form = formBuilder.group({ consolidationRule: null });
+    component.form = formBuilder.group({
+      rootDirectory: null,
+      consolidationRule: null
+    });
     fixture.detectChanges();
   }));
 

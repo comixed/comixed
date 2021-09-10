@@ -19,7 +19,10 @@
 package org.comixedproject.controller.library;
 
 import static junit.framework.TestCase.*;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
 import static org.comixedproject.controller.library.LibraryController.MAXIMUM_RECORDS;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_RENAMING_RULE;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +32,16 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
-import org.comixedproject.model.net.library.*;
+import org.comixedproject.model.net.library.LoadLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryResponse;
+import org.comixedproject.model.net.library.RescanComicsRequest;
+import org.comixedproject.model.net.library.UpdateMetadataRequest;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.task.ConvertComicsTask;
-import org.comixedproject.task.MoveComicsTask;
 import org.comixedproject.task.Task;
 import org.comixedproject.task.runner.TaskManager;
 import org.junit.Before;
@@ -55,7 +61,7 @@ public class LibraryControllerTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final Random RANDOM = new Random();
   private static final boolean TEST_RENAME_PAGES = RANDOM.nextBoolean();
-  private static final Boolean TEST_DELETE_PHYSICAL_FILES = RANDOM.nextBoolean();
+  private static final boolean TEST_DELETE_REMOVED_COMIC_FILES = RANDOM.nextBoolean();
   private static final String TEST_RENAMING_RULE = "PUBLISHER/SERIES/VOLUME/SERIES vVOLUME #ISSUE";
   private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
   private static final Boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
@@ -65,13 +71,11 @@ public class LibraryControllerTest {
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
   @Mock private ComicService comicService;
-  @Mock private List<Comic> comicList;
+  @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
   @Mock private TaskManager taskManager;
   @Mock private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
   @Mock private ConvertComicsTask convertComicsWorkerTask;
-  @Mock private ObjectFactory<MoveComicsTask> moveComicsWorkerTaskObjectFactory;
-  @Mock private MoveComicsTask moveComicsWorkerTask;
   @Mock private Comic comic;
   @Mock private Comic lastComic;
   @Mock private JobLauncher jobLauncher;
@@ -84,6 +88,10 @@ public class LibraryControllerTest {
   @Mock
   @Qualifier("processComicsJob")
   private Job processComicsJob;
+
+  @Mock
+  @Qualifier("consolidateLibraryJob")
+  private Job consolidateLibraryJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -116,17 +124,49 @@ public class LibraryControllerTest {
         .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
   }
 
+  @Test(expected = LibraryException.class)
+  public void testConsolidateServiceThrowsException() throws Exception {
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
+        .thenReturn(TEST_DESTINATION_DIRECTORY);
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_RENAMING_RULE))
+        .thenReturn(TEST_RENAMING_RULE);
+    Mockito.doThrow(LibraryException.class)
+        .when(libraryService)
+        .prepareForConsolidation(Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean());
+
+    try {
+      controller.consolidateLibrary(new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
+    } finally {
+      Mockito.verify(configurationService, Mockito.times(1))
+          .getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY);
+    }
+  }
+
   @Test
-  public void testConsolidate() {
-    Mockito.when(libraryService.consolidateLibrary(Mockito.anyBoolean())).thenReturn(comicList);
+  public void testConsolidate() throws Exception {
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
+        .thenReturn(TEST_DESTINATION_DIRECTORY);
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_RENAMING_RULE))
+        .thenReturn(TEST_RENAMING_RULE);
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
 
-    List<Comic> response =
-        controller.consolidateLibrary(new ConsolidateLibraryRequest(TEST_DELETE_PHYSICAL_FILES));
+    controller.consolidateLibrary(new ConsolidateLibraryRequest(TEST_DELETE_REMOVED_COMIC_FILES));
 
-    assertNotNull(response);
-    assertSame(comicList, response);
+    final JobParameters parameters = jobParametersArgumentCaptor.getValue();
+    assertNotNull(parameters);
+    assertTrue(parameters.getParameters().containsKey(PARAM_CONSOLIDATION_JOB_STARTED));
+    assertEquals(
+        String.valueOf(TEST_DELETE_REMOVED_COMIC_FILES),
+        parameters.getString(PARAM_DELETE_REMOVED_COMIC_FILES));
+    assertEquals(TEST_DESTINATION_DIRECTORY, parameters.getString(PARAM_TARGET_DIRECTORY));
+    assertEquals(TEST_RENAMING_RULE, parameters.getString(PARAM_RENAMING_RULE));
 
-    Mockito.verify(libraryService, Mockito.times(1)).consolidateLibrary(TEST_DELETE_PHYSICAL_FILES);
+    Mockito.verify(libraryService, Mockito.times(1))
+        .prepareForConsolidation(
+            TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
+    Mockito.verify(jobLauncher, Mockito.times(1))
+        .run(consolidateLibraryJob, jobParametersArgumentCaptor.getValue());
   }
 
   @Test
@@ -152,20 +192,6 @@ public class LibraryControllerTest {
     assertFalse(result.isSuccess());
 
     Mockito.verify(libraryService, Mockito.times(1)).clearImageCache();
-  }
-
-  @Test
-  public void testMoveLibrary() {
-    Mockito.when(moveComicsWorkerTaskObjectFactory.getObject()).thenReturn(moveComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
-
-    controller.moveComics(
-        new MoveComicsRequest(
-            TEST_DELETE_PHYSICAL_FILES, TEST_DESTINATION_DIRECTORY, TEST_RENAMING_RULE));
-
-    Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setDirectory(TEST_DESTINATION_DIRECTORY);
-    Mockito.verify(moveComicsWorkerTask, Mockito.times(1)).setRenamingRule(TEST_RENAMING_RULE);
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(moveComicsWorkerTask);
   }
 
   @Test

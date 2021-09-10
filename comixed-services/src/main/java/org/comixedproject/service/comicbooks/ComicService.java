@@ -381,8 +381,33 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     return this.comicRepository.findComicsWithMetadataToUpdate();
   }
 
-  public List<Comic> findAllMarkedForDeletion() {
+  /**
+   * Finds all comics marked for deletion.
+   *
+   * @return the list of comics
+   */
+  public List<Comic> findComicsMarkedForDeletion() {
     log.trace("Finding all comics marked for deletion");
-    return this.comicRepository.findAllMarkedForDeletion();
+    return this.comicRepository.findComicsMarkedForDeletion();
+  }
+
+  /**
+   * Finds all comics that are to be moved.
+   *
+   * @return the list of comics
+   */
+  public List<Comic> findComicsToBeMoved() {
+    log.trace("Finding all comics to be moved");
+    return this.comicRepository.findComicsToBeMoved();
+  }
+
+  /**
+   * Returns all comics.
+   *
+   * @return the list of comics
+   */
+  public List<Comic> findAll() {
+    log.trace("Finding all comics");
+    return this.comicRepository.findAll();
   }
 }

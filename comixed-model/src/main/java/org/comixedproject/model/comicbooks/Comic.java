@@ -70,8 +70,6 @@ public class Comic {
   @NonNull
   private String filename;
 
-  @Getter @Setter @Transient @JsonIgnore private File backingFile;
-
   @Column(name = "ArchiveType", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("archiveType")
@@ -125,6 +123,12 @@ public class Comic {
   @Getter
   @Setter
   private boolean updateMetadata = false;
+
+  @Column(name = "Consolidating", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean consolidating = false;
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "PageNumber")
@@ -452,11 +456,7 @@ public class Comic {
   @JsonProperty("missing")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   public boolean isMissing() {
-    if (this.backingFile == null) {
-      this.backingFile = new File(this.filename);
-    }
-
-    return !this.backingFile.exists();
+    return !this.getFile().exists();
   }
 
   public int getIndexFor(Page page) {

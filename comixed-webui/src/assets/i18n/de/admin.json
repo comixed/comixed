@@ -2,7 +2,8 @@
   "configuration": {
     "label": {
       "comicvine-api-key": "ComicVine API Key",
-      "consolidation-rule": "Comic Renaming Rule"
+      "renaming-rule": "Comic Renaming Rule",
+      "root-directory": "Library Root Directory"
     },
     "load-all": {
       "effect-failure": "Failed to load configuration options."

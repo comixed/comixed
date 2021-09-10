@@ -19,6 +19,7 @@
 package org.comixedproject.model.archives;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.comixedproject.views.View;
 
@@ -27,10 +28,11 @@ import org.comixedproject.views.View;
  *
  * @author Darryl L. Pierce
  */
+@AllArgsConstructor
 public enum ArchiveType {
-  CBZ("ZIP Comic", "application/vnc.comicbook+zip"),
-  CBR("RAR Comic", "application/vnc.comicbook+rar"),
-  CB7("7Z Comic", "application/vnc.comicbook+octet-stream");
+  CBZ("ZIP Comic", "application/vnc.comicbook+zip", "CBZ"),
+  CBR("RAR Comic", "application/vnc.comicbook+rar", "CBR"),
+  CB7("7Z Comic", "application/vnc.comicbook+octet-stream", "CB7");
 
   @JsonView(View.AuditLogEntryDetail.class)
   @Getter
@@ -40,10 +42,9 @@ public enum ArchiveType {
   @Getter
   private String mimeType;
 
-  private ArchiveType(String name, String mimeType) {
-    this.name = name;
-    this.mimeType = mimeType;
-  }
+  @JsonView(View.AuditLogEntryDetail.class)
+  @Getter
+  private String extension;
 
   public static ArchiveType forValue(String name) {
     for (ArchiveType value : values()) {

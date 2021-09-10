@@ -33,7 +33,8 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import {
   COMICVINE_API_KEY,
-  LIBRARY_CONSOLIDATION_RULE
+  LIBRARY_RENAMING_RULE,
+  LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
 import { loadConfigurationOptions } from '@app/admin/actions/configuration-option-list.actions';
 import { updateQueryParam } from '@app/core';
@@ -52,7 +53,11 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   mappings = [
     { name: COMICVINE_API_KEY, control: 'apiKey' },
     {
-      name: LIBRARY_CONSOLIDATION_RULE,
+      name: LIBRARY_ROOT_DIRECTORY,
+      control: 'rootDirectory'
+    },
+    {
+      name: LIBRARY_RENAMING_RULE,
       control: 'consolidationRule'
     }
   ];
@@ -82,7 +87,8 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
       }
     );
     this.configurationForm = this.formBuilder.group({
-      consolidationRule: ['', [Validators.required]],
+      rootDirectory: ['', [Validators.required]],
+      consolidationRule: ['', []],
       apiKey: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{40}')]]
     });
     this.configStateSubscription = this.store

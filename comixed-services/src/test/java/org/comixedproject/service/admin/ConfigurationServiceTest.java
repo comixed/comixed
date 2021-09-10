@@ -18,8 +18,7 @@
 
 package org.comixedproject.service.admin;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,5 +92,28 @@ public class ConfigurationServiceTest {
         .findByName(TEST_OPTION_NAME);
     Mockito.verify(existingOption, Mockito.times(optionList.size())).setValue(TEST_OPTION_VALUE);
     Mockito.verify(configurationRepository, Mockito.times(optionList.size())).save(existingOption);
+  }
+
+  @Test
+  public void testGetOptionValueNotFound() {
+    Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(null);
+
+    final String result = service.getOptionValue(TEST_OPTION_NAME);
+
+    assertNull(result);
+
+    Mockito.verify(configurationRepository, Mockito.times(1)).findByName(TEST_OPTION_NAME);
+  }
+
+  @Test
+  public void testGetOptionValu() {
+    Mockito.when(configurationRepository.findByName(Mockito.anyString())).thenReturn(option);
+
+    final String result = service.getOptionValue(TEST_OPTION_NAME);
+
+    assertNotNull(result);
+    assertEquals(TEST_OPTION_VALUE, result);
+
+    Mockito.verify(configurationRepository, Mockito.times(1)).findByName(TEST_OPTION_NAME);
   }
 }
