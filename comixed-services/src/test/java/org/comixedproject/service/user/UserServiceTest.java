@@ -22,11 +22,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.Date;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
-import org.comixedproject.utils.Utils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class UserServiceTest {
   @InjectMocks private UserService service;
   @Mock private ComiXedUserRepository userRepository;
   @Mock private PublishCurrentUserAction publishCurrentUserAction;
-  @Mock private Utils utils;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComiXedUser user;
   @Mock private ComiXedUser userRecord;
 
@@ -181,7 +181,8 @@ public class UserServiceTest {
   @Test(expected = ComiXedUserException.class)
   public void testUpdateCurrentUserSaveThrowsException() throws ComiXedUserException {
     Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
-    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(userRepository.save(user)).thenThrow(ConstraintViolationException.class);
 
     try {
@@ -196,7 +197,8 @@ public class UserServiceTest {
   public void testUpdateCurrentUserPublishingException()
       throws ComiXedUserException, PublishingException {
     Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
-    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(userRepository.save(user)).thenReturn(userRecord);
     Mockito.doThrow(PublishingException.class)
         .when(publishCurrentUserAction)
@@ -217,7 +219,8 @@ public class UserServiceTest {
   @Test
   public void testUpdateCurrentUser() throws ComiXedUserException, PublishingException {
     Mockito.when(userRepository.getById(Mockito.anyLong())).thenReturn(user);
-    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(userRepository.save(user)).thenReturn(userRecord);
 
     final ComiXedUser result = service.updateCurrentUser(TEST_USER_ID, TEST_EMAIL, TEST_PASSWORD);

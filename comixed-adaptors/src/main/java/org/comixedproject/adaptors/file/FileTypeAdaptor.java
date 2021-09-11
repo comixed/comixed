@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.utils;
+package org.comixedproject.adaptors.file;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,13 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>FileTypeIdentifier</code> identifies the mime type for a file or file entry.
+ * <code>FileTypeAdaptor</code> identifies the mime type for a file or file entry.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class FileTypeIdentifier {
+public class FileTypeAdaptor {
   @Autowired private Tika tika;
   @Autowired private Metadata metadata;
 

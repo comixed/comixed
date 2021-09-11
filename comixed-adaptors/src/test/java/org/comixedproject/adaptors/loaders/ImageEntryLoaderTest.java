@@ -21,10 +21,10 @@ package org.comixedproject.adaptors.loaders;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.PageType;
 import org.comixedproject.repositories.comicbooks.PageTypeRepository;
-import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,14 +46,15 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
   @InjectMocks private ImageEntryLoader loader;
   @Mock private PageTypeRepository pageTypeRepository;
   @Mock private PageType pageType;
-  @Mock private Utils utils;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   private Comic comic;
 
   @Before
   public void setUp() {
     comic = new Comic();
-    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_HASH);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_HASH);
   }
 
   @Test

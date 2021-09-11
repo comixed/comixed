@@ -21,7 +21,7 @@ package org.comixedproject.adaptors.archive;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import org.comixedproject.ComiXedAdaptorsTestContext;
+import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Before;
@@ -32,7 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ComiXedAdaptorsTestContext.class)
+@SpringBootTest(classes = AdaptorTestContext.class)
 public class RarArchiveAdaptorTest {
   private static final String TEST_FILE_ENTRY_0 = "exampleCBR.jpg";
   private static final String TEST_FILE_ENTRY_1 = "example.jpeg";

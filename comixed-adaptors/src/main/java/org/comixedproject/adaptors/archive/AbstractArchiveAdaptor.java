@@ -28,14 +28,14 @@ import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.plexus.util.FileUtils;
-import org.comixedproject.adaptors.ComicInfoEntryAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicInfoEntryAdaptor;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.adaptors.loaders.EntryLoader;
 import org.comixedproject.adaptors.loaders.EntryLoaderException;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.utils.ComicFileUtils;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -58,10 +58,10 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, InitializingBean {
   @Autowired private ApplicationContext context;
-  @Autowired protected FileTypeIdentifier fileTypeIdentifier;
+  @Autowired protected FileTypeAdaptor fileTypeAdaptor;
   @Autowired protected ComicInfoEntryAdaptor comicInfoEntryAdaptor;
   @Autowired protected ComicFileHandler comicFileHandler;
-  @Autowired private ComicFileUtils comicFileUtils;
+  @Autowired private ComicFileAdaptor comicFileAdaptor;
 
   protected List<EntryLoaderForType> loaders = new ArrayList<>();
   protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
@@ -114,7 +114,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   protected EntryLoader getLoaderForContent(byte[] content) {
-    String type = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+    String type = this.fileTypeAdaptor.subtypeFor(new ByteArrayInputStream(content));
 
     log.debug("Content type: {}", type);
 
@@ -234,7 +234,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     comic.addFileEntry(
         filename,
         content.length,
-        this.fileTypeIdentifier.basetypeFor(new ByteArrayInputStream(content)));
+        this.fileTypeAdaptor.basetypeFor(new ByteArrayInputStream(content)));
   }
 
   @Override
@@ -255,7 +255,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     this.saveComicInternal(comic, tempFilename, renamePages);
 
     String filename =
-        this.comicFileUtils.findAvailableFilename(
+        this.comicFileAdaptor.findAvailableFilename(
             FilenameUtils.removeExtension(comic.getFilename()), 0, this.defaultExtension);
     var file1 = new File(tempFilename);
     var file2 = new File(filename);
@@ -346,7 +346,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
     for (String entry : entries) {
       byte[] content = this.loadSingleFileInternal(archiveRef, entry);
-      String contentType = this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+      String contentType = this.fileTypeAdaptor.subtypeFor(new ByteArrayInputStream(content));
 
       if (contentType != null && this.imageTypes.contains(contentType)) {
         result = entry;

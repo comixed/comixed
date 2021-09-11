@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
-import org.comixedproject.utils.Utils;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,7 +50,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
 
   @Autowired private ComiXedUserDetailsService userDetailsService;
   @Autowired private JwtTokenUtil jwtTokenUtil;
-  @Autowired private Utils utils;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
   protected void doFilterInternal(
@@ -75,7 +75,7 @@ public class ComiXedAuthenticationFilter extends OncePerRequestFilter {
       String[] userDetails = credentials.split(":", 2);
       if (!userDetails[0].equals(USER_PREFIX)) {
         username = userDetails[0];
-        password = this.utils.createHash(userDetails[1].getBytes());
+        password = this.genericUtilitiesAdaptor.createHash(userDetails[1].getBytes());
       }
     } else {
       this.logger.warn("couldn't find bearer string, will ignore the header");

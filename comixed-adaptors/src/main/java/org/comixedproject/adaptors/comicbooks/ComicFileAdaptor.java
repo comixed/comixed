@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.utils;
+package org.comixedproject.adaptors.comicbooks;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -24,14 +24,14 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicFileUtils</code> provides a set of utility methods related to comic files and
+ * <code>ComicFileAdaptor</code> provides a set of utility methods related to comic files and
  * filenames.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicFileUtils {
+public class ComicFileAdaptor {
   /**
    * Looks for the next available filename for a comic file.
    *

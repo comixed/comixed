@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.adaptors.ComicDataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;

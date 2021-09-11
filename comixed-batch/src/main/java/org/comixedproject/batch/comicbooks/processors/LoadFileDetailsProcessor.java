@@ -20,9 +20,9 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import java.io.FileInputStream;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicFileDetails;
-import org.comixedproject.utils.Utils;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class LoadFileDetailsProcessor implements ItemProcessor<Comic, Comic> {
-  @Autowired private Utils utils;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
   public Comic process(final Comic comic) throws Exception {
@@ -43,7 +43,8 @@ public class LoadFileDetailsProcessor implements ItemProcessor<Comic, Comic> {
     final ComicFileDetails fileDetails = new ComicFileDetails(comic);
     comic.setFileDetails(fileDetails);
     log.trace("Getting comic file hash");
-    fileDetails.setHash(this.utils.createHash(new FileInputStream(comic.getFilename())));
+    fileDetails.setHash(
+        this.genericUtilitiesAdaptor.createHash(new FileInputStream(comic.getFilename())));
     return comic;
   }
 }

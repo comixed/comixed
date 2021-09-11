@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors;
+package org.comixedproject.adaptors.comicbooks;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.scraping.ScrapingRule;
 import org.springframework.stereotype.Component;

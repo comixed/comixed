@@ -21,9 +21,9 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.*;
 
 import java.io.InputStream;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicFileDetails;
-import org.comixedproject.utils.Utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -35,7 +35,7 @@ public class LoadFileDetailsProcessorTest {
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
 
   @InjectMocks private LoadFileDetailsProcessor processor;
-  @Mock private Utils utils;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private Comic comic;
 
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsArgumentCaptor;
@@ -43,7 +43,8 @@ public class LoadFileDetailsProcessorTest {
   @Test
   public void testProcess() throws Exception {
     Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-    Mockito.when(utils.createHash(Mockito.any(InputStream.class))).thenReturn(TEST_HASH);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(InputStream.class)))
+        .thenReturn(TEST_HASH);
     Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsArgumentCaptor.capture());
 
     final Comic result = processor.process(comic);

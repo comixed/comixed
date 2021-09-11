@@ -1,4 +1,4 @@
-package org.comixedproject.utils;
+package org.comixedproject.adaptors;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 /**
- * <code>Utils</code> provides useful utility functions.
+ * <code>GenericUtilitiesAdaptor</code> provides useful utility functions.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class Utils {
+public class GenericUtilitiesAdaptor {
   public String createHash(byte[] bytes) {
     var result = new StringBuilder(convertToHexString(DigestUtils.md5Digest(bytes)));
     while (result.length() < 32) result = result.insert(0, "0");

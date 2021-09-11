@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicbooks.Comic;
@@ -33,7 +34,6 @@ import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
-import org.comixedproject.utils.ComicFileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -56,7 +56,7 @@ public class ComicFileServiceTest {
 
   @InjectMocks private ComicFileService service;
   @Mock private ComicFileHandler comicFileHandler;
-  @Mock private ComicFileUtils comicFileUtils;
+  @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
   @Mock private ComicFileDescriptorRepository comicFileDescriptorRepository;
@@ -126,7 +126,7 @@ public class ComicFileServiceTest {
 
   @Test
   public void testGetAllComicsAlreadyImported() throws IOException {
-    Mockito.when(comicFileUtils.isComicFile(Mockito.any(File.class))).thenReturn(true);
+    Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
     Mockito.when(comicRepository.findByFilename(Mockito.anyString())).thenReturn(comic);
 
     final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
@@ -140,7 +140,7 @@ public class ComicFileServiceTest {
 
   @Test
   public void testGetAllComicsUnderWithLimit() throws IOException {
-    Mockito.when(comicFileUtils.isComicFile(Mockito.any(File.class))).thenReturn(true);
+    Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
 
     final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
@@ -151,7 +151,7 @@ public class ComicFileServiceTest {
 
   @Test
   public void testGetAllComicsUnder() throws IOException {
-    Mockito.when(comicFileUtils.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
+    Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenCallRealMethod();
 
     final List<ComicFile> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_NO_LIMIT);
 

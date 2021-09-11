@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.comixedproject.ComiXedAdaptorsTestContext;
+import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Before;
@@ -35,7 +35,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ComiXedAdaptorsTestContext.class)
+@SpringBootTest(classes = AdaptorTestContext.class)
 public class ZipArchiveAdaptorTest {
   private static final String TEST_FILE_ENTRY_3 = "exampleCBR.jpg";
   private static final String TEST_FILE_ENTRY_2 = "example.png";
