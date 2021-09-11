@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.List;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
@@ -34,7 +35,6 @@ import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.PageCacheService;
 import org.comixedproject.service.comicbooks.PageException;
 import org.comixedproject.service.comicbooks.PageService;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +64,7 @@ public class PageControllerTest {
   @Mock private List<Page> pageList;
   @Mock private Comic comic;
   @Mock private List<PageType> pageTypes;
-  @Mock private FileTypeIdentifier fileTypeIdentifier;
+  @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
 
@@ -102,9 +102,8 @@ public class PageControllerTest {
     Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_FILENAME);
     Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
         .thenReturn(TEST_PAGE_CONTENT);
-    Mockito.when(fileTypeIdentifier.typeFor(inputStream.capture()))
-        .thenReturn(TEST_PAGE_CONTENT_TYPE);
-    Mockito.when(fileTypeIdentifier.subtypeFor(inputStream.capture()))
+    Mockito.when(fileTypeAdaptor.typeFor(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
+    Mockito.when(fileTypeAdaptor.subtypeFor(inputStream.capture()))
         .thenReturn(TEST_PAGE_CONTENT_SUBTYPE);
 
     ResponseEntity<byte[]> result = pageController.getPageContent(TEST_PAGE_ID);
@@ -114,9 +113,8 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(fileTypeIdentifier, Mockito.times(1)).typeFor(inputStream.getAllValues().get(0));
-    Mockito.verify(fileTypeIdentifier, Mockito.times(1))
-        .subtypeFor(inputStream.getAllValues().get(1));
+    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).typeFor(inputStream.getAllValues().get(0));
+    Mockito.verify(fileTypeAdaptor, Mockito.times(1)).subtypeFor(inputStream.getAllValues().get(1));
   }
 
   @Test

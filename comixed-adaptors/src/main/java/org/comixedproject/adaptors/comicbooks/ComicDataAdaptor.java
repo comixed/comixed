@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors;
+package org.comixedproject.adaptors.comicbooks;
 
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.stereotype.Component;

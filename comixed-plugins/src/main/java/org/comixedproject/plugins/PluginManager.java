@@ -25,9 +25,9 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.plugins.model.Plugin;
 import org.comixedproject.plugins.model.PluginDescriptor;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class PluginManager implements InitializingBean {
   @Autowired private ObjectFactory<Plugin> pluginObjectFactory;
-  @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   @Value("${comixed.plugins.location}")
   String pluginLocation;
@@ -90,7 +90,7 @@ public class PluginManager implements InitializingBean {
     var processed = 0;
     for (File pluginFile : pluginFiles) {
       try (InputStream input = new BufferedInputStream(new FileInputStream(pluginFile))) {
-        String fileType = this.fileTypeIdentifier.subtypeFor(input);
+        String fileType = this.fileTypeAdaptor.subtypeFor(input);
         if (!fileType.equalsIgnoreCase("zip")) {
           log.debug("{} is not a zip file; skipping", pluginFile.getName());
         } else {

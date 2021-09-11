@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.auditlog.AuditableEndpoint;
@@ -39,7 +40,6 @@ import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.task.MarkComicsForRemovalTask;
 import org.comixedproject.task.UnmarkComicsForRemovalTask;
 import org.comixedproject.task.runner.TaskManager;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class ComicController {
   @Autowired private ComicService comicService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
-  @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private TaskManager taskManager;
   @Autowired private ObjectFactory<MarkComicsForRemovalTask> deleteComicsWorkerTaskFactory;
 
@@ -233,9 +233,9 @@ public class ComicController {
   private ResponseEntity<byte[]> getResponseEntityForImage(byte[] content, String filename) {
     final ByteArrayInputStream inputStream = new ByteArrayInputStream(content);
     String type =
-        this.fileTypeIdentifier.typeFor(inputStream)
+        this.fileTypeAdaptor.typeFor(inputStream)
             + "/"
-            + this.fileTypeIdentifier.subtypeFor(inputStream);
+            + this.fileTypeAdaptor.subtypeFor(inputStream);
     return ResponseEntity.ok()
         .contentLength(content.length)
         .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")

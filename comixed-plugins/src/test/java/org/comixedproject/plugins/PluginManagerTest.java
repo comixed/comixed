@@ -23,9 +23,9 @@ import static junit.framework.TestCase.*;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.plugins.model.Plugin;
 import org.comixedproject.plugins.model.PluginDescriptor;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -41,7 +41,7 @@ public class PluginManagerTest {
   @InjectMocks private PluginManager pluginManager;
   @Mock private ObjectFactory<Plugin> pluginObjectFactory;
   @Mock private Plugin plugin;
-  @Mock private FileTypeIdentifier fileTypeIdentifier;
+  @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Captor private ArgumentCaptor<InputStream> inputStreamArgumentCaptor;
   @Mock private PluginDescriptor pluginDescriptor;
 
@@ -73,14 +73,14 @@ public class PluginManagerTest {
     pluginManager.pluginLocation =
         new File(TEST_EXAMPLE_PLUGIN_FILE).getParentFile().getAbsolutePath();
 
-    Mockito.when(fileTypeIdentifier.subtypeFor(inputStreamArgumentCaptor.capture()))
+    Mockito.when(fileTypeAdaptor.subtypeFor(inputStreamArgumentCaptor.capture()))
         .thenReturn("7zip");
 
     pluginManager.loadPlugins();
 
     assertTrue(pluginManager.plugins.isEmpty());
 
-    Mockito.verify(fileTypeIdentifier, Mockito.times(1))
+    Mockito.verify(fileTypeAdaptor, Mockito.times(1))
         .subtypeFor(inputStreamArgumentCaptor.getValue());
   }
 
@@ -89,8 +89,7 @@ public class PluginManagerTest {
     pluginManager.pluginLocation =
         new File(TEST_EXAMPLE_PLUGIN_FILE).getParentFile().getAbsolutePath();
 
-    Mockito.when(fileTypeIdentifier.subtypeFor(inputStreamArgumentCaptor.capture()))
-        .thenReturn("zip");
+    Mockito.when(fileTypeAdaptor.subtypeFor(inputStreamArgumentCaptor.capture())).thenReturn("zip");
     Mockito.when(pluginObjectFactory.getObject()).thenReturn(plugin);
     Mockito.doNothing().when(plugin).setEntries(Mockito.anyMap());
     Mockito.when(plugin.getName()).thenReturn(TEST_PLUGIN_NAME);
@@ -100,7 +99,7 @@ public class PluginManagerTest {
     assertFalse(pluginManager.plugins.isEmpty());
     assertTrue(pluginManager.plugins.containsKey(TEST_PLUGIN_NAME));
 
-    Mockito.verify(fileTypeIdentifier, Mockito.times(1))
+    Mockito.verify(fileTypeAdaptor, Mockito.times(1))
         .subtypeFor(inputStreamArgumentCaptor.getValue());
   }
 

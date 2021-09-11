@@ -27,13 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +53,7 @@ public class LibraryServiceTest {
   @Mock private ComicService comicService;
   @Mock private Comic comic;
   @Mock private File file;
-  @Mock private Utils utils;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
 
@@ -101,7 +101,7 @@ public class LibraryServiceTest {
     Mockito.doNothing().when(comicService).delete(Mockito.any(Comic.class));
     Mockito.when(comic.getFilename()).thenReturn(TEST_FILENAME);
     Mockito.when(comic.getFile()).thenReturn(file);
-    Mockito.when(utils.deleteFile(Mockito.any(File.class))).thenReturn(true);
+    Mockito.when(genericUtilitiesAdaptor.deleteFile(Mockito.any(File.class))).thenReturn(true);
 
     List<Comic> result = service.consolidateLibrary(true);
 
@@ -111,29 +111,33 @@ public class LibraryServiceTest {
     Mockito.verify(comicService, Mockito.times(comicList.size())).delete(comic);
     Mockito.verify(comic, Mockito.times(comicList.size())).getFilename();
     Mockito.verify(comic, Mockito.times(comicList.size())).getFile();
-    Mockito.verify(utils, Mockito.times(comicList.size())).deleteFile(file);
+    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(comicList.size())).deleteFile(file);
   }
 
   @Test
   public void testClearImageCache() throws LibraryException, IOException {
     Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
-    Mockito.doNothing().when(utils).deleteDirectoryContents(Mockito.anyString());
+    Mockito.doNothing().when(genericUtilitiesAdaptor).deleteDirectoryContents(Mockito.anyString());
 
     service.clearImageCache();
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
-    Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
+    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1))
+        .deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
   }
 
   @Test(expected = LibraryException.class)
   public void testClearImageCacheError() throws LibraryException, IOException {
     Mockito.when(pageCacheService.getRootDirectory()).thenReturn(TEST_IMAGE_CACHE_DIRECTORY);
-    Mockito.doThrow(IOException.class).when(utils).deleteDirectoryContents(Mockito.anyString());
+    Mockito.doThrow(IOException.class)
+        .when(genericUtilitiesAdaptor)
+        .deleteDirectoryContents(Mockito.anyString());
 
     service.clearImageCache();
 
     Mockito.verify(pageCacheService, Mockito.times(1)).getRootDirectory();
-    Mockito.verify(utils, Mockito.times(1)).deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
+    Mockito.verify(genericUtilitiesAdaptor, Mockito.times(1))
+        .deleteDirectoryContents(TEST_IMAGE_CACHE_DIRECTORY);
   }
 
   @Test

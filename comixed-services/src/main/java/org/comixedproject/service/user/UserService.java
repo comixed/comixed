@@ -21,11 +21,11 @@ package org.comixedproject.service.user;
 import java.util.Date;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.user.PublishCurrentUserAction;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
-import org.comixedproject.utils.Utils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class UserService {
   @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private Utils utils;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Autowired private PublishCurrentUserAction publishCurrentUserAction;
 
   /**
@@ -148,7 +148,7 @@ public class UserService {
     log.trace("Updating user details");
     user.setEmail(email);
     if (StringUtils.isNotEmpty(password)) {
-      user.setPasswordHash(this.utils.createHash(password.getBytes()));
+      user.setPasswordHash(this.genericUtilitiesAdaptor.createHash(password.getBytes()));
     }
 
     log.trace("Saving updated user");

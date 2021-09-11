@@ -16,13 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors;
+package org.comixedproject.adaptors.comicbooks;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.scraping.ScrapingRule;
 import org.junit.Before;

@@ -23,12 +23,12 @@ import static org.junit.Assert.assertSame;
 
 import java.io.InputStream;
 import java.util.Map;
-import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -43,7 +43,7 @@ public class ComicFileHandlerTest {
   private static final String TEST_NON_ARCHIVE_FILENAME = "src/test/resources/example.jpg";
 
   @InjectMocks private ComicFileHandler handler;
-  @Mock private FileTypeIdentifier identifier;
+  @Mock private FileTypeAdaptor identifier;
   @Mock private Comic comic;
   @Captor private ArgumentCaptor<InputStream> input;
   @Mock private Map<String, ArchiveAdaptor> archiveAdaptors;

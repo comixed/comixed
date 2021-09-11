@@ -23,10 +23,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Page;
 import org.comixedproject.repositories.comicbooks.PageTypeRepository;
-import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +39,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ImageEntryLoader extends AbstractEntryLoader {
   @Autowired private PageTypeRepository pageTypeRepository;
-  @Autowired private Utils utils;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
   public void loadContent(
@@ -52,7 +52,7 @@ public class ImageEntryLoader extends AbstractEntryLoader {
     if (comic.hasPageWithFilename(filename)) {
       log.debug("Ignore known file: {}", filename);
     } else {
-      final String hash = utils.createHash(content);
+      final String hash = genericUtilitiesAdaptor.createHash(content);
 
       try {
         final BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(content));

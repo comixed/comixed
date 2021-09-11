@@ -22,12 +22,12 @@ import java.io.*;
 import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.comixedproject.adaptors.ComicDataAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -48,7 +48,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ComicFileHandler implements InitializingBean {
   @Autowired private ApplicationContext context;
-  @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private Map<String, ArchiveAdaptor> archiveAdaptors;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
 
@@ -100,7 +100,7 @@ public class ComicFileHandler implements InitializingBean {
       if (FileUtils.directoryContains(
           file.getAbsoluteFile().getParentFile(), file.getAbsoluteFile())) {
         InputStream input = new BufferedInputStream(new FileInputStream(filename));
-        archiveType = this.fileTypeIdentifier.subtypeFor(input);
+        archiveType = this.fileTypeAdaptor.subtypeFor(input);
       }
     } catch (IOException error) {
       throw new ComicFileHandlerException("Unable to load comic file", error);
@@ -166,7 +166,7 @@ public class ComicFileHandler implements InitializingBean {
 
     try {
       InputStream input = new BufferedInputStream(new FileInputStream(comic.getFilename()));
-      archiveMimeSubtype = this.fileTypeIdentifier.subtypeFor(input);
+      archiveMimeSubtype = this.fileTypeAdaptor.subtypeFor(input);
     } catch (FileNotFoundException error) {
       throw new ComicFileHandlerException("Unable to load comic file", error);
     }

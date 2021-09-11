@@ -28,7 +28,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.comixedproject.utils.Utils;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +51,7 @@ public class ComiXedAuthenticationFilterTest {
   @InjectMocks private ComiXedAuthenticationFilter authenticationFilter;
   @Mock private ComiXedUserDetailsService userDetailsService;
   @Mock private JwtTokenUtil jwtTokenUtil;
-  @Mock private Utils utils;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
   @Mock private FilterChain filterChain;

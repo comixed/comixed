@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicbooks.Comic;
@@ -32,7 +33,6 @@ import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
-import org.comixedproject.utils.ComicFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +49,7 @@ public class ComicFileService {
   @Autowired private ComicFileHandler comicFileHandler;
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicFileDescriptorRepository comicFileDescriptorRepository;
-  @Autowired private ComicFileUtils comicFileUtils;
+  @Autowired private ComicFileAdaptor comicFileAdaptor;
 
   public byte[] getImportFileCover(final String comicArchive)
       throws ComicFileHandlerException, ArchiveAdaptorException {
@@ -122,7 +122,7 @@ public class ComicFileService {
   }
 
   private boolean canBeImported(final File file) throws IOException {
-    boolean isComic = this.comicFileUtils.isComicFile(file);
+    boolean isComic = this.comicFileAdaptor.isComicFile(file);
 
     final String filePath = file.getCanonicalPath();
     final Comic comic = this.comicRepository.findByFilename(filePath);

@@ -27,11 +27,11 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.tasks.PersistedTaskType;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.comixedproject.utils.ComicFileUtils;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -54,7 +54,7 @@ public class MoveComicTask extends AbstractTask {
   private static final String UNKNOWN_VALUE = "Unknown";
 
   @Autowired private ComicStateHandler comicStateHandler;
-  @Autowired private ComicFileUtils comicFileUtils;
+  @Autowired private ComicFileAdaptor comicFileAdaptor;
 
   @JsonView(View.AuditLogEntryDetail.class)
   @Getter
@@ -89,7 +89,7 @@ public class MoveComicTask extends AbstractTask {
     String defaultExtension = FilenameUtils.getExtension(comic.getFilename());
     destFile =
         new File(
-            this.comicFileUtils.findAvailableFilename(
+            this.comicFileAdaptor.findAvailableFilename(
                 destFile.getAbsolutePath(), 0, defaultExtension));
 
     // if the source and target are the same, then skip the file

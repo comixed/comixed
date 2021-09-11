@@ -22,11 +22,11 @@ import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.utils.Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +45,7 @@ public class ComiXedAuthenticationProviderTest {
 
   @InjectMocks private ComiXedAuthenticationProvider authenticationProvider;
   @Mock private UserService userService;
-  @Mock private Utils utils;
+  @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private Authentication authentication;
   @Mock private ComiXedUser user;
 
@@ -56,7 +56,8 @@ public class ComiXedAuthenticationProviderTest {
     Mockito.when(authentication.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(authentication.getCredentials()).thenReturn(TEST_PASSWORD);
     Mockito.when(user.getPasswordHash()).thenReturn(TEST_PASSWORD_HASH);
-    Mockito.when(utils.createHash(Mockito.any(byte[].class))).thenReturn(TEST_PASSWORD_HASH);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
+        .thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(user.getRoles()).thenReturn(roles);
     Mockito.when(userService.updateLastLoggedInDate(Mockito.any())).thenReturn(user);
 

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.utils;
+package org.comixedproject.adaptors.file;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import org.comixedproject.AdaptorTestContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +33,18 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = UtilsContext.class)
+@SpringBootTest(classes = AdaptorTestContext.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class FileTypeIdentifierTest {
+public class FileTypeAdaptorTest {
   private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
   private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
 
-  @Autowired FileTypeIdentifier fileTypeIdentifier;
+  @Autowired FileTypeAdaptor fileTypeAdaptor;
 
   @Test
   public void testIdentifyZipFile() throws FileNotFoundException {
     String result =
-        fileTypeIdentifier.subtypeFor(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
+        fileTypeAdaptor.subtypeFor(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
 
     assertNotNull(result);
     assertEquals("zip", result);
@@ -52,7 +53,7 @@ public class FileTypeIdentifierTest {
   @Test
   public void testIdentifyRarFile() throws FileNotFoundException {
     String result =
-        fileTypeIdentifier.subtypeFor(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
+        fileTypeAdaptor.subtypeFor(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
 
     assertNotNull(result);
     assertEquals("x-rar-compressed", result);

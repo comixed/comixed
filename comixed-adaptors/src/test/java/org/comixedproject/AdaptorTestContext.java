@@ -16,27 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.utils;
+package org.comixedproject;
 
-import org.apache.tika.Tika;
-import org.apache.tika.metadata.Metadata;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.TestPropertySource;
 
 @Configuration
-@ComponentScan
-class UtilsContext {
-  private Tika tika = new Tika();
-  private Metadata metadata = new Metadata();
-
-  @Bean
-  public Tika tika() {
-    return tika;
-  }
-
-  @Bean
-  public Metadata metadata() {
-    return metadata;
-  }
-}
+@EnableAutoConfiguration
+@ComponentScan(basePackages = {"org.comixedproject"})
+@TestPropertySource(locations = "classpath:application.properties")
+public class AdaptorTestContext {}

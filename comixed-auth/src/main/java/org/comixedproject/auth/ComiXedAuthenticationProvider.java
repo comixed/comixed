@@ -21,11 +21,11 @@ package org.comixedproject.auth;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
-import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +46,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
   private static final String ROLE_PREFIX = "ROLE_";
 
   @Autowired private UserService userService;
-  @Autowired private Utils utils;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -68,7 +68,7 @@ public class ComiXedAuthenticationProvider implements AuthenticationProvider {
       return null;
     }
 
-    if (utils.createHash(password.getBytes()).equals(user.getPasswordHash())) {
+    if (genericUtilitiesAdaptor.createHash(password.getBytes()).equals(user.getPasswordHash())) {
       log.debug("Passwords match!");
 
       List<GrantedAuthority> roles = new ArrayList<>();

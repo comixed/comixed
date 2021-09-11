@@ -16,15 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject;
+package org.comixedproject.adaptors;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.apache.tika.Tika;
+import org.apache.tika.metadata.Metadata;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.TestPropertySource;
 
+/**
+ * <code>AdaptorConfiguration</code> provides beans for the adaptors package.
+ *
+ * @author Darryl L. Pierce
+ */
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan(basePackages = {"org.comixedproject"})
-@TestPropertySource(locations = "classpath:application.properties")
-public class ComiXedAdaptorsTestContext {}
+@ComponentScan
+class AdaptorConfiguration {
+  @Bean
+  public Tika tika() {
+    return new Tika();
+  }
+
+  @Bean
+  public Metadata metadata() {
+    return new Metadata();
+  }
+}

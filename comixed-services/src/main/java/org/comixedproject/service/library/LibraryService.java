@@ -22,13 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.comixedproject.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class LibraryService {
   @Autowired private ComicService comicService;
-  @Autowired private Utils utils;
+  @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicStateHandler comicStateHandler;
 
@@ -55,7 +55,7 @@ public class LibraryService {
         String filename = comic.getFilename();
         File file = comic.getFile();
         log.debug("Deleting physical file: {}", filename);
-        this.utils.deleteFile(file);
+        this.genericUtilitiesAdaptor.deleteFile(file);
       }
     }
     return result;
@@ -70,7 +70,7 @@ public class LibraryService {
     String directory = this.pageCacheService.getRootDirectory();
     log.debug("Clearing the image cache: {}", directory);
     try {
-      this.utils.deleteDirectoryContents(directory);
+      this.genericUtilitiesAdaptor.deleteDirectoryContents(directory);
     } catch (IOException error) {
       throw new LibraryException("failed to clean image cache directory", error);
     }

@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import marvin.image.MarvinImage;
 import marvinplugins.MarvinPluginCollection;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
@@ -34,7 +35,6 @@ import org.comixedproject.model.comicbooks.Page;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -54,7 +54,7 @@ public class OPDSController {
   public static final String FEED_HEADER = "Comics - ";
   @Autowired private ComicRepository comicRepository;
   @Autowired private ReadingListService readingListService;
-  @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicFileHandler comicFileHandler;
 
   @ResponseBody
@@ -164,9 +164,9 @@ public class OPDSController {
       }
 
       String type =
-          this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
+          this.fileTypeAdaptor.typeFor(new ByteArrayInputStream(content))
               + "/"
-              + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+              + this.fileTypeAdaptor.subtypeFor(new ByteArrayInputStream(content));
       log.debug("Image {} mimetype: {}", index, type);
       return ResponseEntity.ok()
           .contentLength(content.length)

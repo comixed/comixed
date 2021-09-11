@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
@@ -35,7 +36,6 @@ import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.PageCacheService;
 import org.comixedproject.service.comicbooks.PageException;
 import org.comixedproject.service.comicbooks.PageService;
-import org.comixedproject.utils.FileTypeIdentifier;
 import org.comixedproject.views.View;
 import org.comixedproject.views.View.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.*;
 public class PageController {
   @Autowired private PageService pageService;
   @Autowired private PageCacheService pageCacheService;
-  @Autowired private FileTypeIdentifier fileTypeIdentifier;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicFileHandler comicFileHandler;
 
   @DeleteMapping(value = "/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -130,9 +130,9 @@ public class PageController {
     }
 
     String type =
-        this.fileTypeIdentifier.typeFor(new ByteArrayInputStream(content))
+        this.fileTypeAdaptor.typeFor(new ByteArrayInputStream(content))
             + "/"
-            + this.fileTypeIdentifier.subtypeFor(new ByteArrayInputStream(content));
+            + this.fileTypeAdaptor.subtypeFor(new ByteArrayInputStream(content));
     log.debug("Page type: {}", type);
 
     return ResponseEntity.ok()
