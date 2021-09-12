@@ -234,28 +234,28 @@ public class ComicStateMachineConfiguration
         .withExternal()
         .source(ComicState.ADDED)
         .target(ComicState.DELETED)
-        .event(ComicEvent.markedForRemoval)
+        .event(ComicEvent.deleteComic)
         .action(markComicForRemovalAction)
         // the comic was marked for deletion
         .and()
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.DELETED)
-        .event(ComicEvent.markedForRemoval)
+        .event(ComicEvent.deleteComic)
         .action(markComicForRemovalAction)
         // the comic was marked for deletion
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.DELETED)
-        .event(ComicEvent.markedForRemoval)
+        .event(ComicEvent.deleteComic)
         .action(markComicForRemovalAction)
         // the comic was unmarked for deletion
         .and()
         .withExternal()
         .source(ComicState.DELETED)
-        .target(ComicState.ADDED)
-        .event(ComicEvent.unmarkedForRemoval)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.undeleteComic)
         .action(unmarkComicForRemovalAction);
   }
 }

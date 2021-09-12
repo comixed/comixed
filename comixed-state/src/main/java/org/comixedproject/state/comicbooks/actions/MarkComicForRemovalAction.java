@@ -18,11 +18,18 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
+import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
+
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.lists.ReadingListEvent;
+import org.comixedproject.state.lists.ReadingListStateHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
@@ -35,10 +42,22 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class MarkComicForRemovalAction extends AbstractComicAction {
+  @Autowired private ReadingListStateHandler readingListStateHandler;
+
   @Override
   public void execute(final StateContext<ComicState, ComicEvent> context) {
     log.trace("Fetching comic");
     final Comic comic = this.fetchComic(context);
+    Map<String, Comic> headers = new HashMap<>();
+    headers.put(HEADER_COMIC, comic);
+    comic
+        .getReadingLists()
+        .forEach(
+            readingList -> {
+              log.trace("Removing from reading list: {}", readingList.getName());
+              this.readingListStateHandler.fireEvent(
+                  readingList, ReadingListEvent.comicRemoved, headers);
+            });
     log.trace("Setting comic deleted date");
     comic.setDateDeleted(new Date());
   }

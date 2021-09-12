@@ -49,7 +49,7 @@ public class DeleteComicProcessor implements ItemProcessor<Comic, Void>, StepExe
   @Override
   public Void process(final Comic comic) {
     log.trace("Removing comic from database");
-    this.comicService.delete(comic);
+    this.comicService.deleteComic(comic);
     if (Boolean.parseBoolean(this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES))) {
       log.trace("Deleting physical file: {}", comic.getFilename());
       this.fileAdaptor.deleteFile(comic.getFile());

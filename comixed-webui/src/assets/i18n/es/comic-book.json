@@ -9,6 +9,10 @@
     }
   },
   "comic-book": {
+    "deleted-state": {
+      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic as deleted?",
+      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comic As Deleted"
+    },
     "hint": {
       "required-for-scraping": "Este valor es necesario para el raspado...",
       "useful-for-scraping": "This value is used when scraping..."
@@ -26,6 +30,7 @@
       "comic-state": "Estado",
       "comic-story": "Historia",
       "comicvine-id": "ComicVine ID",
+      "comicvine-issue-details": "Comic Details Page",
       "credits": "Equipo creativo ({count})",
       "description": "Descripción de la edición",
       "file-details": "Detalles del archivo cómico",
@@ -85,6 +90,7 @@
     "tooltip": {
       "blocked-page": "Páginas como esta están bloqueadas...",
       "cancel-scraping": "Deja de raspar este cómic.",
+      "delete-comic": "Mark comics as deleted.",
       "download-comic": "Descarga este cómic...",
       "go-to-next-comic": "Ir al siguiente cómic de esta serie...",
       "go-to-previous-comic": "Ir al cómic anterior de esta serie...",
@@ -97,7 +103,9 @@
       "scrape-comic": "Raspa este cómic.",
       "show-next-comic-page": "Ir a la página siguiente...",
       "show-previous-comic-page": "Ir a la página anterior...",
-      "undo-changes": "Deshacer cambios en este cómic."
+      "undelete-comic": "Unmark comic as deleted.",
+      "undo-changes": "Deshacer cambios en este cómic.",
+      "update-comic-info": "Update comic file metadata."
     },
     "undo-changes": {
       "message": "¿Estás seguro de que quieres deshacer los cambios en este cómic?",

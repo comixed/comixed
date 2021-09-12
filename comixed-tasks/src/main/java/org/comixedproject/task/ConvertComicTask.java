@@ -134,7 +134,7 @@ public class ConvertComicTask extends AbstractTask {
     try {
       FileUtils.forceDelete(file);
       log.debug("Removing comic from repository: id={}", this.comic.getId());
-      this.comicService.delete(this.comic);
+      this.comicService.deleteComic(this.comic);
     } catch (IOException error) {
       log.error("Unable to delete comic: {}", filename, error);
       throw new TaskException("failed to delete comic", error);

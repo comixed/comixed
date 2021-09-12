@@ -56,6 +56,7 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
+import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -232,6 +233,26 @@ export class ComicBookPageComponent
       confirm: () => {
         this.logger.debug('Updating comic file:', this.comic);
         this.store.dispatch(updateMetadata({ comics: [this.comic] }));
+      }
+    });
+  }
+
+  onSetComicDeletedState(deleted: boolean): void {
+    this.logger.trace('Confirming setting comic deleted state');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'comic-book.deleted-state.confirmation-title',
+        { deleted }
+      ),
+      message: this.translateService.instant(
+        'comic-book.deleted-state.confirmation-message',
+        { deleted }
+      ),
+      confirm: () => {
+        this.logger.trace('Marking comic for deletion');
+        this.store.dispatch(
+          markComicsDeleted({ comics: [this.comic], deleted })
+        );
       }
     });
   }

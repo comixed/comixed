@@ -70,6 +70,7 @@ import { updateComicReadStatus } from '@app/last-read/actions/update-read-status
 import { Confirmation } from '@app/core/models/confirmation';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
+import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
 
 describe('ComicBookPageComponent', () => {
   const COMIC = COMIC_1;
@@ -327,6 +328,28 @@ describe('ComicBookPageComponent', () => {
       it('clears the last read reference', () => {
         expect(component.lastRead).toBeNull();
       });
+    });
+  });
+
+  describe('setting the deleted state', () => {
+    const DELETED = Math.random() > 0.5;
+
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.comic = COMIC;
+      component.onSetComicDeletedState(DELETED);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        markComicsDeleted({ comics: [COMIC], deleted: DELETED })
+      );
     });
   });
 });

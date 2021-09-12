@@ -64,7 +64,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
   private static final String KEY_UPDATE_METADATA_STARTED = "key.update-metadata.started";
-  private static final String KEY_RESCAN_COMICS_START = "key.rescan-comics.started";
+  public static final String KEY_RESCAN_COMICS_START = "key.rescan-comics.started";
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;

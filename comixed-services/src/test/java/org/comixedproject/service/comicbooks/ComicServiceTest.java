@@ -194,27 +194,28 @@ public class ComicServiceTest {
 
   @Test(expected = ComicException.class)
   public void testDeleteComicNonexistent() throws ComicException {
-    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(comicRepository.getByIdWithReadingLists(Mockito.anyLong())).thenReturn(null);
 
     try {
       service.deleteComic(TEST_COMIC_ID);
     } finally {
-      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+      Mockito.verify(comicRepository, Mockito.times(1)).getByIdWithReadingLists(TEST_COMIC_ID);
     }
   }
 
   @Test
   public void testDeleteComic() throws ComicException {
-    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic, comicRecord);
+    Mockito.when(comicRepository.getByIdWithReadingLists(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comicRecord);
 
     final Comic result = service.deleteComic(TEST_COMIC_ID);
 
     assertNotNull(result);
     assertSame(comicRecord, result);
 
-    Mockito.verify(comicRepository, Mockito.times(2)).getById(TEST_COMIC_ID);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comic, ComicEvent.markedForRemoval);
+    Mockito.verify(comicRepository, Mockito.times(1)).getByIdWithReadingLists(TEST_COMIC_ID);
+    Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.deleteComic);
   }
 
   @Test(expected = ComicException.class)
@@ -222,7 +223,7 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      service.restoreComic(TEST_COMIC_ID);
+      service.undeleteComic(TEST_COMIC_ID);
     } finally {
       Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     }
@@ -233,14 +234,14 @@ public class ComicServiceTest {
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
     Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comicRecord);
 
-    final Comic response = service.restoreComic(TEST_COMIC_ID);
+    final Comic response = service.undeleteComic(TEST_COMIC_ID);
 
     assertNotNull(response);
     assertSame(comicRecord, response);
 
     Mockito.verify(comicRepository, Mockito.times(2)).getById(TEST_COMIC_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicRecord, ComicEvent.unmarkedForRemoval);
+        .fireEvent(comicRecord, ComicEvent.undeleteComic);
   }
 
   @Test
@@ -338,7 +339,7 @@ public class ComicServiceTest {
   public void testDelete() {
     Mockito.doNothing().when(comicRepository).delete(Mockito.any(Comic.class));
 
-    service.delete(comic);
+    service.deleteComic(comic);
 
     Mockito.verify(comicRepository, Mockito.times(1)).delete(comic);
   }
@@ -564,5 +565,55 @@ public class ComicServiceTest {
     assertSame(comicList, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testDeleteComicsInvalidId() {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getByIdWithReadingLists(Mockito.anyLong())).thenReturn(null);
+
+    service.deleteComics(idList);
+
+    Mockito.verify(comicRepository, Mockito.times(idList.size()))
+        .getByIdWithReadingLists(TEST_COMIC_ID);
+  }
+
+  @Test
+  public void testDeleteComics() {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getByIdWithReadingLists(Mockito.anyLong())).thenReturn(comic);
+
+    service.deleteComics(idList);
+
+    Mockito.verify(comicRepository, Mockito.times(idList.size()))
+        .getByIdWithReadingLists(TEST_COMIC_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
+        .fireEvent(comic, ComicEvent.deleteComic);
+  }
+
+  @Test
+  public void testUndeleteComicsInvalidId() {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    service.undeleteComics(idList);
+
+    Mockito.verify(comicRepository, Mockito.times(idList.size())).getById(TEST_COMIC_ID);
+  }
+
+  @Test
+  public void testUndeleteComics() {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.undeleteComics(idList);
+
+    Mockito.verify(comicRepository, Mockito.times(idList.size())).getById(TEST_COMIC_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
+        .fireEvent(comic, ComicEvent.undeleteComic);
   }
 }

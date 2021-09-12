@@ -18,7 +18,9 @@
 
 package org.comixedproject.state.lists;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.lists.ReadingList;
@@ -87,9 +89,24 @@ public class ReadingListStateHandler extends LifecycleObjectSupport {
    * @param event the event
    */
   public void fireEvent(final ReadingList readingList, final ReadingListEvent event) {
+    this.fireEvent(readingList, event, Collections.emptyMap());
+  }
+
+  /**
+   * Initiates a state event.
+   *
+   * @param readingList the reading list
+   * @param event the event
+   * @param headers the event headers
+   */
+  public void fireEvent(
+      final ReadingList readingList, final ReadingListEvent event, Map<String, ?> headers) {
     log.debug("Firing reading list event: {} => {}", readingList.getId(), event);
     final Message<ReadingListEvent> message =
-        MessageBuilder.withPayload(event).setHeader(HEADER_READING_LIST, readingList).build();
+        MessageBuilder.withPayload(event)
+            .copyHeaders(headers)
+            .setHeader(HEADER_READING_LIST, readingList)
+            .build();
     this.stateMachine.stop();
     this.stateMachine
         .getStateMachineAccessor()

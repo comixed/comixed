@@ -16,15 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+package org.comixedproject.state.lists.actions;
 
-export const LOAD_COMIC_FORMATS_URL = `${API_ROOT_URL}/comics/types/format`;
-export const LOAD_SCAN_TYPES_URL = `${API_ROOT_URL}/comics/types/scan`;
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
-export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
-export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
+import org.comixedproject.model.lists.ReadingListState;
+import org.comixedproject.state.StateContextAccessor;
+import org.comixedproject.state.lists.ReadingListEvent;
+import org.springframework.statemachine.action.Action;
 
-export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
-
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
+public abstract class AbstractReadingListAction extends StateContextAccessor
+    implements Action<ReadingListState, ReadingListEvent> {}
