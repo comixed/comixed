@@ -176,4 +176,13 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
   @Query(
       "SELECT c FROM Comic c WHERE c.consolidating = true AND c.dateDeleted IS NULL ORDER BY c.lastModifiedOn")
   List<Comic> findComicsToBeMoved();
+
+  /**
+   * Returns a single comic with all reading lists in which it is found.
+   *
+   * @param id the record id
+   * @return the comic
+   */
+  @Query("SELECT c FROM Comic c LEFT JOIN FETCH c.readingLists l WHERE c.id = :id")
+  Comic getByIdWithReadingLists(@Param("id") long id);
 }

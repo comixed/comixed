@@ -18,13 +18,10 @@
 
 package org.comixedproject.state.comicbooks.guards;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
-
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.state.StateContextAccessor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 
 /**
@@ -34,9 +31,5 @@ import org.springframework.statemachine.guard.Guard;
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicGuard implements Guard<ComicState, ComicEvent> {
-  protected Comic fetchComic(final StateContext<ComicState, ComicEvent> context) {
-    log.trace("Fetching comic");
-    return context.getMessageHeaders().get(HEADER_COMIC, Comic.class);
-  }
-}
+public abstract class AbstractComicGuard extends StateContextAccessor
+    implements Guard<ComicState, ComicEvent> {}

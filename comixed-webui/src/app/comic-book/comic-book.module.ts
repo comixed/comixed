@@ -86,6 +86,7 @@ import {
   MARK_COMICS_DELETED_FEATURE_KEY,
   reducer as markComicsDeletedReducer
 } from '@app/comic-book/reducers/mark-comics-deleted.reducer';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -144,7 +145,8 @@ import {
     MatChipsModule,
     MatSortModule,
     CoreModule,
-    MatGridListModule
+    MatGridListModule,
+    MatDividerModule
   ],
   exports: [
     CommonModule,

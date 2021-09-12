@@ -21,6 +21,11 @@ package org.comixedproject.state.lists;
 import java.util.EnumSet;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
+import org.comixedproject.state.lists.actions.AddComicToReadingListAction;
+import org.comixedproject.state.lists.actions.RemoveComicFromReadingListAction;
+import org.comixedproject.state.lists.guards.ComicIsInReadingListGuard;
+import org.comixedproject.state.lists.guards.ComicIsNotInReadingListGuard;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
@@ -37,6 +42,11 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 @EnableStateMachine(name = "readingListStateMachine")
 public class ReadingListStateMachineConfig
     extends EnumStateMachineConfigurerAdapter<ReadingListState, ReadingListEvent> {
+  @Autowired private ComicIsInReadingListGuard comicIsInReadingListGuard;
+  @Autowired private RemoveComicFromReadingListAction removeComicFromReadingListAction;
+  @Autowired private ComicIsNotInReadingListGuard comicIsNotInReadingListGuard;
+  @Autowired private AddComicToReadingListAction addComicToReadingListAction;
+
   @Override
   public void configure(
       final StateMachineStateConfigurer<ReadingListState, ReadingListEvent> states)
@@ -64,12 +74,16 @@ public class ReadingListStateMachineConfig
         .source(ReadingListState.STABLE)
         .target(ReadingListState.STABLE)
         .event(ReadingListEvent.comicAdded)
+        .guard(comicIsNotInReadingListGuard)
+        .action(addComicToReadingListAction)
         // comics have been removed from the reading list
         .and()
         .withExternal()
         .source(ReadingListState.STABLE)
         .target(ReadingListState.STABLE)
         .event(ReadingListEvent.comicRemoved)
+        .guard(comicIsInReadingListGuard)
+        .action(removeComicFromReadingListAction)
         // the reading list has been deleted
         .and()
         .withExternal()

@@ -118,8 +118,8 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Transactional
   public Comic deleteComic(final long id) throws ComicException {
     log.debug("Marking comic for deletion: id={}", id);
-    final var comic = this.doGetComic(id);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.markedForRemoval);
+    final var comic = this.comicRepository.getByIdWithReadingLists(id);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.deleteComic);
     return this.doGetComic(id);
   }
 
@@ -197,10 +197,10 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
    * @throws ComicException if the comic id is invalid
    */
   @Transactional
-  public Comic restoreComic(final long id) throws ComicException {
+  public Comic undeleteComic(final long id) throws ComicException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
-    this.comicStateHandler.fireEvent(comic, ComicEvent.unmarkedForRemoval);
+    this.comicStateHandler.fireEvent(comic, ComicEvent.undeleteComic);
     return this.doGetComic(id);
   }
 
@@ -210,7 +210,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
    * @param comic the comic
    */
   @Transactional
-  public void delete(final Comic comic) {
+  public void deleteComic(final Comic comic) {
     log.debug("Deleting comic: id={}", comic.getId());
     this.comicRepository.delete(comic);
   }
@@ -409,5 +409,37 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public List<Comic> findAll() {
     log.trace("Finding all comics");
     return this.comicRepository.findAll();
+  }
+
+  /**
+   * Marks comics for deletion.
+   *
+   * @param ids the comic ids
+   */
+  public void deleteComics(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          final Comic comic = this.comicRepository.getByIdWithReadingLists(id);
+          if (comic != null) {
+            log.trace("Marking comic for deletion: id={}", comic.getId());
+            this.comicStateHandler.fireEvent(comic, ComicEvent.deleteComic);
+          }
+        });
+  }
+
+  /**
+   * Unmarks comics for deletion.
+   *
+   * @param ids the comic ids
+   */
+  public void undeleteComics(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          final Comic comic = this.comicRepository.getById(id);
+          if (comic != null) {
+            log.trace("Unmarking comic for deletion: id={}", comic.getId());
+            this.comicStateHandler.fireEvent(comic, ComicEvent.undeleteComic);
+          }
+        });
   }
 }

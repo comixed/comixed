@@ -37,14 +37,10 @@ import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.PageCacheService;
 import org.comixedproject.service.comicfiles.ComicFileService;
-import org.comixedproject.task.MarkComicsForRemovalTask;
-import org.comixedproject.task.UnmarkComicsForRemovalTask;
-import org.comixedproject.task.runner.TaskManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -65,12 +61,7 @@ public class ComicControllerTest {
   @InjectMocks private ComicController controller;
   @Mock private ComicService comicService;
   @Mock private PageCacheService pageCacheService;
-  @Mock private TaskManager taskManager;
   @Mock private Comic comic;
-  @Mock private ObjectFactory<MarkComicsForRemovalTask> deleteComicsTaskFactory;
-  @Mock private MarkComicsForRemovalTask markComicsForRemovalTask;
-  @Mock private ObjectFactory<UnmarkComicsForRemovalTask> undeleteComicsWorkerTaskObjectFactory;
-  @Mock private UnmarkComicsForRemovalTask undeleteComicsWorkerTask;
   @Mock private List<Long> comicIds;
   @Mock private ComicFileService comicFileService;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -139,51 +130,22 @@ public class ComicControllerTest {
     }
   }
 
-  @Test(expected = ComicException.class)
-  public void testRestoreComicFails() throws ComicException {
-    Mockito.when(comicService.restoreComic(Mockito.anyLong())).thenThrow(ComicException.class);
-
-    try {
-      controller.restoreComic(TEST_COMIC_ID);
-    } finally {
-      Mockito.verify(comicService, Mockito.times(1)).restoreComic(TEST_COMIC_ID);
-    }
-  }
-
-  @Test
-  public void testRestoreComic() throws ComicException {
-    Mockito.when(comicService.restoreComic(Mockito.anyLong())).thenReturn(comic);
-
-    final Comic response = controller.restoreComic(TEST_COMIC_ID);
-
-    assertNotNull(response);
-    assertSame(comic, response);
-
-    Mockito.verify(comicService, Mockito.times(1)).restoreComic(TEST_COMIC_ID);
-  }
-
   @Test
   public void testMarkComicsDeleted() {
-    Mockito.when(this.deleteComicsTaskFactory.getObject())
-        .thenReturn(this.markComicsForRemovalTask);
-    Mockito.doNothing().when(this.markComicsForRemovalTask).setComicIds(Mockito.anyList());
-    Mockito.doNothing().when(this.taskManager).runTask(Mockito.any());
+    Mockito.doNothing().when(comicService).deleteComics(comicIds);
 
     controller.markComicsDeleted(new MarkComicsDeletedRequest(this.comicIds));
 
-    Mockito.verify(this.markComicsForRemovalTask, Mockito.times(1)).setComicIds(this.comicIds);
-    Mockito.verify(this.taskManager, Mockito.times(1)).runTask(this.markComicsForRemovalTask);
+    Mockito.verify(comicService, Mockito.times(1)).deleteComics(this.comicIds);
   }
 
   @Test
-  public void testMarkComicsUndeleted() {
-    Mockito.when(this.undeleteComicsWorkerTaskObjectFactory.getObject())
-        .thenReturn(undeleteComicsWorkerTask);
+  public void testMarkComicsUndeleted() throws Exception {
+    Mockito.doNothing().when(comicService).undeleteComics(comicIds);
 
-    controller.markComicsUndeleted(new MarkComicsUndeletedRequest(this.comicIds));
+    controller.markComicsUndeleted(new MarkComicsUndeletedRequest(comicIds));
 
-    Mockito.verify(undeleteComicsWorkerTask, Mockito.times(1)).setIds(this.comicIds);
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(undeleteComicsWorkerTask);
+    Mockito.verify(comicService, Mockito.times(1)).undeleteComics(comicIds);
   }
 
   @Test

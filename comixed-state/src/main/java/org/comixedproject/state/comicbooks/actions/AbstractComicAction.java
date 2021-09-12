@@ -18,13 +18,10 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
-
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.state.StateContextAccessor;
 import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
 /**
@@ -34,8 +31,5 @@ import org.springframework.statemachine.action.Action;
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicAction implements Action<ComicState, ComicEvent> {
-  protected Comic fetchComic(final StateContext<ComicState, ComicEvent> context) {
-    return context.getMessageHeaders().get(HEADER_COMIC, Comic.class);
-  }
-}
+public abstract class AbstractComicAction extends StateContextAccessor
+    implements Action<ComicState, ComicEvent> {}

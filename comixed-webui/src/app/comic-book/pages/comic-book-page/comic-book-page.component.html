@@ -42,6 +42,7 @@
   >
     <mat-icon>arrow_downward</mat-icon>
   </button>
+  <mat-divider class="cx-height-100" vertical="true"></mat-divider>
   <button
     *ngIf="!isRead"
     id="mark-as-read-button"
@@ -63,6 +64,28 @@
     (click)="setReadState(false)"
   >
     <mat-icon>turned_in</mat-icon>
+  </button>
+  <button
+    *ngIf="isAdmin && !comic.deletedDate"
+    id="delete-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'comic-book.tooltip.delete-comic' | translate"
+    (click)="onSetComicDeletedState(true)"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button
+    *ngIf="isAdmin && !!comic.deletedDate"
+    id="undelete-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'comic-book.tooltip.undelete-comic' | translate"
+    (click)="onSetComicDeletedState(false)"
+  >
+    <mat-icon>restore_from_trash</mat-icon>
   </button>
 </mat-toolbar>
 <mat-card *ngIf="!!comic">

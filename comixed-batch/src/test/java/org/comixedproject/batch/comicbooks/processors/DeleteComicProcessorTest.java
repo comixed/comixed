@@ -65,7 +65,7 @@ public class DeleteComicProcessorTest {
 
     processor.process(comic);
 
-    Mockito.verify(comicService, Mockito.times(1)).delete(comic);
+    Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
   }
 
@@ -76,7 +76,7 @@ public class DeleteComicProcessorTest {
 
     processor.process(comic);
 
-    Mockito.verify(comicService, Mockito.times(1)).delete(comic);
+    Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
   }
 
@@ -87,7 +87,7 @@ public class DeleteComicProcessorTest {
 
     processor.process(comic);
 
-    Mockito.verify(comicService, Mockito.times(1)).delete(comic);
+    Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
     Mockito.verify(fileAdaptor, Mockito.never()).deleteFile(Mockito.any());
   }
 

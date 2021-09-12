@@ -18,10 +18,13 @@
 
 package org.comixedproject.service.lists;
 
+import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.library.SmartListMatcher;
@@ -195,21 +198,18 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     }
     comicIds.forEach(
         comicId -> {
-          log.trace("Checking if comic is already in list");
-          if (readingList.getComics().stream().noneMatch(entry -> entry.getId().equals(comicId))) {
-            try {
-              log.trace("Loading comic: id={}", comicId);
-              final Comic comic = this.comicService.getComic(comicId);
-              log.trace("Adding comic to reading list");
-              readingList.getComics().add(comic);
-            } catch (ComicException error) {
-              log.error("Failed to add comic to reading list", error);
-            }
+          try {
+            log.trace("Loading comic: id={}", comicId);
+            final Comic comic = this.comicService.getComic(comicId);
+            log.trace("Adding comic to reading list");
+            Map<String, Object> headers = new HashMap<>();
+            headers.put(HEADER_COMIC, comic);
+            this.readingListStateHandler.fireEvent(
+                readingList, ReadingListEvent.comicAdded, headers);
+          } catch (ComicException error) {
+            log.error("Failed to add comic to reading list", error);
           }
         });
-
-    log.trace("Firing action: comics added to reading list");
-    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.comicAdded);
     log.trace("Returning reading list");
     return this.doLoadReadingList(id);
   }
@@ -237,20 +237,19 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
 
     comicIds.forEach(
         comicId -> {
-          if (readingList.getComics().stream().anyMatch(comic -> comic.getId().equals(comicId))) {
-            try {
-              log.trace("Loading comic: id={}", comicId);
-              final Comic comic = this.comicService.getComic(comicId);
-              log.trace("Removing comic from reading list");
-              readingList.getComics().remove(comic);
-            } catch (ComicException error) {
-              log.error("Failed to remove comic from reading list", error);
-            }
+          try {
+            log.trace("Loading comic: id={}", comicId);
+            final Comic comic = this.comicService.getComic(comicId);
+            log.trace("Removing comic from reading list");
+            Map<String, Object> headers = new HashMap<>();
+            headers.put(HEADER_COMIC, comic);
+            this.readingListStateHandler.fireEvent(
+                readingList, ReadingListEvent.comicRemoved, headers);
+          } catch (ComicException error) {
+            log.error("Failed to remove comic from reading list", error);
           }
         });
 
-    log.trace("Firing action: comics removed from reading list");
-    this.readingListStateHandler.fireEvent(readingList, ReadingListEvent.comicRemoved);
     log.trace("Returning reading list");
     return this.doLoadReadingList(id);
   }

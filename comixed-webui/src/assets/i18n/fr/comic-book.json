@@ -9,6 +9,10 @@
     }
   },
   "comic-book": {
+    "deleted-state": {
+      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic as deleted?",
+      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comic As Deleted"
+    },
     "hint": {
       "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails...",
       "useful-for-scraping": "This value is used when scraping..."
@@ -26,6 +30,7 @@
       "coic-state": "État",
       "comic-story": "Histoire",
       "comicvine-id": "ComicVine ID",
+      "comicvine-issue-details": "Comic Details Page",
       "credits": "Équipe créative ({count})",
       "description": "Description de ce numéro",
       "file-details": "Détails du fichier de la Bande Dessinée",
@@ -85,6 +90,7 @@
     "tooltip": {
       "blocked-page": "Les pages comme celle-ci sont bloquées...",
       "cancel-scraping": "Arrêter la récupération des détails de cette Bande Dessinées.",
+      "delete-comic": "Mark comics as deleted.",
       "download-comic": "Télécharger cette Bande Dessinée...",
       "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
       "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",
@@ -97,7 +103,9 @@
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
       "show-next-comic-page": "Aller à la page suivante...",
       "show-previous-comic-page": "Aller à la page précédente...",
-      "undo-changes": "Annulez les modifications de cette Bande Dessinée"
+      "undelete-comic": "Unmark comic as deleted.",
+      "undo-changes": "Annulez les modifications de cette Bande Dessinée",
+      "update-comic-info": "Update comic file metadata."
     },
     "undo-changes": {
       "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",
