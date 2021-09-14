@@ -19,9 +19,9 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
-import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
-import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
+import org.comixedproject.batch.comicbooks.processors.RecreateComicFileProcessor;
+import org.comixedproject.batch.comicbooks.readers.RecreateComicFileReader;
+import org.comixedproject.batch.comicbooks.writers.RecreateComicFileWriter;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -32,60 +32,43 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * <code>UpdateMetadataConfiguration</code> defines a batch process that updates the metadata within
- * comics.
+ * <code>RecreateComicFilesConfiguration</code> defines the process for recreating comic files.
  *
- * @author Darryl L Pierce
+ * @author Darryl L. Pierce
  */
 @Configuration
-@EnableScheduling
 @Log4j2
-public class UpdateMetadataConfiguration {
-  public static final String JOB_UPDATE_METADATA_STARTED = "job.update-metadata.started";
+public class RecreateComicFilesConfiguration {
+  public static final String JOB_TARGET_ARCHIVE = "job.recreate-comic.target-archive";
+  public static final String JOB_DELETE_MARKED_PAGES = "job.recreate-comic.delete-blocked-pages";
+  public static final String JOB_RENAME_PAGES = "job.recreate-comic.rename-pages";
 
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;
 
-  /**
-   * Returns the job bean to update comic metadata.
-   *
-   * @param jobBuilderFactory the job builder factory
-   * @param updateMetadataStep the update metadata step
-   * @return the job
-   */
   @Bean
-  @Qualifier("updateMetadataJob")
-  public Job updateMetadataJob(
+  @Qualifier("recreateComicFilesJob")
+  public Job recreateComicFilesJob(
       final JobBuilderFactory jobBuilderFactory,
-      @Qualifier("updateMetadataStep") final Step updateMetadataStep) {
+      @Qualifier("recreateComicFileStep") final Step recreateComicFileStep) {
     return jobBuilderFactory
-        .get("updateMetadataJob")
+        .get("recreateComicFilesJob")
         .incrementer(new RunIdIncrementer())
-        .start(updateMetadataStep)
+        .start(recreateComicFileStep)
         .build();
   }
 
-  /**
-   * The update metadata step.
-   *
-   * @param stepBuilderFactory the step factory
-   * @param reader the reader
-   * @param processor the processor
-   * @param writer the writer
-   * @return the step
-   */
   @Bean
-  @Qualifier("updateMetadataStep")
-  public Step updateMetadataStep(
+  @Qualifier("recreateComicFileStep")
+  public Step recreateComicFileStep(
       final StepBuilderFactory stepBuilderFactory,
-      final UpdateMetadataReader reader,
-      final UpdateMetadataProcessor processor,
-      final UpdateMetadataWriter writer) {
+      final RecreateComicFileReader reader,
+      final RecreateComicFileProcessor processor,
+      final RecreateComicFileWriter writer) {
     return stepBuilderFactory
-        .get("updateMetadataStep")
+        .get("recreateComicFileStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)

@@ -185,4 +185,12 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT c FROM Comic c LEFT JOIN FETCH c.readingLists l WHERE c.id = :id")
   Comic getByIdWithReadingLists(@Param("id") long id);
+
+  /**
+   * Returns comics that are marked to be recreated.
+   *
+   * @return the list of comics
+   */
+  @Query("SELECT c FROM Comic c WHERE c.recreating = true ORDER BY c.lastModifiedOn")
+  List<Comic> findComicsToRecreate();
 }

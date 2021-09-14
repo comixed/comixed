@@ -20,6 +20,7 @@ package org.comixedproject.controller.library;
 
 import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
 import static org.comixedproject.controller.library.LibraryController.MAXIMUM_RECORDS;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
@@ -41,9 +42,6 @@ import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.task.ConvertComicsTask;
-import org.comixedproject.task.Task;
-import org.comixedproject.task.runner.TaskManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +51,6 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,8 +61,7 @@ public class LibraryControllerTest {
   private static final boolean TEST_DELETE_REMOVED_COMIC_FILES = RANDOM.nextBoolean();
   private static final String TEST_RENAMING_RULE = "PUBLISHER/SERIES/VOLUME/SERIES vVOLUME #ISSUE";
   private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
-  private static final Boolean TEST_DELETE_PAGES = RANDOM.nextBoolean();
-  private static final Boolean TEST_DELETE_ORIGINAL_COMIC = RANDOM.nextBoolean();
+  private static final Boolean TEST_DELETE_MARKED_PAGES = RANDOM.nextBoolean();
   private static final long TEST_LAST_COMIC_ID = 717L;
 
   @InjectMocks private LibraryController controller;
@@ -73,9 +69,6 @@ public class LibraryControllerTest {
   @Mock private ComicService comicService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
-  @Mock private TaskManager taskManager;
-  @Mock private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
-  @Mock private ConvertComicsTask convertComicsWorkerTask;
   @Mock private Comic comic;
   @Mock private Comic lastComic;
   @Mock private JobLauncher jobLauncher;
@@ -93,6 +86,10 @@ public class LibraryControllerTest {
   @Qualifier("consolidateLibraryJob")
   private Job consolidateLibraryJob;
 
+  @Mock
+  @Qualifier("recreateComicFilesJob")
+  private Job recreateComicFilesJob;
+
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @Before
@@ -101,27 +98,24 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testConvertComics() {
-    Mockito.when(convertComicsWorkerTaskObjectFactory.getObject())
-        .thenReturn(convertComicsWorkerTask);
-    Mockito.doNothing().when(taskManager).runTask(Mockito.any(Task.class));
+  public void testConvertComics() throws Exception {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
 
     controller.convertComics(
         new ConvertComicsRequest(
-            idList,
-            TEST_ARCHIVE_TYPE,
-            TEST_RENAME_PAGES,
-            TEST_DELETE_PAGES,
-            TEST_DELETE_ORIGINAL_COMIC));
+            idList, TEST_ARCHIVE_TYPE, TEST_RENAME_PAGES, TEST_DELETE_MARKED_PAGES));
 
-    Mockito.verify(taskManager, Mockito.times(1)).runTask(convertComicsWorkerTask);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setIdList(idList);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
-        .setTargetArchiveType(TEST_ARCHIVE_TYPE);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setRenamePages(TEST_RENAME_PAGES);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1)).setDeletePages(TEST_DELETE_PAGES);
-    Mockito.verify(convertComicsWorkerTask, Mockito.times(1))
-        .setDeleteOriginal(TEST_DELETE_ORIGINAL_COMIC);
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+    assertEquals(TEST_ARCHIVE_TYPE.getName(), jobParameters.getString(JOB_TARGET_ARCHIVE));
+    assertEquals(
+        String.valueOf(TEST_DELETE_MARKED_PAGES), jobParameters.getString(JOB_DELETE_MARKED_PAGES));
+    assertEquals(String.valueOf(TEST_RENAME_PAGES), jobParameters.getString(JOB_RENAME_PAGES));
+
+    Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComics(idList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
   }
 
   @Test(expected = LibraryException.class)
