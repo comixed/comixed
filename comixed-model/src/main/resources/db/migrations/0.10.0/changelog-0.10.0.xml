@@ -15,5 +15,6 @@
   <include file="/db/migrations/0.10.0/007_865_add_update_metadata_column.xml"/>
   <include file="/db/migrations/0.10.0/008_889_add_consolidating_column.xml"/>
   <include file="/db/migrations/0.10.0/009_892_add_converting_column.xml"/>
+  <include file="/db/migrations/0.10.0/010_894_remove_task_tables.xml"/>
 
 </databaseChangeLog>

@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TASK_COUNT_TOPIC } from '@app/app.constants';
 import { TaskCountMessage } from '@app/models/net/task-count-message';
-import { setTaskCount } from '@app/actions/server-status.actions';
+import { setServerStatus } from '@app/actions/server-status.actions';
 import { Frame, Subscription } from 'webstomp-client';
 import { WebSocketService } from '@app/messaging';
 import {
@@ -97,7 +97,7 @@ describe('TaskCountService', () => {
 
     it('fires an action on update', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setTaskCount({ count: COUNT })
+        setServerStatus({ count: COUNT })
       );
     });
   });

@@ -29,7 +29,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.lists.ReadingList;
-import org.comixedproject.model.tasks.PersistedTask;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
@@ -384,9 +383,6 @@ public class Comic {
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   private Set<ReadingList> readingLists = new HashSet<>();
-
-  @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
-  private List<PersistedTask> persistedTasks = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @JsonIgnore

@@ -21,7 +21,7 @@ import {
   reducer,
   ServerStatusState
 } from './server-status.reducer';
-import { setTaskCount } from '@app/actions/server-status.actions';
+import { setServerStatus } from '@app/actions/server-status.actions';
 
 describe('ServerStatus Reducer', () => {
   const TASK_COUNT = Math.abs(Math.floor(Math.random() * 100.0));
@@ -46,7 +46,7 @@ describe('ServerStatus Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, taskCount: 0 },
-        setTaskCount({ count: TASK_COUNT })
+        setServerStatus({ count: TASK_COUNT })
       );
     });
 

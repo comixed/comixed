@@ -23,35 +23,6 @@
     "effect-failure": "Failed to save configuration changes.",
     "effect-success": "Configuration changes saved."
   },
-  "task-audit-log": {
-    "label": {
-      "description": "Detalles",
-      "runtime": "Ejecución",
-      "start-time": "Hora de comienzo",
-      "successful": "Exitoso",
-      "task-type": "Tipo de tarea"
-    },
-    "load-entries-effect-failure": "Error al cargar entradas del registro de auditoría de tareas.",
-    "page-title": "Registro de auditoría de tareas",
-    "tab-title": "Registro de auditoría de tareas",
-    "text": {
-      "details-title": "Detalles de la tarea",
-      "exception-title": "Excepción lanzada",
-      "runtime": "{duration}ms",
-      "task-type-ADD_COMIC": "Agregar un cómic",
-      "task-type-CONVERT_COMIC": "Convertir un cómic",
-      "task-type-DELETE_COMIC": "Eliminar un cómic",
-      "task-type-DELETE_COMICS": "Eliminar varios cómics",
-      "task-type-MOVE_COMIC": "Mover un cómic",
-      "task-type-MOVE_COMICS": "Mover varios cómics",
-      "task-type-PROCESS_COMIC": "Proceso un cómic",
-      "task-type-QUEUE_COMICS": "Hacer cola un cómic",
-      "task-type-RESCAN_COMIC": "Volver a escanear un cómic",
-      "task-type-RESCAN_COMICS": "Volver a escanear varios cómics",
-      "task-type-UNDELETE_COMIC": "Recuperar un cómic",
-      "task-type-UNDELETE_COMICS": "Recuperar varios cómics"
-    }
-  },
   "web-audit-log": {
     "clear": {
       "confirmation-message": "¿Está seguro de que desea borrar el registro de auditoría? Esta acción no se puede deshacer.",

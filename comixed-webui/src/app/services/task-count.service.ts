@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
-import { setTaskCount } from '@app/actions/server-status.actions';
+import { setServerStatus } from '@app/actions/server-status.actions';
 import { TaskCountMessage } from '@app/models/net/task-count-message';
 import { Subscription } from 'webstomp-client';
 import { Store } from '@ngrx/store';
@@ -57,7 +57,7 @@ export class TaskCountService {
         const message = JSON.parse(frame.body) as TaskCountMessage;
         this.logger.debug('Task message:', message);
         this.store.dispatch(
-          setTaskCount({
+          setServerStatus({
             count: message.count
           })
         );
