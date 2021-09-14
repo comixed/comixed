@@ -54,7 +54,6 @@
   },
   "home": {
     "label": {
-      "task-count": "Recuento de tareas"
     },
     "title": "Página principal"
   },
@@ -100,7 +99,6 @@
       "reading-lists": "Reading Lists",
       "series-collection": "Series",
       "story-collection": "Historias",
-      "task-audit-log": "Registro de auditoría de tareas",
       "team-collection": "Equipos",
       "unread-comics": "Cómics no leídos",
       "unscraped-comics": "Unscraped Comics",

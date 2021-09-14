@@ -35,12 +35,6 @@ import { CoreModule } from '@app/core/core.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { TaskAuditLogPageComponent } from './pages/task-audit-log-page/task-audit-log-page.component';
-import {
-  reducer as taskAuditLogReducer,
-  TASK_AUDIT_LOG_FEATURE_KEY
-} from '@app/admin/reducers/task-audit-log.reducer';
-import { TaskAuditLogEffects } from '@app/admin/effects/task-audit-log.effects';
 import { MatCardModule } from '@angular/material/card';
 import { ConfigurationPageComponent } from './pages/configuration-page/configuration-page.component';
 import { ComicVineConfigurationComponent } from './components/comic-vine-configuration/comic-vine-configuration.component';
@@ -62,7 +56,6 @@ import { LibraryConfigurationComponent } from './components/library-configuratio
 @NgModule({
   declarations: [
     WebAuditLogPageComponent,
-    TaskAuditLogPageComponent,
     ConfigurationPageComponent,
     ComicVineConfigurationComponent,
     LibraryConfigurationComponent
@@ -80,12 +73,10 @@ import { LibraryConfigurationComponent } from './components/library-configuratio
       SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
       saveConfigurationOptionsReducer
     ),
-    StoreModule.forFeature(TASK_AUDIT_LOG_FEATURE_KEY, taskAuditLogReducer),
     StoreModule.forFeature(WEB_AUDIT_LOG_FEATURE_KEY, webAuditLogReducer),
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
-      TaskAuditLogEffects,
       WebAuditLogEffects
     ]),
     MatTableModule,

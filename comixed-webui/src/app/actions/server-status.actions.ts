@@ -18,7 +18,8 @@
 
 import { createAction, props } from '@ngrx/store';
 
-export const setTaskCount = createAction(
+// TODO leaving the task count intact until we add ore interesting details to the status
+export const setServerStatus = createAction(
   '[Server Status] Set the task count',
   props<{ count: number }>()
 );

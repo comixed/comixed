@@ -53,9 +53,7 @@
     "title": "Display Options"
   },
   "home": {
-    "label": {
-      "task-count": "Task Count"
-    },
+    "label": {},
     "title": "Home"
   },
   "menu": {
@@ -100,7 +98,6 @@
       "reading-lists": "Reading Lists",
       "series-collection": "Series",
       "story-collection": "Stories",
-      "task-audit-log": "Task Audit Log",
       "team-collection": "Teams",
       "unread-comics": "Unread Comics",
       "unscraped-comics": "Unscraped Comics",

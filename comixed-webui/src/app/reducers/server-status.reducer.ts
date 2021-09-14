@@ -17,7 +17,7 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import { setTaskCount } from '../actions/server-status.actions';
+import { setServerStatus } from '../actions/server-status.actions';
 
 export const SERVER_STATUS_FEATURE_KEY = 'server_status';
 
@@ -32,5 +32,8 @@ export const initialState: ServerStatusState = {
 export const reducer = createReducer(
   initialState,
 
-  on(setTaskCount, (state, action) => ({ ...state, taskCount: action.count }))
+  on(setServerStatus, (state, action) => ({
+    ...state,
+    taskCount: action.count
+  }))
 );
