@@ -169,4 +169,36 @@ public class LibraryServiceTest {
     Mockito.verify(comicStateHandler, Mockito.times(comicList.size()))
         .fireEvent(comic, ComicEvent.consolidateComic, headers);
   }
+
+  @Test
+  public void testPrepareToRecreateComics() throws ComicException {
+    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+
+    service.prepareToRecreateComics(comicIdList);
+
+    for (int index = 0; index < comicIdList.size(); index++) {
+      final Long id = comicIdList.get(index);
+      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+    }
+    Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
+        .fireEvent(comic, ComicEvent.recreateComicFile);
+  }
+
+  @Test
+  public void testPrepareToRecreateComicsInvalid() throws ComicException {
+    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+
+    service.prepareToRecreateComics(comicIdList);
+
+    for (int index = 0; index < comicIdList.size(); index++) {
+      final Long id = comicIdList.get(index);
+      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+    }
+    Mockito.verify(comicStateHandler, Mockito.never())
+        .fireEvent(comic, ComicEvent.recreateComicFile);
+  }
 }

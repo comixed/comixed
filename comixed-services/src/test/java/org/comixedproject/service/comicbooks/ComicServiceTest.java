@@ -616,4 +616,16 @@ public class ComicServiceTest {
     Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
         .fireEvent(comic, ComicEvent.undeleteComic);
   }
+
+  @Test
+  public void testFindAllComicsToRecreate() {
+    Mockito.when(comicRepository.findComicsToRecreate()).thenReturn(comicList);
+
+    final List<Comic> result = service.findComicsToRecreate();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsToRecreate();
+  }
 }

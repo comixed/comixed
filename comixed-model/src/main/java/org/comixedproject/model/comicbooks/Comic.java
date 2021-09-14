@@ -130,6 +130,12 @@ public class Comic {
   @Setter
   private boolean consolidating = false;
 
+  @Column(name = "Recreating", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean recreating = false;
+
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "PageNumber")
   @JsonProperty("pages")
@@ -568,19 +574,16 @@ public class Comic {
     return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
   }
 
-  public void removeDeletedPages(final boolean deletePages) {
-    log.trace("Remove deleted pages? {}", deletePages);
-    if (deletePages) {
-      Page[] pageArray = this.pages.toArray(new Page[this.pages.size()]);
-      for (int index = 0; index < pageArray.length; index++) {
-        Page page = pageArray[index];
-        if (page.isDeleted() || page.isBlocked()) {
-          log.trace("Removing page: filename={} hash={}", page.getFilename(), page.getHash());
-          this.pages.remove(page);
-          page.setComic(null);
-        }
-      }
-    }
+  /** Removes pages that are marked for deletion. */
+  public void removeDeletedPages() {
+    List<Page> pages = new ArrayList<>(this.pages);
+    pages.forEach(
+        page -> {
+          if (page.isDeleted()) {
+            log.trace("Removing page: {}", page.getId());
+            this.pages.remove(page);
+          }
+        });
   }
 
   @Override

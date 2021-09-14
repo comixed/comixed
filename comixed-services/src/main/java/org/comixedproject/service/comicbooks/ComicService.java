@@ -442,4 +442,14 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
           }
         });
   }
+
+  /**
+   * Finds all comics to be recreated.
+   *
+   * @return the list of comics
+   */
+  public List<Comic> findComicsToRecreate() {
+    log.trace("Finding all comics to be recreated");
+    return this.comicRepository.findComicsToRecreate();
+  }
 }

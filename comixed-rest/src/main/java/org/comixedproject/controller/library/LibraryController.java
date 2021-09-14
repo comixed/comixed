@@ -19,11 +19,14 @@
 package org.comixedproject.controller.library;
 
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
+import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
@@ -37,13 +40,10 @@ import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
-import org.comixedproject.task.ConvertComicsTask;
-import org.comixedproject.task.runner.TaskManager;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -63,15 +63,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
-  private static final String KEY_UPDATE_METADATA_STARTED = "key.update-metadata.started";
-  public static final String KEY_RESCAN_COMICS_START = "key.rescan-comics.started";
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;
   @Autowired private ConfigurationService configurationService;
-
-  @Autowired private TaskManager taskManager;
-  @Autowired private ObjectFactory<ConvertComicsTask> convertComicsWorkerTaskObjectFactory;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -89,32 +84,41 @@ public class LibraryController {
   @Qualifier("consolidateLibraryJob")
   private Job consolidateLibraryJob;
 
+  @Autowired
+  @Qualifier("recreateComicFilesJob")
+  private Job recreateComicFilesJob;
+
+  /**
+   * Prepares comics to have their underlying file recreated.
+   *
+   * @param request the request body
+   * @throws Exception if an error occurs
+   */
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  public void convertComics(@RequestBody() ConvertComicsRequest request) {
+  public void convertComics(@RequestBody() ConvertComicsRequest request) throws Exception {
     List<Long> idList = request.getComicIdList();
     ArchiveType archiveType = request.getArchiveType();
     boolean renamePages = request.isRenamePages();
     boolean deletePages = request.isDeletePages();
-    boolean deleteOriginal = request.isDeleteOriginal();
 
     log.info(
-        "Converting {} comic{} to {}{}{}{}",
-        idList.size(),
+        "Converting comic{}: target={} delete pages={} rename pages={}",
         idList.size() == 1 ? "" : "s",
         archiveType,
-        renamePages ? " (rename pages)" : "",
-        deletePages ? " (delete pages)" : "",
-        deleteOriginal ? " (delete original comic)" : "");
+        renamePages,
+        deletePages);
 
-    final ConvertComicsTask task = this.convertComicsWorkerTaskObjectFactory.getObject();
-    task.setIdList(idList);
-    task.setTargetArchiveType(archiveType);
-    task.setRenamePages(renamePages);
-    task.setDeletePages(deletePages);
-    task.setDeleteOriginal(deleteOriginal);
-
-    this.taskManager.runTask(task);
+    log.trace("Preparing to recreate comic files");
+    this.libraryService.prepareToRecreateComics(idList);
+    log.trace("Starting batch process");
+    this.jobLauncher.run(
+        recreateComicFilesJob,
+        new JobParametersBuilder()
+            .addString(JOB_TARGET_ARCHIVE, archiveType.getName())
+            .addString(JOB_DELETE_MARKED_PAGES, String.valueOf(deletePages))
+            .addString(JOB_RENAME_PAGES, String.valueOf(renamePages))
+            .toJobParameters());
   }
 
   /**
@@ -212,7 +216,7 @@ public class LibraryController {
     this.jobLauncher.run(
         processComicsJob,
         new JobParametersBuilder()
-            .addLong(KEY_RESCAN_COMICS_START, System.currentTimeMillis())
+            .addLong(ProcessComicsConfiguration.JOB_RESCAN_COMICS_START, System.currentTimeMillis())
             .toJobParameters());
   }
 
@@ -233,7 +237,8 @@ public class LibraryController {
     this.jobLauncher.run(
         this.updateMetadataJob,
         new JobParametersBuilder()
-            .addLong(KEY_UPDATE_METADATA_STARTED, System.currentTimeMillis())
+            .addLong(
+                UpdateMetadataConfiguration.JOB_UPDATE_METADATA_STARTED, System.currentTimeMillis())
             .toJobParameters());
   }
 }

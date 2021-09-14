@@ -23,6 +23,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
 import org.comixedproject.state.comicbooks.guards.ComicContentsProcessedGuard;
+import org.comixedproject.state.comicbooks.guards.ComicFileAlreadyRecreatingGuard;
 import org.comixedproject.state.comicbooks.guards.ComicFilenameWillChangeGuard;
 import org.comixedproject.state.comicbooks.guards.FileDetailsCreatedGuard;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class ComicStateMachineConfiguration
   @Autowired private ConsolidateComicAction consolidateComicAction;
   @Autowired private ComicFilenameWillChangeGuard comicFilenameWillChangeGuard;
   @Autowired private ComicConsolidatedAction comicConsolidatedAction;
+  @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
+  @Autowired private RecreateComicFileAction recreateComicFileAction;
+  @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
   @Autowired private MarkComicForRemovalAction markComicForRemovalAction;
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
 
@@ -126,7 +130,7 @@ public class ComicStateMachineConfiguration
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.STABLE)
-        .event(ComicEvent.archiveRecreated)
+        .event(ComicEvent.comicFileRecreated)
         // the comic is going to be consolidated
         .and()
         .withExternal()
@@ -217,12 +221,33 @@ public class ComicStateMachineConfiguration
         .target(ComicState.STABLE)
         .event(ComicEvent.metadataUpdated)
         .action(metadataUpdatedAction)
+        // the comic archive is going to be recreated
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.recreateComicFile)
+        .action(recreateComicFileAction)
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.recreateComicFile)
+        .guard(comicFileAlreadyRecreatingGuard)
+        .action(recreateComicFileAction)
         // the comic archive was recreated
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.STABLE)
-        .event(ComicEvent.archiveRecreated)
+        .event(ComicEvent.comicFileRecreated)
+        .action(comicFileRecreatedAction)
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.comicFileRecreated)
+        .action(comicFileRecreatedAction)
         // the comic file was reprocessed and the database details overwritten
         .and()
         .withExternal()

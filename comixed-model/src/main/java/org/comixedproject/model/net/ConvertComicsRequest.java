@@ -20,7 +20,9 @@ package org.comixedproject.model.net;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.comixedproject.model.archives.ArchiveType;
 
@@ -29,6 +31,8 @@ import org.comixedproject.model.archives.ArchiveType;
  *
  * @author Darryl L. Pierce
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class ConvertComicsRequest {
   @Getter
   @Setter
@@ -49,22 +53,4 @@ public class ConvertComicsRequest {
   @Setter
   @JsonProperty("deletePages")
   private boolean deletePages;
-
-  @Getter
-  @Setter
-  @JsonProperty("deleteOriginal")
-  private boolean deleteOriginal;
-
-  public ConvertComicsRequest(
-      final List<Long> comicIdList,
-      final ArchiveType archiveType,
-      final boolean renamePages,
-      final Boolean deletePages,
-      final boolean deleteOriginal) {
-    this.comicIdList = comicIdList;
-    this.archiveType = archiveType;
-    this.renamePages = renamePages;
-    this.deletePages = deletePages;
-    this.deleteOriginal = deleteOriginal;
-  }
 }

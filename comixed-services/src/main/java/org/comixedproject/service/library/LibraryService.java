@@ -109,4 +109,22 @@ public class LibraryService {
               this.comicStateHandler.fireEvent(comic, ComicEvent.consolidateComic, headers);
             });
   }
+
+  /**
+   * Prepares comics to have their files recreated.
+   *
+   * @param ids the comic ids
+   */
+  public void prepareToRecreateComics(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          try {
+            final Comic comic = this.comicService.getComic(id);
+            log.trace("Firing action to recreate comic: id={}", id);
+            this.comicStateHandler.fireEvent(comic, ComicEvent.recreateComicFile);
+          } catch (ComicException error) {
+            log.error("Failed to update comic", error);
+          }
+        });
+  }
 }
