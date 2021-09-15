@@ -25,7 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference, isAdmin } from '@app/user/user.functions';
-import { updateQueryParam } from '@app/core';
+import { interpolate, updateQueryParam } from '@app/core';
 import {
   API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE,
@@ -45,7 +45,7 @@ import {
 import { ScrapingVolume } from '@app/comic-book/models/scraping-volume';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-book/pipes/comic-title.pipe';
-import { loadComic } from '@app/comic-book/actions/comic.actions';
+import { comicLoaded, loadComic } from '@app/comic-book/actions/comic.actions';
 import {
   selectComic,
   selectComicBusy
@@ -57,6 +57,9 @@ import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
+import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-book/comic-book.constants';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -71,6 +74,8 @@ export class ComicBookPageComponent
   currentTab = 0;
   scrapingStateSubscription: Subscription;
   comicSubscription: Subscription;
+  comicUpdateSubscription: MessagingSubscription;
+  messagingSubscription: Subscription;
   comicId = -1;
   pageIndex = 0;
   comic: Comic;
@@ -102,7 +107,8 @@ export class ComicBookPageComponent
     private titleService: TitleService,
     private translateService: TranslateService,
     private comicTitlePipe: ComicTitlePipe,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private webSocketService: WebSocketService
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -168,6 +174,20 @@ export class ComicBookPageComponent
         this.lastRead =
           entries.find(entry => entry.comic.id === this.comicId) || null;
       });
+    this.messagingSubscription = this.store
+      .select(selectMessagingState)
+      .subscribe(state => {
+        if (state.started && !this.comicUpdateSubscription) {
+          this.logger.trace('Subscribing to comic book updates');
+          this.comicUpdateSubscription = this.webSocketService.subscribe(
+            interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId }),
+            comic => {
+              this.logger.debug('Comic book update received:', comic);
+              this.store.dispatch(comicLoaded({ comic }));
+            }
+          );
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -183,6 +203,9 @@ export class ComicBookPageComponent
     this.userSubscription.unsubscribe();
     this.volumesSubscription.unsubscribe();
     this.lastReadSubscription.unsubscribe();
+    if (!!this.comicUpdateSubscription) {
+      this.comicUpdateSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit(): void {

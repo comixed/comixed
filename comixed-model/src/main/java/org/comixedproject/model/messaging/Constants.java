@@ -24,8 +24,11 @@ package org.comixedproject.model.messaging;
  * @author Darryl L. Pierce
  */
 public interface Constants {
-  /** Topic which receives comic updates in real time. */
+  /** Topic which receives comic list updates in real time. */
   String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
+
+  /** Topic which receives individual comic updates in real time. */
+  String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";
 
   /** Topic which receives blocked page updates in real time. */
   String BLOCKED_PAGE_LIST_UPDATE_TOPIC = "/topic/blocked-page-list.update";

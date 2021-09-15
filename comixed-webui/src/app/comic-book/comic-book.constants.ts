@@ -28,3 +28,5 @@ export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content
 
 export const COMICVINE_ISSUE_LINK =
   'https://comicvine.gamespot.com/issues/4000-${id}/';
+
+export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
