@@ -71,6 +71,15 @@ import { Confirmation } from '@app/core/models/confirmation';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { WebSocketService } from '@app/messaging';
+import { Subscription } from 'webstomp-client';
+import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-book/comic-book.constants';
+import { interpolate } from '@app/core';
+import { comicLoaded } from '@app/comic-book/actions/comic.actions';
 
 describe('ComicBookPageComponent', () => {
   const COMIC = COMIC_1;
@@ -89,7 +98,8 @@ describe('ComicBookPageComponent', () => {
     [DISPLAY_FEATURE_KEY]: { ...initialDisplayState },
     [SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_FEATURE_KEY]: { ...initialComicState },
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
+    [LAST_READ_LIST_FEATURE_KEY]: { ...initialLastReadState },
+    [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
 
   let component: ComicBookPageComponent;
@@ -100,6 +110,7 @@ describe('ComicBookPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let confirmationService: ConfirmationService;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -134,7 +145,14 @@ describe('ComicBookPageComponent', () => {
         },
         ConfirmationService,
         ComicTitlePipe,
-        TitleService
+        TitleService,
+        {
+          provide: WebSocketService,
+          useValue: {
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+            unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
+          }
+        }
       ]
     }).compileComponents();
 
@@ -149,6 +167,9 @@ describe('ComicBookPageComponent', () => {
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
     confirmationService = TestBed.inject(ConfirmationService);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
     fixture.detectChanges();
   }));
 
@@ -349,6 +370,36 @@ describe('ComicBookPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         markComicsDeleted({ comics: [COMIC], deleted: DELETED })
+      );
+    });
+  });
+
+  describe('subscribing to comic updates', () => {
+    beforeEach(() => {
+      component.comicId = COMIC.id;
+      webSocketService.subscribe.and.callFake((topic, callback) => {
+        callback(COMIC);
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          started: true
+        }
+      });
+    });
+
+    it('subscribes to the task topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: COMIC.id }),
+        jasmine.anything()
+      );
+    });
+
+    it('publishes updates', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        comicLoaded({ comic: COMIC })
       );
     });
   });

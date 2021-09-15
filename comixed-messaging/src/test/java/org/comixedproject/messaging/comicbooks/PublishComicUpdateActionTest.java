@@ -37,6 +37,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @RunWith(MockitoJUnitRunner.class)
 public class PublishComicUpdateActionTest {
   private static final String TEST_COMIC_AS_JSON = "Object as JSON";
+  private static final long TEST_COMIC_ID = 273L;
 
   @InjectMocks private PublishComicUpdateAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
@@ -48,6 +49,7 @@ public class PublishComicUpdateActionTest {
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_COMIC_AS_JSON);
+    Mockito.when(comic.getId()).thenReturn(TEST_COMIC_ID);
   }
 
   @Test(expected = PublishingException.class)
@@ -70,8 +72,11 @@ public class PublishComicUpdateActionTest {
     action.publish(comic);
 
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicListView.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(comic);
+    Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(comic);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(Constants.COMIC_LIST_UPDATE_TOPIC, TEST_COMIC_AS_JSON);
+    Mockito.verify(messagingTemplate, Mockito.times(1))
+        .convertAndSend(
+            String.format(Constants.COMIC_BOOK_UPDATE_TOPIC, TEST_COMIC_ID), TEST_COMIC_AS_JSON);
   }
 }

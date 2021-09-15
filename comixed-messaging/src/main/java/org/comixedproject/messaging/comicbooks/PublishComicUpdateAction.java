@@ -36,7 +36,12 @@ import org.springframework.stereotype.Component;
 public class PublishComicUpdateAction extends AbstractPublishAction<Comic> {
   @Override
   public void publish(final Comic comic) throws PublishingException {
-    log.trace("Publishing comic update");
+    log.trace("Publishing comic list update");
     this.doPublish(Constants.COMIC_LIST_UPDATE_TOPIC, comic, View.ComicListView.class);
+    log.trace("Publishing comic book update");
+    this.doPublish(
+        String.format(Constants.COMIC_BOOK_UPDATE_TOPIC, comic.getId()),
+        comic,
+        View.ComicDetailsView.class);
   }
 }
