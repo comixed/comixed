@@ -36,6 +36,7 @@ import { BehaviorSubject } from 'rxjs';
 import {
   createReadingList,
   loadReadingList,
+  readingListLoaded,
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
@@ -44,12 +45,20 @@ import { Confirmation } from '@app/core/models/confirmation';
 import { ComicListViewComponent } from '@app/library/components/comic-list-view/comic-list-view.component';
 import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { READING_LIST_UPDATES } from '@app/lists/lists.constants';
+import { interpolate } from '@app/core';
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const initialState = {
-    [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState
+    [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
+    [MESSAGING_FEATURE_KEY]: initialMessagingState
   };
 
   let component: ReadingListPageComponent;
@@ -58,6 +67,7 @@ describe('ReadingListPageComponent', () => {
   let activatedRoute: ActivatedRoute;
   let router: Router;
   let confirmationService: ConfirmationService;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -81,7 +91,14 @@ describe('ReadingListPageComponent', () => {
             params: new BehaviorSubject<{}>({})
           }
         },
-        ConfirmationService
+        ConfirmationService,
+        {
+          provide: WebSocketService,
+          useValue: {
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+            unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
+          }
+        }
       ]
     }).compileComponents();
 
@@ -94,6 +111,9 @@ describe('ReadingListPageComponent', () => {
     spyOn(router, 'navigateByUrl');
     spyOn(router, 'navigate');
     confirmationService = TestBed.inject(ConfirmationService);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
     fixture.detectChanges();
   }));
 
@@ -287,6 +307,35 @@ describe('ReadingListPageComponent', () => {
           list: READING_LIST,
           comics: COMICS
         })
+      );
+    });
+  });
+  describe('subscribing to comic updates', () => {
+    beforeEach(() => {
+      component.readingListId = READING_LIST.id;
+      webSocketService.subscribe.and.callFake((topic, callback) => {
+        callback(READING_LIST);
+        return {} as MessagingSubscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: {
+          ...initialMessagingState,
+          started: true
+        }
+      });
+    });
+
+    it('subscribes to the task topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        interpolate(READING_LIST_UPDATES, { id: READING_LIST.id }),
+        jasmine.anything()
+      );
+    });
+
+    it('publishes updates', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        readingListLoaded({ list: READING_LIST })
       );
     });
   });

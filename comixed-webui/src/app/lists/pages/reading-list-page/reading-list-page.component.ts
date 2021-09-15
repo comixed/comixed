@@ -18,13 +18,14 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { WebSocketService } from '@app/messaging';
+import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   createReadingList,
   loadReadingList,
+  readingListLoaded,
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import {
@@ -39,6 +40,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Comic } from '@app/comic-book/models/comic';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { READING_LIST_UPDATES } from '@app/lists/lists.constants';
+import { interpolate } from '@app/core';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -49,6 +53,8 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   paramsSubscription: Subscription;
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
+  messagingSubscription: Subscription;
+  readingListUpdateSubscription: MessagingSubscription;
   readingListForm: FormGroup;
   readingListId = -1;
   selectedEntries: Comic[] = [];
@@ -103,6 +109,24 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
           this.readingList = readingList;
         }
       });
+    this.messagingSubscription = this.store
+      .select(selectMessagingState)
+      .subscribe(state => {
+        if (
+          this.readingListId !== -1 &&
+          state.started &&
+          !this.readingListUpdateSubscription
+        ) {
+          this.logger.trace('Subscription to reading list updates');
+          this.readingListUpdateSubscription = this.webSocketService.subscribe(
+            interpolate(READING_LIST_UPDATES, { id: this.readingListId }),
+            list => {
+              this.logger.trace('Reading list updated received');
+              this.store.dispatch(readingListLoaded({ list }));
+            }
+          );
+        }
+      });
   }
 
   private _readingList: ReadingList;
@@ -125,6 +149,10 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     this.paramsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListSubscription.unsubscribe();
+    if (!!this.readingListUpdateSubscription) {
+      this.logger.trace('Unsubcribing from reading list details updates');
+      this.readingListUpdateSubscription.unsubscribe();
+    }
   }
 
   onSave(): void {

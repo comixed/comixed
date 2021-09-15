@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
@@ -72,6 +74,7 @@ public class ReadingListServiceTest {
   @Mock private State<ReadingListState, ReadingListEvent> incomingState;
   @Mock private MessageHeaders messageHeaders;
   @Mock private Message<ReadingListEvent> incomingMessage;
+  @Mock private PublishReadingListUpdateAction publishReadingListUpdateAction;
 
   @Captor private ArgumentCaptor<ReadingList> readingListArgumentCaptor;
   @Captor private ArgumentCaptor<Map<String, Object>> headersArgumentCaptor;
@@ -391,11 +394,33 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testOnStateChange() {
+  public void testOnReadingListStateChange() throws PublishingException {
     Mockito.when(incomingMessage.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
         .thenReturn(readingList);
     Mockito.when(incomingState.getId()).thenReturn(TEST_READING_LIST_STATE);
+    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
+        .thenReturn(savedReadingList);
+
+    service.onReadingListStateChange(incomingState, incomingMessage);
+
+    Mockito.verify(readingList, Mockito.times(1)).setReadingListState(TEST_READING_LIST_STATE);
+    Mockito.verify(readingList, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
+    Mockito.verify(readingListRepository, Mockito.times(1)).save(readingList);
+    Mockito.verify(publishReadingListUpdateAction, Mockito.times(1)).publish(savedReadingList);
+  }
+
+  @Test
+  public void testOnReadingListStateChangePublishingException() throws PublishingException {
+    Mockito.when(incomingMessage.getHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(readingList);
+    Mockito.when(incomingState.getId()).thenReturn(TEST_READING_LIST_STATE);
+    Mockito.when(readingListRepository.save(Mockito.any(ReadingList.class)))
+        .thenReturn(savedReadingList);
+    Mockito.doThrow(PublishingException.class)
+        .when(publishReadingListUpdateAction)
+        .publish(Mockito.any(ReadingList.class));
 
     service.onReadingListStateChange(incomingState, incomingMessage);
 

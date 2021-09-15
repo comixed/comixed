@@ -21,6 +21,7 @@ package org.comixedproject.messaging;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -52,6 +53,33 @@ public abstract class AbstractPublishAction<T> implements PublishAction<T> {
     try {
       this.messagingTemplate.convertAndSend(
           destination, this.objectMapper.writerWithView(viewClass).writeValueAsString(subject));
+    } catch (JsonProcessingException error) {
+      throw new PublishingException(error);
+    }
+  }
+
+  /**
+   * Publishes a message to a specific user.
+   *
+   * @param owner the user
+   * @param destination the destination
+   * @param subject the message subject
+   * @param viewClass the view class
+   * @throws PublishingException if an error occurs
+   */
+  protected void doPublish(
+      final ComiXedUser owner,
+      final String destination,
+      final Object subject,
+      final Class<?> viewClass)
+      throws PublishingException {
+    final String email = owner.getEmail();
+    log.trace("Publishing object to {} for {}", destination, email);
+    try {
+      this.messagingTemplate.convertAndSendToUser(
+          email,
+          destination,
+          this.objectMapper.writerWithView(viewClass).writeValueAsString(subject));
     } catch (JsonProcessingException error) {
       throw new PublishingException(error);
     }

@@ -47,4 +47,10 @@ public interface Constants {
 
   /** Topic which receives notices when the duplicate page list is updated. */
   String DUPLICATE_PAGE_LIST_TOPIC = "/topic/duplicate-page-list.update";
+
+  /** Topic which receives reading list updates. */
+  String READING_LISTS_UPDATE_TOPIC = "/topic/reading-lists.update";
+
+  /** Topic which receives reading list updates. */
+  String READING_LIST_UPDATE_TOPIC = "/topic/reading-list.%d.update";
 }
