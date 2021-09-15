@@ -16,6 +16,7 @@
     <cx-comic-detail-card
       *ngFor="let comic of comics"
       [comic]="comic"
+      [coverTooltip]="comic.title"
       [title]="comic | comicTitle"
       [subtitle]="comic.title"
       [imageUrl]="comic | comicCoverUrl"
@@ -43,7 +44,7 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
     <button mat-menu-item (click)="onShowComicDetails(comic)">
-      <mat-icon>details</mat-icon>
+      <mat-icon>info</mat-icon>
       <mat-label>
         {{ "library.context-menu.comic-details" | translate }}
       </mat-label>

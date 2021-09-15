@@ -163,7 +163,8 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         'library.update-metadata.confirmation-title'
       ),
       message: this.translateService.instant(
-        'library.update-metadata.confirmation-message'
+        'library.update-metadata.confirmation-message',
+        { count: 1 }
       ),
       confirm: () => {
         this.logger.trace('Updating comic info:', comic);

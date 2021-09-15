@@ -80,7 +80,7 @@
       "title": "Save Changes To Comic"
     },
     "text": {
-      "comic-changed": "Comic details have changed.",
+      "comic-changed": "Write metadata to the comic file.",
       "comicvine-issue-link": "ComicVine Details Page",
       "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",

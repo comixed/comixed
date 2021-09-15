@@ -50,7 +50,6 @@ describe('ComicDetailCardComponent', () => {
         TranslateModule.forRoot(),
         MatCardModule,
         MatGridListModule,
-        MatExpansionModule,
         MatChipsModule,
         MatTooltipModule
       ],
