@@ -78,7 +78,7 @@
       "title": "Enregistrer les changements dans la bande dessinée"
     },
     "text": {
-      "comic-changed": "Comic details have changed.",
+      "comic-changed": "Write metadata to the comic file.",
       "comicvine-issue-link": "ComicVine Details Page",
       "file-entries": "Il y a {count, plural, =1{un fichier} other{# fichiers}} dans cette archive.",
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
