@@ -139,7 +139,11 @@ public class Comic {
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @OrderColumn(name = "PageNumber")
   @JsonProperty("pages")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({
+    View.ComicDetailsView.class,
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
+  })
   @Getter
   List<Page> pages = new ArrayList<>();
 
@@ -163,7 +167,8 @@ public class Comic {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter

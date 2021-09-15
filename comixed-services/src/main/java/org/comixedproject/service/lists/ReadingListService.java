@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.library.SmartListMatcher;
 import org.comixedproject.model.library.SmartReadingList;
@@ -58,10 +60,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ReadingListService implements ReadingListStateChangeListener, InitializingBean {
   @Autowired private ReadingListStateHandler readingListStateHandler;
-  @Autowired ReadingListRepository readingListRepository;
-  @Autowired SmartReadingListRepository smartReadingListRepository;
-  @Autowired UserService userService;
-  @Autowired ComicService comicService;
+  @Autowired private ReadingListRepository readingListRepository;
+  @Autowired private SmartReadingListRepository smartReadingListRepository;
+  @Autowired private UserService userService;
+  @Autowired private ComicService comicService;
+  @Autowired private PublishReadingListUpdateAction publishReadingListUpdateAction;
 
   /**
    * Returns all reading lists for the user with the given email.
@@ -329,7 +332,13 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     log.trace("Updating last modified date");
     readingList.setLastModifiedOn(new Date());
     log.trace("Saving updated reading list");
-    this.readingListRepository.save(readingList);
+    final ReadingList savedReadingList = this.readingListRepository.save(readingList);
+    try {
+      log.trace("Publishing changes");
+      this.publishReadingListUpdateAction.publish(savedReadingList);
+    } catch (PublishingException error) {
+      log.error("Failed to publish update", error);
+    }
   }
 
   @Override

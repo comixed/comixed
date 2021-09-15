@@ -18,6 +18,7 @@
 
 import { API_ROOT_URL } from '../core';
 import { ReadingList } from '@app/lists/models/reading-list';
+import { SECURED_PREFIX } from '@app/messaging/messaging.constants';
 
 export const LOAD_READING_LISTS_URL = `${API_ROOT_URL}/lists/reading`;
 export const LOAD_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}`;
@@ -35,3 +36,5 @@ export const READING_LIST_TEMPLATE: ReadingList = {
   lastModifiedOn: 0,
   comics: []
 };
+
+export const READING_LIST_UPDATES = `${SECURED_PREFIX}/topic/reading-list.\${id}.update`;
