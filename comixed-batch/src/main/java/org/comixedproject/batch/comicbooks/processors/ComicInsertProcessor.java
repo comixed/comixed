@@ -18,11 +18,15 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.model.scraping.ScrapingRule;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.scraping.ScrapingRuleService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,6 +42,8 @@ import org.springframework.stereotype.Component;
 public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, Comic> {
   @Autowired private ComicService comicService;
   @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ScrapingRuleService scrapingRuleService;
+  @Autowired private FilenameScraperAdaptor filenameScraperAdaptor;
 
   @Override
   public Comic process(final ComicFileDescriptor descriptor) throws Exception {
@@ -49,6 +55,14 @@ public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, 
     final Comic comic = new Comic(descriptor.getFilename());
     log.trace("Setting archive type");
     this.comicFileHandler.loadComicArchiveType(comic);
+    log.trace("Loading scraping rules");
+    final List<ScrapingRule> rules = this.scrapingRuleService.getAllRules();
+    for (int index = 0; index < rules.size(); index++) {
+      if (this.filenameScraperAdaptor.execute(comic, rules.get(index))) {
+        log.trace("Scraping rule applied");
+        break;
+      }
+    }
     log.trace("Returning comic");
     return comic;
   }
