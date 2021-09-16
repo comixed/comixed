@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   ADD_COMICS_TO_READING_LIST_URL,
+  DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
   REMOVE_COMICS_FROM_READING_LIST_URL,
@@ -80,6 +81,13 @@ export class ReadingListService {
       {
         ids: args.comics.map(comic => comic.id)
       } as RemoveComicsFromReadingListRequest
+    );
+  }
+
+  downloadFile(args: { list: ReadingList }): Observable<any> {
+    this.logger.trace('Downloading reading list:', args);
+    return this.http.get(
+      interpolate(DOWNLOAD_READING_LIST_URL, { id: args.list.id })
     );
   }
 }

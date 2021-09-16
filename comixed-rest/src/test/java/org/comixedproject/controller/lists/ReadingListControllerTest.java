@@ -29,6 +29,7 @@ import java.util.Set;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.RemoveComicsFromReadingListRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
@@ -58,6 +59,7 @@ public class ReadingListControllerTest {
   @Mock private Principal principal;
   @Mock private List<ReadingList> readingLists;
   @Mock private List<Long> comicIdList;
+  @Mock private DownloadDocument downloadDocument;
 
   @Before
   public void setUp() {
@@ -193,7 +195,6 @@ public class ReadingListControllerTest {
 
   @Test
   public void testRemoveComicsFromList() throws ReadingListException {
-    Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
     Mockito.when(
             readingListService.removeComicsFromList(
                 Mockito.anyString(), Mockito.anyLong(), Mockito.anyList()))
@@ -208,5 +209,32 @@ public class ReadingListControllerTest {
 
     Mockito.verify(readingListService, Mockito.times(1))
         .removeComicsFromList(TEST_USER_EMAIL, TEST_READING_LIST_ID, comicIdList);
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testDownloadListServiceException() throws ReadingListException {
+    Mockito.when(readingListService.encodeReadingList(Mockito.anyString(), Mockito.anyLong()))
+        .thenThrow(ReadingListException.class);
+
+    try {
+      controller.downloadReadingList(principal, TEST_READING_LIST_ID);
+    } finally {
+      Mockito.verify(readingListService, Mockito.times(1))
+          .encodeReadingList(TEST_USER_EMAIL, TEST_READING_LIST_ID);
+    }
+  }
+
+  @Test
+  public void testDownloadList() throws ReadingListException {
+    Mockito.when(readingListService.encodeReadingList(Mockito.anyString(), Mockito.anyLong()))
+        .thenReturn(downloadDocument);
+
+    final DownloadDocument result = controller.downloadReadingList(principal, TEST_READING_LIST_ID);
+
+    assertNotNull(result);
+    assertSame(downloadDocument, result);
+
+    Mockito.verify(readingListService, Mockito.times(1))
+        .encodeReadingList(TEST_USER_EMAIL, TEST_READING_LIST_ID);
   }
 }

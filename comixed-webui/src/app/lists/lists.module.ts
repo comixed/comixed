@@ -51,6 +51,11 @@ import {
 } from '@app/lists/reducers/reading-list-entries.reducer';
 import { ReadingListEntriesEffects } from '@app/lists/effects/reading-list-entries.effects';
 import { LibraryModule } from '@app/library/library.module';
+import {
+  DOWNLOAD_READING_LIST_FEATURE_KEY,
+  reducer as downloadReadingListReducer
+} from '@app/lists/reducers/download-reading-list.reducer';
+import { DownloadReadingListEffects } from '@app/lists/effects/download-reading-list.effects';
 
 @NgModule({
   declarations: [ReadingListsPageComponent, ReadingListPageComponent],
@@ -67,10 +72,15 @@ import { LibraryModule } from '@app/library/library.module';
       READING_LIST_ENTRIES_FEATURE_KEY,
       readingListEntriesReducer
     ),
+    StoreModule.forFeature(
+      DOWNLOAD_READING_LIST_FEATURE_KEY,
+      downloadReadingListReducer
+    ),
     EffectsModule.forFeature([
       ReadingListsEffects,
       ReadingListDetailEffects,
-      ReadingListEntriesEffects
+      ReadingListEntriesEffects,
+      DownloadReadingListEffects
     ]),
     MatToolbarModule,
     MatPaginatorModule,

@@ -19,28 +19,34 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-import { DownloadBlockedPagesEffects } from './download-blocked-pages.effects';
-import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
+import { DownloadReadingListEffects } from './download-reading-list.effects';
+import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { BLOCKED_PAGE_FILE } from '@app/blocked-pages/blocked-pages.fixtures';
-import {
-  blockedPagesDownloaded,
-  downloadBlockedPages,
-  downloadBlockedPagesFailed
-} from '@app/blocked-pages/actions/download-blocked-pages.actions';
-import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FileDownloadService } from '@app/core/services/file-download.service';
+import {
+  downloadReadingList,
+  downloadReadingListFailed,
+  readingListDownloaded
+} from '@app/lists/actions/download-reading-list.actions';
+import { hot } from 'jasmine-marbles';
+import { DownloadDocument } from '@app/core/models/download-document';
+import { READING_LIST_3 } from '@app/lists/lists.fixtures';
+import { HttpErrorResponse } from '@angular/common/http';
 
-describe('DownloadBlockedPagesEffects', () => {
-  const DOWNLOADED_FILE = BLOCKED_PAGE_FILE;
+describe('DownloadReadingListEffects', () => {
+  const READING_LIST = READING_LIST_3;
+  const DOWNLOAD_DOCUMENT = {
+    filename: 'filename',
+    content: 'content',
+    mediaType: 'text/csv'
+  } as DownloadDocument;
 
   let actions$: Observable<any>;
-  let effects: DownloadBlockedPagesEffects;
-  let blockedPageService: jasmine.SpyObj<BlockedPageService>;
+  let effects: DownloadReadingListEffects;
+  let readingListService: jasmine.SpyObj<ReadingListService>;
   let alertService: AlertService;
   let fileDownloadService: FileDownloadService;
 
@@ -52,12 +58,12 @@ describe('DownloadBlockedPagesEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        DownloadBlockedPagesEffects,
+        DownloadReadingListEffects,
         provideMockActions(() => actions$),
         {
-          provide: BlockedPageService,
+          provide: ReadingListService,
           useValue: {
-            downloadFile: jasmine.createSpy('BlockedPageService.downloadFile()')
+            downloadFile: jasmine.createSpy('ReadingListService.downloadFile()')
           }
         },
         AlertService,
@@ -65,10 +71,10 @@ describe('DownloadBlockedPagesEffects', () => {
       ]
     });
 
-    effects = TestBed.inject(DownloadBlockedPagesEffects);
-    blockedPageService = TestBed.inject(
-      BlockedPageService
-    ) as jasmine.SpyObj<BlockedPageService>;
+    effects = TestBed.inject(DownloadReadingListEffects);
+    readingListService = TestBed.inject(
+      ReadingListService
+    ) as jasmine.SpyObj<ReadingListService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'error');
     fileDownloadService = TestBed.inject(FileDownloadService);
@@ -79,46 +85,56 @@ describe('DownloadBlockedPagesEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('downloading a blocked page file', () => {
+  describe('downloading a reading list', () => {
     it('fires an action on success', () => {
-      const serviceResponse = BLOCKED_PAGE_FILE;
-      const action = downloadBlockedPages();
-      const outcome = blockedPagesDownloaded({ document: DOWNLOADED_FILE });
+      const serviceResponse = DOWNLOAD_DOCUMENT;
+      const action = downloadReadingList({ list: READING_LIST });
+      const outcome = readingListDownloaded();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.downloadFile.and.returnValue(of(serviceResponse));
+      readingListService.downloadFile
+        .withArgs({ list: READING_LIST })
+        .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.downloadFile$).toBeObservable(expected);
+      expect(effects.downloadReadingList$).toBeObservable(expected);
       expect(fileDownloadService.saveFile).toHaveBeenCalledWith({
-        document: DOWNLOADED_FILE
+        document: DOWNLOAD_DOCUMENT
       });
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = downloadBlockedPages();
-      const outcome = downloadBlockedPagesFailed();
+      const action = downloadReadingList({ list: READING_LIST });
+      const outcome = downloadReadingListFailed();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.downloadFile.and.returnValue(
-        throwError(serviceResponse)
-      );
+      readingListService.downloadFile
+        .withArgs({ list: READING_LIST })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.downloadFile$).toBeObservable(expected);
+      expect(effects.downloadReadingList$).toBeObservable(expected);
+      expect(fileDownloadService.saveFile).not.toHaveBeenCalledWith(
+        jasmine.anything()
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = downloadBlockedPages();
-      const outcome = downloadBlockedPagesFailed();
+      const action = downloadReadingList({ list: READING_LIST });
+      const outcome = downloadReadingListFailed();
 
       actions$ = hot('-a', { a: action });
-      blockedPageService.downloadFile.and.throwError('expected');
+      readingListService.downloadFile
+        .withArgs({ list: READING_LIST })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.downloadFile$).toBeObservable(expected);
+      expect(effects.downloadReadingList$).toBeObservable(expected);
+      expect(fileDownloadService.saveFile).not.toHaveBeenCalledWith(
+        jasmine.anything()
+      );
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

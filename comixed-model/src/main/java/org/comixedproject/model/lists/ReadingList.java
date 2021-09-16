@@ -59,12 +59,16 @@ public class ReadingList {
   @Setter
   private ReadingListState readingListState = ReadingListState.STABLE;
 
-  @Column(name = "Name", length = 128)
+  @Column(name = "NameKey", length = 128)
   @ColumnTransformer(write = "(UPPER(?))")
+  @JsonIgnore
+  @Getter
+  private String nameKey;
+
+  @Column(name = "Name", length = 128)
   @JsonProperty("name")
   @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
   @Getter
-  @Setter
   private String name;
 
   @Column(name = "Summary", length = 256, nullable = true)
@@ -114,6 +118,11 @@ public class ReadingList {
   @Getter
   private List<Comic> comics = new ArrayList<>();
 
+  public void setName(final String name) {
+    this.name = name;
+    this.nameKey = name;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -121,6 +130,7 @@ public class ReadingList {
     ReadingList that = (ReadingList) o;
     return Objects.equals(id, that.id)
         && Objects.equals(readingListState, that.readingListState)
+        && Objects.equals(nameKey, that.nameKey)
         && Objects.equals(name, that.name)
         && Objects.equals(summary, that.summary)
         && Objects.equals(owner, that.owner)

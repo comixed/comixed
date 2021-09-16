@@ -21,11 +21,13 @@ package org.comixedproject.service.lists;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
@@ -33,6 +35,7 @@ import org.comixedproject.model.library.SmartListMatcher;
 import org.comixedproject.model.library.SmartReadingList;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.SmartReadingListRepository;
 import org.comixedproject.repositories.lists.ReadingListRepository;
@@ -59,11 +62,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class ReadingListService implements ReadingListStateChangeListener, InitializingBean {
+  static final String POSITION_HEADER = "";
+  static final String PUBLISHER_HEADER = "Publisher";
+  static final String SERIES_HEADER = "Series";
+  static final String VOLUME_HEADER = "Volume";
+  static final String ISSUE_NUMBER_HEADER = "Issue Number";
+
   @Autowired private ReadingListStateHandler readingListStateHandler;
   @Autowired private ReadingListRepository readingListRepository;
   @Autowired private SmartReadingListRepository smartReadingListRepository;
   @Autowired private UserService userService;
   @Autowired private ComicService comicService;
+  @Autowired private CsvAdaptor csvAdaptor;
   @Autowired private PublishReadingListUpdateAction publishReadingListUpdateAction;
 
   /**
@@ -95,7 +105,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     log.trace("Loading owner");
     final ComiXedUser owner = this.doLoadUser(email);
     log.trace("Looking for existing reading list: name={}", name);
-    if (this.readingListRepository.findReadingListForUser(owner, name) != null) {
+    if (this.readingListRepository.checkForExistingReadingList(owner, name)) {
       throw new ReadingListException("Name already used: " + name);
     }
     log.trace("Creating reading list");
@@ -345,5 +355,49 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   public void afterPropertiesSet() throws Exception {
     log.trace("Subscribing to reading list state changes");
     this.readingListStateHandler.addListener(this);
+  }
+
+  /**
+   * Returns a reading list encoded for download.
+   *
+   * @param email the user's email
+   * @param readingListId the reading list id
+   * @return the encoded reading list
+   * @throws ReadingListException if the user is not the owner, or the id is invalid
+   */
+  public DownloadDocument encodeReadingList(final String email, final long readingListId)
+      throws ReadingListException {
+    log.trace("Loading reading list");
+    final ReadingList readingList = this.doLoadReadingListForOwner(readingListId, email);
+    try {
+      log.trace("Encoding reading list");
+      final byte[] content =
+          this.csvAdaptor.encodeRecords(
+              readingList.getComics(),
+              (index, model) -> {
+                if (index == 0) {
+                  return new String[] {
+                    POSITION_HEADER,
+                    PUBLISHER_HEADER,
+                    SERIES_HEADER,
+                    VOLUME_HEADER,
+                    ISSUE_NUMBER_HEADER
+                  };
+                } else {
+                  return new String[] {
+                    String.valueOf(index),
+                    model.getPublisher(),
+                    model.getSeries(),
+                    model.getVolume(),
+                    model.getIssueNumber()
+                  };
+                }
+              });
+      log.trace("Returning encoded reading list");
+      return new DownloadDocument(
+          String.format("%s.csv", readingList.getName()), "text/csv", content);
+    } catch (IOException error) {
+      throw new ReadingListException("Error encoding reading list", error);
+    }
   }
 }

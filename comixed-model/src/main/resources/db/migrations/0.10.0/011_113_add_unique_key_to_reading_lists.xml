@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="011_113_add_unique_key_to_reading_lists.xml"
+             author="mcpierce">
+
+    <addColumn tableName="ReadingLists">
+      <column name="NameKey"
+              type="varchar(128)"/>
+    </addColumn>
+
+    <sql>UPDATE ReadingLists
+         SET NameKey=UPPER(Name)</sql>
+
+    <addUniqueConstraint tableName="ReadingLists"
+                         columnNames="OwnerId,NameKey"
+                         constraintName="ReadingListOwnerNameKeyIdx"/>
+
+    <dropUniqueConstraint tableName="ReadingLists"
+                          constraintName="ReadingListUniqueOwnerNameIdx"/>
+
+  </changeSet>
+</databaseChangeLog>

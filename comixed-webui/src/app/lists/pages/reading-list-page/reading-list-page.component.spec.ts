@@ -52,13 +52,19 @@ import {
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { READING_LIST_UPDATES } from '@app/lists/lists.constants';
 import { interpolate } from '@app/core';
+import {
+  DOWNLOAD_READING_LIST_FEATURE_KEY,
+  initialState as initialDownloadReadingListState
+} from '@app/lists/reducers/download-reading-list.reducer';
+import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
-    [MESSAGING_FEATURE_KEY]: initialMessagingState
+    [MESSAGING_FEATURE_KEY]: initialMessagingState,
+    [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState
   };
 
   let component: ReadingListPageComponent;
@@ -336,6 +342,19 @@ describe('ReadingListPageComponent', () => {
     it('publishes updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         readingListLoaded({ list: READING_LIST })
+      );
+    });
+  });
+
+  describe('downloading a reading list', () => {
+    beforeEach(() => {
+      component.readingList = READING_LIST;
+      component.onDownload();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        downloadReadingList({ list: READING_LIST })
       );
     });
   });

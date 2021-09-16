@@ -26,6 +26,7 @@ export const SAVE_READING_LIST = `${API_ROOT_URL}/lists/reading`;
 export const UPDATE_READING_LIST = `${API_ROOT_URL}/lists/reading/\${id}`;
 export const ADD_COMICS_TO_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}/comics/add`;
 export const REMOVE_COMICS_FROM_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}/comics/remove`;
+export const DOWNLOAD_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}/download`;
 
 export const READING_LIST_TEMPLATE: ReadingList = {
   id: null,

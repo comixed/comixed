@@ -30,6 +30,16 @@
     <mat-icon>undo</mat-icon>
   </button>
   <button
+    id="download-button"
+    mat-icon-button
+    color="accent"
+    [disabled]="!readingList?.id"
+    [matTooltip]="'reading-list.tooltip.download' | translate"
+    (click)="onDownload()"
+  >
+    <mat-icon>download</mat-icon>
+  </button>
+  <button
     id="save-changes-button"
     mat-icon-button
     color="primary"
