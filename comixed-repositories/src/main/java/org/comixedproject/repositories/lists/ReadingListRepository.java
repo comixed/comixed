@@ -46,8 +46,8 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
    * @return the reading list
    */
   @Query(
-      "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner = :owner AND l.name = :listName")
-  ReadingList findReadingListForUser(
+      "SELECT CASE WHEN COUNT(l) > 0 THEN true ELSE false END FROM ReadingList l WHERE l.owner = :owner AND l.nameKey = UPPER(:listName)")
+  boolean checkForExistingReadingList(
       @Param("owner") ComiXedUser owner, @Param("listName") String listName);
 
   /**

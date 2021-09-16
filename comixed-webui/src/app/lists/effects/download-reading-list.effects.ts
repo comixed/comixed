@@ -18,45 +18,42 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { BlockedPageService } from '@app/blocked-pages/services/blocked-page.service';
-import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '@angular-ru/logger';
 import {
-  blockedPagesDownloaded,
-  downloadBlockedPages,
-  downloadBlockedPagesFailed
-} from '@app/blocked-pages/actions/download-blocked-pages.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { DownloadDocument } from '@app/core/models/download-document';
+  downloadReadingList,
+  downloadReadingListFailed,
+  readingListDownloaded
+} from '../actions/download-reading-list.actions';
+import { LoggerService } from '@angular-ru/logger';
+import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { AlertService } from '@app/core/services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { DownloadDocument } from '@app/core/models/download-document';
 import { FileDownloadService } from '@app/core/services/file-download.service';
+import { of } from 'rxjs';
 
 @Injectable()
-export class DownloadBlockedPagesEffects {
-  downloadFile$ = createEffect(() => {
+export class DownloadReadingListEffects {
+  downloadReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(downloadBlockedPages),
-      tap(action =>
-        this.logger.debug('Effect: download blocked pages file:', action)
-      ),
+      ofType(downloadReadingList),
+      tap(action => this.logger.trace('Downloading reading list:', action)),
       switchMap(action =>
-        this.blockedPageService.downloadFile().pipe(
+        this.readingListService.downloadFile({ list: action.list }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
           tap((response: DownloadDocument) =>
             this.fileDownloadService.saveFile({ document: response })
           ),
-          map((response: DownloadDocument) =>
-            blockedPagesDownloaded({ document: response })
-          ),
+          map(() => readingListDownloaded()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page-list.download-file.effect-failure'
+                'reading-list.download.effect-failure',
+                { name: action.list.name }
               )
             );
-            return of(downloadBlockedPagesFailed());
+            return of(downloadReadingListFailed());
           })
         )
       ),
@@ -65,7 +62,7 @@ export class DownloadBlockedPagesEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(downloadBlockedPagesFailed());
+        return of(downloadReadingListFailed());
       })
     );
   });
@@ -73,7 +70,7 @@ export class DownloadBlockedPagesEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private blockedPageService: BlockedPageService,
+    private readingListService: ReadingListService,
     private alertService: AlertService,
     private translateService: TranslateService,
     private fileDownloadService: FileDownloadService

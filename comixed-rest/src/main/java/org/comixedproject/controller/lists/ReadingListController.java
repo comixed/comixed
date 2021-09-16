@@ -25,6 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
+import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.RemoveComicsFromReadingListRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
@@ -211,5 +212,26 @@ public class ReadingListController {
         email,
         id);
     return this.readingListService.removeComicsFromList(email, id, comicIds);
+  }
+
+  /**
+   * Downloads an encoded reading list.
+   *
+   * @param principal the user principal
+   * @param readingListId the reading list id
+   * @return the encoded reading list
+   * @throws ReadingListException if an exception is thrown
+   */
+  @GetMapping(
+      value = "/api/lists/reading/{id}/download",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('READER')")
+  @AuditableEndpoint
+  public DownloadDocument downloadReadingList(
+      final Principal principal, @PathVariable("id") final long readingListId)
+      throws ReadingListException {
+    final String email = principal.getName();
+    log.info("Downloading reading list: email={} reading list id={}", email, readingListId);
+    return this.readingListService.encodeReadingList(email, readingListId);
   }
 }

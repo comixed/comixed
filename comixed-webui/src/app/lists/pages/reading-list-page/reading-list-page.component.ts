@@ -43,6 +43,7 @@ import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-ent
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { READING_LIST_UPDATES } from '@app/lists/lists.constants';
 import { interpolate } from '@app/core';
+import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -213,6 +214,11 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   onSelectionChanged(selected: Comic[]): void {
     this.logger.debug('Selected reading list comics changed:', selected);
     this.selectedEntries = selected;
+  }
+
+  onDownload(): void {
+    this.logger.trace('Downloading reading list');
+    this.store.dispatch(downloadReadingList({ list: this.readingList }));
   }
 
   private encodeForm(): ReadingList {

@@ -1,5 +1,8 @@
 {
   "reading-list": {
+    "download": {
+      "effect-failure": "Failed to download reading list: {name}"
+    },
     "load-one": {
       "effect-failure": "Failed to load reading list."
     },
@@ -17,6 +20,7 @@
       "no-name": "Unnamed Reading List"
     },
     "tooltip": {
+      "download": "Download this reading list.",
       "remove-comics": "Remove the selected comics.",
       "reset-reading-list": "Reset changes to the reading list.",
       "return-to-list": "Return to the list.",

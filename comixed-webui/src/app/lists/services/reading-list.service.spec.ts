@@ -30,6 +30,7 @@ import {
 import { interpolate } from '@app/core';
 import {
   ADD_COMICS_TO_READING_LIST_URL,
+  DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
   REMOVE_COMICS_FROM_READING_LIST_URL,
@@ -40,11 +41,17 @@ import { LoggerModule } from '@angular-ru/logger';
 import { COMIC_1 } from '@app/comic-book/comic-book.fixtures';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
+import { DownloadDocument } from '@app/core/models/download-document';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
   const READING_LIST = READING_LISTS[0];
   const COMIC = COMIC_1;
+  const DOWNLOAD_DOCUMENT = {
+    filename: 'filename',
+    content: 'content',
+    mediaType: 'text/csv'
+  } as DownloadDocument;
 
   let service: ReadingListService;
   let httpMock: HttpTestingController;
@@ -144,5 +151,17 @@ describe('ReadingListService', () => {
       ids: [COMIC.id]
     } as RemoveComicsFromReadingListRequest);
     req.flush(READING_LIST);
+  });
+
+  it('can download a reading list', () => {
+    service
+      .downloadFile({ list: READING_LIST })
+      .subscribe(response => expect(response).toEqual(DOWNLOAD_DOCUMENT));
+
+    const req = httpMock.expectOne(
+      interpolate(DOWNLOAD_READING_LIST_URL, { id: READING_LIST.id })
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(DOWNLOAD_DOCUMENT);
   });
 });

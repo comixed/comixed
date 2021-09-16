@@ -95,12 +95,18 @@ public class ReadingListRepositoryTest {
   }
 
   @Test
-  public void testFindReadingListForUser() {
-    ReadingList result = repository.findReadingListForUser(reader, TEST_EXISTING_LIST_NAME);
+  public void testCheckForExistingReadingList() {
+    boolean result = repository.checkForExistingReadingList(reader, TEST_EXISTING_LIST_NAME);
 
-    assertNotNull(result);
-    assertEquals(TEST_EXISTING_LIST_NAME, result.getName());
-    assertEquals(5, result.getComics().size());
+    assertTrue(result);
+  }
+
+  @Test
+  public void testCheckForExistingReadingListNotFOund() {
+    boolean result =
+        repository.checkForExistingReadingList(reader, TEST_EXISTING_LIST_NAME.substring(1));
+
+    assertFalse(result);
   }
 
   @Test
