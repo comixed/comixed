@@ -36,7 +36,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan({
-  "org.comixedproject.controller",
+  "org.comixedproject.rest",
+  "org.comixedproject.http",
   "org.comixedproject.opds",
   "org.comixedproject.auth"
 })

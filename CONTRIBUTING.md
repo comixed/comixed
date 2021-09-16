@@ -145,6 +145,7 @@ The application is composed of several modules:
  * **comixed-state**: state management layer,
  * **comixed-batch**: batch processing layer,
  * **comixed-auth**: the authentication layer,
+ * **comixed-http**: the web layer,
  * **comixed-rest**: the REST controllers,
  * **comixed-opds**: the OPDS controllers,
  * **comixed-webui**: the Angular frontend, and
