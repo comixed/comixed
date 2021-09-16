@@ -36,6 +36,10 @@ import {
 } from '@app/lists/selectors/reading-lists.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatPaginator } from '@angular/material/paginator';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
+import { selectUploadReadingListState } from '@app/lists/selectors/upload-reading-list.selectors';
 
 @Component({
   selector: 'cx-reading-lists-page',
@@ -51,6 +55,7 @@ export class ReadingListsPageComponent
   dataSource = new MatTableDataSource<ReadingList>([]);
   readingListStateSubscription: Subscription;
   readingListsSubscription: Subscription;
+  uploadReadingListSubscription: Subscription;
 
   readonly displayedColumns = [
     'list-name',
@@ -58,8 +63,14 @@ export class ReadingListsPageComponent
     'comic-count',
     'created-on'
   ];
+  showUploadRow = false;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
+  ) {
     this.logger.trace('Subscribing to reading list state updates');
     this.readingListStateSubscription = this.store
       .select(selectUserReadingListsState)
@@ -70,9 +81,16 @@ export class ReadingListsPageComponent
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(readingLists => (this.readingLists = readingLists));
+    this.uploadReadingListSubscription = this.store
+      .select(selectUploadReadingListState)
+      .subscribe(state => {
+        this.logger.trace('Uploading reading list state change');
+        this.store.dispatch(setBusyState({ enabled: state.uploading }));
+      });
   }
 
   private _readingLists: ReadingList[];
+
   set readingLists(readingLists: ReadingList[]) {
     this.logger.trace('Received reading lists update');
     this._readingLists = readingLists;
@@ -106,7 +124,32 @@ export class ReadingListsPageComponent
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from user reading list state updates');
     this.readingListStateSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user redaing list updates');
+    this.logger.trace('Unsubscribing from user reading list updates');
     this.readingListsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from upload reading list state updates');
+    this.uploadReadingListSubscription.unsubscribe();
+  }
+
+  onShowUploadRow(): void {
+    this.logger.trace('Showing upload row');
+    this.showUploadRow = true;
+  }
+
+  onFileSelected(file: File): void {
+    this.logger.trace('Confirming uploading reading list file');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'reading-list.upload-file.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'reading-list.upload-file.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing upload reading list action');
+        this.store.dispatch(uploadReadingList({ file }));
+      }
+    });
+    this.logger.trace('Hiding upload row');
+    this.showUploadRow = false;
   }
 }

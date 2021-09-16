@@ -23,12 +23,14 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
+import org.comixedproject.adaptors.csv.CsvRowDecoder;
 import org.comixedproject.adaptors.csv.CsvRowEncoder;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
@@ -64,6 +66,7 @@ public class ReadingListServiceTest {
   private static final Long TEST_COMIC_ID = 1000L;
   private static final String TEST_OWNER_EMAIL = "owner@localhost.com";
   private static final ReadingListState TEST_READING_LIST_STATE = ReadingListState.STABLE;
+  private static final String TEST_POSITION = "1";
   private static final String TEST_PUBLISHER = "Publisher";
   private static final String TEST_SERIES = "Series";
   private static final String TEST_VOLUME = "Volume";
@@ -88,10 +91,12 @@ public class ReadingListServiceTest {
   @Mock private MessageHeaders messageHeaders;
   @Mock private Message<ReadingListEvent> incomingMessage;
   @Mock private PublishReadingListUpdateAction publishReadingListUpdateAction;
+  @Mock private InputStream inputStream;
 
   @Captor private ArgumentCaptor<ReadingList> readingListArgumentCaptor;
   @Captor private ArgumentCaptor<Map<String, Object>> headersArgumentCaptor;
   @Captor private ArgumentCaptor<CsvRowEncoder> rowEncoderArgumentCaptor;
+  @Captor private ArgumentCaptor<CsvRowDecoder> rowDecoderArgumentCaptor;
 
   private List<Long> idList = new ArrayList<>();
   private List<Comic> comicList = new ArrayList<>();
@@ -519,5 +524,131 @@ public class ReadingListServiceTest {
 
     Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     Mockito.verify(csvAdaptor, Mockito.times(1)).encodeRecords(comicList, encoder);
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testDecodeAndCreateReadingListInvalidEmail()
+      throws ComiXedUserException, ReadingListException, IOException {
+    Mockito.when(userService.findByEmail(Mockito.anyString()))
+        .thenThrow(ComiXedUserException.class);
+
+    try {
+      service.decodeAndCreateReadingList(TEST_OWNER_EMAIL, TEST_READING_LIST_NAME, inputStream);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_OWNER_EMAIL);
+    }
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testDecodeAndCreateReadingListNameUsed()
+      throws ComiXedUserException, ReadingListException, IOException {
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            readingListRepository.checkForExistingReadingList(
+                Mockito.any(ComiXedUser.class), Mockito.anyString()))
+        .thenReturn(true);
+
+    try {
+      service.decodeAndCreateReadingList(TEST_OWNER_EMAIL, TEST_READING_LIST_NAME, inputStream);
+    } finally {
+      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_OWNER_EMAIL);
+      Mockito.verify(readingListRepository, Mockito.times(1))
+          .checkForExistingReadingList(user, TEST_READING_LIST_NAME);
+    }
+  }
+
+  @Test
+  public void testDecodeAndCreateReadingListComicNotFound()
+      throws ComiXedUserException, ComicException, ReadingListException, IOException {
+    final List<String> decodingRow = new ArrayList<>();
+    decodingRow.add(TEST_POSITION);
+    decodingRow.add(TEST_PUBLISHER);
+    decodingRow.add(TEST_SERIES);
+    decodingRow.add(TEST_VOLUME);
+    decodingRow.add(TEST_ISSUE_NUMBER);
+
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            readingListRepository.checkForExistingReadingList(
+                Mockito.any(ComiXedUser.class), Mockito.anyString()))
+        .thenReturn(false);
+    Mockito.when(readingListRepository.save(readingListArgumentCaptor.capture()))
+        .thenReturn(savedReadingList);
+    Mockito.doNothing()
+        .when(csvAdaptor)
+        .decodeRecords(
+            Mockito.any(InputStream.class), Mockito.any(), rowDecoderArgumentCaptor.capture());
+    Mockito.when(
+            comicService.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(null);
+
+    service.decodeAndCreateReadingList(TEST_OWNER_EMAIL, TEST_READING_LIST_NAME, inputStream);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_OWNER_EMAIL);
+    Mockito.verify(readingListRepository, Mockito.times(1))
+        .checkForExistingReadingList(user, TEST_READING_LIST_NAME);
+
+    final CsvRowDecoder decoder = rowDecoderArgumentCaptor.getValue();
+    decoder.processRow(1, decodingRow);
+
+    Mockito.verify(comicService, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+    Mockito.verify(readingListStateHandler, Mockito.never())
+        .fireEvent(Mockito.any(), Mockito.any(), Mockito.any());
+  }
+
+  @Test
+  public void testDecodeAndCreateReadingList()
+      throws ComiXedUserException, ComicException, ReadingListException, IOException {
+    final List<String> decodingRow = new ArrayList<>();
+    decodingRow.add(TEST_POSITION);
+    decodingRow.add(TEST_PUBLISHER);
+    decodingRow.add(TEST_SERIES);
+    decodingRow.add(TEST_VOLUME);
+    decodingRow.add(TEST_ISSUE_NUMBER);
+
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(
+            readingListRepository.checkForExistingReadingList(
+                Mockito.any(ComiXedUser.class), Mockito.anyString()))
+        .thenReturn(false);
+    Mockito.when(readingListRepository.save(readingListArgumentCaptor.capture()))
+        .thenReturn(savedReadingList);
+    Mockito.doNothing()
+        .when(csvAdaptor)
+        .decodeRecords(
+            Mockito.any(InputStream.class), Mockito.any(), rowDecoderArgumentCaptor.capture());
+    Mockito.when(
+            comicService.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(comic);
+    Mockito.when(savedReadingList.getId()).thenReturn(TEST_READING_LIST_ID);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
+    Mockito.doNothing()
+        .when(readingListStateHandler)
+        .fireEvent(
+            Mockito.any(ReadingList.class),
+            Mockito.any(ReadingListEvent.class),
+            headersArgumentCaptor.capture());
+
+    service.decodeAndCreateReadingList(TEST_OWNER_EMAIL, TEST_READING_LIST_NAME, inputStream);
+
+    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_OWNER_EMAIL);
+    Mockito.verify(readingListRepository, Mockito.times(1))
+        .checkForExistingReadingList(user, TEST_READING_LIST_NAME);
+
+    final CsvRowDecoder decoder = rowDecoderArgumentCaptor.getValue();
+    decoder.processRow(1, decodingRow);
+
+    final Map<String, Object> headers = headersArgumentCaptor.getValue();
+    assertFalse(headers.isEmpty());
+    assertSame(comic, headers.get(HEADER_COMIC));
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(comicService, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+    Mockito.verify(readingListStateHandler, Mockito.times(1))
+        .fireEvent(readingList, ReadingListEvent.comicAdded, headers);
   }
 }

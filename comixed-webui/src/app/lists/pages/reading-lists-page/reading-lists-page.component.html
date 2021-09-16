@@ -1,15 +1,34 @@
 <mat-toolbar class="cx-primary-light-background">
-  <mat-paginator class="cx-primary-light-background"></mat-paginator>
-  <div class="cx-spacer"></div>
-  <button
-    id="add-reading-list-button"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'reading-lists.tooltip.add-reading-list' | translate"
-    routerLink="/lists/reading/new"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
+  <mat-toolbar-row>
+    <mat-paginator class="cx-primary-light-background"></mat-paginator>
+    <div class="cx-spacer"></div>
+    <button
+      id="add-reading-list-button"
+      mat-icon-button
+      color="primary"
+      [matTooltip]="'reading-lists.tooltip.add-reading-list' | translate"
+      routerLink="/lists/reading/new"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+    <button
+      id="upload-button"
+      mat-icon-button
+      color="primary"
+      [matTooltip]="'reading-list.tooltip.upload-file' | translate"
+      (click)="onShowUploadRow()"
+    >
+      <mat-icon>upload</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="showUploadRow">
+    <input
+      id="fileUpload"
+      type="file"
+      (change)="onFileSelected($event.target.files[0])"
+      (click)="$event.stopPropagation()"
+    />
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-table [dataSource]="dataSource" matSort>

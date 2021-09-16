@@ -35,13 +35,15 @@ import {
   LOAD_READING_LISTS_URL,
   REMOVE_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
-  UPDATE_READING_LIST
+  UPDATE_READING_LIST,
+  UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { LoggerModule } from '@angular-ru/logger';
 import { COMIC_1 } from '@app/comic-book/comic-book.fixtures';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DownloadDocument } from '@app/core/models/download-document';
+import { HttpResponse } from '@angular/common/http';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -52,6 +54,7 @@ describe('ReadingListService', () => {
     content: 'content',
     mediaType: 'text/csv'
   } as DownloadDocument;
+  const UPLOADED_FILE = new File([], 'testing');
 
   let service: ReadingListService;
   let httpMock: HttpTestingController;
@@ -163,5 +166,16 @@ describe('ReadingListService', () => {
     );
     expect(req.request.method).toEqual('GET');
     req.flush(DOWNLOAD_DOCUMENT);
+  });
+
+  it('can upload a reading list', () => {
+    service
+      .uploadFile({ file: UPLOADED_FILE })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(UPLOAD_READING_LIST_URL));
+    expect(req.request.method).toEqual('POST');
+    expect((req.request.body as FormData).get('file')).toEqual(UPLOADED_FILE);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 });

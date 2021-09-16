@@ -56,6 +56,11 @@ import {
   reducer as downloadReadingListReducer
 } from '@app/lists/reducers/download-reading-list.reducer';
 import { DownloadReadingListEffects } from '@app/lists/effects/download-reading-list.effects';
+import {
+  reducer as uploadReadingListReducer,
+  UPLOAD_READING_LIST_FEATURE_KEY
+} from '@app/lists/reducers/upload-reading-list.reducer';
+import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list.effects';
 
 @NgModule({
   declarations: [ReadingListsPageComponent, ReadingListPageComponent],
@@ -76,11 +81,16 @@ import { DownloadReadingListEffects } from '@app/lists/effects/download-reading-
       DOWNLOAD_READING_LIST_FEATURE_KEY,
       downloadReadingListReducer
     ),
+    StoreModule.forFeature(
+      UPLOAD_READING_LIST_FEATURE_KEY,
+      uploadReadingListReducer
+    ),
     EffectsModule.forFeature([
       ReadingListsEffects,
       ReadingListDetailEffects,
       ReadingListEntriesEffects,
-      DownloadReadingListEffects
+      DownloadReadingListEffects,
+      UploadReadingListEffects
     ]),
     MatToolbarModule,
     MatPaginatorModule,

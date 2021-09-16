@@ -52,7 +52,12 @@
     </button>
   </mat-toolbar-row>
   <mat-toolbar-row *ngIf="showUploadRow">
-    <input id="fileUpload" type="file" (change)="onFileSelected($event)" />
+    <input
+      id="fileUpload"
+      type="file"
+      (change)="onFileSelected($event.target.files[0])"
+      (click)="$event.stopPropagation()"
+    />
   </mat-toolbar-row>
 </mat-toolbar>
 

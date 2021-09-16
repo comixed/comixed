@@ -28,7 +28,8 @@ import {
   LOAD_READING_LISTS_URL,
   REMOVE_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
-  UPDATE_READING_LIST
+  UPDATE_READING_LIST,
+  UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { Comic } from '@app/comic-book/models/comic';
@@ -89,5 +90,12 @@ export class ReadingListService {
     return this.http.get(
       interpolate(DOWNLOAD_READING_LIST_URL, { id: args.list.id })
     );
+  }
+
+  uploadFile(args: { file: File }): Observable<any> {
+    this.logger.trace('Uploading reading list:', args);
+    const formData = new FormData();
+    formData.append('file', args.file);
+    return this.http.post(interpolate(UPLOAD_READING_LIST_URL), formData);
   }
 }

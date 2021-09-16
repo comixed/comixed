@@ -19,9 +19,11 @@
 package org.comixedproject.controller.lists;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
@@ -37,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <code>ReadingListController</code> provides REST APIs for working with instances of {@link
@@ -233,5 +236,24 @@ public class ReadingListController {
     final String email = principal.getName();
     log.info("Downloading reading list: email={} reading list id={}", email, readingListId);
     return this.readingListService.encodeReadingList(email, readingListId);
+  }
+
+  /**
+   * Creates a reading list from an uploaded descriptor.
+   *
+   * @param principal the user principal
+   * @param file the file
+   * @throws IOException if the file has an error
+   * @throws ReadingListException if there is an error creating the reading list
+   */
+  @PostMapping(value = "/api/lists/reading/upload")
+  @AuditableEndpoint
+  @PreAuthorize("hasRole('READER')")
+  public void uploadReadingList(final Principal principal, final MultipartFile file)
+      throws IOException, ReadingListException {
+    final String email = principal.getName();
+    final String name = FilenameUtils.getBaseName(file.getOriginalFilename());
+    log.info("Uploading reading list: email={} name={}", email, name);
+    this.readingListService.decodeAndCreateReadingList(email, name, file.getInputStream());
   }
 }
