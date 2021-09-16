@@ -26,6 +26,7 @@
     <sonar.exclusions>
       **/model/**,
       **/test/**,
+      **/comixedproject/http/**,
       **/state/comicbooks/Comic*,
       **/state/lists/ReadingList*,
       **/batch/comicbooks/*Configuration,
@@ -187,7 +188,6 @@
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4-rule</artifactId>
-
       <version>2.0.7</version>
       <scope>test</scope>
     </dependency>
@@ -229,6 +229,7 @@
         <configuration>
           <excludes>
             <exclude>**/model/**</exclude>
+            <exclude>**/comixedproject/http/**</exclude>
             <exclude>**/*Exception*</exclude>
             <exclude>**/state/comicbooks/Comic*</exclude>
             <exclude>**/state/lists/ReadingList**</exclude>
@@ -369,6 +370,7 @@
     <module>comixed-plugins</module>
     <module>comixed-auth</module>
     <module>comixed-auditlog</module>
+    <module>comixed-http</module>
     <module>comixed-opds</module>
     <module>comixed-rest</module>
     <module>comixed-webui</module>
