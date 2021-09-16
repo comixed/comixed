@@ -17,17 +17,16 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ReadingList } from '@app/lists/models/reading-list';
 
-export const downloadReadingList = createAction(
-  '[Download Reading List] Download a reading list',
-  props<{ list: ReadingList }>()
+export const uploadReadingList = createAction(
+  '[Upload Reading List] Upload reading list',
+  props<{ file: File }>()
 );
 
-export const readingListDownloaded = createAction(
-  '[Download Reading List] Reading list downloaded'
+export const readingListUploaded = createAction(
+  '[Upload Reading List] Reading list uploaded'
 );
 
-export const downloadReadingListFailed = createAction(
-  '[Download Reading List] Failed to download a reading list'
+export const uploadReadingListFailed = createAction(
+  '[Upload Reading list] Failed to upload reading list'
 );

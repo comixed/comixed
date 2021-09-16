@@ -22,6 +22,7 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -104,10 +105,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       throws ReadingListException {
     log.trace("Loading owner");
     final ComiXedUser owner = this.doLoadUser(email);
-    log.trace("Looking for existing reading list: name={}", name);
-    if (this.readingListRepository.checkForExistingReadingList(owner, name)) {
-      throw new ReadingListException("Name already used: " + name);
-    }
+    ensureReadingListIsUnique(name, owner);
     log.trace("Creating reading list");
     final ReadingList readingList = new ReadingList();
     log.trace("Setting owner");
@@ -398,6 +396,49 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
           String.format("%s.csv", readingList.getName()), "text/csv", content);
     } catch (IOException error) {
       throw new ReadingListException("Error encoding reading list", error);
+    }
+  }
+
+  /**
+   * Decodes an uploaded file and creates a reading list based on its contents.
+   *
+   * @param email the owner's email
+   * @param name the reading list name
+   * @param input the content stream
+   * @throws ReadingListException if an error occurs
+   */
+  @Transactional
+  public void decodeAndCreateReadingList(
+      final String email, final String name, final InputStream input)
+      throws ReadingListException, IOException {
+    final ReadingList readingList = this.createReadingList(email, name, "");
+    final Long readingListId = readingList.getId();
+    this.csvAdaptor.decodeRecords(
+        input,
+        new String[] {
+          POSITION_HEADER, PUBLISHER_HEADER, SERIES_HEADER, VOLUME_HEADER, ISSUE_NUMBER_HEADER
+        },
+        (index, row) -> {
+          if (index > 0) {
+            log.trace("Looking for comic");
+            final Comic comic =
+                this.comicService.findComic(row.get(1), row.get(2), row.get(3), row.get(4));
+            if (comic != null) {
+              final ReadingList list = this.readingListRepository.getById(readingListId);
+              log.trace("Adding comic to reading list");
+              Map<String, Object> headers = new HashMap<>();
+              headers.put(HEADER_COMIC, comic);
+              this.readingListStateHandler.fireEvent(list, ReadingListEvent.comicAdded, headers);
+            }
+          }
+        });
+  }
+
+  private void ensureReadingListIsUnique(final String name, final ComiXedUser owner)
+      throws ReadingListException {
+    log.trace("Looking for existing reading list: name={}", name);
+    if (this.readingListRepository.checkForExistingReadingList(owner, name)) {
+      throw new ReadingListException("Name already used: " + name);
     }
   }
 }

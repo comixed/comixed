@@ -22,10 +22,13 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.SneakyThrows;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
@@ -44,6 +47,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.multipart.MultipartFile;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -60,10 +64,15 @@ public class ReadingListControllerTest {
   @Mock private List<ReadingList> readingLists;
   @Mock private List<Long> comicIdList;
   @Mock private DownloadDocument downloadDocument;
+  @Mock private MultipartFile multipartFile;
+  @Mock private InputStream inputStream;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
+    Mockito.when(multipartFile.getInputStream()).thenReturn(inputStream);
+    Mockito.when(multipartFile.getOriginalFilename())
+        .thenReturn(String.format("%s.csv", TEST_READING_LIST_NAME));
   }
 
   @Test
@@ -236,5 +245,29 @@ public class ReadingListControllerTest {
 
     Mockito.verify(readingListService, Mockito.times(1))
         .encodeReadingList(TEST_USER_EMAIL, TEST_READING_LIST_ID);
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testUploadListServiceException() throws ReadingListException, IOException {
+    Mockito.doThrow(ReadingListException.class)
+        .when(readingListService)
+        .decodeAndCreateReadingList(
+            Mockito.anyString(), Mockito.anyString(), Mockito.any(InputStream.class));
+
+    try {
+      controller.uploadReadingList(principal, multipartFile);
+    } finally {
+      Mockito.verify(readingListService, Mockito.times(1))
+          .decodeAndCreateReadingList(TEST_USER_EMAIL, TEST_READING_LIST_NAME, inputStream);
+    }
+  }
+
+  @SneakyThrows
+  @Test
+  public void testUploadListService() throws ReadingListException {
+    controller.uploadReadingList(principal, multipartFile);
+
+    Mockito.verify(readingListService, Mockito.times(1))
+        .decodeAndCreateReadingList(TEST_USER_EMAIL, TEST_READING_LIST_NAME, inputStream);
   }
 }

@@ -19,41 +19,42 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  downloadReadingList,
-  downloadReadingListFailed,
-  readingListDownloaded
-} from '../actions/download-reading-list.actions';
+  readingListUploaded,
+  uploadReadingList,
+  uploadReadingListFailed
+} from '../actions/upload-reading-list.actions';
 import { LoggerService } from '@angular-ru/logger';
-import { ReadingListService } from '@app/lists/services/reading-list.service';
-import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AlertService } from '@app/core/services/alert.service';
+import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { DownloadDocument } from '@app/core/models/download-document';
-import { FileDownloadService } from '@app/core/services/file-download.service';
 import { of } from 'rxjs';
 
 @Injectable()
-export class DownloadReadingListEffects {
-  downloadReadingList$ = createEffect(() => {
+export class UploadReadingListEffects {
+  uploadReadingList$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(downloadReadingList),
-      tap(action => this.logger.trace('Downloading reading list:', action)),
+      ofType(uploadReadingList),
+      tap(action => this.logger.trace('Uploading reading list:', action)),
       switchMap(action =>
-        this.readingListService.downloadFile({ list: action.list }).pipe(
+        this.readingListService.uploadFile({ file: action.file }).pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          tap((response: DownloadDocument) =>
-            this.fileDownloadService.saveFile({ document: response })
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'reading-list.upload-file.effect-success'
+              )
+            )
           ),
-          map(() => readingListDownloaded()),
+          map(() => readingListUploaded()),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'reading-list.download-file.effect-failure',
-                { name: action.list.name }
+                'reading-list.upload-file.effect-failure'
               )
             );
-            return of(downloadReadingListFailed());
+            return of(uploadReadingListFailed());
           })
         )
       ),
@@ -62,7 +63,7 @@ export class DownloadReadingListEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(downloadReadingListFailed());
+        return of(uploadReadingListFailed());
       })
     );
   });
@@ -72,7 +73,6 @@ export class DownloadReadingListEffects {
     private actions$: Actions,
     private readingListService: ReadingListService,
     private alertService: AlertService,
-    private translateService: TranslateService,
-    private fileDownloadService: FileDownloadService
+    private translateService: TranslateService
   ) {}
 }

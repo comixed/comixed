@@ -24,9 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
@@ -65,6 +63,14 @@ public class ReadingList {
   @Getter
   private String nameKey;
 
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "OwnerId")
+  @JsonProperty("owner")
+  @JsonView({View.ComicListView.class, View.ReadingLists.class})
+  @Getter
+  @Setter
+  private ComiXedUser owner;
+
   @Column(name = "Name", length = 128)
   @JsonProperty("name")
   @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
@@ -77,14 +83,6 @@ public class ReadingList {
   @Getter
   @Setter
   private String summary;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "OwnerId")
-  @JsonProperty("owner")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class})
-  @Getter
-  @Setter
-  private ComiXedUser owner;
 
   @Column(name = "CreatedOn")
   @CreatedDate

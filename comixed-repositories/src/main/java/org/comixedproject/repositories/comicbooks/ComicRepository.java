@@ -193,4 +193,21 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT c FROM Comic c WHERE c.recreating = true ORDER BY c.lastModifiedOn")
   List<Comic> findComicsToRecreate();
+
+  /**
+   * Returns a single comic that matches the given criteria.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issuesNumber the issue number
+   * @return the comic
+   */
+  @Query(
+      "SELECT c FROM Comic c WHERE c.publisher = :publisher AND c.series = :series AND c.volume = :volume and c.issueNumber = :issueNumber")
+  Comic findComic(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume,
+      @Param("issueNumber") String issuesNumber);
 }

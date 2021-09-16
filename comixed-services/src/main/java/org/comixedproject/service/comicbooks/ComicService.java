@@ -452,4 +452,24 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     log.trace("Finding all comics to be recreated");
     return this.comicRepository.findComicsToRecreate();
   }
+
+  /**
+   * Looks for the first existing comic that matches the given criteria.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param issueNumber the issue number
+   * @return the comic
+   */
+  public Comic findComic(
+      final String publisher, final String series, final String volume, final String issueNumber) {
+    log.trace(
+        "Finding comic: publisher={} series={} volume={} issue #={}",
+        publisher,
+        series,
+        volume,
+        issueNumber);
+    return this.comicRepository.findComic(publisher, series, volume, issueNumber);
+  }
 }

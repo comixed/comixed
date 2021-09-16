@@ -274,7 +274,7 @@ describe('BlockedPageService', () => {
 
     const req = httpMock.expectOne(interpolate(UPLOAD_BLOCKED_PAGE_FILE_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).not.toBeNull();
+    expect((req.request.body as FormData).get('file')).toEqual(UPLOADED_FILE);
     req.flush(ENTRIES);
   });
 

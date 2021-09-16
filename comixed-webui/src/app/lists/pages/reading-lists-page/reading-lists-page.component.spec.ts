@@ -23,7 +23,7 @@ import {
   initialState as initialReadingListsState,
   READING_LISTS_FEATURE_KEY
 } from '@app/lists/reducers/reading-lists.reducer';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,6 +35,14 @@ import {
   READING_LIST_3,
   READING_LIST_5
 } from '@app/lists/lists.fixtures';
+import {
+  initialState as initialUploadReadingListState,
+  UPLOAD_READING_LIST_FEATURE_KEY
+} from '@app/lists/reducers/upload-reading-list.reducer';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { Confirmation } from '@app/core/models/confirmation';
+import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -43,11 +51,14 @@ describe('ReadingListsPageComponent', () => {
     [READING_LISTS_FEATURE_KEY]: {
       ...initialReadingListsState,
       lists: READING_LISTS
-    }
+    },
+    [UPLOAD_READING_LIST_FEATURE_KEY]: initialUploadReadingListState
   };
 
   let component: ReadingListsPageComponent;
   let fixture: ComponentFixture<ReadingListsPageComponent>;
+  let confirmationService: ConfirmationService;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -59,13 +70,17 @@ describe('ReadingListsPageComponent', () => {
         MatPaginatorModule,
         MatIconModule,
         MatTableModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatDialogModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReadingListsPageComponent);
     component = fixture.componentInstance;
+    confirmationService = TestBed.inject(ConfirmationService);
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
     fixture.detectChanges();
   }));
 
@@ -92,6 +107,43 @@ describe('ReadingListsPageComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(LIST, 'created-on')
       ).toEqual(LIST.createdOn);
+    });
+  });
+
+  describe('showing the upload row', () => {
+    beforeEach(() => {
+      component.showUploadRow = false;
+      component.onShowUploadRow();
+    });
+
+    it('sets the show upload row flag', () => {
+      expect(component.showUploadRow).toBeTrue();
+    });
+  });
+
+  describe('uploading a file', () => {
+    const FILE = new File([], 'test');
+
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.showUploadRow = true;
+      component.onFileSelected(FILE);
+    });
+
+    it('clears the show upload row flag', () => {
+      expect(component.showUploadRow).toBeFalse();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        uploadReadingList({ file: FILE })
+      );
     });
   });
 });

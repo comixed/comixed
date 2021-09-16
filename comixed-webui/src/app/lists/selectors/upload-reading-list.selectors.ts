@@ -16,18 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { ReadingList } from '@app/lists/models/reading-list';
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  UPLOAD_READING_LIST_FEATURE_KEY,
+  UploadReadingListState
+} from '../reducers/upload-reading-list.reducer';
 
-export const downloadReadingList = createAction(
-  '[Download Reading List] Download a reading list',
-  props<{ list: ReadingList }>()
-);
-
-export const readingListDownloaded = createAction(
-  '[Download Reading List] Reading list downloaded'
-);
-
-export const downloadReadingListFailed = createAction(
-  '[Download Reading List] Failed to download a reading list'
-);
+export const selectUploadReadingListState =
+  createFeatureSelector<UploadReadingListState>(
+    UPLOAD_READING_LIST_FEATURE_KEY
+  );

@@ -628,4 +628,37 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1)).findComicsToRecreate();
   }
+
+  @Test
+  public void testFindComicNotFound() {
+    Mockito.when(
+            comicRepository.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(null);
+
+    final Comic result =
+        service.findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+
+    assertNull(result);
+
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+  }
+
+  @Test
+  public void testFindComic() {
+    Mockito.when(
+            comicRepository.findComic(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(comic);
+
+    final Comic result =
+        service.findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+  }
 }

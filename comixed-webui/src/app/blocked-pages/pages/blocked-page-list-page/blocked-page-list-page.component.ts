@@ -110,8 +110,7 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     this.showUploadRow = true;
   }
 
-  onFileSelected(event: any): void {
-    event.stopPropagation();
+  onFileSelected(file: File): void {
     this.showUploadRow = false;
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -121,9 +120,7 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
         'blocked-page-list.upload-file.confirmation-message'
       ),
       confirm: () => {
-        const file = event.target.files[0];
         this.logger.debug('Uploading blocked pages file:', file);
-        this.store.dispatch(uploadBlockedPages({ file }));
         this.store.dispatch(uploadBlockedPages({ file }));
       }
     });

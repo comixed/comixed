@@ -1,6 +1,6 @@
 {
   "reading-list": {
-    "download": {
+    "download-file": {
       "effect-failure": "Failed to download reading list: {name}"
     },
     "load-one": {
@@ -20,15 +20,22 @@
       "no-name": "Unnamed Reading List"
     },
     "tooltip": {
-      "download": "Download this reading list.",
+      "download-file": "Download this reading list.",
       "remove-comics": "Remove the selected comics.",
       "reset-reading-list": "Reset changes to the reading list.",
       "return-to-list": "Return to the list.",
-      "save-reading-list": "Save changes to the reading list."
+      "save-reading-list": "Save changes to the reading list.",
+      "upload-file": "Upload a reading list."
     },
     "undo-changes": {
       "confirmation-message": "Are you sure you want to discard your changes?",
       "confirmation-title": "Undo Reading List Changes"
+    },
+    "upload-file": {
+      "confirmation-message": "Upload this reading list file?",
+      "confirmation-title": "Upload Reading List",
+      "effect-failure": "Failed to create reading list.",
+      "effect-success": "Reading list created successfully."
     }
   },
   "reading-lists": {

@@ -193,17 +193,13 @@ describe('BlockedPageListPageComponent', () => {
 
   describe('when a file is selected', () => {
     const FILE = new File([], 'test');
-    const EVENT = {
-      stopPropagation: jasmine.createSpy(),
-      target: { files: [FILE] }
-    };
 
     beforeEach(() => {
       component.showUploadRow = true;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onFileSelected(EVENT);
+      component.onFileSelected(FILE);
     });
 
     it('hides the upload row', () => {

@@ -38,6 +38,11 @@ import {
   DownloadReadingListState,
   reducer as downloadReadingListReducer
 } from './reducers/download-reading-list.reducer';
+import {
+  reducer as uploadReadingListReducer,
+  UPLOAD_READING_LIST_FEATURE_KEY,
+  UploadReadingListState
+} from './reducers/upload-reading-list.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -51,6 +56,7 @@ export interface ListsModuleState {
   [READING_LIST_DETAIL_FEATURE_KEY]: ReadingListDetailState;
   [READING_LIST_ENTRIES_FEATURE_KEY]: ReadingListEntriesState;
   [DOWNLOAD_READING_LIST_FEATURE_KEY]: DownloadReadingListState;
+  [UPLOAD_READING_LIST_FEATURE_KEY]: UploadReadingListState;
 }
 
 export type ModuleState = ListsModuleState;
@@ -60,5 +66,6 @@ export const reducers: ActionReducerMap<ListsModuleState> = {
   [READING_LISTS_FEATURE_KEY]: readingListListReducer,
   [READING_LIST_DETAIL_FEATURE_KEY]: readingListDetailReducer,
   [READING_LIST_ENTRIES_FEATURE_KEY]: readingListEntriesReducer,
-  [DOWNLOAD_READING_LIST_FEATURE_KEY]: downloadReadingListReducer
+  [DOWNLOAD_READING_LIST_FEATURE_KEY]: downloadReadingListReducer,
+  [UPLOAD_READING_LIST_FEATURE_KEY]: uploadReadingListReducer
 };
