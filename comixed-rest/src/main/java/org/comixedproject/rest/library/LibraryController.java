@@ -97,7 +97,7 @@ public class LibraryController {
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   public void convertComics(@RequestBody() ConvertComicsRequest request) throws Exception {
-    List<Long> idList = request.getComicIdList();
+    List<Long> idList = request.getIds();
     ArchiveType archiveType = request.getArchiveType();
     boolean renamePages = request.isRenamePages();
     boolean deletePages = request.isDeletePages();
@@ -115,6 +115,7 @@ public class LibraryController {
     this.jobLauncher.run(
         recreateComicFilesJob,
         new JobParametersBuilder()
+            .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
             .addString(JOB_TARGET_ARCHIVE, archiveType.getName())
             .addString(JOB_DELETE_MARKED_PAGES, String.valueOf(deletePages))
             .addString(JOB_RENAME_PAGES, String.valueOf(renamePages))

@@ -47,10 +47,14 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import {
+  ArchiveType,
+  archiveTypeFromString
+} from '@app/comic-book/models/archive-type.enum';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { convertComics } from '@app/library/actions/convert-comics.actions';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -237,6 +241,59 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         this.logger.trace('Firing action: add comics to reading list');
         this.store.dispatch(
           addComicsToReadingList({ list, comics: this.selected })
+        );
+      }
+    });
+  }
+
+  onConvertOne(comic: Comic, format: string): void {
+    this.doConversion(
+      this.translateService.instant(
+        'library.convert-comics.convert-one.confirmation-title'
+      ),
+      this.translateService.instant(
+        'library.convert-comics.convert-one.confirmation-message',
+        { format }
+      ),
+      format,
+      [comic]
+    );
+  }
+
+  onConvertSelected(format: string): void {
+    this.doConversion(
+      this.translateService.instant(
+        'library.convert-comics.convert-selected.confirmation-title'
+      ),
+      this.translateService.instant(
+        'library.convert-comics.convert-selected.confirmation-message',
+        { format, count: this.selected.length }
+      ),
+      format,
+      this.selected
+    );
+  }
+
+  private doConversion(
+    title: string,
+    message: string,
+    format: string,
+    comics: Comic[]
+  ): void {
+    const archiveType = archiveTypeFromString(format);
+    this.logger.trace('Confirming conversion with user');
+    this.confirmationService.confirm({
+      title,
+      message,
+      confirm: () => {
+        this.logger.trace('Firing action to convert comics');
+        this.store.dispatch(
+          convertComics({
+            comics,
+            archiveType,
+            deletePages: true,
+            renamePages: true
+          })
         );
       }
     });

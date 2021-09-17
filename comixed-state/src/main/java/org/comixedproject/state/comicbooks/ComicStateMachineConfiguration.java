@@ -125,12 +125,6 @@ public class ComicStateMachineConfiguration
         .target(ComicState.STABLE)
         .event(ComicEvent.contentsProcessed)
         .guard(comicContentsProcessedGuard)
-        // the comic archive was recreated
-        .and()
-        .withExternal()
-        .source(ComicState.STABLE)
-        .target(ComicState.STABLE)
-        .event(ComicEvent.comicFileRecreated)
         // the comic is going to be consolidated
         .and()
         .withExternal()
@@ -239,13 +233,13 @@ public class ComicStateMachineConfiguration
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
-        .target(ComicState.STABLE)
+        .target(ComicState.UNPROCESSED)
         .event(ComicEvent.comicFileRecreated)
         .action(comicFileRecreatedAction)
         .and()
         .withExternal()
         .source(ComicState.STABLE)
-        .target(ComicState.STABLE)
+        .target(ComicState.UNPROCESSED)
         .event(ComicEvent.comicFileRecreated)
         .action(comicFileRecreatedAction)
         // the comic file was reprocessed and the database details overwritten

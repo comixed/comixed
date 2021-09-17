@@ -48,22 +48,22 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
 
   private void addFileToArchive(SevenZOutputFile archive, String filename, byte[] content)
       throws IOException {
-    log.debug("Saving file to archive: " + filename + " [size=" + content.length + "]");
+    log.trace("Saving file to archive: " + filename + " [size=" + content.length + "]");
 
     var tempFile = File.createTempFile("comixed", "tmp");
-    log.debug("Saving entry as temporary filename: " + tempFile.getAbsolutePath());
+    log.trace("Saving entry as temporary filename: " + tempFile.getAbsolutePath());
 
     try (var output = new FileOutputStream(tempFile)) {
       output.write(content, 0, content.length);
     }
 
-    log.debug("Adding temporary file to archive");
+    log.trace("Adding temporary file to archive");
     SevenZArchiveEntry entry = archive.createArchiveEntry(tempFile, filename);
     archive.putArchiveEntry(entry);
     archive.write(content);
     archive.closeArchiveEntry();
 
-    log.debug("Cleaning up the temporary file");
+    log.trace("Cleaning up the temporary file");
     Files.delete(tempFile.toPath());
   }
 
@@ -92,7 +92,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   protected void loadAllFiles(
       final Comic comic, final SevenZFile archiveReference, final boolean ignoreMetadata)
       throws ArchiveAdaptorException {
-    log.debug("Processing entries for archive");
+    log.trace("Processing entries for archive");
     comic.setArchiveType(ArchiveType.CB7);
     var done = false;
 
@@ -162,13 +162,13 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
   @Override
   void saveComicInternal(Comic source, String filename, boolean renamePages)
       throws ArchiveAdaptorException {
-    log.debug("Getting archive adaptor to read comic");
+    log.trace("Getting archive adaptor to read comic");
     var sourceArchiveAdaptor = this.getSourceArchiveAdaptor(source.getFilename());
 
     try (var sevenzcomic = new SevenZOutputFile(new File(filename))) {
       sevenzcomic.setContentCompression(SevenZMethod.LZMA2);
 
-      log.debug("Adding the ComicInfo.xml entry");
+      log.trace("Adding the ComicInfo.xml entry");
 
       this.addFileToArchive(
           sevenzcomic, "ComicInfo.xml", this.comicInfoEntryAdaptor.saveContent(source));
@@ -176,7 +176,7 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
       for (var index = 0; index < source.getPageCount(); index++) {
         var page = source.getPage(index);
         if (page.isDeleted()) {
-          log.debug("Skipping offset marked for deletion");
+          log.trace("Skipping offset marked for deletion");
           continue;
         }
         String pagename =
