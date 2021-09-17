@@ -16,20 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export enum ArchiveType {
-  CBZ = 'CBZ',
-  CBR = 'CBR',
-  CB7 = 'CB7'
-}
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  CONVERT_COMICS_FEATURE_KEY,
+  ConvertComicsState
+} from '../reducers/convert-comics.reducer';
 
-export function archiveTypeFromString(key: string): ArchiveType {
-  switch (key) {
-    case 'CBZ':
-      return ArchiveType.CBZ;
-    case 'CBR':
-      return ArchiveType.CBR;
-    case 'CB7':
-      return ArchiveType.CB7;
-  }
-  return null;
-}
+export const selectConvertComicsState =
+  createFeatureSelector<ConvertComicsState>(CONVERT_COMICS_FEATURE_KEY);

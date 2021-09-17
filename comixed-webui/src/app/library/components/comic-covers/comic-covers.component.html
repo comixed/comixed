@@ -63,6 +63,14 @@
         {{ "library.context-menu.reading-lists" | translate }}
       </mat-label>
     </button>
+    <button
+      mat-menu-item
+      [matMenuTriggerFor]="convertMenu"
+      [disabled]="!isAdmin"
+    >
+      <mat-icon>change_circle</mat-icon>
+      <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
+    </button>
   </ng-template>
 </mat-menu>
 
@@ -164,5 +172,50 @@
   >
     <mat-icon>playlist_add</mat-icon>
     <mat-label>{{ list.name }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #convertMenu="matMenu">
+  <button
+    id="convert-one-to-cbz-button"
+    mat-menu-item
+    (click)="onConvertOne(comic, 'CBZ')"
+  >
+    <mat-icon>change_circle</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.convert-one-to-cbz" | translate }}
+    </mat-label>
+  </button>
+  <button
+    id="convert-one-to-cb7-button"
+    mat-menu-item
+    (click)="onConvertOne(comic, 'CB7')"
+  >
+    <mat-icon>change_circle</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.convert-one-to-cb7" | translate }}
+    </mat-label>
+  </button>
+  <button
+    *ngIf="selected.length"
+    id="convert-all-to-cbz-button"
+    mat-menu-item
+    (click)="onConvertSelected('CBZ')"
+  >
+    <mat-icon>change_circle</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.convert-selected-to-cbz" | translate }}
+    </mat-label>
+  </button>
+  <button
+    *ngIf="selected.length"
+    id="convert-all-to-cb7-button"
+    mat-menu-item
+    (click)="onConvertSelected('CB7')"
+  >
+    <mat-icon>change_circle</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.convert-selected-to-cb7" | translate }}
+    </mat-label>
   </button>
 </mat-menu>

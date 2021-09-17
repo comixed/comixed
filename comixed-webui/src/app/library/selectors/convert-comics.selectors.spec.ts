@@ -16,20 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export enum ArchiveType {
-  CBZ = 'CBZ',
-  CBR = 'CBR',
-  CB7 = 'CB7'
-}
+import {
+  CONVERT_COMICS_FEATURE_KEY,
+  ConvertComicsState
+} from '../reducers/convert-comics.reducer';
+import { selectConvertComicsState } from './convert-comics.selectors';
 
-export function archiveTypeFromString(key: string): ArchiveType {
-  switch (key) {
-    case 'CBZ':
-      return ArchiveType.CBZ;
-    case 'CBR':
-      return ArchiveType.CBR;
-    case 'CB7':
-      return ArchiveType.CB7;
-  }
-  return null;
-}
+describe('ConvertComics Selectors', () => {
+  let state: ConvertComicsState;
+
+  beforeEach(() => {
+    state = { converting: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectConvertComicsState({
+        [CONVERT_COMICS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

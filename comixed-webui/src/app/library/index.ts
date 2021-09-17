@@ -59,6 +59,11 @@ import {
   ConsolidateLibraryState,
   reducer as consolidateLibraryReducer
 } from './reducers/consolidate-library.reducer';
+import {
+  CONVERT_COMICS_FEATURE_KEY,
+  ConvertComicsState,
+  reducer as convertComicsReducer
+} from './reducers/convert-comics.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -76,6 +81,7 @@ export interface LibraryModuleState {
   [RESCAN_COMICS_FEATURE_KEY]: RescanComicsState;
   [UPDATE_METADATA_FEATURE_KEY]: UpdateMetadataState;
   [CONSOLIDATE_LIBRARY_FEATURE_KEY]: ConsolidateLibraryState;
+  [CONVERT_COMICS_FEATURE_KEY]: ConvertComicsState;
 }
 
 export type ModuleState = LibraryModuleState;
@@ -89,5 +95,6 @@ export const reducers: ActionReducerMap<LibraryModuleState> = {
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer,
   [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer,
   [UPDATE_METADATA_FEATURE_KEY]: updateMetadataReducer,
-  [CONSOLIDATE_LIBRARY_FEATURE_KEY]: consolidateLibraryReducer
+  [CONSOLIDATE_LIBRARY_FEATURE_KEY]: consolidateLibraryReducer,
+  [CONVERT_COMICS_FEATURE_KEY]: convertComicsReducer
 };

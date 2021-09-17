@@ -41,6 +41,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Log4j2
 public class RecreateComicFilesConfiguration {
+  public static final String JOB_RECREATE_COMICS_STARTED = "job.recreate-comic.started";
   public static final String JOB_TARGET_ARCHIVE = "job.recreate-comic.target-archive";
   public static final String JOB_DELETE_MARKED_PAGES = "job.recreate-comic.delete-blocked-pages";
   public static final String JOB_RENAME_PAGES = "job.recreate-comic.rename-pages";
@@ -52,11 +53,13 @@ public class RecreateComicFilesConfiguration {
   @Qualifier("recreateComicFilesJob")
   public Job recreateComicFilesJob(
       final JobBuilderFactory jobBuilderFactory,
-      @Qualifier("recreateComicFileStep") final Step recreateComicFileStep) {
+      @Qualifier("recreateComicFileStep") final Step recreateComicFileStep,
+      @Qualifier("processComicsJobStep") final Step processComicsJobStep) {
     return jobBuilderFactory
         .get("recreateComicFilesJob")
         .incrementer(new RunIdIncrementer())
         .start(recreateComicFileStep)
+        .next(processComicsJobStep)
         .build();
   }
 

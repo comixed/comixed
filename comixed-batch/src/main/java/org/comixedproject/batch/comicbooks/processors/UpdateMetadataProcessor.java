@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.batch.BatchException;
 import org.comixedproject.model.comicbooks.Comic;
@@ -44,9 +45,14 @@ public class UpdateMetadataProcessor implements ItemProcessor<Comic, Comic> {
       throw new BatchException(
           "No archive adaptor found for " + comic.getArchiveType().getMimeType());
 
-    log.trace("Updating comic metadata");
-    final Comic result = archiveAdaptor.updateComic(comic);
-    log.trace("Returning updated comics");
-    return result;
+    try {
+      log.trace("Updating comic metadata");
+      final Comic result = archiveAdaptor.updateComic(comic);
+      log.trace("Returning updated comics");
+      return result;
+    } catch (ArchiveAdaptorException error) {
+      log.error("Failed to update comic");
+      return comic;
+    }
   }
 }

@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicInfoEntryAdaptor;
@@ -84,11 +85,11 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
                 this.entryLoaders.put(
                     entry.getType(), (EntryLoader) this.context.getBean(entry.getBean()));
                 if (entry.getEntryType() == ArchiveEntryType.IMAGE) {
-                  log.debug("Adding image adaptor: {}={}", entry.getEntryType(), entry.getBean());
+                  log.trace("Adding image adaptor: {}={}", entry.getEntryType(), entry.getBean());
                   this.imageTypes.add(entry.getType());
                 }
               } else {
-                log.debug("No such entry adaptor bean: {}", entry.getBean());
+                log.trace("No such entry adaptor bean: {}", entry.getBean());
               }
             });
   }
@@ -116,7 +117,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   protected EntryLoader getLoaderForContent(byte[] content) {
     String type = this.fileTypeAdaptor.subtypeFor(new ByteArrayInputStream(content));
 
-    log.debug("Content type: {}", type);
+    log.trace("Content type: {}", type);
 
     return this.entryLoaders.get(type);
   }
@@ -139,23 +140,28 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
       throws ArchiveAdaptorException {
     I archiveReference = null;
 
-    log.debug("Processing archive: {}", comic.getFilename());
+    log.trace("Reset comic pages");
+    comic.getPages().clear();
+    log.trace("Reset comic file entries");
+    comic.getFileEntries().clear();
+
+    log.trace("Processing archive: {}", comic.getFilename());
     long started = System.currentTimeMillis();
 
     try {
       var comicFile = this.validateFile(comic);
       archiveReference = this.openArchive(comicFile);
 
-      log.debug("Loading entire comic: {}", comic.getFilename());
+      log.trace("Loading entire comic: {}", comic.getFilename());
       this.loadAllFiles(comic, archiveReference, ignoreMetadata);
     } finally {
       // clean up
       if (archiveReference != null) {
-        log.debug("Closing archive: {}", comic.getFilename());
+        log.trace("Closing archive: {}", comic.getFilename());
         this.closeArchive(archiveReference);
       }
       long duration = System.currentTimeMillis() - started;
-      log.debug("Processing time: {}ms", duration);
+      log.trace("Processing time: {}ms", duration);
     }
   }
 
@@ -165,7 +171,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   protected byte[] loadContent(final String filename, final long size, final InputStream input)
       throws IOException {
-    log.debug("Loading entry: name={} size={}", filename, size);
+    log.trace("Loading entry: name={} size={}", filename, size);
     var content = new byte[(int) size];
 
     IOUtils.readFully(input, content);
@@ -175,14 +181,14 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   @Override
   public byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException {
-    log.debug("Loading single entry from comic: comic={} entry={}", comic.getFilename(), entryName);
+    log.trace("Loading single entry from comic: comic={} entry={}", comic.getFilename(), entryName);
 
     return this.loadSingleFile(comic.getFilename(), entryName);
   }
 
   @Override
   public byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException {
-    log.debug("Loading single entry from file: filename={} entry={}", filename, entryName);
+    log.trace("Loading single entry from file: filename={} entry={}", filename, entryName);
     var archiveReference = this.openArchive(new File(filename));
     byte[] result = this.loadSingleFileInternal(archiveReference, entryName);
     this.closeArchive(archiveReference);
@@ -219,18 +225,18 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     EntryLoader loader = this.getLoaderForContent(content);
     if (loader != null) {
       try {
-        log.debug("Loading content: filename={} length={}", filename, content.length);
+        log.trace("Loading content: filename={} length={}", filename, content.length);
         loader.loadContent(comic, filename, content, ignoreMetadata);
       } catch (EntryLoaderException error) {
         log.error("Error loading content", error);
       }
     } else {
-      log.debug("No registered adaptor for type");
+      log.trace("No registered adaptor for type");
     }
   }
 
   private void recordFileEntry(Comic comic, String filename, byte[] content) {
-    log.debug("Adding file entry");
+    log.trace("Adding file entry");
     comic.addFileEntry(
         filename,
         content.length,
@@ -240,48 +246,51 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   @Override
   public Comic saveComic(Comic comic, boolean renamePages)
       throws ArchiveAdaptorException, IOException {
-    log.debug("Saving comic: {}", comic.getFilename());
+    return this.saveComic(comic, renamePages, "");
+  }
 
-    String tempFilename;
-    try {
-      tempFilename =
-          File.createTempFile(
-                  FilenameUtils.removeExtension(comic.getFilename()) + "-temporary", "tmp")
-              .getAbsolutePath();
-    } catch (IOException error) {
-      throw new ArchiveAdaptorException("unable to write comic", error);
+  protected Comic saveComic(Comic comic, boolean renamePages, String filename)
+      throws ArchiveAdaptorException, IOException {
+    log.trace("Saving comic: {}", comic.getFilename());
+
+    String tempFilename = filename;
+    if (StringUtils.isEmpty(tempFilename)) {
+      try {
+        tempFilename =
+            File.createTempFile(
+                    FilenameUtils.removeExtension(comic.getFilename()) + "-temporary", "tmp")
+                .getAbsolutePath();
+      } catch (IOException error) {
+        throw new ArchiveAdaptorException("unable to write comic", error);
+      }
     }
 
+    var originalFile = comic.getFile();
     this.saveComicInternal(comic, tempFilename, renamePages);
 
-    String filename =
+    log.trace("Deleting original comic file");
+    FileUtils.forceDelete(originalFile);
+
+    String targetFilename =
         this.comicFileAdaptor.findAvailableFilename(
             FilenameUtils.removeExtension(comic.getFilename()), 0, this.defaultExtension);
-    var file1 = new File(tempFilename);
-    var file2 = new File(filename);
+    var sourceFile = new File(tempFilename);
+    var targetFile = new File(targetFilename);
     try {
-      log.debug("Copying {} to {}", tempFilename, filename);
-      FileUtils.copyFile(file1, file2);
+      log.trace("Copying {} to {}", tempFilename, targetFilename);
+      FileUtils.copyFile(sourceFile, targetFile);
     } catch (IOException error) {
       throw new ArchiveAdaptorException("Unable to copy file", error);
     }
 
-    var result = new Comic();
+    comic.setFilename(targetFilename);
 
-    result.setFilename(filename);
-
-    try {
-      this.comicFileHandler.loadComic(result);
-    } catch (ComicFileHandlerException error) {
-      throw new ArchiveAdaptorException("Error loading new comic", error);
-    }
-
-    return result;
+    return comic;
   }
 
   @Override
   public Comic updateComic(final Comic comic) throws ArchiveAdaptorException {
-    log.debug("Updating comic: {}", comic.getFilename());
+    log.trace("Updating comic: {}", comic.getFilename());
 
     String tempFilename;
     try {
@@ -298,7 +307,7 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
     var file1 = new File(tempFilename);
     var file2 = new File(comic.getFilename());
     try {
-      log.debug("Copying {} to {}", tempFilename, comic.getFilename());
+      log.trace("Copying {} to {}", tempFilename, comic.getFilename());
       FileUtils.copyFile(file1, file2);
     } catch (IOException error) {
       throw new ArchiveAdaptorException("Unable to copy file", error);
@@ -367,14 +376,14 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
   protected ArchiveAdaptor getSourceArchiveAdaptor(final String filename)
       throws ArchiveAdaptorException {
-    log.debug("Getting archive adaptor for file: {}", filename);
+    log.trace("Getting archive adaptor for file: {}", filename);
     ArchiveAdaptor result = null;
     try {
       result = this.comicFileHandler.getArchiveAdaptorFor(filename);
     } catch (ComicFileHandlerException error) {
       throw new ArchiveAdaptorException("could not find archive adaptor for comic", error);
     }
-    log.debug("Creating temporary file: " + filename);
+    log.trace("Creating temporary file: " + filename);
     return result;
   }
 }

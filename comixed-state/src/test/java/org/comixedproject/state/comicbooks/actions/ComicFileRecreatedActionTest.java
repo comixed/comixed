@@ -18,14 +18,18 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import java.util.Date;
+import java.util.List;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicFileEntry;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.Page;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
@@ -36,8 +40,8 @@ public class ComicFileRecreatedActionTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private Comic comic;
-
-  @Captor private ArgumentCaptor<Date> deletedDateCaptor;
+  @Mock private List<ComicFileEntry> fileEntryList;
+  @Mock private List<Page> pageList;
 
   @Before
   public void setUp() {
@@ -48,8 +52,16 @@ public class ComicFileRecreatedActionTest {
 
   @Test
   public void testExecute() {
+    Mockito.when(comic.getFileEntries()).thenReturn(fileEntryList);
+    Mockito.when(comic.getPages()).thenReturn(pageList);
+
     action.execute(context);
 
     Mockito.verify(comic, Mockito.times(1)).setRecreating(false);
+    Mockito.verify(comic, Mockito.times(1)).setFileDetails(null);
+    Mockito.verify(fileEntryList, Mockito.times(1)).clear();
+    Mockito.verify(pageList, Mockito.times(1)).clear();
+    Mockito.verify(comic, Mockito.times(1)).setFileContentsLoaded(false);
+    Mockito.verify(comic, Mockito.times(1)).setBlockedPagesMarked(false);
   }
 }

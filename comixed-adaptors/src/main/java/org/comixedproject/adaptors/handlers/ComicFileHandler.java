@@ -58,7 +58,7 @@ public class ComicFileHandler implements InitializingBean {
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    log.debug("Initializing ComicFileHandler");
+    log.trace("Initializing ComicFileHandler");
     this.archiveAdaptors.clear();
     this.archiveTypes.clear();
     this.adaptors.stream()
@@ -68,7 +68,7 @@ public class ComicFileHandler implements InitializingBean {
               ArchiveAdaptor bean = (ArchiveAdaptor) this.context.getBean(loader.bean);
 
               if (this.context.containsBean(loader.bean)) {
-                log.debug(
+                log.trace(
                     "Adding new archive adaptor: format=" + loader.format + " bean=" + loader.bean);
                 this.archiveAdaptors.put(loader.format, bean);
                 this.archiveTypes.put(loader.format, loader.archiveType);
@@ -91,7 +91,7 @@ public class ComicFileHandler implements InitializingBean {
    * @throws ComicFileHandlerException if an error occurs
    */
   public ArchiveAdaptor getArchiveAdaptorFor(String filename) throws ComicFileHandlerException {
-    log.debug("Fetching archive adaptor for file: {}", filename);
+    log.trace("Fetching archive adaptor for file: {}", filename);
 
     String archiveType = null;
     final File file = new File(filename);
@@ -109,9 +109,9 @@ public class ComicFileHandler implements InitializingBean {
     ArchiveAdaptor result = null;
 
     if (archiveType == null) {
-      log.debug("Unable to determine the file type");
+      log.trace("Unable to determine the file type");
     } else {
-      log.debug("Archive is of type={}", archiveType);
+      log.trace("Archive is of type={}", archiveType);
       result = this.archiveAdaptors.get(archiveType);
     }
 
@@ -137,17 +137,17 @@ public class ComicFileHandler implements InitializingBean {
    */
   public void loadComic(Comic comic, boolean ignoreComicInfoXml) throws ComicFileHandlerException {
     if (comic.isMissing()) {
-      log.debug("Unable to load missing file: " + comic.getFilename());
+      log.trace("Unable to load missing file: " + comic.getFilename());
       return;
     }
 
-    log.debug("Loading comic: " + comic.getFilename());
+    log.trace("Loading comic: " + comic.getFilename());
     var archiveAdaptor = this.getArchiveAdaptorFor(comic.getFilename());
 
     try {
       archiveAdaptor.loadComic(comic);
       if (ignoreComicInfoXml) {
-        log.debug("Clearing out meta-data");
+        log.trace("Clearing out meta-data");
         this.comicDataAdaptor.clear(comic);
       }
     } catch (ArchiveAdaptorException error) {
@@ -157,10 +157,10 @@ public class ComicFileHandler implements InitializingBean {
 
   public void loadComicArchiveType(final Comic comic) throws ComicFileHandlerException {
     if (comic.isMissing()) {
-      log.debug("Unable to determine type for missing file: file={}", comic.getFilename());
+      log.trace("Unable to determine type for missing file: file={}", comic.getFilename());
       return;
     }
-    log.debug("Determining archive type: file={}", comic.getFilename());
+    log.trace("Determining archive type: file={}", comic.getFilename());
 
     String archiveMimeSubtype = null;
 
@@ -174,7 +174,7 @@ public class ComicFileHandler implements InitializingBean {
     if (archiveMimeSubtype == null) throw new ComicFileHandlerException("Unknown comic type");
 
     var archiveType = this.archiveTypes.get(archiveMimeSubtype);
-    log.debug("Archive type: {}", archiveType);
+    log.trace("Archive type: {}", archiveType);
     comic.setArchiveType(archiveType);
 
     var archiveAdaptor = this.archiveAdaptors.get(archiveMimeSubtype);
@@ -193,7 +193,7 @@ public class ComicFileHandler implements InitializingBean {
    * @return the adaptor
    */
   public ArchiveAdaptor getArchiveAdaptorFor(final ArchiveType archiveType) {
-    log.debug("Getting the archive adaptor for: type={}", archiveType);
+    log.trace("Getting the archive adaptor for: type={}", archiveType);
     return this.adaptorForType.get(archiveType);
   }
 

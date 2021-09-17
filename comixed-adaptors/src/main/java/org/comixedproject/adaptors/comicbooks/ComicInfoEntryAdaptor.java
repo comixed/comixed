@@ -182,7 +182,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
                 this.commandSeparatedList(xmlInputReader.getElementText())
                     .forEach(
                         name -> {
-                          log.debug("Adding role: {}={}", role, name);
+                          log.trace("Adding role: {}={}", role, name);
                           comic.getCredits().add(new Credit(comic, name, role));
                         });
               }
@@ -231,7 +231,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
    * @throws EntryLoaderException if an error occurs
    */
   public byte[] saveContent(Comic comic) throws EntryLoaderException {
-    log.debug("Generating comic info data from comic");
+    log.trace("Generating comic info data from comic");
     var result = new ByteArrayOutputStream();
     try {
       final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(result);

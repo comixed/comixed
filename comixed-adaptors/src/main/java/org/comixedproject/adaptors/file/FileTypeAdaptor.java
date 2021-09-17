@@ -39,7 +39,7 @@ public class FileTypeAdaptor {
   @Autowired private Metadata metadata;
 
   private MediaType getMimeType(InputStream input) {
-    log.debug("Attempting to detect mime type for stream");
+    log.trace("Attempting to detect mime type for stream");
     MediaType result = null;
 
     try {
@@ -50,7 +50,7 @@ public class FileTypeAdaptor {
       log.error("Error determining filetype from stream", error);
     }
 
-    log.debug("result=" + result);
+    log.trace("result=" + result);
 
     return result;
   }

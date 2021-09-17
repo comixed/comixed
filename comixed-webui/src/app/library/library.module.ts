@@ -96,6 +96,11 @@ import {
   reducer as consolidateLibraryReducer
 } from '@app/library/reducers/consolidate-library.reducer';
 import { ConsolidateLibraryEffects } from '@app/library/effects/consolidate-library.effects';
+import {
+  CONVERT_COMICS_FEATURE_KEY,
+  reducer as convertComicsReducer
+} from '@app/library/reducers/convert-comics.reducer';
+import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effects';
 
 @NgModule({
   declarations: [
@@ -138,6 +143,7 @@ import { ConsolidateLibraryEffects } from '@app/library/effects/consolidate-libr
       CONSOLIDATE_LIBRARY_FEATURE_KEY,
       consolidateLibraryReducer
     ),
+    StoreModule.forFeature(CONVERT_COMICS_FEATURE_KEY, convertComicsReducer),
     EffectsModule.forFeature([
       DisplayEffects,
       LibraryEffects,
@@ -145,7 +151,8 @@ import { ConsolidateLibraryEffects } from '@app/library/effects/consolidate-libr
       DuplicatePageDetailEffects,
       RescanComicsEffects,
       UpdateMetadataEffects,
-      ConsolidateLibraryEffects
+      ConsolidateLibraryEffects,
+      ConvertComicsEffects
     ]),
     MatInputModule,
     MatSelectModule,

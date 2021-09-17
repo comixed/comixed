@@ -31,7 +31,6 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,26 +120,6 @@ public class AddComicsConfiguration {
         .reader(reader)
         .processor(processor)
         .writer(writer)
-        .build();
-  }
-
-  /**
-   * Returns the step that launches the processing batch job.
-   *
-   * @param stepBuilderFactory the step factory
-   * @param jobLauncher the job launcher
-   * @return the step the step
-   */
-  @Bean
-  @Qualifier("processComicsJobStep")
-  public Step processComicsJobStep(
-      final StepBuilderFactory stepBuilderFactory,
-      final @Qualifier("processComicsJob") Job processComicsJob,
-      final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
-    return stepBuilderFactory
-        .get("processComicsJobStep")
-        .job(processComicsJob)
-        .launcher(jobLauncher)
         .build();
   }
 }

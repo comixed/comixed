@@ -33,9 +33,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.item.ExecutionContext;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecreateComicFileProcessorTest {
@@ -43,8 +42,7 @@ public class RecreateComicFileProcessorTest {
 
   @InjectMocks private RecreateComicFileProcessor processor;
   @Mock private StepExecution stepExecution;
-  @Mock private JobExecution jobException;
-  @Mock private ExecutionContext executionContext;
+  @Mock private JobParameters jobParameters;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private Comic comic;
   @Mock private ArchiveAdaptor targetArchiveAdaptor;
@@ -52,24 +50,21 @@ public class RecreateComicFileProcessorTest {
 
   @Before
   public void setUp() throws ComicFileHandlerException {
-    Mockito.when(stepExecution.getJobExecution()).thenReturn(jobException);
-    Mockito.when(jobException.getExecutionContext()).thenReturn(executionContext);
-    Mockito.when(executionContext.getString(RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE))
+    Mockito.when(stepExecution.getJobParameters()).thenReturn(jobParameters);
+    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE))
         .thenReturn(TEST_TARGET_ARCHIVE);
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
         .thenReturn(targetArchiveAdaptor);
-    Mockito.when(
-            executionContext.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
+    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
         .thenReturn(String.valueOf(false));
-    Mockito.when(executionContext.getString(RecreateComicFilesConfiguration.JOB_RENAME_PAGES))
+    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_RENAME_PAGES))
         .thenReturn(String.valueOf(false));
     processor.beforeStep(stepExecution);
   }
 
   @Test
   public void testProcessDeleteMarkedPages() throws Exception {
-    Mockito.when(
-            executionContext.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
+    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
         .thenReturn(String.valueOf(true));
 
     processor.process(comic);
@@ -79,7 +74,7 @@ public class RecreateComicFileProcessorTest {
 
   @Test
   public void testProcessRenamePages() throws Exception {
-    Mockito.when(executionContext.getString(RecreateComicFilesConfiguration.JOB_RENAME_PAGES))
+    Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_RENAME_PAGES))
         .thenReturn(String.valueOf(true));
     Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
         .thenReturn(savedComic);
