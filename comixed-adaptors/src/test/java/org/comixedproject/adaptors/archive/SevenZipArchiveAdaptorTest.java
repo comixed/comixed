@@ -20,10 +20,13 @@ package org.comixedproject.adaptors.archive;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,11 +37,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdaptorTestContext.class)
 public class SevenZipArchiveAdaptorTest {
+  private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
+  private static final String TEST_FILE_ENTRY_1 = "example.jpg";
   private static final String TEST_FILE_ENTRY_2 = "exampleCBR.jpg";
   private static final String TEST_FILE_ENTRY_3 = "example.png";
-  private static final String TEST_FILE_ENTRY_1 = "example.jpg";
-  private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
+  private static final String TEST_SOURCE_CB7_FILE = "src/test/resources/example.cb7";
   private static final String TEST_CB7_FILE = "target/test-classes/example.cb7";
+  private static final String TEST_CREATED_CB7_FILE = "target/test-classes/example-created.cb7";
   private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
   private static final String TEST_FILE_ENTRY_RENAMED_0 = "offset-000.jpeg";
   private static final String TEST_FILE_ENTRY_RENAMED_1 = "offset-001.jpg";
@@ -50,10 +55,18 @@ public class SevenZipArchiveAdaptorTest {
   private Comic comic;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     comic = new Comic();
     comic.setFilename(TEST_CB7_FILE);
     comic.setArchiveType(ArchiveType.CB7);
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_0, 0));
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_1, 1));
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_2, 2));
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_3, 3));
+    // TODO remove this when #437 is done
+    final File destination = new File(TEST_CB7_FILE);
+    FileUtils.deleteQuietly(destination);
+    FileUtils.copyFile(new File(TEST_SOURCE_CB7_FILE), destination);
   }
 
   @Test(expected = ArchiveAdaptorException.class)
@@ -106,7 +119,10 @@ public class SevenZipArchiveAdaptorTest {
     archiveAdaptor.loadComic(comic);
 
     // now save it and reload it
-    Comic result = archiveAdaptor.saveComic(comic, false);
+    Comic result = archiveAdaptor.saveComic(comic, false, TEST_CREATED_CB7_FILE);
+
+    // reload comic
+    archiveAdaptor.loadComic(comic);
 
     assertEquals(4, result.getPageCount());
     assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
@@ -121,7 +137,10 @@ public class SevenZipArchiveAdaptorTest {
     archiveAdaptor.loadComic(comic);
 
     // now save it and reload it
-    Comic result = archiveAdaptor.saveComic(comic, true);
+    Comic result = archiveAdaptor.saveComic(comic, true, TEST_CREATED_CB7_FILE);
+
+    // reload comic
+    archiveAdaptor.loadComic(comic);
 
     assertEquals(4, result.getPageCount());
     assertEquals(TEST_FILE_ENTRY_RENAMED_0, result.getPage(0).getFilename());
@@ -135,15 +154,20 @@ public class SevenZipArchiveAdaptorTest {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
-    comic.getPage(1).setDeleted(true);
+    comic.getPages().stream()
+        .filter(page -> page.getFilename().equals(TEST_FILE_ENTRY_1))
+        .findFirst()
+        .get()
+        .setDeleted(true);
 
     // now save it and reload it
-    Comic result = archiveAdaptor.saveComic(comic, false);
+    Comic result = archiveAdaptor.saveComic(comic, false, TEST_CREATED_CB7_FILE);
 
-    assertEquals(3, result.getPageCount());
-    assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
-    assertEquals(TEST_FILE_ENTRY_2, result.getPage(1).getFilename());
-    assertEquals(TEST_FILE_ENTRY_3, result.getPage(2).getFilename());
+    assertFalse(
+        result.getPages().stream()
+            .filter(page -> page.equals(TEST_FILE_ENTRY_1))
+            .findFirst()
+            .isPresent());
   }
 
   @Test

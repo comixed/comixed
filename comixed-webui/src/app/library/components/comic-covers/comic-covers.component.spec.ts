@@ -60,11 +60,15 @@ import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts'
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import {
+  ArchiveType,
+  archiveTypeFromString
+} from '@app/comic-book/models/archive-type.enum';
 import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
 import { MatDividerModule } from '@angular/material/divider';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
+import { convertComics } from '@app/library/actions/convert-comics.actions';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -400,6 +404,55 @@ describe('ComicCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         addComicsToReadingList({ list: READING_LIST, comics: COMICS })
+      );
+    });
+  });
+
+  describe('converting a single comic', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onConvertOne(COMIC, 'CBZ');
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        convertComics({
+          comics: [COMIC],
+          archiveType: archiveTypeFromString('CBZ'),
+          renamePages: true,
+          deletePages: true
+        })
+      );
+    });
+  });
+
+  describe('converting the comic selection', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.selected = COMICS;
+      component.onConvertSelected('CBZ');
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        convertComics({
+          comics: COMICS,
+          archiveType: archiveTypeFromString('CBZ'),
+          renamePages: true,
+          deletePages: true
+        })
       );
     });
   });

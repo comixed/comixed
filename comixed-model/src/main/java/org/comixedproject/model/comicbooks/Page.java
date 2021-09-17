@@ -22,9 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
@@ -38,6 +36,7 @@ import org.hibernate.annotations.Formula;
 @Table(name = "Pages")
 @Log4j2
 @NoArgsConstructor
+@RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 public class Page {
   @Id
@@ -52,6 +51,7 @@ public class Page {
   @JsonProperty("comic")
   @Getter
   @Setter
+  @NonNull
   private Comic comic;
 
   @ManyToOne
@@ -67,6 +67,7 @@ public class Page {
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
+  @NonNull
   private String filename;
 
   @Column(name = "FileHash", length = 32, updatable = true, nullable = false)
@@ -81,6 +82,7 @@ public class Page {
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
+  @NonNull
   private Integer pageNumber;
 
   @Column(name = "Deleted", updatable = true, nullable = false)

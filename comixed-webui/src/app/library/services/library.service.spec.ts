@@ -31,6 +31,7 @@ import {
 import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
 import {
+  CONVERT_COMICS_URL,
   LOAD_COMIC_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
@@ -42,11 +43,16 @@ import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-requ
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_1;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
   const READ = Math.random() > 0.5;
+  const ARCHIVE_TYPE = ArchiveType.CBZ;
+  const RENAME_PAGES = Math.random() > 0.5;
+  const DELETE_PAGES = Math.random() > 0.5;
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -128,6 +134,27 @@ describe('LibraryService', () => {
     expect(req.request.body).toEqual({
       ids: COMICS.map(comic => comic.id)
     } as UpdateMetadataRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can convert comics', () => {
+    service
+      .convertComics({
+        comics: COMICS,
+        archiveType: ARCHIVE_TYPE,
+        renamePages: RENAME_PAGES,
+        deletePages: DELETE_PAGES
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(CONVERT_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id),
+      archiveType: ARCHIVE_TYPE,
+      deletePages: DELETE_PAGES,
+      renamePages: RENAME_PAGES
+    } as ConvertComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });

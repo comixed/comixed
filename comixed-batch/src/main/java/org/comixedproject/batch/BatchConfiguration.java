@@ -18,9 +18,13 @@
 
 package org.comixedproject.batch;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.job.DefaultJobParametersExtractor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,5 +79,26 @@ public class BatchConfiguration {
     jobLauncher.setTaskExecutor(taskExecutor);
     jobLauncher.afterPropertiesSet();
     return jobLauncher;
+  }
+
+  /**
+   * Returns the step that launches the processing batch job.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param jobLauncher the job launcher
+   * @return the step the step
+   */
+  @Bean
+  @Qualifier("processComicsJobStep")
+  public Step processComicsJobStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final @Qualifier("processComicsJob") Job processComicsJob,
+      final @Qualifier("batchJobLauncher") JobLauncher jobLauncher) {
+    return stepBuilderFactory
+        .get("processComicsJobStep")
+        .job(processComicsJob)
+        .parametersExtractor(new DefaultJobParametersExtractor())
+        .launcher(jobLauncher)
+        .build();
   }
 }

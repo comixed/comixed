@@ -76,7 +76,7 @@ public class ProcessComicsConfiguration {
       @Qualifier("loadFileDetailsStep") final Step loadFileDetailsStep,
       @Qualifier("contentsProcessedStep") final Step contentsProcessedStep) {
     return jobBuilderFactory
-        .get("importComicsJob")
+        .get("processComicsJob")
         .incrementer(new RunIdIncrementer())
         .start(loadFileContentsStep)
         .next(markBlockedPagesStep)

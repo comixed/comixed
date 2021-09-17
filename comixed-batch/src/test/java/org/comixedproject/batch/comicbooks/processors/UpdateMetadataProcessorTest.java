@@ -57,7 +57,7 @@ public class UpdateMetadataProcessorTest {
     }
   }
 
-  @Test(expected = ArchiveAdaptorException.class)
+  @Test
   public void testProcessUpdateException() throws Exception {
     Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
@@ -65,12 +65,13 @@ public class UpdateMetadataProcessorTest {
     Mockito.when(archiveAdaptor.updateComic(Mockito.any(Comic.class)))
         .thenThrow(ArchiveAdaptorException.class);
 
-    try {
-      processor.process(comic);
-    } finally {
-      Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_ARCHIVE_TYPE);
-      Mockito.verify(archiveAdaptor, Mockito.times(1)).updateComic(comic);
-    }
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_ARCHIVE_TYPE);
+    Mockito.verify(archiveAdaptor, Mockito.times(1)).updateComic(comic);
   }
 
   @Test

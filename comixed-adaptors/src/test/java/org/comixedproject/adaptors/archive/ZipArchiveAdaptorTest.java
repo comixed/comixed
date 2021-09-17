@@ -20,13 +20,16 @@ package org.comixedproject.adaptors.archive;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,22 +44,32 @@ public class ZipArchiveAdaptorTest {
   private static final String TEST_FILE_ENTRY_2 = "example.png";
   private static final String TEST_FILE_ENTRY_1 = "example.jpg";
   private static final String TEST_FILE_ENTRY_0 = "example.jpeg";
+  private static final String TEST_SOURCE_CBZ_FILE = "src/test/resources/example.cbz";
   private static final String TEST_CBZ_FILE = "target/test-classes/example.cbz";
+  private static final String TEST_CREATED_CBZ_FILE = "target/test-classes/example-created.cbz";
   private static final String TEST_CBR_FILE = "target/test-classes/example.cbr";
-  private static final Object TEST_FILE_ENTRY_RENAMED_0 = "offset-000.jpeg";
-  private static final Object TEST_FILE_ENTRY_RENAMED_1 = "offset-001.jpg";
-  private static final Object TEST_FILE_ENTRY_RENAMED_2 = "offset-002.png";
-  private static final Object TEST_FILE_ENTRY_RENAMED_3 = "offset-003.jpg";
+  private static final String TEST_FILE_ENTRY_RENAMED_0 = "offset-000.jpeg";
+  private static final String TEST_FILE_ENTRY_RENAMED_1 = "offset-001.jpg";
+  private static final String TEST_FILE_ENTRY_RENAMED_2 = "offset-002.png";
+  private static final String TEST_FILE_ENTRY_RENAMED_3 = "offset-003.jpg";
 
   @Autowired private AbstractArchiveAdaptor<ZipFile> archiveAdaptor;
 
   private Comic comic;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     comic = new Comic();
     comic.setFilename(TEST_CBZ_FILE);
     comic.setArchiveType(ArchiveType.CBZ);
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_0, 0));
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_1, 1));
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_2, 2));
+    comic.getPages().add(new Page(comic, TEST_FILE_ENTRY_3, 3));
+    // TODO remove this when #437 is done
+    final File destination = new File(TEST_CBZ_FILE);
+    FileUtils.deleteQuietly(destination);
+    FileUtils.copyFile(new File(TEST_SOURCE_CBZ_FILE), destination);
   }
 
   @Test(expected = ArchiveAdaptorException.class)
@@ -109,7 +122,7 @@ public class ZipArchiveAdaptorTest {
     archiveAdaptor.loadComic(comic);
 
     // now save it and reload it
-    Comic result = archiveAdaptor.saveComic(comic, false);
+    Comic result = archiveAdaptor.saveComic(comic, false, TEST_CREATED_CBZ_FILE);
 
     assertEquals(4, result.getPageCount());
     assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
@@ -124,7 +137,10 @@ public class ZipArchiveAdaptorTest {
     archiveAdaptor.loadComic(comic);
 
     // now save it and reload it
-    Comic result = archiveAdaptor.saveComic(comic, true);
+    Comic result = archiveAdaptor.saveComic(comic, true, TEST_CREATED_CBZ_FILE);
+
+    // reload an existing comic
+    archiveAdaptor.loadComic(comic);
 
     assertEquals(4, result.getPageCount());
     assertEquals(TEST_FILE_ENTRY_RENAMED_0, result.getPage(0).getFilename());
@@ -138,15 +154,23 @@ public class ZipArchiveAdaptorTest {
     // load an existing comic
     archiveAdaptor.loadComic(comic);
 
-    comic.getPage(1).setDeleted(true);
+    comic.getPages().stream()
+        .filter(page -> page.getFilename().equals(TEST_FILE_ENTRY_1))
+        .findFirst()
+        .get()
+        .setDeleted(true);
 
     // now save it and reload it
-    Comic result = archiveAdaptor.saveComic(comic, false);
+    Comic result = archiveAdaptor.saveComic(comic, false, TEST_CREATED_CBZ_FILE);
 
-    assertEquals(3, result.getPageCount());
-    assertEquals(TEST_FILE_ENTRY_0, result.getPage(0).getFilename());
-    assertEquals(TEST_FILE_ENTRY_2, result.getPage(1).getFilename());
-    assertEquals(TEST_FILE_ENTRY_3, result.getPage(2).getFilename());
+    // reload an existing comic
+    archiveAdaptor.loadComic(comic);
+
+    assertFalse(
+        comic.getPages().stream()
+            .filter(page -> page.getFilename().equals(TEST_FILE_ENTRY_1))
+            .findFirst()
+            .isPresent());
   }
 
   @Test

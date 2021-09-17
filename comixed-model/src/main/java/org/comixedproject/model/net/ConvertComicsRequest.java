@@ -37,7 +37,7 @@ public class ConvertComicsRequest {
   @Getter
   @Setter
   @JsonProperty("ids")
-  private List<Long> comicIdList;
+  private List<Long> ids;
 
   @Getter
   @Setter

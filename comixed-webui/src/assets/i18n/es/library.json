@@ -63,6 +63,11 @@
     },
     "context-menu": {
       "comic-details": "Mostrar detalles del cómic...",
+      "convert": "Convert format...",
+      "convert-one-to-cb7": "Convert comic to CB7",
+      "convert-one-to-cbz": "Convert comic to CBZ",
+      "convert-selected-to-cb7": "Convert selections to CB7",
+      "convert-selected-to-cbz": "Convert selections to CBZ",
       "delete-one": "This Comic As Deleted",
       "delete-selected": "Selected Comics As Deleted",
       "mark-as": "Marque...",
@@ -75,6 +80,18 @@
       "set-page-unblocked": "No bloquee páginas como esta",
       "undelete-one": "This Comic As Undeleted",
       "undelete-selected": "Selected Comics As Undeleted"
+    },
+    "convert-comics": {
+      "convert-one": {
+        "confirmation-message": "Are you sure you want to convert this comic to {format}?",
+        "confirmation-title": "Convert Comic Format"
+      },
+      "convert-selected": {
+        "confirmation-message": "Are you sure you want to convert {count, plural, =1{one comic} other{# comics}} to {format}?",
+        "confirmation-title": "Convert Comics Format"
+      },
+      "effect-failure": "Failed to start the conversion process.",
+      "effect-success": "Starting converting {count, plural, =1{one comic} other{# comics}} to {archiveType}."
     },
     "label": {
       "no-publisher": "Editor desconocido",

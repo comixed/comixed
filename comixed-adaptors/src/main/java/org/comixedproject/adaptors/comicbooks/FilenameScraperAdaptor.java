@@ -47,7 +47,7 @@ public class FilenameScraperAdaptor {
    */
   public boolean execute(final Comic comic, final ScrapingRule scrapingRule)
       throws AdaptorException {
-    log.debug(
+    log.trace(
         "Applying filename scraping rule: filename={} rule={}",
         FilenameUtils.getName(comic.getFilename()),
         scrapingRule.getRule());
@@ -59,7 +59,7 @@ public class FilenameScraperAdaptor {
     var filename = FilenameUtils.getBaseName(comic.getFilename());
 
     if (this.ruleApplies(expression, filename)) {
-      log.debug("Rule applies");
+      log.trace("Rule applies");
       String[] elements = this.extractElements(expression, filename);
       if (scrapingRule.getCoverDatePosition() != null
           && !StringUtils.isEmpty(scrapingRule.getDateFormat())) {
@@ -80,7 +80,7 @@ public class FilenameScraperAdaptor {
       }
       return true;
     } else {
-      log.debug("Rule does not apply");
+      log.trace("Rule does not apply");
       return false;
     }
   }
@@ -98,7 +98,7 @@ public class FilenameScraperAdaptor {
     while (matches.find()) {
       for (var index = 0; index < result.length; index++) {
         result[index] = matches.group(index);
-        log.debug("Setting index={} to {}", index, result[index]);
+        log.trace("Setting index={} to {}", index, result[index]);
       }
     }
 

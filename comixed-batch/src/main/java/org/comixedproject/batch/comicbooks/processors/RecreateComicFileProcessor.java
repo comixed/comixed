@@ -26,9 +26,9 @@ import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,19 +44,19 @@ public class RecreateComicFileProcessor
     implements ItemProcessor<Comic, Comic>, StepExecutionListener {
   @Autowired private ComicFileHandler comicFileHandler;
 
-  private ExecutionContext executionContext;
+  private JobParameters jobParameters;
 
   @Override
   public Comic process(final Comic comic) throws Exception {
     final ArchiveAdaptor targetArchiveAdaptor =
         this.comicFileHandler.getArchiveAdaptorFor(
-            ArchiveType.forValue(this.executionContext.getString(JOB_TARGET_ARCHIVE)));
-    if (Boolean.parseBoolean(this.executionContext.getString(JOB_DELETE_MARKED_PAGES))) {
+            ArchiveType.forValue(this.jobParameters.getString(JOB_TARGET_ARCHIVE)));
+    if (Boolean.parseBoolean(this.jobParameters.getString(JOB_DELETE_MARKED_PAGES))) {
       log.trace("Removing deleted pages");
       comic.removeDeletedPages();
     }
     final boolean renamePages =
-        Boolean.parseBoolean(this.executionContext.getString(JOB_RENAME_PAGES));
+        Boolean.parseBoolean(this.jobParameters.getString(JOB_RENAME_PAGES));
     log.trace("Recreating comic file{}", renamePages ? ", renaming pages" : "");
     return targetArchiveAdaptor.saveComic(comic, renamePages);
   }
@@ -64,7 +64,7 @@ public class RecreateComicFileProcessor
   @Override
   public void beforeStep(final StepExecution stepExecution) {
     log.trace("Storing step execution reference");
-    this.executionContext = stepExecution.getJobExecution().getExecutionContext();
+    this.jobParameters = stepExecution.getJobParameters();
   }
 
   @Override

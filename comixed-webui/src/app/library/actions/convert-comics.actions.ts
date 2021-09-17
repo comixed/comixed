@@ -16,20 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export enum ArchiveType {
-  CBZ = 'CBZ',
-  CBR = 'CBR',
-  CB7 = 'CB7'
-}
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '@app/comic-book/models/comic';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
-export function archiveTypeFromString(key: string): ArchiveType {
-  switch (key) {
-    case 'CBZ':
-      return ArchiveType.CBZ;
-    case 'CBR':
-      return ArchiveType.CBR;
-    case 'CB7':
-      return ArchiveType.CB7;
-  }
-  return null;
-}
+export const convertComics = createAction(
+  '[Convert Comics] Convert comics',
+  props<{
+    comics: Comic[];
+    archiveType: ArchiveType;
+    deletePages: boolean;
+    renamePages: boolean;
+  }>()
+);
+
+export const comicsConverting = createAction(
+  '[Convert Comics] Conversion process started'
+);
+
+export const convertComicsFailed = createAction(
+  '[Convert Comics] Failed to start converting comics'
+);

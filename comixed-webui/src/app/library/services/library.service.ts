@@ -22,6 +22,7 @@ import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
+  CONVERT_COMICS_URL,
   LOAD_COMIC_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
@@ -33,6 +34,8 @@ import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-requ
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
+import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 
 @Injectable({
   providedIn: 'root'
@@ -81,5 +84,20 @@ export class LibraryService {
     return this.http.post(interpolate(UPDATE_METADATA_URL), {
       ids: args.comics.map(comic => comic.id)
     } as UpdateMetadataRequest);
+  }
+
+  convertComics(args: {
+    comics: Comic[];
+    archiveType: ArchiveType;
+    renamePages: boolean;
+    deletePages: boolean;
+  }): Observable<any> {
+    this.logger.trace('Converting comics:', args);
+    return this.http.post(interpolate(CONVERT_COMICS_URL), {
+      ids: args.comics.map(comic => comic.id),
+      archiveType: args.archiveType,
+      renamePages: args.renamePages,
+      deletePages: args.deletePages
+    } as ConvertComicsRequest);
   }
 }

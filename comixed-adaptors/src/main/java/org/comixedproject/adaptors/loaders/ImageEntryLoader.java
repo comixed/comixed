@@ -47,10 +47,10 @@ public class ImageEntryLoader extends AbstractEntryLoader {
       final String filename,
       final byte[] content,
       final boolean ignoreMetadata) {
-    log.debug("Loading image into comic");
+    log.trace("Loading image into comic");
     // if the comic already has this offset then update the offset's content
     if (comic.hasPageWithFilename(filename)) {
-      log.debug("Ignore known file: {}", filename);
+      log.trace("Ignore known file: {}", filename);
     } else {
       final String hash = genericUtilitiesAdaptor.createHash(content);
 
