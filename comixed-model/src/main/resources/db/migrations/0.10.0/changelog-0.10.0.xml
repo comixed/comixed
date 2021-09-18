@@ -17,5 +17,6 @@
   <include file="/db/migrations/0.10.0/009_892_add_converting_column.xml"/>
   <include file="/db/migrations/0.10.0/010_894_remove_task_tables.xml"/>
   <include file="/db/migrations/0.10.0/011_113_add_unique_key_to_reading_lists.xml"/>
+  <include file="/db/migrations/0.10.0/012_912_change_comic_title_length.xml"/>
 
 </databaseChangeLog>
