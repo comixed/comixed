@@ -26,8 +26,11 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { of } from 'rxjs';
 import {
+  deleteReadingLists,
+  deleteReadingListsFailed,
   loadReadingLists,
   loadReadingListsFailed,
+  readingListsDeleted,
   readingListsLoaded
 } from '@app/lists/actions/reading-lists.actions';
 
@@ -38,7 +41,7 @@ export class ReadingListsEffects {
       ofType(loadReadingLists),
       tap(action => this.logger.trace('Load reading lists for user:', action)),
       switchMap(action =>
-        this.readingListService.loadEntries().pipe(
+        this.readingListService.loadReadingLists().pipe(
           tap(response => this.logger.trace('Response received:', response)),
           map((response: ReadingList[]) =>
             readingListsLoaded({ entries: response })
@@ -60,6 +63,46 @@ export class ReadingListsEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(loadReadingListsFailed());
+      })
+    );
+  });
+
+  deleteReadingLists$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteReadingLists),
+      tap(action => this.logger.trace('Delete reading lists:', action)),
+      switchMap(action =>
+        this.readingListService
+          .deleteReadingLists({ lists: action.lists })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'reading-lists.delete-reading-lists.effect-success',
+                  { count: action.lists.length }
+                )
+              )
+            ),
+            map(() => readingListsDeleted()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'reading-lists.delete-reading-lists.effect-failure',
+                  { count: action.lists.length }
+                )
+              );
+              return of(deleteReadingListsFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(deleteReadingListsFailed());
       })
     );
   });

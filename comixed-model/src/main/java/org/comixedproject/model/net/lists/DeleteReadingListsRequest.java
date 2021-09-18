@@ -16,20 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists;
+package org.comixedproject.model.net.lists;
 
-import org.comixedproject.model.lists.ReadingList;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
- * <code>ReadingListEvent</code> defines the set of events that can affect the state for a {@link
- * ReadingList}.
+ * <code>DeleteReadingListsRequest</code> represents the request body when deleting reading lists.
  *
  * @author Darryl L. Pierce
  */
-public enum ReadingListEvent {
-  created, // a new reading list has been created
-  updated,
-  comicAdded,
-  comicRemoved,
-  deleted
+@NoArgsConstructor
+@AllArgsConstructor
+public class DeleteReadingListsRequest {
+  @JsonProperty("ids")
+  @Getter
+  private List<Long> ids;
 }

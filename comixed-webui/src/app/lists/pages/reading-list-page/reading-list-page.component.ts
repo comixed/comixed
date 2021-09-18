@@ -41,9 +41,16 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Comic } from '@app/comic-book/models/comic';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { READING_LIST_UPDATES } from '@app/lists/lists.constants';
+import {
+  READING_LIST_REMOVAL_TOPIC,
+  READING_LIST_UPDATES_TOPIC
+} from '@app/lists/lists.constants';
 import { interpolate } from '@app/core';
 import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
+import {
+  deleteReadingLists,
+  readingListRemoved
+} from '@app/lists/actions/reading-lists.actions';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -56,6 +63,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   readingListSubscription: Subscription;
   messagingSubscription: Subscription;
   readingListUpdateSubscription: MessagingSubscription;
+  readingListRemovalSubscription: MessagingSubscription;
   readingListForm: FormGroup;
   readingListId = -1;
   selectedEntries: Comic[] = [];
@@ -114,16 +122,36 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
       .select(selectMessagingState)
       .subscribe(state => {
         if (
-          this.readingListId !== -1 &&
           state.started &&
+          this.readingListId !== -1 &&
           !this.readingListUpdateSubscription
         ) {
-          this.logger.trace('Subscription to reading list updates');
+          this.logger.trace('Subscribing to reading list updates');
           this.readingListUpdateSubscription = this.webSocketService.subscribe(
-            interpolate(READING_LIST_UPDATES, { id: this.readingListId }),
+            interpolate(READING_LIST_UPDATES_TOPIC, {
+              id: this.readingListId
+            }),
             list => {
               this.logger.trace('Reading list updated received');
               this.store.dispatch(readingListLoaded({ list }));
+            }
+          );
+        }
+        if (
+          state.started &&
+          this.readingListId !== -1 &&
+          !this.readingListRemovalSubscription
+        ) {
+          this.logger.trace('Subscribing to reading list removal');
+          this.readingListUpdateSubscription = this.webSocketService.subscribe(
+            READING_LIST_REMOVAL_TOPIC,
+            list => {
+              this.logger.trace('Reading list removal received');
+              this.store.dispatch(readingListRemoved({ list }));
+              if (list.id === this.readingListId) {
+                this.logger.trace('This reading list was removed');
+                this.router.navigateByUrl('/lists/reading');
+              }
             }
           );
         }
@@ -150,10 +178,10 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     this.paramsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListSubscription.unsubscribe();
-    if (!!this.readingListUpdateSubscription) {
-      this.logger.trace('Unsubcribing from reading list details updates');
-      this.readingListUpdateSubscription.unsubscribe();
-    }
+    this.logger.trace('Unsubscribing from reading list details updates');
+    this.readingListUpdateSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from reading list removal updates');
+    this.readingListRemovalSubscription?.unsubscribe();
   }
 
   onSave(): void {
@@ -219,6 +247,22 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   onDownload(): void {
     this.logger.trace('Downloading reading list');
     this.store.dispatch(downloadReadingList({ list: this.readingList }));
+  }
+
+  onDeleteReadingList(): void {
+    this.logger.trace('Confirming deleting reading list');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'reading-list.delete-reading-list.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'reading-list.delete-reading-list.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action to delete reading list');
+        this.store.dispatch(deleteReadingLists({ lists: [this.readingList] }));
+      }
+    });
   }
 
   private encodeForm(): ReadingList {

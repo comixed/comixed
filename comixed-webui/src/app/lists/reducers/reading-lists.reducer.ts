@@ -18,9 +18,14 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
+  deleteReadingLists,
+  deleteReadingListsFailed,
   loadReadingLists,
   loadReadingListsFailed,
-  readingListsLoaded
+  readingListRemoved,
+  readingListsDeleted,
+  readingListsLoaded,
+  readingListUpdate
 } from '../actions/reading-lists.actions';
 import { ReadingList } from '@app/lists/models/reading-list';
 
@@ -28,11 +33,13 @@ export const READING_LISTS_FEATURE_KEY = 'reading_lists_state';
 
 export interface ReadingListsState {
   loading: boolean;
+  deleting: boolean;
   entries: ReadingList[];
 }
 
 export const initialState: ReadingListsState = {
   loading: false,
+  deleting: false,
   entries: []
 };
 
@@ -45,5 +52,17 @@ export const reducer = createReducer(
     loading: false,
     entries: action.entries
   })),
-  on(loadReadingListsFailed, state => ({ ...state, loading: false }))
+  on(loadReadingListsFailed, state => ({ ...state, loading: false })),
+  on(deleteReadingLists, state => ({ ...state, deleting: true })),
+  on(readingListsDeleted, state => ({ ...state, deleting: false })),
+  on(deleteReadingListsFailed, state => ({ ...state, deleting: false })),
+  on(readingListUpdate, (state, action) => {
+    const entries = state.entries.filter(entry => entry.id !== action.list.id);
+    entries.push(action.list);
+    return { ...state, entries };
+  }),
+  on(readingListRemoved, (state, action) => {
+    const entries = state.entries.filter(entry => entry.id !== action.list.id);
+    return { ...state, entries };
+  })
 );

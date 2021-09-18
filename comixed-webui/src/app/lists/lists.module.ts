@@ -61,6 +61,7 @@ import {
   UPLOAD_READING_LIST_FEATURE_KEY
 } from '@app/lists/reducers/upload-reading-list.reducer';
 import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list.effects';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [ReadingListsPageComponent, ReadingListPageComponent],
@@ -103,7 +104,8 @@ import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    LibraryModule
+    LibraryModule,
+    MatCheckboxModule
   ],
   exports: [CommonModule]
 })

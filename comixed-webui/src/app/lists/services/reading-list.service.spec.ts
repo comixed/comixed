@@ -30,9 +30,12 @@ import {
 import { interpolate } from '@app/core';
 import {
   ADD_COMICS_TO_READING_LIST_URL,
+  DELETE_READING_LISTS_URL,
   DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
+  READING_LIST_REMOVAL_TOPIC,
+  READING_LISTS_UPDATES_TOPIC,
   REMOVE_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST,
@@ -44,6 +47,18 @@ import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DownloadDocument } from '@app/core/models/download-document';
 import { HttpResponse } from '@angular/common/http';
+import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { Subscription as WebstompSubscription } from 'webstomp-client';
+import {
+  readingListRemoved,
+  readingListUpdate
+} from '@app/lists/actions/reading-lists.actions';
+import { WebSocketService } from '@app/messaging';
 
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -56,16 +71,44 @@ describe('ReadingListService', () => {
   } as DownloadDocument;
   const UPLOADED_FILE = new File([], 'testing');
 
+  const initialState = {
+    [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
+  };
+
   let service: ReadingListService;
   let httpMock: HttpTestingController;
+  let store: MockStore<any>;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
+  const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
+  updateSubscription.unsubscribe = jasmine.createSpy(
+    'Subscription.unsubscribe(updates)'
+  );
+  const removalSubscription = jasmine.createSpyObj(['unsubscribe']);
+  removalSubscription.unsubscribe = jasmine.createSpy(
+    'Subscription.unsubscribe(removals)'
+  );
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(ReadingListService);
     httpMock = TestBed.inject(HttpTestingController);
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
   });
 
   it('should be created', () => {
@@ -74,7 +117,7 @@ describe('ReadingListService', () => {
 
   it('can load the reading lists for the current user', () => {
     service
-      .loadEntries()
+      .loadReadingLists()
       .subscribe(response => expect(response).toEqual(READING_LISTS));
 
     const req = httpMock.expectOne(interpolate(LOAD_READING_LISTS_URL));
@@ -177,5 +220,94 @@ describe('ReadingListService', () => {
     expect(req.request.method).toEqual('POST');
     expect((req.request.body as FormData).get('file')).toEqual(UPLOADED_FILE);
     req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can delete reading lists', () => {
+    service
+      .deleteReadingLists({ lists: READING_LISTS })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(DELETE_READING_LISTS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: READING_LISTS.map(list => list.id)
+    } as DeleteReadingListsRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  describe('when messaging is started', () => {
+    beforeEach(() => {
+      service.readingListUpdateSubscription = null;
+      service.readingListRemovalSubscription = null;
+      webSocketService.subscribe
+        .withArgs(READING_LISTS_UPDATES_TOPIC, jasmine.anything())
+        .and.callFake((topic, callback) => {
+          callback(READING_LIST);
+          return {} as WebstompSubscription;
+        });
+      webSocketService.subscribe
+        .withArgs(READING_LIST_REMOVAL_TOPIC, jasmine.anything())
+        .and.callFake((topic, callback) => {
+          callback(READING_LIST);
+          return {} as WebstompSubscription;
+        });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to reading list update topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        READING_LISTS_UPDATES_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('subscribes to reading list removal topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        READING_LIST_REMOVAL_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('processes reading list updates', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        readingListUpdate({ list: READING_LIST })
+      );
+    });
+
+    it('processed reading list removals', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        readingListRemoved({ list: READING_LIST })
+      );
+    });
+  });
+
+  describe('when messaging is stopped', () => {
+    beforeEach(() => {
+      service.readingListUpdateSubscription = updateSubscription;
+      service.readingListRemovalSubscription = removalSubscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from the reading list update queue', () => {
+      expect(updateSubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the reading page list update subscription', () => {
+      expect(service.readingListUpdateSubscription).toBeNull();
+    });
+
+    it('unsubscribes from the reading list removal queue', () => {
+      expect(removalSubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the reading page list removal subscription', () => {
+      expect(service.readingListRemovalSubscription).toBeNull();
+    });
   });
 });

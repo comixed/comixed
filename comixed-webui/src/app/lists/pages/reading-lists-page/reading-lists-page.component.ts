@@ -28,7 +28,10 @@ import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
+import {
+  deleteReadingLists,
+  loadReadingLists
+} from '@app/lists/actions/reading-lists.actions';
 import { MatSort } from '@angular/material/sort';
 import {
   selectUserReadingLists,
@@ -40,6 +43,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
 import { selectUploadReadingListState } from '@app/lists/selectors/upload-reading-list.selectors';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-reading-lists-page',
@@ -52,18 +56,21 @@ export class ReadingListsPageComponent
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  dataSource = new MatTableDataSource<ReadingList>([]);
+  dataSource = new MatTableDataSource<SelectableListItem<ReadingList>>([]);
   readingListStateSubscription: Subscription;
   readingListsSubscription: Subscription;
   uploadReadingListSubscription: Subscription;
 
   readonly displayedColumns = [
+    'selection',
     'list-name',
     'summary',
     'comic-count',
     'created-on'
   ];
   showUploadRow = false;
+  hasSelections = false;
+  allSelected = false;
 
   constructor(
     private logger: LoggerService,
@@ -95,7 +102,15 @@ export class ReadingListsPageComponent
     this.logger.trace('Received reading lists update');
     this._readingLists = readingLists;
     this.logger.trace('Loading reading lists data source');
-    this.dataSource.data = readingLists;
+    const oldData = this.dataSource.data;
+    this.dataSource.data = readingLists.map(list => {
+      const oldEntry = oldData.find(entry => entry.item.id === list.id);
+
+      return {
+        item: list,
+        selected: oldEntry?.selected || false
+      };
+    });
   }
 
   ngOnInit(): void {
@@ -109,12 +124,14 @@ export class ReadingListsPageComponent
     this.logger.trace('Setting up sort');
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
+        case 'selection':
+          return `${data.selected}`;
         case 'list-name':
-          return data.name;
+          return data.item.name;
         case 'comic-count':
-          return data.comics.length;
+          return data.item.comics.length;
         case 'created-on':
-          return data.createdOn;
+          return data.item.createdOn;
       }
     };
     this.logger.trace('Assigning table paginator');
@@ -151,5 +168,43 @@ export class ReadingListsPageComponent
     });
     this.logger.trace('Hiding upload row');
     this.showUploadRow = false;
+  }
+
+  onSelectAll(selected: boolean): void {
+    this.logger.trace('Setting all selected:', selected);
+    this.dataSource.data.forEach(entry => (entry.selected = selected));
+    this.updateSelectedState();
+  }
+
+  onSelectOne(entry: SelectableListItem<ReadingList>, selected: boolean): void {
+    this.logger.trace('Setting one selected:', entry, selected);
+    entry.selected = selected;
+    this.updateSelectedState();
+  }
+
+  onDeleteReadingLists(): void {
+    this.logger.trace('Confirming deleting reading lists');
+    const lists = this.dataSource.data
+      .filter(entry => entry.selected)
+      .map(entry => entry.item);
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'reading-lists.delete-reading-lists.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'reading-lists.delete-reading-lists.confirmation-message',
+        { count: lists.length }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action to delete reading lists');
+        this.store.dispatch(deleteReadingLists({ lists }));
+      }
+    });
+  }
+
+  private updateSelectedState(): void {
+    this.allSelected = this.dataSource.data.every(entry => entry.selected);
+    this.hasSelections =
+      this.allSelected || this.dataSource.data.some(entry => entry.selected);
   }
 }

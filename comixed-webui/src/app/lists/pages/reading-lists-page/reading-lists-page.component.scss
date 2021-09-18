@@ -1,5 +1,11 @@
 @import '~styles';
 
+.mat-column-selection {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
 .mat-column-list-name {
   width: $cx-column-large;
   max-width: $cx-column-large;

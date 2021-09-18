@@ -30,6 +30,7 @@ import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.library.SmartListMatcher;
@@ -76,6 +77,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   @Autowired private ComicService comicService;
   @Autowired private CsvAdaptor csvAdaptor;
   @Autowired private PublishReadingListUpdateAction publishReadingListUpdateAction;
+  @Autowired private PublishReadingListDeletedAction publishReadingListDeletedAction;
 
   /**
    * Returns all reading lists for the user with the given email.
@@ -115,7 +117,10 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     log.trace("Setting summary");
     readingList.setSummary(summary);
     log.trace("Saving reading list");
-    return this.readingListRepository.save(readingList);
+    final ReadingList result = this.readingListRepository.save(readingList);
+    log.trace("Firing new reading list event");
+    this.readingListStateHandler.fireEvent(result, ReadingListEvent.created);
+    return this.readingListRepository.getById(result.getId());
   }
 
   /**
@@ -440,5 +445,31 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     if (this.readingListRepository.checkForExistingReadingList(owner, name)) {
       throw new ReadingListException("Name already used: " + name);
     }
+  }
+
+  /**
+   * Deletes reading lists.
+   *
+   * @param email the requesting user email
+   * @param ids the reading list ids
+   * @throws ReadingListException if the user is not the owner of a list or the id is invalid
+   */
+  public void deleteReadingLists(final String email, final List<Long> ids)
+      throws ReadingListException {
+    ids.forEach(
+        id -> {
+          try {
+            log.trace("Loading reading list: id={}", id);
+            final ReadingList readingList = this.doLoadReadingListForOwner(id, email);
+            log.trace("Deleting reading list");
+            this.readingListRepository.delete(readingList);
+            log.trace("Publishing deletion");
+            this.publishReadingListDeletedAction.publish(readingList);
+          } catch (ReadingListException error) {
+            log.error("Failed to delete reading list", error);
+          } catch (PublishingException error) {
+            log.error("Failed to publish reading list deletion", error);
+          }
+        });
   }
 }

@@ -29,6 +29,7 @@ import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.RemoveComicsFromReadingListRequest;
+import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.repositories.lists.ReadingListRepository;
@@ -255,5 +256,24 @@ public class ReadingListController {
     final String name = FilenameUtils.getBaseName(file.getOriginalFilename());
     log.info("Uploading reading list: email={} name={}", email, name);
     this.readingListService.decodeAndCreateReadingList(email, name, file.getInputStream());
+  }
+
+  /**
+   * Deletes a set of reading lists.
+   *
+   * @param principal the user principal
+   * @param request the request body
+   * @throws ReadingListException if an error occurs
+   */
+  @PostMapping(value = "/api/lists/reading/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  @PreAuthorize("hasRole('READER')")
+  public void deleteReadingLists(
+      final Principal principal, @RequestBody() final DeleteReadingListsRequest request)
+      throws ReadingListException {
+    final String email = principal.getName();
+    final List<Long> ids = request.getIds();
+    log.info("Deleting reading lists for {}", email);
+    this.readingListService.deleteReadingLists(email, ids);
   }
 }
