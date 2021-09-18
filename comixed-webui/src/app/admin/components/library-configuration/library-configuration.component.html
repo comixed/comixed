@@ -10,10 +10,39 @@
       required
     />
   </mat-form-field>
-  <div
-    class="cx-width-100"
-    [innerHTML]="'configuration.text.renaming-rules-explained' | translate"
-  ></div>
+  <div class="cx-width-100">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ "configuration.label.renaming-variables" | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table class="cx-width-100 cx-border-primary-1 cx-padding-5">
+        <caption>
+          {{ "configuration.text.variable-caption" | translate }}
+        </caption>
+        <colgroup>
+          <col class="cx-table-column-medium" />
+          <col />
+        </colgroup>
+        <thead>
+          <th scope="col">
+            {{ "configuration.label.variable-name" | translate }}
+          </th>
+          <th scope="col">
+            {{ "configuration.label.variable-description" | translate }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let option of variableOptions">
+            <td>{{ option.label }}</td>
+            <td>{{ option.value | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-expansion-panel>
+  </div>
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>
       {{ "configuration.label.renaming-rule" | translate }}

@@ -22,7 +22,6 @@ $cx-selected-comic-background-color: #0033cc;
 $cx-selected-comic-color: #ffffff;
 
 // component sizes
-
 .cx-width-10 {
   width: 10% !important;
 }
@@ -171,7 +170,18 @@ $cx-column-small: 50px;
 $cx-column-medium: 150px;
 $cx-column-large: 325px;
 
+.cx-table-column-medium {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
 // table rows
+
+th {
+  background-color: var(--accent-darker-color);
+  color: var(--text-accent-darker-color);
+  font-weight: bolder;
+}
 
 .cx-selected-row {
   background-color: var(--accent-lighter-color);

@@ -20,6 +20,8 @@ package org.comixedproject.adaptors.comicbooks;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.adaptors.comicbooks.ComicFileAdaptor.NO_COVER_DATE;
+import static org.comixedproject.adaptors.comicbooks.ComicFileAdaptor.UNKNOWN_VALUE;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.Locale;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +49,7 @@ public class ComicFileAdaptorTest {
       TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME + "." + TEST_EXTENSION;
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = TEST_COMIC_FILENAME;
   private static final String TEST_RENAMING_RULE =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $FORMAT $PUBMONTH $PUBYEAR $COVERDATE";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2020";
@@ -58,106 +61,23 @@ public class ComicFileAdaptorTest {
       TEST_COVER_DATE_LOCALDATE.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault())
           + " "
           + TEST_COVER_DATE_LOCALDATE.getYear();
-  private static final String TEST_RELATIVE_NAME_WITH_RULE =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_ISSUE,
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
-  private static final String TEST_RELATIVE_NAME_NO_PUBLISHER =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          "Unknown",
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_ISSUE,
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
-  private static final String TEST_RELATIVE_NAME_NO_SERIES =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER,
-          "Unknown",
-          TEST_VOLUME,
-          "Unknown",
-          TEST_VOLUME,
-          TEST_ISSUE,
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
-  private static final String TEST_RELATIVE_NAME_NO_VOLUME =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER,
-          TEST_SERIES,
-          "Unknown",
-          TEST_SERIES,
-          "Unknown",
-          TEST_ISSUE,
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
-  private static final String TEST_RELATIVE_NAME_NO_ISSUE_NUMBER =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_SERIES,
-          TEST_VOLUME,
-          "Unknown",
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
-  private static final String TEST_RELATIVE_NAME_NO_COVER_DATE =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_ISSUE,
-          "No Cover Date",
-          TEST_EXTENSION);
+  private static final Date TEST_STORE_DATE = new Date(120, 5, 1);
+  private static final String TEST_PUBLISHED_MONTH = "5";
+  private static final String TEST_PUBLISHED_YEAR = "2020";
+  private static final String TEST_COMIC_FORMAT_NAME = "formatname";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "\"?Publisher*'";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Publisher__";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|Series?>";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Series__";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS = "\\/717:";
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__717_";
-  private static final String TEST_RELATIVE_NAME_SCRUBBED =
-      String.format(
-          "%s/%s/%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
-          TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
-          TEST_VOLUME,
-          TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
-          TEST_VOLUME,
-          TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
   private static final String TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS =
       "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
-  private static final String TEST_RELATIVE_NAME_WITH_RULE_WITH_SCRUBBED_CHARACTERS =
-      String.format(
-          "__%s/____%s/__%s/%s v%s #%s (%s).%s",
-          TEST_PUBLISHER,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_SERIES,
-          TEST_VOLUME,
-          TEST_ISSUE,
-          TEST_FORMATTED_COVER_DATE,
-          TEST_EXTENSION);
 
   @InjectMocks private ComicFileAdaptor adaptor;
   @Mock private Comic comic;
   @Mock private ArchiveType archiveAdaptor;
+  @Mock private ComicFormat comicFormat;
 
   @Before
   public void setUp() {
@@ -168,6 +88,9 @@ public class ComicFileAdaptorTest {
     Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE);
     Mockito.when(comic.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(comic.getArchiveType()).thenReturn(archiveAdaptor);
+    Mockito.when(comic.getFormat()).thenReturn(comicFormat);
+    Mockito.when(comicFormat.getName()).thenReturn(TEST_COMIC_FORMAT_NAME);
+    Mockito.when(comic.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(archiveAdaptor.getExtension()).thenReturn(TEST_EXTENSION);
   }
 
@@ -182,7 +105,18 @@ public class ComicFileAdaptorTest {
   public void testCreateFileFromRule() {
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_WITH_RULE, result);
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test
@@ -190,7 +124,18 @@ public class ComicFileAdaptorTest {
     final String result =
         adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS);
 
-    assertEquals(TEST_RELATIVE_NAME_WITH_RULE_WITH_SCRUBBED_CHARACTERS, result);
+    assertEquals(
+        String.format(
+            "__%s/____%s/__%s/%s v%s #%s (%s).%s",
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test
@@ -201,7 +146,18 @@ public class ComicFileAdaptorTest {
 
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_SCRUBBED, result);
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+            TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+            TEST_VOLUME,
+            TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test
@@ -210,7 +166,18 @@ public class ComicFileAdaptorTest {
 
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_NO_PUBLISHER, result);
+    assertEquals(
+        formattedName(
+            UNKNOWN_VALUE,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test
@@ -219,7 +186,18 @@ public class ComicFileAdaptorTest {
 
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_NO_SERIES, result);
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            UNKNOWN_VALUE,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test
@@ -228,7 +206,43 @@ public class ComicFileAdaptorTest {
 
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_NO_VOLUME, result);
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            UNKNOWN_VALUE,
+            TEST_ISSUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
+  }
+
+  private String formattedName(
+      final String publisher,
+      final String series,
+      final String volume,
+      final String issueNumber,
+      final String coverDate,
+      final String format,
+      final String publishedMonth,
+      final String publishedYear,
+      final String extension) {
+    return String.format(
+        "%s/%s/%s/%s v%s #%s %s %s %s %s.%s",
+        publisher,
+        series,
+        volume,
+        series,
+        volume,
+        issueNumber,
+        format,
+        publishedMonth,
+        publishedYear,
+        coverDate,
+        extension);
   }
 
   @Test
@@ -237,7 +251,18 @@ public class ComicFileAdaptorTest {
 
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_NO_ISSUE_NUMBER, result);
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            UNKNOWN_VALUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test
@@ -246,7 +271,18 @@ public class ComicFileAdaptorTest {
 
     final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE);
 
-    assertEquals(TEST_RELATIVE_NAME_NO_COVER_DATE, result);
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            NO_COVER_DATE,
+            TEST_COMIC_FORMAT_NAME,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
   }
 
   @Test

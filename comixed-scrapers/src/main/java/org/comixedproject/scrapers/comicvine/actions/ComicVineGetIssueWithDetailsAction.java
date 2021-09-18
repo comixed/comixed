@@ -56,6 +56,7 @@ public class ComicVineGetIssueWithDetailsAction
     this.addField("volume");
     this.addField("issue_number");
     this.addField("cover_date");
+    this.addField("store_date");
     this.addField("name");
     this.addField("description");
     this.addField("character_credits");

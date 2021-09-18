@@ -46,6 +46,10 @@ public class ComicVineIssue {
   @Getter
   private Date coverDate;
 
+  @JsonProperty("store_date")
+  @Getter
+  private Date storeDate;
+
   @JsonProperty("name")
   @Getter
   private String title;
@@ -57,10 +61,6 @@ public class ComicVineIssue {
   @JsonProperty("image")
   @Getter
   private ComicVineImage image = new ComicVineImage();
-
-  @JsonProperty("store_date")
-  @Getter
-  private String storeDate;
 
   @JsonProperty("character_credits")
   @Getter
