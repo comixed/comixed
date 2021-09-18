@@ -38,13 +38,13 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicFilenameWillChangeGuardTest {
+public class ConsolidateComicGuardTest {
   private static final String TEST_TARGET_DIRECTORY = "/Users/comixed/Documents/old";
   private static final String TEST_RENAMING_RULE = "The renaming rule";
   private static final String TEST_OLD_FILENAME = "The old filename";
   private static final String TEST_NEW_FILENAME = "The new filename";
 
-  @InjectMocks private ComicFilenameWillChangeGuard guard;
+  @InjectMocks private ConsolidateComicGuard guard;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private Comic comic;

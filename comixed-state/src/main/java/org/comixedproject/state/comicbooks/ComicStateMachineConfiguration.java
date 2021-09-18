@@ -24,7 +24,7 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
 import org.comixedproject.state.comicbooks.guards.ComicContentsProcessedGuard;
 import org.comixedproject.state.comicbooks.guards.ComicFileAlreadyRecreatingGuard;
-import org.comixedproject.state.comicbooks.guards.ComicFilenameWillChangeGuard;
+import org.comixedproject.state.comicbooks.guards.ConsolidateComicGuard;
 import org.comixedproject.state.comicbooks.guards.FileDetailsCreatedGuard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +51,7 @@ public class ComicStateMachineConfiguration
   @Autowired private UpdateMetadataAction updateMetadataAction;
   @Autowired private MetadataUpdatedAction metadataUpdatedAction;
   @Autowired private ConsolidateComicAction consolidateComicAction;
-  @Autowired private ComicFilenameWillChangeGuard comicFilenameWillChangeGuard;
+  @Autowired private ConsolidateComicGuard consolidateComicGuard;
   @Autowired private ComicConsolidatedAction comicConsolidatedAction;
   @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
   @Autowired private RecreateComicFileAction recreateComicFileAction;
@@ -137,14 +137,14 @@ public class ComicStateMachineConfiguration
         .source(ComicState.STABLE)
         .target(ComicState.STABLE)
         .event(ComicEvent.consolidateComic)
-        .guard(comicFilenameWillChangeGuard)
+        .guard(consolidateComicGuard)
         .action(consolidateComicAction)
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.consolidateComic)
-        .guard(comicFilenameWillChangeGuard)
+        .guard(consolidateComicGuard)
         .action(consolidateComicAction)
         .and()
         .withExternal()
