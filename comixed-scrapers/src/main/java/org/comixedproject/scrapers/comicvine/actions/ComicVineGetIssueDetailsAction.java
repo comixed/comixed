@@ -67,7 +67,7 @@ public class ComicVineGetIssueDetailsAction
     final ComicVinePublisher publisherDetails =
         this.getPublisherDetails(volumeDetails.getPublisher());
 
-    log.debug("Populatie the issue details");
+    log.debug("Populate the issue details");
     final ScrapingIssueDetails result = new ScrapingIssueDetails();
     result.setSourceId(String.valueOf(issueDetails.getId()));
     result.setPublisher(publisherDetails.getName());
@@ -75,6 +75,7 @@ public class ComicVineGetIssueDetailsAction
     result.setVolume(volumeDetails.getStartYear());
     result.setIssueNumber(issueDetails.getIssueNumber());
     result.setCoverDate(issueDetails.getCoverDate());
+    result.setStoreDate(issueDetails.getStoreDate());
     result.setTitle(issueDetails.getTitle());
     result.setDescription(issueDetails.getDescription());
 

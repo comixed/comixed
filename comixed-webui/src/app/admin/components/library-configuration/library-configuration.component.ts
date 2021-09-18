@@ -18,6 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { ListItem } from '@app/core/models/ui/list-item';
 
 @Component({
   selector: 'cx-library-configuration',
@@ -26,6 +27,32 @@ import { FormGroup } from '@angular/forms';
 })
 export class LibraryConfigurationComponent implements OnInit {
   @Input() form: FormGroup;
+
+  readonly variableOptions: ListItem<string>[] = [
+    {
+      label: '$PUBLISHER',
+      value: 'configuration.text.renaming-rule-publisher'
+    },
+    { label: '$SERIES', value: 'configuration.text.renaming-rule-series' },
+    { label: '$VOLUME', value: 'configuration.text.renaming-rule-volume' },
+    {
+      label: '$ISSUE',
+      value: 'configuration.text.renaming-rule-issue-number'
+    },
+    {
+      label: '$COVERDATE',
+      value: 'configuration.text.renaming-rule-cover-date'
+    },
+    { label: '$FORMAT', value: 'configuration.text.renaming-rule-format' },
+    {
+      label: '$PUBMONTH',
+      value: 'configuration.text.renaming-rule-published-month'
+    },
+    {
+      label: '$PUBYEAR',
+      value: 'configuration.text.renaming-rule-published-year'
+    }
+  ];
 
   constructor() {}
 

@@ -173,6 +173,19 @@ public class Comic {
   @Setter
   private Date coverDate;
 
+  @Column(name = "StoreDate", nullable = true)
+  @Temporal(TemporalType.DATE)
+  @JsonProperty("storeDate")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
+  })
+  @Getter
+  @Setter
+  private Date storeDate;
+
   @Column(name = "Publisher", length = 128)
   @JsonProperty("publisher")
   @JsonView({

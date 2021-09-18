@@ -45,7 +45,7 @@ public class ScrapingIssue {
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @Getter
   @Setter
-  private String storeDate;
+  private Date storeDate;
 
   @JsonProperty(value = "coverUrl")
   @Getter

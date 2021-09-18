@@ -57,6 +57,7 @@ public class ScrapingServiceTest {
   private static final String TEST_PUBLISHER = "Publisher Name";
   private static final String TEST_VOLUME = "2020";
   private static final Date TEST_COVER_DATE = new Date();
+  private static final Date TEST_STORE_DATE = new Date();
   private static final String TEST_TITLE = "The Title";
   private static final String TEST_DESCRIPTION = "This is the comic's description";
   private static final String TEST_ISSUE_DETAILS_KEY = "IssueDetailsKey";
@@ -93,6 +94,7 @@ public class ScrapingServiceTest {
     Mockito.when(scrapingIssueDetails.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(scrapingIssueDetails.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(scrapingIssueDetails.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    Mockito.when(scrapingIssueDetails.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(scrapingIssueDetails.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(scrapingIssueDetails.getDescription()).thenReturn(TEST_DESCRIPTION);
   }
@@ -454,6 +456,7 @@ public class ScrapingServiceTest {
     Mockito.verify(this.loadedComic, Mockito.never()).setSeries(Mockito.anyString());
     Mockito.verify(this.loadedComic, Mockito.never()).setVolume(Mockito.anyString());
     Mockito.verify(this.loadedComic, Mockito.never()).setCoverDate(Mockito.any(Date.class));
+    Mockito.verify(this.loadedComic, Mockito.never()).setStoreDate(Mockito.any(Date.class));
     Mockito.verify(this.loadedComic, Mockito.never()).setDescription(Mockito.anyString());
   }
 
@@ -463,6 +466,7 @@ public class ScrapingServiceTest {
     Mockito.verify(this.loadedComic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setVolume(TEST_VOLUME);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
+    Mockito.verify(this.loadedComic, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
   }

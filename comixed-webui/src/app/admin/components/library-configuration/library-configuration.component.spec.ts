@@ -23,6 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 describe('LibraryConfigurationComponent', () => {
   const formBuilder = new FormBuilder();
@@ -39,7 +40,8 @@ describe('LibraryConfigurationComponent', () => {
         ReactiveFormsModule,
         TranslateModule.forRoot(),
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        MatExpansionModule
       ]
     }).compileComponents();
 

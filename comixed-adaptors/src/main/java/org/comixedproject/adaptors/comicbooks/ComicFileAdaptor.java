@@ -21,6 +21,8 @@ package org.comixedproject.adaptors.comicbooks;
 import java.io.File;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comicbooks.Comic;
@@ -38,7 +40,8 @@ import org.springframework.util.StringUtils;
 public class ComicFileAdaptor {
   private static final String FORBIDDEN_RULE_CHARACTERS = "[\"':\\\\*?|<>]";
   private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>]";
-  private static final String UNKNOWN_VALUE = "Unknown";
+  static final String UNKNOWN_VALUE = "Unknown";
+  public static final String NO_COVER_DATE = "No Cover Date";
 
   private final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
 
@@ -105,16 +108,28 @@ public class ComicFileAdaptor {
     final String issueNumber =
         StringUtils.isEmpty(comic.getIssueNumber()) ? UNKNOWN_VALUE : scrub(comic.getIssueNumber());
     final String coverDate =
-        comic.getCoverDate() != null
-            ? coverDateFormat.format(comic.getCoverDate())
-            : "No Cover Date";
+        comic.getCoverDate() != null ? coverDateFormat.format(comic.getCoverDate()) : NO_COVER_DATE;
+    final String format = comic.getFormat() == null ? "" : comic.getFormat().getName();
+    String publishedMonth = "";
+    String publishedYear = "";
+    if (comic.getStoreDate() != null) {
+      final GregorianCalendar calendar = new GregorianCalendar();
+      calendar.setTime(comic.getStoreDate());
+      log.trace("Getting store year");
+      publishedYear = String.valueOf(calendar.get(Calendar.YEAR));
+      log.trace("Getting store month");
+      publishedMonth = String.valueOf(calendar.get(Calendar.MONTH));
+    }
 
     String result =
         rule.replace("$PUBLISHER", publisher)
             .replace("$SERIES", series)
             .replace("$VOLUME", volume)
             .replace("$ISSUE", issueNumber)
-            .replace("$COVERDATE", coverDate);
+            .replace("$COVERDATE", coverDate)
+            .replace("$FORMAT", format)
+            .replace("$PUBYEAR", publishedYear)
+            .replace("$PUBMONTH", publishedMonth);
 
     log.trace("Relative comic filename: {}", result);
 
