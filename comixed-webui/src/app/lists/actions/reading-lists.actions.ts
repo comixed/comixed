@@ -31,3 +31,26 @@ export const readingListsLoaded = createAction(
 export const loadReadingListsFailed = createAction(
   '[Reading Lists] Failed to load all reading lists for the current user'
 );
+
+export const deleteReadingLists = createAction(
+  '[Reading Lists] Delete reading lists',
+  props<{ lists: ReadingList[] }>()
+);
+
+export const readingListsDeleted = createAction(
+  '[Reading Lists] Reading lists were deleted'
+);
+
+export const deleteReadingListsFailed = createAction(
+  '[Reading Lists] Failed to delete reading lists'
+);
+
+export const readingListRemoved = createAction(
+  '[Reading Lists] A reading list was removed',
+  props<{ list: ReadingList }>()
+);
+
+export const readingListUpdate = createAction(
+  '[Reading Lists] A reading list was added or updated',
+  props<{ list: ReadingList }>()
+);

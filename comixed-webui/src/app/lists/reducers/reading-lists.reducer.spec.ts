@@ -23,14 +23,21 @@ import {
 } from './reading-lists.reducer';
 import {
   READING_LIST_1,
+  READING_LIST_2,
   READING_LIST_3,
   READING_LIST_5
 } from '@app/lists/lists.fixtures';
 import {
+  deleteReadingLists,
+  deleteReadingListsFailed,
   loadReadingLists,
   loadReadingListsFailed,
-  readingListsLoaded
+  readingListRemoved,
+  readingListsDeleted,
+  readingListsLoaded,
+  readingListUpdate
 } from '@app/lists/actions/reading-lists.actions';
+import { ReadingList } from '@app/lists/models/reading-list';
 
 describe('ReadingLists Reducer', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -48,6 +55,10 @@ describe('ReadingLists Reducer', () => {
 
     it('clears the loading flag', () => {
       expect(state.loading).toBeFalse();
+    });
+
+    it('clears the deleting flag', () => {
+      expect(state.deleting).toBeFalse();
     });
 
     it('has no entries', () => {
@@ -89,6 +100,95 @@ describe('ReadingLists Reducer', () => {
 
     it('clears the loading flag', () => {
       expect(state.loading).toBeFalse();
+    });
+  });
+
+  describe('deleting reading lists', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, deleting: false },
+        deleteReadingLists({ lists: READING_LISTS })
+      );
+    });
+
+    it('sets the deleting flag', () => {
+      expect(state.deleting).toBeTrue();
+    });
+  });
+
+  describe('successfully deleting reading lists', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, deleting: true }, readingListsDeleted());
+    });
+
+    it('clears the deleting flag', () => {
+      expect(state.deleting).toBeFalse();
+    });
+  });
+
+  describe('failure deleting reading lists', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, deleting: true }, deleteReadingListsFailed());
+    });
+
+    it('clears the deleting flag', () => {
+      expect(state.deleting).toBeFalse();
+    });
+  });
+
+  describe('a reading list was removed', () => {
+    const REMOVED = READING_LISTS[1];
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, entries: READING_LISTS },
+        readingListRemoved({ list: REMOVED })
+      );
+    });
+
+    it('removes the reading list', () => {
+      expect(state.entries).not.toContain(REMOVED);
+    });
+
+    it('keeps the other entries', () => {
+      expect(state.entries).toEqual(
+        READING_LISTS.filter(entry => entry.id !== REMOVED.id)
+      );
+    });
+  });
+
+  describe('a reading list was added', () => {
+    const LIST = READING_LIST_2;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, entries: READING_LISTS },
+        readingListUpdate({ list: LIST })
+      );
+    });
+
+    it('adds the new entry', () => {
+      expect(state.entries).toContain(LIST);
+    });
+  });
+
+  describe('a reading list was updated', () => {
+    const ORIGINAL = READING_LISTS[0];
+    const UPDATE = { ...ORIGINAL, name: 'updated' } as ReadingList;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, entries: READING_LISTS },
+        readingListUpdate({ list: UPDATE })
+      );
+    });
+
+    it('removes the previous list entry', () => {
+      expect(state.entries).not.toContain(ORIGINAL);
+    });
+
+    it('adds the update', () => {
+      expect(state.entries).toContain(UPDATE);
     });
   });
 });

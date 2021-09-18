@@ -43,6 +43,9 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { Confirmation } from '@app/core/models/confirmation';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { ReadingList } from '@app/lists/models/reading-list';
+import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -89,24 +92,33 @@ describe('ReadingListsPageComponent', () => {
   });
 
   describe('sorting reading lists', () => {
-    const LIST = READING_LISTS[0];
+    const LIST = {
+      item: READING_LISTS[0],
+      selected: Math.random() > 0.5
+    } as SelectableListItem<ReadingList>;
+
+    it('can sort by selection status', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(LIST, 'selection')
+      ).toEqual(`${LIST.selected}`);
+    });
 
     it('can sort by name', () => {
       expect(
         component.dataSource.sortingDataAccessor(LIST, 'list-name')
-      ).toEqual(LIST.name);
+      ).toEqual(LIST.item.name);
     });
 
     it('can sort by comic count', () => {
       expect(
         component.dataSource.sortingDataAccessor(LIST, 'comic-count')
-      ).toEqual(LIST.comics.length);
+      ).toEqual(LIST.item.comics.length);
     });
 
     it('can sort by created date', () => {
       expect(
         component.dataSource.sortingDataAccessor(LIST, 'created-on')
-      ).toEqual(LIST.createdOn);
+      ).toEqual(LIST.item.createdOn);
     });
   });
 
@@ -143,6 +155,81 @@ describe('ReadingListsPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         uploadReadingList({ file: FILE })
+      );
+    });
+  });
+
+  describe('loading reading lists', () => {
+    beforeEach(() => {
+      component.dataSource.data = [{ item: READING_LISTS[0], selected: true }];
+      component.readingLists = READING_LISTS;
+    });
+
+    it('maintains the previous selections', () => {
+      expect(component.dataSource.data[0].selected).toBeTrue();
+    });
+  });
+
+  describe('selecting all reading lists', () => {
+    beforeEach(() => {
+      component.allSelected = false;
+      component.hasSelections = false;
+      component.readingLists = READING_LISTS;
+      component.onSelectAll(true);
+    });
+
+    it('selects all reading lists', () => {
+      expect(
+        component.dataSource.data.every(entry => entry.selected)
+      ).toBeTrue();
+    });
+
+    it('set the all selected flag', () => {
+      expect(component.allSelected).toBeTrue();
+    });
+
+    it('set the has selections flag', () => {
+      expect(component.hasSelections).toBeTrue();
+    });
+  });
+
+  describe('selecting one reading list', () => {
+    let entry: SelectableListItem<ReadingList>;
+
+    beforeEach(() => {
+      component.allSelected = false;
+      component.hasSelections = false;
+      component.readingLists = READING_LISTS;
+      entry = component.dataSource.data[0];
+      component.onSelectOne(entry, true);
+    });
+
+    it('selects the entry', () => {
+      expect(entry.selected).toBeTrue();
+    });
+
+    it('set the has selections flag', () => {
+      expect(component.hasSelections).toBeTrue();
+    });
+  });
+
+  describe('deleting selected reading lists', () => {
+    beforeEach(() => {
+      component.readingLists = READING_LISTS;
+      component.dataSource.data.forEach(entry => (entry.selected = true));
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onDeleteReadingLists();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteReadingLists({ lists: READING_LISTS })
       );
     });
   });

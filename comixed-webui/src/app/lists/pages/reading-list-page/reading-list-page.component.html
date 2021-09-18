@@ -49,6 +49,15 @@
   >
     <mat-icon>save</mat-icon>
   </button>
+  <button
+    id="delete-reading-list-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'reading-list.tooltip.delete-reading-list' | translate"
+    (click)="onDeleteReadingList()"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-card *ngIf="!!readingList">

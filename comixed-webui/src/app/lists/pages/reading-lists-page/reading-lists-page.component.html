@@ -20,6 +20,16 @@
     >
       <mat-icon>upload</mat-icon>
     </button>
+    <button
+      id="remove-button"
+      mat-icon-button
+      color="warn"
+      [disabled]="!hasSelections"
+      [matTooltip]="'reading-lists.tooltip.delete-reading-lists' | translate"
+      (click)="onDeleteReadingLists()"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
   </mat-toolbar-row>
   <mat-toolbar-row *ngIf="showUploadRow">
     <input
@@ -32,13 +42,32 @@
 </mat-toolbar>
 
 <mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="selection">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      <mat-checkbox
+        [checked]="allSelected"
+        (change)="onSelectAll($event.checked)"
+        (click)="$event.stopPropagation()"
+      ></mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        <mat-checkbox
+          [checked]="entry.selected"
+          (change)="onSelectOne(entry, $event.checked)"
+          (click)="$event.stopPropagation()"
+        ></mat-checkbox>
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="list-name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "reading-lists.label.name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.name }}
+        {{ entry.item.name }}
       </span>
     </mat-cell>
   </ng-container>
@@ -49,7 +78,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.summary }}
+        {{ entry.item.summary }}
       </span>
     </mat-cell>
   </ng-container>
@@ -60,7 +89,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.comics.length | number }}
+        {{ entry.item.comics.length | number }}
       </span>
     </mat-cell>
   </ng-container>
@@ -71,7 +100,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">
-        {{ entry.createdOn | date: "medium" }}
+        {{ entry.item.createdOn | date: "medium" }}
       </span>
     </mat-cell>
   </ng-container>

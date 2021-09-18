@@ -33,6 +33,7 @@ import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.adaptors.csv.CsvRowDecoder;
 import org.comixedproject.adaptors.csv.CsvRowEncoder;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
@@ -91,6 +92,7 @@ public class ReadingListServiceTest {
   @Mock private MessageHeaders messageHeaders;
   @Mock private Message<ReadingListEvent> incomingMessage;
   @Mock private PublishReadingListUpdateAction publishReadingListUpdateAction;
+  @Mock private PublishReadingListDeletedAction publishReadingListDeletedAction;
   @Mock private InputStream inputStream;
 
   @Captor private ArgumentCaptor<ReadingList> readingListArgumentCaptor;
@@ -102,8 +104,10 @@ public class ReadingListServiceTest {
   private List<Comic> comicList = new ArrayList<>();
 
   @Before
-  public void setUp() {
+  public void setUp() throws ComiXedUserException {
+    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(readingList.getOwner()).thenReturn(owner);
+    Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
     Mockito.when(readingList.getName()).thenReturn(TEST_READING_LIST_NAME);
     Mockito.when(readingList.getComics()).thenReturn(comicList);
@@ -128,7 +132,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void testGetReadingListsForUser() throws ComiXedUserException, ReadingListException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+
     Mockito.when(readingListRepository.getAllReadingListsForOwner(Mockito.any(ComiXedUser.class)))
         .thenReturn(readingLists);
 
@@ -157,7 +161,7 @@ public class ReadingListServiceTest {
   @Test(expected = ReadingListException.class)
   public void testCreateReadingListNameAlreadyUsed()
       throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+
     Mockito.when(
             readingListRepository.checkForExistingReadingList(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
@@ -174,13 +178,13 @@ public class ReadingListServiceTest {
 
   @Test
   public void testCreateReadingList() throws ReadingListException, ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.checkForExistingReadingList(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
         .thenReturn(false);
     Mockito.when(readingListRepository.save(readingListArgumentCaptor.capture()))
-        .thenReturn(savedReadingList);
+        .thenReturn(readingList);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(savedReadingList);
 
     ReadingList result =
         service.createReadingList(
@@ -199,6 +203,7 @@ public class ReadingListServiceTest {
         .checkForExistingReadingList(user, TEST_READING_LIST_NAME);
     Mockito.verify(readingListRepository, Mockito.times(1))
         .save(readingListArgumentCaptor.getValue());
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
   }
 
   @Test
@@ -542,7 +547,7 @@ public class ReadingListServiceTest {
   @Test(expected = ReadingListException.class)
   public void testDecodeAndCreateReadingListNameUsed()
       throws ComiXedUserException, ReadingListException, IOException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+
     Mockito.when(
             readingListRepository.checkForExistingReadingList(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
@@ -567,13 +572,13 @@ public class ReadingListServiceTest {
     decodingRow.add(TEST_VOLUME);
     decodingRow.add(TEST_ISSUE_NUMBER);
 
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.checkForExistingReadingList(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
         .thenReturn(false);
     Mockito.when(readingListRepository.save(readingListArgumentCaptor.capture()))
-        .thenReturn(savedReadingList);
+        .thenReturn(readingList);
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(savedReadingList);
     Mockito.doNothing()
         .when(csvAdaptor)
         .decodeRecords(
@@ -596,6 +601,7 @@ public class ReadingListServiceTest {
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
     Mockito.verify(readingListStateHandler, Mockito.never())
         .fireEvent(Mockito.any(), Mockito.any(), Mockito.any());
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
   }
 
   @Test
@@ -608,7 +614,6 @@ public class ReadingListServiceTest {
     decodingRow.add(TEST_VOLUME);
     decodingRow.add(TEST_ISSUE_NUMBER);
 
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(
             readingListRepository.checkForExistingReadingList(
                 Mockito.any(ComiXedUser.class), Mockito.anyString()))
@@ -645,10 +650,66 @@ public class ReadingListServiceTest {
     assertFalse(headers.isEmpty());
     assertSame(comic, headers.get(HEADER_COMIC));
 
-    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(readingListRepository, Mockito.times(2)).getById(TEST_READING_LIST_ID);
     Mockito.verify(comicService, Mockito.times(1))
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
     Mockito.verify(readingListStateHandler, Mockito.times(1))
         .fireEvent(readingList, ReadingListEvent.comicAdded, headers);
+  }
+
+  @Test
+  public void testDeleteReadingListsInvalidReadingList()
+      throws ReadingListException, ComiXedUserException {
+    idList.add(TEST_READING_LIST_ID);
+
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    service.deleteReadingLists(TEST_OWNER_EMAIL, idList);
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(readingListRepository, Mockito.never()).delete(Mockito.any());
+  }
+
+  @Test
+  public void testDeleteReadingListsNotOwner() throws ReadingListException, ComiXedUserException {
+    idList.add(TEST_READING_LIST_ID);
+
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
+
+    service.deleteReadingLists(TEST_USER_EMAIL, idList);
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(readingListRepository, Mockito.never()).delete(Mockito.any());
+  }
+
+  @Test
+  public void testDeleteReadingListsPublishException()
+      throws ReadingListException, ComiXedUserException, PublishingException {
+    idList.add(TEST_READING_LIST_ID);
+
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
+    Mockito.doThrow(PublishingException.class)
+        .when(publishReadingListDeletedAction)
+        .publish(Mockito.any());
+
+    service.deleteReadingLists(TEST_OWNER_EMAIL, idList);
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(readingListRepository, Mockito.times(1)).delete(readingList);
+    Mockito.verify(publishReadingListDeletedAction, Mockito.times(1)).publish(readingList);
+  }
+
+  @Test
+  public void testDeleteReadingLists()
+      throws ReadingListException, ComiXedUserException, PublishingException {
+    idList.add(TEST_READING_LIST_ID);
+
+    Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
+
+    service.deleteReadingLists(TEST_OWNER_EMAIL, idList);
+
+    Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
+    Mockito.verify(readingListRepository, Mockito.times(1)).delete(readingList);
+    Mockito.verify(publishReadingListDeletedAction, Mockito.times(1)).publish(readingList);
   }
 }

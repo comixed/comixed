@@ -28,12 +28,12 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import lombok.SneakyThrows;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.RemoveComicsFromReadingListRequest;
+import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
 import org.comixedproject.service.comicbooks.ComicException;
@@ -66,6 +66,7 @@ public class ReadingListControllerTest {
   @Mock private DownloadDocument downloadDocument;
   @Mock private MultipartFile multipartFile;
   @Mock private InputStream inputStream;
+  @Mock private List<Long> readingListIdList;
 
   @Before
   public void setUp() throws IOException {
@@ -262,12 +263,33 @@ public class ReadingListControllerTest {
     }
   }
 
-  @SneakyThrows
   @Test
-  public void testUploadListService() throws ReadingListException {
+  public void testUploadListService() throws ReadingListException, IOException {
     controller.uploadReadingList(principal, multipartFile);
 
     Mockito.verify(readingListService, Mockito.times(1))
         .decodeAndCreateReadingList(TEST_USER_EMAIL, TEST_READING_LIST_NAME, inputStream);
+  }
+
+  @Test(expected = ReadingListException.class)
+  public void testDeleteReadingListsServiceException() throws ReadingListException {
+    Mockito.doThrow(ReadingListException.class)
+        .when(readingListService)
+        .deleteReadingLists(Mockito.anyString(), Mockito.anyList());
+
+    try {
+      controller.deleteReadingLists(principal, new DeleteReadingListsRequest(readingListIdList));
+    } finally {
+      Mockito.verify(readingListService, Mockito.times(1))
+          .deleteReadingLists(TEST_USER_EMAIL, readingListIdList);
+    }
+  }
+
+  @Test
+  public void testDeleteReadingLists() throws ReadingListException {
+    controller.deleteReadingLists(principal, new DeleteReadingListsRequest(readingListIdList));
+
+    Mockito.verify(readingListService, Mockito.times(1))
+        .deleteReadingLists(TEST_USER_EMAIL, readingListIdList);
   }
 }

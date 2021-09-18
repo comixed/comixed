@@ -63,7 +63,12 @@ public class ReadingListStateMachineConfig
       final StateMachineTransitionConfigurer<ReadingListState, ReadingListEvent> transitions)
       throws Exception {
     transitions
+        .withExternal()
+        .source(ReadingListState.STABLE)
+        .target(ReadingListState.STABLE)
+        .event(ReadingListEvent.created)
         // the reading list has been updated
+        .and()
         .withExternal()
         .source(ReadingListState.STABLE)
         .target(ReadingListState.STABLE)
