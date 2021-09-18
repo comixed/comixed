@@ -33,13 +33,13 @@ import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicFilenameWillChangeGuard</code> checks if the comic already has the target filename.
+ * <code>ConsolidateComicGuard</code> checks if the comic already has the target filename.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicFilenameWillChangeGuard extends AbstractComicGuard {
+public class ConsolidateComicGuard extends AbstractComicGuard {
   @Autowired private ComicFileAdaptor comicFileAdaptor;
 
   @Override
@@ -53,7 +53,7 @@ public class ComicFilenameWillChangeGuard extends AbstractComicGuard {
     final String renamingRule = context.getMessageHeaders().get(HEADER_RENAMING_RULE, String.class);
     log.trace("Generating target name");
     final String targetName = this.comicFileAdaptor.createFilenameFromRule(comic, renamingRule);
-    log.trace("Ensuring the comic filename would be difference");
+    log.trace("Ensuring the comic filename would be different");
     final String absoluteSource = comic.getFile().getAbsolutePath();
     final String absoluteTarget =
         new File(String.format("%s/%s", targetDirectory, targetName)).getAbsolutePath();
