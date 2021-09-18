@@ -16,20 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists;
-
-import org.comixedproject.model.lists.ReadingList;
-
-/**
- * <code>ReadingListEvent</code> defines the set of events that can affect the state for a {@link
- * ReadingList}.
- *
- * @author Darryl L. Pierce
- */
-public enum ReadingListEvent {
-  created, // a new reading list has been created
-  updated,
-  comicAdded,
-  comicRemoved,
-  deleted
+export interface DeleteReadingListsRequest {
+  ids: number[];
 }

@@ -29,3 +29,8 @@ export const selectUserReadingLists = createSelector(
   selectUserReadingListsState,
   state => state.entries
 );
+
+export const selectUserReadingListsBusy = createSelector(
+  selectUserReadingListsState,
+  state => state.loading || state.deleting
+);

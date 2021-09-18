@@ -49,14 +49,19 @@ import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
-import { MessagingSubscription, WebSocketService } from '@app/messaging';
-import { READING_LIST_UPDATES } from '@app/lists/lists.constants';
+import { WebSocketService } from '@app/messaging';
+import {
+  READING_LIST_REMOVAL_TOPIC,
+  READING_LIST_UPDATES_TOPIC
+} from '@app/lists/lists.constants';
 import { interpolate } from '@app/core';
 import {
   DOWNLOAD_READING_LIST_FEATURE_KEY,
   initialState as initialDownloadReadingListState
 } from '@app/lists/reducers/download-reading-list.reducer';
+import { Subscription as WebstompSubscription } from 'webstomp-client';
 import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
+import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;
@@ -74,6 +79,14 @@ describe('ReadingListPageComponent', () => {
   let router: Router;
   let confirmationService: ConfirmationService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
+  const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
+  updateSubscription.unsubscribe = jasmine.createSpy(
+    'Subscription.unsubscribe(updates)'
+  );
+  const removalSubscription = jasmine.createSpyObj(['unsubscribe']);
+  removalSubscription.unsubscribe = jasmine.createSpy(
+    'Subscription.unsubscribe(removals)'
+  );
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -316,37 +329,70 @@ describe('ReadingListPageComponent', () => {
       );
     });
   });
-  describe('subscribing to comic updates', () => {
+
+  describe('when messaging is started', () => {
+    let readingListRemovalSubscription: any;
+
     beforeEach(() => {
       component.readingListId = READING_LIST.id;
-      webSocketService.subscribe.and.callFake((topic, callback) => {
-        callback(READING_LIST);
-        return {} as MessagingSubscription;
-      });
+      component.readingListUpdateSubscription = null;
+      component.readingListRemovalSubscription = null;
+      webSocketService.subscribe
+        .withArgs(
+          interpolate(READING_LIST_UPDATES_TOPIC, { id: READING_LIST.id }),
+          jasmine.anything()
+        )
+        .and.callFake((topic, callback) => {
+          callback(READING_LIST);
+          return {} as WebstompSubscription;
+        });
+      webSocketService.subscribe
+        .withArgs(READING_LIST_REMOVAL_TOPIC, jasmine.anything())
+        .and.callFake((topic, callback) => {
+          readingListRemovalSubscription = callback;
+          return {} as WebstompSubscription;
+        });
       store.setState({
         ...initialState,
-        [MESSAGING_FEATURE_KEY]: {
-          ...initialMessagingState,
-          started: true
-        }
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
       });
     });
 
-    it('subscribes to the task topic', () => {
+    it('subscribes to reading list update topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        interpolate(READING_LIST_UPDATES, { id: READING_LIST.id }),
+        interpolate(READING_LIST_UPDATES_TOPIC, { id: READING_LIST.id }),
         jasmine.anything()
       );
     });
 
-    it('publishes updates', () => {
+    it('subscribes to reading list removal topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        READING_LIST_REMOVAL_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('processes reading list updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         readingListLoaded({ list: READING_LIST })
       );
     });
+
+    it('redirects the browser when the current list was removed', () => {
+      readingListRemovalSubscription(READING_LIST);
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/lists/reading');
+    });
+
+    it('ignores when a different list was removed', () => {
+      readingListRemovalSubscription({
+        ...READING_LIST,
+        id: READING_LIST.id + 1
+      });
+      expect(router.navigateByUrl).not.toHaveBeenCalled();
+    });
   });
 
-  describe('downloading a reading list', () => {
+  describe('downloading the reading list', () => {
     beforeEach(() => {
       component.readingList = READING_LIST;
       component.onDownload();
@@ -355,6 +401,26 @@ describe('ReadingListPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         downloadReadingList({ list: READING_LIST })
+      );
+    });
+  });
+
+  describe('delete reading list', () => {
+    beforeEach(() => {
+      component.readingList = READING_LIST;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onDeleteReadingList();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deleteReadingLists({ lists: [READING_LIST] })
       );
     });
   });

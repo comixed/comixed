@@ -31,10 +31,13 @@ import {
   READING_LIST_5
 } from '@app/lists/lists.fixtures';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
+  deleteReadingLists,
+  deleteReadingListsFailed,
   loadReadingLists,
   loadReadingListsFailed,
+  readingListsDeleted,
   readingListsLoaded
 } from '@app/lists/actions/reading-lists.actions';
 
@@ -59,7 +62,12 @@ describe('ReadingListsEffects', () => {
         {
           provide: ReadingListService,
           useValue: {
-            loadEntries: jasmine.createSpy('ReadingListsService.loadEntries()')
+            loadReadingLists: jasmine.createSpy(
+              'ReadingListsService.loadReadingLists()'
+            ),
+            deleteReadingLists: jasmine.createSpy(
+              'ReadingListsService.deleteReadingLists()'
+            )
           }
         },
         AlertService
@@ -71,6 +79,7 @@ describe('ReadingListsEffects', () => {
       ReadingListService
     ) as jasmine.SpyObj<ReadingListService>;
     alertService = TestBed.inject(AlertService);
+    spyOn(alertService, 'info');
     spyOn(alertService, 'error');
   });
 
@@ -85,7 +94,7 @@ describe('ReadingListsEffects', () => {
       const outcome = readingListsLoaded({ entries: READING_LISTS });
 
       actions$ = hot('-a', { a: action });
-      readingListService.loadEntries.and.returnValue(of(serviceResponse));
+      readingListService.loadReadingLists.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadUserReadingLists$).toBeObservable(expected);
@@ -97,7 +106,7 @@ describe('ReadingListsEffects', () => {
       const outcome = loadReadingListsFailed();
 
       actions$ = hot('-a', { a: action });
-      readingListService.loadEntries.and.returnValue(
+      readingListService.loadReadingLists.and.returnValue(
         throwError(serviceResponse)
       );
 
@@ -111,10 +120,56 @@ describe('ReadingListsEffects', () => {
       const outcome = loadReadingListsFailed();
 
       actions$ = hot('-a', { a: action });
-      readingListService.loadEntries.and.throwError('expected');
+      readingListService.loadReadingLists.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadUserReadingLists$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('deleting reading lists', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = deleteReadingLists({ lists: READING_LISTS });
+      const outcome = readingListsDeleted();
+
+      actions$ = hot('-a', { a: action });
+      readingListService.deleteReadingLists
+        .withArgs({ lists: READING_LISTS })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.deleteReadingLists$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = deleteReadingLists({ lists: READING_LISTS });
+      const outcome = deleteReadingListsFailed();
+
+      actions$ = hot('-a', { a: action });
+      readingListService.deleteReadingLists
+        .withArgs({ lists: READING_LISTS })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.deleteReadingLists$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = deleteReadingLists({ lists: READING_LISTS });
+      const outcome = deleteReadingListsFailed();
+
+      actions$ = hot('-a', { a: action });
+      readingListService.deleteReadingLists
+        .withArgs({ lists: READING_LISTS })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.deleteReadingLists$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

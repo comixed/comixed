@@ -23,9 +23,12 @@ import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
 import {
   ADD_COMICS_TO_READING_LIST_URL,
+  DELETE_READING_LISTS_URL,
   DOWNLOAD_READING_LIST_URL,
   LOAD_READING_LIST_URL,
   LOAD_READING_LISTS_URL,
+  READING_LIST_REMOVAL_TOPIC,
+  READING_LISTS_UPDATES_TOPIC,
   REMOVE_COMICS_FROM_READING_LIST_URL,
   SAVE_READING_LIST,
   UPDATE_READING_LIST,
@@ -35,14 +38,67 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { Comic } from '@app/comic-book/models/comic';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
+import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';
+import { Store } from '@ngrx/store';
+import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import {
+  loadReadingLists,
+  readingListRemoved,
+  readingListUpdate
+} from '@app/lists/actions/reading-lists.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReadingListService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  readingListsSubscription: MessagingSubscription;
+  readingListUpdateSubscription: MessagingSubscription;
+  readingListRemovalSubscription: MessagingSubscription;
 
-  loadEntries(): Observable<any> {
+  constructor(
+    private logger: LoggerService,
+    private http: HttpClient,
+    private store: Store<any>,
+    private webSocketService: WebSocketService
+  ) {
+    this.store.select(selectMessagingState).subscribe(state => {
+      if (state.started && !this.readingListUpdateSubscription) {
+        this.logger.trace('Subscribing to reading list updates');
+        this.readingListUpdateSubscription = this.webSocketService.subscribe(
+          interpolate(READING_LISTS_UPDATES_TOPIC),
+          list => {
+            this.logger.trace('Updated reading list received:', list);
+            this.store.dispatch(readingListUpdate({ list }));
+          }
+        );
+        this.store.dispatch(loadReadingLists());
+      }
+      if (state.started && !this.readingListRemovalSubscription) {
+        this.logger.trace('Subscribing to reading list removals');
+        this.readingListRemovalSubscription = this.webSocketService.subscribe(
+          READING_LIST_REMOVAL_TOPIC,
+          list => {
+            this.logger.trace('Reading list removed:', list);
+            this.store.dispatch(readingListRemoved({ list }));
+          }
+        );
+      }
+
+      if (!state.started && !!this.readingListUpdateSubscription) {
+        this.logger.trace('Unsubscribing from reading list updates');
+        this.readingListUpdateSubscription.unsubscribe();
+        this.readingListUpdateSubscription = null;
+      }
+      if (!state.started && !!this.readingListRemovalSubscription) {
+        this.logger.trace('Unsubscribing from reading list removals');
+        this.readingListRemovalSubscription.unsubscribe();
+        this.readingListRemovalSubscription = null;
+      }
+    });
+  }
+
+  loadReadingLists(): Observable<any> {
     this.logger.trace('Load reading list entries for user');
     return this.http.get(interpolate(LOAD_READING_LISTS_URL));
   }
@@ -97,5 +153,12 @@ export class ReadingListService {
     const formData = new FormData();
     formData.append('file', args.file);
     return this.http.post(interpolate(UPLOAD_READING_LIST_URL), formData);
+  }
+
+  deleteReadingLists(args: { lists: ReadingList[] }): Observable<any> {
+    this.logger.trace('Deleting reading lists:', args);
+    return this.http.post(interpolate(DELETE_READING_LISTS_URL), {
+      ids: args.lists.map(entry => entry.id)
+    } as DeleteReadingListsRequest);
   }
 }

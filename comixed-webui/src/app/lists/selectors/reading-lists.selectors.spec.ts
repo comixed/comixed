@@ -21,8 +21,9 @@ import {
   ReadingListsState
 } from '../reducers/reading-lists.reducer';
 import {
-  selectUserReadingListsState,
-  selectUserReadingLists
+  selectUserReadingLists,
+  selectUserReadingListsBusy,
+  selectUserReadingListsState
 } from './reading-lists.selectors';
 import {
   READING_LIST_1,
@@ -36,7 +37,11 @@ describe('ReadingLists Selectors', () => {
   let state: ReadingListsState;
 
   beforeEach(() => {
-    state = { loading: Math.random() > 0.5, entries: READING_LISTS };
+    state = {
+      loading: Math.random() > 0.5,
+      deleting: Math.random() > 0.5,
+      entries: READING_LISTS
+    };
   });
 
   it('should select the feature state', () => {
@@ -53,5 +58,13 @@ describe('ReadingLists Selectors', () => {
         [READING_LISTS_FEATURE_KEY]: state
       })
     ).toEqual(state.entries);
+  });
+
+  it('should select the busy state', () => {
+    expect(
+      selectUserReadingListsBusy({
+        [READING_LISTS_FEATURE_KEY]: state
+      })
+    ).toEqual(state.loading || state.deleting);
   });
 });

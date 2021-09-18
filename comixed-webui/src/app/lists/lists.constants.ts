@@ -28,6 +28,7 @@ export const ADD_COMICS_TO_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${
 export const REMOVE_COMICS_FROM_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}/comics/remove`;
 export const DOWNLOAD_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/\${id}/download`;
 export const UPLOAD_READING_LIST_URL = `${API_ROOT_URL}/lists/reading/upload`;
+export const DELETE_READING_LISTS_URL = `${API_ROOT_URL}/lists/reading/delete`;
 
 export const READING_LIST_TEMPLATE: ReadingList = {
   id: null,
@@ -39,4 +40,6 @@ export const READING_LIST_TEMPLATE: ReadingList = {
   comics: []
 };
 
-export const READING_LIST_UPDATES = `${SECURED_PREFIX}/topic/reading-list.\${id}.update`;
+export const READING_LISTS_UPDATES_TOPIC = `${SECURED_PREFIX}/topic/reading-lists.update`;
+export const READING_LIST_UPDATES_TOPIC = `${SECURED_PREFIX}/topic/reading-list.\${id}.update`;
+export const READING_LIST_REMOVAL_TOPIC = `${SECURED_PREFIX}/topic/reading-list.removed`;

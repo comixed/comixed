@@ -53,4 +53,7 @@ public interface Constants {
 
   /** Topic which receives reading list updates. */
   String READING_LIST_UPDATE_TOPIC = "/topic/reading-list.%d.update";
+
+  /** Topic which receives reading list removed updates. */
+  String READING_LIST_REMOVED_TOPIC = "/topic/reading-list.removed";
 }

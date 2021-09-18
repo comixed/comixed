@@ -16,20 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.state.lists;
+package org.comixedproject.messaging.lists;
 
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.messaging.AbstractPublishAction;
+import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.lists.ReadingList;
+import org.comixedproject.model.messaging.Constants;
+import org.comixedproject.views.View;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ReadingListEvent</code> defines the set of events that can affect the state for a {@link
- * ReadingList}.
+ * <code>PublishReadingListDeletedAction</code> publishes a message when a reading list is deleted.
  *
  * @author Darryl L. Pierce
  */
-public enum ReadingListEvent {
-  created, // a new reading list has been created
-  updated,
-  comicAdded,
-  comicRemoved,
-  deleted
+@Component
+@Log4j2
+public class PublishReadingListDeletedAction extends AbstractPublishAction<ReadingList> {
+  @Override
+  public void publish(final ReadingList readingList) throws PublishingException {
+    log.trace("Publishing reading list removed");
+    this.doPublish(
+        readingList.getOwner(),
+        Constants.READING_LIST_REMOVED_TOPIC,
+        readingList,
+        View.ReadingListDetail.class);
+  }
 }
