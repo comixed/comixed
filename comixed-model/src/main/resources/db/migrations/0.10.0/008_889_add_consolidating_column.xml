@@ -24,11 +24,7 @@
               value="NOW()"/>
     </insert>
 
-    <update tableName="ConfigurationOptions">
-      <column name="Name"
-              value="library.renaming-rule"/>
-      <where>Name="library.consolidation-rule"</where>
-    </update>
+    <sql>UPDATE ConfigurationOptions SET Name='library.renaming-rule' WHERE Name='library.consolidation-rule'</sql>
 
   </changeSet>
 </databaseChangeLog>

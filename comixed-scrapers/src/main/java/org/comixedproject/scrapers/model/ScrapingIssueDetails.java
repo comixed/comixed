@@ -62,6 +62,11 @@ public class ScrapingIssueDetails {
   @Setter
   private Date coverDate;
 
+  @JsonProperty("storeDate")
+  @Getter
+  @Setter
+  private Date storeDate;
+
   @JsonProperty("title")
   @Getter
   @Setter

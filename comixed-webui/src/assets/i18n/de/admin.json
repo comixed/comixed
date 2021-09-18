@@ -3,7 +3,10 @@
     "label": {
       "comicvine-api-key": "ComicVine API Key",
       "renaming-rule": "Comic Renaming Rule",
-      "root-directory": "Library Root Directory"
+      "renaming-variables": "Available Renaming Variables",
+      "root-directory": "Library Root Directory",
+      "variable-description": "Description Of The Output",
+      "variable-name": "Variable Name"
     },
     "load-all": {
       "effect-failure": "Failed to load configuration options."
@@ -12,7 +15,18 @@
       "comicvine": "ComicVine Settings",
       "library": "Library"
     },
-    "tab-title": "Configuration"
+    "tab-title": "Configuration",
+    "text": {
+      "renaming-rule-cover-date": "The cover date",
+      "renaming-rule-format": "The comic format",
+      "renaming-rule-issue-number": "The issue number",
+      "renaming-rule-published-month": "The month published",
+      "renaming-rule-published-year": "The name of the publisher",
+      "renaming-rule-publisher": "The name of the publisher",
+      "renaming-rule-series": "The name of the series",
+      "renaming-rule-volume": "The volume",
+      "variable-caption": "These are the available variables that can be used for renaming comics."
+    }
   },
   "save-configuration": {
     "confirmation-message": "Save changes to the configuration?",
