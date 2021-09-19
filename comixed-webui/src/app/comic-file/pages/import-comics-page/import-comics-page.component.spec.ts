@@ -55,10 +55,7 @@ import { ComicFileCoverUrlPipe } from '@app/comic-file/pipes/comic-file-cover-ur
 import { MatCardModule } from '@angular/material/card';
 import { ComicPageComponent } from '@app/comic-book/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  DELETE_BLOCKED_PAGES_PREFERENCE,
-  IGNORE_METADATA_PREFERENCE
-} from '@app/library/library.constants';
+import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
@@ -154,20 +151,13 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('loading user preferences', () => {
-    const IGNORE_METADATA = Math.random() > 0.5;
-    const DELETE_BLOCKED_PAGES = Math.random() > 0.5;
-
     beforeEach(() => {
       const user = {
         ...USER_ADMIN,
         preferences: [
           {
-            name: IGNORE_METADATA_PREFERENCE,
-            value: `${IGNORE_METADATA}`
-          },
-          {
-            name: DELETE_BLOCKED_PAGES_PREFERENCE,
-            value: `${DELETE_BLOCKED_PAGES}`
+            name: PAGE_SIZE_PREFERENCE,
+            value: `${PAGE_SIZE}`
           }
         ]
       } as User;
@@ -181,11 +171,7 @@ describe('ImportComicsPageComponent', () => {
     });
 
     it('sets the ignore metadata flag', () => {
-      expect(component.ignoreMetadata).toEqual(IGNORE_METADATA);
-    });
-
-    it('sets the delete blocked pages flag', () => {
-      expect(component.deleteBlockedPages).toEqual(DELETE_BLOCKED_PAGES);
+      expect(component.pageSize).toEqual(PAGE_SIZE);
     });
   });
 
@@ -290,14 +276,9 @@ describe('ImportComicsPageComponent', () => {
   });
 
   describe('starting the import process', () => {
-    const IGNORE_METADATA = Math.random() > 0.5;
-    const DELETE_BLOCKED_PAGES = Math.random() > 0.5;
-
     beforeEach(() => {
       component.files = FILES;
       component.selectedFiles = FILES;
-      component.ignoreMetadata = IGNORE_METADATA;
-      component.deleteBlockedPages = DELETE_BLOCKED_PAGES;
 
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirm: Confirmation) => confirm.confirm()
@@ -312,9 +293,7 @@ describe('ImportComicsPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         sendComicFiles({
-          files: FILES,
-          ignoreMetadata: IGNORE_METADATA,
-          deleteBlockedPages: DELETE_BLOCKED_PAGES
+          files: FILES
         })
       );
     });

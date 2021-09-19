@@ -37,11 +37,6 @@ import {
   sendComicFiles,
   sendComicFilesFailed
 } from '@app/comic-file/actions/import-comic-files.actions';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  DELETE_BLOCKED_PAGES_PREFERENCE,
-  IGNORE_METADATA_PREFERENCE
-} from '@app/library/library.constants';
 import { hot } from 'jasmine-marbles';
 import { clearComicFileSelections } from '@app/comic-file/actions/comic-file-list.actions';
 
@@ -88,35 +83,22 @@ describe('ImportComicFilesEffects', () => {
   });
 
   describe('sending comic files', () => {
-    const IGNORE_METADATA = Math.random() > 0.5;
-    const DELETE_BLOCKED_PAGES = Math.random() > 0.5;
-
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = sendComicFiles({
-        files: FILES,
-        ignoreMetadata: IGNORE_METADATA,
-        deleteBlockedPages: DELETE_BLOCKED_PAGES
+        files: FILES
       });
       const outcome1 = comicFilesSent();
       const outcome2 = clearComicFileSelections();
-      const outcome3 = saveUserPreference({
-        name: IGNORE_METADATA_PREFERENCE,
-        value: `${IGNORE_METADATA}`
-      });
-      const outcome4 = saveUserPreference({
-        name: DELETE_BLOCKED_PAGES_PREFERENCE,
-        value: `${DELETE_BLOCKED_PAGES}`
-      });
 
       actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles.and.returnValue(of(serviceResponse));
+      comicImportService.sendComicFiles
+        .withArgs({ files: FILES })
+        .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bcde)', {
+      const expected = hot('-(bc)', {
         b: outcome1,
-        c: outcome2,
-        d: outcome3,
-        e: outcome4
+        c: outcome2
       });
       expect(effects.sendComicFiles$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
@@ -125,16 +107,14 @@ describe('ImportComicFilesEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = sendComicFiles({
-        files: FILES,
-        ignoreMetadata: false,
-        deleteBlockedPages: true
+        files: FILES
       });
       const outcome = sendComicFilesFailed();
 
       actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles.and.returnValue(
-        throwError(serviceResponse)
-      );
+      comicImportService.sendComicFiles
+        .withArgs({ files: FILES })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.sendComicFiles$).toBeObservable(expected);
@@ -143,14 +123,14 @@ describe('ImportComicFilesEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = sendComicFiles({
-        files: FILES,
-        ignoreMetadata: false,
-        deleteBlockedPages: true
+        files: FILES
       });
       const outcome = sendComicFilesFailed();
 
       actions$ = hot('-a', { a: action });
-      comicImportService.sendComicFiles.and.throwError('expected');
+      comicImportService.sendComicFiles
+        .withArgs({ files: FILES })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.sendComicFiles$).toBeObservable(expected);

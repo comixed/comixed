@@ -33,11 +33,7 @@
       "selected-for-import": "Este archivo se importará."
     },
     "tooltip": {
-      "delete-blocked-pages-off": "Las páginas bloqueadas no se marcarán para su eliminación.",
-      "delete-blocked-pages-on": "Las páginas bloqueadas se marcarán para su eliminación.",
       "deselect-all": "Borrar las selecciones de archivos de cómic.",
-      "ignore-metadata-on": "No se utilizarán metadatos.",
-      "ignore-metadata-off": "Se utilizarán metadatos.",
       "select-all": "Seleccione todos los archivos de cómic para importarlos.",
       "start-import": "Empezar a importar los archivos de cómic seleccionados.",
       "toggle-file-lookup-form": "Alternar el formulario de búsqueda de archivos de cómic."

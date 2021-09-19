@@ -59,11 +59,6 @@ export const IMPORT_ROOT_DIRECTORY_DEFAULT = '';
 export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
   'preference.import.maximum-results';
 export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
-export const IGNORE_METADATA_PREFERENCE = 'preference.import.ignore-metadata';
-export const IGNORE_METADATA_DEFAULT = `${false}`;
-export const DELETE_BLOCKED_PAGES_PREFERENCE =
-  'preference.import.delete-blocked-pages';
-export const DELETE_BLOCKED_PAGES_DEFAULT = `${false}`;
 export const API_KEY_PREFERENCE = 'preference.scraping.api-key';
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
 export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';

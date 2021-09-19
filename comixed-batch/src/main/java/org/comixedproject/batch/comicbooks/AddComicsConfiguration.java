@@ -46,6 +46,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Log4j2
 public class AddComicsConfiguration {
+  public static final String PARAM_ADD_COMICS_STARTED = "job.add-comics.started";
+
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;
 
