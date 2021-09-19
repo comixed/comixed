@@ -35,14 +35,14 @@
     <cx-comic-scraping
       *ngIf="scrapingVolumes.length > 0"
       [comic]="currentComic"
-      [comicSeriesName]="currentComic.series"
-      [comicVolume]="currentComic.volume"
-      [comicIssueNumber]="currentComic.issueNumber"
+      [comicSeriesName]="currentSeries"
+      [comicVolume]="currentVolume"
+      [comicIssueNumber]="this.currentIssueNumber"
       [apiKey]="apiKey"
-      [volumes]="scrapingVolumes"
       [skipCache]="skipCache"
       [pageSize]="pageSize"
       [multimode]="true"
+      [volumes]="scrapingVolumes"
     ></cx-comic-scraping>
   </div>
 </div>

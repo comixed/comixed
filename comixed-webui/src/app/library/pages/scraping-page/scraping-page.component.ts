@@ -53,6 +53,9 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   selectedComicsSubscription: Subscription;
   comics: Comic[] = [];
   currentComic: Comic = null;
+  currentSeries = '';
+  currentVolume = '';
+  currentIssueNumber = '';
   apiKey = '';
   skipCache = false;
   maximumRecords = 0;
@@ -115,12 +118,16 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   }
 
   onSelectionChanged(comic: Comic): void {
-    this.logger.debug('Selected comic changed:', comic);
+    this.logger.trace('Selected comic changed:', comic);
     this.currentComic = comic;
   }
 
   onScrape(event: ScrapeEvent): void {
-    this.logger.debug('Fetching scraping volumes:', event);
+    this.logger.trace('Storing comic details');
+    this.currentSeries = event.series;
+    this.currentVolume = event.volume;
+    this.currentIssueNumber = event.issueNumber;
+    this.logger.trace('Fetching scraping volumes:', event);
     this.store.dispatch(
       loadScrapingVolumes({
         apiKey: event.apiKey,
