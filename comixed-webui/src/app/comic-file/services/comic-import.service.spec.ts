@@ -29,11 +29,11 @@ import { LoadComicFilesRequest } from '@app/library/models/net/load-comic-files-
 import { SendComicFilesRequest } from '@app/library/models/net/send-comic-files-request';
 import { HttpResponse } from '@angular/common/http';
 import {
-  ROOT_DIRECTORY,
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  COMIC_FILE_4
+  COMIC_FILE_4,
+  ROOT_DIRECTORY
 } from '@app/comic-file/comic-file.fixtures';
 import {
   LOAD_COMIC_FILES_URL,
@@ -43,8 +43,6 @@ import {
 describe('ComicImportService', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
   const MAXIMUM = 100;
-  const IGNORE_METADATA = Math.random() > 0.5;
-  const DELETE_BLOCKED_PAGES = Math.random() > 0.5;
 
   let service: ComicImportService;
   let httpMock: HttpTestingController;
@@ -83,18 +81,14 @@ describe('ComicImportService', () => {
     const serviceResponse = new HttpResponse({ status: 200 });
     service
       .sendComicFiles({
-        files: FILES,
-        ignoreMetadata: IGNORE_METADATA,
-        deleteBlockedPages: DELETE_BLOCKED_PAGES
+        files: FILES
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(SEND_COMIC_FILES_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      filenames: FILES.map(file => file.filename),
-      ignoreMetadata: IGNORE_METADATA,
-      deleteBlockedPages: DELETE_BLOCKED_PAGES
+      filenames: FILES.map(file => file.filename)
     } as SendComicFilesRequest);
     req.flush(serviceResponse);
   });

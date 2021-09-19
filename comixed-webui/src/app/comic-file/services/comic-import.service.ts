@@ -57,16 +57,10 @@ export class ComicImportService {
    * @param args.ignoreMetadata flag to ignore metadata
    * @param args.deleteBlockedPages flag to mark blocked pages as deleted
    */
-  sendComicFiles(args: {
-    files: ComicFile[];
-    ignoreMetadata: boolean;
-    deleteBlockedPages: boolean;
-  }): Observable<any> {
+  sendComicFiles(args: { files: ComicFile[] }): Observable<any> {
     this.logger.debug('Service: sending comic files:', args);
     return this.http.post(interpolate(SEND_COMIC_FILES_URL), {
-      filenames: args.files.map(file => file.filename),
-      ignoreMetadata: args.ignoreMetadata,
-      deleteBlockedPages: args.deleteBlockedPages
+      filenames: args.files.map(file => file.filename)
     } as SendComicFilesRequest);
   }
 }

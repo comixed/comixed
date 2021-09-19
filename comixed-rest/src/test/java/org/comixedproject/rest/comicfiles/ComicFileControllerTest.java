@@ -50,8 +50,6 @@ public class ComicFileControllerTest {
   private static final String TEST_DIRECTORY = "src/test";
   private static final Integer TEST_LIMIT = RANDOM.nextInt();
   private static final Integer TEST_NO_LIMIT = -1;
-  private static final boolean TEST_DELETE_BLOCKED_PAGES = RANDOM.nextBoolean();
-  private static final boolean TEST_IGNORE_METADATA = RANDOM.nextBoolean();
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
@@ -124,8 +122,7 @@ public class ComicFileControllerTest {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
-    controller.importComicFiles(
-        new ImportComicFilesRequest(filenameList, TEST_IGNORE_METADATA, TEST_DELETE_BLOCKED_PAGES));
+    controller.importComicFiles(new ImportComicFilesRequest(filenameList));
 
     final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
 

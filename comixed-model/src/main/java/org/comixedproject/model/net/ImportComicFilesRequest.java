@@ -39,14 +39,4 @@ public class ImportComicFilesRequest {
   @Getter
   @Setter
   private List<String> filenames = new ArrayList<>();
-
-  @JsonProperty("ignoreMetadata")
-  @Getter
-  @Setter
-  private boolean ignoreMetadata;
-
-  @JsonProperty("deleteBlockedPages")
-  @Getter
-  @Setter
-  private boolean deleteBlockedPages;
 }

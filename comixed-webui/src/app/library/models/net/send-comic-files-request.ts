@@ -18,6 +18,4 @@
 
 export interface SendComicFilesRequest {
   filenames: string[];
-  ignoreMetadata: boolean;
-  deleteBlockedPages: boolean;
 }
