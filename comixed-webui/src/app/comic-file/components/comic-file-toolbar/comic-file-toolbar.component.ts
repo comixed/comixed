@@ -42,8 +42,6 @@ import { User } from '@app/user/models/user';
   styleUrls: ['./comic-file-toolbar.component.scss']
 })
 export class ComicFileToolbarComponent {
-  @Input() ignoreMetadata = false;
-  @Input() deleteBlockedPages = false;
   @Input() comicFiles: ComicFile[] = [];
   @Input() selectedComicFiles: ComicFile[] = [];
 
@@ -111,26 +109,11 @@ export class ComicFileToolbarComponent {
     this.store.dispatch(clearComicFileSelections());
   }
 
-  onToggleIgnoreMetadata(): void {
-    this.logger.trace('Setting ignoring metadata to', !this.ignoreMetadata);
-    this.ignoreMetadata = this.ignoreMetadata === false;
-  }
-
-  onToggleDeleteBlockedPages(): void {
-    this.logger.trace(
-      'Setting deleting blocked pages to',
-      !this.deleteBlockedPages
-    );
-    this.deleteBlockedPages = this.deleteBlockedPages === false;
-  }
-
   onStartImport(): void {
     this.logger.trace('Starting the import process');
     this.store.dispatch(
       sendComicFiles({
-        files: this.selectedComicFiles,
-        ignoreMetadata: this.ignoreMetadata,
-        deleteBlockedPages: this.deleteBlockedPages
+        files: this.selectedComicFiles
       })
     );
   }

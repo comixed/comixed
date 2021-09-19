@@ -26,11 +26,6 @@ import {
   sendComicFiles,
   sendComicFilesFailed
 } from '@app/comic-file/actions/import-comic-files.actions';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  DELETE_BLOCKED_PAGES_PREFERENCE,
-  IGNORE_METADATA_PREFERENCE
-} from '@app/library/library.constants';
 import { LoggerService } from '@angular-ru/logger';
 import { ComicImportService } from '@app/comic-file/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
@@ -46,9 +41,7 @@ export class ImportComicFilesEffects {
       switchMap(action =>
         this.comicImportService
           .sendComicFiles({
-            files: action.files,
-            ignoreMetadata: action.ignoreMetadata,
-            deleteBlockedPages: action.deleteBlockedPages
+            files: action.files
           })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
@@ -60,18 +53,7 @@ export class ImportComicFilesEffects {
                 )
               )
             ),
-            mergeMap(() => [
-              comicFilesSent(),
-              clearComicFileSelections(),
-              saveUserPreference({
-                name: IGNORE_METADATA_PREFERENCE,
-                value: `${action.ignoreMetadata}`
-              }),
-              saveUserPreference({
-                name: DELETE_BLOCKED_PAGES_PREFERENCE,
-                value: `${action.deleteBlockedPages}`
-              })
-            ]),
+            mergeMap(() => [comicFilesSent(), clearComicFileSelections()]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

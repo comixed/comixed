@@ -33,50 +33,6 @@
     <mat-icon>check_box_outline_blank</mat-icon>
   </button>
   <button
-    *ngIf="ignoreMetadata"
-    id="ignore-metadata-button"
-    class="cx-margin-right-5"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'comic-files.tooltip.ignore-metadata-on' | translate"
-    (click)="onToggleIgnoreMetadata()"
-  >
-    <mat-icon>block</mat-icon>
-  </button>
-  <button
-    *ngIf="!ignoreMetadata"
-    id="use-metadata-button"
-    class="cx-margin-right-5"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'comic-files.tooltip.ignore-metadata-off' | translate"
-    (click)="onToggleIgnoreMetadata()"
-  >
-    <mat-icon>remove_circle_outline</mat-icon>
-  </button>
-  <button
-    *ngIf="deleteBlockedPages"
-    id="cx-delete-blocked-pages-button"
-    class="cx-margin-right-5"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'comic-files.tooltip.delete-blocked-pages-on' | translate"
-    (click)="onToggleDeleteBlockedPages()"
-  >
-    <mat-icon>delete</mat-icon>
-  </button>
-  <button
-    *ngIf="!deleteBlockedPages"
-    id="cx-ignore-blocked-pages-button"
-    class="cx-margin-right-5"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'comic-files.tooltip.delete-blocked-pages-off' | translate"
-    (click)="onToggleDeleteBlockedPages()"
-  >
-    <mat-icon>clear</mat-icon>
-  </button>
-  <button
     id="start-import-button"
     class="cx-margin-right-5"
     mat-icon-button

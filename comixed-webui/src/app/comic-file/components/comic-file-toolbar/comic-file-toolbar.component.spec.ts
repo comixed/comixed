@@ -147,39 +147,8 @@ describe('ComicFileToolbarComponent', () => {
     });
   });
 
-  describe('toggling the ignore metadata flag', () => {
-    const IGNORED = Math.random() > 0.5;
-
-    beforeEach(() => {
-      component.ignoreMetadata = IGNORED;
-      component.onToggleIgnoreMetadata();
-    });
-
-    it('flips the flag', () => {
-      expect(component.ignoreMetadata).not.toEqual(IGNORED);
-    });
-  });
-
-  describe('marking blocked pages for deletion', () => {
-    const MARKED = Math.random() > 0.5;
-
-    beforeEach(() => {
-      component.deleteBlockedPages = MARKED;
-      component.onToggleDeleteBlockedPages();
-    });
-
-    it('flips the flag', () => {
-      expect(component.deleteBlockedPages).not.toEqual(MARKED);
-    });
-  });
-
   describe('starting the import process', () => {
-    const IGNORED = Math.random() > 0.5;
-    const MARKED = Math.random() > 0.5;
-
     beforeEach(() => {
-      component.ignoreMetadata = IGNORED;
-      component.deleteBlockedPages = MARKED;
       component.selectedComicFiles = COMIC_FILES;
       component.onStartImport();
     });
@@ -187,9 +156,7 @@ describe('ComicFileToolbarComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         sendComicFiles({
-          files: COMIC_FILES,
-          ignoreMetadata: IGNORED,
-          deleteBlockedPages: MARKED
+          files: COMIC_FILES
         })
       );
     });

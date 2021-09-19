@@ -27,10 +27,6 @@ import { filter } from 'rxjs/operators';
 import { getUserPreference } from '@app/user';
 import { Title } from '@angular/platform-browser';
 import {
-  DELETE_BLOCKED_PAGES_DEFAULT,
-  DELETE_BLOCKED_PAGES_PREFERENCE,
-  IGNORE_METADATA_DEFAULT,
-  IGNORE_METADATA_PREFERENCE,
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
@@ -68,8 +64,6 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   selectedFilesSubscription: Subscription;
   selectedFiles: ComicFile[];
   pageSize = PAGE_SIZE_DEFAULT;
-  ignoreMetadata = false;
-  deleteBlockedPages = false;
   importing = false;
   private sending = false;
   private loading = false;
@@ -92,18 +86,6 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         this.user = user;
         this.logger.debug('User updated:', user);
-        this.ignoreMetadata =
-          getUserPreference(
-            user.preferences,
-            IGNORE_METADATA_PREFERENCE,
-            IGNORE_METADATA_DEFAULT
-          ) === 'true';
-        this.deleteBlockedPages =
-          getUserPreference(
-            user.preferences,
-            DELETE_BLOCKED_PAGES_PREFERENCE,
-            DELETE_BLOCKED_PAGES_DEFAULT
-          ) === 'true';
         this.pageSize = parseInt(
           getUserPreference(
             user.preferences,
@@ -171,9 +153,7 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
         this.logger.debug('Starting import');
         this.store.dispatch(
           sendComicFiles({
-            files: this.selectedFiles,
-            ignoreMetadata: this.ignoreMetadata,
-            deleteBlockedPages: this.deleteBlockedPages
+            files: this.selectedFiles
           })
         );
       }

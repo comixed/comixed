@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.batch.comicbooks.AddComicsConfiguration;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
@@ -54,7 +55,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/files")
 @Log4j2
 public class ComicFileController {
-  private static final String KEY_ADD_COMICS_STARTED = "key.add-comics.started";
 
   @Autowired private ComicFileService comicFileService;
 
@@ -147,8 +147,6 @@ public class ComicFileController {
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
     final List<String> filenames = request.getFilenames();
-    final boolean deleteBlockedPages = request.isDeleteBlockedPages();
-    final boolean ignoreMetadata = request.isIgnoreMetadata();
 
     log.info("Importing comic files");
     this.comicFileService.importComicFiles(filenames);
@@ -156,7 +154,7 @@ public class ComicFileController {
     this.jobLauncher.run(
         addComicsToLibraryJob,
         new JobParametersBuilder()
-            .addLong(KEY_ADD_COMICS_STARTED, System.currentTimeMillis())
+            .addLong(AddComicsConfiguration.PARAM_ADD_COMICS_STARTED, System.currentTimeMillis())
             .toJobParameters());
   }
 }

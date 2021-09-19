@@ -56,9 +56,7 @@ describe('ImportComicFiles Reducer', () => {
       state = reducer(
         { ...state, sending: false },
         sendComicFiles({
-          files: FILES,
-          ignoreMetadata: true,
-          deleteBlockedPages: true
+          files: FILES
         })
       );
     });
