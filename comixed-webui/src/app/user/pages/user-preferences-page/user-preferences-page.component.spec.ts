@@ -90,4 +90,18 @@ describe('UserPreferencesPageComponent', () => {
       );
     });
   });
+
+  describe('sorting', () => {
+    it('can sort by preference name', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PREFERENCE, 'name')
+      ).toEqual(PREFERENCE.name);
+    });
+
+    it('can sort by preference value', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PREFERENCE, 'value')
+      ).toEqual(PREFERENCE.value);
+    });
+  });
 });

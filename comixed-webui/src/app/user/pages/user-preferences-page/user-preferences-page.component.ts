@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/logger';
@@ -33,7 +39,9 @@ import { Preference } from '@app/user/models/preference';
   templateUrl: './user-preferences-page.component.html',
   styleUrls: ['./user-preferences-page.component.scss']
 })
-export class UserPreferencesPageComponent implements OnInit, OnDestroy {
+export class UserPreferencesPageComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatSort) sort: MatSort;
 
   readonly displayedColumns = ['name', 'value', 'actions'];
@@ -47,9 +55,23 @@ export class UserPreferencesPageComponent implements OnInit, OnDestroy {
     private translateService: TranslateService
   ) {
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.logger.debug('Loading user preferences');
+      this.logger.trace('Loading user preferences');
       this.dataSource.data = user.preferences;
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.trace('Assigning table sort');
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      console.log('*** sortHeaderId:', sortHeaderId);
+      switch (sortHeaderId) {
+        case 'name':
+          return data.name;
+        case 'value':
+          return data.value;
+      }
+    };
   }
 
   ngOnDestroy(): void {
@@ -67,7 +89,7 @@ export class UserPreferencesPageComponent implements OnInit, OnDestroy {
         'user.user-preferences.delete-confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Deleting user preference:', name);
+        this.logger.trace('Deleting user preference:', name);
         this.store.dispatch(saveUserPreference({ name, value: null }));
       }
     });
