@@ -114,6 +114,6 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    (click)="onOpenBlockedPageDetails(row)"
+    [routerLink]="['/library', 'pages', 'blocked', row.item.hash]"
   ></mat-row>
 </mat-table>
