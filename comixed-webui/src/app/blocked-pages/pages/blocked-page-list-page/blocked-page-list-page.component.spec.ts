@@ -152,24 +152,6 @@ describe('BlockedPageListPageComponent', () => {
     });
   });
 
-  describe('when a row is selected', () => {
-    beforeEach(() => {
-      component.onOpenBlockedPageDetails({
-        item: ENTRY,
-        selected: true
-      } as SelectableListItem<BlockedPage>);
-    });
-
-    it('redirects the browser', () => {
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/admin',
-        'pages',
-        'blocked',
-        ENTRY.hash
-      ]);
-    });
-  });
-
   describe('downloading the blocked pages file', () => {
     beforeEach(() => {
       component.onDownloadFile();

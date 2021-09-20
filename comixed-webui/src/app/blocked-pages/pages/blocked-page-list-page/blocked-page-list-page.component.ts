@@ -95,11 +95,6 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  onOpenBlockedPageDetails(entry: SelectableListItem<BlockedPage>): void {
-    this.logger.debug('Opening blocked page:', entry.item);
-    this.router.navigate(['/admin', 'pages', 'blocked', entry.item.hash]);
-  }
-
   onDownloadFile(): void {
     this.logger.debug('Download blocked pages file');
     this.store.dispatch(downloadBlockedPages());
