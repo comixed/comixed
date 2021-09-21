@@ -2,37 +2,37 @@
   "configuration": {
     "label": {
       "comicvine-api-key": "ComicVine API Key",
-      "renaming-rule": "Comic Renaming Rule",
-      "renaming-variables": "Available Renaming Variables",
-      "root-directory": "Library Root Directory",
-      "variable-description": "Description Of The Output",
-      "variable-name": "Variable Name"
+      "renaming-rule": "Règle de renommage des bandes dessinées",
+      "renaming-variables": "Variables de renommage disponibles",
+      "root-directory": "Répertoire racine de la bibliothèque",
+      "variable-description": "Description du résultat",
+      "variable-name": "Nom de la variable"
     },
     "load-all": {
-      "effect-failure": "Failed to load configuration options."
+      "effect-failure": "Échec du chargement des options de configuration."
     },
     "tab": {
-      "comicvine": "ComicVine Settings",
-      "library": "Library"
+      "comicvine": "Paramètres de ComicVine",
+      "library": "Bibliothèque"
     },
     "tab-title": "Configuration",
     "text": {
-      "renaming-rule-cover-date": "The cover date",
-      "renaming-rule-format": "The comic format",
-      "renaming-rule-issue-number": "The issue number",
-      "renaming-rule-published-month": "The month published",
-      "renaming-rule-published-year": "The name of the publisher",
-      "renaming-rule-publisher": "The name of the publisher",
-      "renaming-rule-series": "The name of the series",
-      "renaming-rule-volume": "The volume",
-      "variable-caption": "These are the available variables that can be used for renaming comics."
+      "renaming-rule-cover-date": "La date de couverture",
+      "renaming-rule-format": "Le format de la bande déssinée",
+      "renaming-rule-issue-number": "Le numéro",
+      "renaming-rule-published-month": "Le mois de publication",
+      "renaming-rule-published-year": "L'année de publication",
+      "renaming-rule-publisher": "Le nom de l'Éditeur",
+      "renaming-rule-series": "Le nom de la série",
+      "renaming-rule-volume": "Le volume",
+      "variable-caption": "Ce sont les variables disponibles qui peuvent être utilisées pour renommer les bandes dessinées."
     }
   },
   "save-configuration": {
-    "confirmation-message": "Save changes to the configuration?",
-    "confirmation-title": "Save Configuration",
-    "effect-failure": "Failed to save configuration changes.",
-    "effect-success": "Configuration changes saved."
+    "confirmation-message": "Enregistrer les modifications de la configuration ?",
+    "confirmation-title": "Enregistrer la configuration",
+    "effect-failure": "Échec de l'enregistrement des changements de configuration.",
+    "effect-success": "Changements de configuration sauvegardés."
   },
   "web-audit-log": {
     "clear": {
