@@ -1,11 +1,29 @@
 @import '~theme';
 
-.mat-subheader {
-  background: var(--primary-lighter-color) !important;
-  color: var(--text-primary-lighter-color) !important;
+.section-title {
+  width: 100%;
+  padding-left: 8px;
+  margin-top: 16px;
 }
 
-.mat-nav-list a.active {
-  background: var(--primary-darker-color) !important;
-  color: var(--text-primary-darker-color) !important;
+.menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1rem;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.active {
+  background: var(--primary-lighter-color);
+  color: var(--text-primary-lighter-color);
+}
+
+mat-divider {
+  margin-top: 16px;
+  background-color: var(--accent-lighter-color);
 }

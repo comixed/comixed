@@ -1,207 +1,230 @@
-<div fxLayout="column">
-  <mat-nav-list>
-    <h3 matSubheader *ngIf="!!user">
-      <button
-        mat-icon-button
-        color="primary"
-        (click)="onCollapseComics(!comicsCollapsed)"
-      >
-        <mat-icon *ngIf="comicsCollapsed">expand_less</mat-icon>
-        <mat-icon *ngIf="!comicsCollapsed">expand_more</mat-icon>
-      </button>
-      {{ "navigation.heading.comics" | translate }}
-    </h3>
-    <mat-nav-list *ngIf="!!user && !comicsCollapsed">
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/all"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.all-comics" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/unread"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.unread-comics" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/unscraped"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.unscraped-comics" | translate }}
-      </a>
-      <a
-        *ngIf="isAdmin"
-        mat-list-item
-        routerLink="/library/import"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.import-comics" | translate }}
-      </a>
-      <a
-        *ngIf="isAdmin"
-        mat-list-item
-        routerLink="/library/deleted"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.deleted-comics" | translate }}
-      </a>
-      <a
-        *ngIf="isAdmin"
-        mat-list-item
-        routerLink="/library/pages/duplicates"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.duplicate-pages" | translate }}
-      </a>
-      <a
-        *ngIf="isAdmin"
-        mat-list-item
-        routerLink="/library/pages/blocked"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.blocked-pages" | translate }}
-      </a>
-    </mat-nav-list>
+<h4 class="section-title" *ngIf="!!user">
+  {{ "navigation.heading.comics" | translate }}
+</h4>
 
-    <h3 *ngIf="!!user" matSubheader>
-      <button
-        id="collapse-collections-button"
-        mat-icon-button
-        color="primary"
-        (click)="onCollapseCollection(!collectionCollapsed)"
-      >
-        <mat-icon *ngIf="collectionCollapsed">expand_less</mat-icon>
-        <mat-icon *ngIf="!collectionCollapsed">expand_more</mat-icon>
-      </button>
-      {{ "navigation.heading.collections" | translate }}
-    </h3>
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/all"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.all-comics" | translate }}</span>
+</button>
 
-    <mat-nav-list *ngIf="!collectionCollapsed">
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/collections/publishers"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.publisher-collection" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/collections/series"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.series-collection" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/collections/characters"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.character-collection" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/collections/teams"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.team-collection" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/collections/locations"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.location-collection" | translate }}
-      </a>
-      <a
-        *ngIf="!!user"
-        mat-list-item
-        routerLink="/library/collections/stories"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.story-collection" | translate }}
-      </a>
-    </mat-nav-list>
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/unread"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.unread-comics" | translate }}</span>
+</button>
 
-    <h3
-      *ngIf="!!user"
-      [matBadge]="readingLists.length"
-      matBadgePosition="after"
-      matSubheader
-    >
-      <button
-        mat-icon-button
-        color="primary"
-        (click)="onCollapseReadingLists(!readingListsCollapsed)"
-      >
-        <mat-icon *ngIf="readingListsCollapsed">expand_less</mat-icon>
-        <mat-icon *ngIf="!readingListsCollapsed">expand_more</mat-icon>
-      </button>
-      {{ "navigation.heading.reading-lists" | translate }}
-    </h3>
-    <mat-nav-list *ngIf="!!user && !readingListsCollapsed">
-      <a mat-list-item routerLink="/lists/reading" routerLinkActive="active">
-        {{ "navigation.option.reading-lists" | translate }}
-      </a>
-      <a
-        *ngFor="let list of readingLists"
-        mat-list-item
-        [routerLink]="['/lists', 'reading', list.id]"
-        routerLinkActive="active"
-      >
-        <span [matBadge]="list.comics.length" matBadgePosition="after">
-          {{ list.name }}
-        </span>
-      </a>
-    </mat-nav-list>
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/unscraped"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.unscraped-comics" | translate }}</span>
+</button>
 
-    <h3 *ngIf="!!user" matSubheader>
-      {{ "navigation.heading.account" | translate }}
-    </h3>
-    <mat-nav-list *ngIf="!!user">
-      <a
-        mat-list-item
-        routerLink="/account/preferences"
-        routerLinkActive="active"
-      >
-        {{ "navigation.option.user-preferences" | translate }}
-      </a>
-    </mat-nav-list>
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/import"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.import-comics" | translate }}</span>
+</button>
 
-    <h3 *ngIf="isAdmin" matSubheader>
-      {{ "navigation.heading.admin" | translate }}
-    </h3>
-    <a
-      *ngIf="isAdmin"
-      mat-list-item
-      routerLink="/admin/configuration"
-      routerLinkActive="active"
-    >
-      {{ "navigation.option.configuration" | translate }}
-    </a>
-    <a
-      *ngIf="isAdmin"
-      mat-list-item
-      routerLink="/admin/audit/web"
-      routerLinkActive="active"
-    >
-      {{ "navigation.option.web-audit-log" | translate }}
-    </a>
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/deleted"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.deleted-comics" | translate }}</span>
+</button>
 
-    <h3 matSubheader>{{ "navigation.heading.system-status" | translate }}</h3>
-    <a mat-list-item [routerLink]="['/build']" routerLinkActive="active">
-      {{ "navigation.option.build-details" | translate }}
-    </a>
-  </mat-nav-list>
-</div>
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/pages/duplicates"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.duplicate-pages" | translate }}</span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/pages/blocked"
+  routerLinkActive="active"
+>
+  <mat-icon>library_books</mat-icon>
+  <span>{{ "navigation.option.blocked-pages" | translate }}</span>
+</button>
+
+<mat-divider *ngIf="!!user"></mat-divider>
+
+<h4 class="section-title" *ngIf="!!user">
+  {{ "navigation.heading.collections" | translate }}
+</h4>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/collections/publishers"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>{{ "navigation.option.publisher-collection" | translate }}</span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/collections/series"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>{{ "navigation.option.series-collection" | translate }}</span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/collections/characters"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>{{ "navigation.option.character-collection" | translate }}</span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/collections/teams"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>{{ "navigation.option.team-collection" | translate }}</span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/collections/locations"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>{{ "navigation.option.location-collection" | translate }}</span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/collections/stories"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>{{ "navigation.option.story-collection" | translate }}</span>
+</button>
+
+<mat-divider *ngIf="!!user"></mat-divider>
+
+<h4 class="section-title" *ngIf="!!user">
+  {{ "navigation.heading.reading-lists" | translate }}
+</h4>
+
+<button
+  mat-button
+  *ngFor="let list of readingLists"
+  class="menu-button"
+  [routerLink]="['/lists', 'reading', list.id]"
+  routerLinkActive="active"
+>
+  <mat-icon>format_list_numbered_rtl</mat-icon>
+  <span>
+    {{ "navigation.option.story-collection" | translate }}
+  </span>
+</button>
+
+<h4 class="section-title" *ngIf="!!user">
+  {{ "navigation.heading.account" | translate }}
+</h4>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/account/preferences"
+  routerLinkActive="active"
+>
+  <mat-icon>account_circle</mat-icon>
+  <span>{{ "navigation.option.user-preferences" | translate }}</span>
+</button>
+
+<mat-divider *ngIf="!!user"></mat-divider>
+
+<h4 class="section-title" *ngIf="isAdmin">
+  {{ "navigation.heading.admin" | translate }}
+</h4>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/admin/configuration"
+  routerLinkActive="active"
+>
+  <mat-icon>settings</mat-icon>
+  <span>{{ "navigation.option.configuration" | translate }}</span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/admin/audit/web"
+  routerLinkActive="active"
+>
+  <mat-icon>list</mat-icon>
+  <span>{{ "navigation.option.web-audit-log" | translate }}</span>
+</button>
+
+<mat-divider *ngIf="!!user"></mat-divider>
+
+<h4 class="section-title">
+  {{ "navigation.heading.system-status" | translate }}
+</h4>
+
+<button
+  mat-button
+  class="menu-button"
+  routerLink="/build"
+  routerLinkActive="active"
+>
+  <mat-icon>list</mat-icon>
+  <span>{{ "navigation.option.build-details" | translate }}</span>
+</button>
