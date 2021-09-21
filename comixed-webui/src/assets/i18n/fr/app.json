@@ -55,14 +55,14 @@
   "home": {
     "label": {
     },
-    "title": "Home"
+    "title": "Accueil"
   },
   "menu": {
     "language-menu": {
       "root": "Choix de la langue"
     },
     "logging-menu": {
-      "root": "Logging",
+      "root": "Journalisation",
       "1": "Tout (Verbeux)",
       "2": "Trace (Encore plus)",
       "3": "Debug (Beaucoup)",
@@ -111,7 +111,7 @@
       "import-comics": "Bandes Dessinées importées",
       "location-collection": "Lieux",
       "publisher-collection": "Éditeurs",
-      "reading-lists": "Reading Lists",
+      "reading-lists": "Listes de lecture",
       "series-collection": "Séries",
       "story-collection": "Histoires",
       "team-collection": "Équipes",
