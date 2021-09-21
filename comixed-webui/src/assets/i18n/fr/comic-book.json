@@ -1,21 +1,21 @@
 {
   "archive-type": {
     "label": {
-      "all": "All",
+      "all": "Tous",
       "cb7": "CB7",
       "cbr": "CBR",
       "cbz": "CBZ",
-      "select": "Archive Type"
+      "select": "Type d'archive"
     }
   },
   "comic-book": {
     "deleted-state": {
-      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic as deleted?",
-      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comic As Deleted"
+      "confirmation-message": "Êtes-vous sûr de vouloir {deleted, select, true{marquer} other{annuler le marquage}} de cette bande dessinée comme supprimée?",
+      "confirmation-title": "{deleted, select, true{Marquer} other{Annulerle marquage}} de Bande desssinée comme supprimée"
     },
     "hint": {
       "required-for-scraping": "Cette valeur est obligatoire pour récupérer les détails...",
-      "useful-for-scraping": "This value is used when scraping..."
+      "useful-for-scraping": "Cette valeur est utilisée lors de la récupération des métadonnées..."
     },
     "label": {
       "added-date": "Ajouté à la bibliothèque le",
@@ -30,7 +30,7 @@
       "coic-state": "État",
       "comic-story": "Histoire",
       "comicvine-id": "ComicVine ID",
-      "comicvine-issue-details": "Comic Details Page",
+      "comicvine-issue-details": "Page de détails de Bande Dessinée",
       "credits": "Équipe créative ({count})",
       "description": "Description de ce numéro",
       "file-details": "Détails du fichier de la Bande Dessinée",
@@ -44,7 +44,7 @@
       "locations": "Lieux dans ce numéro ({count})",
       "other-details": "Autres détails de cette Bande Dessinée",
       "page-count": "# de pages",
-      "page-title": "Page {which} Of {count}",
+      "page-title": "Page {which} sur {count}",
       "publisher": "Éditeur",
       "scan-type": "Type de scan",
       "scraping-notes": "Notes de récupération",
@@ -52,17 +52,17 @@
       "sort-name": "Nom pour le tri",
       "stories": "Arcs naratifs dans ce numéro ({count})",
       "teams": "Équipes dans ce numéro ({count})",
-      "title": "Title",
+      "title": "Titre",
       "volume": "Volume"
     },
     "load-comic": {
       "effect-failure": "Échec du chargement de la Bande Dessinée."
     },
     "mark-as-deleted": {
-      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic for deletion?",
-      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} For Deletion",
-      "effect-failure": "Failed to {deleted, select, true{mark} other{unmark}} for deletion.",
-      "effect-success": "{deleted, select, true{Marked} other{Unmarked}} for deletion."
+      "confirmation-message": "Êtes-vous sûr de vouloir {deleted, select, true{marquer} other{annuler le marquage}} de cette bande dessinée pour suppression?",
+      "confirmation-title": "{deleted, select, true{Marquer} other{Annuler de marquage}} pour suppression",
+      "effect-failure": "Échec {deleted, select, true{du marquage} other{de l'annulation du marquage}} pour suppression.",
+      "effect-success": "{deleted, select, true{Marquer} other{Annuler le marquage}} pour suppression."
     },
     "placeholder": {
       "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
@@ -78,8 +78,8 @@
       "title": "Enregistrer les changements dans la bande dessinée"
     },
     "text": {
-      "comic-changed": "Write metadata to the comic file.",
-      "comicvine-issue-link": "ComicVine Details Page",
+      "comic-changed": "Écrire les métadonnées dans le fichier de la bande dessinée.",
+      "comicvine-issue-link": "Page de détails de ComicVine",
       "file-entries": "Il y a {count, plural, =1{un fichier} other{# fichiers}} dans cette archive.",
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
       "state-ADDED": "Non modifié",
@@ -90,7 +90,7 @@
     "tooltip": {
       "blocked-page": "Les pages comme celle-ci sont bloquées...",
       "cancel-scraping": "Arrêter la récupération des détails de cette Bande Dessinées.",
-      "delete-comic": "Mark comics as deleted.",
+      "delete-comic": "Marquer les bandes dessinées comme supprimées.",
       "download-comic": "Télécharger cette Bande Dessinée...",
       "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
       "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",
@@ -103,9 +103,9 @@
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
       "show-next-comic-page": "Aller à la page suivante...",
       "show-previous-comic-page": "Aller à la page précédente...",
-      "undelete-comic": "Unmark comic as deleted.",
+      "undelete-comic": "Annulez le marquage de la bande dessinée comme supprimée.",
       "undo-changes": "Annulez les modifications de cette Bande Dessinée",
-      "update-comic-info": "Update comic file metadata."
+      "update-comic-info": "Mise à jour des métadonnées du fichier de la bande dessinée."
     },
     "undo-changes": {
       "message": "Êtes-vous sûr de vouloir annuler les changements apportés à cette Bande Dessinée ?",

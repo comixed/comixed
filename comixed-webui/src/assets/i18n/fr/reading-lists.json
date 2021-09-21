@@ -1,79 +1,79 @@
 {
   "reading-list": {
     "delete-reading-list": {
-      "confirmation-message": "Are you sure you want to delete this reading list?",
-      "confirmation-title": "Delete Reading List"
+      "confirmation-message": "Êtes-vous sûr de vouloir supprimer cette liste de lecture ?",
+      "confirmation-title": "Supprimer la liste de lecture"
     },
     "download-file": {
-      "effect-failure": "Failed to download reading list: {name}"
+      "effect-failure": "Échec du téléchargement de la liste de lecture : {name}"
     },
     "load-one": {
-      "effect-failure": "Failed to load reading list."
+      "effect-failure": "Impossible de charger la liste de lecture."
     },
     "placeholder": {
-      "name": "Reading List Name",
-      "summary": "Summary Of The Reading List"
+      "name": "Nom de la liste de lecture",
+      "summary": "Résumé de la liste de lecture"
     },
     "save-changes": {
-      "confirmation-message": "Save changes to this reading list?",
-      "confirmation-title": "Save Changes",
-      "effect-failure": "Failed to save reading list.",
-      "effect-success": "Reading list saved."
+      "confirmation-message": "Enregistrer les modifications apportées à cette liste de lecture ?",
+      "confirmation-title": "Enregistrer les modifications",
+      "effect-failure": "Échec de la sauvegarde de la liste de lecture.",
+      "effect-success": "Liste de lecture sauvegardée."
     },
     "text": {
-      "no-name": "Unnamed Reading List"
+      "no-name": "Liste de lecture sans nom"
     },
     "tooltip": {
-      "delete-reading-list": "Delete this reading list.",
-      "download-file": "Download this reading list.",
-      "remove-comics": "Remove the selected comics.",
-      "reset-reading-list": "Reset changes to the reading list.",
-      "return-to-list": "Return to the list.",
-      "save-reading-list": "Save changes to the reading list.",
-      "upload-file": "Upload a reading list."
+      "delete-reading-list": "Supprimer cette liste de lecture.",
+      "download-file": "Télécharger cette liste de lecture.",
+      "remove-comics": "Supprimer les bandes dessinées sélectionnées.",
+      "reset-reading-list": "Annuler les modifications apportées à la liste de lecture.",
+      "return-to-list": "Retour à la liste.",
+      "save-reading-list": "Enregistrer les modifications apportées à la liste de lecture.",
+      "upload-file": "Upload une liste de lecture."
     },
     "undo-changes": {
-      "confirmation-message": "Are you sure you want to discard your changes?",
-      "confirmation-title": "Undo Reading List Changes"
+      "confirmation-message": "Êtes-vous sûr de vouloir abandonner vos modifications ?",
+      "confirmation-title": "Annuler les modifications de la liste de lecture"
     },
     "upload-file": {
-      "confirmation-message": "Upload this reading list file?",
-      "confirmation-title": "Upload Reading List",
-      "effect-failure": "Failed to create reading list.",
-      "effect-success": "Reading list created successfully."
+      "confirmation-message": "Upload le fichier de cette liste de lecture ?",
+      "confirmation-title": "Upload la liste de lecture",
+      "effect-failure": "Échec de la création de la liste de lecture.",
+      "effect-success": "Liste de lecture créée avec succès."
     }
   },
   "reading-lists": {
     "delete-reading-lists": {
-      "confirmation-message": "Are you sure you want to delete {count, plural, =1{one reding list} other{# reading lists}}?",
-      "confirmation-title": "Delete Reading Lists",
-      "effect-failure": "Failed to delete {count, plural, =1{one reading list} other{# reading lists}}.",
-      "effect-success": "Deleted {count, plural, =1{one reading list} other{# reading lists}}."
+      "confirmation-message": "Êtes-vous sûr de vouloir supprimer {count, plural, =1{la liste de lecture} other{les # listes de lecture}} ?",
+      "confirmation-title": "Supprimer les listes de lecture",
+      "effect-failure": "Échec de la suppression {count, plural, =1{de la liste de lecture} other{des # listes de lecture}}.",
+      "effect-success": "{count, plural, =1{une liste de lecture supprimée} other{# listes de lecture supprimées}}."
     },
     "label": {
-      "comic-count": "# Of Comics",
-      "created-on": "Created",
-      "name": "Reading List Name",
-      "summary": "Summary"
+      "comic-count": "Nombre de bandes dessinées",
+      "created-on": "Créée",
+      "name": "Nom de la liste de lecture",
+      "summary": "Résumé"
     },
     "load-for-user": {
-      "effect-failure": "Failed to load reading lists."
+      "effect-failure": "Échec du chargement des listes de lecture."
     },
     "tooltip": {
-      "add-reading-list": "Add a new reading list.",
-      "delete-reading-lists": "Delete the selected reading lists."
+      "add-reading-list": "Ajouter une nouvelle liste de lecture.",
+      "delete-reading-lists": "Supprimer les listes de lecture sélectionnées."
     }
   },
   "reading-list-entries": {
     "add-comics": {
-      "effect-failure": "Failed to add comics to reading list.",
-      "effect-success": "Added comics to reading list: {name}"
+      "effect-failure": "Impossible d'ajouter des bandes dessinées à la liste de lecture.",
+      "effect-success": "Ajouter des bandes dessinées à la liste de lecture : {name}"
     },
     "remove-comics": {
-      "confirmation-message": "Are you sure you want to remove {count, plural, =1{one comic} other{# comics}} from this reading list?",
-      "confirmation-title": "Remove Comics From Reading List",
-      "effect-failure": "Failed to remove comics from reading list.",
-      "effect-success": "Removed comics from reading list: {name}"
+      "confirmation-message": "Êtes-vous sûr de vouloir supprimer {count, plural, =1{la bande dessinée} other{les # bandes dessinées}} de cette liste de lecture ?",
+      "confirmation-title": "Supprimer des bandes dessinées de la liste de lecture",
+      "effect-failure": "Échec de la suppression des bandes dessinées de la liste de lecture.",
+      "effect-success": "Bandes dessinées supprimées de la liste de lecture : {name}"
     }
   }
 }

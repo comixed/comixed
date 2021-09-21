@@ -1,8 +1,8 @@
 {
   "blocked-page": {
     "add-page-hash": {
-      "confirmation-message": "Are you sure you want to block all pages with the hash \"{hash}\"?",
-      "confirmation-title": "Block Page With Hash"
+      "confirmation-message": "Etes-vous sûr de vouloir bloquer toutes les pages avec le hash \"{hash}\"?",
+      "confirmation-title": "Bloquer une page avec un hash"
     },
     "editing": {
       "reset-message": "Annuler les modifications apportées à ce type de page bloquée ?",
@@ -19,8 +19,8 @@
     "load-by-hash-effect-error": "Impossible de charger la page bloquée pour le hash : {hash}",
     "page-title": "Détails de la page bloquée : {hash}",
     "remove-page-hash": {
-      "confirmation-message": "Are you sure you want to unblock ll pages with the hash \"{hash}\"?",
-      "confirmation-title": "Unblock Page Hash"
+      "confirmation-message": "Etes-vous sûr de vouloir débloquer toutes les pages avec le hash \"{hash}\"?",
+      "confirmation-title": "Déloquer une page avec un hash"
     },
     "set-state": {
       "effect-failure": "Échec du hash de la page {block,select,true{bloquée} other{débloquée}}.",
@@ -45,19 +45,19 @@
     },
     "load-effect-failure": "Impossible de charger les pages bloquées.",
     "set-deleted-flag": {
-      "confirm-clear-message": "Are you sure you want to clear the pages with this hash from deletion?",
-      "confirm-clear-title": "Don't Delete Affected Pages",
-      "confirm-mark-message": "Are you sure you want to mark the pages with this hash for deletion?",
-      "confirm-mark-title": "Mark Pages For Deletion",
-      "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
-      "effect-success": "{deleted, select, true{Marked} other{Cleared}} {count, plural, =1{one page} other{# pages}} for deletion."
+      "confirm-clear-message": "Etes-vous sûr de vouloir annuler la suppression des pages avec ce hash ?",
+      "confirm-clear-title": "Ne pas supprimer les pages affectées",
+      "confirm-mark-message": "Etes-vous sûr de vouloir marquer les pages avec ce hash pour la suppression ?",
+      "confirm-mark-title": "Marquer les pages pour suppression",
+      "effect-failure": "Échec {deleted, select, true{de l'ajout} other{de l'annulation}} du flag de suppression.",
+      "effect-success": "{deleted, select, true{Marquage} other{Nettoyage}} {count, plural, =1{d'une page} other{# pages}} pour suppression."
     },
     "tooltip": {
-      "clear-deleted": "Clear selected pages from deletion.",
-      "delete-entries": "Delete selected blocked page entries.",
+      "clear-deleted": "Effacer les pages sélectionnées de la suppression.",
+      "delete-entries": "Supprimer les entrées de pages bloquées sélectionnées.",
       "download-file": "Télécharger le fichier des pages bloquées.",
       "upload-file": "Uploader un fichier de pages bloquées.",
-      "set-deleted": "Mark selected pages for deletion."
+      "set-deleted": "Marquer les pages sélectionnées pour suppression."
     },
     "upload-file": {
       "confirmation-message": "Êtes-vous sûr de vouloir uploader ce fichier ?",
