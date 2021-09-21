@@ -15,10 +15,11 @@
   ></cx-navigation-bar>
   <div class="cx-width-100 cx-height-100 cx-overflow-y-scroll">
     <mat-sidenav-container class="cx-width-100 cx-height-100">
-      <mat-sidenav #sidenav mode="side">
-        <div class="cx-height-100 cx-margin-bottom-100px cx-overflow-y-scroll">
-          <cx-side-navigation [user]="user"></cx-side-navigation>
-        </div>
+      <mat-sidenav #sidenav mode="side" class="cx-primary-dark-background">
+        <cx-side-navigation
+          class="cx-vertical-scrolling cx-height-100"
+          [user]="user"
+        ></cx-side-navigation>
       </mat-sidenav>
       <mat-sidenav-content #sidebar>
         <div
