@@ -40,6 +40,7 @@ import {
 import { WEB_AUDIT_LOG_ENTRY_1 } from '@app/admin/admin.fixtures';
 import { Confirmation } from '@app/core/models/confirmation';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('WebAuditLogPageComponent', () => {
   const TIMESTAMP = new Date().getTime();
@@ -66,7 +67,8 @@ describe('WebAuditLogPageComponent', () => {
         MatSidenavModule,
         MatToolbarModule,
         MatTableModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatTooltipModule
       ],
       providers: [
         provideMockStore({ initialState }),
