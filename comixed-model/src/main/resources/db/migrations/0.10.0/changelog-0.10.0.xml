@@ -19,5 +19,6 @@
   <include file="/db/migrations/0.10.0/011_113_add_unique_key_to_reading_lists.xml"/>
   <include file="/db/migrations/0.10.0/012_912_change_comic_title_length.xml"/>
   <include file="/db/migrations/0.10.0/013_512_add_comic_store_date_column.xml"/>
+  <include file="/db/migrations/0.10.0/014_426_move_imprints_to_database.xml"/>
 
 </databaseChangeLog>

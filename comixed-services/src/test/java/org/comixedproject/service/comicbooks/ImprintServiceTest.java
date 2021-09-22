@@ -16,9 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.scrapers.adaptors;
+package org.comixedproject.service.comicbooks;
 
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.Imprint;
+import org.comixedproject.repositories.comicbooks.ImprintRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,18 +30,27 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ImprintAdaptorTest {
+public class ImprintServiceTest {
   private static final String TEST_PUBLISHER = "Marvel";
   private static final String TEST_IMPRINT = "Marvel Soleil";
 
-  @InjectMocks private ImprintAdaptor imprintAdaptor;
+  @InjectMocks private ImprintService imprintService;
+  @Mock private ImprintRepository imprintRepository;
   @Mock private Comic comic;
+  @Mock private Imprint imprint;
+
+  @Before
+  public void setUp() {
+    Mockito.when(comic.getPublisher()).thenReturn(TEST_IMPRINT);
+    Mockito.when(imprint.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(imprint.getName()).thenReturn(TEST_IMPRINT);
+  }
 
   @Test
   public void testComicWithImprint() {
-    Mockito.when(comic.getPublisher()).thenReturn(TEST_IMPRINT);
+    Mockito.when(imprintRepository.findByName(Mockito.anyString())).thenReturn(imprint);
 
-    imprintAdaptor.update(comic);
+    imprintService.update(comic);
 
     Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
@@ -46,9 +58,9 @@ public class ImprintAdaptorTest {
 
   @Test
   public void testComicWithoutImprint() {
-    Mockito.when(comic.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(imprintRepository.findByName(Mockito.anyString())).thenReturn(null);
 
-    imprintAdaptor.update(comic);
+    imprintService.update(comic);
 
     Mockito.verify(comic, Mockito.times(1)).setImprint("");
     Mockito.verify(comic, Mockito.never()).setPublisher(Mockito.anyString());

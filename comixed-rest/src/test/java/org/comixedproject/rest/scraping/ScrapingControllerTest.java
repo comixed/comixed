@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.rest.library;
+package org.comixedproject.rest.scraping;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
