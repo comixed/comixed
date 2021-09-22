@@ -24,7 +24,7 @@ import {
 } from '@app/blocked-pages/actions/set-blocked-page-deletion-flag.actions';
 
 export const SET_BLOCKED_PAGE_DELETION_FLAGS_FEATURE_KEY =
-  'setBlockedPageDeletionFlag';
+  'set_blocked_page_deletion_flag';
 
 export interface SetBlockedPageDeletionFlagsState {
   marking: boolean;
