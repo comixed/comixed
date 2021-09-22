@@ -21,21 +21,16 @@ import { ComicDetailCardComponent } from './comic-detail-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { COMIC_3 } from '@app/comic-book/comic-book.fixtures';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicDetailCardComponent', () => {
   const COMIC = COMIC_3;
-  const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
+  const initialState = {};
 
   let component: ComicDetailCardComponent;
   let fixture: ComponentFixture<ComicDetailCardComponent>;
@@ -66,22 +61,6 @@ describe('ComicDetailCardComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('loading user preferences', () => {
-    const PAGE_SIZE = 400;
-
-    beforeEach(() => {
-      component.imageWidth = `100px`;
-      store.setState({
-        ...initialState,
-        [DISPLAY_FEATURE_KEY]: { ...initialDisplayState, pageSize: PAGE_SIZE }
-      });
-    });
-
-    it('sets the page size', () => {
-      expect(component.imageWidth).toEqual(`${PAGE_SIZE}px`);
-    });
   });
 
   describe('when the image is clicked', () => {
