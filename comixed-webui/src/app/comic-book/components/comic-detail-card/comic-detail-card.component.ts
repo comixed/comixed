@@ -24,10 +24,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
-import { filter } from 'rxjs/operators';
 import { LoggerService } from '@angular-ru/logger';
 import { Comic } from '@app/comic-book/models/comic';
 import { ComicContextMenuEvent } from '@app/comic-book/models/ui/comic-context-menu-event';
@@ -47,8 +43,6 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Input() imageUrl: string;
   @Input() description: string;
   @Input() detailLink: string;
-  @Input() imageWidth = 'auto';
-  @Input() imageHeight = '100%';
   @Input() busy = false;
   @Input() blurred = false;
   @Input() selected = false;
@@ -60,22 +54,11 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
   @Output() updateComicInfo = new EventEmitter<UpdateComicInfoEvent>();
 
-  displayOptionSubscription: Subscription;
-
-  constructor(private logger: LoggerService, private store: Store<any>) {
-    this.displayOptionSubscription = this.store
-      .select(selectDisplayState)
-      .pipe(filter(state => !!state))
-      .subscribe(state => {
-        this.imageWidth = `${state.pageSize}px`;
-      });
-  }
+  constructor(private logger: LoggerService) {}
 
   ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    this.displayOptionSubscription.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic

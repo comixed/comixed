@@ -1,4 +1,4 @@
-<div class="cx-width-100 cx-height-100 cx-top-0">
+<div class="cx-width-100 cx-top-0">
   <cx-library-toolbar
     [comics]="comics"
     [showActions]="showActions"
@@ -9,28 +9,32 @@
     [archiveType]="archiveType"
     (archiveTypeChanged)="onArchiveTypeChanged($event)"
   ></cx-library-toolbar>
-  <div
-    id="cx-all-comics"
-    class="cx-comic-detail-card-container cx-height-100 cx-vertical-scrolling"
-  >
-    <cx-comic-detail-card
+  <div id="cx-all-comics" class="cx-comic-detail-card-container">
+    <div
       *ngFor="let comic of comics"
-      [comic]="comic"
-      [coverTooltip]="comic.title"
-      [title]="comic | comicTitle"
-      [subtitle]="comic.title"
-      [imageUrl]="comic | comicCoverUrl"
-      [detailLink]="['/comics', comic.id]"
-      [blurred]="!comic.fileDetails"
-      [busy]="!comic.fileDetails"
-      [selected]="isSelected(comic)"
-      [comicChanged]="isChanged(comic)"
-      [isAdmin]="isAdmin"
-      [showActions]="showActions"
-      (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
-      (showContextMenu)="onShowContextMenu($event.comic, $event.x, $event.y)"
-      (updateComicInfo)="onUpdateMetadata($event.comic)"
-    ></cx-comic-detail-card>
+      fxFlex="20%"
+      fxFlex.xs="100%"
+      fxFlex.sm="25%"
+    >
+      <cx-comic-detail-card
+        class="mat-elevation-z4"
+        [comic]="comic"
+        [coverTooltip]="comic.title"
+        [title]="comic | comicTitle"
+        [subtitle]="comic.title"
+        [imageUrl]="comic | comicCoverUrl"
+        [detailLink]="['/comics', comic.id]"
+        [blurred]="!comic.fileDetails"
+        [busy]="!comic.fileDetails"
+        [selected]="isSelected(comic)"
+        [comicChanged]="isChanged(comic)"
+        [isAdmin]="isAdmin"
+        [showActions]="showActions"
+        (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
+        (showContextMenu)="onShowContextMenu($event.comic, $event.x, $event.y)"
+        (updateComicInfo)="onUpdateMetadata($event.comic)"
+      ></cx-comic-detail-card>
+    </div>
   </div>
 </div>
 

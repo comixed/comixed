@@ -24,23 +24,12 @@
       <mat-sidenav-content #sidebar>
         <div
           id="cx-main-content-area"
-          class="cx-width-100 cx-height-100 cx-margin-bottom-50px"
+          class="cx-width-100 cx-height-100 cx-footer-margin"
         >
           <router-outlet></router-outlet>
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>
-  <div
-    id="cx-footer"
-    class="
-      cx-width-100
-      cx-padding-left-15
-      cx-padding-right-15
-      cx-padding-top-5
-      cx-padding-bottom-5
-    "
-  >
-    <cx-footer [user]="user"></cx-footer>
-  </div>
+  <cx-footer id="cx-footer" class="cx-padding-left-5" [user]="user"></cx-footer>
 </div>

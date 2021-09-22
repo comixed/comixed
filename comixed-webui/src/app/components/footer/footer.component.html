@@ -1,15 +1,25 @@
-<div fxLayout="row" class="cx-width-100" fxLayoutAlign="center start">
+<div
+  fxLayout="row"
+  class="cx-width-100 cx-padding-right-15"
+  fxLayoutAlign="center start"
+>
   <div *ngIf="!!user" fxFlex="75%">
-    {{
-      "app.system-status"
-        | translate
-          : {
-              importCount: importCount,
-              comicCount: comicCount,
-              readCount: readCount,
-              deletedCount: deletedCount
-            }
-    }}
+    <span class="cx-text-nowrap cx-padding-left-15">
+      {{
+        "app.system-status"
+          | translate
+            : {
+                importCount: importCount,
+                comicCount: comicCount,
+                readCount: readCount,
+                deletedCount: deletedCount
+              }
+      }}
+    </span>
   </div>
-  <div fxFlex="25%">Copyright &copy; 2017-2021, The ComiXed Project.</div>
+  <div fxFlex="25%">
+    <span class="cx-text-nowrap cx-padding-right-15">
+      Copyright &copy; 2017-2021, The ComiXed Project.
+    </span>
+  </div>
 </div>
