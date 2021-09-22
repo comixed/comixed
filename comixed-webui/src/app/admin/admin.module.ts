@@ -53,6 +53,7 @@ import { SaveConfigurationOptionsEffects } from '@app/admin/effects/save-configu
 import { MatTabsModule } from '@angular/material/tabs';
 import { LibraryConfigurationComponent } from './components/library-configuration/library-configuration.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     ReactiveFormsModule,
     MatInputModule,
     MatTabsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTooltipModule
   ],
   exports: [CommonModule, CoreModule]
 })
