@@ -9,16 +9,11 @@
 }
 
 .mat-column-remote-ip {
-  width: $cx-column-large;
-  max-width: $cx-column-large;
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
 }
 
 .mat-column-url {
-  width: $cx-column-large;
-  max-width: $cx-column-large;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .mat-column-method {

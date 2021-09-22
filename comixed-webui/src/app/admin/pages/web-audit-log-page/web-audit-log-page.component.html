@@ -9,7 +9,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar>
+    <mat-toolbar class="cx-primary-light-background">
+      <mat-paginator
+        class="cx-primary-light-background cx-height-100"
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+      ></mat-paginator>
+      <div class="cx-spacer"></div>
       <button
         mat-flat-button
         class="cx-action-button"
@@ -19,11 +25,6 @@
         <mat-icon>clear_all</mat-icon>
         <mat-label>{{ "button.clear-log" | translate }}</mat-label>
       </button>
-      <div class="cx-spacer"></div>
-      <mat-paginator
-        [pageSizeOptions]="[5, 10, 20]"
-        showFirstLastButtons
-      ></mat-paginator>
     </mat-toolbar>
 
     <mat-table [dataSource]="dataSource" matSort>
@@ -55,12 +56,21 @@
         <mat-header-cell mat-sort-header *matHeaderCellDef>
           {{ "web-audit-log.label.account" | translate }}
         </mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{ entry.email }}</mat-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-text-nowrap" [matTooltip]="entry.email">
+            {{ entry.email }}
+          </span>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="remote-ip">
         <mat-header-cell mat-sort-header *matHeaderCellDef>
-          {{ "web-audit-log.label.remote-ip" | translate }}
+          <span
+            class="cx-text-nowrap"
+            [matTooltip]="'web-audit-log.label.remote-ip' | translate"
+          >
+            {{ "web-audit-log.label.remote-ip" | translate }}
+          </span>
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">{{ entry.remoteIp }}</mat-cell>
       </ng-container>
@@ -69,7 +79,11 @@
         <mat-header-cell mat-sort-header *matHeaderCellDef>
           {{ "web-audit-log.label.url" | translate }}
         </mat-header-cell>
-        <mat-cell *matCellDef="let entry">{{ entry.url }}</mat-cell>
+        <mat-cell *matCellDef="let entry">
+          <span class="cx-text-nowrap" [matTooltip]="entry.url">
+            {{ entry.url }}
+          </span>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="method">
@@ -84,7 +98,12 @@
           {{ "web-audit-log.label.started" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let entry">
-          {{ entry.startTime | date: "medium" }}
+          <span
+            class="cx-text-nowrap"
+            [matTooltip]="entry.startTime | date: 'medium'"
+          >
+            {{ entry.startTime | date: "medium" }}
+          </span>
         </mat-cell>
       </ng-container>
 
