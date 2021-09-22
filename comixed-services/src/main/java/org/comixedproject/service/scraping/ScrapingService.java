@@ -33,6 +33,7 @@ import org.comixedproject.scrapers.model.ScrapingIssueDetails;
 import org.comixedproject.scrapers.model.ScrapingVolume;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class ScrapingService {
   @Autowired private ScrapingCacheService scrapingCacheService;
   @Autowired private ComicService comicService;
   @Autowired private ComicStateHandler comicStateHandler;
+  @Autowired private ImprintService imprintService;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -251,6 +253,8 @@ public class ScrapingService {
               entry -> comic.getCredits().add(new Credit(comic, entry.getName(), entry.getRole())));
       comic.setNotes(
           String.format("Comic details scraped by %s", this.scrapingAdaptor.getIdentifier()));
+      log.trace("Checking for imprint");
+      this.imprintService.update(comic);
       log.trace("Updating comic state: scraped");
       this.comicStateHandler.fireEvent(comic, ComicEvent.scraped);
     }

@@ -33,6 +33,7 @@ import org.comixedproject.scrapers.model.ScrapingIssueDetails;
 import org.comixedproject.scrapers.model.ScrapingVolume;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Before;
@@ -75,6 +76,7 @@ public class ScrapingServiceTest {
   @Mock private Comic loadedComic;
   @Mock private Comic savedComic;
   @Mock private ScrapingIssueDetails scrapingIssueDetails;
+  @Mock private ImprintService imprintService;
 
   private List<String> cachedEntryList = new ArrayList<>();
   private List<ScrapingVolume> fetchedVolumeList = new ArrayList<>();
@@ -385,7 +387,7 @@ public class ScrapingServiceTest {
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(loadedComic, ComicEvent.scraped);
 
-    this.verifyComicScraping();
+    this.verifyComicScraping(loadedComic);
   }
 
   @Test
@@ -419,7 +421,7 @@ public class ScrapingServiceTest {
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
-    this.verifyComicScraping();
+    this.verifyComicScraping(loadedComic);
   }
 
   @Test
@@ -448,7 +450,7 @@ public class ScrapingServiceTest {
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
-    this.verifyComicScraping();
+    this.verifyComicScraping(loadedComic);
   }
 
   private void verifyComicScrapingNotDone() {
@@ -460,7 +462,7 @@ public class ScrapingServiceTest {
     Mockito.verify(this.loadedComic, Mockito.never()).setDescription(Mockito.anyString());
   }
 
-  private void verifyComicScraping() {
+  private void verifyComicScraping(final Comic comic) {
     Mockito.verify(this.loadedComic, Mockito.times(1)).setComicVineId(TEST_SOURCE_ID);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
@@ -469,5 +471,6 @@ public class ScrapingServiceTest {
     Mockito.verify(this.loadedComic, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(this.imprintService, Mockito.times(1)).update(comic);
   }
 }

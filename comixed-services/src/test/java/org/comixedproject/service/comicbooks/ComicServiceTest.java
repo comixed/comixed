@@ -84,6 +84,7 @@ public class ComicServiceTest {
   @Mock private State<ComicState, ComicEvent> state;
   @Mock private Message<ComicEvent> message;
   @Mock private MessageHeaders messageHeaders;
+  @Mock private ImprintService imprintService;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -321,6 +322,7 @@ public class ComicServiceTest {
     Mockito.verify(comic, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+    Mockito.verify(imprintService, Mockito.times(1)).update(comic);
   }
 
   @Test

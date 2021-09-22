@@ -56,6 +56,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private PublishComicUpdateAction comicUpdatePublishAction;
+  @Autowired private ImprintService imprintService;
 
   /**
    * Retrieves a single comic by id. It is expected that this comic exists.
@@ -150,6 +151,8 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     comic.setTitle(update.getTitle());
     comic.setDescription(update.getDescription());
 
+    this.imprintService.update(comic);
+
     this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
     return this.doGetComic(id);
   }
@@ -163,6 +166,8 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Transactional
   public Comic save(final Comic comic) {
     log.debug("Saving comic: filename={}", comic.getFilename());
+
+    this.imprintService.update(comic);
 
     final Comic result = this.comicRepository.save(comic);
 
