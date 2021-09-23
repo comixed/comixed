@@ -101,7 +101,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         if (state.notFound) {
           this.logger.trace('Reading list not found');
-          this.router.navigateByUrl('/lists/reading');
+          this.router.navigateByUrl('/lists/reading/all');
         } else {
           this.store.dispatch(setBusyState({ enabled: state.loading }));
         }
@@ -150,7 +150,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
               this.store.dispatch(readingListRemoved({ list }));
               if (list.id === this.readingListId) {
                 this.logger.trace('This reading list was removed');
-                this.router.navigateByUrl('/lists/reading');
+                this.router.navigateByUrl('/lists/reading/all');
               }
             }
           );
