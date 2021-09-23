@@ -186,7 +186,7 @@ describe('ReadingListPageComponent', () => {
     });
 
     it('redirects the browser', () => {
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/lists/reading');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/lists/reading/all');
     });
   });
 
@@ -380,7 +380,7 @@ describe('ReadingListPageComponent', () => {
 
     it('redirects the browser when the current list was removed', () => {
       readingListRemovalSubscription(READING_LIST);
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/lists/reading');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/lists/reading/all');
     });
 
     it('ignores when a different list was removed', () => {

@@ -29,13 +29,13 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
-    path: 'lists/reading/:id',
-    component: ReadingListPageComponent,
+    path: 'lists/reading/all',
+    component: ReadingListsPageComponent,
     canActivate: [ReaderGuard]
   },
   {
-    path: 'lists/reading',
-    component: ReadingListsPageComponent,
+    path: 'lists/reading/:id',
+    component: ReadingListPageComponent,
     canActivate: [ReaderGuard]
   }
 ];

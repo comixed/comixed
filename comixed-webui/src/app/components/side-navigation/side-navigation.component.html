@@ -159,6 +159,18 @@
 
 <button
   mat-button
+  class="menu-button"
+  routerLink="/lists/reading/all"
+  routerLinkActive="active"
+>
+  <mat-icon>library_add</mat-icon>
+  <span>
+    {{ "navigation.heading.reading-lists" | translate }}
+  </span>
+</button>
+
+<button
+  mat-button
   *ngFor="let list of readingLists"
   class="menu-button"
   [routerLink]="['/lists', 'reading', list.id]"
