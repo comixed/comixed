@@ -55,7 +55,7 @@
     mat-icon-button
     color="accent"
     [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
-    [disabled]="!comicForm.valid && hasApiKey"
+    [disabled]="!comicForm.valid || !hasApiKey"
     (click)="onFetchScrapingVolumes()"
   >
     <mat-icon>cloud_circle</mat-icon>
