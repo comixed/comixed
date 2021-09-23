@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -37,8 +38,21 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   readingListsCollapsed = false;
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
+  queryParamSubscription: Subscription;
+  queryParams = {};
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private activedRoute: ActivatedRoute
+  ) {
+    this.queryParamSubscription = this.activedRoute.queryParams.subscribe(
+      params => {
+        const sidebar = !!params.sidebar;
+
+        this.queryParams = { sidebar: !!sidebar ? sidebar : undefined };
+      }
+    );
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
@@ -57,7 +71,10 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from query parameter updates');
+    this.queryParamSubscription.unsubscribe();
   }
 
   ngOnInit(): void {}
