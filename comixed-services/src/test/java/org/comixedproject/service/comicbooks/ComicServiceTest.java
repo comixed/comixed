@@ -29,9 +29,7 @@ import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.ComicFormat;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.ScanType;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -63,8 +61,6 @@ public class ComicServiceTest {
   private static final String TEST_CURRENT_ISSUE_NUMBER = "7";
   private static final String TEST_NEXT_ISSUE_NUMBER = "10";
   private static final String TEST_SORTABLE_NAME = "Sortable Name";
-  private static final ScanType TEST_SCAN_TYPE = new ScanType();
-  private static final ComicFormat TEST_COMIC_FORMAT = new ComicFormat();
   private static final String TEST_IMPRINT = "Incredible Imprints";
   private static final String TEST_TITLE = "The Issue Title";
   private static final String TEST_DESCRIPTION = "This description of the issue";
@@ -297,8 +293,6 @@ public class ComicServiceTest {
     Mockito.when(incomingComic.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(incomingComic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(incomingComic.getComicVineId()).thenReturn(TEST_COMIC_VINE_ID);
-    Mockito.when(incomingComic.getScanType()).thenReturn(TEST_SCAN_TYPE);
-    Mockito.when(incomingComic.getFormat()).thenReturn(TEST_COMIC_FORMAT);
     Mockito.when(incomingComic.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComic.getSortName()).thenReturn(TEST_SORTABLE_NAME);
     Mockito.when(incomingComic.getTitle()).thenReturn(TEST_TITLE);
@@ -316,8 +310,6 @@ public class ComicServiceTest {
     Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
     Mockito.verify(comic, Mockito.times(1)).setComicVineId(TEST_COMIC_VINE_ID);
     Mockito.verify(comic, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
-    Mockito.verify(comic, Mockito.times(1)).setScanType(TEST_SCAN_TYPE);
-    Mockito.verify(comic, Mockito.times(1)).setFormat(TEST_COMIC_FORMAT);
     Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comic, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);

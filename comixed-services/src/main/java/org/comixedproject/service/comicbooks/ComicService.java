@@ -144,8 +144,6 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     comic.setVolume(update.getVolume());
     comic.setIssueNumber(update.getIssueNumber());
     comic.setComicVineId(update.getComicVineId());
-    comic.setScanType(update.getScanType());
-    comic.setFormat(update.getFormat());
     comic.setImprint(update.getImprint());
     comic.setSortName(update.getSortName());
     comic.setTitle(update.getTitle());

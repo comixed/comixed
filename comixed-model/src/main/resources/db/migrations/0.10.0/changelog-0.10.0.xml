@@ -20,5 +20,6 @@
   <include file="/db/migrations/0.10.0/012_912_change_comic_title_length.xml"/>
   <include file="/db/migrations/0.10.0/013_512_add_comic_store_date_column.xml"/>
   <include file="/db/migrations/0.10.0/014_426_move_imprints_to_database.xml"/>
+  <include file="/db/migrations/0.10.0/015_955_remove_page_types.xml"/>
 
 </databaseChangeLog>

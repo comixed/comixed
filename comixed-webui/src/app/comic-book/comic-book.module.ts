@@ -19,17 +19,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import {
-  COMIC_FORMAT_FEATURE_KEY,
-  reducer as comicFormatReducer
-} from './reducers/comic-format.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { ComicFormatEffects } from './effects/comic-format.effects';
-import {
-  reducer as scanTypeReducer,
-  SCAN_TYPE_FEATURE_KEY
-} from './reducers/scan-type.reducer';
-import { ScanTypeEffects } from './effects/scan-type.effects';
 import { ComicBookRouting } from './comic-book.routing';
 import { ComicBookPageComponent } from './pages/comic-book-page/comic-book-page.component';
 import { ComicEditComponent } from './components/comic-edit/comic-edit.component';
@@ -109,8 +99,6 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     ComicBookRouting,
-    StoreModule.forFeature(COMIC_FORMAT_FEATURE_KEY, comicFormatReducer),
-    StoreModule.forFeature(SCAN_TYPE_FEATURE_KEY, scanTypeReducer),
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
     StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
@@ -119,8 +107,6 @@ import { MatDividerModule } from '@angular/material/divider';
       markComicsDeletedReducer
     ),
     EffectsModule.forFeature([
-      ComicFormatEffects,
-      ScanTypeEffects,
       ScrapingEffects,
       ComicListEffects,
       ComicEffects,

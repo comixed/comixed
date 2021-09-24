@@ -17,12 +17,10 @@
  */
 
 import { Comic } from '@app/comic-book/models/comic';
-import { PageType } from '@app/comic-book/models/page-type';
 
 export interface Page {
   id: number;
   comic?: Comic;
-  pageType: PageType;
   filename: string;
   hash: string;
   pageNumber: number;

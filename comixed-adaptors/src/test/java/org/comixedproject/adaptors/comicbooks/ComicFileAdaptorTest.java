@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.Locale;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.ComicFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +48,7 @@ public class ComicFileAdaptorTest {
       TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME + "." + TEST_EXTENSION;
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = TEST_COMIC_FILENAME;
   private static final String TEST_RENAMING_RULE =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $FORMAT $PUBMONTH $PUBYEAR $COVERDATE";
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $PUBMONTH $PUBYEAR $COVERDATE";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2020";
@@ -64,7 +63,6 @@ public class ComicFileAdaptorTest {
   private static final Date TEST_STORE_DATE = new Date(120, 5, 1);
   private static final String TEST_PUBLISHED_MONTH = "5";
   private static final String TEST_PUBLISHED_YEAR = "2020";
-  private static final String TEST_COMIC_FORMAT_NAME = "formatname";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS = "\"?Publisher*'";
   private static final String TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__Publisher__";
   private static final String TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS = "<|Series?>";
@@ -77,7 +75,6 @@ public class ComicFileAdaptorTest {
   @InjectMocks private ComicFileAdaptor adaptor;
   @Mock private Comic comic;
   @Mock private ArchiveType archiveAdaptor;
-  @Mock private ComicFormat comicFormat;
 
   @Before
   public void setUp() {
@@ -88,8 +85,6 @@ public class ComicFileAdaptorTest {
     Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE);
     Mockito.when(comic.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(comic.getArchiveType()).thenReturn(archiveAdaptor);
-    Mockito.when(comic.getFormat()).thenReturn(comicFormat);
-    Mockito.when(comicFormat.getName()).thenReturn(TEST_COMIC_FORMAT_NAME);
     Mockito.when(comic.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(archiveAdaptor.getExtension()).thenReturn(TEST_EXTENSION);
   }
@@ -112,7 +107,6 @@ public class ComicFileAdaptorTest {
             TEST_VOLUME,
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
@@ -153,7 +147,6 @@ public class ComicFileAdaptorTest {
             TEST_VOLUME,
             TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
             TEST_FORMATTED_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
@@ -173,7 +166,6 @@ public class ComicFileAdaptorTest {
             TEST_VOLUME,
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
@@ -193,7 +185,6 @@ public class ComicFileAdaptorTest {
             TEST_VOLUME,
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
@@ -213,7 +204,6 @@ public class ComicFileAdaptorTest {
             UNKNOWN_VALUE,
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
@@ -226,19 +216,17 @@ public class ComicFileAdaptorTest {
       final String volume,
       final String issueNumber,
       final String coverDate,
-      final String format,
       final String publishedMonth,
       final String publishedYear,
       final String extension) {
     return String.format(
-        "%s/%s/%s/%s v%s #%s %s %s %s %s.%s",
+        "%s/%s/%s/%s v%s #%s %s %s %s.%s",
         publisher,
         series,
         volume,
         series,
         volume,
         issueNumber,
-        format,
         publishedMonth,
         publishedYear,
         coverDate,
@@ -258,7 +246,6 @@ public class ComicFileAdaptorTest {
             TEST_VOLUME,
             UNKNOWN_VALUE,
             TEST_FORMATTED_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
@@ -278,7 +265,6 @@ public class ComicFileAdaptorTest {
             TEST_VOLUME,
             TEST_ISSUE,
             NO_COVER_DATE,
-            TEST_COMIC_FORMAT_NAME,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
             TEST_EXTENSION),
