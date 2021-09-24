@@ -15,12 +15,18 @@
   <name>comixed-release</name>
   <url>http://maven.apache.org</url>
   <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
     <sonar.skip>true</sonar.skip>
   </properties>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-state</artifactId>
       <version>0.11.0-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -35,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-scrapers</artifactId>
+      <artifactId>comixed-messaging</artifactId>
       <version>0.11.0-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -45,12 +51,52 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-batch</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-scrapers</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-plugins</artifactId>
       <version>0.11.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-auditlog</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-rest</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-auditlog</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-http</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-opds</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-rest</artifactId>
+      <version>0.11.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.comixedproject</groupId>
+      <artifactId>comixed-webui</artifactId>
       <version>0.11.0-SNAPSHOT</version>
     </dependency>
     <dependency>
