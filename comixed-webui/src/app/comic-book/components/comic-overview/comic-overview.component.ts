@@ -42,9 +42,9 @@ export class ComicOverviewComponent implements OnInit {
 
   constructor(private logger: LoggerService) {}
 
-  ngOnInit(): void {}
-
   get comicChanged(): boolean {
     return !!this.comic && this.comic.comicState === ComicBookState.CHANGED;
   }
+
+  ngOnInit(): void {}
 }

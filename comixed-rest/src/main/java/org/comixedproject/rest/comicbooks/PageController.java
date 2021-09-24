@@ -30,11 +30,8 @@ import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Page;
-import org.comixedproject.model.comicbooks.PageType;
-import org.comixedproject.model.net.SetPageTypeRequest;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.PageCacheService;
-import org.comixedproject.service.comicbooks.PageException;
 import org.comixedproject.service.comicbooks.PageService;
 import org.comixedproject.views.View;
 import org.comixedproject.views.View.PageList;
@@ -44,8 +41,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * <code>PageController</code> provides REST APIs for working with instances of {@link Page}.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
-@RequestMapping("/api")
 @Log4j2
 public class PageController {
   @Autowired private PageService pageService;
@@ -53,7 +54,7 @@ public class PageController {
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicFileHandler comicFileHandler;
 
-  @DeleteMapping(value = "/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(value = "/api/pages/hash/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   public int deleteAllWithHash(@PathVariable("hash") String hash) {
     log.info("Marking all pages with hash as deleted: {}", hash);
@@ -67,7 +68,7 @@ public class PageController {
    * @param id the page id
    * @return the parent comic
    */
-  @DeleteMapping(value = "/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(value = "/api/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicDetailsView.class)
   @AuditableEndpoint
@@ -93,7 +94,7 @@ public class PageController {
    * @return the page content
    * @throws ComicException if an error occurs
    */
-  @GetMapping(value = "/pages/{pageId}/content")
+  @GetMapping(value = "/api/pages/{pageId}/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getPageContent(@PathVariable("pageId") long pageId)
       throws ComicException {
@@ -149,7 +150,7 @@ public class PageController {
    * @return the page content
    * @throws ComicException if an error occurs
    */
-  @GetMapping(value = "/pages/hashes/{hash}/content")
+  @GetMapping(value = "/api/pages/hashes/{hash}/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getPageForHash(@PathVariable("hash") final String hash)
       throws ComicException {
@@ -174,21 +175,13 @@ public class PageController {
     return this.pageService.getPageInComicByIndex(comicId, index);
   }
 
-  @GetMapping(value = "/pages/types", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public Iterable<PageType> getPageTypes() {
-    log.info("Fetching page types");
-
-    return this.pageService.getPageTypes();
-  }
-
   /**
    * Unmarks the page for deletion.
    *
    * @param id the page id
    * @return the parent comic
    */
-  @PostMapping(value = "/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicDetailsView.class)
   @AuditableEndpoint
@@ -196,16 +189,5 @@ public class PageController {
     log.info("Undeleting page: id={}", id);
 
     return this.pageService.undeletePage(id);
-  }
-
-  @PutMapping(value = "/pages/{id}/type", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.PageDetails.class)
-  @AuditableEndpoint
-  public Page updateTypeForPage(
-      @PathVariable("id") long id, @RequestBody() SetPageTypeRequest request) throws PageException {
-    String typeName = request.getTypeName();
-    log.info("Setting page type: id={} typeName={}", id, typeName);
-
-    return this.pageService.updateTypeForPage(id, typeName);
   }
 }

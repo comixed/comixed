@@ -27,8 +27,6 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.ComicFormat;
-import org.comixedproject.model.comicbooks.ScanType;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,8 +78,6 @@ public class ComicRepositoryTest {
   private static final String TEST_HASH_WITH_COMICS = "0123456789ABCDEF0123456789ABCDEF";
 
   @Autowired private ComicRepository repository;
-  @Autowired private ScanTypeRepository scanTypeRepository;
-  @Autowired private ComicFormatRepository comicFormatRepository;
 
   private Comic comic;
 
@@ -282,48 +278,6 @@ public class ComicRepositoryTest {
     Comic result = repository.findById(TEST_COMIC_ID_WITH_DELETED_PAGES).get();
 
     assertEquals(3, result.getCalculatedDeletedPageCount().intValue());
-  }
-
-  @Test
-  public void testComicReturnWithTheirScanType() {
-    Comic result = repository.findById(TEST_COMIC_ID).get();
-
-    assertNotNull(result.getScanType());
-    assertEquals(1, result.getScanType().getId());
-  }
-
-  @Test
-  public void testComicScanTypeCanBeChanged() {
-    ScanType scanType = scanTypeRepository.findById(2L).get();
-
-    Comic record = repository.findById(TEST_COMIC_ID).get();
-    record.setScanType(scanType);
-
-    repository.save(record);
-
-    Comic result = repository.findById(TEST_COMIC_ID).get();
-    assertEquals(scanType.getId(), result.getScanType().getId());
-  }
-
-  @Test
-  public void testComicReturnWithTheirFormat() {
-    Comic result = repository.findById(TEST_COMIC_ID).get();
-
-    assertNotNull(result.getFormat());
-    assertEquals(1L, result.getFormat().getId().longValue());
-  }
-
-  @Test
-  public void testComicFormatCanBeChanged() {
-    ComicFormat format = comicFormatRepository.findById(2L).get();
-
-    Comic record = repository.findById(TEST_COMIC_ID).get();
-    record.setFormat(format);
-
-    repository.save(record);
-
-    Comic result = repository.findById(TEST_COMIC_ID).get();
-    assertEquals(format.getId(), result.getFormat().getId());
   }
 
   @Test

@@ -23,8 +23,6 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.PageType;
-import org.comixedproject.repositories.comicbooks.PageTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,8 +42,6 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
   private static final String TEST_HASH = "928375298571098571209857";
 
   @InjectMocks private ImageEntryLoader loader;
-  @Mock private PageTypeRepository pageTypeRepository;
-  @Mock private PageType pageType;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   private Comic comic;
@@ -59,31 +55,21 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
 
   @Test
   public void testLoadJPGImage() throws IOException {
-    Mockito.when(pageTypeRepository.getDefaultPageType()).thenReturn(pageType);
-
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
     loader.loadContent(comic, TEST_JPEG_FILENAME, content, false);
 
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
-
     assertEquals(1, comic.getPageCount());
     assertNotNull(comic.getPage(0));
-    assertSame(pageType, comic.getPage(0).getPageType());
   }
 
   @Test
   public void testLoadWebPImage() throws IOException {
-    Mockito.when(pageTypeRepository.getDefaultPageType()).thenReturn(pageType);
-
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
     loader.loadContent(comic, TEST_WEBP_FILENAME, content, false);
 
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).getDefaultPageType();
-
     assertEquals(1, comic.getPageCount());
     assertNotNull(comic.getPage(0));
-    assertSame(pageType, comic.getPage(0).getPageType());
   }
 }

@@ -29,11 +29,8 @@ import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Page;
-import org.comixedproject.model.comicbooks.PageType;
-import org.comixedproject.model.net.SetPageTypeRequest;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.PageCacheService;
-import org.comixedproject.service.comicbooks.PageException;
 import org.comixedproject.service.comicbooks.PageService;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +51,6 @@ public class PageControllerTest {
   private static final String TEST_PAGE_HASH = "12345";
   private static final String TEST_PAGE_CONTENT_TYPE = "application";
   private static final String TEST_PAGE_CONTENT_SUBTYPE = "image";
-  private static final String TEST_PAGE_TYPE_NAME = "Story";
   private static final String TEST_PAGE_FILENAME = "page01.jpg";
 
   @InjectMocks private PageController pageController;
@@ -63,7 +59,6 @@ public class PageControllerTest {
   @Mock private Page page;
   @Mock private List<Page> pageList;
   @Mock private Comic comic;
-  @Mock private List<PageType> pageTypes;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ArchiveAdaptor archiveAdaptor;
@@ -74,21 +69,6 @@ public class PageControllerTest {
   @Before
   public void setUp() {
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
-  }
-
-  @Test
-  public void testSetPageType() throws PageException {
-    Mockito.when(pageService.updateTypeForPage(Mockito.anyLong(), Mockito.anyString()))
-        .thenReturn(page);
-
-    final Page result =
-        pageController.updateTypeForPage(TEST_PAGE_ID, new SetPageTypeRequest(TEST_PAGE_TYPE_NAME));
-
-    assertNotNull(result);
-    assertSame(page, result);
-
-    Mockito.verify(pageService, Mockito.times(1))
-        .updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
   }
 
   @Test
@@ -209,15 +189,6 @@ public class PageControllerTest {
     assertSame(pageList, result);
 
     Mockito.verify(pageService, Mockito.times(1)).getAllPagesForComic(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testGetPageTypes() {
-    Mockito.when(pageService.getPageTypes()).thenReturn(pageTypes);
-
-    assertSame(pageTypes, pageController.getPageTypes());
-
-    Mockito.verify(pageService, Mockito.times(1)).getPageTypes();
   }
 
   @Test

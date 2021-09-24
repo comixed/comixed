@@ -199,42 +199,6 @@
   </mat-grid-tile>
 
   <mat-grid-tile
-    *ngIf="!!comic.scanType"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
-  >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.scan-type" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="!!comic.scanType" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.scanType?.name }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile
-    *ngIf="!!comic.format"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
-  >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.comic-format" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="!!comic.format" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.format?.name }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile
     *ngIf="!!comic.imprint"
     class="cx-accent-light-background"
     colspan="1"
