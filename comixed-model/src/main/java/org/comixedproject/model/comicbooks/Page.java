@@ -54,14 +54,6 @@ public class Page {
   @NonNull
   private Comic comic;
 
-  @ManyToOne
-  @JoinColumn(name = "TypeId", nullable = false)
-  @JsonProperty("pageType")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private PageType pageType;
-
   @Column(name = "Filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})

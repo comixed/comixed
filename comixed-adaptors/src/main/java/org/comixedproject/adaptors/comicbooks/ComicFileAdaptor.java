@@ -109,7 +109,6 @@ public class ComicFileAdaptor {
         StringUtils.isEmpty(comic.getIssueNumber()) ? UNKNOWN_VALUE : scrub(comic.getIssueNumber());
     final String coverDate =
         comic.getCoverDate() != null ? coverDateFormat.format(comic.getCoverDate()) : NO_COVER_DATE;
-    final String format = comic.getFormat() == null ? "" : comic.getFormat().getName();
     String publishedMonth = "";
     String publishedYear = "";
     if (comic.getStoreDate() != null) {
@@ -127,7 +126,6 @@ public class ComicFileAdaptor {
             .replace("$VOLUME", volume)
             .replace("$ISSUE", issueNumber)
             .replace("$COVERDATE", coverDate)
-            .replace("$FORMAT", format)
             .replace("$PUBYEAR", publishedYear)
             .replace("$PUBMONTH", publishedMonth);
 

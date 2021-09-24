@@ -43,11 +43,6 @@ export class LibraryConfigurationComponent implements OnInit {
       label: '$COVERDATE',
       value: 'configuration.text.renaming-rule-cover-date'
     },
-    { label: '$FORMAT', value: 'configuration.text.renaming-rule-format' },
-    {
-      label: '$PUBMONTH',
-      value: 'configuration.text.renaming-rule-published-month'
-    },
     {
       label: '$PUBYEAR',
       value: 'configuration.text.renaming-rule-published-year'

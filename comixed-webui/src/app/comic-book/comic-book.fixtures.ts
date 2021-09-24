@@ -16,9 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicFormat } from './models/comic-format';
-import { ScanType } from './models/scan-type';
-import { PageType } from '@app/comic-book/models/page-type';
 import { Page } from '@app/comic-book/models/page';
 import { FileDetails } from '@app/comic-book/models/file-details';
 import { ComicCredit } from '@app/comic-book/models/comic-credit';
@@ -28,84 +25,8 @@ import { ScrapingIssue } from '@app/comic-book/models/scraping-issue';
 import { ComicBookState } from '@app/comic-book/models/comic-book-state';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 
-export const FORMAT_1: ComicFormat = {
-  id: 1,
-  name: 'standard'
-};
-
-export const FORMAT_2: ComicFormat = {
-  id: 2,
-  name: 'trade-paperback'
-};
-
-export const FORMAT_3: ComicFormat = {
-  id: 3,
-  name: 'graphic-novel'
-};
-
-export const FORMAT_4: ComicFormat = {
-  id: 4,
-  name: 'deluxe-edition'
-};
-
-export const FORMAT_5: ComicFormat = {
-  id: 5,
-  name: 'treasury'
-};
-
-export const SCAN_TYPE_1: ScanType = {
-  id: 1,
-  name: 'digital'
-};
-
-export const SCAN_TYPE_2: ScanType = {
-  id: 2,
-  name: 'print'
-};
-
-export const SCAN_TYPE_3: ScanType = {
-  id: 3,
-  name: 'scan_c2c'
-};
-
-export const SCAN_TYPE_4: ScanType = {
-  id: 4,
-  name: 'fiche'
-};
-
-export const SCAN_TYPE_5: ScanType = {
-  id: 5,
-  name: 'hybrid'
-};
-
-export const SCAN_TYPE_6: ScanType = {
-  id: 6,
-  name: 'partial'
-};
-
-export const SCAN_TYPE_7: ScanType = {
-  id: 7,
-  name: 'scanalation'
-};
-
-export const FRONT_COVER: PageType = {
-  id: 1,
-  name: 'front-cover'
-};
-
-export const STORY: PageType = {
-  id: 2,
-  name: 'story'
-};
-
-export const BACK_COVER: PageType = {
-  id: 99,
-  name: 'back-cover'
-};
-
 export const PAGE_1: Page = {
   id: 1000,
-  pageType: FRONT_COVER,
   filename: 'firstpage.png',
   hash: 'abcdef1234567890',
   pageNumber: 1,
@@ -118,7 +39,6 @@ export const PAGE_1: Page = {
 
 export const PAGE_2: Page = {
   id: 1001,
-  pageType: FRONT_COVER,
   filename: 'firstpage.png',
   hash: 'abcdef1234567891',
   pageNumber: 2,
@@ -131,7 +51,6 @@ export const PAGE_2: Page = {
 
 export const PAGE_3: Page = {
   id: 1002,
-  pageType: FRONT_COVER,
   filename: 'firstpage.png',
   hash: 'abcdef1234567892',
   pageNumber: 3,
@@ -144,7 +63,6 @@ export const PAGE_3: Page = {
 
 export const PAGE_4: Page = {
   id: 1003,
-  pageType: FRONT_COVER,
   filename: 'firstpage.png',
   hash: 'abcdef1234567893',
   pageNumber: 4,
@@ -203,8 +121,6 @@ export const COMIC_1: Comic = {
   blockedPageCount: 0,
   deletedPageCount: 0,
   credits: [],
-  scanType: SCAN_TYPE_1,
-  format: FORMAT_1,
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -243,8 +159,6 @@ export const COMIC_2: Comic = {
   blockedPageCount: 0,
   deletedPageCount: 0,
   credits: [],
-  scanType: null,
-  format: null,
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -283,8 +197,6 @@ export const COMIC_3: Comic = {
   blockedPageCount: 0,
   deletedPageCount: 0,
   credits: [],
-  scanType: null,
-  format: null,
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -323,8 +235,6 @@ export const COMIC_4: Comic = {
   blockedPageCount: 0,
   deletedPageCount: 0,
   credits: [],
-  scanType: null,
-  format: null,
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -363,8 +273,6 @@ export const COMIC_5: Comic = {
   blockedPageCount: 0,
   deletedPageCount: 0,
   credits: [COMIC_CREDIT_1, COMIC_CREDIT_2],
-  scanType: null,
-  format: null,
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,

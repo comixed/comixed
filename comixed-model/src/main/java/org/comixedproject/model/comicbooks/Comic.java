@@ -322,22 +322,6 @@ public class Comic {
   @Setter
   private String notes;
 
-  @ManyToOne
-  @JoinColumn(name = "ScanTypeId")
-  @JsonProperty("scanType")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private ScanType scanType;
-
-  @ManyToOne
-  @JoinColumn(name = "FormatId")
-  @JsonProperty("format")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private ComicFormat format;
-
   @Formula(value = "(SELECT COUNT(*) FROM Pages p WHERE p.ComicId = id)")
   @JsonIgnore
   @Transient

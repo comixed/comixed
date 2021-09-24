@@ -25,9 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Page;
-import org.comixedproject.model.comicbooks.PageType;
 import org.comixedproject.repositories.comicbooks.PageRepository;
-import org.comixedproject.repositories.comicbooks.PageTypeRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,61 +48,16 @@ public class PageServiceTest {
 
   @InjectMocks private PageService pageService;
   @Mock private PageRepository pageRepository;
-  @Mock private PageTypeRepository pageTypeRepository;
   @Mock private ComicService comicService;
-  @Mock private PageType pageType;
   @Mock private Page page;
   @Mock private Page savedPage;
   @Mock private Comic comic;
-  @Mock private List<PageType> pageTypeList;
 
   private List<Page> pageList = new ArrayList<>();
 
   @Before
   public void setUp() {
     Mockito.when(page.getComic()).thenReturn(comic);
-  }
-
-  @Test(expected = PageException.class)
-  public void testSetPageTypeForNonexistentPage() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
-    try {
-      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-    } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    }
-  }
-
-  @Test(expected = PageException.class)
-  public void testSetPageTypeWithNonexistentType() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(pageTypeRepository.findByName(Mockito.anyString())).thenReturn(null);
-
-    try {
-      pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-    } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-      Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
-    }
-  }
-
-  @Test
-  public void testSetPageType() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(pageTypeRepository.findByName(Mockito.anyString())).thenReturn(pageType);
-    Mockito.doNothing().when(page).setPageType(pageType);
-    Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(page);
-
-    final Page result = pageService.updateTypeForPage(TEST_PAGE_ID, TEST_PAGE_TYPE_NAME);
-
-    assertNotNull(result);
-    assertSame(page, result);
-
-    Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).findByName(TEST_PAGE_TYPE_NAME);
-    Mockito.verify(page, Mockito.times(1)).setPageType(pageType);
-    Mockito.verify(pageRepository, Mockito.times(1)).save(page);
   }
 
   @Test(expected = ComicException.class)
@@ -277,15 +230,6 @@ public class PageServiceTest {
     assertSame(pageList, result);
 
     Mockito.verify(pageRepository, Mockito.times(1)).findAllByComicId(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testGetPageTypes() {
-    Mockito.when(pageTypeRepository.findPageTypes()).thenReturn(pageTypeList);
-
-    assertSame(pageTypeList, pageService.getPageTypes());
-
-    Mockito.verify(pageTypeRepository, Mockito.times(1)).findPageTypes();
   }
 
   @Test

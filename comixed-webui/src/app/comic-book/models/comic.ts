@@ -16,8 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ScanType } from '@app/comic-book/models/scan-type';
-import { ComicFormat } from '@app/comic-book/models/comic-format';
 import { FileDetails } from '@app/comic-book/models/file-details';
 import { ComicFileEntry } from '@app/comic-book/models/comic-file-entry';
 import { ComicCredit } from '@app/comic-book/models/comic-credit';
@@ -28,8 +26,6 @@ import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
 export interface Comic {
   id: number;
   archiveType: ArchiveType;
-  scanType: ScanType;
-  format: ComicFormat;
   filename: string;
   baseFilename: string;
   comicState: ComicBookState;

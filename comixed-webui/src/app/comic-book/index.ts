@@ -18,17 +18,7 @@
 
 import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import {
-  COMIC_FORMAT_FEATURE_KEY,
-  ComicFormatState,
-  reducer as comicFormatReducer
-} from './reducers/comic-format.reducer';
 import { ActionReducerMap } from '@ngrx/store';
-import {
-  reducer as scanTypeReducer,
-  SCAN_TYPE_FEATURE_KEY,
-  ScanTypeState
-} from './reducers/scan-type.reducer';
 import {
   reducer as scrapingReducer,
   SCRAPING_FEATURE_KEY,
@@ -58,8 +48,6 @@ interface RouterStateUrl {
 
 export interface ComicModuleState {
   router: RouterReducerState<RouterStateUrl>;
-  [COMIC_FORMAT_FEATURE_KEY]: ComicFormatState;
-  [SCAN_TYPE_FEATURE_KEY]: ScanTypeState;
   [SCRAPING_FEATURE_KEY]: ScrapingState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
   [COMIC_FEATURE_KEY]: ComicState;
@@ -70,8 +58,6 @@ export type ModuleState = ComicModuleState;
 
 export const reducers: ActionReducerMap<ComicModuleState> = {
   router: routerReducer,
-  [COMIC_FORMAT_FEATURE_KEY]: comicFormatReducer,
-  [SCAN_TYPE_FEATURE_KEY]: scanTypeReducer,
   [SCRAPING_FEATURE_KEY]: scrapingReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,
   [COMIC_FEATURE_KEY]: comicReducer,

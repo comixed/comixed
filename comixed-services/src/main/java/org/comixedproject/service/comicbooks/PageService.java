@@ -22,9 +22,7 @@ import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Page;
-import org.comixedproject.model.comicbooks.PageType;
 import org.comixedproject.repositories.comicbooks.PageRepository;
-import org.comixedproject.repositories.comicbooks.PageTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,31 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class PageService {
   @Autowired private PageRepository pageRepository;
-  @Autowired private PageTypeRepository pageTypeRepository;
   @Autowired private ComicService comicService;
-
-  @Transactional
-  public Page updateTypeForPage(final long id, final String typeName) throws PageException {
-    log.debug("Setting page type for page: id={} page type={}", id, typeName);
-
-    final Optional<Page> page = this.pageRepository.findById(id);
-    final PageType pageType = this.pageTypeRepository.findByName(typeName);
-
-    if (page.isPresent()) {
-      if (pageType != null) {
-        final Page pageRecord = page.get();
-
-        pageRecord.setPageType(pageType);
-
-        log.debug("Updating page with  new type");
-        return this.pageRepository.save(pageRecord);
-      } else {
-        throw new PageException("Invalid page type: " + typeName);
-      }
-    } else {
-      throw new PageException("No such page: id=" + id);
-    }
-  }
 
   /**
    * Retrieves the content for a comic page.
@@ -164,12 +138,6 @@ public class PageService {
     log.debug("Getting all pages for comic: id={}", comicId);
 
     return this.pageRepository.findAllByComicId(comicId);
-  }
-
-  public List<PageType> getPageTypes() {
-    log.debug("Getting all page types");
-
-    return this.pageTypeRepository.findPageTypes();
   }
 
   /**
