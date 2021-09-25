@@ -171,6 +171,7 @@
 </h4>
 
 <button
+  *ngIf="!!user"
   mat-button
   class="menu-button"
   routerLink="/lists/reading/all"
