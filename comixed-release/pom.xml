@@ -65,7 +65,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
-          <outputDirectory>../release</outputDirectory>
+          <outputDirectory>..</outputDirectory>
           <descriptors>
             <descriptor>src/main/assembly/src.xml</descriptor>
           </descriptors>
