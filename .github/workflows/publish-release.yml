@@ -34,4 +34,4 @@ jobs:
           prerelease: true
           title: Changes For 0.11.0-SNAPSHOT
           files: |
-            release/comixed-release-0.11.0-SNAPSHOT-RELEASE.zip
+            comixed-release-0.11.0-SNAPSHOT-RELEASE.zip

@@ -313,8 +313,7 @@
         <configuration>
           <filesets>
             <fileset>
-              <directory>release</directory>
-              <followSymlinks>false</followSymlinks>
+              <include>comixed-release-*.zip</include>
             </fileset>
           </filesets>
         </configuration>
