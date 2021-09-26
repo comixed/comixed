@@ -2,7 +2,7 @@
   <div class="cx-spacer"></div>
   <button
     id="save-button"
-    class="cx-action-button"
+    class="cx-toolbar-button"
     mat-icon-button
     color="primary"
     [disabled]="!userForm.valid"
@@ -12,7 +12,7 @@
   </button>
   <button
     id="reset-button"
-    class="cx-action-button"
+    class="cx-toolbar-button"
     mat-icon-button
     color="warn"
     [disabled]="!userForm.dirty"
@@ -41,6 +41,14 @@
               formControlName="email"
               required
             />
+            <mat-error>
+              <span *ngIf="controls.email.errors?.required">
+                {{ "validation.field-required" | translate }}
+              </span>
+              <span *ngIf="controls.email.errors?.email">
+                {{ "validation.email-required" | translate }}
+              </span>
+            </mat-error>
           </mat-form-field>
           <mat-form-field class="cx-width-100" appearance="fill">
             <mat-label>
@@ -54,25 +62,23 @@
               (keyup)="onPasswordChanged()"
             />
             <mat-error>
-              <span *ngIf="userForm.controls.password.errors?.minLength">
+              <span *ngIf="!!controls.password.errors?.minlength">
                 {{
                   "validation.value-too-short"
                     | translate
                       : {
                           length:
-                            userForm.controls.password.errors.minLength
-                              .requiredLength
+                            controls.password.errors.minlength.requiredLength
                         }
                 }}
               </span>
-              <span *ngIf="userForm.controls.password.errors?.maxLength">
+              <span *ngIf="!!controls.password.errors?.maxlength">
                 {{
                   "validation.value-too-long"
                     | translate
                       : {
                           length:
-                            userForm.controls.password.errors.maxLength
-                              .requiredLength
+                            controls.password.errors.maxlength.requiredLength
                         }
                 }}
               </span>

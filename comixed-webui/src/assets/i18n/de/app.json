@@ -118,6 +118,7 @@
     "yes": "Yes"
   },
   "validation": {
+    "email-required": "Value must be a valid email address.",
     "field-required": "This field is required",
     "value-too-long": "Maximum length is {length, plural, =1{one character} other{# characters}}.",
     "value-too-short": "Minimum length is {length, plural, =1{one character} other{# characters}}."

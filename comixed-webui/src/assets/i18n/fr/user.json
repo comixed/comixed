@@ -29,7 +29,7 @@
     },
     "reset-user-changes": {
       "confirmation-message": "Annuler les modifications apportées à votre compte ?",
-      "conformation-title": "Annuler les changements"
+      "confirmation-title": "Annuler les changements"
     },
     "save-current-user": {
       "confirmation-message": "Êtes-vous sûr de vouloir enregistrer les changements de votre compte utilisateur ?",

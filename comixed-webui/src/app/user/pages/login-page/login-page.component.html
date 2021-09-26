@@ -12,6 +12,14 @@
           formControlName="email"
           [placeholder]="'user.login-user.email-placeholder' | translate"
         />
+        <mat-error>
+          <span *ngIf="controls.email.errors?.required">
+            {{ "validation.field-required" | translate }}
+          </span>
+          <span *ngIf="controls.email.errors?.email">
+            {{ "validation.email-required" | translate }}
+          </span>
+        </mat-error>
       </mat-form-field>
       <mat-form-field class="cx-width-100" required>
         <input
@@ -21,6 +29,29 @@
           formControlName="password"
           [placeholder]="'user.login-user.password-placeholder' | translate"
         />
+        <mat-error>
+          <span *ngIf="controls.password.errors?.required">
+            {{ "validation.field-required" | translate }}
+          </span>
+          <span *ngIf="!!controls.password.errors?.minlength">
+            {{
+              "validation.value-too-short"
+                | translate
+                  : {
+                      length: controls.password.errors.minlength.requiredLength
+                    }
+            }}
+          </span>
+          <span *ngIf="!!controls.password.errors?.maxlength">
+            {{
+              "validation.value-too-long"
+                | translate
+                  : {
+                      length: controls.password.errors.maxlength.requiredLength
+                    }
+            }}
+          </span>
+        </mat-error>
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
