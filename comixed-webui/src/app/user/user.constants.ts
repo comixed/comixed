@@ -18,6 +18,9 @@
 
 import { API_ROOT_URL } from '@app/core';
 
+export const MIN_PASSWORD_LENGTH = 4;
+export const MAX_PASSWORD_LENGTH = 128;
+
 export const ROLE_NAME_READER = 'READER';
 export const ROLE_NAME_ADMIN = 'ADMIN';
 

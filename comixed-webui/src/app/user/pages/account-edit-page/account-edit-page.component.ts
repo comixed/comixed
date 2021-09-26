@@ -18,6 +18,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ValidationErrors,
@@ -43,6 +44,10 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH
+} from '@app/user/user.constants';
 
 @Component({
   selector: 'cx-account-edit',
@@ -85,6 +90,10 @@ export class AccountEditPageComponent implements OnInit, OnDestroy {
       .subscribe(user => (this.user = user));
   }
 
+  get controls(): { [p: string]: AbstractControl } {
+    return this.userForm.controls;
+  }
+
   private _user: User;
 
   get user(): User {
@@ -116,22 +125,29 @@ export class AccountEditPageComponent implements OnInit, OnDestroy {
   }
 
   onPasswordChanged(): void {
+    this.logger.trace('Password value has changed');
     const password = this.userForm.controls.password.value;
     if (!!password && password !== '') {
+      this.logger.trace('Adding validators to password');
       this.userForm.controls.password.setValidators([
         Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(16)
+        Validators.minLength(MIN_PASSWORD_LENGTH),
+        Validators.maxLength(MAX_PASSWORD_LENGTH)
       ]);
+      this.logger.trace('Adding validators to password verify');
       this.userForm.controls.passwordVerify.setValidators([
         Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(16)
+        Validators.minLength(MIN_PASSWORD_LENGTH),
+        Validators.maxLength(MAX_PASSWORD_LENGTH)
       ]);
+      this.logger.trace('Adding password comparison validator');
       this.userForm.setValidators(passwordVerifyValidator);
     } else {
+      this.logger.trace('Removing password validators');
       this.userForm.controls.password.setValidators(null);
+      this.logger.trace('Removing password verify validators');
       this.userForm.controls.passwordVerify.setValidators(null);
+      this.logger.trace('Removing password comparison validator');
       this.userForm.setValidators(null);
     }
     this.userForm.controls.password.updateValueAndValidity();

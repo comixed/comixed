@@ -29,7 +29,7 @@
     },
     "reset-user-changes": {
       "confirmation-message": "Discard changes to your account?",
-      "conformation-title": "Revert Changes"
+      "confirmation-title": "Revert Changes"
     },
     "save-current-user": {
       "confirmation-message": "Are you sure you want to save the changes to your user account?",

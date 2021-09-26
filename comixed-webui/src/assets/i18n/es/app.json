@@ -119,6 +119,7 @@
     "yes": "Sí"
   },
   "validation": {
+    "email-required": "Value must be a valid email address.",
     "field-required": "Este campo es obligatorio",
     "value-too-long": "La longitud máxima es {length, plural, =1{one character} other{# characters}}.",
     "value-too-short": "La longitud mínima es {length, plural, =1{one character} other{# characters}}."
