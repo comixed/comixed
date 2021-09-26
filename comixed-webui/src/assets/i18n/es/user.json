@@ -29,7 +29,7 @@
     },
     "reset-user-changes": {
       "confirmation-message": "¿Descartar cambios en tu cuenta?",
-      "conformation-title": "Revertir cambios"
+      "confirmation-title": "Revertir cambios"
     },
     "save-current-user": {
       "confirmation-message": "¿Está seguro de que desea guardar los cambios en su cuenta de usuario?",

@@ -134,6 +134,7 @@
     "yes": "Oui"
   },
   "validation": {
+    "email-required": "Value must be a valid email address.",
     "field-required": "Ce champ est obligatoire",
     "value-too-long": "La longueur maximal est {length, plural, =1{un caractère} other{# caractères}}.",
     "value-too-short": "La longueur minimal est {length, plural, =1{un caractère} other{# caractères}}."

@@ -18,7 +18,12 @@
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { UserModuleState } from '@app/user';
 import { Subscription } from 'rxjs';
@@ -28,6 +33,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH
+} from '@app/user/user.constants';
 
 @Component({
   selector: 'cx-login',
@@ -51,7 +60,14 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(4)]]
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(MIN_PASSWORD_LENGTH),
+          Validators.maxLength(MAX_PASSWORD_LENGTH)
+        ]
+      ]
     });
     this.userSubscription = this.store
       .select(selectUserState)
@@ -65,6 +81,10 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+  }
+
+  get controls(): { [p: string]: AbstractControl } {
+    return this.loginForm.controls;
   }
 
   ngAfterViewInit(): void {
