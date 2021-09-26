@@ -13,7 +13,7 @@
   <artifactId>comixed-adaptors</artifactId>
   <version>0.11.0-SNAPSHOT</version>
   <name>comixed-adaptors</name>
-  <url>http://maven.apache.org</url>
+  <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>

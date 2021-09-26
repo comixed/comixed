@@ -13,7 +13,7 @@
   <artifactId>comixed-plugins</artifactId>
   <version>0.11.0-SNAPSHOT</version>
   <name>comixed-plugins</name>
-  <url>http://maven.apache.org</url>
+  <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
       <groupId>org.python</groupId>
