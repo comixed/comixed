@@ -29,7 +29,10 @@
       **/comixedproject/http/**,
       **/state/comicbooks/Comic*,
       **/state/lists/ReadingList*,
-      **/batch/comicbooks/*Configuration,
+      **/*Configuration,
+      **/*Event,
+      **/*Exception,
+      **/*StateHandler,
       **/ComiXedApp
     </sonar.exclusions>
     <sonar.test.inclusions>**/test/**</sonar.test.inclusions>

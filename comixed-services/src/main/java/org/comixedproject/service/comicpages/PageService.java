@@ -18,15 +18,26 @@
 
 package org.comixedproject.service.comicpages;
 
+import static org.comixedproject.state.comicpages.PageStateHandler.HEADER_PAGE;
+
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.comicpages.PageRepository;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.comixedproject.state.comicpages.PageEvent;
+import org.comixedproject.state.comicpages.PageStateChangeListener;
+import org.comixedproject.state.comicpages.PageStateHandler;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,9 +48,41 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Log4j2
-public class PageService {
+public class PageService implements InitializingBean, PageStateChangeListener {
   @Autowired private PageRepository pageRepository;
+  @Autowired private PageStateHandler pageStateHandler;
   @Autowired private ComicService comicService;
+  @Autowired private ComicStateHandler comicStateHandler;
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    log.trace("Subscribing to page state changes");
+    this.pageStateHandler.addListener(this);
+  }
+
+  @Override
+  public void onPageStateChange(
+      final State<PageState, PageEvent> state, final Message<PageEvent> message) {
+    final var page = message.getHeaders().get(HEADER_PAGE, Page.class);
+    if (page == null) return;
+    log.debug("Processing page state change: [{}] =>  {}", page.getId(), state.getId());
+    page.setPageState(state.getId());
+    final Page updated = this.pageRepository.save(page);
+    log.trace("Firing comic event");
+    this.comicStateHandler.fireEvent(updated.getComic(), ComicEvent.detailsUpdated);
+  }
+
+  /**
+   * Finds one page with the given hash
+   *
+   * @param hash the hash
+   * @return the page
+   */
+  public Page getOneForHash(final String hash) {
+    log.trace("Finding a page with hash: {}", hash);
+    final List<Page> results = this.pageRepository.findByHash(hash);
+    return results.isEmpty() ? null : results.get(0);
+  }
 
   /**
    * Retrieves the content for a comic page.
@@ -72,26 +115,18 @@ public class PageService {
    *
    * @param id the page id
    * @return the comic
+   * @throws PageException if the id is invalid
    */
   @Transactional
-  public Comic deletePage(final long id) {
-    log.debug("Marking page as deleted: id={}", id);
-    final Optional<Page> page = this.pageRepository.findById(id);
-
-    if (page.isPresent()) {
-      if (page.get().isDeleted()) {
-        log.debug("Page was already marked as deleted");
-        return page.get().getComic();
-      } else {
-        page.get().setDeleted(true);
-        final Page result = this.pageRepository.save(page.get());
-        log.debug("Page deleted");
-        return result.getComic();
-      }
-    }
-
-    log.warn("No such page");
-    return null;
+  public Comic deletePage(final long id) throws PageException {
+    log.trace("Deleting page: id={}");
+    final Page page = this.doGetPage(id);
+    log.trace("Getting comic id");
+    final Long comicId = page.getComic().getId();
+    log.trace("Firing event: mark page for deletion");
+    this.pageStateHandler.fireEvent(page, PageEvent.markForDeletion);
+    log.trace("Returning updated comic: id={}", comicId);
+    return this.doGetPage(id).getComic();
   }
 
   /**
@@ -99,26 +134,24 @@ public class PageService {
    *
    * @param id the page id
    * @return the comic
+   * @throws PageException if the id is invalid
    */
   @Transactional
-  public Comic undeletePage(final long id) {
-    log.debug("Marking page as not deleted: id={}", id);
-    final Optional<Page> page = this.pageRepository.findById(id);
+  public Comic undeletePage(final long id) throws PageException {
+    log.trace("Deleting page: id={}");
+    final Page page = this.doGetPage(id);
+    log.trace("Getting comic id");
+    final Long comicId = page.getComic().getId();
+    log.trace("Firing event: unmark page for deletion");
+    this.pageStateHandler.fireEvent(page, PageEvent.unmarkForDeletion);
+    log.trace("Returning updated comic: id={}", comicId);
+    return this.doGetPage(id).getComic();
+  }
 
-    if (page.isPresent()) {
-      if (page.get().isDeleted()) {
-        page.get().setDeleted(false);
-        log.debug("Page undeleted");
-        return this.pageRepository.save(page.get()).getComic();
-
-      } else {
-        log.debug("Page was not marked as deleted");
-        return page.get().getComic();
-      }
-    } else {
-      log.warn("No such page");
-    }
-    return null;
+  private Page doGetPage(final long id) throws PageException {
+    final Optional<Page> result = this.pageRepository.findById(id);
+    if (result.isEmpty()) throw new PageException("No such page: id=" + id);
+    return result.get();
   }
 
   /**
@@ -126,24 +159,11 @@ public class PageService {
    *
    * @param id the record id
    * @return the page
+   * @throws PageException if the id is invalid
    */
-  public Page getForId(final long id) {
-    log.debug("Getting page by id: id={}", id);
-
-    final Optional<Page> result = this.pageRepository.findById(id);
-
-    if (!result.isPresent()) {
-      log.warn("No such page");
-      return null;
-    }
-
-    return result.get();
-  }
-
-  public List<Page> getAllPagesForComic(final long comicId) {
-    log.debug("Getting all pages for comic: id={}", comicId);
-
-    return this.pageRepository.findAllByComicId(comicId);
+  public Page getForId(final long id) throws PageException {
+    log.trace("Getting page: id={}", id);
+    return this.doGetPage(id);
   }
 
   /**
@@ -151,26 +171,14 @@ public class PageService {
    *
    * @param page the page
    * @return the updated page
+   * @throws PageException if an error occurs
    */
   @Transactional
-  public Page save(final Page page) {
-    log.debug("Saving page: filename={} index={}", page.getFilename(), page.getIndex());
-    return this.pageRepository.save(page);
-  }
-
-  /**
-   * Finds one page with the given hash
-   *
-   * @param hash the hash
-   * @return the page
-   */
-  public Page getOneForHash(final String hash) {
-    log.debug("Finding pages with hash: {}", hash);
-    final List<Page> pages = this.pageRepository.getPagesWithHash(hash);
-    if (pages.isEmpty()) {
-      log.debug("No pages found");
-    }
-    return pages.get(0);
+  public Page save(final Page page) throws PageException {
+    log.trace("Firing page event: save");
+    this.pageStateHandler.fireEvent(page, PageEvent.savePage);
+    log.trace("Returning updated page");
+    return this.doGetPage(page.getId());
   }
 
   /**
@@ -181,7 +189,7 @@ public class PageService {
    */
   public List<Page> getUnmarkedWithHash(final String hash) {
     log.trace("Fetching unmarked pages with hash: {}", hash);
-    return this.pageRepository.findByHashAndDeleted(hash, false);
+    return this.pageRepository.findByHashAndPageState(hash, PageState.STABLE);
   }
 
   /**
@@ -192,6 +200,6 @@ public class PageService {
    */
   public List<Page> getMarkedWithHash(final String hash) {
     log.trace("Fetching marked pages with hash: {}", hash);
-    return this.pageRepository.findByHashAndDeleted(hash, true);
+    return this.pageRepository.findByHashAndPageState(hash, PageState.DELETED);
   }
 }

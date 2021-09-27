@@ -16,25 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.processors;
+package org.comixedproject.batch.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MarkPageWithHashProcessor</code> marks pages as deleted.
+ * <code>NoopProcessor</code> provides an implemented of {@link ItemProcessor} that performs no
+ * behavior.
  *
+ * @param <T> the type
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class MarkPageWithHashProcessor implements ItemProcessor<Page, Page> {
+public class NoopProcessor<T> implements ItemProcessor<T, T> {
   @Override
-  public Page process(final Page page) throws Exception {
-    log.trace("Marking page as deleted: id={}", page.getId());
-    page.setDeleted(true);
-    return page;
+  public T process(final T item) throws Exception {
+    log.trace("Performing no action");
+    return item;
   }
 }

@@ -18,8 +18,19 @@
 
 package org.comixedproject.service.comicpages;
 
+import org.comixedproject.model.comicpages.Page;
+
+/**
+ * <code>PageException</code> is thrown when an error occurs with a {@link Page}.
+ *
+ * @author Darryl L. Piere
+ */
 public class PageException extends Exception {
   public PageException(final String message) {
     super(message);
+  }
+
+  public PageException(final String message, final Exception cause) {
+    super(message, cause);
   }
 }
