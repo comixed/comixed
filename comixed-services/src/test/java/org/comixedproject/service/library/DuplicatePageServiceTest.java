@@ -52,12 +52,12 @@ public class DuplicatePageServiceTest {
 
   @Test(expected = DuplicatePageException.class)
   public void testGetForHashNotFound() throws DuplicatePageException {
-    Mockito.when(pageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pageList);
+    Mockito.when(pageRepository.findByHash(Mockito.anyString())).thenReturn(pageList);
 
     try {
       service.getForHash(TEST_PAGE_HASH);
     } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
+      Mockito.verify(pageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
     }
   }
 
@@ -65,7 +65,7 @@ public class DuplicatePageServiceTest {
   public void testGetForHash() throws DuplicatePageException {
     pageList.add(page);
 
-    Mockito.when(pageRepository.getPagesWithHash(Mockito.anyString())).thenReturn(pageList);
+    Mockito.when(pageRepository.findByHash(Mockito.anyString())).thenReturn(pageList);
 
     final DuplicatePage result = service.getForHash(TEST_PAGE_HASH);
 
@@ -73,6 +73,6 @@ public class DuplicatePageServiceTest {
     assertEquals(TEST_PAGE_HASH, result.getHash());
     assertTrue(result.getComics().contains(comic));
 
-    Mockito.verify(pageRepository, Mockito.times(1)).getPagesWithHash(TEST_PAGE_HASH);
+    Mockito.verify(pageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }
 }

@@ -19,9 +19,12 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import java.util.List;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
+import org.comixedproject.state.comicpages.PageEvent;
+import org.comixedproject.state.comicpages.PageStateHandler;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,15 +37,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class AbstractPageWriter implements ItemWriter<Page> {
-  @Autowired private PageService pageService;
+@RequiredArgsConstructor
+public abstract class AbstractPageWriter implements ItemWriter<Page> {
+  @Autowired private PageStateHandler pageStateHandler;
+
+  @NonNull private PageEvent pageEvent;
 
   @Override
   public void write(final List<? extends Page> pages) throws Exception {
     pages.forEach(
         page -> {
-          log.trace("Writing page: id={}", page.getId());
-          this.pageService.save(page);
+          log.trace("Publishing page event: {}", this.pageEvent);
+          this.pageStateHandler.fireEvent(page, this.pageEvent);
         });
   }
 }

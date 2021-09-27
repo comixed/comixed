@@ -55,7 +55,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
-  @Autowired private PublishComicUpdateAction comicUpdatePublishAction;
+  @Autowired private PublishComicUpdateAction publishComicUpdateAction;
   @Autowired private ImprintService imprintService;
 
   /**
@@ -263,7 +263,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     final Comic updated = this.comicRepository.save(comic);
     log.trace("Publishing updated comic");
     try {
-      this.comicUpdatePublishAction.publish(updated);
+      this.publishComicUpdateAction.publish(updated);
     } catch (PublishingException error) {
       log.error("Failed to publish comic update", error);
     }

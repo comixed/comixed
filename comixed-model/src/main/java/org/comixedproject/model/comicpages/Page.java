@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
@@ -55,6 +56,13 @@ public class Page {
   @NonNull
   private Comic comic;
 
+  @Column(name = "PageState", nullable = false, updatable = true)
+  @Enumerated(EnumType.STRING)
+  @Getter
+  @Setter
+  @NonNull
+  private PageState pageState = PageState.STABLE;
+
   @Column(name = "Filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
@@ -77,13 +85,6 @@ public class Page {
   @Setter
   @NonNull
   private Integer pageNumber;
-
-  @Column(name = "Deleted", updatable = true, nullable = false)
-  @JsonProperty("deleted")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private boolean deleted = false;
 
   @Column(name = "Width", updatable = true)
   @JsonProperty("width")
@@ -119,26 +120,26 @@ public class Page {
   }
 
   @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = (prime * result) + ((this.filename == null) ? 0 : this.filename.hashCode());
-    result = (prime * result) + ((this.hash == null) ? 0 : this.hash.hashCode());
-    return result;
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final Page page = (Page) o;
+    return comic.equals(page.comic)
+        && pageState == page.pageState
+        && filename.equals(page.filename)
+        && hash.equals(page.hash)
+        && pageNumber.equals(page.pageNumber);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (this.getClass() != obj.getClass()) return false;
-    Page other = (Page) obj;
-    if (this.filename == null) {
-      if (other.filename != null) return false;
-    } else if (!this.filename.equals(other.filename)) return false;
-    if (this.hash == null) {
-      if (other.hash != null) return false;
-    } else if (!this.hash.equals(other.hash)) return false;
-    return true;
+  public int hashCode() {
+    return Objects.hash(comic, pageState, filename, hash, pageNumber);
+  }
+
+  @Transient
+  @JsonProperty("deleted")
+  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  public boolean isDeleted() {
+    return PageState.DELETED.equals(this.pageState);
   }
 }

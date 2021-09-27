@@ -19,9 +19,9 @@
 package org.comixedproject.batch.comicpages;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicpages.processors.MarkPageWithHashProcessor;
 import org.comixedproject.batch.comicpages.readers.MarkPageWithHashReader;
 import org.comixedproject.batch.comicpages.writers.MarkPageWithHashWriter;
+import org.comixedproject.batch.processors.NoopProcessor;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -83,7 +83,7 @@ public class MarkPagesWithHashConfiguration {
   public Step markPageWithHashStep(
       final StepBuilderFactory stepBuilderFactory,
       final MarkPageWithHashReader reader,
-      final MarkPageWithHashProcessor processor,
+      final NoopProcessor<Page> processor,
       final MarkPageWithHashWriter writer) {
     return stepBuilderFactory
         .get("markPageWithHashStep")

@@ -19,8 +19,18 @@
 package org.comixedproject.batch.comicpages.writers;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.state.comicpages.PageEvent;
 import org.springframework.stereotype.Component;
 
+/**
+ * <code>MarkPageWithHashWriter</code> fires an event indicated a page has been marked for deletion.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
 @Log4j2
-public class MarkPageWithHashWriter extends AbstractPageWriter {}
+public class MarkPageWithHashWriter extends AbstractPageWriter {
+  public MarkPageWithHashWriter() {
+    super(PageEvent.markForDeletion);
+  }
+}

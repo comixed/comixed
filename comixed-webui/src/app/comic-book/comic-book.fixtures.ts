@@ -16,7 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Page } from '@app/comic-book/models/page';
 import { FileDetails } from '@app/comic-book/models/file-details';
 import { ComicCredit } from '@app/comic-book/models/comic-credit';
 import { Comic } from '@app/comic-book/models/comic';
@@ -24,54 +23,12 @@ import { ScrapingVolume } from '@app/comic-book/models/scraping-volume';
 import { ScrapingIssue } from '@app/comic-book/models/scraping-issue';
 import { ComicBookState } from '@app/comic-book/models/comic-book-state';
 import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
-
-export const PAGE_1: Page = {
-  id: 1000,
-  filename: 'firstpage.png',
-  hash: 'abcdef1234567890',
-  pageNumber: 1,
-  deleted: false,
-  width: 1080,
-  height: 1920,
-  blocked: false,
-  index: 0
-};
-
-export const PAGE_2: Page = {
-  id: 1001,
-  filename: 'firstpage.png',
-  hash: 'abcdef1234567891',
-  pageNumber: 2,
-  deleted: false,
-  width: 1080,
-  height: 1920,
-  blocked: false,
-  index: 0
-};
-
-export const PAGE_3: Page = {
-  id: 1002,
-  filename: 'firstpage.png',
-  hash: 'abcdef1234567892',
-  pageNumber: 3,
-  deleted: false,
-  width: 1080,
-  height: 1920,
-  blocked: false,
-  index: 0
-};
-
-export const PAGE_4: Page = {
-  id: 1003,
-  filename: 'firstpage.png',
-  hash: 'abcdef1234567893',
-  pageNumber: 4,
-  deleted: false,
-  width: 1080,
-  height: 1920,
-  blocked: false,
-  index: 0
-};
+import {
+  PAGE_1,
+  PAGE_2,
+  PAGE_3,
+  PAGE_4
+} from '@app/comic-pages/comic-pages.fixtures';
 
 export const FILE_DETAILS_1: FileDetails = {
   id: 1,

@@ -16,25 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.processors;
+package org.comixedproject.model.comicpages;
 
-import org.comixedproject.model.comicpages.Page;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
-@RunWith(MockitoJUnitRunner.class)
-public class UnmarkPageWithHashProcessorTest {
-  @InjectMocks private UnmarkPageWithHashProcessor processor;
-  @Mock private Page page;
-
-  @Test
-  public void testProcess() throws Exception {
-    processor.process(page);
-
-    Mockito.verify(page, Mockito.times(1)).setDeleted(false);
-  }
+/**
+ * <code>PageState</code> represents the current state of a page.
+ *
+ * @author Darryl L. Pierce
+ */
+public enum PageState {
+  // the page is unchanged
+  STABLE,
+  // the page is to be deleted
+  DELETED,
+  // the page was deleted, should never reach this state
+  REMOVED
 }

@@ -16,25 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.processors;
+package org.comixedproject.state.comicpages;
 
 import org.comixedproject.model.comicpages.Page;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MarkPageWithHashProcessorTest {
-  @InjectMocks private MarkPageWithHashProcessor processor;
-  @Mock private Page page;
-
-  @Test
-  public void testProcess() throws Exception {
-    processor.process(page);
-
-    Mockito.verify(page, Mockito.times(1)).setDeleted(true);
-  }
+/**
+ * <code>PageEvent</code> represents the events that cause a state change for a {@link Page}.
+ *
+ * @author Darryl L. Pierce
+ */
+public enum PageEvent {
+  savePage,
+  markForDeletion,
+  unmarkForDeletion
 }

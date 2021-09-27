@@ -26,7 +26,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
-import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
+import { PAGE_2 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicPageComponent', () => {
   const SOURCE = {} as any;
