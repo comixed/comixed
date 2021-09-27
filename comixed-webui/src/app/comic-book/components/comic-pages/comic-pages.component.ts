@@ -20,7 +20,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { Page } from '@app/comic-book/models/page';
 import { Comic } from '@app/comic-book/models/comic';
 

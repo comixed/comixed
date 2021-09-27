@@ -22,7 +22,7 @@ import java.util.List;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicFileEntry;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicbooks.Page;
+import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
 import org.junit.Test;

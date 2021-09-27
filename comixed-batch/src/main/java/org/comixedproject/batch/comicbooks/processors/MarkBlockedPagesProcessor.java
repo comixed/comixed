@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.service.blockedpage.BlockedPageService;
+import org.comixedproject.service.comicpages.BlockedPageService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

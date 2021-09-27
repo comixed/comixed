@@ -26,7 +26,7 @@ import org.apache.commons.io.FileUtils;
 import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.Page;
+import org.comixedproject.model.comicpages.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

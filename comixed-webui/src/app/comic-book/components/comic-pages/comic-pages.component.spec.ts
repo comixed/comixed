@@ -30,7 +30,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
-import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ComicPagesComponent', () => {

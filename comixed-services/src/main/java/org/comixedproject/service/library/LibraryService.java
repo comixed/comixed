@@ -30,7 +30,7 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
-import org.comixedproject.service.comicbooks.PageCacheService;
+import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.factory.annotation.Autowired;

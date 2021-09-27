@@ -45,12 +45,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics-with-duplicate-page/comics-with-duplicate-page.component';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { DUPLICATE_PAGE_LIST_TOPIC } from '@app/library/library.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
-import { selectBlockedPageList } from '@app/blocked-pages/selectors/blocked-page-list.selectors';
+import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
+import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -68,7 +68,7 @@ export class DuplicatePageListPageComponent
   duplicatePageSubscription: Subscription;
   duplicatePageStateSubscription: Subscription;
   blockedPageListSubscription: Subscription;
-  blockedPages: BlockedPage[] = [];
+  blockedPages: BlockedHash[] = [];
   messagingStateSubscription: Subscription;
   pageUpdatesSubscription: MessagingSubscription;
   allSelected = false;

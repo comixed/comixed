@@ -31,7 +31,7 @@ import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.Page;
+import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;

@@ -43,14 +43,14 @@ import { TitleService } from '@app/core/services/title.service';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics-with-duplicate-page/comics-with-duplicate-page.component';
-import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
 import {
-  BLOCKED_PAGE_LIST_FEATURE_KEY,
+  BLOCKED_HASH_LIST_FEATURE_KEY,
   initialState as initialBlockedPageListState
-} from '@app/blocked-pages/reducers/blocked-page-list.reducer';
-import { BLOCKED_PAGE_1 } from '@app/blocked-pages/blocked-pages.fixtures';
+} from '@app/comic-pages/reducers/blocked-hash-list.reducer';
+import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -70,7 +70,7 @@ describe('DuplicatePageListPageComponent', () => {
   const initialState = {
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [BLOCKED_PAGE_LIST_FEATURE_KEY]: initialBlockedPageListState
+    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
   };
 
   let component: DuplicatePageListPageComponent;
@@ -223,9 +223,9 @@ describe('DuplicatePageListPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
-        [BLOCKED_PAGE_LIST_FEATURE_KEY]: {
+        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
           ...initialBlockedPageListState,
-          entries: [{ ...BLOCKED_PAGE_1, hash: DUPLICATE_PAGES[0].hash }]
+          entries: [{ ...BLOCKED_HASH_1, hash: DUPLICATE_PAGES[0].hash }]
         }
       });
     });
