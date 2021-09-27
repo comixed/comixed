@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.service.comicpages.BlockedPageService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class MarkBlockedPagesProcessor implements ItemProcessor<Comic, Comic> {
               log.trace("Checking if page has is blocked: {}", hash);
               final boolean deleted = this.blockedPageService.isHashBlocked(hash);
               log.trace("Setting deleted state: {}", deleted);
-              page.setDeleted(deleted);
+              page.setPageState(deleted ? PageState.DELETED : PageState.STABLE);
             });
     return comic;
   }

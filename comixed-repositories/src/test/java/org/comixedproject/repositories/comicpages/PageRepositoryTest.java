@@ -25,6 +25,7 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +49,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class PageRepositoryTest {
-  private static final Long BLOCKED_PAGE_ID = 1000L;
-  private static final Long UNBLOCKED_PAGE_ID = 1001L;
   private static final String TEST_DUPLICATE_PAGE_HASH_1 = "F0123456789ABCDEF0123456789ABCDE";
   private static final String TEST_DUPLICATE_PAGE_HASH_2 = "0123456789ABCDEF0123456789ABCDEF";
   private static final String TEST_DUPLICATE_PAGE_HASH_3 = "123456789ABCDEF0123456789ABCDEF0";
@@ -67,20 +66,6 @@ public class PageRepositoryTest {
   @Autowired private PageRepository repository;
 
   @Test
-  public void testGetPageWithBlockedHash() {
-    Page result = repository.findById(BLOCKED_PAGE_ID).get();
-
-    assertTrue(result.isBlocked());
-  }
-
-  @Test
-  public void testGetPageWithNonBlockedHash() {
-    Page result = repository.findById(UNBLOCKED_PAGE_ID).get();
-
-    assertFalse(result.isBlocked());
-  }
-
-  @Test
   public void testGetDuplicatePages() {
     List<Page> result = repository.getDuplicatePages();
 
@@ -90,55 +75,55 @@ public class PageRepositoryTest {
   }
 
   @Test
-  public void testGetPagesWithHashNoSuchHash() {
-    final List<Page> result = repository.getPagesWithHash(TEST_INVALID_HASH);
+  public void testFindByHashNotFound() {
+    final List<Page> result = repository.findByHash(TEST_INVALID_HASH);
 
-    assertNotNull(result);
     assertTrue(result.isEmpty());
   }
 
   @Test
-  public void testGetPagesWithHash() {
-    final List<Page> result = repository.getPagesWithHash(TEST_DUPLICATE_PAGE_HASH_1);
+  public void testFindByHash() {
+    final List<Page> result = repository.findByHash(TEST_DUPLICATE_PAGE_HASH_1);
 
-    assertNotNull(result);
     assertFalse(result.isEmpty());
-    for (int index = 0; index < result.size(); index++) {
-      assertEquals(TEST_DUPLICATE_PAGE_HASH_1, result.get(index).getHash());
-    }
+    assertEquals(TEST_DUPLICATE_PAGE_HASH_1, result.get(0).getHash());
   }
 
   @Test
-  public void testFindByHashAndDeletedNotDeleted() {
-    final List<Page> result = repository.findByHashAndDeleted(TEST_NOT_DELETED_HASH, false);
+  public void testFindByHashAndPageStateWantNotDeleted() {
+    final List<Page> result =
+        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, PageState.STABLE);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_NOT_DELETED_HASH, result.get(0).getHash());
-    assertFalse(result.get(0).isDeleted());
+    assertNotSame(PageState.DELETED, result.get(0).getPageState());
   }
 
   @Test
-  public void testFindByHashAndDeletedNotDeletedWantsDeleted() {
-    final List<Page> result = repository.findByHashAndDeleted(TEST_NOT_DELETED_HASH, true);
+  public void testFindByHashAndPageStateNotDeletedWantsDeleted() {
+    final List<Page> result =
+        repository.findByHashAndPageState(TEST_NOT_DELETED_HASH, PageState.DELETED);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
   }
 
   @Test
-  public void testFindByHashAndDeletedDeleted() {
-    final List<Page> result = repository.findByHashAndDeleted(TEST_DELETED_HASH, true);
+  public void testFindByHashAndPageStateDeleted() {
+    final List<Page> result =
+        repository.findByHashAndPageState(TEST_DELETED_HASH, PageState.DELETED);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_DELETED_HASH, result.get(0).getHash());
-    assertTrue(result.get(0).isDeleted());
+    assertSame(PageState.DELETED, result.get(0).getPageState());
   }
 
   @Test
-  public void testFindByHashAndDeletedDeletedWantsNotDeleted() {
-    final List<Page> result = repository.findByHashAndDeleted(TEST_DELETED_HASH, false);
+  public void testFindByHashAndPageStateDeletedWantsNotDeleted() {
+    final List<Page> result =
+        repository.findByHashAndPageState(TEST_DELETED_HASH, PageState.STABLE);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());

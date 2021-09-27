@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.service.comicpages.BlockedPageService;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class MarkBlockedPagesProcessorTest {
     assertSame(comic, result);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).isHashBlocked(TEST_HASH);
-    Mockito.verify(page, Mockito.times(1)).setDeleted(true);
+    Mockito.verify(page, Mockito.times(1)).setPageState(PageState.DELETED);
   }
 
   @Test
@@ -75,6 +76,6 @@ public class MarkBlockedPagesProcessorTest {
     assertSame(comic, result);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).isHashBlocked(TEST_HASH);
-    Mockito.verify(page, Mockito.times(1)).setDeleted(false);
+    Mockito.verify(page, Mockito.times(1)).setPageState(PageState.STABLE);
   }
 }

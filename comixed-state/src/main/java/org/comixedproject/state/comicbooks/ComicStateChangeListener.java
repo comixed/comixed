@@ -32,7 +32,7 @@ public interface ComicStateChangeListener {
   /**
    * Invoked when a comic's state has changed.
    *
-   * @param state the state
+   * @param state the new state
    * @param message the event message
    */
   void onComicStateChange(State<ComicState, ComicEvent> state, Message<ComicEvent> message);

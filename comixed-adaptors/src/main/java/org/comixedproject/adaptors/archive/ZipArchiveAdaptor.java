@@ -35,6 +35,7 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.comixedproject.adaptors.loaders.EntryLoaderException;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicpages.PageState;
 import org.springframework.stereotype.Component;
 
 /**
@@ -160,7 +161,7 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
 
       for (var index = 0; index < source.getPageCount(); index++) {
         var page = source.getPage(index);
-        if (page.isDeleted()) {
+        if (page.getPageState() == PageState.DELETED) {
           log.trace("Skipping offset marked for deletion");
           continue;
         }

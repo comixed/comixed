@@ -30,6 +30,7 @@ import org.comixedproject.AdaptorTestContext;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -156,9 +157,7 @@ public class ZipArchiveAdaptorTest {
 
     comic.getPages().stream()
         .filter(page -> page.getFilename().equals(TEST_FILE_ENTRY_1))
-        .findFirst()
-        .get()
-        .setDeleted(true);
+        .forEach(page -> page.setPageState(PageState.DELETED));
 
     // now save it and reload it
     Comic result = archiveAdaptor.saveComic(comic, false, TEST_CREATED_CBZ_FILE);

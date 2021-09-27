@@ -18,7 +18,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
-import { COMIC_2, PAGE_1 } from '@app/comic-book/comic-book.fixtures';
+import { COMIC_2 } from '@app/comic-book/comic-book.fixtures';
 import { ComicPageUrlPipe } from '@app/comic-book/pipes/comic-page-url.pipe';
 import { ComicPageComponent } from '@app/comic-book/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
@@ -32,6 +32,7 @@ import { USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;

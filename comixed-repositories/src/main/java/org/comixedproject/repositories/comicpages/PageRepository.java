@@ -20,9 +20,9 @@ package org.comixedproject.repositories.comicpages;
 
 import java.util.List;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -33,6 +33,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PageRepository extends CrudRepository<Page, Long> {
   /**
+   * Finds a single page with a given hash.
+   *
+   * @param hash the page hash
+   * @return the page
+   */
+  List<Page> findByHash(String hash);
+
+  /**
    * Returns a list of Pages with duplicate hashes.
    *
    * @return a list of Page objects with duplicate hashes
@@ -41,24 +49,12 @@ public interface PageRepository extends CrudRepository<Page, Long> {
       "SELECT p FROM Page p JOIN FETCH p.comic WHERE p.hash IN (SELECT d.hash FROM Page d GROUP BY d.hash HAVING COUNT(*) > 1) GROUP BY p.id, p.hash")
   List<Page> getDuplicatePages();
 
-  @Query("SELECT p FROM Page p WHERE p.comic.id = :id")
-  List<Page> findAllByComicId(@Param("id") long id);
-
   /**
-   * Returns the list of all pages with the given page hash.
-   *
-   * @param hash the hash value
-   * @return the list of pages
-   */
-  @Query("SELECT p FROM Page p WHERE p.hash = :hash")
-  List<Page> getPagesWithHash(@Param("hash") String hash);
-
-  /**
-   * Returns the list of pages that have the given hash and deleted flag value.
+   * Returns the list of pages that have the given hash and state flag value.
    *
    * @param hash the page hash
-   * @param deleted the deleted flag
+   * @param state the state
    * @return the pages
    */
-  List<Page> findByHashAndDeleted(String hash, boolean deleted);
+  List<Page> findByHashAndPageState(String hash, PageState state);
 }

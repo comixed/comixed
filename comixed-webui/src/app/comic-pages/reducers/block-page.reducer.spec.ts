@@ -17,12 +17,12 @@
  */
 
 import { BlockPageState, initialState, reducer } from './block-page.reducer';
-import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
 import {
   blockedStateSet,
   setBlockedState,
   setBlockedStateFailed
 } from '@app/comic-pages/actions/block-page.actions';
+import { PAGE_2 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('BlockPage Reducer', () => {
   const PAGE = PAGE_2;

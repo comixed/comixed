@@ -28,6 +28,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.views.View;
@@ -328,7 +329,8 @@ public class Comic {
   @Transient
   private Integer calculatedPageCount;
 
-  @Formula(value = "(SELECT COUNT(*) FROM Pages p where p.ComicId = id AND p.Deleted = true)")
+  @Formula(
+      value = "(SELECT COUNT(*) FROM Pages p where p.ComicId = id AND p.PageState = 'DELETED')")
   @JsonIgnore
   @Getter
   private Integer calculatedDeletedPageCount;
@@ -578,7 +580,7 @@ public class Comic {
     List<Page> pages = new ArrayList<>(this.pages);
     pages.forEach(
         page -> {
-          if (page.isDeleted()) {
+          if (page.getPageState() == PageState.DELETED) {
             log.trace("Removing page: {}", page.getId());
             this.pages.remove(page);
           }

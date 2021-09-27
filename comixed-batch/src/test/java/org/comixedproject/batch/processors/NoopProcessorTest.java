@@ -16,25 +16,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicpages.processors;
+package org.comixedproject.batch.processors;
 
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicpages.Page;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.stereotype.Component;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-/**
- * <code>UnmarkPageWithHashProcessor</code> unmarks a page for deletion.
- *
- * @author Darryl L. Pierce
- */
-@Component
-@Log4j2
-public class UnmarkPageWithHashProcessor implements ItemProcessor<Page, Page> {
-  @Override
-  public Page process(final Page page) throws Exception {
-    log.trace("Clearing delete flag for page: id={}", page.getId());
-    page.setDeleted(false);
-    return page;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+@RunWith(MockitoJUnitRunner.class)
+public class NoopProcessorTest {
+  @InjectMocks private NoopProcessor<Object> processor;
+  @Mock private Object item;
+
+  @Test
+  public void testProcess() throws Exception {
+    final Object result = processor.process(item);
+
+    assertNotNull(result);
+    assertSame(item, result);
   }
 }
