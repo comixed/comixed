@@ -44,13 +44,13 @@
       "label": "Libellé"
     },
     "load-effect-failure": "Impossible de charger les pages bloquées.",
-    "set-deleted-flag": {
+    "mark-pages-with-hash": {
       "confirm-clear-message": "Etes-vous sûr de vouloir annuler la suppression des pages avec ce hash ?",
       "confirm-clear-title": "Ne pas supprimer les pages affectées",
       "confirm-mark-message": "Etes-vous sûr de vouloir marquer les pages avec ce hash pour la suppression ?",
       "confirm-mark-title": "Marquer les pages pour suppression",
       "effect-failure": "Échec {deleted, select, true{de l'ajout} other{de l'annulation}} du flag de suppression.",
-      "effect-success": "{deleted, select, true{Marquage} other{Nettoyage}} {count, plural, =1{d'une page} other{# pages}} pour suppression."
+      "effect-success": "{deleted, select, true{Marquage} other{Nettoyage}} pour suppression."
     },
     "tooltip": {
       "clear-deleted": "Effacer les pages sélectionnées de la suppression.",

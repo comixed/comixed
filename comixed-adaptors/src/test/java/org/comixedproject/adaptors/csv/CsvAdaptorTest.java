@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.blockedpage.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedPage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

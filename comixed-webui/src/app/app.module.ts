@@ -63,7 +63,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { MatListModule } from '@angular/material/list';
-import { BlockedPagesModule } from '@app/blocked-pages/blocked-pages.module';
+import { ComicPagesModule } from '@app/comic-pages/comic-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
 import { LastReadModule } from '@app/last-read/last-read.module';
 import { ComicFileModule } from '@app/comic-file/comic-file.module';
@@ -88,7 +88,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     ComicBookModule.forRoot(),
     ComicFileModule,
     LibraryModule,
-    BlockedPagesModule,
+    ComicPagesModule,
     LastReadModule,
     CollectionsModule,
     ListsModule,

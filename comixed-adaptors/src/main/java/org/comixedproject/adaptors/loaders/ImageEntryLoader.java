@@ -25,7 +25,7 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.Page;
+import org.comixedproject.model.comicpages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -34,7 +34,7 @@ import { Comic } from '@app/comic-book/models/comic';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { setBlockedState } from '@app/blocked-pages/actions/block-page.actions';
+import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
