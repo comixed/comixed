@@ -24,9 +24,9 @@ export interface Page {
   filename: string;
   hash: string;
   pageNumber: number;
-  deleted: boolean;
   width: number;
   height: number;
+  deleted: boolean;
   blocked: boolean;
   index: number;
 }

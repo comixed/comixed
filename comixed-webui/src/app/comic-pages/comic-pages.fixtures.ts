@@ -18,6 +18,7 @@
 
 import { BlockedHash } from './models/blocked-hash';
 import { DownloadDocument } from '@app/core/models/download-document';
+import { Page } from '@app/comic-book/models/page';
 
 export const BLOCKED_HASH_1: BlockedHash = {
   id: 1,
@@ -63,4 +64,52 @@ export const BLOCKED_PAGE_FILE: DownloadDocument = {
   filename: 'Blocked Hashes.csv',
   mediaType: 'text/csv',
   content: 'blahblahblahblahblahblahblahblahblah'
+};
+
+export const PAGE_1: Page = {
+  id: 1000,
+  filename: 'firstpage.png',
+  hash: 'abcdef1234567890',
+  pageNumber: 1,
+  width: 1080,
+  height: 1920,
+  deleted: false,
+  blocked: false,
+  index: 0
+};
+
+export const PAGE_2: Page = {
+  id: 1001,
+  filename: 'firstpage.png',
+  hash: 'abcdef1234567891',
+  pageNumber: 2,
+  width: 1080,
+  height: 1920,
+  deleted: false,
+  blocked: false,
+  index: 0
+};
+
+export const PAGE_3: Page = {
+  id: 1002,
+  filename: 'firstpage.png',
+  hash: 'abcdef1234567892',
+  pageNumber: 3,
+  width: 1080,
+  height: 1920,
+  deleted: false,
+  blocked: false,
+  index: 0
+};
+
+export const PAGE_4: Page = {
+  id: 1003,
+  filename: 'firstpage.png',
+  hash: 'abcdef1234567893',
+  pageNumber: 4,
+  width: 1080,
+  height: 1920,
+  deleted: false,
+  blocked: false,
+  index: 0
 };

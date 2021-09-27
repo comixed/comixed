@@ -16,31 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-import { PageService } from './page.service';
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
-import { LoggerModule } from '@angular-ru/logger';
-import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+package org.comixedproject.state.comicpages;
 
-describe('PageService', () => {
-  const PAGE = PAGE_1;
+import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 
-  let service: PageService;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
-    });
-
-    service = TestBed.inject(PageService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+/**
+ * <code>PageStateChangeListener</code> defines a type that is notified of state changes for a
+ * {@link Page}.
+ *
+ * @author Darryl L. Pierce
+ */
+public interface PageStateChangeListener {
+  /**
+   * Invokes with the details of a state change.
+   *
+   * @param state the new state
+   * @param message the event message
+   */
+  void onPageStateChange(State<PageState, PageEvent> state, Message<PageEvent> message);
+}

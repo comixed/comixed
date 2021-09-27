@@ -19,9 +19,9 @@
 package org.comixedproject.batch.comicpages;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicpages.processors.UnmarkPageWithHashProcessor;
 import org.comixedproject.batch.comicpages.readers.UnmarkPageWithHashReader;
 import org.comixedproject.batch.comicpages.writers.UnmarkPageWithHashWriter;
+import org.comixedproject.batch.processors.NoopProcessor;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -83,7 +83,7 @@ public class UnmarkPagesWithHashConfiguration {
   public Step unmarkPageWithHashStep(
       final StepBuilderFactory stepBuilderFactory,
       final UnmarkPageWithHashReader reader,
-      final UnmarkPageWithHashProcessor processor,
+      final NoopProcessor<Page> processor,
       final UnmarkPageWithHashWriter writer) {
     return stepBuilderFactory
         .get("unmarkPageWithHashStep")

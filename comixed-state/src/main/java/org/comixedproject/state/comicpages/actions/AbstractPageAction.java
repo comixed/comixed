@@ -16,31 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { TestBed } from '@angular/core/testing';
-import { PageService } from './page.service';
-import {
-  HttpClientTestingModule,
-  HttpTestingController
-} from '@angular/common/http/testing';
-import { LoggerModule } from '@angular-ru/logger';
-import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+package org.comixedproject.state.comicpages.actions;
 
-describe('PageService', () => {
-  const PAGE = PAGE_1;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.comicpages.PageState;
+import org.comixedproject.state.StateContextAccessor;
+import org.comixedproject.state.comicpages.PageEvent;
+import org.springframework.statemachine.action.Action;
 
-  let service: PageService;
-  let httpMock: HttpTestingController;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
-    });
-
-    service = TestBed.inject(PageService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+/**
+ * <code>AbstractPageAction</code> provides a foundation for building new actions for {@link Page}
+ * state events.
+ *
+ * @author Darryl L. Pierce
+ */
+@Log4j2
+public abstract class AbstractPageAction extends StateContextAccessor
+    implements Action<PageState, PageEvent> {}

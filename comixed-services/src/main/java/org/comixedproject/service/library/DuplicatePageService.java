@@ -77,7 +77,7 @@ public class DuplicatePageService {
    */
   public DuplicatePage getForHash(final String hash) throws DuplicatePageException {
     log.trace("Loading all pages with a given hash");
-    final List<Page> pages = this.pageRepository.getPagesWithHash(hash);
+    final List<Page> pages = this.pageRepository.findByHash(hash);
     if (pages.isEmpty()) {
       log.trace("Hash not found: raising exception");
       throw new DuplicatePageException("Hash not found: " + hash);

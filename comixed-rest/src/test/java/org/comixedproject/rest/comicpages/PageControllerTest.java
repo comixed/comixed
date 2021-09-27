@@ -31,6 +31,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.service.comicpages.PageException;
 import org.comixedproject.service.comicpages.PageService;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,7 +73,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageContent() throws ComicException, ArchiveAdaptorException {
+  public void testGetPageContent() throws ComicException, ArchiveAdaptorException, PageException {
     Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(page.getComic()).thenReturn(comic);
@@ -98,7 +99,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testDeletePageInvalidId() {
+  public void testDeletePageInvalidId() throws PageException {
     Mockito.when(pageService.deletePage(Mockito.anyLong())).thenReturn(null);
 
     final Comic result = controller.deletePage(TEST_PAGE_ID);
@@ -109,7 +110,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testDeletePage() {
+  public void testDeletePage() throws PageException {
     Mockito.when(pageService.deletePage(Mockito.anyLong())).thenReturn(comic);
 
     final Comic result = controller.deletePage(TEST_PAGE_ID);
@@ -121,7 +122,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testUndeletePageForNonexistentPage() {
+  public void testUndeletePageForNonexistentPage() throws PageException {
     Mockito.when(pageService.undeletePage(Mockito.anyLong())).thenReturn(null);
 
     final Comic result = controller.undeletePage(TEST_PAGE_ID);
@@ -132,7 +133,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testUndeletePage() {
+  public void testUndeletePage() throws PageException {
     Mockito.when(pageService.undeletePage(Mockito.anyLong())).thenReturn(comic);
 
     final Comic result = controller.undeletePage(TEST_PAGE_ID);
@@ -177,17 +178,5 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1))
         .getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
-  }
-
-  @Test
-  public void testGetAllPagesForComic() {
-    Mockito.when(pageService.getAllPagesForComic(Mockito.anyLong())).thenReturn(pageList);
-
-    List<Page> result = controller.getAllPagesForComic(TEST_COMIC_ID);
-
-    assertNotNull(result);
-    assertSame(pageList, result);
-
-    Mockito.verify(pageService, Mockito.times(1)).getAllPagesForComic(TEST_COMIC_ID);
   }
 }

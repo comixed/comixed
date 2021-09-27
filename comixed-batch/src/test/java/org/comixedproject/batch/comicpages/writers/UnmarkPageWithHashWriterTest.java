@@ -21,8 +21,8 @@ package org.comixedproject.batch.comicpages.writers;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicpages.PageService;
-import org.junit.Before;
+import org.comixedproject.state.comicpages.PageEvent;
+import org.comixedproject.state.comicpages.PageStateHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,20 +32,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UnmarkPageWithHashWriterTest {
-  private static final long TEST_PAGE_ID = 213L;
-
   @InjectMocks private UnmarkPageWithHashWriter writer;
-  @Mock private PageService pageService;
+  @Mock private PageStateHandler pageStateHandler;
   @Mock private Page page;
-  @Mock private Page savedPage;
 
   private List<Page> pageList = new ArrayList<>();
-
-  @Before
-  public void setUp() {
-    Mockito.when(page.getId()).thenReturn(TEST_PAGE_ID);
-    Mockito.when(pageService.save(Mockito.any(Page.class))).thenReturn(savedPage);
-  }
 
   @Test
   public void testWrite() throws Exception {
@@ -53,6 +44,7 @@ public class UnmarkPageWithHashWriterTest {
 
     writer.write(pageList);
 
-    Mockito.verify(pageService, Mockito.times(pageList.size())).save(page);
+    Mockito.verify(pageStateHandler, Mockito.times(pageList.size()))
+        .fireEvent(page, PageEvent.unmarkForDeletion);
   }
 }

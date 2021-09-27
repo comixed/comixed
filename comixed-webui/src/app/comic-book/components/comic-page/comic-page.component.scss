@@ -1,3 +1,7 @@
 .blocked-page {
-  filter: grayscale(100%);
+  filter: sepia(100%) !important;
+}
+
+.deleted-page {
+  filter: blur(3px) !important;
 }

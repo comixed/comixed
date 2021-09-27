@@ -25,7 +25,8 @@ import {
   BLOCKED_HASH_3,
   BLOCKED_HASH_4,
   BLOCKED_HASH_5,
-  BLOCKED_PAGE_FILE
+  BLOCKED_PAGE_FILE,
+  PAGE_2
 } from '@app/comic-pages/comic-pages.fixtures';
 import { LoggerModule } from '@angular-ru/logger';
 import {
@@ -58,7 +59,6 @@ import {
   blockedHashUpdated
 } from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { Subscription } from 'webstomp-client';
-import { PAGE_2 } from '@app/comic-book/comic-book.fixtures';
 import { HttpResponse } from '@angular/common/http';
 import { DeleteBlockedPagesRequest } from '@app/comic-pages/models/net/delete-blocked-pages-request';
 import { SetBlockedStateRequest } from '@app/comic-pages/models/net/set-blocked-state-request';
