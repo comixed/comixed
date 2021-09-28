@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BlockedPageListPageComponent } from './blocked-page-list-page.component';
+import { BlockedHashListPageComponent } from './blocked-hash-list-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
   BLOCKED_HASH_LIST_FEATURE_KEY,
@@ -49,21 +49,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { markPagesWithHash } from '@app/comic-pages/actions/blocked-hash-list.actions';
 
-describe('BlockedPageListPageComponent', () => {
+describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_2;
   const initialState = {
     [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
   };
-  let component: BlockedPageListPageComponent;
-  let fixture: ComponentFixture<BlockedPageListPageComponent>;
+  let component: BlockedHashListPageComponent;
+  let fixture: ComponentFixture<BlockedHashListPageComponent>;
   let router: Router;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BlockedPageListPageComponent],
+      declarations: [BlockedHashListPageComponent],
       imports: [
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
@@ -79,7 +79,7 @@ describe('BlockedPageListPageComponent', () => {
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BlockedPageListPageComponent);
+    fixture = TestBed.createComponent(BlockedHashListPageComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
@@ -139,8 +139,8 @@ describe('BlockedPageListPageComponent', () => {
         }
       });
       entry = component.dataSource.data[0];
-      component.hasSelections = false;
-      component.onChangeSelection(entry, true);
+      component.someSelected = false;
+      component.onSelectOne(entry, true);
     });
 
     it('sets the checked state for the item', () => {
@@ -148,7 +148,56 @@ describe('BlockedPageListPageComponent', () => {
     });
 
     it('sets the has selections flag', () => {
-      expect(component.hasSelections).toBeTrue();
+      expect(component.someSelected).toBeTrue();
+    });
+  });
+
+  describe('toggling all selections', () => {
+    beforeEach(() => {
+      component.entries = ENTRIES;
+      component.onSelectAll(true);
+    });
+
+    it('selects all items', () => {
+      expect(
+        component.dataSource.data.every(entry => entry.selected)
+      ).toBeTrue();
+    });
+
+    it('sets the all selected flag', () => {
+      expect(component.allSelected).toBeTrue();
+    });
+
+    it('sets the some selection flag', () => {
+      expect(component.someSelected).toBeTrue();
+    });
+
+    describe('unselecting one item', () => {
+      beforeEach(() => {
+        component.onSelectOne(component.dataSource.data[0], false);
+      });
+
+      it('clears the all selected flag', () => {
+        expect(component.allSelected).toBeFalse();
+      });
+
+      it('sets the some selection flag', () => {
+        expect(component.someSelected).toBeTrue();
+      });
+    });
+
+    describe('deselecting all items', () => {
+      beforeEach(() => {
+        component.onSelectAll(false);
+      });
+
+      it('clears the all selected flag', () => {
+        expect(component.allSelected).toBeFalse();
+      });
+
+      it('clears the some selection flag', () => {
+        expect(component.someSelected).toBeFalse();
+      });
     });
   });
 

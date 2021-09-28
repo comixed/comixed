@@ -19,39 +19,39 @@
 package org.comixedproject.repositories.comicpages;
 
 import java.util.List;
-import org.comixedproject.model.comicpages.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedHash;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * <code>BlockedPageRepository</code> manages persisted instances of {@link BlockedPage}.
+ * <code>BlockedPageRepository</code> manages persisted instances of {@link BlockedHash}.
  *
  * @author The ComiXed Project
  */
-public interface BlockedPageRepository extends JpaRepository<BlockedPage, Long> {
+public interface BlockedPageRepository extends JpaRepository<BlockedHash, Long> {
   /**
    * Returns the one instance with the given hash.
    *
    * @param hash the offset hash
    * @return the instance, or <code>null</code> if no such hash is registered
    */
-  @Query("SELECT b FROM BlockedPage b WHERE b.hash = :#{#hash}")
-  BlockedPage findByHash(@Param("hash") String hash);
+  @Query("SELECT b FROM BlockedHash b WHERE b.hash = :#{#hash}")
+  BlockedHash findByHash(@Param("hash") String hash);
 
   /**
    * Retrieves all blocked page records.
    *
    * @return the records.
    */
-  @Query("SELECT b FROM BlockedPage b")
-  List<BlockedPage> getAll();
+  @Query("SELECT b FROM BlockedHash b")
+  List<BlockedHash> getAll();
 
   /**
    * Retrieves only the hashes from the database.
    *
    * @return the hashes
    */
-  @Query("SELECT b.hash FROM BlockedPage b")
+  @Query("SELECT b.hash FROM BlockedHash b")
   List<String> getHashes();
 }

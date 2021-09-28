@@ -31,10 +31,10 @@ public interface Constants {
   String COMIC_BOOK_UPDATE_TOPIC = "/topic/comic-book.%d.update";
 
   /** Topic which receives blocked page updates in real time. */
-  String BLOCKED_PAGE_LIST_UPDATE_TOPIC = "/topic/blocked-page-list.update";
+  String BLOCKED_HASH_LIST_UPDATE_TOPIC = "/topic/blocked-hash-list.update";
 
   /** Topic which receives blocked page removals in real time. */
-  String BLOCKED_PAGE_LIST_REMOVAL_TOPIC = "/topic/blocked-page-list.removal";
+  String BLOCKED_HASH_LIST_REMOVAL_TOPIC = "/topic/blocked-hash-list.removal";
 
   /** Topic which receives updates on the current user." */
   String CURRENT_USER_UPDATE_TOPIC = "/topic/user/current";

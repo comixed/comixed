@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicpages.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.junit.Before;
@@ -35,14 +35,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PublishBlockedPageRemovalActionTest {
+public class PublishBlockedHashUpdateActionTest {
   private static final String TEST_BLOCKED_PAGE_AS_JSON = "Object as JSON";
 
-  @InjectMocks private PublishBlockedPageRemovalAction action;
+  @InjectMocks private PublishBlockedPageUpdateAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private BlockedPage blockedPage;
+  @Mock private BlockedHash blockedHash;
 
   @Before
   public void setUp() throws JsonProcessingException {
@@ -58,9 +58,9 @@ public class PublishBlockedPageRemovalActionTest {
         .thenThrow(JsonProcessingException.class);
 
     try {
-      action.publish(blockedPage);
+      action.publish(blockedHash);
     } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedPageList.class);
+      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedHashList.class);
     }
   }
 
@@ -69,11 +69,11 @@ public class PublishBlockedPageRemovalActionTest {
     Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
         .thenReturn(TEST_BLOCKED_PAGE_AS_JSON);
 
-    action.publish(blockedPage);
+    action.publish(blockedHash);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedPageList.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(blockedPage);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.BlockedHashList.class);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(blockedHash);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.BLOCKED_PAGE_LIST_REMOVAL_TOPIC, TEST_BLOCKED_PAGE_AS_JSON);
+        .convertAndSend(Constants.BLOCKED_HASH_LIST_UPDATE_TOPIC, TEST_BLOCKED_PAGE_AS_JSON);
   }
 }

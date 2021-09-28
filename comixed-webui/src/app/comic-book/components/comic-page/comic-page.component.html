@@ -6,7 +6,7 @@
       [alt]="imageUrl"
       [style.height]="imageHeight"
       [style.width]="imageWidth"
-      [class.blocked-page]="page?.blocked"
+      [class.blocked-hash]="page?.blocked"
       [class.deleted-page]="page?.deleted"
       (contextmenu)="onContextMenu($event)"
     />
@@ -14,7 +14,7 @@
   <mat-card-footer *ngIf="page?.blocked">
     <mat-icon
       *ngIf="page?.blocked"
-      [matTooltip]="'comic-book.tooltip.blocked-page' | translate"
+      [matTooltip]="'comic-book.tooltip.blocked-hash' | translate"
     >
       block
     </mat-icon>

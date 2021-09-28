@@ -50,7 +50,7 @@ export class BlockedHashListEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page-list.load-effect-failure'
+                'blocked-hash-list.load-effect-failure'
               )
             );
             return of(loadBlockedHashListFailed());
@@ -84,7 +84,7 @@ export class BlockedHashListEffects {
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
-                  'blocked-page-list.mark-pages-with-hash.effect-success',
+                  'blocked-hash-list.mark-pages-with-hash.effect-success',
                   { deleted: action.deleted }
                 )
               )
@@ -94,7 +94,7 @@ export class BlockedHashListEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'blocked-page-list.mark-pages-with-hash.effect-failure',
+                  'blocked-hash-list.mark-pages-with-hash.effect-failure',
                   { deleted: action.deleted }
                 )
               );

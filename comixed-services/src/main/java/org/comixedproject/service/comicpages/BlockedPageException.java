@@ -18,9 +18,11 @@
 
 package org.comixedproject.service.comicpages;
 
+import org.comixedproject.model.comicpages.BlockedHash;
+
 /**
  * <code>BlockedPageException</code> is thrown when an error occurs while working with instances of
- * {@link org.comixedproject.model.comicpages.BlockedPage}.
+ * {@link BlockedHash}.
  *
  * @author Darryl L. Pierce
  */

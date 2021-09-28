@@ -86,7 +86,7 @@
     },
     "option": {
       "all-comics": "All comics",
-      "blocked-pages": "Blocked Pages",
+      "blocked-hashs": "Blocked Pages",
       "build-details": "Build Details",
       "character-collection": "Characters",
       "configuration": "Configuration",

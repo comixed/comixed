@@ -380,13 +380,13 @@
          Filename="backpage.jpg"
          PageNumber="4"
          FileHash="EF0123456789ABCDEF0123456789ABCD"/>
-  <BlockedPages Id="1000"
+  <BlockedHashes Id="1000"
                 Label="Created Yesterday"
                 Hash="0123456789ABCDEF0123456789ABCDEF"
                 Snapshot="some base64 data"
                 CreatedOn="[now-1d]"
   />
-  <BlockedPages Id="1001"
+  <BlockedHashes Id="1001"
                 Label="Created Today"
                 Hash="ABCDEF0123456789ABCDEF0123456789"
                 Snapshot="some base64 data"

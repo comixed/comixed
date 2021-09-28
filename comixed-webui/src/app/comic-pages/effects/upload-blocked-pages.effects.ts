@@ -46,7 +46,7 @@ export class UploadBlockedPagesEffects {
           tap((response: BlockedHash[]) =>
             this.alertService.info(
               this.translateService.instant(
-                'blocked-page-list.upload-file.effect-success',
+                'blocked-hash-list.upload-file.effect-success',
                 { count: response.length }
               )
             )
@@ -59,7 +59,7 @@ export class UploadBlockedPagesEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page-list.upload-file.effect-failure'
+                'blocked-hash-list.upload-file.effect-failure'
               )
             );
             return of(uploadBlockedPagesFailed());

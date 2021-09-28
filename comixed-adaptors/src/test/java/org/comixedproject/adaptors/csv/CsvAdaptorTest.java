@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicpages.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedHash;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,17 +24,17 @@ public class CsvAdaptorTest {
 
   @InjectMocks private CsvAdaptor adaptor;
 
-  private BlockedPage blockedPage =
-      new BlockedPage(TEST_PAGE_LABEL, TEST_PAGE_HASH, TEST_PAGE_SNAPSHOT);
-  private List<BlockedPage> blockedPages = new ArrayList<>();
+  private BlockedHash blockedHash =
+      new BlockedHash(TEST_PAGE_LABEL, TEST_PAGE_HASH, TEST_PAGE_SNAPSHOT);
+  private List<BlockedHash> blockedHashes = new ArrayList<>();
 
   @Test
   public void testEncodeAndDecode() throws IOException {
-    blockedPages.add(blockedPage);
+    blockedHashes.add(blockedHash);
 
     final byte[] encoded =
         adaptor.encodeRecords(
-            blockedPages,
+            blockedHashes,
             (index, model) -> {
               if (index == 0) {
                 return new String[] {LABEL, HASH, SNAPSHOT};

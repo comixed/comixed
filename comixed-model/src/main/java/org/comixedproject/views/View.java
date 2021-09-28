@@ -85,11 +85,11 @@ public class View {
   /** Used when viewing the build details for the server. */
   public interface BuildDetails {}
 
-  /** Used when viewing a list of blocked pages. */
-  public interface BlockedPageList {}
+  /** Used when viewing a list of blocked hashes. */
+  public interface BlockedHashList {}
 
-  /** Used when viewing the details of a blocked page. */
-  public interface BlockedPageDetail extends BlockedPageList {}
+  /** Used when viewing the details of a blocked hashes. */
+  public interface BlockedHashDetail extends BlockedHashList {}
 
   /** Used when viewing the last read dates for a user. */
   public interface LastReadList {}

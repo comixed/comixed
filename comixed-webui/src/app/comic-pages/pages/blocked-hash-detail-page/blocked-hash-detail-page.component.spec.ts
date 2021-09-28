@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BlockedPageDetailPageComponent } from './blocked-page-detail-page.component';
+import { BlockedHashDetailPageComponent } from './blocked-hash-detail-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import {
   BLOCKED_PAGE_DETAIL_FEATURE_KEY,
@@ -48,7 +48,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 
-describe('BlockedPageDetailPageComponent', () => {
+describe('BlockedHashDetailPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_4;
   const initialState = {
@@ -59,15 +59,15 @@ describe('BlockedPageDetailPageComponent', () => {
     [USER_FEATURE_KEY]: initialUserState
   };
 
-  let component: BlockedPageDetailPageComponent;
-  let fixture: ComponentFixture<BlockedPageDetailPageComponent>;
+  let component: BlockedHashDetailPageComponent;
+  let fixture: ComponentFixture<BlockedHashDetailPageComponent>;
   let store: MockStore<any>;
   let router: Router;
   let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BlockedPageDetailPageComponent],
+      declarations: [BlockedHashDetailPageComponent],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -84,7 +84,7 @@ describe('BlockedPageDetailPageComponent', () => {
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BlockedPageDetailPageComponent);
+    fixture = TestBed.createComponent(BlockedHashDetailPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
