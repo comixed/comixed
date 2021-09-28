@@ -12,3 +12,4 @@ coverage
 yarn-error.log
 comixed-webui/node/*
 comixed-webui/node_modules/*
+ComiXed*Installer.exe
