@@ -23,10 +23,10 @@ export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
   return new MultiTranslateHttpLoader(http, [
     { prefix: './assets/i18n/', suffix: '/admin.json' },
     { prefix: './assets/i18n/', suffix: '/app.json' },
-    { prefix: './assets/i18n/', suffix: '/blocked-pages.json' },
     { prefix: './assets/i18n/', suffix: '/collections.json' },
     { prefix: './assets/i18n/', suffix: '/comic-book.json' },
     { prefix: './assets/i18n/', suffix: '/comic-file.json' },
+    { prefix: './assets/i18n/', suffix: '/comic-pages.json' },
     { prefix: './assets/i18n/', suffix: '/core.json' },
     { prefix: './assets/i18n/', suffix: '/last-read.json' },
     { prefix: './assets/i18n/', suffix: '/library.json' },

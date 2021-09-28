@@ -52,7 +52,7 @@ export class BlockedPageDetailEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page.load-by-hash-effect-error',
+                'blocked-hash.load-by-hash-effect-error',
                 { hash: action.hash }
               )
             );
@@ -80,7 +80,7 @@ export class BlockedPageDetailEffects {
           tap((response: BlockedHash) =>
             this.alertService.info(
               this.translateService.instant(
-                'blocked-page.editing.save-effect-success'
+                'blocked-hash.editing.save-effect-success'
               )
             )
           ),
@@ -89,7 +89,7 @@ export class BlockedPageDetailEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page.editing.save-effect-failure'
+                'blocked-hash.editing.save-effect-failure'
               )
             );
             return of(saveBlockedPageFailed());

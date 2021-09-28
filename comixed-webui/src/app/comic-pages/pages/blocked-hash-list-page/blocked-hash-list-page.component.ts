@@ -37,11 +37,11 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
-  selector: 'cx-blocked-page-list',
-  templateUrl: './blocked-page-list-page.component.html',
-  styleUrls: ['./blocked-page-list-page.component.scss']
+  selector: 'cx-blocked-hash-list',
+  templateUrl: './blocked-hash-list-page.component.html',
+  styleUrls: ['./blocked-hash-list-page.component.scss']
 })
-export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
+export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
   @ViewChild('MatPagination') paginator: MatPaginator;
 
   pageSubscription: Subscription;
@@ -54,7 +54,8 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     'created-on'
   ];
   showUploadRow = false;
-  hasSelections = false;
+  someSelected = false;
+  allSelected = false;
 
   constructor(
     private logger: LoggerService,
@@ -75,22 +76,17 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
         oldData.find(entry => entry.item.id === item.id)?.selected || false;
       return { selected, item };
     });
-    this.hasSelections = this.dataSource.data.some(entry => entry.selected);
+    this.someSelected = this.dataSource.data.some(entry => entry.selected);
   }
 
   ngOnInit(): void {
     this.store.dispatch(loadBlockedHashList());
   }
 
-  onChangeSelection(
-    entry: SelectableListItem<BlockedHash>,
-    checked: boolean
-  ): void {
+  onSelectOne(entry: SelectableListItem<BlockedHash>, checked: boolean): void {
     this.logger.debug('Changing selection to', checked);
     entry.selected = checked;
-    this.hasSelections = this.dataSource.data.some(
-      listEntry => listEntry.selected
-    );
+    this.updateSelections();
   }
 
   ngAfterViewInit(): void {
@@ -111,10 +107,10 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     this.showUploadRow = false;
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'blocked-page-list.upload-file.confirmation-title'
+        'blocked-hash-list.upload-file.confirmation-title'
       ),
       message: this.translateService.instant(
-        'blocked-page-list.upload-file.confirmation-message'
+        'blocked-hash-list.upload-file.confirmation-message'
       ),
       confirm: () => {
         this.logger.debug('Uploading blocked pages file:', file);
@@ -126,10 +122,10 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
   onDeleteEntries(): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'blocked-page-list.delete-entries.confirmation-title'
+        'blocked-hash-list.delete-entries.confirmation-title'
       ),
       message: this.translateService.instant(
-        'blocked-page-list.delete-entries.confirmation-message',
+        'blocked-hash-list.delete-entries.confirmation-message',
         { count: this.dataSource.data.filter(entry => entry.selected).length }
       ),
       confirm: () => {
@@ -146,10 +142,10 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     this.logger.trace('Confirming marking selected pages for deletion');
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'blocked-page-list.mark-pages-with-hash.confirm-mark-title'
+        'blocked-hash-list.mark-pages-with-hash.confirm-mark-title'
       ),
       message: this.translateService.instant(
-        'blocked-page-list.mark-pages-with-hash.confirm-mark-message'
+        'blocked-hash-list.mark-pages-with-hash.confirm-mark-message'
       ),
       confirm: () => {
         this.logger.trace(
@@ -164,10 +160,10 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     this.logger.trace('Confirming clearing selected pages for deletion');
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'blocked-page-list.mark-pages-with-hash.confirm-clear-title'
+        'blocked-hash-list.mark-pages-with-hash.confirm-clear-title'
       ),
       message: this.translateService.instant(
-        'blocked-page-list.mark-pages-with-hash.confirm-clear-message'
+        'blocked-hash-list.mark-pages-with-hash.confirm-clear-message'
       ),
       confirm: () => {
         this.logger.trace(
@@ -176,6 +172,12 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
         this.doSetDeletionFlag(false);
       }
     });
+  }
+
+  onSelectAll(checked: boolean): void {
+    this.logger.trace('Selecting all:', checked);
+    this.dataSource.data.forEach(entry => (entry.selected = checked));
+    this.updateSelections();
   }
 
   private doSetDeletionFlag(deleted: boolean): void {
@@ -187,5 +189,12 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
         deleted
       })
     );
+  }
+
+  private updateSelections(): void {
+    this.allSelected = this.dataSource.data.every(entry => entry.selected);
+    this.someSelected =
+      this.allSelected ||
+      this.dataSource.data.some(listEntry => listEntry.selected);
   }
 }

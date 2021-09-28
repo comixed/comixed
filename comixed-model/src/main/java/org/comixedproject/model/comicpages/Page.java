@@ -101,7 +101,7 @@ public class Page {
   private Integer height = -1;
 
   @Formula(
-      "(SELECT CASE WHEN (FileHash IN (SELECT b.hash FROM BlockedPages b)) THEN true ELSE false END)")
+      "(SELECT CASE WHEN (FileHash IN (SELECT b.hash FROM BlockedHashes b)) THEN true ELSE false END)")
   @JsonProperty("blocked")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter

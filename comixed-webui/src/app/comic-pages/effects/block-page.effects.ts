@@ -45,7 +45,7 @@ export class BlockPageEffects {
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
-                  'blocked-page.set-state.effect-success',
+                  'blocked-hash.set-state.effect-success',
                   { blocked: action.blocked }
                 )
               )
@@ -55,7 +55,7 @@ export class BlockPageEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'blocked-page.set-state.effect-failure',
+                  'blocked-hash.set-state.effect-failure',
                   { blocked: action.blocked }
                 )
               );

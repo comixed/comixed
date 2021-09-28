@@ -26,8 +26,8 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { WebSocketService } from '@app/messaging';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import {
-  BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
-  BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+  BLOCKED_HASH_LIST_REMOVAL_TOPIC,
+  BLOCKED_HASH_LIST_UPDATE_TOPIC,
   DELETE_BLOCKED_PAGES_URL,
   DOWNLOAD_BLOCKED_PAGE_FILE_URL,
   LOAD_ALL_BLOCKED_PAGES_URL,
@@ -70,7 +70,7 @@ export class BlockedPageService {
         this.store.dispatch(loadBlockedHashList());
         this.logger.trace('Subscribing to blocked page updates');
         this.updateSubscription = this.webSocketService.subscribe<BlockedHash>(
-          BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+          BLOCKED_HASH_LIST_UPDATE_TOPIC,
           entry => {
             this.logger.trace('Received blocked page update:', entry);
             this.store.dispatch(blockedHashUpdated({ entry }));
@@ -80,7 +80,7 @@ export class BlockedPageService {
       if (state.started && !this.removalSubscription) {
         this.logger.trace('Subscribing to blocked page removals');
         this.removalSubscription = this.webSocketService.subscribe<BlockedHash>(
-          BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
+          BLOCKED_HASH_LIST_REMOVAL_TOPIC,
           entry => {
             this.logger.trace('Received blocked page removal:', entry);
             this.store.dispatch(blockedHashRemoved({ entry }));

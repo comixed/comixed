@@ -150,7 +150,7 @@ public class Comic {
 
   @Formula(
       value =
-          "(SELECT COUNT(*) FROM Pages p WHERE p.ComicId = id AND p.FileHash in (SELECT b.Hash FROM BlockedPages b))")
+          "(SELECT COUNT(*) FROM Pages p WHERE p.ComicId = id AND p.FileHash in (SELECT b.Hash FROM BlockedHashes b))")
   @JsonProperty("blockedPageCount")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter

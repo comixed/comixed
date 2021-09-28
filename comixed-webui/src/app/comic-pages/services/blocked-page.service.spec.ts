@@ -40,8 +40,8 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
-  BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+  BLOCKED_HASH_LIST_REMOVAL_TOPIC,
+  BLOCKED_HASH_LIST_UPDATE_TOPIC,
   DELETE_BLOCKED_PAGES_URL,
   DOWNLOAD_BLOCKED_PAGE_FILE_URL,
   LOAD_ALL_BLOCKED_PAGES_URL,
@@ -128,13 +128,13 @@ describe('BlockedPageService', () => {
       service.updateSubscription = null;
       service.removalSubscription = null;
       webSocketService.subscribe
-        .withArgs(BLOCKED_PAGE_LIST_UPDATE_TOPIC, jasmine.anything())
+        .withArgs(BLOCKED_HASH_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(UPDATED);
           return {} as Subscription;
         });
       webSocketService.subscribe
-        .withArgs(BLOCKED_PAGE_LIST_REMOVAL_TOPIC, jasmine.anything())
+        .withArgs(BLOCKED_HASH_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((topic, callback) => {
           callback(REMOVED);
           return {} as Subscription;
@@ -147,14 +147,14 @@ describe('BlockedPageService', () => {
 
     it('subscribes to the blocked page list update topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        BLOCKED_PAGE_LIST_UPDATE_TOPIC,
+        BLOCKED_HASH_LIST_UPDATE_TOPIC,
         jasmine.anything()
       );
     });
 
     it('subscribes to the blocked page list removal topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        BLOCKED_PAGE_LIST_REMOVAL_TOPIC,
+        BLOCKED_HASH_LIST_REMOVAL_TOPIC,
         jasmine.anything()
       );
     });

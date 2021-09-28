@@ -1,5 +1,5 @@
 {
-  "blocked-page": {
+  "blocked-hash": {
     "add-page-hash": {
       "confirmation-message": "Are you sure you want to block all pages with the hash \"{hash}\"?",
       "confirmation-title": "Block Page With Hash"
@@ -27,7 +27,7 @@
       "effect-success": "El hash de página {block, select, true{blocked} other{unblocked}} correctamente."
     }
   },
-  "blocked-page-list": {
+  "blocked-hash-list": {
     "delete-entries": {
       "confirmation-message": "¿Está seguro de que desea desbloquear el/la {count, plural, =1{selected entry} other{# selected entries}}?",
       "confirmation-title": "Desbloquear hashes",

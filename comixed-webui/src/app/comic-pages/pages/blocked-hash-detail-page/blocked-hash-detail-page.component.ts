@@ -39,11 +39,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
-  selector: 'cx-blocked-page-detail-page',
-  templateUrl: './blocked-page-detail-page.component.html',
-  styleUrls: ['./blocked-page-detail-page.component.scss']
+  selector: 'cx-blocked-hash-detail-page',
+  templateUrl: './blocked-hash-detail-page.component.html',
+  styleUrls: ['./blocked-hash-detail-page.component.scss']
 })
-export class BlockedPageDetailPageComponent implements OnInit, OnDestroy {
+export class BlockedHashDetailPageComponent implements OnInit, OnDestroy {
   paramsSubscription: Subscription;
   blockedPageDetailStateSubscription: Subscription;
   blockedPageSubscription: Subscription;
@@ -123,9 +123,9 @@ export class BlockedPageDetailPageComponent implements OnInit, OnDestroy {
 
   onSave(): void {
     this.confirmationService.confirm({
-      title: this.translateService.instant('blocked-page.editing.save-title'),
+      title: this.translateService.instant('blocked-hash.editing.save-title'),
       message: this.translateService.instant(
-        'blocked-page.editing.save-message'
+        'blocked-hash.editing.save-message'
       ),
       confirm: () => {
         this.logger.debug('Saving changes');
@@ -136,9 +136,9 @@ export class BlockedPageDetailPageComponent implements OnInit, OnDestroy {
 
   onReset(): void {
     this.confirmationService.confirm({
-      title: this.translateService.instant('blocked-page.editing.reset-title'),
+      title: this.translateService.instant('blocked-hash.editing.reset-title'),
       message: this.translateService.instant(
-        'blocked-page.editing.reset-message'
+        'blocked-hash.editing.reset-message'
       ),
       confirm: () => {
         this.logger.debug('Resetting changes');

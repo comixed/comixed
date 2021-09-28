@@ -53,7 +53,7 @@ export class DownloadBlockedPagesEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page-list.download-file.effect-failure'
+                'blocked-hash-list.download-file.effect-failure'
               )
             );
             return of(downloadBlockedPagesFailed());

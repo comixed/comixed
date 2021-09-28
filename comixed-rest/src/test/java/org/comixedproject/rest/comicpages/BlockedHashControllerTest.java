@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicpages.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.SetBlockedPageRequest;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
@@ -54,20 +54,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.multipart.MultipartFile;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BlockedPageControllerTest {
+public class BlockedHashControllerTest {
   private static final String TEST_PAGE_HASH = "0123456789ABCDEF0123456789ABCDEF";
 
   @InjectMocks private BlockedPageController controller;
   @Mock private BlockedPageService blockedPageService;
-  @Mock private List<BlockedPage> blockedPageList;
-  @Mock private BlockedPage blockedPage;
-  @Mock private BlockedPage blockedPageRecord;
+  @Mock private List<BlockedHash> blockedHashList;
+  @Mock private BlockedHash blockedHash;
+  @Mock private BlockedHash blockedHashRecord;
   @Mock private DownloadDocument downloadDocument;
   @Mock private MultipartFile uploadedFile;
   @Mock private InputStream inputStream;
   @Mock private List<String> hashList;
   @Mock private List<String> updatedHashList;
-  @Mock private List<BlockedPage> blockedPages = new ArrayList<>();
+  @Mock private List<BlockedHash> blockedHashes = new ArrayList<>();
 
   @Mock
   @Qualifier("markPagesWithHashJob")
@@ -84,17 +84,17 @@ public class BlockedPageControllerTest {
 
   @Before
   public void setUp() {
-    blockedPages.add(blockedPageRecord);
+    blockedHashes.add(blockedHashRecord);
   }
 
   @Test
   public void testLoadAll() {
-    Mockito.when(blockedPageService.getAll()).thenReturn(blockedPageList);
+    Mockito.when(blockedPageService.getAll()).thenReturn(blockedHashList);
 
-    final List<BlockedPage> result = controller.getAll();
+    final List<BlockedHash> result = controller.getAll();
 
     assertNotNull(result);
-    assertSame(blockedPageList, result);
+    assertSame(blockedHashList, result);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).getAll();
   }
@@ -113,12 +113,12 @@ public class BlockedPageControllerTest {
 
   @Test
   public void testGetOne() throws BlockedPageException {
-    Mockito.when(blockedPageService.getByHash(Mockito.anyString())).thenReturn(blockedPageRecord);
+    Mockito.when(blockedPageService.getByHash(Mockito.anyString())).thenReturn(blockedHashRecord);
 
-    final BlockedPage result = controller.getByHash(TEST_PAGE_HASH);
+    final BlockedHash result = controller.getByHash(TEST_PAGE_HASH);
 
     assertNotNull(result);
-    assertSame(blockedPageRecord, result);
+    assertSame(blockedHashRecord, result);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).getByHash(TEST_PAGE_HASH);
   }
@@ -134,14 +134,14 @@ public class BlockedPageControllerTest {
   public void testUpdateBlockedPageServiceRaisesException() throws BlockedPageException {
     Mockito.when(
             blockedPageService.updateBlockedPage(
-                Mockito.anyString(), Mockito.any(BlockedPage.class)))
+                Mockito.anyString(), Mockito.any(BlockedHash.class)))
         .thenThrow(BlockedPageException.class);
 
     try {
-      controller.updateBlockedPage(TEST_PAGE_HASH, blockedPage);
+      controller.updateBlockedPage(TEST_PAGE_HASH, blockedHash);
     } finally {
       Mockito.verify(blockedPageService, Mockito.times(1))
-          .updateBlockedPage(TEST_PAGE_HASH, blockedPage);
+          .updateBlockedPage(TEST_PAGE_HASH, blockedHash);
     }
   }
 
@@ -149,16 +149,16 @@ public class BlockedPageControllerTest {
   public void testUpdateBlockedPage() throws BlockedPageException {
     Mockito.when(
             blockedPageService.updateBlockedPage(
-                Mockito.anyString(), Mockito.any(BlockedPage.class)))
-        .thenReturn(blockedPageRecord);
+                Mockito.anyString(), Mockito.any(BlockedHash.class)))
+        .thenReturn(blockedHashRecord);
 
-    final BlockedPage result = controller.updateBlockedPage(TEST_PAGE_HASH, blockedPage);
+    final BlockedHash result = controller.updateBlockedPage(TEST_PAGE_HASH, blockedHash);
 
     assertNotNull(result);
-    assertSame(blockedPageRecord, result);
+    assertSame(blockedHashRecord, result);
 
     Mockito.verify(blockedPageService, Mockito.times(1))
-        .updateBlockedPage(TEST_PAGE_HASH, blockedPage);
+        .updateBlockedPage(TEST_PAGE_HASH, blockedHash);
   }
 
   @Test
@@ -197,12 +197,12 @@ public class BlockedPageControllerTest {
   public void testUploadFile() throws BlockedPageException, IOException {
     Mockito.when(uploadedFile.getInputStream()).thenReturn(inputStream);
     Mockito.when(blockedPageService.uploadFile(Mockito.any(InputStream.class)))
-        .thenReturn(blockedPageList);
+        .thenReturn(blockedHashList);
 
-    final List<BlockedPage> response = controller.uploadFile(uploadedFile);
+    final List<BlockedHash> response = controller.uploadFile(uploadedFile);
 
     assertNotNull(response);
-    assertSame(blockedPageList, response);
+    assertSame(blockedHashList, response);
 
     Mockito.verify(blockedPageService, Mockito.times(1)).uploadFile(inputStream);
   }

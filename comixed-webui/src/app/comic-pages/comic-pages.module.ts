@@ -25,14 +25,14 @@ import {
 } from './reducers/blocked-hash-list.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TranslateModule } from '@ngx-translate/core';
-import { BlockedPageListPageComponent } from './pages/blocked-page-list-page/blocked-page-list-page.component';
+import { BlockedHashListPageComponent } from './pages/blocked-hash-list-page/blocked-hash-list-page.component';
 import { ComicPagesRouting } from './comic-pages.routing';
 import { BlockedHashListEffects } from '@app/comic-pages/effects/blocked-hash-list.effects';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { BlockedPageDetailPageComponent } from './pages/blocked-page-detail-page/blocked-page-detail-page.component';
+import { BlockedHashDetailPageComponent } from './pages/blocked-hash-detail-page/blocked-hash-detail-page.component';
 import { MatCardModule } from '@angular/material/card';
 import {
   BLOCKED_PAGE_DETAIL_FEATURE_KEY,
@@ -68,7 +68,7 @@ import {
 import { DeleteBlockedPagesEffects } from '@app/comic-pages/effects/delete-blocked-pages.effects';
 
 @NgModule({
-  declarations: [BlockedPageListPageComponent, BlockedPageDetailPageComponent],
+  declarations: [BlockedHashListPageComponent, BlockedHashDetailPageComponent],
   imports: [
     CommonModule,
     ComicPagesRouting,

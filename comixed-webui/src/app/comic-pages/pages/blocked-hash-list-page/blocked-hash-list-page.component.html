@@ -6,8 +6,8 @@
       id="set-deleted-button"
       mat-icon-button
       color="warn"
-      [matTooltip]="'blocked-page-list.tooltip.set-deleted' | translate"
-      [disabled]="!hasSelections"
+      [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
+      [disabled]="!someSelected"
       (click)="onMarkSelectedForDeletion()"
     >
       <mat-icon>block</mat-icon>
@@ -16,8 +16,8 @@
       id="clear-deleted-button"
       mat-icon-button
       color="accent"
-      [matTooltip]="'blocked-page-list.tooltip.clear-deleted' | translate"
-      [disabled]="!hasSelections"
+      [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
+      [disabled]="!someSelected"
       (click)="onClearSelectedForDeletion()"
     >
       <mat-icon>remove_circle_outline</mat-icon>
@@ -26,8 +26,8 @@
       id="delete-entries"
       mat-icon-button
       color="warn"
-      [matTooltip]="'blocked-page-list.tooltip.delete-entries' | translate"
-      [disabled]="!hasSelections"
+      [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
+      [disabled]="!someSelected"
       (click)="onDeleteEntries()"
     >
       <mat-icon>delete</mat-icon>
@@ -36,7 +36,7 @@
       id="upload-button"
       mat-icon-button
       color="primary"
-      [matTooltip]="'blocked-page-list.tooltip.upload-file' | translate"
+      [matTooltip]="'blocked-hash-list.tooltip.upload-file' | translate"
       (click)="onShowUploadRow()"
     >
       <mat-icon>upload</mat-icon>
@@ -45,7 +45,7 @@
       id="download-button"
       mat-icon-button
       color="primary"
-      [matTooltip]="'blocked-page-list.tooltip.download-file' | translate"
+      [matTooltip]="'blocked-hash-list.tooltip.download-file' | translate"
       (click)="onDownloadFile()"
     >
       <mat-icon>download</mat-icon>
@@ -63,19 +63,24 @@
 
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="selected">
-    <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef>
+      <mat-checkbox
+        [checked]="allSelected"
+        (change)="onSelectAll($event.checked)"
+      ></mat-checkbox>
+    </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-checkbox
-        [checked]="entry.item.selected"
+        [checked]="entry.selected"
         (click)="$event.stopImmediatePropagation()"
-        (change)="onChangeSelection(entry, $event.checked)"
+        (change)="onSelectOne(entry, $event.checked)"
       ></mat-checkbox>
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="label">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "blocked-page-list.header.label" | translate }}
+      {{ "blocked-hash-list.header.label" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">{{ entry.item.label }}</span>
@@ -84,7 +89,7 @@
 
   <ng-container matColumnDef="hash">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "blocked-page-list.header.hash" | translate }}
+      {{ "blocked-hash-list.header.hash" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">{{ entry.item.hash }}</span>
@@ -93,7 +98,7 @@
 
   <ng-container matColumnDef="comic-count">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "blocked-page-list.header.comic-count" | translate }}
+      {{ "blocked-hash-list.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">{{ entry.item.comicCount }}</span>
@@ -102,7 +107,7 @@
 
   <ng-container matColumnDef="created-on">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "blocked-page-list.header.created-on" | translate }}
+      {{ "blocked-hash-list.header.created-on" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">
