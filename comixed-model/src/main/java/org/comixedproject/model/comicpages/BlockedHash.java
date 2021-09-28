@@ -29,25 +29,25 @@ import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
 /**
- * <code>BlockedPage</code> represents a type of page that can be automatically marked for deletion.
+ * <code>BlockedHash</code> represents a type of page that can be automatically marked for deletion.
  *
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "BlockedPages")
+@Table(name = "BlockedHashes")
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class BlockedPage {
+public class BlockedHash {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @Getter
   private Long id;
 
   @Column(name = "Label", nullable = true, updatable = true, length = 128)
   @JsonProperty("label")
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @Getter
   @Setter
   @NonNull
@@ -55,7 +55,7 @@ public class BlockedPage {
 
   @Column(name = "Hash", nullable = false, unique = true, updatable = false, length = 32)
   @JsonProperty("hash")
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @Getter
   @NonNull
   private String hash;
@@ -70,14 +70,14 @@ public class BlockedPage {
   @Column(name = "CreatedOn", nullable = false, updatable = false)
   @JsonProperty("createdOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @Getter
   private Date createdOn = new Date();
 
   @Formula(
       "(SELECT COUNT(*) FROM Comics c WHERE c.id IN (SELECT p.ComicId FROM Pages p WHERE p.FileHash = hash))")
   @JsonProperty("comicCount")
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @Getter
   private Integer comicCount;
 
@@ -90,7 +90,7 @@ public class BlockedPage {
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final BlockedPage that = (BlockedPage) o;
+    final BlockedHash that = (BlockedHash) o;
     return Objects.equals(label, that.label) && Objects.equals(hash, that.hash);
   }
 }

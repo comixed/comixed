@@ -23,7 +23,7 @@ import static junit.framework.TestCase.*;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixedproject.model.comicpages.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +46,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class BlockedPageRepositoryTest {
+public class BlockedHashRepositoryTest {
   private static final String TEST_HASH_IN_DATABASE = "0123456789ABCDEF0123456789ABCDEF";
   private static final String TEST_HASH_NOT_IN_DATABASE =
       new StringBuilder(TEST_HASH_IN_DATABASE).reverse().toString();
@@ -60,7 +60,7 @@ public class BlockedPageRepositoryTest {
 
   @Test
   public void tetFindByHash() {
-    final BlockedPage result = repository.findByHash(TEST_HASH_IN_DATABASE);
+    final BlockedHash result = repository.findByHash(TEST_HASH_IN_DATABASE);
 
     assertNotNull(result);
     assertEquals(TEST_HASH_IN_DATABASE, result.getHash());
@@ -68,7 +68,7 @@ public class BlockedPageRepositoryTest {
 
   @Test
   public void testGetAll() {
-    final List<BlockedPage> result = repository.getAll();
+    final List<BlockedHash> result = repository.getAll();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.comicpages.BlockedPage;
+import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.net.GenericResponse;
 import org.comixedproject.model.net.SetBlockedPageRequest;
@@ -54,7 +54,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <code>BlockedPageController</code> provides endpoints for working with instances of {@link
- * BlockedPage}.
+ * BlockedHash}.
  *
  * @author Darryl L. Pierce
  */
@@ -81,8 +81,8 @@ public class BlockedPageController {
    * @return the list of blocked page hashes
    */
   @GetMapping(value = "/api/pages/blocked", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.BlockedPageList.class)
-  public List<BlockedPage> getAll() {
+  @JsonView(View.BlockedHashList.class)
+  public List<BlockedHash> getAll() {
     log.info("Load all blocked pages");
     return this.blockedPageService.getAll();
   }
@@ -95,7 +95,7 @@ public class BlockedPageController {
    * @throws BlockedPageException if an error occurs
    */
   @GetMapping(value = "/api/pages/blocked/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public BlockedPage getByHash(@PathVariable("hash") final String hash)
+  public BlockedHash getByHash(@PathVariable("hash") final String hash)
       throws BlockedPageException {
     log.info("Loading blocked page: hash={}", hash);
     return this.blockedPageService.getByHash(hash);
@@ -105,20 +105,20 @@ public class BlockedPageController {
    * Updates the details for a blocked page.
    *
    * @param hash the page hash
-   * @param blockedPage the updated details
+   * @param blockedHash the updated details
    * @return the updated record
    * @throws BlockedPageException if an error occurs
    */
   @PutMapping(value = "/api/pages/blocked/{hash}")
   @AuditableEndpoint
-  @JsonView(View.BlockedPageDetail.class)
+  @JsonView(View.BlockedHashDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
-  public BlockedPage updateBlockedPage(
-      @PathVariable("hash") final String hash, @RequestBody() final BlockedPage blockedPage)
+  public BlockedHash updateBlockedPage(
+      @PathVariable("hash") final String hash, @RequestBody() final BlockedHash blockedHash)
       throws BlockedPageException {
     log.info(
-        "Updating blocked page: hash={} label={}", blockedPage.getHash(), blockedPage.getHash());
-    return this.blockedPageService.updateBlockedPage(hash, blockedPage);
+        "Updating blocked page: hash={} label={}", blockedHash.getHash(), blockedHash.getHash());
+    return this.blockedPageService.updateBlockedPage(hash, blockedHash);
   }
 
   /**
@@ -132,7 +132,7 @@ public class BlockedPageController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  @JsonView(View.BlockedPageDetail.class)
+  @JsonView(View.BlockedHashDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
   public GenericResponse blockPageHashes(@RequestBody() final SetBlockedPageRequest request) {
     final List<String> hashes = request.getHashes();
@@ -186,9 +186,9 @@ public class BlockedPageController {
    */
   @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @PreAuthorize("hasRole('ADMIN')")
-  public List<BlockedPage> uploadFile(final MultipartFile file)
+  public List<BlockedHash> uploadFile(final MultipartFile file)
       throws BlockedPageException, IOException {
     log.info("Received uploaded blocked page file: {}", file.getOriginalFilename());
     return this.blockedPageService.uploadFile(file.getInputStream());
@@ -205,7 +205,7 @@ public class BlockedPageController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  @JsonView(View.BlockedPageList.class)
+  @JsonView(View.BlockedHashList.class)
   @PreAuthorize("hasRole('ADMIN')")
   public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {
     final List<String> hashes = request.getHashes();

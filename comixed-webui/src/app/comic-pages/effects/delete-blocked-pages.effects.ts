@@ -43,7 +43,7 @@ export class DeleteBlockedPagesEffects {
           tap(() =>
             this.alertService.info(
               this.translateService.instant(
-                'blocked-page-list.delete-entries.effect-success',
+                'blocked-hash-list.delete-entries.effect-success',
                 { count: action.entries.length }
               )
             )
@@ -53,7 +53,7 @@ export class DeleteBlockedPagesEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'blocked-page-list.delete-entries.effect-failure'
+                'blocked-hash-list.delete-entries.effect-failure'
               )
             );
             return of(deleteBlockedPagesFailed());

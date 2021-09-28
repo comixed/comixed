@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/0.11.0/001_978_add_page_state_column.xml"/>
+  <include file="/db/migrations/0.11.0/002_985_rename_blocked_pages_table.xml"/>
 
 </databaseChangeLog>

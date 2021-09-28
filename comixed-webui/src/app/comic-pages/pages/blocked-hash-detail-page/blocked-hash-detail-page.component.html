@@ -45,11 +45,11 @@
   </mat-toolbar>
   <mat-card>
     <mat-card-title>
-      {{ "blocked-page.page-title" | translate: { hash: hash } }}
+      {{ "blocked-hash.page-title" | translate: { hash: hash } }}
     </mat-card-title>
     <mat-card-content>
       <mat-form-field class="cx-width-100" appearance="fill">
-        <mat-label>{{ "blocked-page.label.label" | translate }}</mat-label>
+        <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
         <tsm-edit-in-place
           [displayTemplate]="displayLabel"
           [editingTemplate]="editLabel"
@@ -70,7 +70,7 @@
         <input matInput hidden />
       </mat-form-field>
       <mat-form-field class="cx-width-100" appearance="fill">
-        <mat-label>{{ "blocked-page.label.hash" | translate }}</mat-label>
+        <mat-label>{{ "blocked-hash.label.hash" | translate }}</mat-label>
         <input
           id="hash-input"
           readonly

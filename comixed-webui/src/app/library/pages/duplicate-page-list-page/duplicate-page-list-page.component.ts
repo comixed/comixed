@@ -190,10 +190,10 @@ export class DuplicatePageListPageComponent
     this.logger.trace('Prompting to block page:', hash);
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'blocked-page.add-page-hash.confirmation-title'
+        'blocked-hash.add-page-hash.confirmation-title'
       ),
       message: this.translateService.instant(
-        'blocked-page.add-page-hash.confirmation-message',
+        'blocked-hash.add-page-hash.confirmation-message',
         { hash }
       ),
       confirm: () => {
@@ -208,10 +208,10 @@ export class DuplicatePageListPageComponent
     this.logger.trace('Prompting to unblock page hash:', hash);
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'blocked-page.remove-page-hash.confirmation-title'
+        'blocked-hash.remove-page-hash.confirmation-title'
       ),
       message: this.translateService.instant(
-        'blocked-page.remove-page-hash.confirmation-message',
+        'blocked-hash.remove-page-hash.confirmation-message',
         { hash }
       ),
       confirm: () => {

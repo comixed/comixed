@@ -102,7 +102,7 @@
     },
     "option": {
       "all-comics": "Toutes les bandes dessinées",
-      "blocked-pages": "Pages bloquées",
+      "blocked-hashs": "Pages bloquées",
       "build-details": "Détails du build",
       "character-collection": "Personnages",
       "configuration": "Configuration",

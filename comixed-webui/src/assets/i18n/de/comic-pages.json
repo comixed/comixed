@@ -1,8 +1,8 @@
 {
-  "blocked-page": {
+  "blocked-hash": {
     "add-page-hash": {
       "confirmation-message": "Are you sure you want to block all pages with the hash \"{hash}\"?",
-      "confirmation-title": "Block Page With Hash"
+      "confirmation-title": "Block Page Hash"
     },
     "editing": {
       "reset-message": "Discard your changes to this blocked page type?",
@@ -27,7 +27,7 @@
       "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."
     }
   },
-  "blocked-page-list": {
+  "blocked-hash-list": {
     "delete-entries": {
       "confirmation-message": "Are you sure you want to unblock the {count, plural, =1{selected entry} other{# selected entries}}?",
       "confirmation-title": "Unblock Hashes",

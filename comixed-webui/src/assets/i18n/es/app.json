@@ -87,7 +87,7 @@
     },
     "option": {
       "all-comics": "Todos los cómics",
-      "blocked-pages": "Páginas bloqueadas",
+      "blocked-hashs": "Páginas bloqueadas",
       "build-details": "Detalles de la compilación",
       "character-collection": "Personajes",
       "configuration": "Configuration",

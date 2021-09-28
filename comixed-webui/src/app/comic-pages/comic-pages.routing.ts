@@ -17,20 +17,20 @@
  */
 
 import { RouterModule, Routes } from '@angular/router';
-import { BlockedPageListPageComponent } from './pages/blocked-page-list-page/blocked-page-list-page.component';
+import { BlockedHashListPageComponent } from './pages/blocked-hash-list-page/blocked-hash-list-page.component';
 import { AdminGuard } from '../user';
 import { NgModule } from '@angular/core';
-import { BlockedPageDetailPageComponent } from '@app/comic-pages/pages/blocked-page-detail-page/blocked-page-detail-page.component';
+import { BlockedHashDetailPageComponent } from '@app/comic-pages/pages/blocked-hash-detail-page/blocked-hash-detail-page.component';
 
 const routes: Routes = [
   {
     path: 'library/pages/blocked',
-    component: BlockedPageListPageComponent,
+    component: BlockedHashListPageComponent,
     canActivate: [AdminGuard]
   },
   {
     path: 'library/pages/blocked/:hash',
-    component: BlockedPageDetailPageComponent,
+    component: BlockedHashDetailPageComponent,
     canActivate: [AdminGuard]
   }
 ];

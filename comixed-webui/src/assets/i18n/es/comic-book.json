@@ -88,7 +88,7 @@
       "state-STABLE": "Igual"
     },
     "tooltip": {
-      "blocked-page": "Páginas como esta están bloqueadas...",
+      "blocked-hash": "Páginas como esta están bloqueadas...",
       "cancel-scraping": "Deja de raspar este cómic.",
       "delete-comic": "Mark comics as deleted.",
       "download-comic": "Descarga este cómic...",
