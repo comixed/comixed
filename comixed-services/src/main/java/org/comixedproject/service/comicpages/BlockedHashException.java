@@ -21,13 +21,13 @@ package org.comixedproject.service.comicpages;
 import org.comixedproject.model.comicpages.BlockedHash;
 
 /**
- * <code>BlockedPageException</code> is thrown when an error occurs while working with instances of
+ * <code>BlockedHashException</code> is thrown when an error occurs while working with instances of
  * {@link BlockedHash}.
  *
  * @author Darryl L. Pierce
  */
-public class BlockedPageException extends Exception {
-  public BlockedPageException(final String message) {
+public class BlockedHashException extends Exception {
+  public BlockedHashException(final String message) {
     super(message);
   }
 }

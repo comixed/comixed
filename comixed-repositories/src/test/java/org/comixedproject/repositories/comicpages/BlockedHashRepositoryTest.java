@@ -51,7 +51,7 @@ public class BlockedHashRepositoryTest {
   private static final String TEST_HASH_NOT_IN_DATABASE =
       new StringBuilder(TEST_HASH_IN_DATABASE).reverse().toString();
 
-  @Autowired private BlockedPageRepository repository;
+  @Autowired private BlockedHashRepository repository;
 
   @Test
   public void testFindByHashNotFound() {

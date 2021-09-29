@@ -25,11 +25,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * <code>BlockedPageRepository</code> manages persisted instances of {@link BlockedHash}.
+ * <code>BlockedHashRepository</code> manages persisted instances of {@link BlockedHash}.
  *
  * @author The ComiXed Project
  */
-public interface BlockedPageRepository extends JpaRepository<BlockedHash, Long> {
+public interface BlockedHashRepository extends JpaRepository<BlockedHash, Long> {
   /**
    * Returns the one instance with the given hash.
    *
