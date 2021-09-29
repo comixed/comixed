@@ -25,14 +25,13 @@ import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
   blockedStateSet,
   setBlockedState,
   setBlockedStateFailed
 } from '@app/comic-pages/actions/block-page.actions';
 import { hot } from 'jasmine-marbles';
-import { GenericResponse } from '@app/core/models/net/generic-response';
 import { PAGE_2 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('BlockPageEffects', () => {
@@ -80,7 +79,7 @@ describe('BlockPageEffects', () => {
 
   describe('setting the blocked state for a page', () => {
     it('fires an action on success', () => {
-      const serviceResponse = { success: true } as GenericResponse;
+      const serviceResponse = new HttpResponse({ status: 200 });
       const action = setBlockedState({
         hashes: [PAGE.hash],
         blocked: Math.random() > 0.5
