@@ -29,7 +29,6 @@ import {
 } from '@app/comic-pages/actions/block-page.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { GenericResponse } from '@app/core/models/net/generic-response';
 
 @Injectable()
 export class BlockPageEffects {
@@ -50,7 +49,7 @@ export class BlockPageEffects {
                 )
               )
             ),
-            map((response: GenericResponse) => blockedStateSet()),
+            map(() => blockedStateSet()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
