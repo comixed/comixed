@@ -30,13 +30,12 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.model.net.GenericResponse;
 import org.comixedproject.model.net.SetBlockedPageRequest;
 import org.comixedproject.model.net.blockedpage.DeleteBlockedPagesRequest;
 import org.comixedproject.model.net.blockedpage.MarkPageWithHashRequest;
 import org.comixedproject.model.net.blockedpage.UnmarkPageWithHashRequest;
-import org.comixedproject.service.comicpages.BlockedPageException;
-import org.comixedproject.service.comicpages.BlockedPageService;
+import org.comixedproject.service.comicpages.BlockedHashException;
+import org.comixedproject.service.comicpages.BlockedHashService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -53,15 +52,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * <code>BlockedPageController</code> provides endpoints for working with instances of {@link
+ * <code>BlockedHashController</code> provides endpoints for working with instances of {@link
  * BlockedHash}.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @Log4j2
-public class BlockedPageController {
-  @Autowired private BlockedPageService blockedPageService;
+public class BlockedHashController {
+  @Autowired private BlockedHashService blockedHashService;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -84,7 +83,7 @@ public class BlockedPageController {
   @JsonView(View.BlockedHashList.class)
   public List<BlockedHash> getAll() {
     log.info("Load all blocked pages");
-    return this.blockedPageService.getAll();
+    return this.blockedHashService.getAll();
   }
 
   /**
@@ -92,13 +91,13 @@ public class BlockedPageController {
    *
    * @param hash the page hash
    * @return the blocked page
-   * @throws BlockedPageException if an error occurs
+   * @throws BlockedHashException if an error occurs
    */
   @GetMapping(value = "/api/pages/blocked/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
   public BlockedHash getByHash(@PathVariable("hash") final String hash)
-      throws BlockedPageException {
+      throws BlockedHashException {
     log.info("Loading blocked page: hash={}", hash);
-    return this.blockedPageService.getByHash(hash);
+    return this.blockedHashService.getByHash(hash);
   }
 
   /**
@@ -107,7 +106,7 @@ public class BlockedPageController {
    * @param hash the page hash
    * @param blockedHash the updated details
    * @return the updated record
-   * @throws BlockedPageException if an error occurs
+   * @throws BlockedHashException if an error occurs
    */
   @PutMapping(value = "/api/pages/blocked/{hash}")
   @AuditableEndpoint
@@ -115,10 +114,10 @@ public class BlockedPageController {
   @PreAuthorize("hasRole('ADMIN')")
   public BlockedHash updateBlockedPage(
       @PathVariable("hash") final String hash, @RequestBody() final BlockedHash blockedHash)
-      throws BlockedPageException {
+      throws BlockedHashException {
     log.info(
         "Updating blocked page: hash={} label={}", blockedHash.getHash(), blockedHash.getHash());
-    return this.blockedPageService.updateBlockedPage(hash, blockedHash);
+    return this.blockedHashService.updateBlockedPage(hash, blockedHash);
   }
 
   /**
@@ -141,7 +140,7 @@ public class BlockedPageController {
           JobParametersInvalidException, JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Block {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
-    this.blockedPageService.blockPages(hashes);
+    this.blockedHashService.blockPages(hashes);
     this.launchMarkPagesWithHashProcess(hashes);
   }
 
@@ -192,72 +191,24 @@ public class BlockedPageController {
    * Unblocks pages by hash.
    *
    * @param request the request body
-   * @throws BlockedPageException if an error occurs
-   * @return the generic response
+   * @throws JobInstanceAlreadyCompleteException if a job error occurs
+   * @throws JobExecutionAlreadyRunningException if a job error occurs
+   * @throws JobParametersInvalidException if a job error occurs
+   * @throws JobRestartException if a job error occurs
    */
   @PostMapping(
       value = "/api/pages/blocked/remove",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
-  @JsonView(View.GenericResponseView.class)
   @PreAuthorize("hasRole('ADMIN')")
-  public GenericResponse unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
-      throws BlockedPageException {
+  public void unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
+      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
+          JobParametersInvalidException, JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Unblock {} hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
-    this.blockedPageService.unblockPages(hashes);
-    return new GenericResponse(true);
-  }
-
-  /**
-   * Generates and downloads a file containing the blocked page list.
-   *
-   * @return the blocked page file
-   * @throws IOException if an error occurs
-   */
-  @GetMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public DownloadDocument downloadFile() throws IOException {
-    log.info("Downloading blocked page file");
-    return this.blockedPageService.createFile();
-  }
-
-  /**
-   * Processes an uploaded blocked page file.
-   *
-   * @param file the uploaded file
-   * @return the updated blocked page list
-   * @throws BlockedPageException if a service exception occurs
-   * @throws IOException if a file exception occurs
-   */
-  @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  @JsonView(View.BlockedHashList.class)
-  @PreAuthorize("hasRole('ADMIN')")
-  public List<BlockedHash> uploadFile(final MultipartFile file)
-      throws BlockedPageException, IOException {
-    log.info("Received uploaded blocked page file: {}", file.getOriginalFilename());
-    return this.blockedPageService.uploadFile(file.getInputStream());
-  }
-
-  /**
-   * Deletes a set of blocked pages by their hash value.
-   *
-   * @param request the request body
-   * @return the list of deleted blocked page hashes
-   */
-  @PostMapping(
-      value = "/api/pages/blocked/delete",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  @JsonView(View.BlockedHashList.class)
-  @PreAuthorize("hasRole('ADMIN')")
-  public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {
-    final List<String> hashes = request.getHashes();
-    log.info("Deleting {} blocked hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
-    return this.blockedPageService.deleteBlockedPages(hashes);
+    this.blockedHashService.unblockPages(hashes);
+    this.launchUnmarkPagesWithHashProcess(hashes);
   }
 
   /**
@@ -276,6 +227,21 @@ public class BlockedPageController {
           JobParametersInvalidException, JobRestartException {
     final List<String> hashes = request.getHashes();
     log.info("Marking pages with hash for deletion");
+    this.launchUnmarkPagesWithHashProcess(hashes);
+  }
+
+  /**
+   * Launches the process to unmark all pages with a given set of hashes.
+   *
+   * @param hashes the hashes
+   * @throws JobInstanceAlreadyCompleteException if a job error occurs
+   * @throws JobExecutionAlreadyRunningException if a job error occurs
+   * @throws JobParametersInvalidException if a job error occurs
+   * @throws JobRestartException if a job error occurs
+   */
+  private void launchUnmarkPagesWithHashProcess(final List<String> hashes)
+      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
+          JobParametersInvalidException, JobRestartException {
     for (int index = 0; index < hashes.size(); index++) {
       final String hash = hashes.get(index);
       log.trace("Unmarking pages with hash: {}", hash);
@@ -286,5 +252,55 @@ public class BlockedPageController {
               .addString(PARAM_UNMARK_PAGES_TARGET_HASH, hash)
               .toJobParameters());
     }
+  }
+
+  /**
+   * Generates and downloads a file containing the blocked page list.
+   *
+   * @return the blocked page file
+   * @throws IOException if an error occurs
+   */
+  @GetMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  public DownloadDocument downloadFile() throws IOException {
+    log.info("Downloading blocked page file");
+    return this.blockedHashService.createFile();
+  }
+
+  /**
+   * Processes an uploaded blocked page file.
+   *
+   * @param file the uploaded file
+   * @return the updated blocked page list
+   * @throws BlockedHashException if a service exception occurs
+   * @throws IOException if a file exception occurs
+   */
+  @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  @JsonView(View.BlockedHashList.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<BlockedHash> uploadFile(final MultipartFile file)
+      throws BlockedHashException, IOException {
+    log.info("Received uploaded blocked page file: {}", file.getOriginalFilename());
+    return this.blockedHashService.uploadFile(file.getInputStream());
+  }
+
+  /**
+   * Deletes a set of blocked pages by their hash value.
+   *
+   * @param request the request body
+   * @return the list of deleted blocked page hashes
+   */
+  @PostMapping(
+      value = "/api/pages/blocked/delete",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint
+  @JsonView(View.BlockedHashList.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {
+    final List<String> hashes = request.getHashes();
+    log.info("Deleting {} blocked hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");
+    return this.blockedHashService.deleteBlockedPages(hashes);
   }
 }

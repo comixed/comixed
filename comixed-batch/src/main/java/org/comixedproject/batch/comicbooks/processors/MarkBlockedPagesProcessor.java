@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.PageState;
-import org.comixedproject.service.comicpages.BlockedPageService;
+import org.comixedproject.service.comicpages.BlockedHashService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class MarkBlockedPagesProcessor implements ItemProcessor<Comic, Comic> {
-  @Autowired private BlockedPageService blockedPageService;
+  @Autowired private BlockedHashService blockedHashService;
 
   @Override
   public Comic process(final Comic comic) {
@@ -44,7 +44,7 @@ public class MarkBlockedPagesProcessor implements ItemProcessor<Comic, Comic> {
             page -> {
               final String hash = page.getHash();
               log.trace("Checking if page has is blocked: {}", hash);
-              final boolean deleted = this.blockedPageService.isHashBlocked(hash);
+              final boolean deleted = this.blockedHashService.isHashBlocked(hash);
               log.trace("Setting deleted state: {}", deleted);
               page.setPageState(deleted ? PageState.DELETED : PageState.STABLE);
             });
