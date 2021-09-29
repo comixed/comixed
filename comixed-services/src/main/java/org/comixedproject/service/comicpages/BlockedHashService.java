@@ -32,25 +32,25 @@ import org.comixedproject.messaging.comicpages.PublishBlockedPageUpdateAction;
 import org.comixedproject.messaging.library.PublishDuplicatePageListUpdateAction;
 import org.comixedproject.model.comicpages.BlockedHash;
 import org.comixedproject.model.net.DownloadDocument;
-import org.comixedproject.repositories.comicpages.BlockedPageRepository;
+import org.comixedproject.repositories.comicpages.BlockedHashRepository;
 import org.comixedproject.service.library.DuplicatePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>BlockedPageService</code> applies business rules to instances of {@link BlockedHash}.
+ * <code>BlockedHashService</code> applies business rules to instances of {@link BlockedHash}.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class BlockedPageService {
+public class BlockedHashService {
   static final String PAGE_LABEL_HEADER = "Page Label";
   static final String PAGE_HASH_HEADER = "Hash Value";
   static final String PAGE_SNAPSHOT_HEADER = "Encoded Snapshot";
 
-  @Autowired private BlockedPageRepository blockedPageRepository;
+  @Autowired private BlockedHashRepository blockedHashRepository;
   @Autowired private CsvAdaptor csvAdaptor;
   @Autowired private PublishBlockedPageUpdateAction publishBlockedPageUpdateAction;
   @Autowired private PublishBlockedPageRemovalAction publishBlockedPageRemovalAction;
@@ -64,7 +64,7 @@ public class BlockedPageService {
    */
   public List<BlockedHash> getAll() {
     log.debug("Loading all blocked page records");
-    return this.blockedPageRepository.getAll();
+    return this.blockedHashRepository.getAll();
   }
 
   /**
@@ -72,14 +72,14 @@ public class BlockedPageService {
    *
    * @param hash the blocked page has
    * @return the blocked page
-   * @throws BlockedPageException if no such record exists
+   * @throws BlockedHashException if no such record exists
    */
-  public BlockedHash getByHash(final String hash) throws BlockedPageException {
+  public BlockedHash getByHash(final String hash) throws BlockedHashException {
     log.debug("Loading blocked page by hash: {}", hash);
-    final BlockedHash result = this.blockedPageRepository.findByHash(hash);
+    final BlockedHash result = this.blockedHashRepository.findByHash(hash);
 
     if (result == null) {
-      throw new BlockedPageException("No such blocked page: hash=" + hash);
+      throw new BlockedHashException("No such blocked page: hash=" + hash);
     }
 
     return result;
@@ -92,7 +92,7 @@ public class BlockedPageService {
    */
   public List<String> getHashes() {
     log.debug("Loading all blocked page hashes");
-    return this.blockedPageRepository.getHashes();
+    return this.blockedHashRepository.getHashes();
   }
 
   private void doPublishDuplicatePageUpdates() {
@@ -111,11 +111,11 @@ public class BlockedPageService {
    * @param hash the page hash
    * @param blockedHash the updated details
    * @return the updated record
-   * @throws BlockedPageException if the hash is invalid
+   * @throws BlockedHashException if the hash is invalid
    */
   @Transactional
   public BlockedHash updateBlockedPage(final String hash, final BlockedHash blockedHash)
-      throws BlockedPageException {
+      throws BlockedHashException {
     final BlockedHash updatedPage = this.doBlockPageHash(hash, blockedHash);
     try {
       this.publishBlockedPageUpdateAction.publish(updatedPage);
@@ -128,7 +128,7 @@ public class BlockedPageService {
 
   public BlockedHash doBlockPageHash(final String hash, final BlockedHash source) {
     log.trace("Looking for existing blocked page record");
-    BlockedHash pageRecord = this.blockedPageRepository.findByHash(hash);
+    BlockedHash pageRecord = this.blockedHashRepository.findByHash(hash);
     if (pageRecord == null) {
       log.trace("Creating new blocked page record");
       pageRecord = new BlockedHash("", hash, "");
@@ -138,7 +138,7 @@ public class BlockedPageService {
       pageRecord.setLabel(source.getLabel());
     }
     log.trace("Saving updated blocked page");
-    return this.blockedPageRepository.save(pageRecord);
+    return this.blockedHashRepository.save(pageRecord);
   }
 
   /**
@@ -184,13 +184,13 @@ public class BlockedPageService {
   }
 
   public BlockedHash doUnblockPageHash(final String hash) {
-    final BlockedHash entry = this.blockedPageRepository.findByHash(hash);
+    final BlockedHash entry = this.blockedHashRepository.findByHash(hash);
     if (entry == null) {
       log.trace("Page hash not blocked: {}", hash);
       return null;
     }
     log.trace("Deleting record");
-    this.blockedPageRepository.delete(entry);
+    this.blockedHashRepository.delete(entry);
     return entry;
   }
 
@@ -201,7 +201,7 @@ public class BlockedPageService {
    */
   public DownloadDocument createFile() throws IOException {
     log.debug("Retrieving blocked pages");
-    final List<BlockedHash> entries = this.blockedPageRepository.findAll();
+    final List<BlockedHash> entries = this.blockedHashRepository.findAll();
     final byte[] content =
         this.csvAdaptor.encodeRecords(
             entries,
@@ -238,20 +238,20 @@ public class BlockedPageService {
             final String snapshot = row.get(2);
 
             log.debug("Checking if blocked page already exists: hash={}", hash);
-            var blockedPage = this.blockedPageRepository.findByHash(hash);
+            var blockedPage = this.blockedHashRepository.findByHash(hash);
             if (blockedPage == null) {
               log.debug("Creating new blocked page record");
               this.doSaveRecord(label, hash, snapshot);
             }
           }
         });
-    return this.blockedPageRepository.findAll();
+    return this.blockedHashRepository.findAll();
   }
 
   @Transactional
   public void doSaveRecord(final String label, final String hash, final String snapshot) {
     final var blockedPage = new BlockedHash(label, hash, snapshot);
-    this.blockedPageRepository.save(blockedPage);
+    this.blockedHashRepository.save(blockedPage);
   }
 
   /**
@@ -267,10 +267,10 @@ public class BlockedPageService {
     hashes.forEach(
         hash -> {
           log.trace("Loading blocked page for hash: {}", hash);
-          final BlockedHash entry = this.blockedPageRepository.findByHash(hash);
+          final BlockedHash entry = this.blockedHashRepository.findByHash(hash);
           if (entry != null) {
             log.trace("Deleting entry: id={}", entry.getId());
-            this.blockedPageRepository.delete(entry);
+            this.blockedHashRepository.delete(entry);
             result.add(entry.getHash());
           }
         });
@@ -286,6 +286,6 @@ public class BlockedPageService {
    */
   public boolean isHashBlocked(final String hash) {
     log.trace("Finding if hash is blocked: {}", hash);
-    return this.blockedPageRepository.findByHash(hash) != null;
+    return this.blockedHashRepository.findByHash(hash) != null;
   }
 }

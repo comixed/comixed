@@ -26,7 +26,7 @@ import java.util.List;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
-import org.comixedproject.service.comicpages.BlockedPageService;
+import org.comixedproject.service.comicpages.BlockedHashService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ public class MarkBlockedPagesProcessorTest {
   private static final String TEST_HASH = "0123456789ABCDEF";
 
   @InjectMocks private MarkBlockedPagesProcessor processor;
-  @Mock private BlockedPageService blockedPageService;
+  @Mock private BlockedHashService blockedHashService;
   @Mock private Comic comic;
   @Mock private Page page;
 
@@ -55,27 +55,27 @@ public class MarkBlockedPagesProcessorTest {
 
   @Test
   public void testProcessWithBlockedPage() {
-    Mockito.when(blockedPageService.isHashBlocked(Mockito.anyString())).thenReturn(true);
+    Mockito.when(blockedHashService.isHashBlocked(Mockito.anyString())).thenReturn(true);
 
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(blockedPageService, Mockito.times(1)).isHashBlocked(TEST_HASH);
+    Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
     Mockito.verify(page, Mockito.times(1)).setPageState(PageState.DELETED);
   }
 
   @Test
   public void testProcessWithoutBlockedPage() {
-    Mockito.when(blockedPageService.isHashBlocked(Mockito.anyString())).thenReturn(false);
+    Mockito.when(blockedHashService.isHashBlocked(Mockito.anyString())).thenReturn(false);
 
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(blockedPageService, Mockito.times(1)).isHashBlocked(TEST_HASH);
+    Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
     Mockito.verify(page, Mockito.times(1)).setPageState(PageState.STABLE);
   }
 }
