@@ -16,16 +16,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createReducer, on } from '@ngrx/store';
+import {
+  imprintsLoaded,
+  loadImprints,
+  loadImprintsFailed
+} from '../actions/imprint-list.actions';
+import { Imprint } from '@app/comic-book/models/imprint';
 
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
-export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
-export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
-export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
+export const IMPRINT_LIST_FEATURE_KEY = 'imprint_list_state';
 
-export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
+export interface ImprintListState {
+  loading: boolean;
+  entries: Imprint[];
+}
 
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
+export const initialState: ImprintListState = {
+  loading: false,
+  entries: []
+};
 
-export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+export const reducer = createReducer(
+  initialState,
+
+  on(loadImprints, state => ({ ...state, loading: true })),
+  on(imprintsLoaded, (state, action) => ({
+    ...state,
+    loading: false,
+    entries: action.entries
+  })),
+  on(loadImprintsFailed, state => ({ ...state, loading: false }))
+);

@@ -29,6 +29,7 @@ import {
   PAGE_3,
   PAGE_4
 } from '@app/comic-pages/comic-pages.fixtures';
+import { Imprint } from '@app/comic-book/models/imprint';
 
 export const FILE_DETAILS_1: FileDetails = {
   id: 1,
@@ -45,6 +46,24 @@ export const COMIC_CREDIT_2: ComicCredit = {
   id: 2,
   name: 'Penn Siller',
   role: 'penciller'
+};
+
+export const IMPRINT_1: Imprint = {
+  id: 1,
+  name: 'Imprint 1',
+  publisher: 'Publisher 1'
+};
+
+export const IMPRINT_2: Imprint = {
+  id: 2,
+  name: 'Imprint 2',
+  publisher: 'Publisher 2'
+};
+
+export const IMPRINT_3: Imprint = {
+  id: 3,
+  name: 'Imprint 3',
+  publisher: 'Publisher 3'
 };
 
 export const COMIC_1: Comic = {

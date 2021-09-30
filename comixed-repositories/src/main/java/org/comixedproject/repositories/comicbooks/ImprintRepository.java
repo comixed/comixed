@@ -19,7 +19,7 @@
 package org.comixedproject.repositories.comicbooks;
 
 import org.comixedproject.model.comicbooks.Imprint;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Repository;
  * @author Darryl L. Pierce
  */
 @Repository
-public interface ImprintRepository extends CrudRepository<Imprint, Long> {
+public interface ImprintRepository extends JpaRepository<Imprint, Long> {
   /**
    * Finds a single imprint by name.
    *

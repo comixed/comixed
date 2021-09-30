@@ -18,9 +18,12 @@
 
 package org.comixedproject.model.comicbooks;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
+import org.comixedproject.views.View;
 
 /**
  * <code>Imprint</code> represents a subsidiary of a publisher.
@@ -32,14 +35,20 @@ import lombok.Getter;
 public class Imprint {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView(View.ImprintListView.class)
   @Getter
   private Long id;
 
   @Column(name = "Name", length = 128, nullable = false, updatable = false, unique = true)
+  @JsonProperty("name")
+  @JsonView(View.ImprintListView.class)
   @Getter
   private String name;
 
   @Column(name = "Publisher", length = 128, nullable = false, updatable = false)
+  @JsonProperty("publisher")
+  @JsonView(View.ImprintListView.class)
   @Getter
   private String publisher;
 

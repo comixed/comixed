@@ -18,6 +18,7 @@
 
 package org.comixedproject.service.comicbooks;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Imprint;
@@ -52,5 +53,15 @@ public class ImprintService {
     log.trace("Updating publisher and imprint: {} => {}", publisher, imprint);
     comic.setPublisher(imprint.getPublisher());
     comic.setImprint(imprint.getName());
+  }
+
+  /**
+   * Returns all imprints.
+   *
+   * @return the imprint list
+   */
+  public List<Imprint> getAll() {
+    log.trace("Fetching all imprints");
+    return this.imprintRepository.findAll();
   }
 }
