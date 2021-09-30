@@ -16,16 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  ImprintListState
+} from '../reducers/imprint-list.reducer';
 
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
-export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
-export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
-export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
+export const selectImprintListState = createFeatureSelector<ImprintListState>(
+  IMPRINT_LIST_FEATURE_KEY
+);
 
-export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
-
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
-
-export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+export const selectImprints = createSelector(
+  selectImprintListState,
+  state => state.entries
+);

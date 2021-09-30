@@ -16,16 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  ImprintListState
+} from '../reducers/imprint-list.reducer';
+import { selectImprintListState } from './imprint-list.selectors';
+import {
+  IMPRINT_1,
+  IMPRINT_2,
+  IMPRINT_3
+} from '@app/comic-book/comic-book.fixtures';
 
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
-export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
-export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
-export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
+describe('ImprintList Selectors', () => {
+  const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
 
-export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
+  let state: ImprintListState;
 
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
+  beforeEach(() => {
+    state = { loading: Math.random() > 0.5, entries: ENTRIES };
+  });
 
-export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+  it('should select the feature state', () => {
+    expect(
+      selectImprintListState({
+        [IMPRINT_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

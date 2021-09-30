@@ -129,6 +129,7 @@
   },
   "text": {
     "archive-type": "{type, select, CBZ{Fichier Zip (CBZ)} CBR{Fichier RAR (CBR)} CB7{Fichier 7Zip (CB7)} other{Inconnu}}",
+    "clear-value": "Clear value",
     "no": "Non",
     "view-details": "Voir les détails",
     "yes": "Oui"

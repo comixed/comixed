@@ -39,6 +39,11 @@ import {
   MarkComicsDeletedState,
   reducer as markComicsDeletedReducer
 } from './reducers/mark-comics-deleted.reducer';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  ImprintListState,
+  reducer as imprintListReducer
+} from './reducers/imprint-list.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -51,6 +56,7 @@ export interface ComicModuleState {
   [SCRAPING_FEATURE_KEY]: ScrapingState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
   [COMIC_FEATURE_KEY]: ComicState;
+  [IMPRINT_LIST_FEATURE_KEY]: ImprintListState;
   [MARK_COMICS_DELETED_FEATURE_KEY]: MarkComicsDeletedState;
 }
 
@@ -61,5 +67,6 @@ export const reducers: ActionReducerMap<ComicModuleState> = {
   [SCRAPING_FEATURE_KEY]: scrapingReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,
   [COMIC_FEATURE_KEY]: comicReducer,
+  [IMPRINT_LIST_FEATURE_KEY]: imprintListReducer,
   [MARK_COMICS_DELETED_FEATURE_KEY]: markComicsDeletedReducer
 };

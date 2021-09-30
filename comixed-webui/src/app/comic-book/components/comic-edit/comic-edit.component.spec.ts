@@ -21,7 +21,12 @@ import { ComicEditComponent } from './comic-edit.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { COMIC_2 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_2,
+  IMPRINT_1,
+  IMPRINT_2,
+  IMPRINT_3
+} from '@app/comic-book/comic-book.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -39,15 +44,22 @@ import {
   MAXIMUM_RECORDS_PREFERENCE
 } from '@app/library/library.constants';
 import { updateComic } from '@app/comic-book/actions/comic.actions';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  initialState as initialImprintState
+} from '@app/comic-book/reducers/imprint-list.reducer';
 
 describe('ComicEditComponent', () => {
+  const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const COMIC = COMIC_2;
   const API_KEY = '1234567890ABCDEF';
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
   const ISSUE_NUMBER = '27';
 
-  const initialState = {};
+  const initialState = {
+    [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES }
+  };
 
   let component: ComicEditComponent;
   let fixture: ComponentFixture<ComicEditComponent>;
@@ -213,6 +225,43 @@ describe('ComicEditComponent', () => {
 
     it('returns true when set', () => {
       expect(component.hasApiKey).toBeTrue();
+    });
+  });
+
+  describe('when an imprint is selected', () => {
+    const IMPRINT = ENTRIES[0];
+
+    beforeEach(() => {
+      component.comic = COMIC;
+      component.onImprintSelected(IMPRINT.name);
+    });
+
+    it('updates the imprint', () => {
+      expect(component.comicForm.controls.imprint.value).toEqual(IMPRINT.name);
+    });
+
+    it('updates the publisher', () => {
+      expect(component.comicForm.controls.publisher.value).toEqual(
+        IMPRINT.publisher
+      );
+    });
+
+    describe('when it is cleared', () => {
+      beforeEach(() => {
+        component.onImprintSelected(null);
+      });
+
+      it('updates the imprint', () => {
+        expect(component.comicForm.controls.imprint.value).toEqual(
+          COMIC.imprint
+        );
+      });
+
+      it('updates the publisher', () => {
+        expect(component.comicForm.controls.publisher.value).toEqual(
+          COMIC.publisher
+        );
+      });
     });
   });
 });

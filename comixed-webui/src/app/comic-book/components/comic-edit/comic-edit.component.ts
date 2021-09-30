@@ -39,6 +39,10 @@ import {
 } from '@app/library/library.constants';
 import { updateComic } from '@app/comic-book/actions/comic.actions';
 import { Subscription } from 'rxjs';
+import { selectImprints } from '@app/comic-book/selectors/imprint-list.selectors';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { loadImprints } from '@app/comic-book/actions/imprint-list.actions';
+import { Imprint } from '@app/comic-book/models/imprint';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -60,7 +64,8 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   comicForm: FormGroup;
   scrapingMode = false;
   imprintSubscription: Subscription;
-  imprintOptions = [];
+  imprintOptions: SelectionOption<Imprint>[] = [];
+  imprints: Imprint[];
 
   constructor(
     private logger: LoggerService,
@@ -81,6 +86,25 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       title: [''],
       description: ['']
     });
+    this.imprintSubscription = this.store
+      .select(selectImprints)
+      .subscribe(imprints => {
+        this.logger.trace('Loading imprint options');
+        this.imprints = imprints;
+        this.imprintOptions = [
+          {
+            label: this.translateService.instant('text.clear-value'),
+            value: { id: -1, name: '', publisher: '' }
+          } as SelectionOption<Imprint>
+        ].concat(
+          imprints.map(imprint => {
+            return {
+              label: imprint.name,
+              value: imprint
+            } as SelectionOption<Imprint>;
+          })
+        );
+      });
   }
 
   private _apiKey = '';
@@ -123,7 +147,10 @@ export class ComicEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.logger.trace('Loading imprints');
+    this.store.dispatch(loadImprints());
+  }
 
   onUndoChanges(): void {
     this.confirmationService.confirm({
@@ -196,6 +223,19 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.store.dispatch(updateComic({ comic }));
       }
     });
+  }
+
+  onImprintSelected(name: string): void {
+    this.logger.trace('Finding imprint');
+    const imprint = this.imprints.find(entry => entry.name === name);
+    this.logger.trace('Setting publisher name');
+    this.comicForm.controls.publisher.setValue(
+      imprint?.publisher || this.comic.publisher
+    );
+    this.logger.trace('Setting imprint name');
+    this.comicForm.controls.imprint.setValue(
+      imprint?.name || this.comic.imprint
+    );
   }
 
   private encodeForm(): Comic {

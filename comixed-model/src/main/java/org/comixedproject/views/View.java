@@ -97,6 +97,9 @@ public class View {
   /** Used when retrieving the configuration list. */
   public interface ConfigurationList {}
 
-  /** Used when retrieiving the filename scraping rules. */
+  /** Used when retrieving the filename scraping rules. */
   public interface FilenameScrapingRuleList {}
+
+  /** Used when retrieving the list of imprints. */
+  public interface ImprintListView {}
 }

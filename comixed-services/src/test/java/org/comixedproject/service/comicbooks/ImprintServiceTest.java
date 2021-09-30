@@ -18,6 +18,10 @@
 
 package org.comixedproject.service.comicbooks;
 
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
+
+import java.util.List;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Imprint;
 import org.comixedproject.repositories.comicbooks.ImprintRepository;
@@ -38,6 +42,7 @@ public class ImprintServiceTest {
   @Mock private ImprintRepository imprintRepository;
   @Mock private Comic comic;
   @Mock private Imprint imprint;
+  @Mock private List<Imprint> imprintList;
 
   @Before
   public void setUp() {
@@ -64,5 +69,17 @@ public class ImprintServiceTest {
 
     Mockito.verify(comic, Mockito.times(1)).setImprint("");
     Mockito.verify(comic, Mockito.never()).setPublisher(Mockito.anyString());
+  }
+
+  @Test
+  public void testGetAll() {
+    Mockito.when(imprintRepository.findAll()).thenReturn(imprintList);
+
+    final List<Imprint> result = imprintService.getAll();
+
+    assertNotNull(result);
+    assertSame(imprintList, result);
+
+    Mockito.verify(imprintRepository, Mockito.times(1)).findAll();
   }
 }

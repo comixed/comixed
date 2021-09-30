@@ -77,6 +77,11 @@ import {
   reducer as markComicsDeletedReducer
 } from '@app/comic-book/reducers/mark-comics-deleted.reducer';
 import { MatDividerModule } from '@angular/material/divider';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  reducer as imprintListReducer
+} from '@app/comic-book/reducers/imprint-list.reducer';
+import { ImprintListEffects } from '@app/comic-book/effects/imprint-list.effects';
 
 @NgModule({
   declarations: [
@@ -102,6 +107,7 @@ import { MatDividerModule } from '@angular/material/divider';
     StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
     StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
+    StoreModule.forFeature(IMPRINT_LIST_FEATURE_KEY, imprintListReducer),
     StoreModule.forFeature(
       MARK_COMICS_DELETED_FEATURE_KEY,
       markComicsDeletedReducer
@@ -110,6 +116,7 @@ import { MatDividerModule } from '@angular/material/divider';
       ScrapingEffects,
       ComicListEffects,
       ComicEffects,
+      ImprintListEffects,
       MarkComicsDeletedEffects
     ]),
     TranslateModule.forRoot(),

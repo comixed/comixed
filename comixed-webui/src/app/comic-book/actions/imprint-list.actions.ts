@@ -16,16 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
+import { createAction, props } from '@ngrx/store';
+import { Imprint } from '@app/comic-book/models/imprint';
 
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
-export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
-export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
-export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
+export const loadImprints = createAction(
+  '[Imprint List] Load the list of imprints'
+);
 
-export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
+export const imprintsLoaded = createAction(
+  '[Imprint List] The list of imprints was loaded',
+  props<{ entries: Imprint[] }>()
+);
 
-export const COMICVINE_ISSUE_LINK =
-  'https://comicvine.gamespot.com/issues/4000-${id}/';
-
-export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+export const loadImprintsFailed = createAction(
+  '[Imprint List] Failed to load the list of imprints'
+);
