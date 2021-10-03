@@ -502,6 +502,7 @@ public class Comic {
    *
    * @param index the offset index
    * @return the offset
+   * @deprecated use #getPages() instead
    */
   public Page getPage(int index) {
     log.trace("Returning offset: index=" + index);

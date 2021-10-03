@@ -1,0 +1,137 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2021, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+package org.comixedproject.opds.rest;
+
+import java.awt.image.BufferedImage;
+import java.io.*;
+import javax.imageio.ImageIO;
+import lombok.extern.log4j.Log4j2;
+import marvin.image.MarvinImage;
+import marvinplugins.MarvinPluginCollection;
+import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.encoders.WebResponseEncoder;
+import org.comixedproject.adaptors.file.FileTypeAdaptor;
+import org.comixedproject.adaptors.handlers.ComicFileHandler;
+import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.opds.OPDSException;
+import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * <code>OPDSComicController</code> provides REST APIs for retrieving comics via OPDS.
+ *
+ * @author Darryl L. Pierce
+ */
+@RestController
+@Log4j2
+public class OPDSComicController {
+  @Autowired private ComicService comicService;
+  @Autowired private WebResponseEncoder webResponseEncoder;
+  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private FileTypeAdaptor fileTypeAdaptor;
+
+  /**
+   * Retrieves a specific comic by record id.
+   *
+   * @param id the record id
+   * @param filename the filename
+   * @return the comic content
+   * @throws OPDSException if an error occurs
+   */
+  @GetMapping(value = "/opds/comics/{id}/content/{filename}")
+  @AuditableEndpoint
+  @ResponseBody
+  public ResponseEntity<InputStreamResource> downloadComic(
+      @PathVariable("id") long id, @PathVariable("filename") final String filename)
+      throws OPDSException {
+    try {
+      log.info("Downloading comic: id={} filename={}", id, filename);
+      Comic comic = this.comicService.getComic(id);
+      log.trace("Returning encoded file: {}", comic.getFilename());
+      return this.webResponseEncoder.encode(
+          (int) comic.getFile().length(),
+          new InputStreamResource(new FileInputStream(comic.getFile())),
+          comic.getBaseFilename(),
+          MediaType.parseMediaType(comic.getArchiveType().getMimeType()));
+    } catch (ComicException | FileNotFoundException error) {
+      throw new OPDSException("Failed to download comic: id=" + id, error);
+    }
+  }
+
+  /**
+   * Loads a single page from a comic.
+   *
+   * @param id the comic id
+   * @param index the page index
+   * @param maxWidth the max width
+   * @return the page content
+   * @throws OPDSException if an error occurs loading the page data
+   */
+  @GetMapping(value = "/opds/comics/{id}/pages/{index}/{maxWidth}")
+  @AuditableEndpoint
+  public ResponseEntity<byte[]> getPageByComicAndIndexWithMaxWidth(
+      @PathVariable("id") long id,
+      @PathVariable("index") int index,
+      @PathVariable("maxWidth") int maxWidth)
+      throws OPDSException {
+    try {
+      log.debug("Getting the image for comic: id={} index={}", id, index);
+      var comic = this.comicService.getComic(id);
+      if (index >= comic.getPages().size()) throw new ComicException("Invalid page: " + index);
+      var page = comic.getPages().get(index);
+      var adaptor = this.comicFileHandler.getArchiveAdaptorFor(comic.getArchiveType());
+      log.trace("Loading page content");
+      var content = adaptor.loadSingleFile(comic, page.getFilename());
+
+      if (maxWidth > 0 && page.getWidth() > maxWidth) {
+        log.trace("Scaling page");
+        ByteArrayInputStream bais = new ByteArrayInputStream(content);
+        BufferedImage image = ImageIO.read(bais);
+
+        MarvinImage unscaledImage = new MarvinImage(image);
+        MarvinImage scaledImage = new MarvinImage();
+        MarvinPluginCollection.scale(unscaledImage, scaledImage, maxWidth);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedImage buffered = scaledImage.getBufferedImage();
+        ImageIO.write(buffered, "jpg", baos);
+        baos.flush();
+        content = baos.toByteArray();
+        baos.close();
+      }
+
+      final InputStream baos = new ByteArrayInputStream(content);
+      String type =
+          this.fileTypeAdaptor.typeFor(baos) + "/" + this.fileTypeAdaptor.subtypeFor(baos);
+      return this.webResponseEncoder.encode(
+          content.length, content, page.getFilename(), MediaType.valueOf(type));
+    } catch (ComicException | ArchiveAdaptorException | IOException error) {
+      throw new OPDSException("Failed to get comic page: id=" + id + " index=" + index, error);
+    }
+  }
+}

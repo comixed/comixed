@@ -8,5 +8,6 @@
 
   <include file="/db/migrations/0.11.0/001_978_add_page_state_column.xml"/>
   <include file="/db/migrations/0.11.0/002_985_rename_blocked_pages_table.xml"/>
+  <include file="/db/migrations/0.11.0/003_909_removed_bookmarks.xml"/>
 
 </databaseChangeLog>

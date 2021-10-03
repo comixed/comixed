@@ -475,4 +475,130 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
         issueNumber);
     return this.comicRepository.findComic(publisher, series, volume, issueNumber);
   }
+
+  /**
+   * Returns the list of all publisher names.
+   *
+   * @return the list of names.
+   */
+  public List<String> getAllPublishers() {
+    log.trace("Loading all publisher names");
+    return this.comicRepository.findDistinctPublishers();
+  }
+
+  /**
+   * Returns all comics for a single publisher by name.
+   *
+   * @param name the publisher's name
+   * @return the comics
+   */
+  public List<Comic> getAllForPublisher(final String name) {
+    log.trace("Loading all comics for one publisher");
+    return this.comicRepository.findAllByPublisher(name);
+  }
+
+  /**
+   * Returns the list of all series names.
+   *
+   * @return the list of names.
+   */
+  public List<String> getAllSeries() {
+    log.trace("Loading all publisher names");
+    return this.comicRepository.findDistinctSeries();
+  }
+
+  /**
+   * Returns all comics for a single series by name.
+   *
+   * @param name the series's name
+   * @return the comics
+   */
+  public List<Comic> getAllForSeries(final String name) {
+    log.trace("Loading all comics for one publisher");
+    return this.comicRepository.findAllBySeries(name);
+  }
+
+  /**
+   * Returns the list of all character names.
+   *
+   * @return the list of names.
+   */
+  public List<String> getAllCharacters() {
+    log.trace("Loading all character names");
+    return this.comicRepository.findDistinctCharacters();
+  }
+
+  /**
+   * Returns all comics for a single character by name.
+   *
+   * @param name the character's name
+   * @return the comics
+   */
+  public List<Comic> getAllForCharacter(final String name) {
+    log.trace("Loading all comics for one publisher");
+    return this.comicRepository.findAllByCharacters(name);
+  }
+
+  /**
+   * Returns the list of all team names.
+   *
+   * @return the list of names.
+   */
+  public List<String> getAllTeams() {
+    log.trace("Loading all publisher names");
+    return this.comicRepository.findDistinctTeams();
+  }
+
+  /**
+   * Returns all comics for a single team by name.
+   *
+   * @param name the team's name
+   * @return the comics
+   */
+  public List<Comic> getAllForTeam(final String name) {
+    log.trace("Loading all comics for one publisher");
+    return this.comicRepository.findAllByTeams(name);
+  }
+
+  /**
+   * Returns the list of all location names.
+   *
+   * @return the list of names.
+   */
+  public List<String> getAllLocations() {
+    log.trace("Loading all location names");
+    return this.comicRepository.findDistinctLocations();
+  }
+
+  /**
+   * Returns all comics for a single location by name.
+   *
+   * @param name the location's name
+   * @return the comics
+   */
+  public List<Comic> getAllForLocation(final String name) {
+    log.trace("Loading all comics for one publisher");
+    return this.comicRepository.findAllByLocations(name);
+  }
+
+  /**
+   * Returns the list of all stories.
+   *
+   * @return the list of names.
+   */
+  public List<String> getAllStories() {
+    log.trace("Loading all publisher names");
+    return this.comicRepository.findDistinctStoryArcs();
+  }
+
+  /**
+   * Returns all comics for a single publisher by name.
+   *
+   * @param name the publisher's name
+   * @return the comics
+   */
+  public List<Comic> getAllForStory(final String name) {
+    log.trace("Loading all comics in a story arc");
+    return this.comicRepository.findAllByStoryArcs(name);
+  }
 }

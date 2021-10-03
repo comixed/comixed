@@ -473,4 +473,12 @@ public class ComicRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
   }
+
+  @Test
+  public void testFindDistinctPublishers() {
+    final List<String> result = repository.findDistinctPublishers();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
 }
