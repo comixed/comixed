@@ -28,7 +28,6 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.views.View;
 
 /**
@@ -89,10 +88,6 @@ public class ComiXedUser {
   @Getter
   private List<Preference> preferences = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  @JsonIgnore
-  private List<Bookmark> bookmarks = new ArrayList<>();
-
   @Transient
   @JsonView(View.UserList.class)
   @Getter
@@ -150,35 +145,6 @@ public class ComiXedUser {
   /** Clears all roles assigned to the user. */
   public void clearRoles() {
     this.roles.clear();
-  }
-
-  /**
-   * Returns the user's mark with the given book.
-   *
-   * @param comic the bookmark's comic
-   * @return the value, or null if none is set
-   */
-  public String getBookmark(Comic comic) {
-    for (Bookmark bookmark : this.bookmarks) {
-      if (bookmark.getComic().getId().equals(comic.getId())) return bookmark.getMark();
-    }
-    return null;
-  }
-
-  /**
-   * Sets the user bookmark for the given book.
-   *
-   * @param comic the comic
-   * @param mark the bookmark mark
-   */
-  public void setBookmark(Comic comic, String mark) {
-    for (Bookmark bookmark : this.bookmarks) {
-      if (bookmark.getComic() == comic) {
-        bookmark.setMark(mark);
-        return;
-      }
-    }
-    this.bookmarks.add(new Bookmark(this, comic, mark));
   }
 
   @Override

@@ -81,6 +81,7 @@ public class ComicServiceTest {
   @Mock private Message<ComicEvent> message;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ImprintService imprintService;
+  @Mock private List<String> collectionList;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -654,5 +655,17 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1))
         .findComic(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
+  }
+
+  @Test
+  public void testFindPublishers() {
+    Mockito.when(comicRepository.findDistinctPublishers()).thenReturn(collectionList);
+
+    final List<String> result = service.getAllPublishers();
+
+    assertNotNull(result);
+    assertSame(collectionList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findDistinctPublishers();
   }
 }

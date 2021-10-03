@@ -210,4 +210,94 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
       @Param("series") String series,
       @Param("volume") String volume,
       @Param("issueNumber") String issuesNumber);
+
+  /**
+   * Returns the distinct list of publisher names.
+   *
+   * @return the publisher names
+   */
+  @Query("SELECT DISTINCT c.publisher FROM Comic c")
+  List<String> findDistinctPublishers();
+
+  /**
+   * Returns all comics with a given publisher.
+   *
+   * @param name the publisher's name
+   */
+  List<Comic> findAllByPublisher(String name);
+
+  /**
+   * Returns the distinct list of series names.
+   *
+   * @return the series names
+   */
+  @Query("Select DISTINCT c.series FROM Comic c")
+  List<String> findDistinctSeries();
+
+  /**
+   * Returns all comics with a given series.
+   *
+   * @param name the series's name
+   */
+  List<Comic> findAllBySeries(String name);
+
+  /**
+   * Returns the distinct list of character names.
+   *
+   * @return the character names
+   */
+  @Query("Select DISTINCT(ch) FROM Comic c JOIN c.characters ch")
+  List<String> findDistinctCharacters();
+
+  /**
+   * Returns all comics with a given character.
+   *
+   * @param name the character's name
+   */
+  List<Comic> findAllByCharacters(String name);
+
+  /**
+   * Returns the distinct list of team names.
+   *
+   * @return the team names
+   */
+  @Query("Select DISTINCT(t) FROM Comic c JOIN c.teams t")
+  List<String> findDistinctTeams();
+
+  /**
+   * Returns all comics with a given team.
+   *
+   * @param name the team's name
+   */
+  List<Comic> findAllByTeams(String name);
+
+  /**
+   * Returns the distinct list of location names.
+   *
+   * @return the location names
+   */
+  @Query("Select DISTINCT(l) FROM Comic c JOIN c.locations l")
+  List<String> findDistinctLocations();
+
+  /**
+   * Returns all comics with a given location.
+   *
+   * @param name the location's name
+   */
+  List<Comic> findAllByLocations(String name);
+
+  /**
+   * Returns the distinct list of story names.
+   *
+   * @return the story names
+   */
+  @Query("Select DISTINCT(s) FROM Comic c JOIN c.storyArcs s")
+  List<String> findDistinctStoryArcs();
+
+  /**
+   * Returns all comics with a given story.
+   *
+   * @param name the story's name
+   */
+  List<Comic> findAllByStoryArcs(String name);
 }
