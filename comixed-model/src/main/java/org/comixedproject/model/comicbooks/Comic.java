@@ -256,7 +256,7 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "Characters", joinColumns = @JoinColumn(name = "ComicId"))
+  @CollectionTable(name = "CharacterTags", joinColumns = @JoinColumn(name = "ComicId"))
   @Column(name = "Name")
   @JsonProperty("characters")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
@@ -265,7 +265,7 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "Teams", joinColumns = @JoinColumn(name = "ComicId"))
+  @CollectionTable(name = "TeamTags", joinColumns = @JoinColumn(name = "ComicId"))
   @Column(name = "Name")
   @JsonProperty("teams")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
@@ -274,7 +274,7 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "Locations", joinColumns = @JoinColumn(name = "ComicId"))
+  @CollectionTable(name = "LocationTags", joinColumns = @JoinColumn(name = "ComicId"))
   @Column(name = "Name")
   @JsonProperty("locations")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
@@ -283,12 +283,12 @@ public class Comic {
 
   @ElementCollection
   @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "Stories", joinColumns = @JoinColumn(name = "ComicId"))
+  @CollectionTable(name = "StoryTags", joinColumns = @JoinColumn(name = "ComicId"))
   @Column(name = "Name")
-  @JsonProperty("storyArcs")
+  @JsonProperty("stories")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
-  List<String> storyArcs = new ArrayList<>();
+  List<String> stories = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("credits")

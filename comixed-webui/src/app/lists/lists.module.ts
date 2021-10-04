@@ -62,9 +62,21 @@ import {
 } from '@app/lists/reducers/upload-reading-list.reducer';
 import { UploadReadingListEffects } from '@app/lists/effects/upload-reading-list.effects';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  reducer as storyListReducer,
+  STORY_LIST_FEATURE_KEY
+} from '@app/lists/reducers/story-list.reducer';
+import { StoryListEffects } from '@app/lists/effects/story-list.effects';
+import { StoryNameListPageComponent } from './pages/story-name-list-page/story-name-list-page.component';
+import { StoryListForNamePageComponent } from './pages/story-list-for-name-page/story-list-for-name-page.component';
 
 @NgModule({
-  declarations: [ReadingListsPageComponent, ReadingListPageComponent],
+  declarations: [
+    ReadingListsPageComponent,
+    ReadingListPageComponent,
+    StoryNameListPageComponent,
+    StoryListForNamePageComponent
+  ],
   imports: [
     CommonModule,
     ListsRouting,
@@ -86,12 +98,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
       UPLOAD_READING_LIST_FEATURE_KEY,
       uploadReadingListReducer
     ),
+    StoreModule.forFeature(STORY_LIST_FEATURE_KEY, storyListReducer),
     EffectsModule.forFeature([
       ReadingListsEffects,
       ReadingListDetailEffects,
       ReadingListEntriesEffects,
       DownloadReadingListEffects,
-      UploadReadingListEffects
+      UploadReadingListEffects,
+      StoryListEffects
     ]),
     MatToolbarModule,
     MatPaginatorModule,

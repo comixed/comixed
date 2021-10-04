@@ -335,7 +335,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   public void onReadingListStateChange(
       final State<ReadingListState, ReadingListEvent> state,
       final Message<ReadingListEvent> message) {
-    log.trace("Fetching reading list frmo message headers");
+    log.trace("Fetching reading list from message headers");
     final var readingList = message.getHeaders().get(HEADER_READING_LIST, ReadingList.class);
     if (readingList == null) {
       return;

@@ -37,7 +37,7 @@ public class ComicDataAdaptor {
     comic.setCoverDate(null);
     comic.setTitle("");
     comic.setDescription("");
-    comic.getStoryArcs().clear();
+    comic.getStories().clear();
     comic.getTeams().clear();
     comic.getCharacters().clear();
     comic.getLocations().clear();

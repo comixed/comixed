@@ -248,7 +248,7 @@ describe('CollectionDetailComponent', () => {
         component.comics = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'stories',
-          collectionName: COMICS[0].storyArcs[0]
+          collectionName: COMICS[0].stories[0]
         });
       });
 

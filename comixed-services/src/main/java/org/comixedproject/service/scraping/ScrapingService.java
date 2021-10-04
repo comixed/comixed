@@ -244,8 +244,8 @@ public class ScrapingService {
       issueDetails.getTeams().forEach(team -> comic.getTeams().add(team));
       comic.getLocations().clear();
       issueDetails.getLocations().forEach(location -> comic.getLocations().add(location));
-      comic.getStoryArcs().clear();
-      issueDetails.getStories().forEach(story -> comic.getStoryArcs().add(story));
+      comic.getStories().clear();
+      issueDetails.getStories().forEach(story -> comic.getStories().add(story));
       comic.getCredits().clear();
       issueDetails
           .getCredits()

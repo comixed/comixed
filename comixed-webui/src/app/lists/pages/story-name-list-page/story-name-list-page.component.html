@@ -1,0 +1,31 @@
+<mat-toolbar class="cx-primary-light-background">
+  <mat-paginator
+    class="cx-primary-light-background cx-height-100"
+    showFirstLastButtons="true"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
+  <div class="cx-spacer"></div>
+</mat-toolbar>
+
+<h2>{{ "story-list.page-title" | translate }}</h2>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="story-name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "story-list.label.story-name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="['/lists', 'stories', 'names', row]"
+  ></mat-row>
+</mat-table>

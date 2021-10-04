@@ -72,7 +72,7 @@ export const selectComicListCollection = createSelector(
           entries = entries.concat(comic.locations);
           break;
         case CollectionType.STORIES:
-          entries = entries.concat(comic.storyArcs);
+          entries = entries.concat(comic.stories);
           break;
       }
     });

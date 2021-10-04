@@ -81,5 +81,5 @@ export const selectLocations = createSelector(selectAllComics, comics =>
 
 /** Selects the stories without duplicates. */
 export const selectStories = createSelector(selectAllComics, comics =>
-  flattened(comics.map(comic => comic.storyArcs))
+  flattened(comics.map(comic => comic.stories))
 );

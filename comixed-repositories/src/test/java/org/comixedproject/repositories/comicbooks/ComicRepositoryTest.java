@@ -243,7 +243,7 @@ public class ComicRepositoryTest {
 
   @Test
   public void testStoryArcs() {
-    assertEquals(1, comic.getStoryArcs().size());
+    assertEquals(1, comic.getStories().size());
   }
 
   @Test

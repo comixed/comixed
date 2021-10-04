@@ -68,6 +68,10 @@ public class ComicServiceTest {
   private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
   private static final ComicState TEST_STATE =
       ComicState.values()[(RandomUtils.nextInt(ComicState.values().length))];
+  private static final String TEST_CHARACTER = "Manlyman";
+  private static final String TEST_TEAM = "The Boys";
+  private static final String TEST_LOCATION = "The Location";
+  private static final String TEST_STORY_NAME = "The Story Name";
 
   @InjectMocks private ComicService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -82,6 +86,7 @@ public class ComicServiceTest {
   @Mock private MessageHeaders messageHeaders;
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
+  @Mock private List<String> publisherList;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -667,5 +672,151 @@ public class ComicServiceTest {
     assertSame(collectionList, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findDistinctPublishers();
+  }
+
+  @Test
+  public void testGetAllForPublisher() {
+    Mockito.when(comicRepository.findAllByPublisher(Mockito.anyString())).thenReturn(comicList);
+
+    final List<Comic> result = service.getAllForPublisher(TEST_PUBLISHER);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllByPublisher(TEST_PUBLISHER);
+  }
+
+  @Test
+  public void testFindSeries() {
+    Mockito.when(comicRepository.findDistinctSeries()).thenReturn(collectionList);
+
+    final List<String> result = service.getAllSeries();
+
+    assertNotNull(result);
+    assertSame(collectionList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findDistinctSeries();
+  }
+
+  @Test
+  public void testGetAllForSeries() {
+    Mockito.when(comicRepository.findAllBySeries(Mockito.anyString())).thenReturn(comicList);
+
+    final List<Comic> result = service.getAllForSeries(TEST_SERIES);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllBySeries(TEST_SERIES);
+  }
+
+  @Test
+  public void testFindCharacters() {
+    Mockito.when(comicRepository.findDistinctCharacters()).thenReturn(collectionList);
+
+    final List<String> result = service.getAllCharacters();
+
+    assertNotNull(result);
+    assertSame(collectionList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findDistinctCharacters();
+  }
+
+  @Test
+  public void testGetAllForCharacter() {
+    Mockito.when(comicRepository.findAllByCharacters(Mockito.anyString())).thenReturn(comicList);
+
+    final List<Comic> result = service.getAllForCharacter(TEST_CHARACTER);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllByCharacters(TEST_CHARACTER);
+  }
+
+  @Test
+  public void testFindTeams() {
+    Mockito.when(comicRepository.findDistinctTeams()).thenReturn(collectionList);
+
+    final List<String> result = service.getAllTeams();
+
+    assertNotNull(result);
+    assertSame(collectionList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findDistinctTeams();
+  }
+
+  @Test
+  public void testGetAllForTeam() {
+    Mockito.when(comicRepository.findAllByTeams(Mockito.anyString())).thenReturn(comicList);
+
+    final List<Comic> result = service.getAllForTeam(TEST_TEAM);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllByTeams(TEST_TEAM);
+  }
+
+  @Test
+  public void testFindLocations() {
+    Mockito.when(comicRepository.findDistinctLocations()).thenReturn(collectionList);
+
+    final List<String> result = service.getAllLocations();
+
+    assertNotNull(result);
+    assertSame(collectionList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findDistinctLocations();
+  }
+
+  @Test
+  public void testGetAllForLocation() {
+    Mockito.when(comicRepository.findAllByLocations(Mockito.anyString())).thenReturn(comicList);
+
+    final List<Comic> result = service.getAllForLocation(TEST_LOCATION);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllByLocations(TEST_LOCATION);
+  }
+
+  @Test
+  public void testFindStories() {
+    Mockito.when(comicRepository.findDistinctStories()).thenReturn(collectionList);
+
+    final List<String> result = service.getAllStories();
+
+    assertNotNull(result);
+    assertSame(collectionList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findDistinctStories();
+  }
+
+  @Test
+  public void testGetAllForStory() {
+    Mockito.when(comicRepository.findAllByStories(Mockito.anyString())).thenReturn(comicList);
+
+    final List<Comic> result = service.getAllForStory(TEST_STORY_NAME);
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAllByStories(TEST_STORY_NAME);
+  }
+
+  @Test
+  public void testGetAllPublishersForStory() {
+    Mockito.when(comicRepository.findDistinctPublishersForStory(Mockito.anyString()))
+        .thenReturn(publisherList);
+
+    final List<String> result = service.getAllPublishersForStory(TEST_STORY_NAME);
+
+    assertNotNull(result);
+    assertSame(publisherList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1))
+        .findDistinctPublishersForStory(TEST_STORY_NAME);
   }
 }

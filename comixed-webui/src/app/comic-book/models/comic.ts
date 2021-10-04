@@ -50,7 +50,7 @@ export interface Comic {
   characters: string[];
   teams: string[];
   locations: string[];
-  storyArcs: string[];
+  stories: string[];
   credits: ComicCredit[];
   nextIssueId: number;
   previousIssueId: number;

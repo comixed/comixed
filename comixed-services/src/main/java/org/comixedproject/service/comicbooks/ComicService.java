@@ -588,7 +588,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
    */
   public List<String> getAllStories() {
     log.trace("Loading all publisher names");
-    return this.comicRepository.findDistinctStoryArcs();
+    return this.comicRepository.findDistinctStories();
   }
 
   /**
@@ -599,6 +599,11 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
    */
   public List<Comic> getAllForStory(final String name) {
     log.trace("Loading all comics in a story arc");
-    return this.comicRepository.findAllByStoryArcs(name);
+    return this.comicRepository.findAllByStories(name);
+  }
+
+  public List<String> getAllPublishersForStory(final String name) {
+    log.trace("Returning all publishers for a given story");
+    return this.comicRepository.findDistinctPublishersForStory(name);
   }
 }

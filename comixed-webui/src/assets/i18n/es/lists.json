@@ -45,7 +45,7 @@
   },
   "reading-lists": {
     "delete-reading-lists": {
-      "confirmation-message": "Are you sure you want to delete {count, plural, =1{one reding list} other{# reading lists}}?",
+      "confirmation-message": "Are you sure you want to delete {count, plural, =1{one reading list} other{# reading lists}}?",
       "confirmation-title": "Delete Reading Lists",
       "effect-failure": "Failed to delete {count, plural, =1{one reading list} other{# reading lists}}.",
       "effect-success": "Deleted {count, plural, =1{one reading list} other{# reading lists}}."
@@ -75,61 +75,27 @@
       "effect-failure": "Failed to remove comics from reading list.",
       "effect-success": "Removed comics from reading list: {name}"
     }
-  }
-}
-{
-  "reading-list": {
-    "load-one": {
-      "effect-failure": "Failed to load reading list."
-    },
-    "placeholder": {
-      "name": "Reading List Name",
-      "summary": "Summary Of The Reading List"
-    },
-    "save-changes": {
-      "confirmation-message": "Save changes to this reading list?",
-      "confirmation-title": "Save Changes",
-      "effect-failure": "Failed to save reading list.",
-      "effect-success": "Reading list saved."
-    },
-    "text": {
-      "no-name": "Unnamed Reading List"
-    },
-    "tooltip": {
-      "remove-comics": "Remove the selected comics.",
-      "reset-reading-list": "Reset changes to the reading list.",
-      "return-to-list": "Return to the list.",
-      "save-reading-list": "Save changes to the reading list."
-    },
-    "undo-changes": {
-      "confirmation-message": "Are you sure you want to discard your changes?",
-      "confirmation-title": "Undo Reading List Changes"
-    }
   },
-  "reading-lists": {
+  "story-list": {
     "label": {
-      "comic-count": "# Of Comics",
-      "created-on": "Created",
-      "name": "Reading List Name",
-      "summary": "Summary"
+      "entry-count": "# Of Entries",
+      "publisher": "Published By",
+      "story-name": "Story Name"
     },
-    "load-for-user": {
-      "effect-failure": "Failed to load reading lists."
+    "load-stories-for-name": {
+      "effect-failure": "Failed to load stories for {name}."
     },
+    "load-story-names": {
+      "effect-failure": "Failed to load all story names."
+    },
+    "page-title": "All Story Names",
+    "tab-title": "All Story Names",
     "tooltip": {
-      "add-reading-list": "Add a new reading list."
+      "scrape-story": "Scrape this story."
     }
   },
-  "reading-list-entries": {
-    "add-comics": {
-      "effect-failure": "Failed to add comics to reading list.",
-      "effect-success": "Added comics to reading list: {name}"
-    },
-    "remove-comics": {
-      "confirmation-message": "Are you sure you want to remove {count, plural, =1{one comic} other{# comics}} from this reading list?",
-      "confirmation-title": "Remove Comics From Reading List",
-      "effect-failure": "Failed to remove comics from reading list.",
-      "effect-success": "Removed comics from reading list: {name}"
-    }
+  "story-list-for-name": {
+    "page-title": "Stories With The Name \"{name}\"",
+    "tab-title": "Stories Named: \"{name}\""
   }
 }

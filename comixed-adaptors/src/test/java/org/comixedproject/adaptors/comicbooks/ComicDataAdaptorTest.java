@@ -44,7 +44,7 @@ public class ComicDataAdaptorTest {
     Mockito.when(comic.getCharacters()).thenReturn(characterList);
     Mockito.when(comic.getTeams()).thenReturn(teamList);
     Mockito.when(comic.getLocations()).thenReturn(locationList);
-    Mockito.when(comic.getStoryArcs()).thenReturn(storyList);
+    Mockito.when(comic.getStories()).thenReturn(storyList);
     Mockito.when(comic.getCredits()).thenReturn(creditList);
 
     adaptor.clear(comic);
