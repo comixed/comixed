@@ -24,7 +24,7 @@ database files under a directory named **database**.
 
 To create the Docker image using the above directories, we'll use the following command line:
 
-``` $ docker create --name comixed -it -p 7171:7171/tcp -v /Users/reader/comixed/library:/comic_dir -v /Users/reader/comixed/database:/root/.comixed comixed/comixed:latest```
+``` $ docker create --name comixed -it -p 7171:7171/tcp -v /Users/reader/comixed/library:/library -v /Users/reader/comixed/database:/root/.comixed comixed/comixed:latest```
 
 This command line:
 1. creates a runnable container named "comixed" in Docker,
@@ -44,6 +44,11 @@ above, we put our comics in /Users/reader/comixed/library, we'll create a new di
 
 We then copy the new comics into this directory.
 
-Then, from the **Image Comics** page, you enter as the import directory **/comic_dir/importing** and click the search
+Then, from the **Image Comics** page, you enter as the import directory **/library/importing** and click the search
 button. This will return all of the comics you just copied into that directory, and allow you to import them into your
 library.
+
+## Logging
+
+The container, by default, generates the log file (named **comixed.log**) in the root directory of the managed library
+directory.
