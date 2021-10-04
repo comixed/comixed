@@ -168,7 +168,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
               this.addElementsToList(xmlInputReader.getElementText(), comic.getLocations());
               break;
             case TAG_ALTERNATE_SERIES:
-              this.addElementsToList(xmlInputReader.getElementText(), comic.getStoryArcs());
+              this.addElementsToList(xmlInputReader.getElementText(), comic.getStories());
               break;
             case TAG_WRITER:
             case TAG_EDITOR:

@@ -185,8 +185,19 @@
 </button>
 
 <button
+  *ngIf="!!user"
   mat-button
+  class="menu-button"
+  routerLink="/lists/stories/names"
+  routerLinkActive="active"
+>
+  <mat-icon>auto_stories</mat-icon>
+  <span>{{ "navigation.option.story-names" | translate }}</span>
+</button>
+
+<button
   *ngFor="let list of readingLists"
+  mat-button
   class="menu-button"
   [routerLink]="['/lists', 'reading', list.id]"
   [queryParams]="queryParams"

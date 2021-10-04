@@ -1,0 +1,22 @@
+@import '~styles';
+
+.mat-column-story-name {
+}
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-entry-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-actions {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

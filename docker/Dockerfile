@@ -5,7 +5,7 @@ MAINTAINER Pidockmedia "pidockmedia@gmail.com"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v0.11.0-SNAPSHOT/comixed-release-0.11.0-SNAPSHOT-RELEASE.zip
+RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v0.10.1-1.1/comixed-release-0.10.1-1.1-RELEASE.zip
 RUN (cd /app; unzip /ul/*.zip)
 RUN rm *.zip
 WORKDIR /app
@@ -16,4 +16,4 @@ ENV PATH="$JAVA_HOME/bin:${PATH}"
 EXPOSE 7171
 VOLUME /comic_data
 
-CMD ["bash", "/app/comixed-release-0.11.0-SNAPSHOT/bin/run.sh", "-L", "/library/comixed.log"]
+CMD ["bash", "/app/comixed-release-0.10.1-1.1/bin/run.sh", "-L", "/library/comixed.log"]

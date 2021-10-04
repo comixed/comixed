@@ -28,6 +28,7 @@ export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 
 export const QUERY_PARAM_SIDEBAR = 'sidebar';
+export const QUERY_PARAM_PAGE_SIZE = 'size';
 
 // messaging constants
 

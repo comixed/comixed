@@ -231,7 +231,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the series names
    */
-  @Query("Select DISTINCT c.series FROM Comic c")
+  @Query("SELECT DISTINCT c.series FROM Comic c")
   List<String> findDistinctSeries();
 
   /**
@@ -246,7 +246,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the character names
    */
-  @Query("Select DISTINCT(ch) FROM Comic c JOIN c.characters ch")
+  @Query("SELECT DISTINCT(ch) FROM Comic c JOIN c.characters ch")
   List<String> findDistinctCharacters();
 
   /**
@@ -261,7 +261,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the team names
    */
-  @Query("Select DISTINCT(t) FROM Comic c JOIN c.teams t")
+  @Query("SELECT DISTINCT(t) FROM Comic c JOIN c.teams t")
   List<String> findDistinctTeams();
 
   /**
@@ -276,7 +276,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the location names
    */
-  @Query("Select DISTINCT(l) FROM Comic c JOIN c.locations l")
+  @Query("SELECT DISTINCT(l) FROM Comic c JOIN c.locations l")
   List<String> findDistinctLocations();
 
   /**
@@ -291,13 +291,22 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the story names
    */
-  @Query("Select DISTINCT(s) FROM Comic c JOIN c.storyArcs s")
-  List<String> findDistinctStoryArcs();
+  @Query("SELECT DISTINCT(s) FROM Comic c JOIN c.stories s")
+  List<String> findDistinctStories();
 
   /**
    * Returns all comics with a given story.
    *
    * @param name the story's name
    */
-  List<Comic> findAllByStoryArcs(String name);
+  List<Comic> findAllByStories(String name);
+
+  /**
+   * Returns the distinct list of publishers who have a story with given name.
+   *
+   * @param name the story name
+   * @return the publishers
+   */
+  @Query("SELECT DISTINCT c.publisher FROM Comic c JOIN c.stories WHERE :name MEMBER OF c.stories")
+  List<String> findDistinctPublishersForStory(@Param("name") String name);
 }

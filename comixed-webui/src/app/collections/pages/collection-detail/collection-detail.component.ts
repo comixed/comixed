@@ -78,7 +78,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
                 case CollectionType.LOCATIONS:
                   return comic.locations.includes(this.collectionName);
                 case CollectionType.STORIES:
-                  return comic.storyArcs.includes(this.collectionName);
+                  return comic.stories.includes(this.collectionName);
               }
             });
           });

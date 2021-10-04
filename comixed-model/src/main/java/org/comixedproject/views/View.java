@@ -24,7 +24,7 @@ package org.comixedproject.views;
  *
  * @author Darryl L. Pierce
  */
-public class View {
+public interface View {
   /** Used when returning the generic response. */
   public interface GenericResponseView {}
 
@@ -102,4 +102,10 @@ public class View {
 
   /** Used when retrieving the list of imprints. */
   public interface ImprintListView {}
+
+  /** Used when retrieving a list of stories. */
+  public interface StoryList {}
+
+  /** Used when retrieving a story. */
+  public interface StoryDetail {}
 }

@@ -30,7 +30,7 @@ export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
     { prefix: './assets/i18n/', suffix: '/core.json' },
     { prefix: './assets/i18n/', suffix: '/last-read.json' },
     { prefix: './assets/i18n/', suffix: '/library.json' },
-    { prefix: './assets/i18n/', suffix: '/reading-lists.json' },
+    { prefix: './assets/i18n/', suffix: '/lists.json' },
     { prefix: './assets/i18n/', suffix: '/user.json' }
   ]);
 }
