@@ -22,7 +22,7 @@ import {
   selectComicBusy,
   selectComicState
 } from './comic.selectors';
-import { COMIC_3 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_3 } from '@app/comic-books/comic-books.fixtures';
 
 describe('Comic Selectors', () => {
   let state: ComicState;

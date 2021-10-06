@@ -22,7 +22,7 @@ import {
   COMIC_2,
   COMIC_3,
   COMIC_4
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import { Comic } from '@app/comic-books/models/comic';
 
 describe('DeletedComicsPipe', () => {

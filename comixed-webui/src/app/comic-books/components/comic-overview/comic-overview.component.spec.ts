@@ -21,7 +21,7 @@ import { ComicOverviewComponent } from './comic-overview.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMIC_1 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MatGridListModule } from '@angular/material/grid-list';

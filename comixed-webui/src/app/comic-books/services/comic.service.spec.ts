@@ -28,7 +28,7 @@ import {
   COMIC_2,
   COMIC_3,
   COMIC_5
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   LOAD_COMIC_URL,
   LOAD_COMICS_URL,
@@ -42,7 +42,7 @@ import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
   UPDATE_COMIC_INFO_URL
-} from '@app/comic-books/comic-book.constants';
+} from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { HttpResponse } from '@angular/common/http';
 import { MarkComicsUndeletedRequest } from '@app/comic-books/models/net/mark-comics-undeleted-request';

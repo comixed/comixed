@@ -43,6 +43,12 @@ import { selectImprints } from '@app/comic-books/selectors/imprint-list.selector
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { Imprint } from '@app/comic-books/models/imprint';
+import {
+  resetScrapedMetadata,
+  scrapeMetadataFromFilename
+} from '@app/comic-files/actions/scrape-metadata.actions';
+import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-metadata.selectors';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -63,6 +69,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   ];
   comicForm: FormGroup;
   scrapingMode = false;
+  scrapedMetadataSubscription: Subscription;
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
@@ -86,6 +93,16 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       title: [''],
       description: ['']
     });
+    this.store.dispatch(resetScrapedMetadata());
+    this.scrapedMetadataSubscription = this.store
+      .select(selectScrapeMetadataState)
+      .pipe(filter(state => state.found))
+      .subscribe(state => {
+        this.logger.trace('Filename scraping data updated');
+        this.comicForm.controls.series.setValue(state.series);
+        this.comicForm.controls.volume.setValue(state.volume);
+        this.comicForm.controls.issueNumber.setValue(state.issueNumber);
+      });
     this.imprintSubscription = this.store
       .select(selectImprints)
       .subscribe(imprints => {
@@ -236,6 +253,12 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.comicForm.controls.imprint.setValue(
       imprint?.name || this.comic.imprint
     );
+  }
+
+  onScrapeFilename(): void {
+    const filename = this.comic.baseFilename;
+    this.logger.trace('Scraping the comic filename:', filename);
+    this.store.dispatch(scrapeMetadataFromFilename({ filename }));
   }
 
   private encodeForm(): Comic {

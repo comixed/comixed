@@ -19,7 +19,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
 import { interpolate } from '@app/core';
-import { COMICVINE_ISSUE_LINK } from '@app/comic-books/comic-book.constants';
+import { COMICVINE_ISSUE_LINK } from '@app/comic-books/comic-books.constants';
 
 @Pipe({
   name: 'comicvineIssueLink'

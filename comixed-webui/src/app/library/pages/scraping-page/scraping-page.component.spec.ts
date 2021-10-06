@@ -42,7 +42,7 @@ import {
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { COMIC_2 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import { loadScrapingVolumes } from '@app/comic-books/actions/scraping.actions';
 import { TitleService } from '@app/core/services/title.service';
 

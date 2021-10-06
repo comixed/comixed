@@ -20,21 +20,15 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
-import org.comixedproject.model.scraping.ScrapingRule;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.scraping.ScrapingRuleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,22 +40,18 @@ public class ComicInsertProcessorTest {
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ComicFileDescriptor descriptor;
   @Mock private ScrapingRuleService scrapingRuleService;
-  @Mock private FilenameScraperAdaptor filenameScraperAdaptor;
-  @Mock private Comic comic;
-  @Mock private ScrapingRule scrapingRule;
+  @Mock private Comic comicRecord;
 
-  private List<ScrapingRule> scrapingRules = new ArrayList<>();
+  @Captor private ArgumentCaptor<Comic> comicArgumentCaptor;
 
   @Before
   public void setUp() {
     Mockito.when(descriptor.getFilename()).thenReturn(TEST_FILENAME);
-    Mockito.when(scrapingRuleService.getAllRules()).thenReturn(scrapingRules);
-    scrapingRules.add(scrapingRule);
   }
 
   @Test
   public void testProcessFilenameUsed() throws Exception {
-    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(comic);
+    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(comicRecord);
 
     final Comic result = processor.process(descriptor);
 
@@ -71,38 +61,21 @@ public class ComicInsertProcessorTest {
   }
 
   @Test
-  public void testProcessNoMatchFound() throws Exception {
-    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
-    Mockito.when(
-            filenameScraperAdaptor.execute(
-                Mockito.any(Comic.class), Mockito.any(ScrapingRule.class)))
-        .thenReturn(false);
-
-    final Comic result = processor.process(descriptor);
-
-    assertNotNull(result);
-    assertEquals(TEST_FILENAME, result.getFilename());
-
-    Mockito.verify(comicService, Mockito.times(1)).findByFilename(TEST_FILENAME);
-    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(result, scrapingRule);
-    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(result);
-  }
-
-  @Test
   public void testProcess() throws Exception {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
-    Mockito.when(
-            filenameScraperAdaptor.execute(
-                Mockito.any(Comic.class), Mockito.any(ScrapingRule.class)))
-        .thenReturn(true);
+    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(comicArgumentCaptor.capture());
 
     final Comic result = processor.process(descriptor);
 
+    final Comic comic = comicArgumentCaptor.getValue();
+    assertNotNull(comic);
+    assertEquals(TEST_FILENAME, comic.getFilename());
+
     assertNotNull(result);
-    assertEquals(TEST_FILENAME, result.getFilename());
+    assertSame(comic, result);
 
     Mockito.verify(comicService, Mockito.times(1)).findByFilename(TEST_FILENAME);
-    Mockito.verify(filenameScraperAdaptor, Mockito.times(1)).execute(result, scrapingRule);
-    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(result);
+    Mockito.verify(scrapingRuleService, Mockito.times(1)).scrapeFilename(comic);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
   }
 }

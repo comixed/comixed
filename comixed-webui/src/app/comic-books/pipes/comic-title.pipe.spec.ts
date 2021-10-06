@@ -17,7 +17,7 @@
  */
 
 import { ComicTitlePipe } from './comic-title.pipe';
-import { COMIC_3 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_3 } from '@app/comic-books/comic-books.fixtures';
 import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
 
 describe('ComicTitlePipe', () => {

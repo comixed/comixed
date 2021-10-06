@@ -35,7 +35,7 @@ import {
   ActivatedRouteSnapshot,
   Router
 } from '@angular/router';
-import { COMIC_1, COMIC_2 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_1, COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import { ComicOverviewComponent } from '@app/comic-books/components/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from '@app/comic-books/components/comic-story/comic-story.component';
 import { ComicPagesComponent } from '@app/comic-books/components/comic-pages/comic-pages.component';
@@ -77,7 +77,7 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { WebSocketService } from '@app/messaging';
 import { Subscription } from 'webstomp-client';
-import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-book.constants';
+import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
 import { comicLoaded } from '@app/comic-books/actions/comic.actions';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';

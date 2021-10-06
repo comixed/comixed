@@ -21,7 +21,7 @@ import { ScrapingIssueDetailComponent } from './scraping-issue-detail.component'
 import { LoggerModule } from '@angular-ru/logger';
 import { ScrapingIssueTitlePipe } from '@app/comic-books/pipes/scraping-issue-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
-import { SCRAPING_ISSUE_1 } from '@app/comic-books/comic-book.fixtures';
+import { SCRAPING_ISSUE_1 } from '@app/comic-books/comic-books.fixtures';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';

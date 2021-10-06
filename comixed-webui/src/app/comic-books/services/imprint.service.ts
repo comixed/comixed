@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GET_IMPRINTS_URL } from '@app/comic-books/comic-book.constants';
+import { GET_IMPRINTS_URL } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
 
 @Injectable({

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
 import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
@@ -29,8 +30,12 @@ import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.batch.comicbooks.AddComicsConfiguration;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
+import org.comixedproject.model.net.comicfiles.FilenameMetadataRequest;
+import org.comixedproject.model.net.comicfiles.FilenameMetadataResponse;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
+import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicfiles.ComicFileService;
+import org.comixedproject.service.scraping.ScrapingRuleService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -52,11 +57,11 @@ import org.springframework.web.bind.annotation.*;
  * @author Darryl L. Pierce
  */
 @RestController
-@RequestMapping("/api/files")
 @Log4j2
 public class ComicFileController {
 
   @Autowired private ComicFileService comicFileService;
+  @Autowired private ScrapingRuleService scrapingRuleService;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -75,7 +80,7 @@ public class ComicFileController {
    * @throws IOException if an error occurs
    */
   @PostMapping(
-      value = "/contents",
+      value = "/api/files/contents",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
@@ -100,7 +105,7 @@ public class ComicFileController {
    * @param filename the file
    * @return the image content, or null
    */
-  @GetMapping(value = "/import/cover")
+  @GetMapping(value = "/api/files/import/cover")
   @AuditableEndpoint
   public byte[] getImportFileCover(@RequestParam("filename") String filename) {
     // for some reason, during development, this value ALWAYS had a trailing
@@ -138,7 +143,7 @@ public class ComicFileController {
    * @throws JobRestartException if an error occurs
    */
   @PostMapping(
-      value = "/import",
+      value = "/api/files/import",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
@@ -156,5 +161,26 @@ public class ComicFileController {
         new JobParametersBuilder()
             .addLong(AddComicsConfiguration.PARAM_ADD_COMICS_STARTED, System.currentTimeMillis())
             .toJobParameters());
+  }
+
+  /**
+   * Returns the metadata extracted from the given filename.
+   *
+   * @param request the request body
+   * @return the response body
+   */
+  @PostMapping(
+      value = "/api/files/metadata",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public FilenameMetadataResponse scrapeFilename(
+      @RequestBody() final FilenameMetadataRequest request) {
+    final String filename = FilenameUtils.getBaseName(request.getFilename());
+    log.info("Scraping filename: {}", filename);
+    final FilenameMetadata info = this.scrapingRuleService.getInfoFromFilename(filename);
+    return new FilenameMetadataResponse(
+        false, info.getSeries(), info.getVolume(), info.getIssueNumber());
   }
 }

@@ -20,12 +20,11 @@ package org.comixedproject.adaptors.comicbooks;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.model.scraping.ScrapingRule;
 import org.springframework.stereotype.Component;
 
@@ -40,48 +39,52 @@ public class FilenameScraperAdaptor {
   /**
    * Attempts to set the metadata on a comic based on the comic's filename.
    *
-   * @param comic the comic to be updated @Param rule the filename scraping rule
+   * @param filename the filename
    * @param scrapingRule the scraping rule
-   * @throws AdaptorException if an error occurs
-   * @return tree if the rule was applied
+   * @return the filename metadata if the rule was applied, otherwise null
    */
-  public boolean execute(final Comic comic, final ScrapingRule scrapingRule)
-      throws AdaptorException {
+  public FilenameMetadata execute(final String filename, final ScrapingRule scrapingRule) {
     log.trace(
-        "Applying filename scraping rule: filename={} rule={}",
-        FilenameUtils.getName(comic.getFilename()),
-        scrapingRule.getRule());
-    return this.applyRule(comic, scrapingRule);
+        "Applying filename scraping rule: filename={} rule={}", filename, scrapingRule.getRule());
+    return this.applyRule(filename, scrapingRule);
   }
 
-  private boolean applyRule(Comic comic, ScrapingRule scrapingRule) throws AdaptorException {
+  private FilenameMetadata applyRule(final String filename, final ScrapingRule scrapingRule) {
     var expression = Pattern.compile(scrapingRule.getRule());
-    var filename = FilenameUtils.getBaseName(comic.getFilename());
 
     if (this.ruleApplies(expression, filename)) {
       log.trace("Rule applies");
       String[] elements = this.extractElements(expression, filename);
+      String series = null;
+      String volume = null;
+      String issueNumber = null;
+      Date coverDate = null;
+
       if (scrapingRule.getCoverDatePosition() != null
           && !StringUtils.isEmpty(scrapingRule.getDateFormat())) {
         try {
-          this.parseCoverDate(comic, scrapingRule, elements[scrapingRule.getCoverDatePosition()]);
+          final SimpleDateFormat dateFormat = new SimpleDateFormat(scrapingRule.getDateFormat());
+          coverDate = dateFormat.parse(elements[scrapingRule.getCoverDatePosition()]);
         } catch (ParseException error) {
-          throw new AdaptorException("Failed to parse cover date", error);
+          log.error("Failed to parse cover date", error);
+          coverDate = null;
         }
       }
+
       if (scrapingRule.getSeriesPosition() != null) {
-        comic.setSeries(elements[scrapingRule.getSeriesPosition()]);
+        series = elements[scrapingRule.getSeriesPosition()];
       }
+
       if (scrapingRule.getVolumePosition() != null) {
-        comic.setVolume(elements[scrapingRule.getVolumePosition()]);
+        volume = elements[scrapingRule.getVolumePosition()];
       }
-      if (scrapingRule.getIssueNumberPosition() != null) {
-        comic.setIssueNumber(elements[scrapingRule.getIssueNumberPosition()]);
-      }
-      return true;
+      if (scrapingRule.getIssueNumberPosition() != null)
+        issueNumber = elements[scrapingRule.getIssueNumberPosition()];
+
+      return new FilenameMetadata(true, series, volume, issueNumber, coverDate);
     } else {
       log.trace("Rule does not apply");
-      return false;
+      return new FilenameMetadata();
     }
   }
 
@@ -103,12 +106,5 @@ public class FilenameScraperAdaptor {
     }
 
     return result;
-  }
-
-  private void parseCoverDate(
-      final Comic comic, final ScrapingRule scrapingRule, final String coverDate)
-      throws ParseException {
-    var dateFormat = new SimpleDateFormat(scrapingRule.getDateFormat());
-    comic.setCoverDate(dateFormat.parse(coverDate));
   }
 }

@@ -31,7 +31,7 @@ import {
   COMIC_4,
   SCRAPING_ISSUE_1,
   SCRAPING_VOLUME_3
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
   SCRAPING_FEATURE_KEY

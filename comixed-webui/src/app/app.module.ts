@@ -66,8 +66,8 @@ import { MatListModule } from '@angular/material/list';
 import { ComicPagesModule } from '@app/comic-pages/comic-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
 import { LastReadModule } from '@app/last-read/last-read.module';
-import { ComicFileModule } from '@app/comic-file/comic-file.module';
-import { ComicBookModule } from '@app/comic-books/comic-book.module';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { ComicFileModule } from '@app/comic-files/comic-file.module';
 import { GravatarModule } from 'ngx-gravatar';
 import { ListsModule } from '@app/lists/lists.module';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -85,7 +85,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     AdminModule,
     MessagingModule,
     UserModule,
-    ComicBookModule.forRoot(),
+    ComicBooksModule.forRoot(),
     ComicFileModule,
     LibraryModule,
     ComicPagesModule,

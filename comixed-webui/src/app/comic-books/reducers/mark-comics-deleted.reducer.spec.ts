@@ -26,7 +26,7 @@ import {
   markComicsDeleted,
   markComicsDeletedFailed
 } from '@app/comic-books/actions/mark-comics-deleted.actions';
-import { COMIC_1 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 
 describe('MarkComicsDeleted Reducer', () => {
   const COMIC = COMIC_1;

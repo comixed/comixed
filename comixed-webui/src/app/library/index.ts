@@ -22,7 +22,7 @@ import {
   COMIC_IMPORT_FEATURE_KEY,
   ComicImportState,
   reducer as libraryImportReducer
-} from '../comic-file/reducers/comic-import.reducer';
+} from '../comic-files/reducers/comic-import.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
   LIBRARY_FEATURE_KEY,
