@@ -11,7 +11,6 @@
       <unpack>false</unpack>
       <includes>
         <include>org.comixedproject:comixed-app:jar:</include>
-        <!-- include>org.comixedproject:comixed-importer:jar:</include -->
       </includes>
     </dependencySet>
   </dependencySets>
