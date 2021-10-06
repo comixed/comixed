@@ -23,14 +23,14 @@ import {
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
-import { GET_IMPRINTS_URL } from '@app/comic-books/comic-book.constants';
+import { GET_IMPRINTS_URL } from '@app/comic-books/comic-books.constants';
 
 describe('ImprintService', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];

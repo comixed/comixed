@@ -17,8 +17,8 @@
  */
 
 import { ComicvineIssueLinkPipe } from './comicvine-issue-link.pipe';
-import { COMICVINE_ISSUE_LINK } from '@app/comic-books/comic-book.constants';
-import { COMIC_5 } from '@app/comic-books/comic-book.fixtures';
+import { COMICVINE_ISSUE_LINK } from '@app/comic-books/comic-books.constants';
+import { COMIC_5 } from '@app/comic-books/comic-books.fixtures';
 import { interpolate } from '@app/core';
 
 describe('ComicvineIssueLinkPipe', () => {

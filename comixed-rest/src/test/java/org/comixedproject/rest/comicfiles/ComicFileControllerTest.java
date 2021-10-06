@@ -28,8 +28,12 @@ import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
+import org.comixedproject.model.net.comicfiles.FilenameMetadataRequest;
+import org.comixedproject.model.net.comicfiles.FilenameMetadataResponse;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
+import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicfiles.ComicFileService;
+import org.comixedproject.service.scraping.ScrapingRuleService;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,14 +54,20 @@ public class ComicFileControllerTest {
   private static final String TEST_DIRECTORY = "src/test";
   private static final Integer TEST_LIMIT = RANDOM.nextInt();
   private static final Integer TEST_NO_LIMIT = -1;
+  private static final String TEST_COMIC_FILENAME = "The filename";
+  private static final String TEST_SERIES = "The Series";
+  private static final String TEST_VOLUME = "The Volume";
+  private static final String TEST_ISSUE_NUMBER = "983a";
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
+  @Mock private ScrapingRuleService scrapingRuleService;
   @Mock private Job addComicsToLibraryJob;
   @Mock private JobLauncher jobLauncher;
   @Mock private List<ComicFile> comicFileList;
   @Mock private List<String> filenameList;
   @Mock private JobExecution jobExecution;
+  @Mock private FilenameMetadata filenameMetadata;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -130,5 +140,40 @@ public class ComicFileControllerTest {
 
     Mockito.verify(comicFileService, Mockito.times(1)).importComicFiles(filenameList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(addComicsToLibraryJob, jobParameters);
+  }
+
+  @Test
+  public void testScrapeFilename() {
+    Mockito.when(scrapingRuleService.getInfoFromFilename(Mockito.anyString()))
+        .thenReturn(filenameMetadata);
+    Mockito.when(filenameMetadata.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(filenameMetadata.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(filenameMetadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+
+    final FilenameMetadataResponse result =
+        controller.scrapeFilename(new FilenameMetadataRequest(TEST_COMIC_FILENAME));
+
+    assertNotNull(result);
+    assertEquals(TEST_SERIES, result.getSeries());
+    assertEquals(TEST_VOLUME, result.getVolume());
+    assertEquals(TEST_ISSUE_NUMBER, result.getIssueNumber());
+
+    Mockito.verify(scrapingRuleService, Mockito.times(1)).getInfoFromFilename(TEST_COMIC_FILENAME);
+  }
+
+  @Test
+  public void testScrapeFilenameNoRuleApplied() {
+    Mockito.when(scrapingRuleService.getInfoFromFilename(Mockito.anyString()))
+        .thenReturn(new FilenameMetadata());
+
+    final FilenameMetadataResponse result =
+        controller.scrapeFilename(new FilenameMetadataRequest(TEST_COMIC_FILENAME));
+
+    assertNotNull(result);
+    assertNull(result.getSeries());
+    assertNull(result.getVolume());
+    assertNull(result.getIssueNumber());
+
+    Mockito.verify(scrapingRuleService, Mockito.times(1)).getInfoFromFilename(TEST_COMIC_FILENAME);
   }
 }

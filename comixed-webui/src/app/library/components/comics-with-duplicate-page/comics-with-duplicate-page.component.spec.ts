@@ -46,7 +46,7 @@ import {
   COMIC_1,
   COMIC_3,
   COMIC_5
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';

@@ -17,7 +17,7 @@
  */
 
 import { PageHashUrlPipe } from './page-hash-url.pipe';
-import { PAGE_URL_FROM_HASH } from '@app/comic-books/comic-book.constants';
+import { PAGE_URL_FROM_HASH } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
 import { PAGE_2 } from '@app/comic-pages/comic-pages.fixtures';
 

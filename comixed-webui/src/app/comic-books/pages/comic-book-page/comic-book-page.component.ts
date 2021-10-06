@@ -58,7 +58,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
-import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-book.constants';
+import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 
 @Component({

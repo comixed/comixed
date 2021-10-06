@@ -47,7 +47,7 @@ import {
   COMIC_1,
   COMIC_3,
   COMIC_5
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   initialState as initialMessagingState,

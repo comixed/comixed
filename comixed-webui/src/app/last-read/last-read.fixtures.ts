@@ -23,7 +23,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '../comic-books/comic-book.fixtures';
+} from '../comic-books/comic-books.fixtures';
 
 export const LAST_READ_1: LastRead = {
   id: 1,

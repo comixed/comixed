@@ -101,6 +101,7 @@
       "match-2": "Coincidencia exacta.",
       "save-changes": "Guarda los cambios en este cómic.",
       "scrape-comic": "Raspa este cómic.",
+      "scrape-filename": "Scrape the filename.",
       "show-next-comic-page": "Ir a la página siguiente...",
       "show-previous-comic-page": "Ir a la página anterior...",
       "undelete-comic": "Unmark comic as deleted.",

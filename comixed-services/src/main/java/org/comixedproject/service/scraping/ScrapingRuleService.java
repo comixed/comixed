@@ -20,6 +20,9 @@ package org.comixedproject.service.scraping;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
+import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.model.scraping.ScrapingRule;
 import org.comixedproject.repositories.scraping.ScrapingRuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class ScrapingRuleService {
   @Autowired private ScrapingRuleRepository scrapingRuleRepository;
+  @Autowired private FilenameScraperAdaptor filenameScraperAdaptor;
 
   /**
    * Returns all rules, sorted by priority.
@@ -44,5 +48,38 @@ public class ScrapingRuleService {
   public List<ScrapingRule> getAllRules() {
     log.trace("Loading all filename scraping rules");
     return this.scrapingRuleRepository.findAll();
+  }
+
+  /**
+   * Applies scraping rules to the comic's filename. Attemps each until one applies, or none apply.
+   *
+   * @param comic the comic
+   */
+  public void scrapeFilename(final Comic comic) {
+    final FilenameMetadata info = this.getInfoFromFilename(comic.getBaseFilename());
+    if (info != null) {
+      log.trace("Applying extracted metadata");
+      comic.setSeries(info.getSeries());
+      comic.setVolume(info.getVolume());
+      comic.setIssueNumber(info.getIssueNumber());
+      comic.setCoverDate(info.getCoverDate());
+    }
+  }
+
+  /**
+   * Returns the metadata extracted from a filename.
+   *
+   * @param filename the filename
+   * @return the metadata, or null if none could be extracted
+   */
+  public FilenameMetadata getInfoFromFilename(final String filename) {
+    log.trace("Loading scraping rules");
+    final List<ScrapingRule> rules = this.getAllRules();
+    for (int index = 0; index < rules.size(); index++) {
+      final FilenameMetadata info = this.filenameScraperAdaptor.execute(filename, rules.get(index));
+      if (info != null) return info;
+    }
+    log.trace("No metadata could be extracted");
+    return new FilenameMetadata();
   }
 }

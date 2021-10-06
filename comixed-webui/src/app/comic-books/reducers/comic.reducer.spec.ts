@@ -17,7 +17,7 @@
  */
 
 import { ComicState, initialState, reducer } from './comic.reducer';
-import { COMIC_2, COMIC_4 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_2, COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicLoaded,
   comicUpdated,

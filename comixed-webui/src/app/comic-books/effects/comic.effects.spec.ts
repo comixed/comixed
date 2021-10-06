@@ -22,7 +22,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ComicEffects } from './comic.effects';
 import { ComicService } from '@app/comic-books/services/comic.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_2 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicLoaded,
   comicUpdated,

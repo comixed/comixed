@@ -25,7 +25,7 @@ import {
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 
 describe('ImprintList Selectors', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];

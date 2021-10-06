@@ -101,6 +101,7 @@
       "match-2": "Exact match.",
       "save-changes": "Saves changes to this comic.",
       "scrape-comic": "Scrape this comic.",
+      "scrape-filename": "Scrape the filename.",
       "show-next-comic-page": "Go to next page...",
       "show-previous-comic-page": "Go to previous page...",
       "undelete-comic": "Unmark comic as deleted.",

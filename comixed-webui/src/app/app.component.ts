@@ -24,7 +24,7 @@ import { getUserPreference } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
-import { setImportingComicsState } from '@app/comic-file/actions/comic-import.actions';
+import { setImportingComicsState } from '@app/comic-files/actions/comic-import.actions';
 import {
   setPageSize,
   setPagination

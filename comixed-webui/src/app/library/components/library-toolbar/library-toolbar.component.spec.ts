@@ -24,7 +24,7 @@ import {
   COMIC_1,
   COMIC_2,
   COMIC_3
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   deselectComics,
   selectComics

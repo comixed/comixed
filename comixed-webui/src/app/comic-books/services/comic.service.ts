@@ -32,7 +32,7 @@ import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
   UPDATE_COMIC_INFO_URL
-} from '@app/comic-books/comic-book.constants';
+} from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 
 @Injectable({

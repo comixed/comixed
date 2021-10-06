@@ -63,7 +63,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
-import { ComicBookModule } from '@app/comic-books/comic-book.module';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
 import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
 import {
@@ -123,7 +123,7 @@ import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effect
   imports: [
     CommonModule,
     CoreModule,
-    ComicBookModule,
+    ComicBooksModule,
     LibraryRouting,
     ReactiveFormsModule,
     TranslateModule.forRoot(),

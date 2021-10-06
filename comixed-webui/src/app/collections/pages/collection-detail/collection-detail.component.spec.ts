@@ -53,7 +53,7 @@ import {
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import {

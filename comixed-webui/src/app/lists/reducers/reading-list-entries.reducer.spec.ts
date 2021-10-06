@@ -22,7 +22,7 @@ import {
   reducer
 } from './reading-list-entries.reducer';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { COMIC_1 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import {
   addComicsToReadingList,
   addComicsToReadingListFailed,

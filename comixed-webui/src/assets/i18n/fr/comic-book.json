@@ -101,6 +101,7 @@
       "match-2": "Correspondance exacte.",
       "save-changes": "Enregistrer les modifications de cette Bande Dessinée.",
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
+      "scrape-filename": "Scrape the filename.",
       "show-next-comic-page": "Aller à la page suivante...",
       "show-previous-comic-page": "Aller à la page précédente...",
       "undelete-comic": "Annulez le marquage de la bande dessinée comme supprimée.",

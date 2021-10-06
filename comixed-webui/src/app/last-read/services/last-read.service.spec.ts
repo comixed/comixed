@@ -40,7 +40,7 @@ import {
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
 import { LoggerModule } from '@angular-ru/logger';
-import { COMIC_4 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { WebSocketService } from '@app/messaging';
 import {

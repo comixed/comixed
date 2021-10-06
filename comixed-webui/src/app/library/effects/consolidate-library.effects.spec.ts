@@ -29,7 +29,7 @@ import {
   COMIC_1,
   COMIC_3,
   COMIC_5
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import {
   libraryConsolidationStarted,
   startLibraryConsolidation,

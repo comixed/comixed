@@ -1,5 +1,15 @@
 <mat-toolbar class="cx-primary-light-background">
   <button
+    id="scrape-filename"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'comic-book.tooltip.scrape-filename' | translate"
+    (click)="onScrapeFilename()"
+  >
+    <mat-icon>upload_file</mat-icon>
+  </button>
+  <button
     id="save-comic-changes"
     *ngIf="!multimode"
     class="cx-toolbar-button cx-margin-left-5"
@@ -159,7 +169,7 @@
       {{ "comic-book.hint.useful-for-scraping" | translate }}
     </mat-hint>
   </mat-form-field>
-  <mat-form-field class="cx-width-34" appearance="fill">
+  <mat-form-field class="cx-width-50" appearance="fill">
     <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
     <mat-select
       id="imprint-select"
@@ -174,7 +184,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field class="cx-width-100" appearance="fill">
+  <mat-form-field class="cx-width-50" appearance="fill">
     <mat-label>{{ "comic-book.label.sort-name" | translate }}</mat-label>
     <input id="sort-name-input" matInput formControlName="sortName" />
   </mat-form-field>

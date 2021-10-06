@@ -35,7 +35,7 @@ import {
   SCRAPING_VOLUME_1,
   SCRAPING_VOLUME_2,
   SCRAPING_VOLUME_3
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 
 describe('Scraping Reducer', () => {
   const API_KEY = '1234567890ABCDEF';

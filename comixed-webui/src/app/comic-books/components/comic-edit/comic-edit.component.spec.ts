@@ -26,7 +26,7 @@ import {
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
-} from '@app/comic-books/comic-book.fixtures';
+} from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -48,6 +48,11 @@ import {
   IMPRINT_LIST_FEATURE_KEY,
   initialState as initialImprintState
 } from '@app/comic-books/reducers/imprint-list.reducer';
+import {
+  initialState as initialScrapeMetadataState,
+  SCRAPE_METADATA_FEATURE_KEY
+} from '@app/comic-files/reducers/scrape-metadata.reducer';
+import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -58,7 +63,8 @@ describe('ComicEditComponent', () => {
   const ISSUE_NUMBER = '27';
 
   const initialState = {
-    [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES }
+    [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES },
+    [SCRAPE_METADATA_FEATURE_KEY]: initialScrapeMetadataState
   };
 
   let component: ComicEditComponent;
@@ -262,6 +268,48 @@ describe('ComicEditComponent', () => {
           COMIC.publisher
         );
       });
+    });
+  });
+
+  describe('when a filename was scraped for metadata', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [SCRAPE_METADATA_FEATURE_KEY]: {
+          ...initialScrapeMetadataState,
+          found: true,
+          series: COMIC.series,
+          volume: COMIC.volume,
+          issueNumber: COMIC.issueNumber
+        }
+      });
+    });
+
+    it('sets the series', () => {
+      expect(component.comicForm.controls.series.value).toEqual(COMIC.series);
+    });
+
+    it('sets the volume', () => {
+      expect(component.comicForm.controls.volume.value).toEqual(COMIC.volume);
+    });
+
+    it('sets the issue number', () => {
+      expect(component.comicForm.controls.issueNumber.value).toEqual(
+        COMIC.issueNumber
+      );
+    });
+  });
+
+  describe('scraping metadata from a filename', () => {
+    beforeEach(() => {
+      component.comic = COMIC;
+      component.onScrapeFilename();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        scrapeMetadataFromFilename({ filename: COMIC.baseFilename })
+      );
     });
   });
 });

@@ -18,7 +18,7 @@
 
 import { ComicCoverUrlPipe } from './comic-cover-url.pipe';
 import { API_ROOT_URL } from '@app/core';
-import { COMIC_1, COMIC_4 } from '@app/comic-books/comic-book.fixtures';
+import { COMIC_1, COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import { MISSING_COMIC_IMAGE_URL } from '@app/library/library.constants';
 
 describe('ComicCoverUrlPipe', () => {
