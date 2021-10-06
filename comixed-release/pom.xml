@@ -13,8 +13,10 @@
   <artifactId>comixed-release</artifactId>
   <version>0.11.0-SNAPSHOT</version>
   <name>comixed-release</name>
-  <packaging>pom</packaging>
-  <url>http://www.comixedproject.org</url>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <sonar.skip>true</sonar.skip>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
@@ -53,11 +55,6 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-webui</artifactId>
-      <version>0.11.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-app</artifactId>
       <version>0.11.0-SNAPSHOT</version>
     </dependency>
@@ -68,7 +65,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
-          <outputDirectory>..</outputDirectory>
+          <outputDirectory>../release</outputDirectory>
           <descriptors>
             <descriptor>src/main/assembly/src.xml</descriptor>
           </descriptors>

@@ -13,7 +13,7 @@
   <artifactId>comixed-messaging</artifactId>
   <version>0.11.0-SNAPSHOT</version>
   <name>comixed-messaging</name>
-  <url>http://www.comixedproject.org</url>
+  <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
