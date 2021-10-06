@@ -25,8 +25,8 @@ import {
   CollectionType,
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import { selectComicList } from '@app/comic-book/selectors/comic-list.selectors';
-import { Comic } from '@app/comic-book/models/comic';
+import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
+import { Comic } from '@app/comic-books/models/comic';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';

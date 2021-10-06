@@ -27,8 +27,12 @@ import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/comic-book/reducers/comic-list.reducer';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+} from '@app/comic-books/reducers/comic-list.reducer';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';

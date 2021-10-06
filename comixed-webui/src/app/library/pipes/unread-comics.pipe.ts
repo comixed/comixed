@@ -17,7 +17,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { LastRead } from '@app/last-read/models/last-read';
 
 @Pipe({

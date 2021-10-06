@@ -31,7 +31,7 @@ import {
   CollectionType,
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import { selectComicListCollection } from '@app/comic-book/selectors/comic-list.selectors';
+import { selectComicListCollection } from '@app/comic-books/selectors/comic-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatSort } from '@angular/material/sort';

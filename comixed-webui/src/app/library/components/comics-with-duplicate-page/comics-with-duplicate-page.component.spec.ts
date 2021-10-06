@@ -42,10 +42,14 @@ import {
   initialState as initialDisplayState
 } from '@app/library/reducers/display.reducer';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
-import { ComicDetailCardComponent } from '@app/comic-book/components/comic-detail-card/comic-detail-card.component';
-import { ComicTitlePipe } from '@app/comic-book/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from '@app/comic-book/pipes/comic-cover-url.pipe';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
+import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';

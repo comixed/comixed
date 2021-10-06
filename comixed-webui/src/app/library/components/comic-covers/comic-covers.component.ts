@@ -26,7 +26,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
@@ -42,7 +42,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { PAGINATION_DEFAULT } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
-import { ComicBookState } from '@app/comic-book/models/comic-book-state';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
@@ -50,8 +50,8 @@ import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import {
   ArchiveType,
   archiveTypeFromString
-} from '@app/comic-book/models/archive-type.enum';
-import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
+} from '@app/comic-books/models/archive-type.enum';
+import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { convertComics } from '@app/library/actions/convert-comics.actions';

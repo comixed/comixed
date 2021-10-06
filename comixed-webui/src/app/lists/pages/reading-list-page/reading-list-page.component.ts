@@ -38,7 +38,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {

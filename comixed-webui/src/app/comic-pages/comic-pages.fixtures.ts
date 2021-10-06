@@ -18,7 +18,7 @@
 
 import { BlockedHash } from './models/blocked-hash';
 import { DownloadDocument } from '@app/core/models/download-document';
-import { Page } from '@app/comic-book/models/page';
+import { Page } from '@app/comic-books/models/page';
 
 export const BLOCKED_HASH_1: BlockedHash = {
   id: 1,

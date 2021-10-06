@@ -35,7 +35,7 @@ import {
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';

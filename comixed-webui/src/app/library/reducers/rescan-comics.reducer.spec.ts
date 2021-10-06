@@ -26,7 +26,11 @@ import {
   rescanComics,
   rescanComicsFailed
 } from '@app/library/actions/rescan-comics.actions';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
 
 describe('RescanComics Reducer', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];

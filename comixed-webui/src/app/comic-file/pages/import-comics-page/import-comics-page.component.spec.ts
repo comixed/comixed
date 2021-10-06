@@ -53,7 +53,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ComicFileCoverUrlPipe } from '@app/comic-file/pipes/comic-file-cover-url.pipe';
 import { MatCardModule } from '@angular/material/card';
-import { ComicPageComponent } from '@app/comic-book/components/comic-page/comic-page.component';
+import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

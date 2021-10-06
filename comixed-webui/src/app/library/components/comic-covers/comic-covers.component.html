@@ -8,12 +8,13 @@
   [archiveType]="archiveType"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
 ></cx-library-toolbar>
-<div id="cx-all-comics" class="cx-comic-detail-card-container">
+<div id="cx-all-comics" class="cx-detail-card-container">
   <div
     *ngFor="let comic of comics"
-    fxFlex="20%"
-    fxFlex.xs="100%"
-    fxFlex.sm="25%"
+    fxFlex.gt-lg="10%"
+    fxFlex.lg="20%"
+    fxFlex.md="50%"
+    fxFlex.lt-md="100%"
   >
     <cx-comic-detail-card
       class="mat-elevation-z4"

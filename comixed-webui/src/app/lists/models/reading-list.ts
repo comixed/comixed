@@ -17,7 +17,7 @@
  */
 
 import { User } from '../../user/models/user';
-import { Comic } from '../../comic-book/models/comic';
+import { Comic } from '../../comic-books/models/comic';
 
 export interface ReadingList {
   id: number;

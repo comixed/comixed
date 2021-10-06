@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-title>{{ page?.filename }}</mat-card-title>
+  <mat-card-content>
+    <div class="cx-detail-card cx-padding-2 cx-margin-2">
+      <img
+        [src]="imageUrl"
+        [alt]="imageUrl"
+        [style.width]="'100%'"
+        [style.height]="'auto'"
+        [class.blocked-hash]="page?.blocked"
+        [class.deleted-page]="page?.deleted"
+        (contextmenu)="onContextMenu($event)"
+      />
+    </div>
+  </mat-card-content>
+  <mat-card-footer *ngIf="page?.blocked">
+    <mat-icon
+      *ngIf="page?.blocked"
+      [matTooltip]="'comic-book.tooltip.blocked-hash' | translate"
+    >
+      block
+    </mat-icon>
+  </mat-card-footer>
+</mat-card>

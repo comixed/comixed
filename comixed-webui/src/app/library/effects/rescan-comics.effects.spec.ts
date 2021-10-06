@@ -25,7 +25,11 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
 import {
   comicsRescanning,
   rescanComics,

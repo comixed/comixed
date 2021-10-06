@@ -22,8 +22,8 @@ import {
   COMIC_2,
   COMIC_3,
   COMIC_4
-} from '@app/comic-book/comic-book.fixtures';
-import { Comic } from '@app/comic-book/models/comic';
+} from '@app/comic-books/comic-book.fixtures';
+import { Comic } from '@app/comic-books/models/comic';
 
 describe('DeletedComicsPipe', () => {
   const DELETED_COMIC: Comic = {

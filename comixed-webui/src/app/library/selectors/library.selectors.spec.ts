@@ -29,7 +29,11 @@ import {
   selectStories,
   selectTeams
 } from './library.selectors';
-import { COMIC_1, COMIC_2, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3
+} from '@app/comic-books/comic-book.fixtures';
 
 describe('Library Selectors', () => {
   const COMIC = COMIC_1;

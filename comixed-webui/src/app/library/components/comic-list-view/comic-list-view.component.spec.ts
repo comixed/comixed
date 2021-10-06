@@ -25,11 +25,15 @@ import {
 import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 
 describe('ComicListViewComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];

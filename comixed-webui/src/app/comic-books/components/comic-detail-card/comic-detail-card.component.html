@@ -1,0 +1,50 @@
+<mat-card>
+  <mat-card-title *ngIf="!!title" class="cx-text-nowrap" [matTooltip]="title">
+    {{ title }}
+  </mat-card-title>
+  <mat-card-content>
+    <div
+      class="cx-detail-card cx-padding-2 cx-margin-2"
+      [class.comic-detail-card-selected]="selected"
+    >
+      <img
+        *ngIf="!!imageUrl"
+        [class.comic-detail-card-blurred]="blurred"
+        [src]="imageUrl"
+        [style.width]="'100%'"
+        [style.height]="'auto'"
+        [alt]="title"
+        [matTooltip]="coverTooltip"
+        [matTooltipDisabled]="!coverTooltip"
+        (click)="onCoverClicked()"
+        (contextmenu)="onContextMenu($event)"
+      />
+      <mat-chip-list *ngIf="showActions">
+        <mat-basic-chip
+          *ngIf="detailLink"
+          color="accent"
+          [routerLink]="detailLink"
+          [matTooltip]="'text.view-details' | translate"
+        >
+          <mat-icon>info</mat-icon>
+        </mat-basic-chip>
+        <mat-basic-chip
+          *ngIf="comicChanged && isAdmin"
+          color="warn"
+          (click)="onUpdateComicInfo(comic)"
+          [matTooltip]="'comic-book.text.comic-changed' | translate"
+        >
+          <mat-icon>sync_alt</mat-icon>
+        </mat-basic-chip>
+      </mat-chip-list>
+    </div>
+    <div *ngIf="!!description" [innerHTML]="description"></div>
+    <mat-progress-spinner
+      *ngIf="busy"
+      class="comic-detail-card-busy-indicator"
+      diameter="100"
+      mode="indeterminate"
+      color="accent"
+    ></mat-progress-spinner>
+  </mat-card-content>
+</mat-card>

@@ -19,9 +19,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicDetailsDialogComponent } from './comic-details-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { ComicTitlePipe } from '@app/comic-book/pipes/comic-title.pipe';
-import { ComicCoverUrlPipe } from '@app/comic-book/pipes/comic-cover-url.pipe';
-import { ComicPageComponent } from '@app/comic-book/components/comic-page/comic-page.component';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
+import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { provideMockStore } from '@ngrx/store/testing';
 import {

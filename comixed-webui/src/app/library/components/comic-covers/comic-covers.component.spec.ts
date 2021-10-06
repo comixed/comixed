@@ -42,7 +42,7 @@ import {
   COMIC_2,
   COMIC_3,
   COMIC_4
-} from '@app/comic-book/comic-book.fixtures';
+} from '@app/comic-books/comic-book.fixtures';
 import {
   deselectComics,
   selectComics,
@@ -54,7 +54,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
-import { ComicBookState } from '@app/comic-book/models/comic-book-state';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
 import { Confirmation } from '@app/core/models/confirmation';
@@ -63,8 +63,8 @@ import { MatSelectModule } from '@angular/material/select';
 import {
   ArchiveType,
   archiveTypeFromString
-} from '@app/comic-book/models/archive-type.enum';
-import { markComicsDeleted } from '@app/comic-book/actions/mark-comics-deleted.actions';
+} from '@app/comic-books/models/archive-type.enum';
+import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { MatDividerModule } from '@angular/material/divider';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';

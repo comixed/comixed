@@ -63,7 +63,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
-import { ComicBookModule } from '@app/comic-book/comic-book.module';
+import { ComicBookModule } from '@app/comic-books/comic-book.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
 import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
 import {

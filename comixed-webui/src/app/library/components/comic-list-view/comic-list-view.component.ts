@@ -25,7 +25,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/logger';
 import { MatSort } from '@angular/material/sort';

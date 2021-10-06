@@ -29,7 +29,7 @@ import {
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
 import { LoadLastReadEntriesRequest } from '@app/last-read/models/net/load-last-read-entries-request';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'webstomp-client';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';

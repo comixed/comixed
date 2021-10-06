@@ -67,7 +67,7 @@ import { ComicPagesModule } from '@app/comic-pages/comic-pages.module';
 import { CollectionsModule } from '@app/collections/collections.module';
 import { LastReadModule } from '@app/last-read/last-read.module';
 import { ComicFileModule } from '@app/comic-file/comic-file.module';
-import { ComicBookModule } from '@app/comic-book/comic-book.module';
+import { ComicBookModule } from '@app/comic-books/comic-book.module';
 import { GravatarModule } from 'ngx-gravatar';
 import { ListsModule } from '@app/lists/lists.module';
 import { MatBadgeModule } from '@angular/material/badge';
