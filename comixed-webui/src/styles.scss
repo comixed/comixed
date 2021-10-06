@@ -58,6 +58,10 @@ $cx-selected-comic-color: #ffffff;
   width: 80% !important;
 }
 
+.cx-width-80 {
+  width: 80% !important;
+}
+
 .cx-width-100 {
   width: 100% !important;
 }
@@ -247,10 +251,15 @@ th {
   text-align: right !important;
 }
 
-.cx-comic-detail-card-container {
+.cx-detail-card-container {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+}
+
+.cx-detail-card {
+  position: relative;
+  display: inline-block;
 }
 
 // flexible containers

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ArchiveType } from '../../../comic-book/models/archive-type.enum';
+import { ArchiveType } from '../../../comic-books/models/archive-type.enum';
 
 export interface ConvertComicsRequest {
   ids: number[];

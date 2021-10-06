@@ -30,7 +30,7 @@ import {
 } from '@app/library/selectors/duplicate-page-detail.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatTableDataSource } from '@angular/material/table';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
 import { ConfirmationService } from '@app/core/services/confirmation.service';

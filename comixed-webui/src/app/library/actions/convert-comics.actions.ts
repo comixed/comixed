@@ -17,8 +17,8 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-book/models/comic';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { Comic } from '@app/comic-books/models/comic';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 
 export const convertComics = createAction(
   '[Convert Comics] Convert comics',

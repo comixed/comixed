@@ -32,8 +32,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { ComicPageComponent } from '@app/comic-book/components/comic-page/comic-page.component';
-import { PageHashUrlPipe } from '@app/comic-book/pipes/page-hash-url.pipe';
+import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
+import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import {

@@ -21,8 +21,12 @@ import {
   initialState,
   reducer
 } from './convert-comics.reducer';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   comicsConverting,
   convertComics,

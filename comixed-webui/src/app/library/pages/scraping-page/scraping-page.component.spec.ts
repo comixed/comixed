@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SelectedComicsComponent } from '@app/library/components/selected-comics/selected-comics.component';
-import { ComicEditComponent } from '@app/comic-book/components/comic-edit/comic-edit.component';
+import { ComicEditComponent } from '@app/comic-books/components/comic-edit/comic-edit.component';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -33,7 +33,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   initialState as initialScrapingState,
   SCRAPING_FEATURE_KEY
-} from '@app/comic-book/reducers/scraping.reducer';
+} from '@app/comic-books/reducers/scraping.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   LIBRARY_FEATURE_KEY,
@@ -42,8 +42,8 @@ import {
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { COMIC_2 } from '@app/comic-book/comic-book.fixtures';
-import { loadScrapingVolumes } from '@app/comic-book/actions/scraping.actions';
+import { COMIC_2 } from '@app/comic-books/comic-book.fixtures';
+import { loadScrapingVolumes } from '@app/comic-books/actions/scraping.actions';
 import { TitleService } from '@app/core/services/title.service';
 
 describe('ScrapingPageComponent', () => {

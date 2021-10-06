@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
@@ -31,8 +31,8 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { selectComicList } from '@app/comic-book/selectors/comic-list.selectors';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import { LastRead } from '@app/last-read/models/last-read';

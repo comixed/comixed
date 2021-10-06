@@ -17,7 +17,11 @@
  */
 
 import { UnreadComicsPipe } from './unread-comics.pipe';
-import { COMIC_1, COMIC_2, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3
+} from '@app/comic-books/comic-book.fixtures';
 import { LastRead } from '@app/last-read/models/last-read';
 
 describe('UnreadComicsPipe', () => {

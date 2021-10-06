@@ -45,11 +45,11 @@ import {
 } from '@app/messaging/actions/messaging.actions';
 import { selectImportCount } from '@app/selectors/import-count.selectors';
 import { Subscription } from 'rxjs';
-import { selectComicListState } from '@app/comic-book/selectors/comic-list.selectors';
+import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
 import {
   loadComics,
   resetComicList
-} from '@app/comic-book/actions/comic-list.actions';
+} from '@app/comic-books/actions/comic-list.actions';
 import { User } from '@app/user/models/user';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 

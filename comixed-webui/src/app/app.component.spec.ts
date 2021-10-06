@@ -53,8 +53,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/comic-book/reducers/comic-list.reducer';
-import { loadComics } from '@app/comic-book/actions/comic-list.actions';
+} from '@app/comic-books/reducers/comic-list.reducer';
+import { loadComics } from '@app/comic-books/actions/comic-list.actions';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
 import { FooterComponent } from '@app/components/footer/footer.component';

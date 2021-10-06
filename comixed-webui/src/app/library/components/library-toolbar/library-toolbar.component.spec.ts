@@ -20,7 +20,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryToolbarComponent } from './library-toolbar.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { COMIC_1, COMIC_2, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3
+} from '@app/comic-books/comic-book.fixtures';
 import {
   deselectComics,
   selectComics
@@ -45,7 +49,7 @@ import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { MatDividerModule } from '@angular/material/divider';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';

@@ -46,14 +46,14 @@ import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/comic-book/reducers/comic-list.reducer';
+} from '@app/comic-books/reducers/comic-list.reducer';
 import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
   COMIC_4,
   COMIC_5
-} from '@app/comic-book/comic-book.fixtures';
+} from '@app/comic-books/comic-book.fixtures';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import {

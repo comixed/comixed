@@ -17,7 +17,11 @@
  */
 
 import { initialState, LibraryState, reducer } from './library.reducer';
-import { COMIC_1, COMIC_2, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3
+} from '@app/comic-books/comic-book.fixtures';
 import {
   deselectComics,
   readStateSet,
@@ -26,7 +30,7 @@ import {
   setReadStateFailed,
   updateComics
 } from '@app/library/actions/library.actions';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 
 describe('Library Reducer', () => {
   const COMIC = COMIC_1;

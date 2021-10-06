@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '../../comic-book/models/comic';
+import { Comic } from '../../comic-books/models/comic';
 
 export const updateMetadata = createAction(
   '[Update Metadata] Start updating metadata in comics',

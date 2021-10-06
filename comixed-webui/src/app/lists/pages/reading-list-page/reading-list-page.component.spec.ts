@@ -43,7 +43,11 @@ import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
 import { ComicListViewComponent } from '@app/library/components/comic-list-view/comic-list-view.component';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
   initialState as initialMessagingState,

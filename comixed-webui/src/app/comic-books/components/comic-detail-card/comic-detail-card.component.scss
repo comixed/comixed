@@ -1,0 +1,32 @@
+@import 'src/styles';
+
+.mat-card-title {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-expansion-panel,
+.mat-expanded {
+  background-color: var(--primary-lighter-color);
+  color: var(--text-primary-lighter-color);
+}
+
+.comic-detail-card-blurred {
+  filter: grayscale(75%);
+  filter: blur(3px);
+}
+
+.comic-detail-card-selected {
+  filter: sepia(100%) !important;
+  background-color: $cx-selected-comic-background-color !important;
+  color: $cx-selected-comic-color;
+}
+
+.comic-detail-card-busy-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}

@@ -56,7 +56,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { LibraryModule } from '@app/library/library.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ComicBookModule } from '@app/comic-book/comic-book.module';
+import { ComicBookModule } from '@app/comic-books/comic-book.module';
 
 @NgModule({
   declarations: [

@@ -29,12 +29,12 @@ import {
   START_LIBRARY_CONSOLIDATION_URL,
   UPDATE_METADATA_URL
 } from '@app/library/library.constants';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
 import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 
 @Injectable({

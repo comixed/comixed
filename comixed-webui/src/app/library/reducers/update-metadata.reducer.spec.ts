@@ -21,7 +21,11 @@ import {
   reducer,
   UpdateMetadataState
 } from './update-metadata.reducer';
-import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-book.fixtures';
 import {
   metadataUpdating,
   updateMetadata,

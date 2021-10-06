@@ -25,7 +25,7 @@ import {
   selectComicListCount,
   selectComicListDeletedCount,
   selectComicListReadCount
-} from '@app/comic-book/selectors/comic-list.selectors';
+} from '@app/comic-books/selectors/comic-list.selectors';
 
 @Component({
   selector: 'cx-footer',

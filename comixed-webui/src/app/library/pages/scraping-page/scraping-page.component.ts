@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { Store } from '@ngrx/store';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,13 +32,13 @@ import {
 } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { ScrapeEvent } from '@app/comic-book/models/ui/scrape-event';
-import { loadScrapingVolumes } from '@app/comic-book/actions/scraping.actions';
-import { ScrapingVolume } from '@app/comic-book/models/scraping-volume';
+import { ScrapeEvent } from '@app/comic-books/models/ui/scrape-event';
+import { loadScrapingVolumes } from '@app/comic-books/actions/scraping.actions';
+import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
 import {
   selectScrapingState,
   selectScrapingVolumes
-} from '@app/comic-book/selectors/scraping.selectors';
+} from '@app/comic-books/selectors/scraping.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 

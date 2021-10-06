@@ -27,7 +27,7 @@ import { LoggerModule } from '@angular-ru/logger';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/comic-book/reducers/comic-list.reducer';
+} from '@app/comic-books/reducers/comic-list.reducer';
 
 describe('FooterComponent', () => {
   const initialState = {

@@ -26,7 +26,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-book/models/comic';
+import { Comic } from '@app/comic-books/models/comic';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import {
@@ -44,7 +44,7 @@ import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';

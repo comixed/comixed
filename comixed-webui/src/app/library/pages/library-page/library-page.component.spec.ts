@@ -58,13 +58,13 @@ import { DeletedComicsPipe } from '@app/library/pipes/deleted-comics.pipe';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
-} from '@app/comic-book/reducers/comic-list.reducer';
-import { COMIC_1, COMIC_3 } from '@app/comic-book/comic-book.fixtures';
+} from '@app/comic-books/reducers/comic-list.reducer';
+import { COMIC_1, COMIC_3 } from '@app/comic-books/comic-book.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
-import { ArchiveType } from '@app/comic-book/models/archive-type.enum';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { UnreadComicsPipe } from '@app/library/pipes/unread-comics.pipe';
 import {
   initialState as initialLastReadListState,
