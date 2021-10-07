@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-  <ScrapingRules Id="1"
-                 Name="Rule 1"
-                 Rule="The rule"
-                 Priority="1"
-                 SeriesPosition="1"
-                 VolumePosition="2"
-                 IssueNumberPosition="3"
-                 CoverDatePosition="4"
-                 DateFormat="YYYY-mm-dd"
-                 LastModifiedOn="[now]"/>
+  <FilenameScrapingRules Id="1"
+                         Name="Rule 1"
+                         Rule="The rule"
+                         Priority="1"
+                         SeriesPosition="1"
+                         VolumePosition="2"
+                         IssueNumberPosition="3"
+                         CoverDatePosition="4"
+                         DateFormat="YYYY-mm-dd"
+                         LastModifiedOn="[now]"/>
   <Comics Id="1000"
           Filename="C:/users/mcpierce/Documents/comics/example.cbz"
           ComicState="STABLE"

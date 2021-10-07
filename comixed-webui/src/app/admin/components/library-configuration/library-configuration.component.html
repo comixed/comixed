@@ -1,4 +1,16 @@
-<form [formGroup]="form">
+<mat-toolbar class="cx-primary-light-background">
+  <div class="cx-spacer"></div>
+  <button
+    mat-icon-button
+    (click)="onSave()"
+    [disabled]="!libraryConfigurationForm.valid"
+    color="primary"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-toolbar>
+
+<form [formGroup]="libraryConfigurationForm">
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>
       {{ "configuration.label.root-directory" | translate }}
@@ -47,11 +59,7 @@
     <mat-label>
       {{ "configuration.label.renaming-rule" | translate }}
     </mat-label>
-    <input
-      id="renaming-rule-input"
-      matInput
-      formControlName="consolidationRule"
-    />
+    <input id="renaming-rule-input" matInput formControlName="renamingRule" />
     <mat-error>
       {{ "validation.field-required" | translate }}
     </mat-error>

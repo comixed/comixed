@@ -16,28 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.scraping;
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  FILENAME_SCRAPING_RULES_FEATURE_KEY,
+  FilenameScrapingRulesState
+} from '../reducers/filename-scraping-rule-list.reducer';
 
-import java.util.List;
-import org.comixedproject.model.scraping.ScrapingRule;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+export const selectFilenameScrapingRulesState =
+  createFeatureSelector<FilenameScrapingRulesState>(
+    FILENAME_SCRAPING_RULES_FEATURE_KEY
+  );
 
-/**
- * <code>ScrapingRuleRepository</code> provides methods for working with persisted instances of
- * {@link ScrapingRule}.
- *
- * @author Darryl L. Pierce
- */
-@Repository
-public interface ScrapingRuleRepository extends JpaRepository<ScrapingRule, Long> {
-
-  /**
-   * Returns all rules sorted by priority.
-   *
-   * @return the sorts fules
-   */
-  @Query("SELECT r FROM ScrapingRule r ORDER BY r.priority")
-  List<ScrapingRule> findAll();
-}
+export const selectFilenameScrapingRules = createSelector(
+  selectFilenameScrapingRulesState,
+  state => state.rules
+);

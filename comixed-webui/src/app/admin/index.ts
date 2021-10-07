@@ -34,6 +34,11 @@ import {
   SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
   SaveConfigurationOptionsState
 } from './reducers/save-configuration-options.reducer';
+import {
+  FILENAME_SCRAPING_RULES_FEATURE_KEY,
+  FilenameScrapingRulesState,
+  reducer as filenameScrapingRulesReducer
+} from './reducers/filename-scraping-rule-list.reducer';
 
 export * from './admin.functions';
 
@@ -48,6 +53,7 @@ export interface AdminModuleState {
   [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: ConfigurationOptionListState;
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: SaveConfigurationOptionsState;
   [WEB_AUDIT_LOG_FEATURE_KEY]: WebAuditLogState;
+  [FILENAME_SCRAPING_RULES_FEATURE_KEY]: FilenameScrapingRulesState;
 }
 
 export type ModuleState = AdminModuleState;
@@ -56,5 +62,6 @@ export const reducers: ActionReducerMap<AdminModuleState> = {
   router: routerReducer,
   [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: configurationOptionListReducer,
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: saveConfigurationOptionsReducer,
-  [WEB_AUDIT_LOG_FEATURE_KEY]: webAuditLogReducer
+  [WEB_AUDIT_LOG_FEATURE_KEY]: webAuditLogReducer,
+  [FILENAME_SCRAPING_RULES_FEATURE_KEY]: filenameScrapingRulesReducer
 };

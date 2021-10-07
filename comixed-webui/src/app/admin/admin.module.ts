@@ -54,13 +54,22 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { LibraryConfigurationComponent } from './components/library-configuration/library-configuration.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FilenameScrapingRulesConfigurationComponent } from './components/filename-scraping-rules-configuration/filename-scraping-rules-configuration.component';
+import {
+  FILENAME_SCRAPING_RULES_FEATURE_KEY,
+  reducer as filenameScrapingRulesReducer
+} from '@app/admin/reducers/filename-scraping-rule-list.reducer';
+import { FilenameScrapingRuleListEffects } from '@app/admin/effects/filename-scraping-rule-list.effects';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
 
 @NgModule({
   declarations: [
     WebAuditLogPageComponent,
     ConfigurationPageComponent,
     ComicVineConfigurationComponent,
-    LibraryConfigurationComponent
+    LibraryConfigurationComponent,
+    FilenameScrapingRulesConfigurationComponent
   ],
   imports: [
     CommonModule,
@@ -76,10 +85,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       saveConfigurationOptionsReducer
     ),
     StoreModule.forFeature(WEB_AUDIT_LOG_FEATURE_KEY, webAuditLogReducer),
+    StoreModule.forFeature(
+      FILENAME_SCRAPING_RULES_FEATURE_KEY,
+      filenameScrapingRulesReducer
+    ),
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
-      WebAuditLogEffects
+      WebAuditLogEffects,
+      FilenameScrapingRuleListEffects
     ]),
     MatTableModule,
     MatToolbarModule,
@@ -92,7 +106,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatTabsModule,
     MatExpansionModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DragDropModule,
+    TragicallySlickEditInPlaceModule
   ],
   exports: [CommonModule, CoreModule]
 })

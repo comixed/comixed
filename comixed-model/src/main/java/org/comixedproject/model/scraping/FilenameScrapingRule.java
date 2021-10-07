@@ -28,18 +28,20 @@ import lombok.*;
 import org.comixedproject.views.View;
 
 /**
- * <code>ScrapingRule</code> represents a single scraping rule for extracting comic details from a
- * filename.
+ * <code>FilenameScrapingRule</code> represents a single scraping rule for extracting comic details
+ * from a filename.
  *
  * @author Darryl L. Pierce
  */
 @Entity
-@Table(name = "ScrapingRules")
+@Table(name = "FilenameScrapingRules")
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class ScrapingRule {
+public class FilenameScrapingRule {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView(View.FilenameScrapingRuleList.class)
   @Getter
   private Long id;
 
@@ -59,22 +61,13 @@ public class ScrapingRule {
   @Setter
   private String rule;
 
-  @Column(name = "Priority")
+  @Column(name = "Priority", nullable = false, updatable = true, unique = true)
   @JsonProperty("priority")
   @JsonView(View.FilenameScrapingRuleList.class)
   @NonNull
   @Getter
   @Setter
-  private int priority = 0;
-
-  @Column(name = "LastModifiedOn", nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-  @JsonProperty("lastModifiedOn")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
-  @JsonView(View.FilenameScrapingRuleList.class)
-  @Getter
-  @Setter
-  private Date lastModifiedOn = new Date();
+  private int priority;
 
   @Column(name = "SeriesPosition", nullable = true)
   @JsonProperty("seriesPosition")
@@ -111,11 +104,20 @@ public class ScrapingRule {
   @Setter
   private String dateFormat = "";
 
+  @Column(name = "LastModifiedOn", nullable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  @JsonProperty("lastModifiedOn")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+  @JsonView(View.FilenameScrapingRuleList.class)
+  @Getter
+  @Setter
+  private Date lastModifiedOn = new Date();
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final ScrapingRule that = (ScrapingRule) o;
+    final FilenameScrapingRule that = (FilenameScrapingRule) o;
     return priority == that.priority
         && Objects.equals(name, that.name)
         && Objects.equals(rule, that.rule)

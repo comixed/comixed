@@ -19,17 +19,32 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicVineConfigurationComponent } from './comic-vine-configuration.component';
 import { LoggerModule } from '@angular-ru/logger';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { COMICVINE_API_KEY } from '@app/admin/admin.constants';
+import { Confirmation } from '@app/core/models/confirmation';
+import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 
 describe('ComicVineConfigurationComponent', () => {
-  const formBuilder = new FormBuilder();
+  const API_KEY = 'The ComicVine API key';
+  const OPTIONS = [
+    {
+      name: COMICVINE_API_KEY,
+      value: API_KEY
+    }
+  ];
+  const initialState = {};
 
   let component: ComicVineConfigurationComponent;
   let fixture: ComponentFixture<ComicVineConfigurationComponent>;
+  let store: MockStore<any>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,17 +56,55 @@ describe('ComicVineConfigurationComponent', () => {
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatFormFieldModule,
-        MatInputModule
-      ]
+        MatInputModule,
+        MatDialogModule
+      ],
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicVineConfigurationComponent);
     component = fixture.componentInstance;
-    component.form = formBuilder.group({ apiKey: null });
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('loading the options', () => {
+    beforeEach(() => {
+      component.options = OPTIONS;
+    });
+
+    it('sets the api key value', () => {
+      expect(component.comicVineConfigForm.controls.apiKey.value).toEqual(
+        API_KEY
+      );
+    });
+  });
+
+  describe('saving the options', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.options = OPTIONS;
+      component.onSave();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveConfigurationOptions({
+          options: [{ name: COMICVINE_API_KEY, value: API_KEY }]
+        })
+      );
+    });
   });
 });

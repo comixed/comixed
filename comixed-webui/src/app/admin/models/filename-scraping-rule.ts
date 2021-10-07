@@ -16,16 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '../core';
-
-export const COMICVINE_API_KEY = 'comicvine.api-key';
-export const LIBRARY_ROOT_DIRECTORY = 'library.root-directory';
-export const LIBRARY_RENAMING_RULE = 'library.renaming-rule';
-
-export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
-export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
-export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
-
-export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
-export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
+export interface FilenameScrapingRule {
+  id: number;
+  name: string;
+  rule: string;
+  priority: number;
+  seriesPosition: number;
+  volumePosition: number;
+  issueNumberPosition: number;
+  coverDatePosition: number;
+  dateFormat: string;
+}

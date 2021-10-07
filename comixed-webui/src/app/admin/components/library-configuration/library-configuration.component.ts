@@ -17,8 +17,19 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListItem } from '@app/core/models/ui/list-item';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { Store } from '@ngrx/store';
+import { LoggerService } from '@angular-ru/logger';
+import { ConfigurationOption } from '@app/admin/models/configuration-option';
+import { getConfigurationOption } from '@app/admin';
+import {
+  LIBRARY_RENAMING_RULE,
+  LIBRARY_ROOT_DIRECTORY
+} from '@app/admin/admin.constants';
+import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 
 @Component({
   selector: 'cx-library-configuration',
@@ -26,7 +37,7 @@ import { ListItem } from '@app/core/models/ui/list-item';
   styleUrls: ['./library-configuration.component.scss']
 })
 export class LibraryConfigurationComponent implements OnInit {
-  @Input() form: FormGroup;
+  @Input() libraryConfigurationForm: FormGroup;
 
   readonly variableOptions: ListItem<string>[] = [
     {
@@ -49,7 +60,59 @@ export class LibraryConfigurationComponent implements OnInit {
     }
   ];
 
-  constructor() {}
+  constructor(
+    private logger: LoggerService,
+    private formBuilder: FormBuilder,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
+  ) {
+    this.libraryConfigurationForm = this.formBuilder.group({
+      rootDirectory: ['', [Validators.required]],
+      renamingRule: ['', []]
+    });
+  }
+
+  @Input() set options(options: ConfigurationOption[]) {
+    this.logger.trace('Loading configuration options');
+    this.libraryConfigurationForm.controls.rootDirectory.setValue(
+      getConfigurationOption(options, LIBRARY_ROOT_DIRECTORY, '')
+    );
+    this.libraryConfigurationForm.controls.renamingRule.setValue(
+      getConfigurationOption(options, LIBRARY_RENAMING_RULE, '')
+    );
+  }
 
   ngOnInit(): void {}
+
+  onSave(): void {
+    this.logger.trace('Save configuration called');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'save-configuration.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'save-configuration.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Save configuration confirmed');
+        this.store.dispatch(
+          saveConfigurationOptions({ options: this.encodeOptions() })
+        );
+      }
+    });
+  }
+
+  private encodeOptions(): ConfigurationOption[] {
+    return [
+      {
+        name: LIBRARY_ROOT_DIRECTORY,
+        value: this.libraryConfigurationForm.controls.rootDirectory.value
+      },
+      {
+        name: LIBRARY_RENAMING_RULE,
+        value: this.libraryConfigurationForm.controls.renamingRule.value
+      }
+    ];
+  }
 }

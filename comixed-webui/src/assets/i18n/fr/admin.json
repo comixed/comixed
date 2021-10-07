@@ -13,7 +13,8 @@
     },
     "tab": {
       "comicvine": "Paramètres de ComicVine",
-      "library": "Bibliothèque"
+      "library": "Bibliothèque",
+      "scraping-rules": "Scraping Rules"
     },
     "tab-title": "Configuration",
     "text": {
@@ -26,6 +27,28 @@
       "renaming-rule-volume": "Le volume",
       "variable-caption": "Ce sont les variables disponibles qui peuvent être utilisées pour renommer les bandes dessinées."
     }
+  },
+  "filename-scraping-rules": {
+    "label": {
+      "cover-date-format": "Cover Date Format",
+      "cover-date-position": "Cover Date Position",
+      "issue-number-position": "Issue # Position",
+      "priority": "#",
+      "rule-name": "Name",
+      "rule-value": "Rule",
+      "series-position": "Series Position",
+      "volume-position": "Volume Position"
+    },
+    "load-all": {
+      "effect-failure": "Failed to load all filename scraping rules."
+    },
+    "save-all": {
+      "confirmation-message": "Are you sure you want to replace all filename scraping rules?",
+      "confirmation-title": "Save Filename Scraping Rules",
+      "effect-failure": "Failed to save filename scraping rules.",
+      "effect-success": "Filename scraping rules saved."
+    },
+    "tab-title": "Filename Scraping Rules"
   },
   "save-configuration": {
     "confirmation-message": "Enregistrer les modifications de la configuration ?",

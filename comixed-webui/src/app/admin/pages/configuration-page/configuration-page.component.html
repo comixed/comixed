@@ -1,32 +1,16 @@
-<mat-toolbar class="cx-primary-light-background">
-  <div class="cx-spacer"></div>
-  <button
-    mat-icon-button
-    (click)="onSaveConfiguration()"
-    [disabled]="!configurationForm.valid"
-    color="primary"
-  >
-    <mat-icon>save</mat-icon>
-  </button>
-</mat-toolbar>
-
-<mat-card>
-  <mat-card-title></mat-card-title>
-  <mat-card-content>
-    <mat-tab-group
-      [selectedIndex]="currentTab"
-      (selectedTabChange)="onTabChange($event.index)"
-    >
-      <mat-tab [label]="'configuration.tab.library' | translate">
-        <cx-library-configuration
-          [form]="configurationForm"
-        ></cx-library-configuration>
-      </mat-tab>
-      <mat-tab [label]="'configuration.tab.comicvine' | translate">
-        <cx-comic-vine-configuration
-          [form]="configurationForm"
-        ></cx-comic-vine-configuration>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-card-content>
-</mat-card>
+<mat-tab-group
+  [selectedIndex]="currentTab"
+  (selectedTabChange)="onTabChange($event.index)"
+>
+  <mat-tab [label]="'configuration.tab.library' | translate">
+    <cx-library-configuration [options]="options"></cx-library-configuration>
+  </mat-tab>
+  <mat-tab [label]="'configuration.tab.comicvine' | translate">
+    <cx-comic-vine-configuration
+      [options]="options"
+    ></cx-comic-vine-configuration>
+  </mat-tab>
+  <mat-tab [label]="'configuration.tab.scraping-rules' | translate">
+    <cx-scraping-rules-configuration></cx-scraping-rules-configuration>
+  </mat-tab>
+</mat-tab-group>

@@ -41,14 +41,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
-import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
   COMICVINE_API_KEY,
-  LIBRARY_RENAMING_RULE,
-  LIBRARY_ROOT_DIRECTORY
+  LIBRARY_RENAMING_RULE
 } from '@app/admin/admin.constants';
 import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -83,7 +79,6 @@ describe('ConfigurationPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy;
-  let confirmationService: ConfirmationService;
   let activatedRoute: ActivatedRoute;
   let router: Router;
 
@@ -113,7 +108,6 @@ describe('ConfigurationPageComponent', () => {
       providers: [
         provideMockStore({ initialState }),
         TitleService,
-        ConfirmationService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -131,7 +125,6 @@ describe('ConfigurationPageComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     setTitleSpy = spyOn(titleService, 'setTitle');
-    confirmationService = TestBed.inject(ConfirmationService);
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
@@ -170,48 +163,6 @@ describe('ConfigurationPageComponent', () => {
     it('updates the URL when the tab changes', () => {
       component.onTabChange(TAB);
       expect(router.navigate).toHaveBeenCalled();
-    });
-  });
-
-  describe('when the user saves the configuration', () => {
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: {
-          ...initialConfigurationOptionListState,
-          options: OPTIONS
-        }
-      });
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.onSaveConfiguration();
-    });
-
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveConfigurationOptions({
-          options: [
-            {
-              name: COMICVINE_API_KEY,
-              value: component.configurationForm.controls.apiKey.value
-            },
-            {
-              name: LIBRARY_ROOT_DIRECTORY,
-              value: component.configurationForm.controls.rootDirectory.value
-            },
-            {
-              name: LIBRARY_RENAMING_RULE,
-              value:
-                component.configurationForm.controls.consolidationRule.value
-            }
-          ]
-        })
-      );
     });
   });
 });

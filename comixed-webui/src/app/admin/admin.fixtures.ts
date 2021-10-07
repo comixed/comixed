@@ -18,6 +18,7 @@
 
 import { WebAuditLogEntry } from './models/web-audit-log-entry';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
+import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 
 export const WEB_AUDIT_LOG_ENTRY_1: WebAuditLogEntry = {
   id: 1,
@@ -112,4 +113,40 @@ export const CONFIGURATION_OPTION_4: ConfigurationOption = {
 export const CONFIGURATION_OPTION_5: ConfigurationOption = {
   name: 'OPTION5',
   value: 'VALUE5'
+};
+
+export const FILENAME_SCRAPING_RULE_1: FilenameScrapingRule = {
+  id: 1,
+  name: 'Rule 1',
+  rule: 'rule text',
+  priority: 1,
+  seriesPosition: 1,
+  volumePosition: 2,
+  issueNumberPosition: 3,
+  coverDatePosition: 4,
+  dateFormat: 'MMMMM yyyy'
+};
+
+export const FILENAME_SCRAPING_RULE_2: FilenameScrapingRule = {
+  id: 2,
+  name: 'Rule 2',
+  rule: 'rule text',
+  priority: 2,
+  seriesPosition: 1,
+  volumePosition: 2,
+  issueNumberPosition: 3,
+  coverDatePosition: 4,
+  dateFormat: 'MMMMM yyyy'
+};
+
+export const FILENAME_SCRAPING_RULE_3: FilenameScrapingRule = {
+  id: 3,
+  name: 'Rule 3',
+  rule: 'rule text',
+  priority: 3,
+  seriesPosition: 1,
+  volumePosition: 2,
+  issueNumberPosition: 3,
+  coverDatePosition: 4,
+  dateFormat: 'MMMMM yyyy'
 };
