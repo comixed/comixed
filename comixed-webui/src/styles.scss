@@ -22,6 +22,11 @@ $cx-selected-comic-background-color: #0033cc;
 $cx-selected-comic-color: #ffffff;
 
 // component sizes
+
+.cx-width-5 {
+  width: 5% !important;
+}
+
 .cx-width-10 {
   width: 10% !important;
 }
@@ -128,8 +133,16 @@ $cx-selected-comic-color: #ffffff;
   padding-top: 5px !important;
 }
 
+.cx-padding-top-25 {
+  padding-top: 25px !important;
+}
+
 .cx-padding-bottom-5 {
   padding-bottom: 5px !important;
+}
+
+.cx-padding-bottom-25 {
+  padding-bottom: 25px !important;
 }
 
 .cx-padding-2 {
@@ -160,7 +173,11 @@ $cx-selected-comic-color: #ffffff;
   margin-right: 50px !important;
 }
 
-.cx-navbar-margin {
+.cx-margin-bottom-5 {
+  margin-bottom: 5px !important;
+}
+
+.cx-footer-margin {
   margin-bottom: 75px !important;
 }
 

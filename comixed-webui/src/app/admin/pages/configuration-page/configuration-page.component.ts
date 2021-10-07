@@ -28,14 +28,6 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
-import {
-  COMICVINE_API_KEY,
-  LIBRARY_RENAMING_RULE,
-  LIBRARY_ROOT_DIRECTORY
-} from '@app/admin/admin.constants';
 import { loadConfigurationOptions } from '@app/admin/actions/configuration-option-list.actions';
 import { updateQueryParam } from '@app/core';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
@@ -50,18 +42,7 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   configStateSubscription: Subscription;
   langChangeSubscription: Subscription;
   optionSubscription: Subscription;
-  mappings = [
-    { name: COMICVINE_API_KEY, control: 'apiKey' },
-    {
-      name: LIBRARY_ROOT_DIRECTORY,
-      control: 'rootDirectory'
-    },
-    {
-      name: LIBRARY_RENAMING_RULE,
-      control: 'consolidationRule'
-    }
-  ];
-  configurationForm: FormGroup;
+  options: ConfigurationOption[] = [];
   queryParamSubscription: Subscription;
   currentTab = 0;
 
@@ -70,8 +51,6 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private formBuilder: FormBuilder,
-    private confirmationService: ConfirmationService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
@@ -86,11 +65,6 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.configurationForm = this.formBuilder.group({
-      rootDirectory: ['', [Validators.required]],
-      consolidationRule: ['', []],
-      apiKey: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{40}')]]
-    });
     this.configStateSubscription = this.store
       .select(selectConfigurationOptionListState)
       .subscribe(state => {
@@ -106,15 +80,6 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
       .subscribe(options => (this.options = options));
   }
 
-  set options(options: ConfigurationOption[]) {
-    options.forEach(option => {
-      const mapping = this.mappings.find(entry => entry.name === option.name);
-      if (!!mapping) {
-        this.configurationForm.controls[mapping.control].setValue(option.value);
-      }
-    });
-  }
-
   ngOnInit(): void {
     this.loadTranslations();
     this.store.dispatch(loadConfigurationOptions());
@@ -124,24 +89,6 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     this.configStateSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.optionSubscription.unsubscribe();
-  }
-
-  onSaveConfiguration(): void {
-    this.logger.trace('Save configuration called');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'save-configuration.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'save-configuration.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.trace('Save configuration confirmed');
-        this.store.dispatch(
-          saveConfigurationOptions({ options: this.encodeOptions() })
-        );
-      }
-    });
   }
 
   onTabChange(index: number): void {
@@ -158,14 +105,5 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('configuration.tab-title')
     );
-  }
-
-  private encodeOptions(): ConfigurationOption[] {
-    return this.mappings.map(entry => {
-      return {
-        name: entry.name,
-        value: this.configurationForm.controls[entry.control].value
-      };
-    });
   }
 }

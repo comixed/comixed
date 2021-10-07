@@ -19,11 +19,13 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicService;
-import org.comixedproject.service.scraping.ScrapingRuleService;
+import org.comixedproject.service.scraping.FilenameScrapingRuleService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,7 +41,8 @@ import org.springframework.stereotype.Component;
 public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, Comic> {
   @Autowired private ComicService comicService;
   @Autowired private ComicFileHandler comicFileHandler;
-  @Autowired private ScrapingRuleService scrapingRuleService;
+  @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
+  @Autowired private FilenameScraperAdaptor filenameScraperAdaptor;
 
   @Override
   public Comic process(final ComicFileDescriptor descriptor) throws Exception {
@@ -52,7 +55,15 @@ public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, 
     log.trace("Setting archive type");
     this.comicFileHandler.loadComicArchiveType(comic);
     log.trace("Scraping comic filename");
-    this.scrapingRuleService.scrapeFilename(comic);
+    final FilenameMetadata metadata =
+        this.filenameScrapingRuleService.loadFilenameMetadata(comic.getBaseFilename());
+    if (metadata.isFound()) {
+      log.trace("Scraping rule applied");
+      comic.setSeries(metadata.getSeries());
+      comic.setVolume(metadata.getVolume());
+      comic.setIssueNumber(metadata.getIssueNumber());
+      comic.setCoverDate(metadata.getCoverDate());
+    }
     log.trace("Returning comic");
     return comic;
   }

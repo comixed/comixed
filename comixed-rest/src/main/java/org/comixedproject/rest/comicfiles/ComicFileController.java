@@ -35,7 +35,7 @@ import org.comixedproject.model.net.comicfiles.FilenameMetadataResponse;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicfiles.ComicFileService;
-import org.comixedproject.service.scraping.ScrapingRuleService;
+import org.comixedproject.service.scraping.FilenameScrapingRuleService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -59,9 +59,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class ComicFileController {
-
   @Autowired private ComicFileService comicFileService;
-  @Autowired private ScrapingRuleService scrapingRuleService;
+  @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
 
   @Autowired
   @Qualifier("batchJobLauncher")
@@ -179,7 +178,7 @@ public class ComicFileController {
       @RequestBody() final FilenameMetadataRequest request) {
     final String filename = FilenameUtils.getBaseName(request.getFilename());
     log.info("Scraping filename: {}", filename);
-    final FilenameMetadata info = this.scrapingRuleService.getInfoFromFilename(filename);
+    final FilenameMetadata info = this.filenameScrapingRuleService.loadFilenameMetadata(filename);
     return new FilenameMetadataResponse(
         false, info.getSeries(), info.getVolume(), info.getIssueNumber());
   }

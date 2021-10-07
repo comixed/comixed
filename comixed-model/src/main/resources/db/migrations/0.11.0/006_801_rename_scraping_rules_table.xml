@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="006_801_rename_scraping_rules_table.xml"
+             author="mcpierce">
+
+    <renameTable oldTableName="ScrapingRules"
+                 newTableName="FilenameScrapingRules"/>
+
+    <addUniqueConstraint tableName="FilenameScrapingRules"
+                         columnNames="Rule"
+                         constraintName="FilenameScrapingRuleUniqueRule"/>
+
+    <addUniqueConstraint tableName="FilenameScrapingRules"
+                         columnNames="Priority"
+                         constraintName="FilenameScrapingRuleUniquePriority"/>
+
+  </changeSet>
+</databaseChangeLog>

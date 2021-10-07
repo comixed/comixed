@@ -1,0 +1,157 @@
+<mat-toolbar class="cx-primary-light-background">
+  <div class="cx-spacer"></div>
+  <button
+    id="save-rules-button"
+    mat-icon-button
+    (click)="onSaveRules()"
+    color="primary"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-table
+  cdkDropList
+  [cdkDropListData]="rules"
+  [dataSource]="dataSource"
+  (cdkDropListDropped)="onReorderRules($event)"
+>
+  <ng-container matColumnDef="priority">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.priority" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.item.priority }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.rule-name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="name-input"
+          #nameInput
+          matInput
+          [value]="entry.editedValue.name"
+          (keyup)="onNameEdited(entry, nameInput.value)"
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="rule">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.rule-value" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="rule-input"
+          #ruleInput
+          matInput
+          [value]="entry.editedValue.rule"
+          (keyup)="onRuleEdited(entry, ruleInput.value)"
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="series-position">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.series-position" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="series-position-input"
+          #seriesPositionInput
+          matInput
+          [value]="entry.editedValue.seriesPosition"
+          (keyup)="onSeriesPositionEdited(entry, seriesPositionInput.value)"
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="volume-position">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.volume-position" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="volume-position-input"
+          #volumePositionInput
+          matInput
+          [value]="entry.editedValue.volumePosition"
+          (keyup)="onVolumePositionEdited(entry, volumePositionInput.value)"
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="issue-number-position">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.issue-number-position" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="issue-number-input"
+          #issueNumberInput
+          matInput
+          type="number"
+          [value]="entry.editedValue.issueNumberPosition"
+          (keyup)="onIssueNumberPositionEdited(entry, issueNumberInput.value)"
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="cover-date-position">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.cover-date-position" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="cover-date-position-input"
+          #coverDatePositionInput
+          matInput
+          type="number"
+          [value]="entry.editedValue.coverDatePosition"
+          (keyup)="
+            onCoverDatePositionEdited(entry, coverDatePositionInput.value)
+          "
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="date-format">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "filename-scraping-rules.label.cover-date-format" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-form-field class="cx-width-100" appearance="fill">
+        <input
+          id="date-format-input"
+          #dateFormatInput
+          matInput
+          [value]="entry.editedValue.dateFormat"
+          (keyup)="onDateFormatEdited(entry, dateFormatInput.value)"
+        />
+      </mat-form-field>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    cdkDrag
+    [cdkDragData]="row.item"
+    *matRowDef="let row; columns: displayedColumns"
+  ></mat-row>
+</mat-table>

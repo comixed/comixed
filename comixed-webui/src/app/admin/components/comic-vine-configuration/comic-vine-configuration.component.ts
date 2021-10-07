@@ -18,7 +18,14 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/logger';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { ConfigurationOption } from '@app/admin/models/configuration-option';
+import { getConfigurationOption } from '@app/admin';
+import { COMICVINE_API_KEY } from '@app/admin/admin.constants';
+import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-comic-vine-configuration',
@@ -26,9 +33,52 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./comic-vine-configuration.component.scss']
 })
 export class ComicVineConfigurationComponent implements OnInit {
-  @Input() form: FormGroup;
+  comicVineConfigForm: FormGroup;
 
-  constructor(private logger: LoggerService) {}
+  constructor(
+    private logger: LoggerService,
+    private formBuilder: FormBuilder,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
+  ) {
+    this.comicVineConfigForm = this.formBuilder.group({
+      apiKey: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9]{40}')]]
+    });
+  }
+
+  @Input() set options(options: ConfigurationOption[]) {
+    this.comicVineConfigForm.controls.apiKey.setValue(
+      getConfigurationOption(options, COMICVINE_API_KEY, '')
+    );
+  }
 
   ngOnInit(): void {}
+
+  onSave(): void {
+    this.logger.trace('Save configuration called');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'save-configuration.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'save-configuration.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Save configuration confirmed');
+        this.store.dispatch(
+          saveConfigurationOptions({ options: this.encodeOptions() })
+        );
+      }
+    });
+  }
+
+  private encodeOptions(): ConfigurationOption[] {
+    return [
+      {
+        name: COMICVINE_API_KEY,
+        value: this.comicVineConfigForm.controls.apiKey.value
+      }
+    ];
+  }
 }

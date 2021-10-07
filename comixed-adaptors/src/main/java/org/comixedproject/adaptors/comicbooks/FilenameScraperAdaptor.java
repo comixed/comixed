@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.scraping.FilenameMetadata;
-import org.comixedproject.model.scraping.ScrapingRule;
+import org.comixedproject.model.scraping.FilenameScrapingRule;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,17 +40,21 @@ public class FilenameScraperAdaptor {
    * Attempts to set the metadata on a comic based on the comic's filename.
    *
    * @param filename the filename
-   * @param scrapingRule the scraping rule
+   * @param filenameScrapingRule the scraping rule
    * @return the filename metadata if the rule was applied, otherwise null
    */
-  public FilenameMetadata execute(final String filename, final ScrapingRule scrapingRule) {
+  public FilenameMetadata execute(
+      final String filename, final FilenameScrapingRule filenameScrapingRule) {
     log.trace(
-        "Applying filename scraping rule: filename={} rule={}", filename, scrapingRule.getRule());
-    return this.applyRule(filename, scrapingRule);
+        "Applying filename scraping rule: filename={} rule={}",
+        filename,
+        filenameScrapingRule.getRule());
+    return this.applyRule(filename, filenameScrapingRule);
   }
 
-  private FilenameMetadata applyRule(final String filename, final ScrapingRule scrapingRule) {
-    var expression = Pattern.compile(scrapingRule.getRule());
+  private FilenameMetadata applyRule(
+      final String filename, final FilenameScrapingRule filenameScrapingRule) {
+    var expression = Pattern.compile(filenameScrapingRule.getRule());
 
     if (this.ruleApplies(expression, filename)) {
       log.trace("Rule applies");
@@ -60,26 +64,27 @@ public class FilenameScraperAdaptor {
       String issueNumber = null;
       Date coverDate = null;
 
-      if (scrapingRule.getCoverDatePosition() != null
-          && !StringUtils.isEmpty(scrapingRule.getDateFormat())) {
+      if (filenameScrapingRule.getCoverDatePosition() != null
+          && !StringUtils.isEmpty(filenameScrapingRule.getDateFormat())) {
         try {
-          final SimpleDateFormat dateFormat = new SimpleDateFormat(scrapingRule.getDateFormat());
-          coverDate = dateFormat.parse(elements[scrapingRule.getCoverDatePosition()]);
+          final SimpleDateFormat dateFormat =
+              new SimpleDateFormat(filenameScrapingRule.getDateFormat());
+          coverDate = dateFormat.parse(elements[filenameScrapingRule.getCoverDatePosition()]);
         } catch (ParseException error) {
           log.error("Failed to parse cover date", error);
           coverDate = null;
         }
       }
 
-      if (scrapingRule.getSeriesPosition() != null) {
-        series = elements[scrapingRule.getSeriesPosition()];
+      if (filenameScrapingRule.getSeriesPosition() != null) {
+        series = elements[filenameScrapingRule.getSeriesPosition()];
       }
 
-      if (scrapingRule.getVolumePosition() != null) {
-        volume = elements[scrapingRule.getVolumePosition()];
+      if (filenameScrapingRule.getVolumePosition() != null) {
+        volume = elements[filenameScrapingRule.getVolumePosition()];
       }
-      if (scrapingRule.getIssueNumberPosition() != null)
-        issueNumber = elements[scrapingRule.getIssueNumberPosition()];
+      if (filenameScrapingRule.getIssueNumberPosition() != null)
+        issueNumber = elements[filenameScrapingRule.getIssueNumberPosition()];
 
       return new FilenameMetadata(true, series, volume, issueNumber, coverDate);
     } else {

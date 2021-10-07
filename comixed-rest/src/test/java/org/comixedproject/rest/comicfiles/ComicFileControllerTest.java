@@ -33,7 +33,7 @@ import org.comixedproject.model.net.comicfiles.FilenameMetadataResponse;
 import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicfiles.ComicFileService;
-import org.comixedproject.service.scraping.ScrapingRuleService;
+import org.comixedproject.service.scraping.FilenameScrapingRuleService;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +61,7 @@ public class ComicFileControllerTest {
 
   @InjectMocks private ComicFileController controller;
   @Mock private ComicFileService comicFileService;
-  @Mock private ScrapingRuleService scrapingRuleService;
+  @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private Job addComicsToLibraryJob;
   @Mock private JobLauncher jobLauncher;
   @Mock private List<ComicFile> comicFileList;
@@ -144,7 +144,7 @@ public class ComicFileControllerTest {
 
   @Test
   public void testScrapeFilename() {
-    Mockito.when(scrapingRuleService.getInfoFromFilename(Mockito.anyString()))
+    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
         .thenReturn(filenameMetadata);
     Mockito.when(filenameMetadata.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(filenameMetadata.getVolume()).thenReturn(TEST_VOLUME);
@@ -158,12 +158,13 @@ public class ComicFileControllerTest {
     assertEquals(TEST_VOLUME, result.getVolume());
     assertEquals(TEST_ISSUE_NUMBER, result.getIssueNumber());
 
-    Mockito.verify(scrapingRuleService, Mockito.times(1)).getInfoFromFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
+        .loadFilenameMetadata(TEST_COMIC_FILENAME);
   }
 
   @Test
   public void testScrapeFilenameNoRuleApplied() {
-    Mockito.when(scrapingRuleService.getInfoFromFilename(Mockito.anyString()))
+    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
         .thenReturn(new FilenameMetadata());
 
     final FilenameMetadataResponse result =
@@ -174,6 +175,7 @@ public class ComicFileControllerTest {
     assertNull(result.getVolume());
     assertNull(result.getIssueNumber());
 
-    Mockito.verify(scrapingRuleService, Mockito.times(1)).getInfoFromFilename(TEST_COMIC_FILENAME);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
+        .loadFilenameMetadata(TEST_COMIC_FILENAME);
   }
 }

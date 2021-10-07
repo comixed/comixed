@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixedproject.model.scraping.ScrapingRule;
+import org.comixedproject.model.scraping.FilenameScrapingRule;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,12 +47,12 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   TransactionalTestExecutionListener.class,
   DbUnitTestExecutionListener.class
 })
-public class ScrapingRuleRepositoryTest {
-  @Autowired private ScrapingRuleRepository repository;
+public class FilenameFilenameScrapingRuleRepositoryTest {
+  @Autowired private FilenameScrapingRuleRepository repository;
 
   @Test
   public void testFindAll() {
-    final List<ScrapingRule> result = this.repository.findAll();
+    final List<FilenameScrapingRule> result = this.repository.findAll();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

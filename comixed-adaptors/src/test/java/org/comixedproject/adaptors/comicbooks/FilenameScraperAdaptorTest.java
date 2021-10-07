@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.text.MessageFormat;
 import org.comixedproject.model.scraping.FilenameMetadata;
-import org.comixedproject.model.scraping.ScrapingRule;
+import org.comixedproject.model.scraping.FilenameScrapingRule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,21 +53,21 @@ public class FilenameScraperAdaptorTest {
           "{0} Vol.{1} #{2} (Farkle, 2019).cbz", TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER);
 
   @InjectMocks private FilenameScraperAdaptor adaptor;
-  @Mock private ScrapingRule scrapingRule;
+  @Mock private FilenameScrapingRule filenameScrapingRule;
 
   @Before
   public void setUp() {
-    Mockito.when(scrapingRule.getRule()).thenReturn(TEST_SCRAPING_RULE);
-    Mockito.when(scrapingRule.getDateFormat()).thenReturn(TEST_DATE_FORMAT);
-    Mockito.when(scrapingRule.getSeriesPosition()).thenReturn(2);
-    Mockito.when(scrapingRule.getVolumePosition()).thenReturn(4);
-    Mockito.when(scrapingRule.getIssueNumberPosition()).thenReturn(5);
-    Mockito.when(scrapingRule.getCoverDatePosition()).thenReturn(6);
+    Mockito.when(filenameScrapingRule.getRule()).thenReturn(TEST_SCRAPING_RULE);
+    Mockito.when(filenameScrapingRule.getDateFormat()).thenReturn(TEST_DATE_FORMAT);
+    Mockito.when(filenameScrapingRule.getSeriesPosition()).thenReturn(2);
+    Mockito.when(filenameScrapingRule.getVolumePosition()).thenReturn(4);
+    Mockito.when(filenameScrapingRule.getIssueNumberPosition()).thenReturn(5);
+    Mockito.when(filenameScrapingRule.getCoverDatePosition()).thenReturn(6);
   }
 
   @Test
   public void testExecuteFilenameDoesNotApply() {
-    final FilenameMetadata result = adaptor.execute(TEST_INVALID_FILENAME, scrapingRule);
+    final FilenameMetadata result = adaptor.execute(TEST_INVALID_FILENAME, filenameScrapingRule);
 
     assertNotNull(result);
     assertFalse(result.isFound());
@@ -75,7 +75,7 @@ public class FilenameScraperAdaptorTest {
 
   @Test
   public void testExecute() {
-    final FilenameMetadata result = adaptor.execute(TEST_FILENAME, scrapingRule);
+    final FilenameMetadata result = adaptor.execute(TEST_FILENAME, filenameScrapingRule);
 
     assertNotNull(result);
 
@@ -87,7 +87,8 @@ public class FilenameScraperAdaptorTest {
 
   @Test
   public void testExecuteInvalidDate() {
-    final FilenameMetadata result = adaptor.execute(TEST_FILENAME_INVALID_DATE, scrapingRule);
+    final FilenameMetadata result =
+        adaptor.execute(TEST_FILENAME_INVALID_DATE, filenameScrapingRule);
 
     assertNotNull(result);
 

@@ -20,11 +20,13 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 
+import java.util.Date;
 import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
+import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicService;
-import org.comixedproject.service.scraping.ScrapingRuleService;
+import org.comixedproject.service.scraping.FilenameScrapingRuleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,20 +35,33 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicInsertProcessorTest {
-  private static final String TEST_FILENAME = "/users/comixed/library/comic.cbz";
+  private static final String TEST_BASE_FILENAME = "comic.cbz";
+  private static final String TEST_FILENAME = "/users/comixed/library/" + TEST_BASE_FILENAME;
+  private static final String TEST_SERIES = "Test Series";
+  private static final String TEST_VOLUME = "2021";
+  private static final String TEST_ISSUE_NUMBER = "27";
+  private static final Date TEST_COVER_DATE = new Date();
 
   @InjectMocks private ComicInsertProcessor processor;
   @Mock private ComicService comicService;
   @Mock private ComicFileHandler comicFileHandler;
   @Mock private ComicFileDescriptor descriptor;
-  @Mock private ScrapingRuleService scrapingRuleService;
+  @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private Comic comicRecord;
+  @Mock private FilenameMetadata filenameMetadata;
 
   @Captor private ArgumentCaptor<Comic> comicArgumentCaptor;
 
   @Before
   public void setUp() {
     Mockito.when(descriptor.getFilename()).thenReturn(TEST_FILENAME);
+    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
+        .thenReturn(filenameMetadata);
+    Mockito.when(filenameMetadata.isFound()).thenReturn(true);
+    Mockito.when(filenameMetadata.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(filenameMetadata.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(filenameMetadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(filenameMetadata.getCoverDate()).thenReturn(TEST_COVER_DATE);
   }
 
   @Test
@@ -74,8 +89,40 @@ public class ComicInsertProcessorTest {
     assertNotNull(result);
     assertSame(comic, result);
 
+    assertEquals(TEST_SERIES, comic.getSeries());
+    assertEquals(TEST_VOLUME, comic.getVolume());
+    assertEquals(TEST_ISSUE_NUMBER, comic.getIssueNumber());
+    assertEquals(TEST_COVER_DATE, comic.getCoverDate());
+
     Mockito.verify(comicService, Mockito.times(1)).findByFilename(TEST_FILENAME);
-    Mockito.verify(scrapingRuleService, Mockito.times(1)).scrapeFilename(comic);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
+        .loadFilenameMetadata(TEST_BASE_FILENAME);
+    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
+  }
+
+  @Test
+  public void testProcessNoneApplied() throws Exception {
+    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(comicArgumentCaptor.capture());
+    Mockito.when(filenameMetadata.isFound()).thenReturn(false);
+
+    final Comic result = processor.process(descriptor);
+
+    final Comic comic = comicArgumentCaptor.getValue();
+    assertNotNull(comic);
+    assertEquals(TEST_FILENAME, comic.getFilename());
+
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    assertNull(comic.getSeries());
+    assertNull(comic.getVolume());
+    assertNull(comic.getIssueNumber());
+    assertNull(comic.getCoverDate());
+
+    Mockito.verify(comicService, Mockito.times(1)).findByFilename(TEST_FILENAME);
+    Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
+        .loadFilenameMetadata(TEST_BASE_FILENAME);
     Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
   }
 }
