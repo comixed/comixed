@@ -18,6 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
@@ -46,6 +47,8 @@ public class OPDSLibraryControllerTest {
     assertNotNull(result.getAuthor());
     assertNotNull(result.getTitle());
     assertNotNull(result.getId());
+    assertEquals("/opds/library", result.getEntries().get(0).getLinks().get(0).getReference());
+    assertEquals("/opds/lists", result.getEntries().get(1).getLinks().get(0).getReference());
   }
 
   @Test
@@ -54,5 +57,19 @@ public class OPDSLibraryControllerTest {
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
+    assertEquals(
+        "/opds/collections/publishers",
+        result.getEntries().get(0).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/collections/series", result.getEntries().get(1).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/collections/characters",
+        result.getEntries().get(2).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/collections/teams", result.getEntries().get(3).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/collections/locations", result.getEntries().get(4).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/collections/stories", result.getEntries().get(5).getLinks().get(0).getReference());
   }
 }
