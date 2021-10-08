@@ -33,6 +33,7 @@ import org.comixedproject.opds.utils.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,6 +60,7 @@ public class OPDSCollectionController {
    */
   @GetMapping(value = "/opds/collections/{type}", produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableEndpoint
+  @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
       @NonNull @PathVariable("type") final CollectionType collectionType) throws OPDSException {
@@ -128,6 +130,7 @@ public class OPDSCollectionController {
    */
   @GetMapping(value = "/opds/collections/{type}/{name}", produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableEndpoint
+  @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(
       @PathVariable("type") final CollectionType collectionType,

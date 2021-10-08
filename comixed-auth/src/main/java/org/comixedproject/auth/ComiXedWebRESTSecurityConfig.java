@@ -23,26 +23,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan({
-  "org.comixedproject.rest",
-  "org.comixedproject.http",
-  "org.comixedproject.opds",
-  "org.comixedproject.auth"
-})
+@ComponentScan({"org.comixedproject.rest", "org.comixedproject.http", "org.comixedproject.auth"})
 @Log4j2
-public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(2)
+public class ComiXedWebRESTSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired private ComiXedUnauthorizedEntryPoint unauthorizedHandler;
   @Autowired private ComiXedAuthenticationFilter authenticationFilter;
   @Autowired private ComiXedAuthenticationProvider authenticationProvider;
@@ -60,7 +53,6 @@ public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    // @formatter:off
     http.cors()
         .and()
         .csrf()
@@ -75,6 +67,5 @@ public class ComiXedWebSecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    // @formatter:on
   }
 }

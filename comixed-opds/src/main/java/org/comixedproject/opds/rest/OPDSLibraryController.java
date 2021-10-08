@@ -27,6 +27,7 @@ import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeedContent;
 import org.comixedproject.opds.model.OPDSNavigationFeedEntry;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +50,7 @@ public class OPDSLibraryController {
    */
   @GetMapping(value = "/opds", produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableEndpoint
+  @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getRootFeed() {
     log.info("Fetching root navigation feed");
@@ -68,6 +70,7 @@ public class OPDSLibraryController {
    */
   @GetMapping(value = "/opds/library", produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableEndpoint
+  @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getLibraryFeed() {
     log.info("Fetching the library root feed");

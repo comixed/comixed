@@ -152,8 +152,8 @@ running ComiXed. So, for example, if that computers IP address is **192.168.1.29
 reader:
 
     Hostname: http://192.168.1.29:7171/opds
-    Username: [the username for your login]
-    Password: [the password for your login]
+    Username: [your login email address]
+    Password: [your login password]
 
 Please note that some readers (such as Chunky) assume the **/opds** portion of the URL. SO if your reader
 does not see a reading list, try removing **/opds** from the URL.
