@@ -118,25 +118,25 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testGetReadingListsForUserInvalidEmail()
+  public void testLoadReadingListsForUserInvalidEmail()
       throws ComiXedUserException, ReadingListException {
     Mockito.when(userService.findByEmail(Mockito.anyString()))
         .thenThrow(ComiXedUserException.class);
 
     try {
-      service.getReadingListsForUser(TEST_USER_EMAIL);
+      service.loadReadingListsForUser(TEST_USER_EMAIL);
     } finally {
       Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     }
   }
 
   @Test
-  public void testGetReadingListsForUser() throws ComiXedUserException, ReadingListException {
+  public void testLoadReadingListsForUser() throws ComiXedUserException, ReadingListException {
 
     Mockito.when(readingListRepository.getAllReadingListsForOwner(Mockito.any(ComiXedUser.class)))
         .thenReturn(readingLists);
 
-    List<ReadingList> result = service.getReadingListsForUser(TEST_USER_EMAIL);
+    List<ReadingList> result = service.loadReadingListsForUser(TEST_USER_EMAIL);
 
     assertNotNull(result);
     assertSame(readingLists, result);
@@ -256,22 +256,22 @@ public class ReadingListServiceTest {
   }
 
   @Test(expected = ReadingListException.class)
-  public void testGetReadingListForOtherUser() throws ReadingListException, ComiXedUserException {
+  public void testLoadReadingListForOtherUser() throws ReadingListException, ComiXedUserException {
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     try {
-      service.getReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
+      service.loadReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
     } finally {
       Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
     }
   }
 
   @Test
-  public void testGetReadingListForUser() throws ReadingListException, ComiXedUserException {
+  public void testLoadReadingListForUser() throws ReadingListException, ComiXedUserException {
     Mockito.when(readingListRepository.getById(Mockito.anyLong())).thenReturn(readingList);
 
     final ReadingList result =
-        service.getReadingListForUser(TEST_OWNER_EMAIL, TEST_READING_LIST_ID);
+        service.loadReadingListForUser(TEST_OWNER_EMAIL, TEST_READING_LIST_ID);
 
     assertNotNull(result);
     assertSame(readingList, result);

@@ -65,10 +65,11 @@ public class ReadingListController {
   @JsonView(View.ReadingLists.class)
   @PreAuthorize("hasRole('READER')")
   @AuditableEndpoint
-  public List<ReadingList> getReadingListsForUser(Principal principal) throws ReadingListException {
+  public List<ReadingList> loadReadingListsForUser(Principal principal)
+      throws ReadingListException {
     final String email = principal.getName();
     log.info("Getting reading lists: user={}", email);
-    return this.readingListService.getReadingListsForUser(email);
+    return this.readingListService.loadReadingListsForUser(email);
   }
 
   /**
@@ -145,11 +146,11 @@ public class ReadingListController {
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
   @AuditableEndpoint
-  public ReadingList getReadingList(final Principal principal, @PathVariable("id") final long id)
+  public ReadingList loadReadingList(final Principal principal, @PathVariable("id") final long id)
       throws ReadingListException {
     final String email = principal.getName();
     log.info("Getting reading list for user: email={} id={}", email, id);
-    return this.readingListService.getReadingListForUser(email, id);
+    return this.readingListService.loadReadingListForUser(email, id);
   }
 
   /**

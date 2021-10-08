@@ -77,16 +77,16 @@ public class ReadingListControllerTest {
   }
 
   @Test
-  public void testGetReadingListsForUser() throws ReadingListException {
-    Mockito.when(readingListService.getReadingListsForUser(Mockito.anyString()))
+  public void testLoadReadingListsForUser() throws ReadingListException {
+    Mockito.when(readingListService.loadReadingListsForUser(Mockito.anyString()))
         .thenReturn(readingLists);
 
-    List<ReadingList> result = controller.getReadingListsForUser(principal);
+    List<ReadingList> result = controller.loadReadingListsForUser(principal);
 
     assertNotNull(result);
     assertSame(readingLists, result);
 
-    Mockito.verify(readingListService, Mockito.times(1)).getReadingListsForUser(TEST_USER_EMAIL);
+    Mockito.verify(readingListService, Mockito.times(1)).loadReadingListsForUser(TEST_USER_EMAIL);
     Mockito.verify(principal, Mockito.atLeast(1)).getName();
   }
 
@@ -138,19 +138,19 @@ public class ReadingListControllerTest {
   }
 
   @Test
-  public void testGetReadingListForUser() throws ReadingListException {
+  public void testLoadReadingListForUser() throws ReadingListException {
     Mockito.when(principal.getName()).thenReturn(TEST_USER_EMAIL);
-    Mockito.when(readingListService.getReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
+    Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
         .thenReturn(readingList);
 
-    final ReadingList result = controller.getReadingList(principal, TEST_READING_LIST_ID);
+    final ReadingList result = controller.loadReadingList(principal, TEST_READING_LIST_ID);
 
     assertNotNull(result);
     assertSame(readingList, result);
 
     Mockito.verify(principal, Mockito.times(1)).getName();
     Mockito.verify(readingListService, Mockito.times(1))
-        .getReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
+        .loadReadingListForUser(TEST_USER_EMAIL, TEST_READING_LIST_ID);
   }
 
   @Test(expected = ReadingListException.class)

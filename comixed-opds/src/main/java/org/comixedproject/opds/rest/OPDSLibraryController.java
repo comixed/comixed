@@ -56,9 +56,16 @@ public class OPDSLibraryController {
     log.info("Fetching root navigation feed");
     final OPDSNavigationFeed response = new OPDSNavigationFeed("Root");
     log.trace("Adding library root feed");
-    final OPDSNavigationFeedEntry entry = new OPDSNavigationFeedEntry("Library");
+    OPDSNavigationFeedEntry entry;
+    // add the library link
+    entry = new OPDSNavigationFeedEntry("Library");
     entry.setContent(new OPDSNavigationFeedContent("The library root"));
     entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/library"));
+    response.getEntries().add(entry);
+    // add the reading lists link
+    entry = new OPDSNavigationFeedEntry("Reading Lists");
+    entry.setContent(new OPDSNavigationFeedContent("Your reading lists"));
+    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/lists"));
     response.getEntries().add(entry);
     return response;
   }
@@ -79,7 +86,7 @@ public class OPDSLibraryController {
     OPDSNavigationFeedEntry entry;
     log.trace("Adding publishers link");
     entry = new OPDSNavigationFeedEntry("Publishers");
-    entry.setContent(new OPDSNavigationFeedContent(("For Publishers")));
+    entry.setContent(new OPDSNavigationFeedContent("For Publishers"));
     entry
         .getLinks()
         .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/publishers"));

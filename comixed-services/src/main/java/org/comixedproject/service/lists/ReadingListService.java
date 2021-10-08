@@ -86,7 +86,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    * @return the reading lists
    * @throws ReadingListException if the email is invalid
    */
-  public List<ReadingList> getReadingListsForUser(final String email) throws ReadingListException {
+  public List<ReadingList> loadReadingListsForUser(final String email) throws ReadingListException {
     log.debug("Getting user: {}", email);
     final ComiXedUser owner = this.doLoadUser(email);
     log.trace("Getting reading lists for user");
@@ -173,7 +173,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    * @return the reading list
    * @throws ReadingListException if the reading list is invalid
    */
-  public ReadingList getReadingListForUser(final String email, final long id)
+  public ReadingList loadReadingListForUser(final String email, final long id)
       throws ReadingListException {
     log.trace("Loading reading list: email={} and id={}", email, id);
     return this.doLoadReadingListForOwner(id, email);
