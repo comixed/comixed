@@ -71,7 +71,7 @@ $cx-selected-comic-color: #ffffff;
 }
 
 .cx-overflow-y-scroll {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 // positioning
@@ -152,7 +152,7 @@ $cx-selected-comic-color: #ffffff;
   margin-right: 50px !important;
 }
 
-.cx-footer-margin {
+.cx-navbar-margin {
   margin-bottom: 75px !important;
 }
 
@@ -251,10 +251,6 @@ th {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-}
-
-.cx-vertical-scrolling {
-  overflow-y: scroll;
 }
 
 // flexible containers
