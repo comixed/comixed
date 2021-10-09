@@ -1,35 +1,34 @@
-<div id="cx-navigation-bar" class="cx-width-100 cx-height-100">
-  <div *ngIf="busy" class="cx-overlay">
-    <div class="cx-centered">
-      <mat-progress-spinner
-        diameter="100"
-        mode="indeterminate"
-        color="accent"
-      ></mat-progress-spinner>
-    </div>
+<div
+  *ngIf="busy"
+  id="cx-navigation-bar"
+  class="cx-overlay cx-width-100 cx-height-100"
+>
+  <div class="cx-centered">
+    <mat-progress-spinner
+      diameter="100"
+      mode="indeterminate"
+      color="accent"
+    ></mat-progress-spinner>
   </div>
-  <cx-navigation-bar
-    [user]="user"
-    [sidebarOpened]="sidenav.opened"
-    (toggleSidebar)="sidenav.toggle($event)"
-  ></cx-navigation-bar>
-  <div class="cx-width-100 cx-height-100 cx-overflow-y-scroll">
-    <mat-sidenav-container class="cx-width-100 cx-height-100">
-      <mat-sidenav #sidenav mode="side" class="cx-primary-dark-background">
-        <cx-side-navigation
-          class="cx-vertical-scrolling cx-height-100"
-          [user]="user"
-        ></cx-side-navigation>
-      </mat-sidenav>
-      <mat-sidenav-content #sidebar>
-        <div
-          id="cx-main-content-area"
-          class="cx-width-100 cx-height-100 cx-footer-margin"
-        >
-          <router-outlet></router-outlet>
-        </div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
-  <cx-footer id="cx-footer" class="cx-padding-left-5" [user]="user"></cx-footer>
 </div>
+
+<mat-sidenav-container class="cx-width-100 cx-height-100 cx-navbar-margin">
+  <mat-sidenav #sidenav class="cx-primary-dark-background" mode="over">
+    <cx-side-navigation [user]="user"></cx-side-navigation>
+  </mat-sidenav>
+  <mat-sidenav-content #sidebar class="cx-width-100 cx-overflow-y-scroll">
+    <cx-navigation-bar
+      [user]="user"
+      [sidebarOpened]="sidenav.opened"
+      (toggleSidebar)="sidenav.toggle($event)"
+    ></cx-navigation-bar>
+
+    <router-outlet></router-outlet>
+
+    <cx-footer
+      id="cx-footer"
+      class="cx-padding-left-5"
+      [user]="user"
+    ></cx-footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
