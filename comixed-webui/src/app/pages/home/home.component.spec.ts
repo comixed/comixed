@@ -26,25 +26,49 @@ import {
   initialState as initialServerStatusState,
   SERVER_STATUS_FEATURE_KEY
 } from '@app/reducers/server-status.reducer';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  COMIC_LIST_FEATURE_KEY,
+  initialState as initialComicListState
+} from '@app/comic-books/reducers/comic-list.reducer';
+import {
+  COMIC_1,
+  COMIC_3,
+  COMIC_5
+} from '@app/comic-books/comic-books.fixtures';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('HomeComponent', () => {
+  const COMICS = [
+    { ...COMIC_1, publisher: null, series: null },
+    COMIC_3,
+    COMIC_5
+  ];
   const initialState = {
-    [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState
+    [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState,
+    [COMIC_LIST_FEATURE_KEY]: initialComicListState
   };
 
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let translateService: TranslateService;
   let titleService: TitleService;
+  let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        MatToolbarModule,
+        MatSelectModule,
+        MatFormFieldModule
       ],
       providers: [TitleService, provideMockStore({ initialState })]
     }).compileComponents();
@@ -54,6 +78,7 @@ describe('HomeComponent', () => {
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   }));
 
@@ -68,6 +93,35 @@ describe('HomeComponent', () => {
 
     it('updates the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('when comics are loaded', () => {
+    beforeEach(() => {
+      component.charts = [];
+      store.setState({
+        ...initialState,
+        [COMIC_LIST_FEATURE_KEY]: {
+          ...initialComicListState,
+          loading: false,
+          lastPayload: true,
+          comics: COMICS
+        }
+      });
+    });
+
+    it('loads the set of charts', () => {
+      expect(component.charts).not.toEqual([]);
+    });
+
+    describe('changing the current chart', () => {
+      beforeEach(() => {
+        component.onShowChart(component.charts[1]);
+      });
+
+      it('changes the current chart', () => {
+        expect(component.chart).toEqual(component.charts[1]);
+      });
     });
   });
 });

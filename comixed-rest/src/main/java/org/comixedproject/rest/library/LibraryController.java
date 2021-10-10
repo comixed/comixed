@@ -62,7 +62,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class LibraryController {
-  static final int MAXIMUM_RECORDS = 100;
+  static final int MAXIMUM_RECORDS = 1000;
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicService comicService;

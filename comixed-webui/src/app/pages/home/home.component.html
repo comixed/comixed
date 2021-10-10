@@ -1,1 +1,28 @@
-<!-- TODO add some interesting widgets -->
+<div *ngIf="loading" class="cx-width-100">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  <h2>{{ "home.title.loading-comics" | translate }}</h2>
+</div>
+<mat-toolbar *ngIf="!loading" class="cx-accent-light-background">
+  <mat-form-field class="cx-height-100" appearance="fill">
+    <mat-select [value]="chart" (selectionChange)="onShowChart($event.value)">
+      <mat-option *ngFor="let option of charts" [value]="option">
+        {{ "home.label." + option.title | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="cx-spacer"></div>
+</mat-toolbar>
+<h2 *ngIf="!!chart">{{ "home.title.comic-statistics" | translate }}</h2>
+<div style="display: block" class="cx-width-100 cx-height-75">
+  <ngx-charts-bar-vertical
+    *ngIf="!!chart"
+    [results]="chart.results"
+    [legendTitle]="'home.label.comics-by-' + chart.title | translate"
+    [xAxisLabel]="'home.label.comic-count' | translate"
+    [yAxisLabel]="'home.label.' + chart.title | json"
+    [legend]="true"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [gradient]="true"
+  ></ngx-charts-bar-vertical>
+</div>
