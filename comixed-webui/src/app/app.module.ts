@@ -71,6 +71,8 @@ import { ComicBookModule } from '@app/comic-books/comic-book.module';
 import { GravatarModule } from 'ngx-gravatar';
 import { ListsModule } from '@app/lists/lists.module';
 import { MatBadgeModule } from '@angular/material/badge';
+import { BarChartModule, NgxChartsModule } from '@swimlane/ngx-charts';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -134,7 +136,10 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatSidenavModule,
     MatListModule,
     GravatarModule,
-    MatBadgeModule
+    MatBadgeModule,
+    BarChartModule,
+    NgxChartsModule,
+    MatProgressBarModule
   ],
   providers: [
     [

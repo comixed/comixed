@@ -53,8 +53,26 @@
     "title": "Display Options"
   },
   "home": {
-    "label": {},
-    "title": "Home"
+    "label": {
+      "character": "Character",
+      "comics-by-character": "Comics By Character",
+      "comics-by-location": "Comics By Location",
+      "comics-by-publisher": "Comics By Publisher",
+      "comics-by-series": "Comics By Series",
+      "comics-by-story": "Comics By Story",
+      "comics-by-team": "Comics By Team",
+      "comic-count": "# Of Comics",
+      "location": "Location",
+      "publisher": "Publisher",
+      "series": "Series",
+      "story": "Story",
+      "team": "Team"
+    },
+    "tab-title": "Home",
+    "title": {
+      "comic-statistics": "Comic Library Statistics",
+      "loading-comics": "Loading library..."
+    }
   },
   "menu": {
     "language-menu": {
