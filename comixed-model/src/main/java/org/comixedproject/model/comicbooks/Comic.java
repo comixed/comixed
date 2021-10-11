@@ -318,6 +318,7 @@ public class Comic {
   private String imprint;
 
   @Column(name = "Notes", length = 128, nullable = true, updatable = true)
+  @Lob
   @JsonProperty("notes")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
