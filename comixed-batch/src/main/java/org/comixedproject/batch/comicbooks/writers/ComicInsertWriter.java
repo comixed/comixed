@@ -40,8 +40,12 @@ public class ComicInsertWriter implements ItemWriter<Comic> {
   public void write(final List<? extends Comic> comics) throws Exception {
     comics.forEach(
         comic -> {
-          log.trace("Saving comic: {}", comic.getFilename());
-          this.comicService.save(comic);
+          try {
+            log.trace("Saving comic: {}", comic.getFilename());
+            this.comicService.save(comic);
+          } catch (Exception error) {
+            log.error("Failed to insert new comic", error);
+          }
         });
   }
 }

@@ -10,5 +10,6 @@
   <include file="/db/migrations/0.11.0/002_985_rename_blocked_pages_table.xml"/>
   <include file="/db/migrations/0.11.0/003_909_removed_bookmarks.xml"/>
   <include file="/db/migrations/0.11.0/004_44_added_story_details.xml"/>
+  <include file="/db/migrations/0.11.0/005_866_expand_comic_notes_column.xml"/>
 
 </databaseChangeLog>
