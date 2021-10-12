@@ -19,8 +19,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { LoggerLevel, LoggerService } from '@angular-ru/logger';
-import { ActivatedRoute, Router } from '@angular/router';
-import { updateQueryParam } from '@app/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
@@ -29,8 +28,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ComicDisplayOptionsComponent } from '@app/library/components/comic-display-options/comic-display-options.component';
 import {
   LANGUAGE_PREFERENCE,
-  LOGGER_LEVEL_PREFERENCE,
-  QUERY_PARAM_SIDEBAR
+  LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -75,14 +73,8 @@ export class NavigationBarComponent {
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private dialog: MatDialog,
-    private activatedRoute: ActivatedRoute
+    private dialog: MatDialog
   ) {
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (!!params[QUERY_PARAM_SIDEBAR]) {
-        this.toggleSidebar.emit(params[QUERY_PARAM_SIDEBAR] === 'true');
-      }
-    });
     this.translateService.onLangChange.subscribe(language => {
       this.logger.debug('Active language changed:', language.lang);
       this.currentLanguage = language.lang;
@@ -189,11 +181,5 @@ export class NavigationBarComponent {
   onToggleSidebar(): void {
     this.logger.trace('Toggling sidebar');
     this.toggleSidebar.emit(!this.sidebarOpened);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_SIDEBAR,
-      `${!this.sidebarOpened}`
-    );
   }
 }
