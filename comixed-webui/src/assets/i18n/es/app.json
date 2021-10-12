@@ -19,7 +19,8 @@
       "remote-origin-url": "Esta rama está rastreando la rama remota {url}"
     },
     "load-effect-failure": "No se pudieron cargar los detalles de la compilación.",
-    "title": "Detalles de la compilación"
+    "page-title": "Detalles de la compilación"
+    "tab-title": "Detalles de la compilación"
   },
   "button": {
     "cancel": "Cancelar",

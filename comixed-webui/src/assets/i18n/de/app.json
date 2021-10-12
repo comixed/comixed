@@ -19,7 +19,8 @@
       "remote-origin-url": "This branch is tracking the remote branch {url}"
     },
     "load-effect-failure": "Failed to load the build details.",
-    "title": "Build Details"
+    "page-title": "Build Details",
+    "tab-title": "Build Details"
   },
   "button": {
     "cancel": "Cancel",

@@ -44,6 +44,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
 import { selectUploadReadingListState } from '@app/lists/selectors/upload-reading-list.selectors';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-reading-lists-page',
@@ -60,6 +61,7 @@ export class ReadingListsPageComponent
   readingListStateSubscription: Subscription;
   readingListsSubscription: Subscription;
   uploadReadingListSubscription: Subscription;
+  langChangeSubscription: Subscription;
 
   readonly displayedColumns = [
     'selection',
@@ -76,7 +78,8 @@ export class ReadingListsPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.logger.trace('Subscribing to reading list state updates');
     this.readingListStateSubscription = this.store
@@ -94,6 +97,9 @@ export class ReadingListsPageComponent
         this.logger.trace('Uploading reading list state change');
         this.store.dispatch(setBusyState({ enabled: state.uploading }));
       });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   private _readingLists: ReadingList[];
@@ -116,6 +122,7 @@ export class ReadingListsPageComponent
   ngOnInit(): void {
     this.logger.trace('Loading all user reading lists');
     this.store.dispatch(loadReadingLists());
+    this.loadTranslations();
   }
 
   ngAfterViewInit(): void {
@@ -145,6 +152,8 @@ export class ReadingListsPageComponent
     this.readingListsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from upload reading list state updates');
     this.uploadReadingListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language change updates');
+    this.langChangeSubscription.unsubscribe();
   }
 
   onShowUploadRow(): void {
@@ -206,5 +215,12 @@ export class ReadingListsPageComponent
     this.allSelected = this.dataSource.data.every(entry => entry.selected);
     this.hasSelections =
       this.allSelected || this.dataSource.data.some(entry => entry.selected);
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Loading reading lists tab title');
+    this.titleService.setTitle(
+      this.translateService.instant('reading-lists.tab-title')
+    );
   }
 }

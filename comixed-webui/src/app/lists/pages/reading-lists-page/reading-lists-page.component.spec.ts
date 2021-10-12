@@ -26,7 +26,7 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -46,6 +46,7 @@ import { uploadReadingList } from '@app/lists/actions/upload-reading-list.action
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -62,6 +63,8 @@ describe('ReadingListsPageComponent', () => {
   let fixture: ComponentFixture<ReadingListsPageComponent>;
   let confirmationService: ConfirmationService;
   let store: MockStore<any>;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -76,7 +79,11 @@ describe('ReadingListsPageComponent', () => {
         MatTooltipModule,
         MatDialogModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReadingListsPageComponent);
@@ -84,11 +91,24 @@ describe('ReadingListsPageComponent', () => {
     confirmationService = TestBed.inject(ConfirmationService);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('sorting reading lists', () => {

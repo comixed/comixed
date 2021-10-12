@@ -33,6 +33,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { Preference } from '@app/user/models/preference';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-user-preferences-page',
@@ -47,17 +48,22 @@ export class UserPreferencesPageComponent
   readonly displayedColumns = ['name', 'value', 'actions'];
   dataSource = new MatTableDataSource<Preference>([]);
   userSubscription: Subscription;
+  langChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.logger.trace('Loading user preferences');
       this.dataSource.data = user.preferences;
     });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   ngAfterViewInit(): void {
@@ -72,10 +78,14 @@ export class UserPreferencesPageComponent
           return data.value;
       }
     };
+    this.loadTranslations();
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language change updates');
+    this.langChangeSubscription.unsubscribe();
   }
 
   ngOnInit(): void {}
@@ -93,5 +103,12 @@ export class UserPreferencesPageComponent
         this.store.dispatch(saveUserPreference({ name, value: null }));
       }
     });
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Loading tab title');
+    this.titleService.setTitle(
+      this.translateService.instant('user.user-preferences.tab-title')
+    );
   }
 }

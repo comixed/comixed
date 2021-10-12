@@ -24,9 +24,10 @@ import {
   initialState as initialBuildState
 } from '@app/reducers/build-details.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BUILD_DETAILS } from '@app/app.fixtures';
 import { MatCardModule } from '@angular/material/card';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('BuildDetailsComponent', () => {
   const initialState = {
@@ -38,6 +39,8 @@ describe('BuildDetailsComponent', () => {
 
   let component: BuildDetailsComponent;
   let fixture: ComponentFixture<BuildDetailsComponent>;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -47,15 +50,28 @@ describe('BuildDetailsComponent', () => {
         TranslateModule.forRoot(),
         MatCardModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BuildDetailsComponent);
     component = fixture.componentInstance;
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 });

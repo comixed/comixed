@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   loadBlockedHashList,
   markPagesWithHash
@@ -35,16 +41,20 @@ import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-page
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-blocked-hash-list',
   templateUrl: './blocked-hash-list-page.component.html',
   styleUrls: ['./blocked-hash-list-page.component.scss']
 })
-export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
+export class BlockedHashListPageComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @ViewChild('MatPagination') paginator: MatPaginator;
 
   pageSubscription: Subscription;
+  langChangeSubscription: Subscription;
   dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
   readonly displayedColumns = [
     'selected',
@@ -62,11 +72,19 @@ export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
     private store: Store<any>,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.pageSubscription = this.store
       .select(selectBlockedPageList)
       .subscribe(entries => (this.entries = entries));
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
+  }
+
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
   }
 
   set entries(entries: BlockedHash[]) {
@@ -81,6 +99,7 @@ export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.store.dispatch(loadBlockedHashList());
+    this.loadTranslations();
   }
 
   onSelectOne(entry: SelectableListItem<BlockedHash>, checked: boolean): void {
@@ -196,5 +215,12 @@ export class BlockedHashListPageComponent implements OnInit, AfterViewInit {
     this.someSelected =
       this.allSelected ||
       this.dataSource.data.some(listEntry => listEntry.selected);
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Loading tab title');
+    this.titleService.setTitle(
+      this.translateService.instant('blocked-hash-list.tab-title')
+    );
   }
 }
