@@ -35,6 +35,8 @@ import { selectComicListCollection } from '@app/comic-books/selectors/comic-list
 import { MatTableDataSource } from '@angular/material/table';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatSort } from '@angular/material/sort';
+import { TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-collection-list',
@@ -53,16 +55,20 @@ export class CollectionListComponent
   collectionSubscription: Subscription;
   dataSource = new MatTableDataSource<CollectionListEntry>([]);
   readonly displayedColumns = ['name', 'comic-count'];
+  langChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.collectionType = collectionTypeFromString(this.routableTypeName);
+      this.loadTranslations();
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');
@@ -76,6 +82,9 @@ export class CollectionListComponent
           );
       }
     });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   set entries(entries: CollectionListEntry[]) {
@@ -88,9 +97,12 @@ export class CollectionListComponent
     if (!!this.collectionSubscription) {
       this.collectionSubscription.unsubscribe();
     }
+    this.langChangeSubscription.unsubscribe();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
 
   onShowCollection(entry: CollectionListEntry): void {
     this.logger.debug('Collection entry selected:', entry);
@@ -112,5 +124,13 @@ export class CollectionListComponent
           return data.comicCount;
       }
     };
+  }
+
+  private loadTranslations(): void {
+    this.titleService.setTitle(
+      this.translateService.instant('collection-list.tab-title', {
+        collection: this.collectionType
+      })
+    );
   }
 }

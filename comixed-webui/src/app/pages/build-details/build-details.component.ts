@@ -24,6 +24,8 @@ import { BuildDetails } from '@app/models/build-details';
 import { selectBuildDetailsState } from '@app/selectors/build-details.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadBuildDetails } from '@app/actions/build-details.actions';
+import { TitleService } from '@app/core/services/title.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-build-details',
@@ -33,19 +35,39 @@ import { loadBuildDetails } from '@app/actions/build-details.actions';
 export class BuildDetailsComponent implements OnInit, OnDestroy {
   detailsSubscription: Subscription;
   details: BuildDetails;
+  langChangeSubscription: Subscription;
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private translateService: TranslateService,
+    private titleService: TitleService
+  ) {
     this.detailsSubscription = this.store
       .select(selectBuildDetailsState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loading }));
         this.details = state.details;
       });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   ngOnInit(): void {
     this.store.dispatch(loadBuildDetails());
+    this.loadTranslations();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from language changes');
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Setting tab title');
+    this.titleService.setTitle(
+      this.translateService.instant('build-details.tab-title')
+    );
+  }
 }

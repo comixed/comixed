@@ -32,7 +32,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -65,6 +65,7 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -81,6 +82,8 @@ describe('CollectionDetailComponent', () => {
   let store: MockStore<any>;
   let activatedRoute: ActivatedRoute;
   let router: Router;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -115,7 +118,8 @@ describe('CollectionDetailComponent', () => {
               collectionName: 'Batman'
             })
           }
-        }
+        },
+        TitleService
       ]
     }).compileComponents();
 
@@ -126,11 +130,24 @@ describe('CollectionDetailComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     spyOn(router, 'navigateByUrl');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('when the collection type is invalid', () => {

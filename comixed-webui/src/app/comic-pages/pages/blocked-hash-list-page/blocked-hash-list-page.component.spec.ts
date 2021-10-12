@@ -36,7 +36,7 @@ import {
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-pages.actions';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -48,6 +48,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { markPagesWithHash } from '@app/comic-pages/actions/blocked-hash-list.actions';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
@@ -60,6 +61,8 @@ describe('BlockedHashListPageComponent', () => {
   let router: Router;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -76,7 +79,11 @@ describe('BlockedHashListPageComponent', () => {
         MatIconModule,
         MatTooltipModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BlockedHashListPageComponent);
@@ -86,11 +93,24 @@ describe('BlockedHashListPageComponent', () => {
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     confirmationService = TestBed.inject(ConfirmationService);
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('receiving blocked page updates', () => {

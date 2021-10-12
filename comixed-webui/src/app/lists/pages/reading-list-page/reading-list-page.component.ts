@@ -51,6 +51,7 @@ import {
   deleteReadingLists,
   readingListRemoved
 } from '@app/lists/actions/reading-lists.actions';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -67,6 +68,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
   readingListForm: FormGroup;
   readingListId = -1;
   selectedEntries: Comic[] = [];
+  langChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
@@ -76,7 +78,8 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private formBuilder: FormBuilder,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       if (!!params.id) {
@@ -116,6 +119,7 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
         } else {
           this.logger.trace('Received reading list');
           this.readingList = readingList;
+          this.loadTranslations();
         }
       });
     this.messagingSubscription = this.store
@@ -156,6 +160,9 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
           );
         }
       });
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   private _readingList: ReadingList;
@@ -271,5 +278,16 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
       name: this.readingListForm.controls.name.value,
       summary: this.readingListForm.controls.summary.value
     };
+  }
+
+  private loadTranslations(): void {
+    if (!!this.readingList) {
+      this.logger.trace('Loading tab title');
+      this.titleService.setTitle(
+        this.translateService.instant('reading-list.tab-title', {
+          name: this.readingList.name
+        })
+      );
+    }
   }
 }

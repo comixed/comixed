@@ -173,6 +173,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-deleted')
       );
+    } else if (this.unscrapedOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.tab-title-unscraped')
+      );
     } else if (this.unreadOnly) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-unread')
