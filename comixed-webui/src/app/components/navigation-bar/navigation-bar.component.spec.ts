@@ -22,11 +22,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerLevel, LoggerModule, LoggerService } from '@angular-ru/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
@@ -44,12 +40,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import {
   LANGUAGE_PREFERENCE,
-  LOGGER_LEVEL_PREFERENCE,
-  QUERY_PARAM_SIDEBAR
+  LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BehaviorSubject } from 'rxjs';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { GravatarModule } from 'ngx-gravatar';
 
@@ -61,7 +55,6 @@ describe('NavigationBarComponent', () => {
   let fixture: ComponentFixture<NavigationBarComponent>;
   let store: MockStore<any>;
   let router: Router;
-  let activatedRoute: ActivatedRoute;
   let confirmationService: ConfirmationService;
   let dialog: MatDialog;
   let dialogRef: jasmine.SpyObj<MatDialogRef<any>>;
@@ -93,13 +86,6 @@ describe('NavigationBarComponent', () => {
           useValue: {
             afterClosed: jasmine.createSpy('MatDialogRef.afterClosed()')
           }
-        },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParams: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
-          }
         }
       ]
     }).compileComponents();
@@ -110,7 +96,6 @@ describe('NavigationBarComponent', () => {
     spyOn(store, 'dispatch');
     router = TestBed.inject(Router);
     spyOn(router, 'navigateByUrl');
-    activatedRoute = TestBed.inject(ActivatedRoute);
     confirmationService = TestBed.inject(ConfirmationService);
     dialog = TestBed.inject(MatDialog);
     dialogRef = TestBed.inject(MatDialogRef) as jasmine.SpyObj<
@@ -304,21 +289,6 @@ describe('NavigationBarComponent', () => {
 
     it('emits an event', () => {
       expect(component.toggleSidebar.emit).toHaveBeenCalled();
-    });
-  });
-
-  describe('query parameters', () => {
-    describe('a sidebar value of true', () => {
-      beforeEach(() => {
-        spyOn(component.toggleSidebar, 'emit');
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          [QUERY_PARAM_SIDEBAR]: 'true'
-        });
-      });
-
-      it('emits ab event', () => {
-        expect(component.toggleSidebar.emit).toHaveBeenCalledWith(true);
-      });
     });
   });
 
