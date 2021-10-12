@@ -46,7 +46,7 @@
   >
     <mat-icon>check_box</mat-icon>
   </button>
-  <mat-divider vertical="true"></mat-divider>
+  <mat-divider *ngIf="isAdmin" vertical="true"></mat-divider>
   <button
     id="update-metadata-button"
     *ngIf="isAdmin"

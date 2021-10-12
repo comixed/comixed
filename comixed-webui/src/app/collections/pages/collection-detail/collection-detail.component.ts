@@ -30,6 +30,8 @@ import { Comic } from '@app/comic-books/models/comic';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { isAdmin } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -47,6 +49,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   selected: Comic[] = [];
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
+  userSubscription: Subscription;
+  isAdmin = false;
 
   constructor(
     private logger: LoggerService,
@@ -84,6 +88,9 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
           });
       }
     });
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.isAdmin = isAdmin(user);
+    });
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
@@ -95,10 +102,14 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from parameter updates');
     this.paramSubscription.unsubscribe();
     if (!!this.comicSubscription) {
       this.comicSubscription.unsubscribe();
     }
+    this.logger.trace('Unsubscribing from user updates');
+    this.userSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from reading list updats');
     this.readingListsSubscription.unsubscribe();
   }
 }
