@@ -61,6 +61,10 @@ import {
   reducer as initialReadingListsState
 } from '@app/lists/reducers/reading-lists.reducer';
 import { MatDividerModule } from '@angular/material/divider';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -68,7 +72,8 @@ describe('CollectionDetailComponent', () => {
     [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
-    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
+    [USER_FEATURE_KEY]: initialUserState
   };
 
   let component: CollectionDetailComponent;
