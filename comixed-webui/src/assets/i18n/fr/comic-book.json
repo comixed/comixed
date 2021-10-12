@@ -84,8 +84,10 @@
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
       "state-ADDED": "Non modifié",
       "state-CHANGED": "Modifié",
+      "state-REMOVED": "Removed",
       "state-DELETED": "Marqué pour suppression",
-      "state-STABLE": "Non modifié"
+      "state-STABLE": "Non modifié",
+      "state-UNPROCESSED": "Unprocessed"
     },
     "tooltip": {
       "blocked-page": "Les pages comme celle-ci sont bloquées...",
