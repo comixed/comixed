@@ -158,6 +158,7 @@ describe('LibraryPageComponent', () => {
   describe('loading page data', () => {
     beforeEach(() => {
       component.unreadOnly = false;
+      component.unscrapedOnly = false;
       component.deletedOnly = false;
       component.unscrapedOnly = false;
     });
@@ -169,6 +170,16 @@ describe('LibraryPageComponent', () => {
 
       it('sets the unread only flag', () => {
         expect(component.unreadOnly).toBeTrue();
+      });
+    });
+
+    describe('when showing unscraped comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ unscraped: true });
+      });
+
+      it('sets the unscraped only flag', () => {
+        expect(component.unscrapedOnly).toBeTrue();
       });
     });
 
@@ -196,6 +207,7 @@ describe('LibraryPageComponent', () => {
   describe('when the language changes', () => {
     beforeEach(() => {
       component.unreadOnly = false;
+      component.unscrapedOnly = false;
       component.deletedOnly = false;
     });
 
@@ -206,6 +218,12 @@ describe('LibraryPageComponent', () => {
 
     it('updates the page title for unread comic', () => {
       component.unreadOnly = true;
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for unscraped comic', () => {
+      component.unscrapedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });

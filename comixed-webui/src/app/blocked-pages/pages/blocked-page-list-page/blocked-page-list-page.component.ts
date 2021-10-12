@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { loadBlockedPageList } from '@app/blocked-pages/actions/blocked-page-list.actions';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
@@ -33,16 +39,20 @@ import { BlockedPage } from '@app/blocked-pages/models/blocked-page';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { setBlockedPageDeletionFlags } from '@app/blocked-pages/actions/set-blocked-page-deletion-flag.actions';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-blocked-page-list',
   templateUrl: './blocked-page-list-page.component.html',
   styleUrls: ['./blocked-page-list-page.component.scss']
 })
-export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
+export class BlockedPageListPageComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @ViewChild('MatPagination') paginator: MatPaginator;
 
   pageSubscription: Subscription;
+  langChangeSubscription: Subscription;
   dataSource = new MatTableDataSource<SelectableListItem<BlockedPage>>([]);
   readonly displayedColumns = [
     'selected',
@@ -59,11 +69,15 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     private store: Store<any>,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.pageSubscription = this.store
       .select(selectBlockedPageList)
       .subscribe(entries => (this.entries = entries));
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
   set entries(entries: BlockedPage[]) {
@@ -76,8 +90,16 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
     this.hasSelections = this.dataSource.data.some(entry => entry.selected);
   }
 
+  ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from blocked page list updates');
+    this.pageSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language changes');
+    this.langChangeSubscription.unsubscribe();
+  }
+
   ngOnInit(): void {
     this.store.dispatch(loadBlockedPageList());
+    this.loadTranslations();
   }
 
   onChangeSelection(
@@ -184,6 +206,13 @@ export class BlockedPageListPageComponent implements OnInit, AfterViewInit {
           .map(entry => entry.item.hash),
         deleted
       })
+    );
+  }
+
+  private loadTranslations(): void {
+    this.logger.trace('Loading tab title');
+    this.titleService.setTitle(
+      this.translateService.instant('blocked-page-list.tab-title')
     );
   }
 }

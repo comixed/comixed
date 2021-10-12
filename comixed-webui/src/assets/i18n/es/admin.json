@@ -58,6 +58,7 @@
     },
     "request-content-title": "Contenido de solicitud",
     "response-content-title": "Contenido de respuesta",
+    "tab-title": "Web Audit Log",
     "text": {
       "runtime": "{time}ms"
     }

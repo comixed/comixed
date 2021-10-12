@@ -19,7 +19,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReadingListPageComponent } from './reading-list-page.component';
 import { LoggerModule } from '@angular-ru/logger';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   initialState as initialReadingListDetailsState,
   READING_LIST_DETAIL_FEATURE_KEY
@@ -62,6 +62,7 @@ import {
 import { Subscription as WebstompSubscription } from 'webstomp-client';
 import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
 import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;
@@ -87,6 +88,8 @@ describe('ReadingListPageComponent', () => {
   removalSubscription.unsubscribe = jasmine.createSpy(
     'Subscription.unsubscribe(removals)'
   );
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -117,7 +120,8 @@ describe('ReadingListPageComponent', () => {
             subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
             unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
           }
-        }
+        },
+        TitleService
       ]
     }).compileComponents();
 
@@ -133,11 +137,25 @@ describe('ReadingListPageComponent', () => {
     webSocketService = TestBed.inject(
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      component.readingList = READING_LIST;
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('when creating a new reading list', () => {

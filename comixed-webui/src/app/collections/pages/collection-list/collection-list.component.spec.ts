@@ -31,7 +31,8 @@ import {
 import { COMIC_1, COMIC_3, COMIC_5 } from '@app/comic-book/comic-book.fixtures';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatTableModule } from '@angular/material/table';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('CollectionListComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -44,6 +45,8 @@ describe('CollectionListComponent', () => {
   let store: MockStore<any>;
   let activatedRoute: ActivatedRoute;
   let router: Router;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -61,7 +64,8 @@ describe('CollectionListComponent', () => {
           useValue: {
             params: new BehaviorSubject<{}>({})
           }
-        }
+        },
+        TitleService
       ]
     }).compileComponents();
 
@@ -72,11 +76,24 @@ describe('CollectionListComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
     spyOn(router, 'navigateByUrl');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('when the collection type is invalid', () => {

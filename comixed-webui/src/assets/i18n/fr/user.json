@@ -44,6 +44,7 @@
         "preference-name": "Nom de la préférence",
         "preference-value": "Valeur"
       },
+      "tab-title": "User Preferences",
       "tooltip": {
         "delete-preference": "Supprimer cette préférence utilisateur."
       }

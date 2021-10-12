@@ -32,6 +32,8 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
+import { TitleService } from '@app/core/services/title.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -51,17 +53,21 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   readingLists: ReadingList[] = [];
   userSubscription: Subscription;
   isAdmin = false;
+  langChangeSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.collectionName = params.collectionName;
       this.collectionType = collectionTypeFromString(this.routableTypeName);
+      this.loadTranslations();
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');
@@ -97,9 +103,14 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTranslations();
+  }
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from parameter updates');
@@ -111,5 +122,15 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updats');
     this.readingListsSubscription.unsubscribe();
+    this.langChangeSubscription.unsubscribe();
+  }
+
+  private loadTranslations(): void {
+    this.titleService.setTitle(
+      this.translateService.instant('collection-detail.tab-title', {
+        collection: this.collectionType,
+        name: this.collectionName
+      })
+    );
   }
 }

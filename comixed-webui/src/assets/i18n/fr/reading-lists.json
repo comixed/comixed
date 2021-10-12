@@ -20,6 +20,7 @@
       "effect-failure": "Échec de la sauvegarde de la liste de lecture.",
       "effect-success": "Liste de lecture sauvegardée."
     },
+    "tab-title": "Reading List: {name}",
     "text": {
       "no-name": "Liste de lecture sans nom"
     },
@@ -59,6 +60,7 @@
     "load-for-user": {
       "effect-failure": "Échec du chargement des listes de lecture."
     },
+    "tab-title": "Reading Lists",
     "tooltip": {
       "add-reading-list": "Ajouter une nouvelle liste de lecture.",
       "delete-reading-lists": "Supprimer les listes de lecture sélectionnées."

@@ -18,8 +18,9 @@
       "jdbc-url": "L'url de la base de données utilisée est {url}",
       "remote-origin-url": "Cette branche suit la branche distante {url}"
     },
-    "title": "Détails du Build",
-    "load-effect-failure": "Échec de la récupération des détails du build..."
+    "load-effect-failure": "Échec de la récupération des détails du build...",
+    "page-title": "Détails du Build"
+    "tab-title": "Détails du Build"
   },
   "button": {
     "cancel": "Annuler",

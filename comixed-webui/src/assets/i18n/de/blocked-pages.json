@@ -52,6 +52,7 @@
       "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
       "effect-success": "{deleted, select, true{Marked} other{Cleared}} {count, plural, =1{one page} other{# pages}} for deletion."
     },
+    "tab-title": "Blocked Hash List",
     "tooltip": {
       "clear-deleted": "Clear selected pages from deletion.",
       "delete-entries": "Delete selected blocked page entries.",

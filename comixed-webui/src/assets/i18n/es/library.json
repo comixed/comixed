@@ -50,7 +50,8 @@
     "all-comics": {
       "tab-title": "Todos los cómics",
       "tab-title-deleted": "Cómics eliminados",
-      "tab-title-unread": "Cómics no leídos"
+      "tab-title-unread": "Cómics no leídos",
+      "tab-title-unscraped": "Unscraped Comics"
     },
     "comic-group": {
       "invalid-grouping": "El grupo \"{name}\" no es válido."

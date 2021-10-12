@@ -20,6 +20,7 @@
       "effect-failure": "Failed to save reading list.",
       "effect-success": "Reading list saved."
     },
+    "tab-title": "Reading List: {name}",
     "text": {
       "no-name": "Unnamed Reading List"
     },
@@ -59,6 +60,7 @@
     "load-for-user": {
       "effect-failure": "Failed to load reading lists."
     },
+    "tab-title": "Reading Lists",
     "tooltip": {
       "add-reading-list": "Add a new reading list.",
       "delete-reading-lists": "Delete the selected reading lists."

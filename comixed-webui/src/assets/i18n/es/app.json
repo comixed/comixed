@@ -18,8 +18,9 @@
       "jdbc-url": "La dirección URL de la base de datos que se utiliza es {url}",
       "remote-origin-url": "Esta rama está rastreando la rama remota {url}"
     },
-    "title": "Detalles de la compilación",
-    "load-effect-failure": "No se pudieron cargar los detalles de la compilación."
+    "load-effect-failure": "No se pudieron cargar los detalles de la compilación.",
+    "page-title": "Detalles de la compilación"
+    "tab-title": "Detalles de la compilación"
   },
   "button": {
     "cancel": "Cancelar",
