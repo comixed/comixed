@@ -87,6 +87,12 @@ public class ComicStateMachineConfiguration
         // rescan a stable comic
         .and()
         .withExternal()
+        .source(ComicState.UNPROCESSED)
+        .target(ComicState.UNPROCESSED)
+        .event(ComicEvent.rescanComic)
+        .action(prepareComicForProcessingAction)
+        .and()
+        .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.UNPROCESSED)
         .event(ComicEvent.rescanComic)
