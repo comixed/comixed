@@ -18,8 +18,9 @@
       "jdbc-url": "The database URL being used is {url}",
       "remote-origin-url": "This branch is tracking the remote branch {url}"
     },
-    "title": "Build Details",
-    "load-effect-failure": "Failed to load the build details."
+    "load-effect-failure": "Failed to load the build details.",
+    "page-title": "Build Details",
+    "tab-title": "Build Details"
   },
   "button": {
     "cancel": "Cancel",

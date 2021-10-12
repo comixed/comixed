@@ -1,9 +1,13 @@
 {
+  "collection-detail": {
+    "tab-title": "{collection, select, characters{Character} teams{Team} locations{Location} stories{Storie} publishers{Publisher} series{Series} other{Unknown}}: {name}"
+  },
   "collection-list": {
     "label": {
       "comic-count": "# Comics",
       "name": "Collection Name"
     },
+    "tab-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "text": {
       "undefined": "[UNDEFINED]"
     }

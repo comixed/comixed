@@ -19,7 +19,8 @@
       "remote-origin-url": "Cette branche suit la branche distante {url}"
     },
     "load-effect-failure": "Échec de la récupération des détails du build...",
-    "title": "Détails du Build"
+    "page-title": "Détails du Build"
+    "tab-title": "Détails du Build"
   },
   "button": {
     "cancel": "Annuler",

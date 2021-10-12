@@ -19,7 +19,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserPreferencesPageComponent } from './user-preferences-page.component';
 import { LoggerModule } from '@angular-ru/logger';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -33,6 +33,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { Confirmation } from '@app/core/models/confirmation';
+import { TitleService } from '@app/core/services/title.service';
 
 describe('UserPreferencesPageComponent', () => {
   const USER = USER_READER;
@@ -45,6 +46,8 @@ describe('UserPreferencesPageComponent', () => {
   let fixture: ComponentFixture<UserPreferencesPageComponent>;
   let confirmationService: ConfirmationService;
   let store: MockStore<any>;
+  let titleService: TitleService;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -57,7 +60,11 @@ describe('UserPreferencesPageComponent', () => {
         MatTableModule,
         MatSortModule
       ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
+      providers: [
+        provideMockStore({ initialState }),
+        ConfirmationService,
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserPreferencesPageComponent);
@@ -65,11 +72,24 @@ describe('UserPreferencesPageComponent', () => {
     confirmationService = TestBed.inject(ConfirmationService);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    titleService = TestBed.inject(TitleService);
+    spyOn(titleService, 'setTitle');
+    translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when the language changes', () => {
+    beforeEach(() => {
+      translateService.use('fr');
+    });
+
+    it('loads the title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('deleting a user preference', () => {

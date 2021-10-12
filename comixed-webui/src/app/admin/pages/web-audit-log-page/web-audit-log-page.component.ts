@@ -42,6 +42,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TitleService } from '@app/core/services/title.service';
 
 @Component({
   selector: 'cx-web-audit-log-page',
@@ -78,7 +79,8 @@ export class WebAuditLogPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private titleService: TitleService
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -165,6 +167,9 @@ export class WebAuditLogPageComponent
     this.logger.debug('Loading translations');
     this.paginator._intl.itemsPerPageLabel = this.translateService.instant(
       'web-audit-log.label.pagination-items-per-page'
+    );
+    this.titleService.setTitle(
+      this.translateService.instant('web-audit-log.tab-title')
     );
   }
 }
