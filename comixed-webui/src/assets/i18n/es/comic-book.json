@@ -85,7 +85,9 @@
       "state-ADDED": "Igual",
       "state-CHANGED": "Cambiado",
       "state-DELETED": "Marcado para la eliminación",
-      "state-STABLE": "Igual"
+      "state-REMOVED": "Removed",
+      "state-STABLE": "Igual",
+      "state-UNPROCESSED": "Unprocessed"
     },
     "tooltip": {
       "blocked-hash": "Páginas como esta están bloqueadas...",
