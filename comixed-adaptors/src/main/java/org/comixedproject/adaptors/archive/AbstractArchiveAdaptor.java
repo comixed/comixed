@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.utils.IOUtils;
@@ -57,6 +60,7 @@ import org.springframework.stereotype.Component;
 @PropertySource("entryloaders.properties")
 @ConfigurationProperties(prefix = "comic.entry", ignoreUnknownFields = false)
 @Log4j2
+@RequiredArgsConstructor
 public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, InitializingBean {
   @Autowired private ApplicationContext context;
   @Autowired protected FileTypeAdaptor fileTypeAdaptor;
@@ -64,15 +68,11 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   @Autowired protected ComicFileHandler comicFileHandler;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
 
-  protected List<EntryLoaderForType> loaders = new ArrayList<>();
+  @Getter @NonNull private String defaultExtension;
+  @Getter protected List<EntryLoaderForType> loaders = new ArrayList<>();
+
   protected Map<String, EntryLoader> entryLoaders = new HashMap<>();
   private Set<String> imageTypes = new HashSet<>();
-  private String defaultExtension;
-
-  protected AbstractArchiveAdaptor(String defaultExtension) {
-    super();
-    this.defaultExtension = defaultExtension;
-  }
 
   @Override
   public void afterPropertiesSet() throws Exception {
