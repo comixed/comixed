@@ -30,9 +30,9 @@ import org.comixedproject.views.View;
  */
 @AllArgsConstructor
 public enum ArchiveType {
-  CBZ("ZIP Comic", "application/vnc.comicbook+zip", "CBZ"),
-  CBR("RAR Comic", "application/vnc.comicbook+rar", "CBR"),
-  CB7("7Z Comic", "application/vnc.comicbook+octet-stream", "CB7");
+  CBZ("ZIP Comic", "application/vnc.comicbook+zip", "cbz"),
+  CBR("RAR Comic", "application/vnc.comicbook+rar", "cbr"),
+  CB7("7Z Comic", "application/vnc.comicbook+octet-stream", "cb7");
 
   @JsonView(View.AuditLogEntryDetail.class)
   @Getter
