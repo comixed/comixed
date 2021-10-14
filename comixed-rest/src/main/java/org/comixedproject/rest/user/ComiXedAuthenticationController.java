@@ -32,12 +32,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <code>ComiXedAuthenticationController</code> provides REST APIs for controller a user's session.
+ *
+ * @author Darryl L. Pierce
+ */
 @RestController
-@RequestMapping("/api/token")
 @Log4j2
 public class ComiXedAuthenticationController {
   @Autowired private AuthenticationManager authenticationManager;
@@ -53,7 +56,7 @@ public class ComiXedAuthenticationController {
    * @return the authentication token
    * @throws AuthenticationException if an error occurs
    */
-  @PostMapping(value = "/generate-token", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/token/generate", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableEndpoint
   public AuthToken generateToken(
       @RequestParam("email") String email, @RequestParam("password") String password)

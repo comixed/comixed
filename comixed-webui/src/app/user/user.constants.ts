@@ -26,7 +26,7 @@ export const ROLE_NAME_ADMIN = 'ADMIN';
 
 export const LOAD_CURRENT_USER_URL = `${API_ROOT_URL}/user`;
 export const SAVE_CURRENT_USER_URL = `${API_ROOT_URL}/user/\${id}`;
-export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate-token`;
+export const LOGIN_USER_URL = `${API_ROOT_URL}/token/generate`;
 
 export const SAVE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;
 export const DELETE_USER_PREFERENCE_URL = `${API_ROOT_URL}/user/preferences/\${name}`;

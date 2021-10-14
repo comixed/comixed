@@ -14,6 +14,7 @@
     "tab": {
       "comicvine": "ComicVine Settings",
       "library": "Library",
+      "server-runtime": "Runtime",
       "scraping-rules": "Scraping Rules"
     },
     "tab-title": "Configuration",
@@ -55,6 +56,40 @@
     "confirmation-title": "Save Configuration",
     "effect-failure": "Failed to save configuration changes.",
     "effect-success": "Configuration changes saved."
+  },
+  "server-health": {
+    "database-status": {
+      "title": "Database Status"
+    },
+    "disk-status":  {
+      "exists": "Exists: {exists}",
+      "free-space": "Free Space: {size}MB",
+      "total-space": "Total Space: {size}MB",
+      "threshold": "Threshold: {size}MB",
+      "title": "Disk Status"
+    },
+    "effect-failure": "Failed to load server health status.",
+    "ping-status": {
+      "title": "Ping Status"
+    },
+    "server-status": {
+      "title": "Server Status"
+    },
+    "text": {
+      "status": "Current Status: {status}"
+    }
+  },
+  "server-runtime": {
+    "tooltip": {
+      "refresh": "Refresh the server health details.",
+      "shutdown": "Shutdown the server."
+    }
+  },
+  "shutdown-server": {
+    "confirmation-message": "Are you sure you want to shutdown the ComiXed server? This cannot be stopped once started.",
+    "confirmation-title": "Shutdown ComiXed",
+    "effect-failure": "Failed to shutdown server.",
+    "effect-success": "Server shutting down."
   },
   "web-audit-log": {
     "clear": {

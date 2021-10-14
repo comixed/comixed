@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2018, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,46 +20,38 @@ package org.comixedproject.auth;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@ComponentScan({"org.comixedproject.rest", "org.comixedproject.http", "org.comixedproject.auth"})
+/**
+ * <code>ComiXedRuntimeSecurityConfiguration</code> defines the web security configuration for the
+ * actuators.
+ *
+ * @author Darryl L. Pierce
+ */
+@Configuration(proxyBeanMethods = false)
+@ComponentScan({"org.comixedproject.auth"})
 @Log4j2
-@Order(2)
-public class ComiXedWebRESTSecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(-1)
+public class ComiXedRuntimeSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired private ComiXedUnauthorizedEntryPoint unauthorizedHandler;
   @Autowired private ComiXedAuthenticationFilter authenticationFilter;
-  @Autowired private ComiXedAuthenticationProvider authenticationProvider;
-
-  @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
-
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(authenticationProvider);
-  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.cors()
+    http.antMatcher("/actuator/**")
+        .cors()
         .and()
         .csrf()
         .disable()
         .authorizeRequests()
         .anyRequest()
-        .permitAll()
+        .hasRole("ADMIN")
         .and()
         .exceptionHandling()
         .authenticationEntryPoint(unauthorizedHandler)

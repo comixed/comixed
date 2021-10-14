@@ -19,6 +19,8 @@
 import { WebAuditLogEntry } from './models/web-audit-log-entry';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
+import { ServerHealth } from '@app/admin/models/server-health';
+import { ServerStatus } from '@app/admin/models/server-status.enum';
 
 export const WEB_AUDIT_LOG_ENTRY_1: WebAuditLogEntry = {
   id: 1,
@@ -149,4 +151,28 @@ export const FILENAME_SCRAPING_RULE_3: FilenameScrapingRule = {
   issueNumberPosition: 3,
   coverDatePosition: 4,
   dateFormat: 'MMMMM yyyy'
+};
+
+export const SERVER_HEALTH: ServerHealth = {
+  status: ServerStatus.UP,
+  components: {
+    db: {
+      status: ServerStatus.UP,
+      details: {
+        database: 'MySQL'
+      }
+    },
+    diskSpace: {
+      status: ServerStatus.UP,
+      details: {
+        total: 1000240963584,
+        free: 446621110272,
+        threshold: 10485760,
+        exists: true
+      }
+    },
+    ping: {
+      status: ServerStatus.UP
+    }
+  }
 };
