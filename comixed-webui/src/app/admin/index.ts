@@ -39,6 +39,11 @@ import {
   FilenameScrapingRulesState,
   reducer as filenameScrapingRulesReducer
 } from './reducers/filename-scraping-rule-list.reducer';
+import {
+  reducer as serverRuntimeReducer,
+  SERVER_RUNTIME_FEATURE_KEY,
+  ShutdownState
+} from '@app/admin/reducers/server-runtime.reducer';
 
 export * from './admin.functions';
 
@@ -54,6 +59,7 @@ export interface AdminModuleState {
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: SaveConfigurationOptionsState;
   [WEB_AUDIT_LOG_FEATURE_KEY]: WebAuditLogState;
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: FilenameScrapingRulesState;
+  [SERVER_RUNTIME_FEATURE_KEY]: ShutdownState;
 }
 
 export type ModuleState = AdminModuleState;
@@ -63,5 +69,6 @@ export const reducers: ActionReducerMap<AdminModuleState> = {
   [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: configurationOptionListReducer,
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: saveConfigurationOptionsReducer,
   [WEB_AUDIT_LOG_FEATURE_KEY]: webAuditLogReducer,
-  [FILENAME_SCRAPING_RULES_FEATURE_KEY]: filenameScrapingRulesReducer
+  [FILENAME_SCRAPING_RULES_FEATURE_KEY]: filenameScrapingRulesReducer,
+  [SERVER_RUNTIME_FEATURE_KEY]: serverRuntimeReducer
 };

@@ -1,0 +1,145 @@
+<mat-toolbar class="cx-primary-light-background">
+  <div class="cx-spacer"></div>
+  <button
+    id="refresh-button"
+    mat-icon-button
+    color="primary"
+    [disabled]="shuttingDown"
+    [matTooltip]="'server-runtime.tooltip.refresh' | translate"
+    (click)="onRefresh()"
+  >
+    <mat-icon>refresh</mat-icon>
+  </button>
+  <button
+    id="shutdown-button"
+    mat-icon-button
+    color="warn"
+    [disabled]="shuttingDown"
+    [matTooltip]="'server-runtime.tooltip.shutdown' | translate"
+    (click)="onShutdown()"
+  >
+    <mat-icon>power_settings_new</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div *ngIf="!!health" class="cx-detail-card-container">
+  <div
+    id="server-status-card"
+    fxFlex.gt-md="25%"
+    fxFlex.md="50%"
+    fxFlex.lt-med="100%"
+  >
+    <mat-card>
+      <mat-card-title>
+        {{ "server-health.server-status.title" | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <div>
+          {{
+            "server-health.text.status" | translate: { status: health.status }
+          }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div
+    id="database-status-card"
+    fxFlex.gt-md="25%"
+    fxFlex.md="50%"
+    fxFlex.lt-med="100%"
+  >
+    <mat-card>
+      <mat-card-title>
+        {{ "server-health.database-status.title" | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <div>
+          {{
+            "server-health.text.status"
+              | translate: { status: health.components.db.status }
+          }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div
+    id="ping-status-card"
+    fxFlex.gt-md="25%"
+    fxFlex.md="50%"
+    fxFlex.lt-med="100%"
+  >
+    <mat-card>
+      <mat-card-title>
+        {{ "server-health.ping-status.title" | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <div>
+          {{
+            "server-health.text.status"
+              | translate: { status: health.components.ping.status }
+          }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div
+    id="disk-status-card"
+    fxFlex.gt-md="25%"
+    fxFlex.md="50%"
+    fxFlex.lt-med="100%"
+  >
+    <mat-card>
+      <mat-card-title>
+        {{ "server-health.disk-status.title" | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <div>
+          {{
+            "server-health.text.status"
+              | translate: { status: health.components.diskSpace.status }
+          }}
+        </div>
+        <div>
+          {{
+            "server-health.disk-status.free-space"
+              | translate
+                : {
+                    size:
+                      health.components.diskSpace.details.free / (1024 * 1024)
+                      | number: "1.0-2"
+                  }
+          }}
+        </div>
+        <div>
+          {{
+            "server-health.disk-status.total-space"
+              | translate
+                : {
+                    size:
+                      health.components.diskSpace.details.total / (1024 * 1024)
+                      | number: "1.0-2"
+                  }
+          }}
+        </div>
+        <div>
+          {{
+            "server-health.disk-status.threshold"
+              | translate
+                : {
+                    size:
+                      health.components.diskSpace.details.threshold /
+                        (1024 * 1024) | number: "1.0-2"
+                  }
+          }}
+        </div>
+        <div>
+          {{
+            "server-health.disk-status.exists"
+              | translate
+                : { exists: health.components.diskSpace.details.exists }
+          }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

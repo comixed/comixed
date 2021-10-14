@@ -27,16 +27,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * <code>ComiXedOPDSSecurityConfiguration</code> defines the web security configuration for the OPDS
+ * system.
+ *
+ * @author Darryl L. Pierce
+ */
 @Configuration
 @ComponentScan({"org.comixedproject.opds", "org.comixedproject.auth"})
 @Log4j2
 @Order(1)
-public class ComiXedWebOPDSSecurityConfig extends WebSecurityConfigurerAdapter {
+public class ComiXedOPDSSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired private ComiXedAuthenticationFilter authenticationFilter;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.antMatcher("/opds/**").authorizeRequests().anyRequest().authenticated().and().httpBasic();
+    http.requestMatchers()
+        .antMatchers("/opds/**")
+        .and()
+        .authorizeRequests()
+        .anyRequest()
+        .hasRole("READER")
+        .and()
+        .httpBasic();
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 }

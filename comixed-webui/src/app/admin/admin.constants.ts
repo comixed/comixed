@@ -29,3 +29,7 @@ export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/
 
 export const LOAD_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries/\${timestamp}`;
 export const CLEAR_WEB_AUDIT_LOG_ENTRIES_URL = `${API_ROOT_URL}/admin/web/audit/entries`;
+
+// actuator URLS
+export const LOAD_SERVER_HEALTH_URL = `/actuator/health`;
+export const SHUTDOWN_SERVER_URL = `/actuator/shutdown`;

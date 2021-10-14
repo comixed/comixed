@@ -18,19 +18,46 @@
 
 package org.comixedproject;
 
+import javax.annotation.PreDestroy;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
+/**
+ * <code>ComiXedApp</code> is the main entry point for the ComiXed application.
+ *
+ * @author Darryl L. Pierce
+ */
 @SpringBootApplication
-public class ComiXedApp implements CommandLineRunner {
+@Log4j2
+public class ComiXedApp implements CommandLineRunner, ApplicationContextAware {
+  private ApplicationContext applicationContext;
+
   public static void main(String[] args) {
-    var app = new SpringApplication(ComiXedApp.class);
-    app.run(args);
+    new SpringApplication(ComiXedApp.class).run(args);
   }
 
   @Override
   public void run(String... args) throws Exception {
     // process any command line arguments here
+  }
+
+  @PreDestroy
+  public void onDestroy() {
+    log.info("Closing application context");
+    ((ConfigurableApplicationContext) this.applicationContext).close();
+    log.info("Shutting down");
+    System.exit(0);
+  }
+
+  @Override
+  public void setApplicationContext(final ApplicationContext applicationContext)
+      throws BeansException {
+    this.applicationContext = applicationContext;
   }
 }

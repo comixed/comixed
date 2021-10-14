@@ -62,6 +62,13 @@ import {
 import { FilenameScrapingRuleListEffects } from '@app/admin/effects/filename-scraping-rule-list.effects';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
+import { ServerRuntimeComponent } from './components/server-runtime/server-runtime.component';
+import {
+  reducer as serverRuntimeReducer,
+  SERVER_RUNTIME_FEATURE_KEY
+} from '@app/admin/reducers/server-runtime.reducer';
+import { ServerRuntimeEffects } from '@app/admin/effects/server-runtime.effects';
+import { FlexModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -69,7 +76,8 @@ import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-plac
     ConfigurationPageComponent,
     ComicVineConfigurationComponent,
     LibraryConfigurationComponent,
-    FilenameScrapingRulesConfigurationComponent
+    FilenameScrapingRulesConfigurationComponent,
+    ServerRuntimeComponent
   ],
   imports: [
     CommonModule,
@@ -89,11 +97,13 @@ import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-plac
       FILENAME_SCRAPING_RULES_FEATURE_KEY,
       filenameScrapingRulesReducer
     ),
+    StoreModule.forFeature(SERVER_RUNTIME_FEATURE_KEY, serverRuntimeReducer),
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
       WebAuditLogEffects,
-      FilenameScrapingRuleListEffects
+      FilenameScrapingRuleListEffects,
+      ServerRuntimeEffects
     ]),
     MatTableModule,
     MatToolbarModule,
@@ -108,7 +118,8 @@ import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-plac
     MatExpansionModule,
     MatTooltipModule,
     DragDropModule,
-    TragicallySlickEditInPlaceModule
+    TragicallySlickEditInPlaceModule,
+    FlexModule
   ],
   exports: [CommonModule, CoreModule]
 })

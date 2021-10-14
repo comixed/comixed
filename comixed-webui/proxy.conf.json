@@ -20,5 +20,16 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/actuator": {
+    "target": {
+      "host": "localhost",
+      "protocol": "http",
+      "port": 7171
+    },
+    "auth": "user:password",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
