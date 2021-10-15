@@ -18,14 +18,10 @@
 
 package org.comixedproject.model.comicbooks;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
+import java.util.Objects;
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.comixedproject.views.View;
 
 /**
@@ -37,6 +33,7 @@ import org.comixedproject.views.View;
 @Table(name = "ComicFileEntries")
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class ComicFileEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,20 +44,15 @@ public class ComicFileEntry {
   @JoinColumn(name = "ComicId")
   @Getter
   @Setter
+  @NonNull
   private Comic comic;
-
-  @Column(name = "FileNumber", nullable = false, updatable = true)
-  @JsonProperty("fileNumber")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private Integer fileNumber;
 
   @Column(name = "FileName", nullable = false, length = 1024)
   @JsonProperty("fileName")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
+  @NonNull
   private String fileName;
 
   @Column(name = "FileSize", nullable = false)
@@ -68,6 +60,7 @@ public class ComicFileEntry {
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
+  @NonNull
   private Integer fileSize;
 
   @Column(name = "FileType", nullable = false, length = 256)
@@ -75,5 +68,21 @@ public class ComicFileEntry {
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
+  @NonNull
   private String fileType;
+
+  @Transient @JsonIgnore @Getter @Setter private boolean touched = false;
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final ComicFileEntry that = (ComicFileEntry) o;
+    return Objects.equals(fileName, that.fileName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fileName);
+  }
 }

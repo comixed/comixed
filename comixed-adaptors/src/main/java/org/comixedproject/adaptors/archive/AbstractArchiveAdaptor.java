@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.adaptors.loaders.EntryLoader;
 import org.comixedproject.adaptors.loaders.EntryLoaderException;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicFileEntry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -142,8 +144,8 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
     log.trace("Reset comic pages");
     comic.getPages().clear();
-    log.trace("Reset comic file entries");
-    comic.getFileEntries().clear();
+    log.trace("Preparing to reload file entries");
+    comic.getFileEntries().forEach(entry -> entry.setTouched(false));
 
     log.trace("Processing archive: {}", comic.getFilename());
     long started = System.currentTimeMillis();
@@ -154,6 +156,14 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
 
       log.trace("Loading entire comic: {}", comic.getFilename());
       this.loadAllFiles(comic, archiveReference, ignoreMetadata);
+
+      log.trace("Removing untouched file entries");
+      comic
+          .getFileEntries()
+          .removeAll(
+              comic.getFileEntries().stream()
+                  .filter(entry -> entry.isTouched() == false)
+                  .collect(Collectors.toList()));
     } finally {
       // clean up
       if (archiveReference != null) {
@@ -236,11 +246,22 @@ public abstract class AbstractArchiveAdaptor<I> implements ArchiveAdaptor, Initi
   }
 
   private void recordFileEntry(Comic comic, String filename, byte[] content) {
-    log.trace("Adding file entry");
-    comic.addFileEntry(
-        filename,
-        content.length,
-        this.fileTypeAdaptor.basetypeFor(new ByteArrayInputStream(content)));
+    final String fileType = this.fileTypeAdaptor.basetypeFor(new ByteArrayInputStream(content));
+    final Optional<ComicFileEntry> entry =
+        comic.getFileEntries().stream()
+            .filter(comicFileEntry -> comicFileEntry.getFileName().equals(filename))
+            .findFirst();
+    if (entry.isPresent()) {
+      log.trace("Updating file entry");
+      entry.get().setFileSize(content.length);
+      entry.get().setFileType(fileType);
+      entry.get().setTouched(true);
+    } else {
+      log.trace("Adding file entry");
+      final ComicFileEntry newEntry = new ComicFileEntry(comic, filename, content.length, fileType);
+      newEntry.setTouched(true);
+      comic.getFileEntries().add(newEntry);
+    }
   }
 
   @Override

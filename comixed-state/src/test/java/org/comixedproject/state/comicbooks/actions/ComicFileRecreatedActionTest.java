@@ -19,6 +19,7 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicFileEntry;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -40,7 +41,7 @@ public class ComicFileRecreatedActionTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private Comic comic;
-  @Mock private List<ComicFileEntry> fileEntryList;
+  @Mock private Set<ComicFileEntry> fileEntrySet;
   @Mock private List<Page> pageList;
 
   @Before
@@ -52,14 +53,14 @@ public class ComicFileRecreatedActionTest {
 
   @Test
   public void testExecute() {
-    Mockito.when(comic.getFileEntries()).thenReturn(fileEntryList);
+    Mockito.when(comic.getFileEntries()).thenReturn(fileEntrySet);
     Mockito.when(comic.getPages()).thenReturn(pageList);
 
     action.execute(context);
 
     Mockito.verify(comic, Mockito.times(1)).setRecreating(false);
     Mockito.verify(comic, Mockito.times(1)).setFileDetails(null);
-    Mockito.verify(fileEntryList, Mockito.times(1)).clear();
+    Mockito.verify(fileEntrySet, Mockito.times(1)).clear();
     Mockito.verify(pageList, Mockito.times(1)).clear();
     Mockito.verify(comic, Mockito.times(1)).setFileContentsLoaded(false);
     Mockito.verify(comic, Mockito.times(1)).setBlockedPagesMarked(false);

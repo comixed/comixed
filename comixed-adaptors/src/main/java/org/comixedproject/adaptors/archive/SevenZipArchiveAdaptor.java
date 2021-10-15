@@ -182,7 +182,9 @@ public class SevenZipArchiveAdaptor extends AbstractArchiveAdaptor<SevenZFile> {
         String pagename =
             renamePages ? this.getFilenameForEntry(page.getFilename(), index) : page.getFilename();
         final byte[] content = sourceArchiveAdaptor.loadSingleFile(source, page.getFilename());
-        this.addFileToArchive(sevenzcomic, pagename, content);
+        if (content != null) {
+          this.addFileToArchive(sevenzcomic, pagename, content);
+        }
       }
     } catch (IOException | EntryLoaderException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);
