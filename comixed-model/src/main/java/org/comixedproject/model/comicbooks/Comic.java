@@ -97,7 +97,7 @@ public class Comic {
   @OrderColumn(name = "FileNumber")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
-  private List<ComicFileEntry> fileEntries = new ArrayList<>();
+  private Set<ComicFileEntry> fileEntries = new HashSet<>();
 
   @Column(name = "ComicState", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
@@ -394,41 +394,6 @@ public class Comic {
   @JsonIgnore
   @Getter
   private List<LastRead> lastReads = new ArrayList<>();
-
-  /**
-   * Adds a file entry, or replaces one if it already exists.
-   *
-   * @param name the entry filename
-   * @param size the entry size
-   * @param type the entry MIME type
-   */
-  public void addFileEntry(final String name, final int size, final String type) {
-    int index = this.fileEntries.size();
-    boolean replacement = false;
-    for (int idx = 0; idx < this.fileEntries.size(); idx++) {
-      if (this.fileEntries.get(idx).getFileName().equals(name)) {
-        index = idx;
-        replacement = true;
-        break;
-      }
-    }
-
-    if (replacement) {
-      log.trace("Updating existing file entry: [{}] {}", index, name);
-      final ComicFileEntry existing = fileEntries.get(index);
-      existing.setFileSize(size);
-      existing.setFileType(type);
-    } else {
-      log.trace("Adding new file entry: [{}] {}", index, name);
-      final ComicFileEntry fileEntry = new ComicFileEntry();
-      fileEntry.setFileName(name);
-      fileEntry.setFileSize(size);
-      fileEntry.setFileType(type);
-      fileEntry.setFileNumber(index);
-      this.fileEntries.add(fileEntry);
-      fileEntry.setComic(this);
-    }
-  }
 
   /**
    * Returns just the filename without the path.
