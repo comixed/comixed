@@ -168,12 +168,14 @@ public class ZipArchiveAdaptor extends AbstractArchiveAdaptor<ZipFile> {
         String pagename =
             renamePages ? getFilenameForEntry(page.getFilename(), index) : page.getFilename();
         content = sourceArchiveAdaptor.loadSingleFile(source, page.getFilename());
-        log.trace("Adding entry: " + pagename + " size=" + content.length);
-        entry = new ZipArchiveEntry(pagename);
-        entry.setSize(content.length);
-        zoutput.putArchiveEntry(entry);
-        zoutput.write(content);
-        zoutput.closeArchiveEntry();
+        if (content != null) {
+          log.trace("Adding entry: " + pagename + " size=" + content.length);
+          entry = new ZipArchiveEntry(pagename);
+          entry.setSize(content.length);
+          zoutput.putArchiveEntry(entry);
+          zoutput.write(content);
+          zoutput.closeArchiveEntry();
+        }
       }
     } catch (IOException | ArchiveException | EntryLoaderException error) {
       throw new ArchiveAdaptorException("error creating comic archive", error);

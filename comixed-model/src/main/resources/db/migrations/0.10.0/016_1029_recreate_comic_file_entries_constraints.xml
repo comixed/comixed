@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="016_1029_recreate_comic_file_entries_constraints.xml"
+             author="mcpierce">
+
+    <renameTable oldTableName="ComicFileEntries"
+                 newTableName="OldComicFileEntries"/>
+
+    <createTable tableName="ComicFileEntries">
+      <column name="id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="ComicId"
+              type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="FileName"
+              type="varchar(1024)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="FileSize"
+              type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="FileType"
+              type="varchar(256)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="ComicFileEntries"
+                      columnName="Id"
+                      columnDataType="bigint"
+                      startWith="1"/>
+
+    <addForeignKeyConstraint baseTableName="ComicFileEntries"
+                             baseColumnNames="ComicId"
+                             constraintName="ComicFileEntryComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+
+    <addUniqueConstraint tableName="ComicFileEntries"
+                         columnNames="ComicId,FileName"
+                         constraintName="ComicFileEntryUniqueComicFilename"/>
+
+    <sql>INSERT INTO ComicFileEntries(ComicId, Filename, FileSize, FileType)
+         SELECT ComicId, Filename, FileSize, FileType
+         FROM OldComicFileEntries;</sql>
+
+    <dropTable tableName="OldComicFileEntries"/>
+
+  </changeSet>
+</databaseChangeLog>
