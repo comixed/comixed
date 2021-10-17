@@ -66,6 +66,7 @@
     },
     "placeholder": {
       "api-key": "La clave de API utilizada al raspar cómics...",
+      "comicvine-id": "######",
       "issue-number": "El número de emisión...",
       "publisher": "El editor...",
       "scraping-filter": "Filter volumes",

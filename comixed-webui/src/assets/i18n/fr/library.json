@@ -178,7 +178,8 @@
       "reject-scraping-issue": "Rejeter ce numéro.",
       "select-scraping-issue": "Sélectionner ce numéro.",
       "show-comic-details": "Afficher les détails",
-      "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération."
+      "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération.",
+      "use-comicvine-id": "Scrape using the ComicVine id."
     },
     "volume-list": {
       "issue-count-header": "# Numéros",

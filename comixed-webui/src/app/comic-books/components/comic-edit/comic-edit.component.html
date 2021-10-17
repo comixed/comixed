@@ -34,18 +34,33 @@
     <mat-icon>undo</mat-icon>
   </button>
   <div class="cx-spacer"></div>
-  <mat-select
-    id="maximum-records-select"
-    [(value)]="maximumRecords"
-    (selectionChange)="onMaximumRecordsChanged($event.value)"
-  >
-    <mat-option
-      *ngFor="let option of maximumRecordsOptions"
-      [value]="option.value"
+  <mat-form-field appearance="fill">
+    <mat-select
+      id="maximum-records-select"
+      [(value)]="maximumRecords"
+      (selectionChange)="onMaximumRecordsChanged($event.value)"
     >
-      {{ option.label | translate }}
-    </mat-option>
-  </mat-select>
+      <mat-option
+        *ngFor="let option of maximumRecordsOptions"
+        [value]="option.value"
+      >
+        {{ option.label | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button
+    id="scrape-with-comicvine-id-button"
+    mat-icon-button
+    color="primary"
+    [disabled]="
+      (this.comicForm.controls.comicVineId.value || '').length === 0 ||
+      !this.comicForm.controls.comicVineId.valid
+    "
+    [matTooltip]="'scraping.tooltip.use-comicvine-id' | translate"
+    (click)="onScrapeUsingComicVineId()"
+  >
+    <mat-icon>download_for_offline</mat-icon>
+  </button>
   <button
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
@@ -68,7 +83,7 @@
     [disabled]="!comicForm.valid || !hasApiKey"
     (click)="onFetchScrapingVolumes()"
   >
-    <mat-icon>cloud_circle</mat-icon>
+    <mat-icon>find_replace</mat-icon>
   </button>
 </mat-toolbar>
 <form *ngIf="!!comic" [formGroup]="comicForm">
@@ -163,7 +178,6 @@
       matInput
       formControlName="comicVineId"
       [placeholder]="'comic-book.placeholder.comicvine-id' | translate"
-      readonly
     />
     <mat-hint>
       {{ "comic-book.hint.useful-for-scraping" | translate }}

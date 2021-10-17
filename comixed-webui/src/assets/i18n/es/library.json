@@ -178,7 +178,8 @@
       "reject-scraping-issue": "Rechazar este problema.",
       "select-scraping-issue": "Seleccione este problema.",
       "show-comic-details": "Mostrar detalles",
-      "skip-cache": "Raspado será {enabled, select, true{skip} other{use}} la caché de raspado."
+      "skip-cache": "Raspado será {enabled, select, true{skip} other{use}} la caché de raspado.",
+      "use-comicvine-id": "Scrape using the ComicVine id."
     },
     "volume-list": {
       "issue-count-header": "# de ediciones",

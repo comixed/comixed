@@ -49,6 +49,7 @@ import {
 } from '@app/comic-files/actions/scrape-metadata.actions';
 import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-metadata.selectors';
 import { filter } from 'rxjs/operators';
+import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -87,7 +88,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       series: ['', [Validators.required]],
       volume: [''],
       issueNumber: ['', [Validators.required]],
-      comicVineId: ['', [Validators.pattern('[0-9]+')]],
+      comicVineId: ['', [Validators.pattern('[0-9]{6}')]],
       imprint: [''],
       sortName: [''],
       title: [''],
@@ -261,6 +262,29 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.store.dispatch(scrapeMetadataFromFilename({ filename }));
   }
 
+  onScrapeUsingComicVineId(): void {
+    this.logger.trace('Confirming scraping the issue');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'scraping.scrape-comic-confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'scraping.scrape-comic-confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Scraping issue using ComicVine ID');
+        this.store.dispatch(
+          scrapeComic({
+            apiKey: this.apiKey,
+            issueId: parseInt(this.comic.comicVineId, 10),
+            comic: this.comic,
+            skipCache: this.skipCache
+          })
+        );
+      }
+    });
+  }
+
   private encodeForm(): Comic {
     this.logger.trace('Encoding comic');
     return {
@@ -272,7 +296,8 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       imprint: this.comicForm.controls.imprint.value,
       sortName: this.comicForm.controls.sortName.value,
       title: this.comicForm.controls.title.value,
-      description: this.comicForm.controls.description.value
+      description: this.comicForm.controls.description.value,
+      comicVineId: this.comicForm.controls.comicVineId.value
     } as Comic;
   }
 }
