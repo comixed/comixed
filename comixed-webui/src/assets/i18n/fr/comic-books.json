@@ -68,6 +68,7 @@
       "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
       "issue-number": "Le numéro de cette Bande Dessinée...",
       "publisher": "L'éditeur...",
+      "scraping-filter": "Filter volumes",
       "series": "Le nom de la série...",
       "volume": "Le volume..."
     },
@@ -82,6 +83,7 @@
       "comicvine-issue-link": "Page de détails de ComicVine",
       "file-entries": "Il y a {count, plural, =1{un fichier} other{# fichiers}} dans cette archive.",
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
+      "no-matching-volumes": "No matching volumes were found...",
       "state-ADDED": "Non modifié",
       "state-CHANGED": "Modifié",
       "state-REMOVED": "Removed",

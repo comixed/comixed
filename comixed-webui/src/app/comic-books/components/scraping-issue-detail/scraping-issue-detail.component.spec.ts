@@ -28,8 +28,8 @@ import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic
 import { MatIconModule } from '@angular/material/icon';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
-  USER_FEATURE_KEY,
-  initialState as initialUserState
+  initialState as initialUserState,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -65,31 +65,10 @@ describe('ScrapingIssueDetailComponent', () => {
     fixture = TestBed.createComponent(ScrapingIssueDetailComponent);
     component = fixture.componentInstance;
     component.issue = SCRAPING_ISSUE;
-    spyOn(component.decision, 'emit');
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('selecting the issue', () => {
-    beforeEach(() => {
-      component.onSelect();
-    });
-
-    it('emits an event', () => {
-      expect(component.decision.emit).toHaveBeenCalledWith(true);
-    });
-  });
-
-  describe('rejecting the issue', () => {
-    beforeEach(() => {
-      component.onReject();
-    });
-
-    it('emits an event', () => {
-      expect(component.decision.emit).toHaveBeenCalledWith(false);
-    });
   });
 });

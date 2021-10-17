@@ -24,7 +24,7 @@ export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
     { prefix: './assets/i18n/', suffix: '/admin.json' },
     { prefix: './assets/i18n/', suffix: '/app.json' },
     { prefix: './assets/i18n/', suffix: '/collections.json' },
-    { prefix: './assets/i18n/', suffix: '/comic-book.json' },
+    { prefix: './assets/i18n/', suffix: '/comic-books.json' },
     { prefix: './assets/i18n/', suffix: '/comic-files.json' },
     { prefix: './assets/i18n/', suffix: '/comic-pages.json' },
     { prefix: './assets/i18n/', suffix: '/core.json' },

@@ -49,6 +49,8 @@
       "scan-type": "Scan Type",
       "scraping-notes": "Scraping Notes",
       "series": "Series Name",
+      "show-next-comic-page": "Go to next page...",
+      "show-previous-comic-page": "Go to previous page...",
       "sort-name": "Sort Name",
       "stories": "Story Arcs In This Issue ({count})",
       "teams": "Teams In This Issue ({count})",
@@ -68,6 +70,7 @@
       "api-key": "The API key used when scraping comics...",
       "issue-number": "The issue number...",
       "publisher": "The publisher...",
+      "scraping-filter": "Filter volumes",
       "series": "The series name...",
       "volume": "The volume..."
     },
@@ -82,6 +85,7 @@
       "comicvine-issue-link": "ComicVine Details Page",
       "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
+      "no-matching-volumes": "No matching volumes were found...",
       "state-ADDED": "Unchanged",
       "state-CHANGED": "Changed",
       "state-DELETED": "Marked For Deletion",
@@ -104,8 +108,6 @@
       "save-changes": "Saves changes to this comic.",
       "scrape-comic": "Scrape this comic.",
       "scrape-filename": "Scrape the filename.",
-      "show-next-comic-page": "Go to next page...",
-      "show-previous-comic-page": "Go to previous page...",
       "undelete-comic": "Unmark comic as deleted.",
       "undo-changes": "Undo changes to this comic.",
       "update-comic-info": "Update comic file metadata."

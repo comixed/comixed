@@ -68,6 +68,7 @@
       "api-key": "La clave de API utilizada al raspar cómics...",
       "issue-number": "El número de emisión...",
       "publisher": "El editor...",
+      "scraping-filter": "Filter volumes",
       "series": "El nombre de la serie...",
       "volume": "El volumen..."
     },
@@ -82,6 +83,7 @@
       "comicvine-issue-link": "ComicVine Details Page",
       "file-entries": "Hay {count, plural, =1{is one file} other{are # files}} en este archivo.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
+      "no-matching-volumes": "No matching volumes were found...",
       "state-ADDED": "Igual",
       "state-CHANGED": "Cambiado",
       "state-DELETED": "Marcado para la eliminación",

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ScrapingIssue } from '@app/comic-books/models/scraping-issue';
 import { LoggerService } from '@angular-ru/logger';
 
@@ -28,19 +28,7 @@ import { LoggerService } from '@angular-ru/logger';
 export class ScrapingIssueDetailComponent implements OnInit {
   @Input() issue: ScrapingIssue;
 
-  @Output() decision = new EventEmitter<boolean>();
-
   constructor(private logger: LoggerService) {}
 
   ngOnInit(): void {}
-
-  onSelect(): void {
-    this.logger.trace('Selecting scraping issue');
-    this.decision.emit(true);
-  }
-
-  onReject(): void {
-    this.logger.trace('Rejecting scraping issue');
-    this.decision.emit(false);
-  }
 }

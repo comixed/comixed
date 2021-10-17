@@ -68,6 +68,7 @@
       "api-key": "The API key used when scraping comics...",
       "issue-number": "The issue number...",
       "publisher": "The publisher...",
+      "scraping-filter": "Filter volumes",
       "series": "The series name...",
       "volume": "The volume..."
     },
@@ -82,6 +83,7 @@
       "comicvine-issue-link": "ComicVine Details Page",
       "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
+      "no-matching-volumes": "No matching volumes were found...",
       "state-ADDED": "Unchanged",
       "state-CHANGED": "Changed",
       "state-DELETED": "Marked For Deletion",
