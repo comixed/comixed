@@ -56,6 +56,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ScrapingIssueDetailComponent } from '@app/comic-books/components/scraping-issue-detail/scraping-issue-detail.component';
+import { MatInputModule } from '@angular/material/input';
 
 describe('ComicScrapingComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -90,7 +91,8 @@ describe('ComicScrapingComponent', () => {
         MatIconModule,
         MatFormFieldModule,
         MatPaginatorModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatInputModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -305,6 +307,40 @@ describe('ComicScrapingComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(resetScraping());
+    });
+  });
+
+  describe('filtering', () => {
+    const VOLUME = {
+      item: SCRAPING_VOLUME,
+      sortOrder: 1
+    } as SortableListItem<ScrapingVolume>;
+
+    it('can handle null values', () => {
+      expect(
+        component.dataSource.filterPredicate(
+          { item: { ...SCRAPING_VOLUME, name: null }, sortOrder: 1 },
+          VOLUME.item.name
+        )
+      ).toBeFalse();
+    });
+
+    it('can filter by name', () => {
+      expect(
+        component.dataSource.filterPredicate(VOLUME, VOLUME.item.name)
+      ).toBeTrue();
+    });
+
+    it('can filter by publisher', () => {
+      expect(
+        component.dataSource.filterPredicate(VOLUME, VOLUME.item.publisher)
+      ).toBeTrue();
+    });
+
+    it('can filter by starting year', () => {
+      expect(
+        component.dataSource.filterPredicate(VOLUME, VOLUME.item.startYear)
+      ).toBeTrue();
     });
   });
 });

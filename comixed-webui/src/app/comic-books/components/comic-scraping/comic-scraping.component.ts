@@ -91,7 +91,8 @@ export class ComicScrapingComponent
     'publisher',
     'name',
     'startYear',
-    'issueCount'
+    'issueCount',
+    'action'
   ];
 
   constructor(
@@ -143,7 +144,9 @@ export class ComicScrapingComponent
   }
 
   ngAfterViewInit(): void {
+    this.logger.trace('Setting up pagination');
     this.dataSource.paginator = this.paginator;
+    this.logger.trace('Setting up sorting');
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (element, property) => {
       switch (property) {
@@ -152,6 +155,14 @@ export class ComicScrapingComponent
         default:
           return element.item[property];
       }
+    };
+    this.logger.trace('Setting up filtering');
+    this.dataSource.filterPredicate = (data, filter) => {
+      return (
+        this.matchesFilter(data.item.name, filter) ||
+        this.matchesFilter(data.item.publisher, filter) ||
+        this.matchesFilter(data.item.startYear, filter)
+      );
     };
   }
 
@@ -210,5 +221,13 @@ export class ComicScrapingComponent
   onCancelScraping(): void {
     this.logger.trace('Canceling scraping');
     this.store.dispatch(resetScraping());
+  }
+
+  private matchesFilter(value: string, filter: string): boolean {
+    console.log('Looking for', filter, ' in', value);
+    return (
+      (value || '').toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !==
+      -1
+    );
   }
 }

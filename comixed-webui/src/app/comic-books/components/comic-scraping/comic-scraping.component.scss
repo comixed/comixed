@@ -33,3 +33,9 @@
   max-width: $cx-column-medium;
   resize: none;
 }
+
+.mat-column-action {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
