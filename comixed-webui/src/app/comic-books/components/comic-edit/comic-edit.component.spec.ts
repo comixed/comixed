@@ -53,6 +53,7 @@ import {
   SCRAPE_METADATA_FEATURE_KEY
 } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
+import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -309,6 +310,31 @@ describe('ComicEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         scrapeMetadataFromFilename({ filename: COMIC.baseFilename })
+      );
+    });
+  });
+
+  describe('scraping a comic using the ComicVine id', () => {
+    beforeEach(() => {
+      component.comic = COMIC;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onScrapeUsingComicVineId();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        scrapeComic({
+          apiKey: API_KEY,
+          issueId: parseInt(COMIC.comicVineId, 10),
+          comic: COMIC,
+          skipCache: SKIP_CACHE
+        })
       );
     });
   });

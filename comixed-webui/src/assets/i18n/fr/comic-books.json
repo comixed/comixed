@@ -66,6 +66,7 @@
     },
     "placeholder": {
       "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
+      "comicvine-id": "######",
       "issue-number": "Le numéro de cette Bande Dessinée...",
       "publisher": "L'éditeur...",
       "scraping-filter": "Filter volumes",

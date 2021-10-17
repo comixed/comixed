@@ -68,6 +68,7 @@
     },
     "placeholder": {
       "api-key": "The API key used when scraping comics...",
+      "comicvine-id": "######",
       "issue-number": "The issue number...",
       "publisher": "The publisher...",
       "scraping-filter": "Filter volumes",
