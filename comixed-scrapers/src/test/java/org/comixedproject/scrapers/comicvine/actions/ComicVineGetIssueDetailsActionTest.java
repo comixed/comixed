@@ -58,7 +58,7 @@ public class ComicVineGetIssueDetailsActionTest {
   private static final String TEST_STORY_NAME = "Story Name";
   private static final String TEST_CREDIT_NAME = "Credit Name";
   private static final String TEST_CREDIT_ROLE = "Credit Role";
-  private static final String TEST_COMIC_VINE_ISSUE_ID = "71765";
+  private static final Integer TEST_COMIC_VINE_ISSUE_ID = 71765;
 
   @InjectMocks private ComicVineGetIssueDetailsAction scrapeComicAction;
   @Mock private ObjectFactory<ComicVineGetIssueWithDetailsAction> issueDetailsActionObjectFactory;
@@ -193,7 +193,7 @@ public class ComicVineGetIssueDetailsActionTest {
     this.verifyGetVolumeDetailsAction();
     this.verifyGetPublisherDetailsAction();
 
-    assertEquals(String.valueOf(TEST_COMIC_VINE_ISSUE_ID), result.getSourceId());
+    assertEquals(TEST_COMIC_VINE_ISSUE_ID, result.getSourceId());
     assertEquals(TEST_PUBLISHER_NAME, result.getPublisher());
     assertEquals(TEST_VOLUME_NAME, result.getSeries());
     assertEquals(TEST_START_YEAR, result.getVolume());

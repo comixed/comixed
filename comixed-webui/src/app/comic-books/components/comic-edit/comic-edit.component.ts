@@ -276,7 +276,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.store.dispatch(
           scrapeComic({
             apiKey: this.apiKey,
-            issueId: parseInt(this.comic.comicVineId, 10),
+            issueId: this.comic.comicVineId,
             comic: this.comic,
             skipCache: this.skipCache
           })

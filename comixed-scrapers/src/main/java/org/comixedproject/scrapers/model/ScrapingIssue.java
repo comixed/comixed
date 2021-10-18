@@ -33,7 +33,7 @@ public class ScrapingIssue {
   @JsonProperty(value = "id")
   @Getter
   @Setter
-  private String id;
+  private Integer id;
 
   @JsonProperty(value = "coverDate")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)

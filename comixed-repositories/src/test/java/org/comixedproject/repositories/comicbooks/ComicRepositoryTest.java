@@ -56,7 +56,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 })
 public class ComicRepositoryTest {
   private static final String TEST_COMIC_SORT_NAME = "My First Comic";
-  private static final String TEST_COMIC_VINE_ID = "ABCDEFG";
+  private static final Integer TEST_COMIC_VINE_ID = 1234;
   private static final long TEST_COMIC_ID = 1000L;
   private static final long TEST_COMIC_ID_WITH_BLOCKED_PAGES = 1001L;
   private static final Long TEST_COMIC_ID_WITH_DELETED_PAGES = 1002L;
@@ -139,13 +139,12 @@ public class ComicRepositoryTest {
 
   @Test
   public void testComicVineIdIsUpdatable() {
-    String id = comic.getComicVineId().substring(1);
-    comic.setComicVineId(id);
+    comic.setComicVineId(comic.getComicVineId() + 1);
     repository.save(comic);
 
     Comic result = repository.findById(comic.getId()).get();
 
-    assertEquals(id, result.getComicVineId());
+    assertEquals(comic.getComicVineId(), result.getComicVineId());
   }
 
   @Test

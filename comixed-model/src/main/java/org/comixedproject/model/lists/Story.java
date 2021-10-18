@@ -54,12 +54,12 @@ public class Story {
   @NonNull
   private String name;
 
-  @Column(name = "ComicVineId", length = 16, nullable = true, updatable = true, unique = true)
+  @Column(name = "ComicVineId", nullable = true, updatable = true, unique = true)
   @JsonProperty("comicVineId")
   @JsonView(View.StoryList.class)
   @Getter
   @Setter
-  private String comicVineId;
+  private Integer comicVineId;
 
   @Column(name = "StoryState", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)

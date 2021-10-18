@@ -368,12 +368,12 @@ public class Comic {
   @Setter
   private Date lastModifiedOn = new Date();
 
-  @Column(name = "ComicVineId", length = 16)
+  @Column(name = "ComicVineId")
   @JsonProperty("comicVineId")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
-  private String comicVineId;
+  private Integer comicVineId;
 
   @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")

@@ -55,7 +55,7 @@ public class ComicServiceTest {
   private static final String TEST_SERIES = "Series Name";
   private static final String TEST_VOLUME = "Volume Name";
   private static final String TEST_ISSUE_NUMBER = "237";
-  private static final String TEST_COMIC_VINE_ID = "2345";
+  private static final Integer TEST_COMIC_VINE_ID = 2345;
   private static final int TEST_MAXIMUM_COMICS = 100;
   private static final String TEST_PREVIOUS_ISSUE_NUMBER = "5";
   private static final String TEST_CURRENT_ISSUE_NUMBER = "7";

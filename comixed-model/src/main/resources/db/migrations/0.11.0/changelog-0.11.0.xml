@@ -12,5 +12,6 @@
   <include file="/db/migrations/0.11.0/004_44_added_story_details.xml"/>
   <include file="/db/migrations/0.11.0/005_866_expand_comic_notes_column.xml"/>
   <include file="/db/migrations/0.11.0/006_801_rename_scraping_rules_table.xml"/>
+  <include file="/db/migrations/0.11.0/007_1046_make_comicvineid_a_number.xml"/>
 
 </databaseChangeLog>

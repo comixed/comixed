@@ -240,13 +240,13 @@ describe('LibraryPageComponent', () => {
       ...COMIC_1,
       lastRead: null,
       deletedDate: null,
-      comicVineId: '54321'
+      comicVineId: 54321
     };
     const DELETED = {
       ...COMIC_3,
       lastRead: new Date().getTime(),
       deletedDate: new Date().getTime(),
-      comicVineId: '12345'
+      comicVineId: 12345
     };
     const UNSCRAPED = {
       ...COMIC_1,

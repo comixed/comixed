@@ -32,7 +32,7 @@ import lombok.Getter;
 public class ComicVineIssue {
   @JsonProperty("id")
   @Getter
-  private String id;
+  private Integer id;
 
   @JsonProperty("volume")
   @Getter

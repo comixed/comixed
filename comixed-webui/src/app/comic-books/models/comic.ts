@@ -45,7 +45,7 @@ export interface Comic {
   sortableIssueNumber: string;
   sortName: string;
   imprint: string;
-  comicVineId: string;
+  comicVineId: number;
   pageCount: number;
   characters: string[];
   teams: string[];
