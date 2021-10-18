@@ -62,7 +62,7 @@ public class ScrapingServiceTest {
   private static final String TEST_TITLE = "The Title";
   private static final String TEST_DESCRIPTION = "This is the comic's description";
   private static final String TEST_ISSUE_DETAILS_KEY = "IssueDetailsKey";
-  private static final String TEST_SOURCE_ID = "71765";
+  private static final Integer TEST_SOURCE_ID = 71765;
 
   @InjectMocks private ScrapingService scrapingService;
   @Mock private ScrapingCacheService scrapingCacheService;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="007_1046_make_comicvineid_a_number.xml"
+             author="mcpierce">
+
+    <modifyDataType tableName="Comics"
+                    columnName="ComicVineId"
+                    newDataType="int"/>
+    <createIndex tableName="Comics"
+                 indexName="ComicComicVineIdIdx">
+      <column name="ComicVineId"/>
+    </createIndex>
+
+    <modifyDataType tableName="Stories"
+                    columnName="ComicVineId"
+                    newDataType="int"/>
+    <createIndex tableName="Stories"
+                 indexName="StoryComicVineIdIdx">
+      <column name="ComicVineId"/>
+    </createIndex>
+
+    <modifyDataType tableName="StoryEntries"
+                    columnName="ComicVineId"
+                    newDataType="int"/>
+    <createIndex tableName="StoryEntries"
+                 indexName="StoryEntryComicVineIdIdx">
+      <column name="ComicVineId"/>
+    </createIndex>
+
+    <!-- technical debt -->
+    <dropIndex tableName="Comics"
+               indexName="idx_added_date"/>
+
+    <dropIndex tableName="Comics"
+               indexName="idx_last_updated_date"/>
+    <createIndex tableName="Comics"
+                 indexName="ComicLastModifiedOnIdx">
+      <column name="LastModifiedOn"/>
+    </createIndex>
+
+    <dropIndex tableName="Comics"
+               indexName="idx_comics_deleted_date"/>
+
+  </changeSet>
+</databaseChangeLog>

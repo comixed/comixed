@@ -331,7 +331,7 @@ describe('ComicEditComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         scrapeComic({
           apiKey: API_KEY,
-          issueId: parseInt(COMIC.comicVineId, 10),
+          issueId: COMIC.comicVineId,
           comic: COMIC,
           skipCache: SKIP_CACHE
         })

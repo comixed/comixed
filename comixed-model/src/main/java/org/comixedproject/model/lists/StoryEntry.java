@@ -92,12 +92,12 @@ public class StoryEntry {
   @Setter
   private Comic comic;
 
-  @Column(name = "ComicVineId", length = 16, nullable = true, updatable = true, unique = true)
+  @Column(name = "ComicVineId", nullable = true, updatable = true, unique = true)
   @JsonProperty("comicVineId")
   @JsonView(View.StoryList.class)
   @Getter
   @Setter
-  private String comicVineId;
+  private Integer comicVineId;
 
   @Override
   public boolean equals(final Object o) {
