@@ -74,7 +74,6 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private dialog: MatDialog,
     private titleService: TitleService
   ) {
     this.translateSubscription = this.translateService.onLangChange.subscribe(
@@ -128,18 +127,6 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
     this.comicFileListStateSubscription.unsubscribe();
     this.sendComicFilesStateSubscription.unsubscribe();
     this.comicImportStateSubscription.unsubscribe();
-  }
-
-  onCurrentFile(file: ComicFile): void {
-    this.logger.debug('Showing details for file:', file);
-    if (!!file) {
-      this.dialog.open(ComicFileDetailsComponent, {
-        data: {
-          file,
-          pageSize: this.pageSize
-        } as ComicFileDetailsData
-      });
-    }
   }
 
   onStartImport(): void {

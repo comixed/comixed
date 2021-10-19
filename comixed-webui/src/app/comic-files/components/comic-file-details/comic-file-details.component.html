@@ -1,12 +1,21 @@
-<mat-card *ngIf="file" [style.width]="cardWidth">
+<mat-card *ngIf="file" class="cx-width-100">
   <mat-card-title class="cx-text-nowrap" [matTooltip]="file.baseFilename">
     {{ file.baseFilename }}
   </mat-card-title>
   <mat-card-content>
-    <cx-comic-page
-      [imageUrl]="file | comicFileCoverUrl"
-      [pageSize]="pageSize"
-    ></cx-comic-page>
+    <p>selected: {{ selected }}</p>
+    <div
+      class="cx-detail-card cx-padding-2 cx-margin-2"
+      [class.cx-detail-card-selected]="selected"
+    >
+      <img
+        [src]="file | comicFileCoverUrl"
+        [alt]="file | comicFileCoverUrl"
+        [style.width]="'100%'"
+        [style.height]="'auto'"
+        (click)="onSelectFile()"
+      />
+    </div>
   </mat-card-content>
   <mat-card-footer>
     <div class="cx-width-100 cx-text-nowrap">
@@ -16,43 +25,4 @@
       }}
     </div>
   </mat-card-footer>
-  <mat-card-actions>
-    <div class="cx-align-content-center">
-      <button
-        id="previous-comic-file-button"
-        mat-icon-button
-        color="accent"
-        [disabled]="noPreviousFile"
-        (click)="onPreviousFile()"
-      >
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <button
-        *ngIf="selected"
-        mat-icon-button
-        color="warn"
-        (click)="onSelectFile(false)"
-      >
-        <mat-icon>remove</mat-icon>
-      </button>
-      <button
-        id="select-comic-file-button"
-        *ngIf="!selected"
-        mat-icon-button
-        color="primary"
-        (click)="onSelectFile(true)"
-      >
-        <mat-icon>add_box</mat-icon>
-      </button>
-      <button
-        id="next-comic-file-button"
-        mat-icon-button
-        color="accent"
-        [disabled]="noNextFile"
-        (click)="onNextFile()"
-      >
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-    </div>
-  </mat-card-actions>
 </mat-card>

@@ -283,6 +283,17 @@ th {
   display: inline-block;
 }
 
+.cx-detail-card-selected {
+  filter: sepia(100%) !important;
+  background-color: $cx-selected-comic-background-color !important;
+  color: $cx-selected-comic-color;
+}
+
+.cx-detail-card-blurred {
+  filter: grayscale(75%);
+  filter: blur(3px);
+}
+
 // flexible containers
 
 .cx-horizontal-container {

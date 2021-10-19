@@ -12,17 +12,6 @@
   color: var(--text-primary-lighter-color);
 }
 
-.comic-detail-card-blurred {
-  filter: grayscale(75%);
-  filter: blur(3px);
-}
-
-.comic-detail-card-selected {
-  filter: sepia(100%) !important;
-  background-color: $cx-selected-comic-background-color !important;
-  color: $cx-selected-comic-color;
-}
-
 .comic-detail-card-busy-indicator {
   position: absolute;
   top: 50%;

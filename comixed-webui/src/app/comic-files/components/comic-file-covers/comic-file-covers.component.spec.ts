@@ -17,34 +17,38 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicFileDetailsComponent } from './comic-file-details.component';
+import { ComicFileCoversComponent } from './comic-file-covers.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
-  COMIC_FILE_3
+  COMIC_FILE_3,
+  COMIC_FILE_4
 } from '@app/comic-files/comic-file.fixtures';
-import { setComicFilesSelectedState } from '@app/comic-files/actions/comic-file-list.actions';
-import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
+import {
+  COMIC_IMPORT_FEATURE_KEY,
+  initialState as initialComicImportState
+} from '@app/comic-files/reducers/comic-import.reducer';
+import { TranslateModule } from '@ngx-translate/core';
 
-describe('ComicFileDetailsComponent', () => {
-  const FILE = COMIC_FILE_2;
-  const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
-  const initialState = {};
+describe('ComicFileCoversComponent', () => {
+  const initialState = { [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState };
+  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+  const FILE = COMIC_FILE_4;
 
-  let component: ComicFileDetailsComponent;
-  let fixture: ComponentFixture<ComicFileDetailsComponent>;
+  let component: ComicFileCoversComponent;
+  let fixture: ComponentFixture<ComicFileCoversComponent>;
   let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [LoggerModule.forRoot()],
-      declarations: [ComicFileDetailsComponent, ComicPageComponent],
+      declarations: [ComicFileCoversComponent],
+      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicFileDetailsComponent);
+    fixture = TestBed.createComponent(ComicFileCoversComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
@@ -55,35 +59,21 @@ describe('ComicFileDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('toggling selection', () => {
+  describe('checking a selection', () => {
+    const SELECTED_FILE = FILES[1];
+    const NOT_SELECTED_FILE = FILES[2];
+
     beforeEach(() => {
-      component.file = FILE;
+      component.files = FILES;
+      component.selectedFiles = [SELECTED_FILE];
     });
 
-    describe('selecting the comic', () => {
-      beforeEach(() => {
-        component.selected = false;
-        component.onSelectFile();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setComicFilesSelectedState({ files: [FILE], selected: true })
-        );
-      });
+    it('returns true for an selected file', () => {
+      expect(component.isFileSelected(SELECTED_FILE)).toBeTrue();
     });
 
-    describe('deselecting the comic', () => {
-      beforeEach(() => {
-        component.selected = true;
-        component.onSelectFile();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          setComicFilesSelectedState({ files: [FILE], selected: false })
-        );
-      });
+    it('returns false for an unselected file', () => {
+      expect(component.isFileSelected(NOT_SELECTED_FILE)).toBeFalse();
     });
   });
 });

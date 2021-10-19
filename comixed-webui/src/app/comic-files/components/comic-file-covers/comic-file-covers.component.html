@@ -1,0 +1,14 @@
+<div class="cx-detail-card-container">
+  <div
+    *ngFor="let file of files"
+    fxFlex.gt-lg="10%"
+    fxFlex.lg="20%"
+    fxFlex.md="50%"
+    fxFlex.lt-md="100%"
+  >
+    <cx-comic-file-details
+      [file]="file"
+      [selected]="isFileSelected(file)"
+    ></cx-comic-file-details>
+  </div>
+</div>

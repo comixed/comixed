@@ -16,36 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { setComicFilesSelectedState } from '@app/comic-files/actions/comic-file-list.actions';
-
-export const CARD_WIDTH_PADDING = 20;
 
 @Component({
-  selector: 'cx-comic-file-details',
-  templateUrl: './comic-file-details.component.html',
-  styleUrls: ['./comic-file-details.component.scss']
+  selector: 'cx-comic-file-covers',
+  templateUrl: './comic-file-covers.component.html',
+  styleUrls: ['./comic-file-covers.component.scss']
 })
-export class ComicFileDetailsComponent implements OnInit, OnDestroy {
-  @Input()
-  file: ComicFile;
-  @Input()
-  selected = false;
+export class ComicFileCoversComponent implements OnInit {
+  @Input() files: ComicFile[] = [];
+  @Input() selectedFiles: ComicFile[] = [];
 
   constructor(private logger: LoggerService, private store: Store<any>) {}
 
   ngOnInit(): void {}
 
-  ngOnDestroy(): void {}
-
-  onSelectFile(): void {
-    const selected = this.selected === false;
-    this.logger.debug('Toggling selected:', selected);
-    this.store.dispatch(
-      setComicFilesSelectedState({ files: [this.file], selected })
-    );
+  isFileSelected(file: ComicFile): boolean {
+    return this.selectedFiles.includes(file);
   }
 }
