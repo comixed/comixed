@@ -46,7 +46,7 @@ import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { User } from '@app/user/models/user';
 import { MatIconModule } from '@angular/material/icon';
 import { ComicFileToolbarComponent } from '@app/comic-files/components/comic-file-toolbar/comic-file-toolbar.component';
-import { ComicFileListComponent } from '@app/comic-files/components/comic-file-list/comic-file-list.component';
+import { ComicFileCoversComponent } from '@app/comic-files/components/comic-file-covers/comic-file-covers.component';
 import { ComicFileDetailsComponent } from '@app/comic-files/components/comic-file-details/comic-file-details.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -94,7 +94,7 @@ describe('ImportComicsPageComponent', () => {
       declarations: [
         ImportComicsPageComponent,
         ComicFileToolbarComponent,
-        ComicFileListComponent,
+        ComicFileCoversComponent,
         ComicFileDetailsComponent,
         ComicFileCoverUrlPipe,
         ComicPageComponent
@@ -210,30 +210,6 @@ describe('ImportComicsPageComponent', () => {
           setBusyState({ enabled: false })
         );
       });
-    });
-  });
-
-  describe('when a file is selected', () => {
-    beforeEach(() => {
-      component.pageSize = PAGE_SIZE;
-      component.onCurrentFile(FILE);
-    });
-
-    it('opens a dialog', () => {
-      expect(dialog.open).toHaveBeenCalledWith(ComicFileDetailsComponent, {
-        data: { file: FILE, pageSize: PAGE_SIZE }
-      });
-    });
-  });
-
-  describe('when no file is selected', () => {
-    beforeEach(() => {
-      component.pageSize = PAGE_SIZE;
-      component.onCurrentFile(null);
-    });
-
-    it('does not open a dialog', () => {
-      expect(dialog.open).not.toHaveBeenCalled();
     });
   });
 

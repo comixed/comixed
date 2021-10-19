@@ -5,11 +5,11 @@
   <mat-card-content>
     <div
       class="cx-detail-card cx-padding-2 cx-margin-2"
-      [class.comic-detail-card-selected]="selected"
+      [class.cx-detail-card-selected]="selected"
     >
       <img
         *ngIf="!!imageUrl"
-        [class.comic-detail-card-blurred]="blurred"
+        [class.cx-detail-card-blurred]="blurred"
         [src]="imageUrl"
         [style.width]="'100%'"
         [style.height]="'auto'"
