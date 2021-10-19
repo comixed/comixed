@@ -39,7 +39,7 @@ public class LoadFileDetailsProcessor implements ItemProcessor<Comic, Comic> {
 
   @Override
   public Comic process(final Comic comic) throws Exception {
-    log.trace("Creating file details container");
+    log.debug("Creating file details container: id={}", comic.getId());
     final ComicFileDetails fileDetails = new ComicFileDetails(comic);
     comic.setFileDetails(fileDetails);
     log.trace("Getting comic file hash");

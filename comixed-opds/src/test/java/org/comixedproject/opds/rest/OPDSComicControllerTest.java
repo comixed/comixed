@@ -28,11 +28,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.encoders.WebResponseEncoder;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
@@ -63,8 +62,7 @@ public class OPDSComicControllerTest {
 
   @InjectMocks private OPDSComicController controller;
   @Mock private ComicService comicService;
-  @Mock private ComicFileHandler comicFileHandler;
-  @Mock private ArchiveAdaptor archiveAdaptor;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private WebResponseEncoder webResponseEncoder;
   @Mock private Comic comic;
@@ -81,9 +79,6 @@ public class OPDSComicControllerTest {
 
   @Before
   public void setUp() throws IOException {
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
-        .thenReturn(archiveAdaptor);
-    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comic.getFile()).thenReturn(comicFile);
     Mockito.when(comic.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comic.getPages()).thenReturn(pageList);
@@ -111,6 +106,8 @@ public class OPDSComicControllerTest {
   @Test
   public void testDownloadComic() throws ComicException, OPDSException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+
     Mockito.when(
             webResponseEncoder.encode(
                 Mockito.anyInt(),
@@ -165,13 +162,13 @@ public class OPDSComicControllerTest {
 
   @Test
   public void testGetPageByComicAndIndexWithMaxWidth()
-      throws ComicException, OPDSException, ArchiveAdaptorException {
+      throws ComicException, OPDSException, AdaptorException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.any(Comic.class), Mockito.anyString()))
-        .thenReturn(this.imageContent);
-    Mockito.when(fileTypeAdaptor.typeFor(Mockito.any(InputStream.class)))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+        .thenReturn(imageContent);
+    Mockito.when(fileTypeAdaptor.getType(Mockito.any(InputStream.class)))
         .thenReturn(TEST_MIME_TYPE);
-    Mockito.when(fileTypeAdaptor.subtypeFor(Mockito.any(InputStream.class)))
+    Mockito.when(fileTypeAdaptor.getSubtype(Mockito.any(InputStream.class)))
         .thenReturn(TEST_MIME_SUBTYPE);
     Mockito.when(
             webResponseEncoder.encode(
@@ -188,5 +185,6 @@ public class OPDSComicControllerTest {
     assertSame(encodedByteArrayResponse, result);
 
     Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, 0);
   }
 }

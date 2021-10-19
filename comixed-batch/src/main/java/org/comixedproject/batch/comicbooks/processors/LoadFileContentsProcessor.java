@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
-  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   @Override
   public Comic process(final Comic comic) throws Exception {
-    log.trace("Loading comic file contents");
-    this.comicFileHandler.loadComic(comic);
+    log.debug("Loading comic file contents: id={}", comic.getId());
+    this.comicBookAdaptor.load(comic);
     log.trace("Returning updated comic");
     return comic;
   }

@@ -16,27 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.adaptors.archive.model;
 
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LoadFileContentsProcessorTest {
-  @InjectMocks private LoadFileContentsProcessor processor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
-
-  @Test
-  public void testProcess() throws Exception {
-    processor.process(comic);
-
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comic);
-  }
+/**
+ * <code>AbstractArchiveReadHandle</code> provides a foundation for creating {@link
+ * ArchiveReadHandle} types.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class AbstractArchiveReadHandle<T> implements ArchiveReadHandle {
+  @Getter private T archiveHandle;
+  @Getter private String filename;
 }

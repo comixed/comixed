@@ -23,11 +23,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
-import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
@@ -56,7 +54,7 @@ public class ComicController {
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicFileService comicFileService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
-  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   /**
    * Retrieves a single comic for a user. The comic is populated with user-specific meta-data.
@@ -180,7 +178,7 @@ public class ComicController {
   @GetMapping(value = "/api/comics/{id}/cover/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
-      throws ComicException, ArchiveAdaptorException, ComicFileHandlerException, IOException {
+      throws ComicException, IOException, AdaptorException {
     log.info("Getting cover for comic: id={}", id);
     final Comic comic = this.comicService.getComic(id);
 
@@ -195,12 +193,7 @@ public class ComicController {
       byte[] content = this.pageCacheService.findByHash(page.getHash());
       if (content == null) {
         log.debug("Loading page from archive");
-        final ArchiveAdaptor archiveAdaptor =
-            this.comicFileHandler.getArchiveAdaptorFor(comic.getFilename());
-        if (archiveAdaptor == null) {
-          throw new ComicFileHandlerException("no archive adaptor found");
-        }
-        content = archiveAdaptor.loadSingleFile(comic, filename);
+        content = this.comicBookAdaptor.loadPageContent(comic, 0);
         this.pageCacheService.saveByHash(page.getHash(), content);
       }
       log.debug("Returning comic cover: filename={} size={}", filename, content.length);
@@ -215,9 +208,9 @@ public class ComicController {
   private ResponseEntity<byte[]> getResponseEntityForImage(byte[] content, String filename) {
     final ByteArrayInputStream inputStream = new ByteArrayInputStream(content);
     String type =
-        this.fileTypeAdaptor.typeFor(inputStream)
+        this.fileTypeAdaptor.getType(inputStream)
             + "/"
-            + this.fileTypeAdaptor.subtypeFor(inputStream);
+            + this.fileTypeAdaptor.getSubtype(inputStream);
     return ResponseEntity.ok()
         .contentLength(content.length)
         .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")

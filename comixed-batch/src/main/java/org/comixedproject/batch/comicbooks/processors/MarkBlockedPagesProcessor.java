@@ -38,6 +38,7 @@ public class MarkBlockedPagesProcessor implements ItemProcessor<Comic, Comic> {
 
   @Override
   public Comic process(final Comic comic) {
+    log.debug("Marking blocked pages for comic: id={}", comic.getId());
     comic
         .getPages()
         .forEach(

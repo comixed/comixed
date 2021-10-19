@@ -21,12 +21,10 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
-import org.comixedproject.batch.BatchException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,57 +34,34 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateMetadataProcessorTest {
-  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
 
   @InjectMocks private UpdateMetadataProcessor processor;
-  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private Comic comic;
-  @Mock private Comic updatedComic;
-  @Mock private ArchiveAdaptor archiveAdaptor;
 
-  @Test(expected = BatchException.class)
-  public void testProcessNoArchiveAdaptorFound() throws Exception {
+  @Before
+  public void setUp() {
     Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
-        .thenReturn(null);
-
-    try {
-      processor.process(comic);
-    } finally {
-      Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_ARCHIVE_TYPE);
-    }
   }
 
   @Test
   public void testProcessUpdateException() throws Exception {
-    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
-        .thenReturn(archiveAdaptor);
-    Mockito.when(archiveAdaptor.updateComic(Mockito.any(Comic.class)))
-        .thenThrow(ArchiveAdaptorException.class);
-
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_ARCHIVE_TYPE);
-    Mockito.verify(archiveAdaptor, Mockito.times(1)).updateComic(comic);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).save(comic, TEST_ARCHIVE_TYPE, false, false);
   }
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
-        .thenReturn(archiveAdaptor);
-    Mockito.when(archiveAdaptor.updateComic(Mockito.any(Comic.class))).thenReturn(updatedComic);
-
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(updatedComic, result);
+    assertSame(comic, result);
 
-    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_ARCHIVE_TYPE);
-    Mockito.verify(archiveAdaptor, Mockito.times(1)).updateComic(comic);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).save(comic, TEST_ARCHIVE_TYPE, false, false);
   }
 }

@@ -73,7 +73,7 @@ public class PluginManagerTest {
     pluginManager.pluginLocation =
         new File(TEST_EXAMPLE_PLUGIN_FILE).getParentFile().getAbsolutePath();
 
-    Mockito.when(fileTypeAdaptor.subtypeFor(inputStreamArgumentCaptor.capture()))
+    Mockito.when(fileTypeAdaptor.getSubtype(inputStreamArgumentCaptor.capture()))
         .thenReturn("7zip");
 
     pluginManager.loadPlugins();
@@ -81,7 +81,7 @@ public class PluginManagerTest {
     assertTrue(pluginManager.plugins.isEmpty());
 
     Mockito.verify(fileTypeAdaptor, Mockito.times(1))
-        .subtypeFor(inputStreamArgumentCaptor.getValue());
+        .getSubtype(inputStreamArgumentCaptor.getValue());
   }
 
   @Test
@@ -89,7 +89,7 @@ public class PluginManagerTest {
     pluginManager.pluginLocation =
         new File(TEST_EXAMPLE_PLUGIN_FILE).getParentFile().getAbsolutePath();
 
-    Mockito.when(fileTypeAdaptor.subtypeFor(inputStreamArgumentCaptor.capture())).thenReturn("zip");
+    Mockito.when(fileTypeAdaptor.getSubtype(inputStreamArgumentCaptor.capture())).thenReturn("zip");
     Mockito.when(pluginObjectFactory.getObject()).thenReturn(plugin);
     Mockito.doNothing().when(plugin).setEntries(Mockito.anyMap());
     Mockito.when(plugin.getName()).thenReturn(TEST_PLUGIN_NAME);
@@ -100,7 +100,7 @@ public class PluginManagerTest {
     assertTrue(pluginManager.plugins.containsKey(TEST_PLUGIN_NAME));
 
     Mockito.verify(fileTypeAdaptor, Mockito.times(1))
-        .subtypeFor(inputStreamArgumentCaptor.getValue());
+        .getSubtype(inputStreamArgumentCaptor.getValue());
   }
 
   @Test

@@ -16,27 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.adaptors.archive.model;
 
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
-@RunWith(MockitoJUnitRunner.class)
-public class LoadFileContentsProcessorTest {
-  @InjectMocks private LoadFileContentsProcessor processor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
-
-  @Test
-  public void testProcess() throws Exception {
-    processor.process(comic);
-
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comic);
-  }
+/**
+ * <code>ArchiveReadHandle</code> defines the type that is the handle for an archive read operation.
+ *
+ * @author Darryl L. Pierce
+ */
+public interface ArchiveReadHandle {
+  /**
+   * Returns the filename for the underlying archive file.
+   *
+   * @return the filename
+   */
+  String getFilename();
 }

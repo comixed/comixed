@@ -16,15 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.comicbooks;
+package org.comixedproject.adaptors.content;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
 import java.util.*;
-import org.comixedproject.adaptors.loaders.BaseLoaderTest;
-import org.comixedproject.adaptors.loaders.EntryLoaderException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Credit;
 import org.junit.Before;
@@ -36,7 +34,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
+public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_COMICINFO_FILE_COMPLETE =
       "src/test/resources/ComicInfo-complete.xml";
   private static final String TEST_COMICINFO_FILE_NOT_XML =
@@ -48,7 +46,7 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   private static final String TEST_TITLE = "Test Title";
   private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
 
-  @InjectMocks ComicInfoEntryAdaptor adaptor;
+  @InjectMocks ComicMetadataContentAdaptor adaptor;
   @Mock private Comic comic;
   private List<String> characterList = new ArrayList<>();
   private List<String> teamList = new ArrayList<>();
@@ -73,29 +71,15 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
     Mockito.when(comic.getCredits()).thenReturn(creditList);
   }
 
-  @Test
-  public void testLoadComicInfoXmlIgnoreMetadata() throws IOException, EntryLoaderException {
-    adaptor.loadContent(
-        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE), true);
-
-    Mockito.verify(comic, Mockito.never()).setPublisher(Mockito.anyString());
-    Mockito.verify(comic, Mockito.never()).setSeries(Mockito.anyString());
-    Mockito.verify(comic, Mockito.never()).setVolume(Mockito.anyString());
-    Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
-    Mockito.verify(comic, Mockito.never()).setTitle(Mockito.anyString());
-    Mockito.verify(comic, Mockito.never()).setDescription(Mockito.anyString());
-  }
-
-  @Test(expected = EntryLoaderException.class)
-  public void testLoadComicInfoXmlNotXml() throws IOException, EntryLoaderException {
-    adaptor.loadContent(
-        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_NOT_XML), false);
+  @Test(expected = ContentAdaptorException.class)
+  public void testLoadComicInfoXmlNotXml() throws IOException, ContentAdaptorException {
+    adaptor.loadContent(comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_NOT_XML));
   }
 
   @Test
-  public void testLoadComicInfoXml() throws IOException, EntryLoaderException {
+  public void testLoadComicInfoXml() throws IOException, ContentAdaptorException {
     adaptor.loadContent(
-        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE), false);
+        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
 
     assertFalse(characterList.isEmpty());
     assertFalse(teamList.isEmpty());
@@ -112,8 +96,8 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
   }
 
   @Test
-  public void testSaveComicInfoXml() throws EntryLoaderException, IOException {
-    final Object[] roles = ComicInfoEntryAdaptor.CREDIT_TO_ROLE.keySet().toArray();
+  public void testCreateContent() throws ContentAdaptorException, IOException {
+    final Object[] roles = ComicMetadataContentAdaptor.CREDIT_TO_ROLE.keySet().toArray();
     for (int index = 0; index < 25; index++) {
       characterList.add("CHAR" + index);
       teamList.add("TEAM" + index);
@@ -121,7 +105,7 @@ public class ComicInfoEntryAdaptorTest extends BaseLoaderTest {
       storyList.add("STORY" + index);
       creditList.add(new Credit(comic, "NAME" + index, roles[index % roles.length].toString()));
     }
-    byte[] result = adaptor.saveContent(comic);
+    byte[] result = adaptor.createContent(comic);
 
     assertNotNull(result);
 

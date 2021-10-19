@@ -24,8 +24,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
-import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.batch.comicbooks.AddComicsConfiguration;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
@@ -117,7 +116,7 @@ public class ComicFileController {
 
     try {
       result = this.comicFileService.getImportFileCover(filename);
-    } catch (ComicFileHandlerException | ArchiveAdaptorException error) {
+    } catch (AdaptorException error) {
       log.error("Failed to load cover from import file", error);
     }
 

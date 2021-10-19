@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.comicbooks;
+package org.comixedproject.adaptors.content;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,20 +29,18 @@ import javax.xml.stream.XMLStreamWriter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.comixedproject.adaptors.loaders.AbstractEntryLoader;
-import org.comixedproject.adaptors.loaders.EntryLoaderException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Credit;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicInfoEntryAdaptor</code> loads data from the ComicInfo.xml file within a comic.
+ * <code>ComicMetadataContentAdaptor</code> loads data from the ComicInfo.xml file within a comic.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
+public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
   private static final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
   private static final XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
   public static final String TAG_WRITER = "Writer";
@@ -106,17 +104,12 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
   public static final String TAG_ALTERNATE_SERIES = "AlternateSeries";
 
   @Override
-  public void loadContent(
-      final Comic comic, final String filename, final byte[] content, final boolean ignoreMetadata)
-      throws EntryLoaderException {
-    if (ignoreMetadata) {
-      log.trace("Ignoring metadata");
-      return;
-    }
+  public void loadContent(final Comic comic, final String filename, final byte[] content)
+      throws ContentAdaptorException {
     try {
       this.loadXmlData(new ByteArrayInputStream(content), comic);
     } catch (final XMLStreamException error) {
-      throw new EntryLoaderException(error);
+      throw new ContentAdaptorException("Failed to load metadata", error);
     }
   }
 
@@ -228,9 +221,9 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
    *
    * @param comic the comic
    * @return the content of the file
-   * @throws EntryLoaderException if an error occurs
+   * @throws org.comixedproject.adaptors.content.ContentAdaptorException if an error occurs
    */
-  public byte[] saveContent(Comic comic) throws EntryLoaderException {
+  public byte[] createContent(Comic comic) throws ContentAdaptorException {
     log.trace("Generating comic info data from comic");
     var result = new ByteArrayOutputStream();
     try {
@@ -267,7 +260,7 @@ public class ComicInfoEntryAdaptor extends AbstractEntryLoader {
 
       return result.toByteArray();
     } catch (XMLStreamException error) {
-      throw new EntryLoaderException("Failed to create XML output writer", error);
+      throw new ContentAdaptorException("Failed to create XML output writer", error);
     }
   }
 

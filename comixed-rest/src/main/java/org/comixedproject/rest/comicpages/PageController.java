@@ -22,10 +22,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
@@ -51,7 +50,7 @@ public class PageController {
   @Autowired private PageService pageService;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
-  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   /**
    * Marks a page for deletion.
@@ -97,30 +96,24 @@ public class PageController {
     byte[] content = this.pageCacheService.findByHash(page.getHash());
 
     if (content == null) {
-      log.debug("Fetching content for page");
-      final ArchiveAdaptor adaptor =
-          this.comicFileHandler.getArchiveAdaptorFor(page.getComic().getArchiveType());
       try {
-        content = adaptor.loadSingleFile(page.getComic(), page.getFilename());
-      } catch (ArchiveAdaptorException error) {
-        throw new ComicException("failed to load page content", error);
-      }
-      log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
-      try {
+        log.debug("Fetching content for page");
+        content = this.comicBookAdaptor.loadPageContent(page.getComic(), page.getPageNumber());
+        log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
         this.pageCacheService.saveByHash(page.getHash(), content);
-      } catch (IOException error) {
+      } catch (IOException | AdaptorException error) {
         log.error("Failed to add comic page to cache", error);
       }
     }
 
     String type =
-        this.fileTypeAdaptor.typeFor(new ByteArrayInputStream(content))
+        this.fileTypeAdaptor.getType(new ByteArrayInputStream(content))
             + "/"
-            + this.fileTypeAdaptor.subtypeFor(new ByteArrayInputStream(content));
+            + this.fileTypeAdaptor.getSubtype(new ByteArrayInputStream(content));
     log.debug("Page type: {}", type);
 
     return ResponseEntity.ok()
-        .contentLength(content.length)
+        .contentLength(content != null ? content.length : 0)
         .header("Content-Disposition", "attachment; filename=\"" + page.getFilename() + "\"")
         .contentType(MediaType.valueOf(type))
         .body(content);

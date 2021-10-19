@@ -16,27 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.adaptors.archive.model;
 
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LoadFileContentsProcessorTest {
-  @InjectMocks private LoadFileContentsProcessor processor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
-
-  @Test
-  public void testProcess() throws Exception {
-    processor.process(comic);
-
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comic);
+/**
+ * <code>SevenZArchiveReadHandler</code> provides an archive handle for reading CB7 files.
+ *
+ * @author Darryl L. Pierce
+ */
+public class Cb7ArchiveReadHandle extends AbstractArchiveReadHandle<SevenZFile> {
+  public Cb7ArchiveReadHandle(final SevenZFile archiveHandle, final String filename) {
+    super(archiveHandle, filename);
   }
 }

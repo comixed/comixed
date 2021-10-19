@@ -23,8 +23,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
-import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
@@ -34,7 +33,6 @@ import org.comixedproject.model.net.comicfiles.LoadComicFilesResponse;
 import org.comixedproject.model.scraping.FilenameMetadata;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.scraping.FilenameScrapingRuleService;
-import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -42,7 +40,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -72,10 +74,9 @@ public class ComicFileControllerTest {
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @Test
-  public void testGetImportFileCoverServiceThrowsException()
-      throws ComicFileHandlerException, ArchiveAdaptorException {
+  public void testGetImportFileCoverServiceThrowsException() throws AdaptorException {
     Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
-        .thenThrow(ComicFileHandlerException.class);
+        .thenThrow(AdaptorException.class);
 
     final byte[] result = controller.getImportFileCover(COMIC_ARCHIVE);
 
@@ -85,7 +86,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testGetImportFileCover() throws ArchiveAdaptorException, ComicFileHandlerException {
+  public void testGetImportFileCover() throws AdaptorException {
     Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
         .thenReturn(IMAGE_CONTENT);
 
@@ -98,7 +99,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testGetAllComicsUnderNoLimit() throws IOException, JSONException {
+  public void testGetAllComicsUnderNoLimit() throws IOException {
     Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileList);
 
@@ -113,7 +114,7 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testGetAllComicsUnder() throws IOException, JSONException {
+  public void testGetAllComicsUnder() throws IOException {
     Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
         .thenReturn(comicFileList);
 
@@ -128,7 +129,9 @@ public class ComicFileControllerTest {
   }
 
   @Test
-  public void testImportComicFiles() throws Exception {
+  public void testImportComicFiles()
+      throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
+          JobParametersInvalidException, JobRestartException {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.handlers;
+package org.comixedproject.adaptors.archive.model;
+
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
 /**
- * <code>ComicFileHandlerException</code> is raised when an error occurs while working with an
- * underlying digital comic file.
+ * <code>CbzArchiveWriteHandle</code> provides a write handle for working with ZIP archives.
  *
  * @author Darryl L. Pierce
  */
-public class ComicFileHandlerException extends Exception {
-  private static final long serialVersionUID = -7821301633974242512L;
-
-  public ComicFileHandlerException(String message) {
-    super(message);
-  }
-
-  public ComicFileHandlerException(String message, Exception cause) {
-    super(message, cause);
+public class CbzArchiveWriteHandle extends AbstractArchiveWriteHandle<ZipArchiveOutputStream> {
+  public CbzArchiveWriteHandle(final ZipArchiveOutputStream archiveHandle, final String filename) {
+    super(archiveHandle, filename);
   }
 }

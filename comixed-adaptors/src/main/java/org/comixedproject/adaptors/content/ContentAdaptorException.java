@@ -16,36 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.loaders;
+package org.comixedproject.adaptors.content;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-public class BaseLoaderTest {
-
-  public BaseLoaderTest() {
-    super();
+/**
+ * <code>ContentAdaptorException</code> is thrown when an error occurs while processing a comic
+ * entry.
+ *
+ * @author Darryl L. Pierce
+ */
+public class ContentAdaptorException extends Exception {
+  public ContentAdaptorException(final String message, final Exception cause) {
+    super(message, cause);
   }
 
-  protected byte[] loadFile(String filename) throws IOException {
-    FileInputStream input = new FileInputStream(filename);
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    boolean done = false;
-    byte[] buffer = new byte[65535];
-
-    while (!done) {
-      int read = input.read(buffer);
-
-      if (read == -1) {
-        done = true;
-      } else {
-        output.write(buffer, 0, read);
-      }
-    }
-
-    input.close();
-
-    return output.toByteArray();
+  public ContentAdaptorException(final String message) {
+    super(message);
   }
 }

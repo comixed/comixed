@@ -23,11 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
-import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
@@ -46,34 +44,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Log4j2
 public class ComicFileService {
-  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
 
-  public byte[] getImportFileCover(final String comicArchive)
-      throws ComicFileHandlerException, ArchiveAdaptorException {
+  public byte[] getImportFileCover(final String comicArchive) throws AdaptorException {
     log.debug("Getting first image from archive: {}", comicArchive);
-
-    byte[] result = null;
-    final ArchiveAdaptor archiveAdaptor = this.comicFileHandler.getArchiveAdaptorFor(comicArchive);
-    if (archiveAdaptor == null) {
-      log.debug("No archive adaptor available");
-      return null;
-    }
-
-    final String coverFile = archiveAdaptor.getFirstImageFileName(comicArchive);
-    if (coverFile == null) {
-      log.debug("Archive contains no images");
-      return null;
-    }
-
-    log.debug("Fetching image content: entry={}", coverFile);
-    result = archiveAdaptor.loadSingleFile(comicArchive, coverFile);
-
-    log.debug("Returning {} bytes", result == null ? 0 : result.length);
-
-    return result;
+    return this.comicBookAdaptor.loadCover(comicArchive);
   }
 
   public List<ComicFile> getAllComicsUnder(final String rootDirectory, final Integer maximum)

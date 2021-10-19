@@ -24,10 +24,10 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import marvin.image.MarvinImage;
 import marvinplugins.MarvinPluginCollection;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.encoders.WebResponseEncoder;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
 import org.comixedproject.auditlog.AuditableEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.opds.OPDSException;
@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OPDSComicController {
   @Autowired private ComicService comicService;
   @Autowired private WebResponseEncoder webResponseEncoder;
-  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
 
   /**
@@ -100,13 +100,11 @@ public class OPDSComicController {
       @PathVariable("maxWidth") int maxWidth)
       throws OPDSException {
     try {
-      log.debug("Getting the image for comic: id={} index={}", id, index);
+      log.trace("Getting page content");
       var comic = this.comicService.getComic(id);
-      if (index >= comic.getPages().size()) throw new ComicException("Invalid page: " + index);
+      if (index >= comic.getPages().size()) throw new OPDSException("Invalid page: index=" + index);
       var page = comic.getPages().get(index);
-      var adaptor = this.comicFileHandler.getArchiveAdaptorFor(comic.getArchiveType());
-      log.trace("Loading page content");
-      var content = adaptor.loadSingleFile(comic, page.getFilename());
+      byte[] content = this.comicBookAdaptor.loadPageContent(comic, index);
 
       if (maxWidth > 0 && page.getWidth() > maxWidth) {
         log.trace("Scaling page");
@@ -127,10 +125,10 @@ public class OPDSComicController {
 
       final InputStream baos = new ByteArrayInputStream(content);
       String type =
-          this.fileTypeAdaptor.typeFor(baos) + "/" + this.fileTypeAdaptor.subtypeFor(baos);
+          this.fileTypeAdaptor.getType(baos) + "/" + this.fileTypeAdaptor.getSubtype(baos);
       return this.webResponseEncoder.encode(
           content.length, content, page.getFilename(), MediaType.valueOf(type));
-    } catch (ComicException | ArchiveAdaptorException | IOException error) {
+    } catch (ComicException | IOException | AdaptorException error) {
       throw new OPDSException("Failed to get comic page: id=" + id + " index=" + index, error);
     }
   }
