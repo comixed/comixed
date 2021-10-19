@@ -31,7 +31,10 @@ import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/logger';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
-import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
+import {
+  selectBlockedPageList,
+  selectBlockedPageListState
+} from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-pages.actions';
@@ -42,6 +45,7 @@ import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TitleService } from '@app/core/services/title.service';
+import { setBusyState } from '@app/core/actions/busy.actions';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -53,6 +57,7 @@ export class BlockedHashListPageComponent
 {
   @ViewChild('MatPagination') paginator: MatPaginator;
 
+  hashStateSubscription: Subscription;
   pageSubscription: Subscription;
   langChangeSubscription: Subscription;
   dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
@@ -75,6 +80,11 @@ export class BlockedHashListPageComponent
     private translateService: TranslateService,
     private titleService: TitleService
   ) {
+    this.hashStateSubscription = this.store
+      .select(selectBlockedPageListState)
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.busy }));
+      });
     this.pageSubscription = this.store
       .select(selectBlockedPageList)
       .subscribe(entries => (this.entries = entries));
@@ -94,6 +104,8 @@ export class BlockedHashListPageComponent
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from hash state updates');
+    this.hashStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from blocked page list updates');
     this.pageSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from language changes');
