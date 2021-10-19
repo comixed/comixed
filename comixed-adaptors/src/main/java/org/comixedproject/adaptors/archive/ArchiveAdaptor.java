@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,97 +18,87 @@
 
 package org.comixedproject.adaptors.archive;
 
-import java.io.IOException;
-import java.util.Map;
-import org.comixedproject.model.comicbooks.Comic;
+import java.util.List;
+import org.comixedproject.adaptors.archive.model.ArchiveReadHandle;
+import org.comixedproject.adaptors.archive.model.ArchiveWriteHandle;
+import org.comixedproject.adaptors.archive.model.ComicArchiveEntry;
+import org.comixedproject.model.archives.ArchiveType;
 
 /**
- * <code>ArchiveAdaptor</code> defines a type which handles loading from and saving to an archive
- * file.
+ * <code>ArchiveAdaptor</code> defines a type that can access the contents of an archive.
  *
  * @author Darryl L. Pierce
  */
 public interface ArchiveAdaptor {
   /**
-   * Retrieves the filename for the first image file in the comic archive.
+   * Identifies the underlying archive type.
    *
-   * @param filename the comic filename
-   * @return the image filename
-   * @throws ArchiveAdaptorException if an error occurs
+   * @return the archive type
    */
-  String getFirstImageFileName(String filename) throws ArchiveAdaptorException;
+  ArchiveType getArchiveType();
 
   /**
-   * Loads the entire comic's contents from disk.
+   * Opens an archive for read operations.
    *
-   * @param comic the comic
-   * @throws ArchiveAdaptorException if an error occurs
+   * @param filename the archive filename
+   * @return the archive handle
+   * @throws ArchiveAdaptorException if the archive could not be opened
    */
-  void loadComic(Comic comic) throws ArchiveAdaptorException;
+  ArchiveReadHandle openArchiveForRead(String filename) throws ArchiveAdaptorException;
 
   /**
-   * Files the entire comic's contents from disk, but ignores any embedded metadata files.
+   * Closes an archive for read operations.
    *
-   * @param comic the comic
+   * @param archiveHandle the archive handle
    * @throws ArchiveAdaptorException if an error occurs
    */
-  void fillComic(Comic comic) throws ArchiveAdaptorException;
+  void closeArchiveForRead(ArchiveReadHandle archiveHandle) throws ArchiveAdaptorException;
 
   /**
-   * Loads a single file from the archive file.
+   * Returns the list of entries in the archive.
    *
-   * @param comic the comic
-   * @param entryName the entry name
-   * @return the content of the entry
-   * @throws ArchiveAdaptorException if an error occurs
+   * @param archiveHandle the archive handle
+   * @return the entries
+   * @throws ArchiveAdaptorException if an error occurs loading an entry
    */
-  byte[] loadSingleFile(Comic comic, String entryName) throws ArchiveAdaptorException;
+  List<ComicArchiveEntry> getEntries(ArchiveReadHandle archiveHandle)
+      throws ArchiveAdaptorException;
 
   /**
-   * Loads a single file from the specified archive.
+   * Returns the entry with the given filename.
    *
-   * @param filename the archive name
-   * @param entryName the entry name
-   * @return the content
-   * @throws ArchiveAdaptorException if an error occurs
+   * @param archiveHandle the archive handle
+   * @param filename the entry filename
+   * @return the entry content
+   * @throws ArchiveAdaptorException if an error occurs loading the entry
    */
-  byte[] loadSingleFile(String filename, String entryName) throws ArchiveAdaptorException;
+  byte[] readEntry(ArchiveReadHandle archiveHandle, String filename) throws ArchiveAdaptorException;
 
   /**
-   * Saves the comic.
+   * Opens an archive for write operations. Creates a new file or overwrites any existing file.
    *
-   * <p>The new comic will have the same base filename and directory as the source, but the
-   * extension will comic be determined by the instance of {@link ArchiveAdaptor}.
-   *
-   * <p>If a comic already exists with the filename, it is replaced by the new comic.
-   *
-   * @param comic the comic
-   * @param renamePages true rename pages
-   * @return the new comic
+   * @param filename the archive filename
+   * @return the archive handle
    * @throws ArchiveAdaptorException if an error occurs
-   * @throws IOException if an error occurs
    */
-  Comic saveComic(Comic comic, boolean renamePages) throws ArchiveAdaptorException, IOException;
+  ArchiveWriteHandle openArchiveForWrite(String filename) throws ArchiveAdaptorException;
 
   /**
-   * Updates the metadata for the given comic.
+   * Adds a new entry to the archive.
    *
-   * @param comic the comic
-   * @return the updated comic
+   * @param archiveHandle the archive handle
+   * @param filename the entry filename
+   * @param content the entry content
    * @throws ArchiveAdaptorException if an error occurs
    */
-  Comic updateComic(Comic comic) throws ArchiveAdaptorException;
+  void writeEntry(ArchiveWriteHandle archiveHandle, String filename, byte[] content)
+      throws ArchiveAdaptorException;
 
   /**
-   * Encodes the provided comics into an encoded stream of data.
+   * Closes an archive for write operations.
    *
-   * <p>The provided map names the files with the key and the contents of the file as the value.
-   *
-   * @param entries the map of file entries
-   * @return the encoded stream
+   * @param archiveHandle the archive handle
    * @throws ArchiveAdaptorException if an error occurs
-   * @throws IOException if an error occurs
    */
-  byte[] encodeFileToStream(Map<String, byte[]> entries)
-      throws ArchiveAdaptorException, IOException;
+  void closeArchiveForWrite(ArchiveWriteHandle archiveHandle) throws ArchiveAdaptorException;
 }

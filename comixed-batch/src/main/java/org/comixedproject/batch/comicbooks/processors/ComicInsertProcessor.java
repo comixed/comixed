@@ -19,8 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.adaptors.comicbooks.FilenameScraperAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.scraping.FilenameMetadata;
@@ -40,20 +39,17 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, Comic> {
   @Autowired private ComicService comicService;
-  @Autowired private ComicFileHandler comicFileHandler;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
-  @Autowired private FilenameScraperAdaptor filenameScraperAdaptor;
 
   @Override
   public Comic process(final ComicFileDescriptor descriptor) throws Exception {
     if (this.comicService.findByFilename(descriptor.getFilename()) != null) {
-      log.trace("Comic already exists. Aborting...");
+      log.debug("Comic already exists. Aborting: filename=", descriptor.getFilename());
       return null;
     }
-    log.trace("Creating comic");
-    final Comic comic = new Comic(descriptor.getFilename());
-    log.trace("Setting archive type");
-    this.comicFileHandler.loadComicArchiveType(comic);
+    log.debug("Creating comic: filename={}", descriptor.getFilename());
+    final Comic comic = this.comicBookAdaptor.createComic(descriptor.getFilename());
     log.trace("Scraping comic filename");
     final FilenameMetadata metadata =
         this.filenameScrapingRuleService.loadFilenameMetadata(comic.getBaseFilename());

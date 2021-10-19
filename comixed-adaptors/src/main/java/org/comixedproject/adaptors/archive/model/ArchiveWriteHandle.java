@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.loaders;
-
-import org.comixedproject.model.comicbooks.Comic;
+package org.comixedproject.adaptors.archive.model;
 
 /**
- * <code>EntryLoader</code> defines a type that processes entry content and sets it on a given
- * {@link Comic}.
+ * <code>ArchiveWriteHandle</code> defines a type that is the handle for an archive write operation.
  *
  * @author Darryl L. Pierce
  */
-public interface EntryLoader {
+public interface ArchiveWriteHandle {
   /**
-   * Loads content into the specified comic.
+   * Returns the filename for the underlying archive file.
    *
-   * @param comic the comic
-   * @param filename the content's filename
-   * @param content the content
-   * @param ignoreMetadata ignore any metadata if found
-   * @throws EntryLoaderException if an error occurs while loading the content
+   * @return the filename
    */
-  void loadContent(Comic comic, String filename, byte[] content, boolean ignoreMetadata)
-      throws EntryLoaderException;
+  String getFilename();
 }

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2017, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,19 +19,16 @@
 package org.comixedproject.adaptors.archive;
 
 /**
- * <code>ArchiveAdaptorException</code> is thrown when an error occurs while working with the
- * contents of an archive.
+ * <code>ArchiveAdaptorException</code> is thrown if an error occurs during an archive operation.
  *
  * @author Darryl L. Pierce
  */
 public class ArchiveAdaptorException extends Exception {
-  private static final long serialVersionUID = 5895095739317473196L;
-
-  public ArchiveAdaptorException(String message) {
-    super(message);
+  public ArchiveAdaptorException(final String message, final Exception cause) {
+    super(message, cause);
   }
 
-  public ArchiveAdaptorException(String message, Exception cause) {
-    super(message, cause);
+  public ArchiveAdaptorException(final String message) {
+    super(message);
   }
 }

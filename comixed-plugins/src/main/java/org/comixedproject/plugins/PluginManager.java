@@ -90,7 +90,7 @@ public class PluginManager implements InitializingBean {
     var processed = 0;
     for (File pluginFile : pluginFiles) {
       try (InputStream input = new BufferedInputStream(new FileInputStream(pluginFile))) {
-        String fileType = this.fileTypeAdaptor.subtypeFor(input);
+        String fileType = this.fileTypeAdaptor.getSubtype(input);
         if (!fileType.equalsIgnoreCase("zip")) {
           log.debug("{} is not a zip file; skipping", pluginFile.getName());
         } else {

@@ -16,23 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.loaders;
+package org.comixedproject.adaptors.content;
 
-import javax.xml.stream.XMLStreamException;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
- * <code>EntryLoaderException</code> is thrown when an error occurs while processing a comic entry.
+ * <code>AbstractContentAdaptor</code> provides a base class for creating new implementations of
+ * {@link ContentAdaptor}.
  *
  * @author Darryl L. Pierce
  */
-public class EntryLoaderException extends Exception {
-  private static final long serialVersionUID = -5175358262813656987L;
+@Log4j2
+public abstract class AbstractContentAdaptor implements ContentAdaptor {
+  @Autowired private ApplicationContext applicationContext;
 
-  public EntryLoaderException(XMLStreamException cause) {
-    super(cause);
-  }
-
-  public EntryLoaderException(final String message, final Exception cause) {
-    super(message, cause);
+  protected ContentAdaptor getBean(final String name) throws ContentAdaptorException {
+    try {
+      return this.applicationContext.getBean(name, ContentAdaptor.class);
+    } catch (BeansException error) {
+      throw new ContentAdaptorException("Failed to load bean: " + name, error);
+    }
   }
 }

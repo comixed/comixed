@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.loaders;
+package org.comixedproject.adaptors.content;
 
 import static org.junit.Assert.*;
 
@@ -36,12 +36,12 @@ import org.springframework.test.context.TestPropertySource;
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
-public class ImageEntryLoaderTest extends BaseLoaderTest {
+public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_JPEG_FILENAME = "src/test/resources/example.jpg";
   private static final String TEST_WEBP_FILENAME = "src/test/resources/example.webp";
   private static final String TEST_HASH = "928375298571098571209857";
 
-  @InjectMocks private ImageEntryLoader loader;
+  @InjectMocks private ImageContentAdaptor loader;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   private Comic comic;
@@ -57,7 +57,7 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
   public void testLoadJPGImage() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    loader.loadContent(comic, TEST_JPEG_FILENAME, content, false);
+    loader.loadContent(comic, TEST_JPEG_FILENAME, content);
 
     assertEquals(1, comic.getPageCount());
     assertNotNull(comic.getPage(0));
@@ -67,7 +67,7 @@ public class ImageEntryLoaderTest extends BaseLoaderTest {
   public void testLoadWebPImage() throws IOException {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
-    loader.loadContent(comic, TEST_WEBP_FILENAME, content, false);
+    loader.loadContent(comic, TEST_WEBP_FILENAME, content);
 
     assertEquals(1, comic.getPageCount());
     assertNotNull(comic.getPage(0));

@@ -51,7 +51,7 @@ public class MoveComicProcessor implements ItemProcessor<Comic, Comic>, StepExec
 
   @Override
   public Comic process(final Comic comic) {
-    log.trace("Getting target directory");
+    log.debug("Getting target directory: id={}", comic.getId());
     final File targetDirectory = new File(this.jobParameters.getString(PARAM_TARGET_DIRECTORY));
     log.trace("Getting renaming rule");
     final String renamingRule = this.jobParameters.getString(PARAM_RENAMING_RULE);

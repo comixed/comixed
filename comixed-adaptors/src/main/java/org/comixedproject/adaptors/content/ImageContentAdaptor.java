@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.loaders;
+package org.comixedproject.adaptors.content;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -30,21 +30,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ImageEntryLoader</code> loads an image and makes it a {@link Page} for a comic.
+ * <code>ImageContentAdaptor</code> loads an image and makes it a {@link Page} for a comic.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ImageEntryLoader extends AbstractEntryLoader {
+public class ImageContentAdaptor extends AbstractContentAdaptor {
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public void loadContent(
-      final Comic comic,
-      final String filename,
-      final byte[] content,
-      final boolean ignoreMetadata) {
+  public void loadContent(final Comic comic, final String filename, final byte[] content) {
     log.trace("Loading image into comic");
     // if the comic already has this offset then update the offset's content
     if (comic.hasPageWithFilename(filename)) {

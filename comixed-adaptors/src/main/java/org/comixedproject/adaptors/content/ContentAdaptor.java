@@ -16,26 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.archive;
+package org.comixedproject.adaptors.content;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.util.StringUtils;
+import org.comixedproject.model.comicbooks.Comic;
 
 /**
- * <code>EntryLoaderForType</code> describes a type entry for loading files from an archive or other
- * source.
+ * <code>ContentAdaptor</code> defines a type that processes entry content and sets it on a given
+ * {@link Comic}.
  *
  * @author Darryl L. Pierce
  */
-public class EntryLoaderForType {
-  @Getter @Setter private String type;
-  @Getter @Setter private String bean;
-  @Getter @Setter private ArchiveEntryType entryType;
-
-  public boolean isValid() {
-    return !StringUtils.isEmpty(this.type)
-        && !StringUtils.isEmpty(this.bean)
-        && this.entryType != null;
-  }
+public interface ContentAdaptor {
+  /**
+   * Loads content into the specified comic.
+   *
+   * @param comic the comic
+   * @param filename the content's filename
+   * @param content the content
+   * @throws ContentAdaptorException if an error occurs while loading the content
+   */
+  void loadContent(Comic comic, String filename, byte[] content) throws ContentAdaptorException;
 }

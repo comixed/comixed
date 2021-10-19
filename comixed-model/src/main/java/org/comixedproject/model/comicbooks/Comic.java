@@ -81,6 +81,7 @@ public class Comic {
   })
   @Getter
   @Setter
+  @NonNull
   private ArchiveType archiveType;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comic", orphanRemoval = true)

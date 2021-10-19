@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.*;
 
 import java.util.Date;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.scraping.FilenameMetadata;
@@ -30,7 +30,9 @@ import org.comixedproject.service.scraping.FilenameScrapingRuleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,24 +46,19 @@ public class ComicInsertProcessorTest {
 
   @InjectMocks private ComicInsertProcessor processor;
   @Mock private ComicService comicService;
-  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileDescriptor descriptor;
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private Comic comicRecord;
-  @Mock private FilenameMetadata filenameMetadata;
+  @Mock private Comic comic;
 
-  @Captor private ArgumentCaptor<Comic> comicArgumentCaptor;
+  private FilenameMetadata filenameMetadata;
 
   @Before
   public void setUp() {
     Mockito.when(descriptor.getFilename()).thenReturn(TEST_FILENAME);
-    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
-        .thenReturn(filenameMetadata);
-    Mockito.when(filenameMetadata.isFound()).thenReturn(true);
-    Mockito.when(filenameMetadata.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(filenameMetadata.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(filenameMetadata.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(filenameMetadata.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    filenameMetadata =
+        new FilenameMetadata(true, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_COVER_DATE);
   }
 
   @Test
@@ -78,51 +75,47 @@ public class ComicInsertProcessorTest {
   @Test
   public void testProcess() throws Exception {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
-    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(comicArgumentCaptor.capture());
+    Mockito.when(comicBookAdaptor.createComic(Mockito.anyString())).thenReturn(comic);
+    Mockito.when(comic.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
+        .thenReturn(filenameMetadata);
 
     final Comic result = processor.process(descriptor);
-
-    final Comic comic = comicArgumentCaptor.getValue();
-    assertNotNull(comic);
-    assertEquals(TEST_FILENAME, comic.getFilename());
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    assertEquals(TEST_SERIES, comic.getSeries());
-    assertEquals(TEST_VOLUME, comic.getVolume());
-    assertEquals(TEST_ISSUE_NUMBER, comic.getIssueNumber());
-    assertEquals(TEST_COVER_DATE, comic.getCoverDate());
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
 
     Mockito.verify(comicService, Mockito.times(1)).findByFilename(TEST_FILENAME);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).createComic(TEST_FILENAME);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
         .loadFilenameMetadata(TEST_BASE_FILENAME);
-    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
   }
 
   @Test
   public void testProcessNoneApplied() throws Exception {
     Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(null);
-    Mockito.doNothing().when(comicFileHandler).loadComicArchiveType(comicArgumentCaptor.capture());
-    Mockito.when(filenameMetadata.isFound()).thenReturn(false);
+    Mockito.when(comicBookAdaptor.createComic(Mockito.anyString())).thenReturn(comic);
+    Mockito.when(comic.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
+        .thenReturn(new FilenameMetadata());
 
     final Comic result = processor.process(descriptor);
-
-    final Comic comic = comicArgumentCaptor.getValue();
-    assertNotNull(comic);
-    assertEquals(TEST_FILENAME, comic.getFilename());
 
     assertNotNull(result);
     assertSame(comic, result);
 
-    assertNull(comic.getSeries());
-    assertNull(comic.getVolume());
-    assertNull(comic.getIssueNumber());
-    assertNull(comic.getCoverDate());
+    Mockito.verify(comic, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
+    Mockito.verify(comic, Mockito.never()).setCoverDate(Mockito.any(Date.class));
 
     Mockito.verify(comicService, Mockito.times(1)).findByFilename(TEST_FILENAME);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(1))
         .loadFilenameMetadata(TEST_BASE_FILENAME);
-    Mockito.verify(comicFileHandler, Mockito.times(1)).loadComicArchiveType(comic);
   }
 }

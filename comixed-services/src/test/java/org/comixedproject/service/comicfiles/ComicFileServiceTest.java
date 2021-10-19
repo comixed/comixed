@@ -24,11 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
-import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
@@ -46,7 +44,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class ComicFileServiceTest {
   private static final String TEST_ARCHIVE_FILENAME = "example.cbz";
-  private static final String TEST_COVER_FILENAME = "cover_image.jpg";
   private static final byte[] TEST_COVER_CONTENT = "this is image data".getBytes();
   private static final String TEST_ROOT_DIRECTORY = "src/test/resources";
   private static final String TEST_COMIC_ARCHIVE =
@@ -55,9 +52,8 @@ public class ComicFileServiceTest {
   private static final Integer TEST_NO_LIMIT = -1;
 
   @InjectMocks private ComicFileService service;
-  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
-  @Mock private ArchiveAdaptor archiveAdaptor;
   @Mock private ComicRepository comicRepository;
   @Mock private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Mock private Comic comic;
@@ -65,46 +61,24 @@ public class ComicFileServiceTest {
   @Mock private List<ComicFileDescriptor> comicFileDescriptors;
 
   @Test
-  public void testGetImportFileCoverWithNoHandler()
-      throws ComicFileHandlerException, ArchiveAdaptorException {
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.anyString())).thenReturn(null);
+  public void testGetImportFileCoverWithNoCover() throws AdaptorException {
+    Mockito.when(comicBookAdaptor.loadCover(Mockito.anyString())).thenReturn(null);
 
     assertNull(service.getImportFileCover(TEST_COMIC_ARCHIVE));
 
-    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_ARCHIVE);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadCover(TEST_COMIC_ARCHIVE);
   }
 
   @Test
-  public void testGetImportFileCoverWithNoCover()
-      throws ComicFileHandlerException, ArchiveAdaptorException {
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.anyString()))
-        .thenReturn(archiveAdaptor);
-    Mockito.when(archiveAdaptor.getFirstImageFileName(Mockito.anyString())).thenReturn(null);
-
-    assertNull(service.getImportFileCover(TEST_COMIC_ARCHIVE));
-
-    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_ARCHIVE);
-    Mockito.verify(archiveAdaptor, Mockito.times(1)).getFirstImageFileName(TEST_COMIC_ARCHIVE);
-  }
-
-  @Test
-  public void testGetImportFileCover() throws ComicFileHandlerException, ArchiveAdaptorException {
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.anyString()))
-        .thenReturn(archiveAdaptor);
-    Mockito.when(archiveAdaptor.getFirstImageFileName(Mockito.anyString()))
-        .thenReturn(TEST_COVER_FILENAME);
-    Mockito.when(archiveAdaptor.loadSingleFile(Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(TEST_COVER_CONTENT);
+  public void testGetImportFileCover() throws AdaptorException {
+    Mockito.when(comicBookAdaptor.loadCover(Mockito.anyString())).thenReturn(TEST_COVER_CONTENT);
 
     final byte[] result = service.getImportFileCover(TEST_COMIC_ARCHIVE);
 
     assertNotNull(result);
     assertEquals(TEST_COVER_CONTENT, result);
 
-    Mockito.verify(comicFileHandler, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_ARCHIVE);
-    Mockito.verify(archiveAdaptor, Mockito.times(1)).getFirstImageFileName(TEST_COMIC_ARCHIVE);
-    Mockito.verify(archiveAdaptor, Mockito.times(1))
-        .loadSingleFile(TEST_COMIC_ARCHIVE, TEST_COVER_FILENAME);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadCover(TEST_COMIC_ARCHIVE);
   }
 
   @Test

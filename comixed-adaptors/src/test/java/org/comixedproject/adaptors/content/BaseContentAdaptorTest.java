@@ -16,15 +16,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.adaptors.loaders;
+package org.comixedproject.adaptors.content;
 
-import lombok.extern.log4j.Log4j2;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
-/**
- * <code>AbstractEntryLoader</code> provides a base class for creating new implementations of {@link
- * EntryLoader}.
- *
- * @author Darryl L. Pierce
- */
-@Log4j2
-public abstract class AbstractEntryLoader implements EntryLoader {}
+public class BaseContentAdaptorTest {
+
+  public BaseContentAdaptorTest() {
+    super();
+  }
+
+  protected byte[] loadFile(String filename) throws IOException {
+    FileInputStream input = new FileInputStream(filename);
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    boolean done = false;
+    byte[] buffer = new byte[65535];
+
+    while (!done) {
+      int read = input.read(buffer);
+
+      if (read == -1) {
+        done = true;
+      } else {
+        output.write(buffer, 0, read);
+      }
+    }
+
+    input.close();
+
+    return output.toByteArray();
+  }
+}

@@ -20,9 +20,8 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 
-import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.handlers.ComicFileHandler;
-import org.comixedproject.adaptors.handlers.ComicFileHandlerException;
+import org.comixedproject.adaptors.AdaptorException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
@@ -38,23 +37,20 @@ import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RecreateComicFileProcessorTest {
-  private static final String TEST_TARGET_ARCHIVE = ArchiveType.CBZ.toString();
+  private static final ArchiveType TEST_TARGET_ARCHIVE = ArchiveType.CBZ;
+  private static final String TEST_TARGET_ARCHIVE_NAME = TEST_TARGET_ARCHIVE.toString();
 
   @InjectMocks private RecreateComicFileProcessor processor;
   @Mock private StepExecution stepExecution;
   @Mock private JobParameters jobParameters;
-  @Mock private ComicFileHandler comicFileHandler;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private Comic comic;
-  @Mock private ArchiveAdaptor targetArchiveAdaptor;
-  @Mock private Comic savedComic;
 
   @Before
-  public void setUp() throws ComicFileHandlerException {
+  public void setUp() throws AdaptorException {
     Mockito.when(stepExecution.getJobParameters()).thenReturn(jobParameters);
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE))
-        .thenReturn(TEST_TARGET_ARCHIVE);
-    Mockito.when(comicFileHandler.getArchiveAdaptorFor(Mockito.any(ArchiveType.class)))
-        .thenReturn(targetArchiveAdaptor);
+        .thenReturn(TEST_TARGET_ARCHIVE_NAME);
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
         .thenReturn(String.valueOf(false));
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_RENAME_PAGES))
@@ -67,39 +63,40 @@ public class RecreateComicFileProcessorTest {
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
         .thenReturn(String.valueOf(true));
 
-    processor.process(comic);
+    final Comic result = processor.process(comic);
 
-    Mockito.verify(comic, Mockito.times(1)).removeDeletedPages();
+    assertNotNull(result);
+    assertSame(comic, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comic, TEST_TARGET_ARCHIVE, true, false);
   }
 
   @Test
   public void testProcessRenamePages() throws Exception {
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_RENAME_PAGES))
         .thenReturn(String.valueOf(true));
-    Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
-        .thenReturn(savedComic);
 
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(savedComic, result);
+    assertSame(comic, result);
 
     Mockito.verify(comic, Mockito.never()).removeDeletedPages();
-    Mockito.verify(targetArchiveAdaptor, Mockito.times(1)).saveComic(comic, true);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comic, TEST_TARGET_ARCHIVE, false, true);
   }
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.when(targetArchiveAdaptor.saveComic(Mockito.any(Comic.class), Mockito.anyBoolean()))
-        .thenReturn(savedComic);
-
     final Comic result = processor.process(comic);
 
     assertNotNull(result);
-    assertSame(savedComic, result);
+    assertSame(comic, result);
 
     Mockito.verify(comic, Mockito.never()).removeDeletedPages();
-    Mockito.verify(targetArchiveAdaptor, Mockito.times(1)).saveComic(comic, false);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comic, TEST_TARGET_ARCHIVE, false, false);
   }
 
   @Test
