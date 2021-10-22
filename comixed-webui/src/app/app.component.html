@@ -12,19 +12,18 @@
   </div>
 </div>
 
+<cx-navigation-bar
+  [user]="user"
+  [sidebarOpened]="sidenav.opened"
+  (toggleSidebar)="sidenav.toggle($event)"
+></cx-navigation-bar>
+
 <mat-sidenav-container class="cx-width-100 cx-height-100 cx-navbar-margin">
   <mat-sidenav #sidenav class="cx-primary-dark-background" mode="over">
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
   <mat-sidenav-content #sidebar class="cx-width-100 cx-overflow-y-scroll">
-    <cx-navigation-bar
-      [user]="user"
-      [sidebarOpened]="sidenav.opened"
-      (toggleSidebar)="sidenav.toggle($event)"
-    ></cx-navigation-bar>
-
     <router-outlet></router-outlet>
-
     <cx-footer
       id="cx-footer"
       class="cx-padding-left-5"
