@@ -34,7 +34,6 @@
       "credits": "Creative Team ({count})",
       "description": "Issue Description",
       "file-details": "Comic File Details",
-      "file-entries": "File Entries",
       "filename": "Filename",
       "filesize": "Filesize",
       "imprint": "Imprint",
@@ -84,7 +83,6 @@
     "text": {
       "comic-changed": "Write metadata to the comic file.",
       "comicvine-issue-link": "ComicVine Details Page",
-      "file-entries": "There {count, plural, =1{is one file} other{are # files}} in this archive.",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "no-matching-volumes": "No matching volumes were found...",
       "state-ADDED": "Unchanged",

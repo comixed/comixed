@@ -42,8 +42,6 @@ public class ComicFileRecreatedAction extends AbstractComicAction {
     // prepare the comic for reprocessing
     log.trace("Clearing file details");
     comic.setFileDetails(null);
-    log.trace("Clearing file entries");
-    comic.getFileEntries().clear();
     log.trace("Clearing pages");
     comic.getPages().clear();
     log.trace("Turning off file contents loaded flag");

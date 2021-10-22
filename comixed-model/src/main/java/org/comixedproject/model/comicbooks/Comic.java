@@ -94,12 +94,6 @@ public class Comic {
   @Setter
   private ComicFileDetails fileDetails;
 
-  @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "FileNumber")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  private Set<ComicFileEntry> fileEntries = new HashSet<>();
-
   @Column(name = "ComicState", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("comicState")

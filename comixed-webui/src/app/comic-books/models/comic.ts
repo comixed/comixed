@@ -17,7 +17,6 @@
  */
 
 import { FileDetails } from '@app/comic-books/models/file-details';
-import { ComicFileEntry } from '@app/comic-books/models/comic-file-entry';
 import { ComicCredit } from '@app/comic-books/models/comic-credit';
 import { Page } from '@app/comic-books/models/page';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
@@ -31,7 +30,6 @@ export interface Comic {
   comicState: ComicBookState;
   missing: boolean;
   fileDetails: FileDetails;
-  fileEntries: ComicFileEntry[];
   addedDate: number;
   deletedDate: number;
   lastModifiedOn: number;
