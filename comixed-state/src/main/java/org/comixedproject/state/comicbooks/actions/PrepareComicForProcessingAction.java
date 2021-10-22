@@ -39,8 +39,6 @@ public class PrepareComicForProcessingAction extends AbstractComicAction {
     final Comic comic = this.fetchComic(context);
     log.trace("Clearing file details");
     comic.setFileDetails(null);
-    log.trace("Clearing file entries");
-    comic.getFileEntries().clear();
     log.trace("Clearing pages");
     comic.getPages().clear();
     log.trace("Turning off file contents loaded flag");

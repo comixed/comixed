@@ -18,11 +18,8 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import java.util.List;
 import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.model.comicbooks.ComicFileEntry;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +37,6 @@ public class RecreateComicFileActionTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private Comic comic;
-  @Mock private List<ComicFileEntry> fileEntryList;
-  @Mock private List<Page> pageList;
 
   @Before
   public void setUp() {
