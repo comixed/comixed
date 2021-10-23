@@ -30,7 +30,7 @@ import {
   metadataUpdating,
   updateMetadata,
   updateMetadataFailed
-} from '@app/library/actions/update-metadata.actions.ts';
+} from '@app/library/actions/update-metadata.actions';
 
 describe('UpdateMetadata Reducer', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];

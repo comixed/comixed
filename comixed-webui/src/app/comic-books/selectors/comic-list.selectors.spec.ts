@@ -36,6 +36,11 @@ import {
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 
 describe('Comic List Selectors', () => {
+  const COMICS = [
+    { ...COMIC_1, lastRead: new Date().getTime(), deletedDate: null },
+    { ...COMIC_3, lastRead: null, deletedDate: null },
+    { ...COMIC_5, lastRead: null, deletedDate: new Date().getTime() }
+  ];
   let state: ComicListState;
 
   beforeEach(() => {
@@ -43,11 +48,10 @@ describe('Comic List Selectors', () => {
       loading: Math.random() > 0.5,
       lastId: Math.floor(Math.abs(Math.random() * 1000)),
       lastPayload: Math.random() > 0.5,
-      comics: [
-        { ...COMIC_1, lastRead: new Date().getTime(), deletedDate: null },
-        { ...COMIC_3, lastRead: null, deletedDate: null },
-        { ...COMIC_5, lastRead: null, deletedDate: new Date().getTime() }
-      ]
+      comics: COMICS,
+      unprocessed: COMICS,
+      unscraped: COMICS,
+      deleted: COMICS
     };
   });
 

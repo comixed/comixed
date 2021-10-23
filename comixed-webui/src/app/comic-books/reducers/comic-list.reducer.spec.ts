@@ -62,6 +62,18 @@ describe('Comic List Reducer', () => {
     it('has no comics', () => {
       expect(state.comics).toEqual([]);
     });
+
+    it('has no unprocessed comics', () => {
+      expect(state.unprocessed).toEqual([]);
+    });
+
+    it('has no unscraped comics', () => {
+      expect(state.unscraped).toEqual([]);
+    });
+
+    it('has no deleted comics', () => {
+      expect(state.deleted).toEqual([]);
+    });
   });
 
   describe('resetting the comic state', () => {
@@ -72,7 +84,10 @@ describe('Comic List Reducer', () => {
           loading: true,
           lastId: LAST_ID,
           lastPayload: true,
-          comics: [COMIC_1, COMIC_3, COMIC_5]
+          comics: [COMIC_1, COMIC_3, COMIC_5],
+          unprocessed: [COMIC_1, COMIC_3, COMIC_5],
+          unscraped: [COMIC_1, COMIC_3, COMIC_5],
+          deleted: [COMIC_1, COMIC_3, COMIC_5]
         },
         resetComicList()
       );
@@ -92,6 +107,18 @@ describe('Comic List Reducer', () => {
 
     it('clears the existing set of comics', () => {
       expect(state.comics).toEqual([]);
+    });
+
+    it('has no unprocessed comics', () => {
+      expect(state.unprocessed).toEqual([]);
+    });
+
+    it('has no unscraped comics', () => {
+      expect(state.unscraped).toEqual([]);
+    });
+
+    it('has no deleted comics', () => {
+      expect(state.deleted).toEqual([]);
     });
   });
 

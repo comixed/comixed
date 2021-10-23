@@ -63,6 +63,10 @@ import {
   initialState as initialReadingListsState,
   READING_LISTS_FEATURE_KEY
 } from '@app/lists/reducers/reading-lists.reducer';
+import {
+  initialState as initialLastReadState,
+  LAST_READ_LIST_FEATURE_KEY
+} from '@app/last-read/reducers/last-read-list.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -77,6 +81,7 @@ describe('AppComponent', () => {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
 

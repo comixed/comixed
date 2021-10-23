@@ -7,11 +7,17 @@
   mat-button
   class="menu-button"
   routerLink="/library/all"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>local_library</mat-icon>
-  <span>{{ "navigation.option.all-comics" | translate }}</span>
+  <span
+    [matBadge]="totalComics$ | async"
+    matBadgePosition="after"
+    matBadgeOverlap="false"
+    matBadgeColor="accent"
+  >
+    {{ "navigation.option.all-comics" | translate }}
+  </span>
 </button>
 
 <button
@@ -19,11 +25,17 @@
   mat-button
   class="menu-button"
   routerLink="/library/unread"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>read_more</mat-icon>
-  <span>{{ "navigation.option.unread-comics" | translate }}</span>
+  <span
+    [matBadge]="unreadComics$ | async"
+    matBadgePosition="after"
+    matBadgeOverlap="false"
+    matBadgeColor="accent"
+  >
+    {{ "navigation.option.unread-comics" | translate }}
+  </span>
 </button>
 
 <button
@@ -31,11 +43,35 @@
   mat-button
   class="menu-button"
   routerLink="/library/unscraped"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>cloud_download</mat-icon>
-  <span>{{ "navigation.option.unscraped-comics" | translate }}</span>
+  <span
+    [matBadge]="unscrapedComics$ | async"
+    matBadgePosition="after"
+    matBadgeOverlap="false"
+    matBadgeColor="accent"
+  >
+    {{ "navigation.option.unscraped-comics" | translate }}
+  </span>
+</button>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
+  routerLink="/library/deleted"
+  routerLinkActive="active"
+>
+  <mat-icon>delete_sweep</mat-icon>
+  <span
+    [matBadge]="deletedComics$ | async"
+    matBadgePosition="after"
+    matBadgeOverlap="false"
+    matBadgeColor="accent"
+  >
+    {{ "navigation.option.deleted-comics" | translate }}
+  </span>
 </button>
 
 <button
@@ -43,7 +79,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/import"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>publish</mat-icon>
@@ -54,20 +89,7 @@
   *ngIf="!!user"
   mat-button
   class="menu-button"
-  routerLink="/library/deleted"
-  [queryParams]="queryParams"
-  routerLinkActive="active"
->
-  <mat-icon>delete_sweep</mat-icon>
-  <span>{{ "navigation.option.deleted-comics" | translate }}</span>
-</button>
-
-<button
-  *ngIf="!!user"
-  mat-button
-  class="menu-button"
   routerLink="/library/pages/duplicates"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>control_point_duplicate</mat-icon>
@@ -79,7 +101,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/pages/blocked"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>block</mat-icon>
@@ -97,7 +118,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/collections/publishers"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>business</mat-icon>
@@ -109,7 +129,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/collections/series"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>auto_stories</mat-icon>
@@ -121,7 +140,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/collections/characters"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>person_outline</mat-icon>
@@ -133,7 +151,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/collections/teams"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>people</mat-icon>
@@ -145,7 +162,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/collections/locations"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>place</mat-icon>
@@ -157,7 +173,6 @@
   mat-button
   class="menu-button"
   routerLink="/library/collections/stories"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>layers</mat-icon>
@@ -175,7 +190,6 @@
   mat-button
   class="menu-button"
   routerLink="/lists/reading/all"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>library_add</mat-icon>
@@ -200,7 +214,6 @@
   mat-button
   class="menu-button"
   [routerLink]="['/lists', 'reading', list.id]"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>format_list_numbered_rtl</mat-icon>
@@ -216,7 +229,6 @@
   mat-button
   class="menu-button"
   routerLink="/account/preferences"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>account_circle</mat-icon>
@@ -234,7 +246,6 @@
   mat-button
   class="menu-button"
   routerLink="/admin/configuration"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>settings</mat-icon>
@@ -246,7 +257,6 @@
   mat-button
   class="menu-button"
   routerLink="/admin/audit/web"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>list</mat-icon>
@@ -263,7 +273,6 @@
   mat-button
   class="menu-button"
   routerLink="/build"
-  [queryParams]="queryParams"
   routerLinkActive="active"
 >
   <mat-icon>list</mat-icon>

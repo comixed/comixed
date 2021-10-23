@@ -56,7 +56,7 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';

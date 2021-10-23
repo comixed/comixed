@@ -20,11 +20,15 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { isAdmin } from '@app/user/user.functions';
 import { LoggerService } from '@angular-ru/logger';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { ActivatedRoute } from '@angular/router';
+import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
+import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
+import { Comic } from '@app/comic-books/models/comic';
+import { LastRead } from '@app/last-read/models/last-read';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -36,23 +40,38 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   comicsCollapsed = false;
   collectionCollapsed = false;
   readingListsCollapsed = false;
+  comicListStateSubscription: Subscription;
+  allComics: Comic[] = [];
+  lastReadSubscription: Subscription;
+  lastRead: LastRead[] = [];
+  totalComics$ = new BehaviorSubject<number>(0);
+  unreadComics$ = new BehaviorSubject<number>(0);
+  unscrapedComics$ = new BehaviorSubject<number>(0);
+  deletedComics$ = new BehaviorSubject<number>(0);
+  duplicateComics = new BehaviorSubject<number>(0);
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
-  queryParamSubscription: Subscription;
-  queryParams = {};
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private activedRoute: ActivatedRoute
   ) {
-    this.queryParamSubscription = this.activedRoute.queryParams.subscribe(
-      params => {
-        const sidebar = !!params.sidebar;
-
-        this.queryParams = { sidebar: !!sidebar ? sidebar : undefined };
-      }
-    );
+    this.comicListStateSubscription = this.store
+      .select(selectComicListState)
+      .subscribe(state => {
+        this.allComics = state.comics;
+        this.totalComics$.next(state.comics.length);
+        this.unreadComics$.next(this.getUnreadComicCount());
+        this.unscrapedComics$.next(state.unscraped.length);
+        this.deletedComics$.next(state.deleted.length);
+      });
+    this.lastReadSubscription = this.store
+      .select(selectLastReadEntries)
+      .subscribe(entries => {
+        this.lastRead = entries;
+        this.unreadComics$.next(this.getUnreadComicCount());
+      });
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
@@ -71,10 +90,12 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from comic list updates');
+    this.comicListStateSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from last read updates');
+    this.lastReadSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamSubscription.unsubscribe();
   }
 
   ngOnInit(): void {}
@@ -89,5 +110,9 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
 
   onCollapseReadingLists(collapsed: boolean): void {
     this.readingListsCollapsed = collapsed;
+  }
+
+  private getUnreadComicCount(): number {
+    return this.allComics.length - this.lastRead.length;
   }
 }

@@ -25,7 +25,7 @@ import {
   metadataUpdating,
   updateMetadata,
   updateMetadataFailed
-} from '@app/library/actions/update-metadata.actions.ts';
+} from '@app/library/actions/update-metadata.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Comic } from '@app/comic-books/models/comic';
 import { of } from 'rxjs';
