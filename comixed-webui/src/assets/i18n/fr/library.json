@@ -50,6 +50,7 @@
     "all-comics": {
       "tab-title": "Toutes les Bandes Dessinées",
       "tab-title-deleted": "Bandes dessinées supprimées",
+      "tab-title-unprocessed": "Unprocessed Comics",
       "tab-title-unread": "Bandes dessinées non lues",
       "tab-title-unscraped": "Unscraped Comics"
     },

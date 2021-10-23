@@ -15,6 +15,18 @@
 </button>
 
 <button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/library/unprocessed"
+  [queryParams]="queryParams"
+  routerLinkActive="active"
+>
+  <mat-icon>incomplete_circle</mat-icon>
+  <span>{{ "navigation.option.unprocessed-comics" | translate }}</span>
+</button>
+
+<button
   *ngIf="!!user"
   mat-button
   class="menu-button"
@@ -27,7 +39,7 @@
 </button>
 
 <button
-  *ngIf="!!user"
+  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/unscraped"
@@ -39,7 +51,7 @@
 </button>
 
 <button
-  *ngIf="!!user"
+  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/import"
@@ -51,7 +63,7 @@
 </button>
 
 <button
-  *ngIf="!!user"
+  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/deleted"
@@ -63,7 +75,7 @@
 </button>
 
 <button
-  *ngIf="!!user"
+  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/pages/duplicates"
@@ -75,7 +87,7 @@
 </button>
 
 <button
-  *ngIf="!!user"
+  *ngIf="isAdmin"
   mat-button
   class="menu-button"
   routerLink="/library/pages/blocked"
@@ -209,6 +221,8 @@
   </span>
 </button>
 
+<mat-divider *ngIf="!!user"></mat-divider>
+
 <h4 class="section-title" *ngIf="!!user">
   {{ "navigation.heading.account" | translate }}
 </h4>
@@ -225,7 +239,7 @@
   <span>{{ "navigation.option.user-preferences" | translate }}</span>
 </button>
 
-<mat-divider *ngIf="!!user"></mat-divider>
+<mat-divider *ngIf="isAdmin"></mat-divider>
 
 <h4 class="section-title" *ngIf="isAdmin">
   {{ "navigation.heading.admin" | translate }}
