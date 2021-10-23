@@ -68,7 +68,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateComicReadStatus } from '@app/last-read/actions/update-read-status.actions';
 import { Confirmation } from '@app/core/models/confirmation';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import {

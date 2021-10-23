@@ -33,13 +33,19 @@ export interface ComicListState {
   lastId: number;
   lastPayload: boolean;
   comics: Comic[];
+  unprocessed: Comic[];
+  unscraped: Comic[];
+  deleted: Comic[];
 }
 
 export const initialState: ComicListState = {
   loading: false,
   lastId: 0,
   lastPayload: false,
-  comics: []
+  comics: [],
+  unprocessed: [],
+  unscraped: [],
+  deleted: []
 };
 
 export const reducer = createReducer(
@@ -50,14 +56,26 @@ export const reducer = createReducer(
     loading: false,
     lastId: 0,
     lastPayload: false,
-    comics: []
+    comics: [],
+    unprocessed: [],
+    unscraped: [],
+    deleted: []
   })),
   on(loadComics, state => ({ ...state, loading: true })),
   on(comicsReceived, (state, action) => {
     const comics = state.comics.concat(action.comics);
     const lastId = action.lastId;
     const lastPayload = action.lastPayload;
-    return { ...state, comics, lastId, lastPayload, loading: false };
+    return {
+      ...state,
+      comics,
+      unprocessed: comics.filter(comic => !comic.fileDetails),
+      unscraped: comics.filter(comic => !comic.comicVineId),
+      deleted: comics.filter(comic => !!comic.deletedDate),
+      lastId,
+      lastPayload,
+      loading: false
+    };
   }),
   on(loadComicsFailed, state => ({ ...state, loading: false })),
   on(comicListUpdateReceived, (state, action) => {

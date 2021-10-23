@@ -45,7 +45,7 @@ import { LibraryToolbarComponent } from '@app/library/components/library-toolbar
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import {
   ArchiveType,

@@ -47,18 +47,18 @@ export const reducer = createReducer(
   initialState,
 
   on(updateComics, (state, action) => {
-    // removed from the local state the old version of incoming comic updates
     let comics = state.comics.filter(comic => {
       return action.updated.some(entry => entry.id === comic.id) === false;
     });
-    // add the updates
     comics = comics.concat(action.updated);
-    // now filter out any removed comics
     comics = comics.filter(
       comic => action.removed.includes(comic.id) === false
     );
 
-    return { ...state, comics };
+    return {
+      ...state,
+      comics
+    };
   }),
   on(selectComics, (state, action) => {
     const selected = state.selected.filter(

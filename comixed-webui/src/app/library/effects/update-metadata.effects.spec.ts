@@ -34,7 +34,7 @@ import {
   metadataUpdating,
   updateMetadata,
   updateMetadataFailed
-} from '@app/library/actions/update-metadata.actions.ts';
+} from '@app/library/actions/update-metadata.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LibraryService } from '@app/library/services/library.service';

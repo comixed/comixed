@@ -55,7 +55,7 @@ import { updateComicReadStatus } from '@app/last-read/actions/update-read-status
 import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { updateMetadata } from '@app/library/actions/update-metadata.actions.ts';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
