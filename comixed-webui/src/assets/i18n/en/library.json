@@ -51,6 +51,7 @@
       "tab-title": "All Comics",
       "tab-title-deleted": "Deleted Comics",
       "tab-title-unread": "Unread Comics",
+      "tab-title-unprocessed": "Unprocessed Comics",
       "tab-title-unscraped": "Unscraped Comics"
     },
     "comic-group": {

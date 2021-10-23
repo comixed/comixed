@@ -58,6 +58,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   unreadOnly = false;
   unscrapedOnly = false;
   deletedOnly = false;
+  unprocessedOnly = false;
   queryParamSubscription: Subscription;
   archiveTypeFilter = null;
   lastReadDatesSubscription: Subscription;
@@ -77,6 +78,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.unreadOnly = !!data.unread && data.unread === true;
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
+      this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
       this.showConsolidate =
         !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
     });
@@ -139,7 +141,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this._comics = comics.filter(
       comic =>
         (!this.unscrapedOnly || !comic.comicVineId) &&
-        (!this.deletedOnly || !!comic.deletedDate)
+        (!this.deletedOnly || !!comic.deletedDate) &&
+        (!this.unprocessedOnly || !comic.fileDetails)
     );
   }
 
@@ -169,7 +172,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   private loadTranslations(): void {
     this.logger.trace('Setting page title');
-    if (this.deletedOnly) {
+    if (this.unprocessedOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant(
+          'library.all-comics.tab-title-unprocessed'
+        )
+      );
+    } else if (this.deletedOnly) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-deleted')
       );

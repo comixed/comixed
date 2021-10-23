@@ -31,6 +31,12 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
+    path: 'library/unprocessed',
+    component: LibraryPageComponent,
+    canActivate: [AdminGuard],
+    data: { unprocessed: true }
+  },
+  {
     path: 'library/unread',
     component: LibraryPageComponent,
     canActivate: [ReaderGuard],
@@ -39,13 +45,13 @@ const routes: Routes = [
   {
     path: 'library/unscraped',
     component: LibraryPageComponent,
-    canActivate: [ReaderGuard],
+    canActivate: [AdminGuard],
     data: { unscraped: true }
   },
   {
     path: 'library/deleted',
     component: LibraryPageComponent,
-    canActivate: [ReaderGuard],
+    canActivate: [AdminGuard],
     data: { deleted: true }
   },
   {

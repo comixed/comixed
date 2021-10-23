@@ -157,10 +157,21 @@ describe('LibraryPageComponent', () => {
 
   describe('loading page data', () => {
     beforeEach(() => {
+      component.unprocessedOnly = false;
       component.unreadOnly = false;
       component.unscrapedOnly = false;
       component.deletedOnly = false;
       component.unscrapedOnly = false;
+    });
+
+    describe('when showing unprocessed comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ unprocessed: true });
+      });
+
+      it('sets the unread only flag', () => {
+        expect(component.unprocessedOnly).toBeTrue();
+      });
     });
 
     describe('when showing unread comics', () => {
@@ -206,12 +217,19 @@ describe('LibraryPageComponent', () => {
 
   describe('when the language changes', () => {
     beforeEach(() => {
+      component.unprocessedOnly = false;
       component.unreadOnly = false;
       component.unscrapedOnly = false;
       component.deletedOnly = false;
     });
 
     it('updates the page title for all comic', () => {
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for unprocessed comic', () => {
+      component.unreadOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
