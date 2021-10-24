@@ -26,9 +26,9 @@ import {
 import { ActionReducerMap } from '@ngrx/store';
 import {
   reducer as updateReadStatusReducer,
-  UPDATE_READ_STATUS_FEATURE_KEY,
-  UpdateReadStatusState
-} from '@app/last-read/reducers/update-read-status.reducer';
+  SET_COMICS_READ_FEATURE_KEY,
+  SetComicsReadState
+} from './reducers/set-comics-read-state.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -39,7 +39,7 @@ interface RouterStateUrl {
 export interface LastReadModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [LAST_READ_LIST_FEATURE_KEY]: LastReadListState;
-  [UPDATE_READ_STATUS_FEATURE_KEY]: UpdateReadStatusState;
+  [SET_COMICS_READ_FEATURE_KEY]: SetComicsReadState;
 }
 
 export type ModuleState = LastReadModuleState;
@@ -47,5 +47,5 @@ export type ModuleState = LastReadModuleState;
 export const reducers: ActionReducerMap<LastReadModuleState> = {
   router: routerReducer,
   [LAST_READ_LIST_FEATURE_KEY]: lastReadDatesReducer,
-  [UPDATE_READ_STATUS_FEATURE_KEY]: updateReadStatusReducer
+  [SET_COMICS_READ_FEATURE_KEY]: updateReadStatusReducer
 };

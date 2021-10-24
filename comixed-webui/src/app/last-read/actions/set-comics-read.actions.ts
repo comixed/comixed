@@ -16,6 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-export interface LoadLastReadEntriesRequest {
-  lastId: number;
-}
+import { createAction, props } from '@ngrx/store';
+import { Comic } from '@app/comic-books/models/comic';
+
+export const setComicsRead = createAction(
+  '[Set Comics Read] Update the comic read state',
+  props<{ comics: Comic[]; read: boolean }>()
+);
+
+export const comicsReadSet = createAction(
+  '[Set Comics Read] The comic read state updated'
+);
+
+export const setComicsReadFailed = createAction(
+  '[Set Comics Read] Failed to update the comic read status'
+);

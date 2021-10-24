@@ -57,12 +57,14 @@ export const reducer = createReducer(
   }),
   on(lastReadDateUpdated, (state, action) => {
     const entries = state.entries
-      .filter(entry => entry.id !== action.entry.id)
+      .filter(entry => entry.comic.id !== action.entry.comic.id)
       .concat([action.entry]);
     return { ...state, entries };
   }),
   on(lastReadDateRemoved, (state, action) => {
-    const entries = state.entries.filter(entry => entry.id !== action.entry.id);
+    const entries = state.entries.filter(
+      entry => entry.comic.id !== action.entry.comic.id
+    );
     return { ...state, entries };
   }),
   on(loadLastReadDatesFailed, state => ({ ...state, loading: false }))

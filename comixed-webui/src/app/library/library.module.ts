@@ -37,7 +37,6 @@ import {
   LIBRARY_FEATURE_KEY,
   reducer as libraryReducer
 } from '@app/library/reducers/library.reducer';
-import { LibraryEffects } from '@app/library/effects/library.effects';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -146,7 +145,6 @@ import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effect
     StoreModule.forFeature(CONVERT_COMICS_FEATURE_KEY, convertComicsReducer),
     EffectsModule.forFeature([
       DisplayEffects,
-      LibraryEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
       RescanComicsEffects,

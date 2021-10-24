@@ -29,9 +29,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { LastReadListEffects } from './effects/last-read-list.effects';
 import {
   reducer as updateReadStatusReducer,
-  UPDATE_READ_STATUS_FEATURE_KEY
-} from '@app/last-read/reducers/update-read-status.reducer';
-import { UpdateReadStatusEffects } from '@app/last-read/effects/update-read-status.effects';
+  SET_COMICS_READ_FEATURE_KEY
+} from '@app/last-read/reducers/set-comics-read-state.reducer';
+import { SetComicsReadEffects } from '@app/last-read/effects/set-comics-read.effects';
 
 @NgModule({
   declarations: [],
@@ -41,10 +41,10 @@ import { UpdateReadStatusEffects } from '@app/last-read/effects/update-read-stat
     TranslateModule.forRoot(),
     StoreModule.forFeature(LAST_READ_LIST_FEATURE_KEY, lastReadDatesReducer),
     StoreModule.forFeature(
-      UPDATE_READ_STATUS_FEATURE_KEY,
+      SET_COMICS_READ_FEATURE_KEY,
       updateReadStatusReducer
     ),
-    EffectsModule.forFeature([LastReadListEffects, UpdateReadStatusEffects])
+    EffectsModule.forFeature([LastReadListEffects, SetComicsReadEffects])
   ],
   exports: [CommonModule]
 })

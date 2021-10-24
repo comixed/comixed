@@ -49,6 +49,7 @@ public class ComicStateHandler extends LifecycleObjectSupport {
   public static final String HEADER_DELETE_REMOVED_COMIC_FILE = "header.remove-comic-file";
   public static final String HEADER_TARGET_DIRECTORY = "header.target-directory";
   public static final String HEADER_RENAMING_RULE = "header.renaming-rule";
+  public static final String HEADER_USER = "header.user";
 
   @Autowired private StateMachine<ComicState, ComicEvent> stateMachine;
 
@@ -102,7 +103,7 @@ public class ComicStateHandler extends LifecycleObjectSupport {
    * @param headers the message headers
    */
   public void fireEvent(
-      final Comic comic, final ComicEvent event, final Map<String, String> headers) {
+      final Comic comic, final ComicEvent event, final Map<String, Object> headers) {
     log.debug("Firing comic event: {} => {}", comic.getId(), event);
     final Message<ComicEvent> message =
         MessageBuilder.withPayload(event)

@@ -28,6 +28,9 @@
         >
           <mat-icon>info</mat-icon>
         </mat-basic-chip>
+        <mat-basic-chip *ngIf="isRead" color="accent">
+          <mat-icon>bookmark</mat-icon>
+        </mat-basic-chip>
         <mat-basic-chip
           *ngIf="comicChanged && isAdmin"
           color="warn"

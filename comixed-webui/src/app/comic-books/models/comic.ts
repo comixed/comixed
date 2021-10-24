@@ -58,5 +58,4 @@ export interface Comic {
   notes: string;
   pages?: Page[];
   duplicateCount?: number;
-  lastRead?: number;
 }

@@ -21,17 +21,17 @@ import { Comic } from '@app/comic-books/models/comic';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import {
-  selectLibraryBusy,
-  selectSelectedComics
-} from '@app/library/selectors/library.selectors';
+import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
+import {
+  selectComicList,
+  selectComicListState
+} from '@app/comic-books/selectors/comic-list.selectors';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
@@ -46,7 +46,7 @@ import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selec
   styleUrls: ['./library-page.component.scss']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  libraryBusySubscription: Subscription;
+  comicListStateSubscription: Subscription;
   comicSubscription: Subscription;
   selectedSubscription: Subscription;
   selected: Comic[] = [];
@@ -106,9 +106,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.libraryBusySubscription = this.store
-      .select(selectLibraryBusy)
-      .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
+    this.comicListStateSubscription = this.store
+      .select(selectComicListState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.loading }))
+      );
     this.comicSubscription = this.store
       .select(selectComicList)
       .subscribe(comics => (this.comics = comics));
@@ -152,7 +154,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
-    this.libraryBusySubscription.unsubscribe();
+    this.comicListStateSubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();

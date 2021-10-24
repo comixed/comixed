@@ -89,7 +89,7 @@ describe('LibraryService', () => {
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(SET_READ_STATE_URL));
-    expect(req.request.method).toEqual('POST');
+    expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
       ids: COMICS.map(comic => comic.id),
       read: READ

@@ -31,11 +31,9 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { interpolate } from '@app/core';
-import { LoadLastReadEntriesRequest } from '@app/last-read/models/net/load-last-read-entries-request';
 import {
-  CLEAR_COMIC_READ_STATUS_URL,
-  LAST_READ_REMOVE_TOPIC,
-  LAST_READ_UPDATE_TOPIC,
+  LAST_READ_REMOVED_TOPIC,
+  LAST_READ_UPDATED_TOPIC,
   LOAD_LAST_READ_ENTRIES_URL,
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
@@ -56,7 +54,8 @@ import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
-import { Subscription } from 'webstomp-client';
+import { SetComicsReadRequest } from '@app/last-read/models/net/set-comics-read-request';
+import { HttpResponse } from '@angular/common/http';
 
 describe('LastReadService', () => {
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
@@ -108,42 +107,29 @@ describe('LastReadService', () => {
       } as LoadLastReadEntriesResponse)
     );
 
-    const req = httpMock.expectOne(interpolate(LOAD_LAST_READ_ENTRIES_URL));
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({
-      lastId: LAST_ID
-    } as LoadLastReadEntriesRequest);
+    const req = httpMock.expectOne(
+      interpolate(LOAD_LAST_READ_ENTRIES_URL, { lastId: LAST_ID })
+    );
+    expect(req.request.method).toEqual('GET');
     req.flush({
       entries: ENTRIES,
       lastPayload: LAST_PAYLOAD
     } as LoadLastReadEntriesResponse);
   });
 
-  describe('updating the last read status of a comic', () => {
-    it('can mark a comic as read', () => {
-      service
-        .setStatus({ comic: COMIC, status: true })
-        .subscribe(response => expect(response).toEqual(COMIC));
+  it('can set comics read', () => {
+    const read = Math.random() > 0.5;
+    service
+      .setRead({ comics: [COMIC], read })
+      .subscribe(response => expect(response.status).toEqual(200));
 
-      const req = httpMock.expectOne(
-        interpolate(SET_COMIC_READ_STATUS_URL, { comicId: COMIC.id })
-      );
-      expect(req.request.method).toEqual('POST');
-      expect(req.request.body).toEqual({});
-      req.flush(COMIC);
-    });
-
-    it('can mark a comic as unread', () => {
-      service
-        .setStatus({ comic: COMIC, status: false })
-        .subscribe(response => expect(response).toEqual(COMIC));
-
-      const req = httpMock.expectOne(
-        interpolate(CLEAR_COMIC_READ_STATUS_URL, { comicId: COMIC.id })
-      );
-      expect(req.request.method).toEqual('DELETE');
-      req.flush(COMIC);
-    });
+    const req = httpMock.expectOne(interpolate(SET_COMIC_READ_STATUS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: [COMIC.id],
+      read
+    } as SetComicsReadRequest);
+    req.flush(new HttpResponse({ status: 200 }));
   });
 
   describe('when messaging starts', () => {
@@ -174,7 +160,7 @@ describe('LastReadService', () => {
         service.updateSubscription = null;
         service.removeSubscription = null;
         webSocketService.subscribe
-          .withArgs(LAST_READ_UPDATE_TOPIC, jasmine.anything())
+          .withArgs(LAST_READ_UPDATED_TOPIC, jasmine.anything())
           .and.callFake((topic, callback) => {
             callback(ENTRY);
             return {
@@ -182,7 +168,7 @@ describe('LastReadService', () => {
             } as any;
           });
         webSocketService.subscribe
-          .withArgs(LAST_READ_REMOVE_TOPIC, jasmine.anything())
+          .withArgs(LAST_READ_REMOVED_TOPIC, jasmine.anything())
           .and.callFake((topic, callback) => {
             callback(ENTRY);
             return {
@@ -194,6 +180,11 @@ describe('LastReadService', () => {
           [MESSAGING_FEATURE_KEY]: {
             ...initialMessagingState,
             started: true
+          },
+          [LAST_READ_LIST_FEATURE_KEY]: {
+            ...initialLastReadListState,
+            loading: false,
+            lastPayload: true
           }
         });
       });

@@ -19,10 +19,12 @@
 package org.comixedproject.state;
 
 import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC;
+import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_USER;
 import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READING_LIST;
 
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.lists.ReadingList;
+import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.statemachine.StateContext;
 
 /**
@@ -50,5 +52,15 @@ public class StateContextAccessor {
    */
   protected ReadingList fetchReadingList(final StateContext<?, ?> context) {
     return context.getMessageHeaders().get(HEADER_READING_LIST, ReadingList.class);
+  }
+
+  /**
+   * Retrieves a user from the state context.
+   *
+   * @param context the context
+   * @return the user
+   */
+  protected ComiXedUser fetchUser(final StateContext<?, ?> context) {
+    return context.getMessageHeaders().get(HEADER_USER, ComiXedUser.class);
   }
 }

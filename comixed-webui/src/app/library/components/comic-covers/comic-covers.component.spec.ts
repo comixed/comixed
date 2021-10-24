@@ -45,8 +45,7 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import {
   deselectComics,
-  selectComics,
-  setReadState
+  selectComics
 } from '@app/library/actions/library.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -69,12 +68,20 @@ import { MatDividerModule } from '@angular/material/divider';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
 import { convertComics } from '@app/library/actions/convert-comics.actions';
+import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
+import {
+  LAST_READ_1,
+  LAST_READ_3,
+  LAST_READ_5
+} from '@app/last-read/last-read.fixtures';
+import { Comic } from '@app/comic-books/models/comic';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
   const COMIC = COMIC_2;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
   const READING_LIST = READING_LIST_1;
+  const LAST_READ_DATES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
   const initialState = {
     [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
@@ -222,12 +229,12 @@ describe('ComicCoversComponent', () => {
 
     describe('for one comic', () => {
       beforeEach(() => {
-        component.onSetOneReadState(COMIC, READ);
+        component.onMarkOneComicRead(COMIC, READ);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setReadState({ comics: [COMIC], read: READ })
+          setComicsRead({ comics: [COMIC], read: READ })
         );
       });
     });
@@ -235,12 +242,12 @@ describe('ComicCoversComponent', () => {
     describe('for selected comic', () => {
       beforeEach(() => {
         component.selected = COMICS;
-        component.onSetSelectedReadState(READ);
+        component.onMarkMultipleComicsRead(READ);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setReadState({ comics: COMICS, read: READ })
+          setComicsRead({ comics: COMICS, read: READ })
         );
       });
     });
@@ -454,6 +461,22 @@ describe('ComicCoversComponent', () => {
           deletePages: true
         })
       );
+    });
+  });
+
+  describe('comic last read states', () => {
+    beforeEach(() => {
+      component.lastRead = LAST_READ_DATES;
+    });
+
+    it('stores the read comic ids', () => {
+      expect(component.readComicIds).toEqual(
+        LAST_READ_DATES.map(entry => entry.comic.id)
+      );
+    });
+
+    it('identifies read comics', () => {
+      expect(component.isRead(LAST_READ_DATES[0].comic as Comic)).toBeTrue();
     });
   });
 });

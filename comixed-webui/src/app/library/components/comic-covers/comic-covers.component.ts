@@ -34,8 +34,7 @@ import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   deselectComics,
-  selectComics,
-  setReadState
+  selectComics
 } from '@app/library/actions/library.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
@@ -55,6 +54,8 @@ import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.
 import { ReadingList } from '@app/lists/models/reading-list';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { convertComics } from '@app/library/actions/convert-comics.actions';
+import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
+import { LastRead } from '@app/last-read/models/last-read';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -97,6 +98,12 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(state => (this.pagination = state.pagination));
   }
 
+  private _readComicIds: number[] = [];
+
+  get readComicIds(): number[] {
+    return this._readComicIds;
+  }
+
   get comics(): Comic[] {
     return this._comicObservable.getValue();
   }
@@ -104,6 +111,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() set comics(comics: Comic[]) {
     this.logger.trace('Setting comics:', comics);
     this.dataSource.data = comics;
+  }
+
+  @Input() set lastRead(lastRead: LastRead[]) {
+    this._readComicIds = lastRead.map(entry => entry.comic.id);
   }
 
   ngOnInit(): void {
@@ -142,14 +153,14 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dialog.open(ComicDetailsDialogComponent, { data: comic });
   }
 
-  onSetOneReadState(comic: Comic, read: boolean): void {
+  onMarkOneComicRead(comic: Comic, read: boolean): void {
     this.logger.trace('Setting one comic read state:', comic, read);
-    this.store.dispatch(setReadState({ comics: [comic], read }));
+    this.store.dispatch(setComicsRead({ comics: [comic], read }));
   }
 
-  onSetSelectedReadState(read: boolean): void {
+  onMarkMultipleComicsRead(read: boolean): void {
     this.logger.trace('Setting selected comics read state:', read);
-    this.store.dispatch(setReadState({ comics: this.selected, read }));
+    this.store.dispatch(setComicsRead({ comics: this.selected, read }));
   }
 
   ngAfterViewInit(): void {
@@ -272,6 +283,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
       format,
       this.selected
     );
+  }
+
+  isRead(comic: Comic): boolean {
+    return this.readComicIds.includes(comic.id);
   }
 
   private doConversion(

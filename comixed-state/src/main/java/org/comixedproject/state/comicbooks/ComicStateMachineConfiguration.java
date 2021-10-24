@@ -22,10 +22,7 @@ import java.util.EnumSet;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
-import org.comixedproject.state.comicbooks.guards.ComicContentsProcessedGuard;
-import org.comixedproject.state.comicbooks.guards.ComicFileAlreadyRecreatingGuard;
-import org.comixedproject.state.comicbooks.guards.ConsolidateComicGuard;
-import org.comixedproject.state.comicbooks.guards.FileDetailsCreatedGuard;
+import org.comixedproject.state.comicbooks.guards.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -58,6 +55,8 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
   @Autowired private MarkComicForRemovalAction markComicForRemovalAction;
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
+  @Autowired private ComicAlreadyReadByUserGuard comicAlreadReadByUserGuard;
+  @Autowired private ComicNotAlreadyReadByUserGuard comicNotAlreadReadByUserGuard;
 
   @Override
   public void configure(final StateMachineStateConfigurer<ComicState, ComicEvent> states)
@@ -131,6 +130,12 @@ public class ComicStateMachineConfiguration
         .target(ComicState.STABLE)
         .event(ComicEvent.contentsProcessed)
         .guard(comicContentsProcessedGuard)
+        // the comic file was reprocessed and the database details overwritten
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.contentsProcessed)
         // the comic is going to be consolidated
         .and()
         .withExternal()
@@ -248,12 +253,32 @@ public class ComicStateMachineConfiguration
         .target(ComicState.UNPROCESSED)
         .event(ComicEvent.comicFileRecreated)
         .action(comicFileRecreatedAction)
-        // the comic file was reprocessed and the database details overwritten
+        // the comic has been marked as read
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.STABLE)
+        .event(ComicEvent.markAsRead)
+        .guard(comicNotAlreadReadByUserGuard)
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.markAsRead)
+        .guard(comicNotAlreadReadByUserGuard)
+        // the comic has been marked as unread
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
         .target(ComicState.STABLE)
-        .event(ComicEvent.contentsProcessed)
+        .event(ComicEvent.markAsUnread)
+        .guard(comicAlreadReadByUserGuard)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.markAsUnread)
+        .guard(comicAlreadReadByUserGuard)
         // the comic was marked for deletion
         .and()
         .withExternal()

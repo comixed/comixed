@@ -40,11 +40,6 @@ export const selectComicListCount = createSelector(
   state => state.comics.length
 );
 
-export const selectComicListReadCount = createSelector(
-  selectComicListState,
-  state => state.comics.filter(comic => !!comic.lastRead).length
-);
-
 export const selectComicListDeletedCount = createSelector(
   selectComicListState,
   state => state.comics.filter(comic => !!comic.deletedDate).length

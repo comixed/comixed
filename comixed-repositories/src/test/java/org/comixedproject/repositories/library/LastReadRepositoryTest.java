@@ -73,18 +73,18 @@ public class LastReadRepositoryTest {
   }
 
   @Test
-  public void testGetEntriesForUserNoEntries() {
+  public void testLoadEntriesForUserNoEntries() {
     final List<LastRead> result =
-        this.repository.getEntriesForUser(userWithoutEntries, 0, PageRequest.of(0, TEST_MAXIMUM));
+        this.repository.loadEntriesForUser(userWithoutEntries, 0, PageRequest.of(0, TEST_MAXIMUM));
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
   }
 
   @Test
-  public void testGetEntriesForUser() {
+  public void testLoadEntriesForUser() {
     final List<LastRead> result =
-        this.repository.getEntriesForUser(user, 0, PageRequest.of(0, TEST_MAXIMUM));
+        this.repository.loadEntriesForUser(user, 0, PageRequest.of(0, TEST_MAXIMUM));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -96,9 +96,9 @@ public class LastReadRepositoryTest {
   }
 
   @Test
-  public void testGetEntriesForUserNoMoreEntries() {
+  public void testLoadEntriesForUserNoMoreEntries() {
     final List<LastRead> result =
-        this.repository.getEntriesForUser(user, 1000L, PageRequest.of(0, TEST_MAXIMUM));
+        this.repository.loadEntriesForUser(user, 1000L, PageRequest.of(0, TEST_MAXIMUM));
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -107,21 +107,21 @@ public class LastReadRepositoryTest {
   @Test
   public void testFindEntryForUserAndComicForUserWithNoEntries() {
     final LastRead result =
-        this.repository.findEntryForUserAndComic(userWithoutEntries, comicWithEntries);
+        this.repository.loadEntryForComicAndUser(comicWithEntries, userWithoutEntries);
 
     assertNull(result);
   }
 
   @Test
   public void testFindEntryForUserAndComicForUserWithEntriesButNoThisComic() {
-    final LastRead result = this.repository.findEntryForUserAndComic(user, comicWithNoEntries);
+    final LastRead result = this.repository.loadEntryForComicAndUser(comicWithNoEntries, user);
 
     assertNull(result);
   }
 
   @Test
   public void testFindEntryForUserAndComic() {
-    final LastRead result = this.repository.findEntryForUserAndComic(user, comicWithEntries);
+    final LastRead result = this.repository.loadEntryForComicAndUser(comicWithEntries, user);
 
     assertNotNull(result);
     assertEquals(user, result.getUser());

@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.messaging.Constants;
+import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,19 +36,23 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PublishLastReadUpdateActionTest {
+public class PublishLastReadUpdatedActionTest {
   private static final String TEST_LAST_READ_AS_JSON = "Object as JSON";
+  private static final String TEST_EMAIL = "read@comixedproject.org";
 
-  @InjectMocks private PublishLastReadUpdateAction action;
+  @InjectMocks private PublishLastReadUpdatedAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
   @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
   @Mock private LastRead lastRead;
+  @Mock private ComiXedUser user;
 
   @Before
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
     Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_LAST_READ_AS_JSON);
+    Mockito.when(lastRead.getUser()).thenReturn(user);
+    Mockito.when(user.getEmail()).thenReturn(TEST_EMAIL);
   }
 
   @Test(expected = PublishingException.class)
@@ -72,6 +77,7 @@ public class PublishLastReadUpdateActionTest {
     Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
     Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(lastRead);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.LAST_READ_UPDATE_TOPIC, TEST_LAST_READ_AS_JSON);
+        .convertAndSendToUser(
+            TEST_EMAIL, Constants.LAST_READ_UPDATED_TOPIC, TEST_LAST_READ_AS_JSON);
   }
 }

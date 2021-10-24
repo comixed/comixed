@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,47 +18,50 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { LibraryService } from '@app/library/services/library.service';
 import { LoggerService } from '@angular-ru/logger';
-import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
+import { LastReadService } from '@app/last-read/services/last-read.service';
 import {
-  readStateSet,
-  setReadState,
-  setReadStateFailed
-} from '@app/library/actions/library.actions';
+  comicsReadSet,
+  setComicsRead,
+  setComicsReadFailed
+} from '@app/last-read/actions/set-comics-read.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
+import { LastRead } from '@app/last-read/models/last-read';
 
 @Injectable()
-export class LibraryEffects {
-  setRead$ = createEffect(() => {
+export class SetComicsReadEffects {
+  setComicsRead$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setReadState),
-      tap(action => this.logger.debug('Effect: set read state:', action)),
+      ofType(setComicsRead),
+      tap(action =>
+        this.logger.debug('Effect: updating comic read status:', action)
+      ),
       switchMap(action =>
-        this.comicService
+        this.lastReadService
           .setRead({ comics: action.comics, read: action.read })
           .pipe(
-            tap(response => this.logger.debug('Response receieved:', response)),
+            tap(response => this.logger.debug('Response received:', response)),
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
-                  'library.set-read.effect-success',
-                  {
-                    count: action.comics.length,
-                    read: action.read
-                  }
+                  'update-read-status.effect-success',
+                  { status: action.read }
                 )
               )
             ),
-            map(() => readStateSet()),
+            map((response: LastRead) => comicsReadSet()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
-                this.translateService.instant('library.set-read.effect-failure')
+                this.translateService.instant(
+                  'update-read-status.effect-failure',
+                  { status: action.read }
+                )
               );
-              return of(setReadStateFailed());
+              return of(setComicsReadFailed());
             })
           )
       ),
@@ -67,7 +70,7 @@ export class LibraryEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(setReadStateFailed());
+        return of(setComicsReadFailed());
       })
     );
   });
@@ -75,7 +78,7 @@ export class LibraryEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private comicService: LibraryService,
+    private lastReadService: LastReadService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

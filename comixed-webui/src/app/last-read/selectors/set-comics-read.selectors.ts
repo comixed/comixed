@@ -16,23 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.library;
+import { createFeatureSelector } from '@ngrx/store';
+import {
+  SET_COMICS_READ_FEATURE_KEY,
+  SetComicsReadState
+} from '../reducers/set-comics-read-state.reducer';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-/**
- * <code>GetLastReadDatesRequest</code> represents the payload for a single request for last read
- * dates for a user.
- *
- * @author Darryl L. Pierce
- */
-@NoArgsConstructor
-@AllArgsConstructor
-public class GetLastReadDatesRequest {
-  @JsonProperty("lastId")
-  @Getter
-  private long lastId;
-}
+export const selectMarkComicReadState =
+  createFeatureSelector<SetComicsReadState>(SET_COMICS_READ_FEATURE_KEY);

@@ -27,16 +27,17 @@ import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishLastReadUpdateAction</code> publishes updates to {@link LastRead} instances.
+ * <code>PublishLastReadUpdatedAction</code> publishes updates to {@link LastRead} instances.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishLastReadUpdateAction extends AbstractPublishAction<LastRead> {
+public class PublishLastReadUpdatedAction extends AbstractPublishAction<LastRead> {
   @Override
   public void publish(final LastRead lastRead) throws PublishingException {
     log.trace("Publishing last read update");
-    this.doPublish(Constants.LAST_READ_UPDATE_TOPIC, lastRead, View.LastReadList.class);
+    this.doPublish(
+        lastRead.getUser(), Constants.LAST_READ_UPDATED_TOPIC, lastRead, View.LastReadList.class);
   }
 }

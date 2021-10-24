@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 
-import { UpdateReadStatusEffects } from './update-read-status.effects';
+import { SetComicsReadEffects } from './set-comics-read.effects';
 import { LastReadService } from '@app/last-read/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
@@ -28,10 +28,10 @@ import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  comicReadStatusUpdated,
-  updateComicReadStatus,
-  updateComicReadStatusFailed
-} from '@app/last-read/actions/update-read-status.actions';
+  comicsReadSet,
+  setComicsRead,
+  setComicsReadFailed
+} from '@app/last-read/actions/set-comics-read.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -46,7 +46,7 @@ describe('UpdateReadStatusEffects', () => {
   const ENTRY = LAST_READ_2;
 
   let actions$: Observable<any>;
-  let effects: UpdateReadStatusEffects;
+  let effects: SetComicsReadEffects;
   let lastReadService: jasmine.SpyObj<LastReadService>;
   let alertService: AlertService;
 
@@ -58,19 +58,19 @@ describe('UpdateReadStatusEffects', () => {
         MatSnackBarModule
       ],
       providers: [
-        UpdateReadStatusEffects,
+        SetComicsReadEffects,
         provideMockActions(() => actions$),
         {
           provide: LastReadService,
           useValue: {
-            setStatus: jasmine.createSpy('LastReadService.setStatus()')
+            setRead: jasmine.createSpy('LastReadService.setRead()')
           }
         },
         AlertService
       ]
     });
 
-    effects = TestBed.inject(UpdateReadStatusEffects);
+    effects = TestBed.inject(SetComicsReadEffects);
     lastReadService = TestBed.inject(
       LastReadService
     ) as jasmine.SpyObj<LastReadService>;
@@ -83,57 +83,42 @@ describe('UpdateReadStatusEffects', () => {
     expect(effects).toBeTruthy();
   });
 
-  describe('updating the last read status of a comic', () => {
-    it('fires an action on success marking', () => {
+  describe('updating the read state of comics', () => {
+    it('fires an action on success', () => {
       const serviceResponse = ENTRY;
-      const action = updateComicReadStatus({ comic: COMIC, status: true });
-      const outcome1 = comicReadStatusUpdated();
-      const outcome2 = lastReadDateUpdated({ entry: ENTRY });
+      const action = setComicsRead({ comics: [COMIC], read: READ });
+      const outcome = comicsReadSet();
 
       actions$ = hot('-a', { a: action });
-      lastReadService.setStatus.and.returnValue(of(serviceResponse));
+      lastReadService.setRead.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
-      expect(effects.updateStatus$).toBeObservable(expected);
-      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
-    });
-
-    it('fires an action on success unmarking', () => {
-      const serviceResponse = ENTRY;
-      const action = updateComicReadStatus({ comic: COMIC, status: false });
-      const outcome1 = comicReadStatusUpdated();
-      const outcome2 = lastReadDateRemoved({ entry: ENTRY });
-
-      actions$ = hot('-a', { a: action });
-      lastReadService.setStatus.and.returnValue(of(serviceResponse));
-
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
-      expect(effects.updateStatus$).toBeObservable(expected);
+      const expected = hot('-b', { b: outcome });
+      expect(effects.setComicsRead$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = updateComicReadStatus({ comic: COMIC, status: READ });
-      const outcome = updateComicReadStatusFailed();
+      const action = setComicsRead({ comics: [COMIC], read: READ });
+      const outcome = setComicsReadFailed();
 
       actions$ = hot('-a', { a: action });
-      lastReadService.setStatus.and.returnValue(throwError(serviceResponse));
+      lastReadService.setRead.and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
-      expect(effects.updateStatus$).toBeObservable(expected);
+      expect(effects.setComicsRead$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on general failure', () => {
-      const action = updateComicReadStatus({ comic: COMIC, status: READ });
-      const outcome = updateComicReadStatusFailed();
+      const action = setComicsRead({ comics: [COMIC], read: READ });
+      const outcome = setComicsReadFailed();
 
       actions$ = hot('-a', { a: action });
-      lastReadService.setStatus.and.throwError('expected');
+      lastReadService.setRead.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
-      expect(effects.updateStatus$).toBeObservable(expected);
+      expect(effects.setComicsRead$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

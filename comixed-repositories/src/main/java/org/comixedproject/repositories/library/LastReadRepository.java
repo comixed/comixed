@@ -35,7 +35,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface LastReadRepository extends CrudRepository<LastRead, Long> {
   /**
-   * Retrieves a batch of last read entries.
+   * Loads a batch of last read entries.
    *
    * @param user the user
    * @param threshold the threshold id
@@ -43,16 +43,16 @@ public interface LastReadRepository extends CrudRepository<LastRead, Long> {
    * @return the entries
    */
   @Query("SELECT e FROM LastRead e WHERE e.id > :threshold AND e.user = :user ORDER BY e.id")
-  List<LastRead> getEntriesForUser(
+  List<LastRead> loadEntriesForUser(
       @Param("user") ComiXedUser user, @Param("threshold") long threshold, Pageable pageRequest);
 
   /**
-   * Retrieves the last read entry for the given user and comic.
+   * Retrieves the last read entry for the given comic and user.
    *
-   * @param user the user
    * @param comic the comic
+   * @param user the user
    * @return the entry, or null if non exists
    */
-  @Query("SELECT e FROM LastRead e WHERE e.user = :user AND e.comic = :comic")
-  LastRead findEntryForUserAndComic(@Param("user") ComiXedUser user, @Param("comic") Comic comic);
+  @Query("SELECT e FROM LastRead e WHERE e.comic = :comic AND e.user = :user")
+  LastRead loadEntryForComicAndUser(@Param("comic") Comic comic, @Param("user") ComiXedUser user);
 }
