@@ -16,11 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
 import {
-  UPDATE_READ_STATUS_FEATURE_KEY,
-  UpdateReadStatusState
-} from '../reducers/update-read-status.reducer';
+  SET_COMICS_READ_FEATURE_KEY,
+  SetComicsReadState
+} from '../reducers/set-comics-read-state.reducer';
+import { selectMarkComicReadState } from './set-comics-read.selectors';
 
-export const selectMarkComicReadState =
-  createFeatureSelector<UpdateReadStatusState>(UPDATE_READ_STATUS_FEATURE_KEY);
+describe('SetComicsRead Selectors', () => {
+  let state: SetComicsReadState;
+
+  beforeEach(() => {
+    state = { updating: Math.random() > 0.5 };
+  });
+
+  it('should select the feature state', () => {
+    expect(
+      selectMarkComicReadState({
+        [SET_COMICS_READ_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

@@ -16,24 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  UPDATE_READ_STATUS_FEATURE_KEY,
-  UpdateReadStatusState
-} from '../reducers/update-read-status.reducer';
-import { selectMarkComicReadState } from './update-read-status.selectors';
-
-describe('UpdateReadStatus Selectors', () => {
-  let state: UpdateReadStatusState;
-
-  beforeEach(() => {
-    state = { updating: Math.random() > 0.5 };
-  });
-
-  it('should select the feature state', () => {
-    expect(
-      selectMarkComicReadState({
-        [UPDATE_READ_STATUS_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-});
+export interface SetComicsReadRequest {
+  ids: number[];
+  read: boolean;
+}

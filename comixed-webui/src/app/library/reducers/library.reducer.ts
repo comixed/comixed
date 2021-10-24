@@ -17,49 +17,22 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import {
-  deselectComics,
-  readStateSet,
-  selectComics,
-  setReadState,
-  setReadStateFailed,
-  updateComics
-} from '../actions/library.actions';
+import { deselectComics, selectComics } from '../actions/library.actions';
 import { Comic } from '@app/comic-books/models/comic';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
-  loading: boolean;
-  comics: Comic[];
   selected: Comic[];
-  saving: boolean;
 }
 
 export const initialState: LibraryState = {
-  loading: false,
-  comics: [],
-  selected: [],
-  saving: false
+  selected: []
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(updateComics, (state, action) => {
-    let comics = state.comics.filter(comic => {
-      return action.updated.some(entry => entry.id === comic.id) === false;
-    });
-    comics = comics.concat(action.updated);
-    comics = comics.filter(
-      comic => action.removed.includes(comic.id) === false
-    );
-
-    return {
-      ...state,
-      comics
-    };
-  }),
   on(selectComics, (state, action) => {
     const selected = state.selected.filter(
       comic => action.comics.includes(comic) === false
@@ -73,8 +46,5 @@ export const reducer = createReducer(
     );
 
     return { ...state, selected };
-  }),
-  on(setReadState, state => ({ ...state, saving: true })),
-  on(readStateSet, state => ({ ...state, saving: false })),
-  on(setReadStateFailed, state => ({ ...state, saving: false }))
+  })
 );

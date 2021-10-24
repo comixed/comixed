@@ -16,18 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-books/models/comic';
+package org.comixedproject.model.net.library.library;
 
-export const updateComicReadStatus = createAction(
-  '[Update Read Status] Update the comic read state',
-  props<{ comic: Comic; status: boolean }>()
-);
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-export const comicReadStatusUpdated = createAction(
-  '[Update Read Status] The comic read state updated'
-);
+/**
+ * <code>SetComicsReadRequest</code> represents the request body when marking multiple comics as
+ * read.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class SetComicsReadRequest {
+  @JsonProperty("ids")
+  @Getter
+  private List<Long> ids;
 
-export const updateComicReadStatusFailed = createAction(
-  '[Update Read Status] Failed to update the comic read status'
-);
+  @JsonProperty("read")
+  @Getter()
+  private boolean read;
+}

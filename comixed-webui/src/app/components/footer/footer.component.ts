@@ -23,9 +23,9 @@ import { selectImportCount } from '@app/selectors/import-count.selectors';
 import { User } from '@app/user/models/user';
 import {
   selectComicListCount,
-  selectComicListDeletedCount,
-  selectComicListReadCount
+  selectComicListDeletedCount
 } from '@app/comic-books/selectors/comic-list.selectors';
+import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 
 @Component({
   selector: 'cx-footer',
@@ -48,8 +48,8 @@ export class FooterComponent implements OnInit {
       .select(selectComicListCount)
       .subscribe(count => (this.comicCount = count));
     this.store
-      .select(selectComicListReadCount)
-      .subscribe(count => (this.readCount = count));
+      .select(selectLastReadEntries)
+      .subscribe(entries => (this.readCount = entries.length));
     this.store
       .select(selectComicListDeletedCount)
       .subscribe(count => (this.deletedCount = count));

@@ -58,7 +58,7 @@ public class LibraryServiceTest {
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
 
-  @Captor private ArgumentCaptor<Map<String, String>> headersArgumentCaptor;
+  @Captor private ArgumentCaptor<Map<String, Object>> headersArgumentCaptor;
 
   private List<Comic> comicList = new ArrayList<>();
   private Comic comic1 = new Comic();
@@ -159,7 +159,7 @@ public class LibraryServiceTest {
     service.prepareForConsolidation(
         TEST_TARGET_DIRECTORY, TEST_RENAMING_RULE, TEST_DELETE_REMOVED_COMIC_FILES);
 
-    final Map<String, String> headers = headersArgumentCaptor.getAllValues().get(0);
+    final Map<String, Object> headers = headersArgumentCaptor.getAllValues().get(0);
     assertEquals(
         String.valueOf(TEST_DELETE_REMOVED_COMIC_FILES),
         headers.get(HEADER_DELETE_REMOVED_COMIC_FILE));

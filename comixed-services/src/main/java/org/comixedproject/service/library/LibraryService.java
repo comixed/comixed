@@ -94,7 +94,7 @@ public class LibraryService {
       throw new LibraryException("Target directory is not configured");
     }
     log.trace("Preparing message headers");
-    Map<String, String> headers = new HashMap<>();
+    Map<String, Object> headers = new HashMap<>();
     headers.put(HEADER_DELETE_REMOVED_COMIC_FILE, String.valueOf(deleteRemovedComicFiles));
     headers.put(HEADER_TARGET_DIRECTORY, targetDirectory);
     headers.put(HEADER_RENAMING_RULE, renamingRule);

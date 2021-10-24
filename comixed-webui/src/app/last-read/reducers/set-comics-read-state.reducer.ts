@@ -18,25 +18,25 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
-  comicReadStatusUpdated,
-  updateComicReadStatus,
-  updateComicReadStatusFailed
-} from '../actions/update-read-status.actions';
+  comicsReadSet,
+  setComicsRead,
+  setComicsReadFailed
+} from '../actions/set-comics-read.actions';
 
-export const UPDATE_READ_STATUS_FEATURE_KEY = 'update_read_status_state';
+export const SET_COMICS_READ_FEATURE_KEY = 'set_comics_read_state';
 
-export interface UpdateReadStatusState {
+export interface SetComicsReadState {
   updating: boolean;
 }
 
-export const initialState: UpdateReadStatusState = {
+export const initialState: SetComicsReadState = {
   updating: false
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(updateComicReadStatus, state => ({ ...state, updating: true })),
-  on(comicReadStatusUpdated, state => ({ ...state, updating: false })),
-  on(updateComicReadStatusFailed, state => ({ ...state, updating: false }))
+  on(setComicsRead, state => ({ ...state, updating: true })),
+  on(comicsReadSet, state => ({ ...state, updating: false })),
+  on(setComicsReadFailed, state => ({ ...state, updating: false }))
 );

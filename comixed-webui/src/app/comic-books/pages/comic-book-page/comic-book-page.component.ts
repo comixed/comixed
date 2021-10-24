@@ -51,7 +51,7 @@ import {
   selectComicBusy
 } from '@app/comic-books/selectors/comic.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { updateComicReadStatus } from '@app/last-read/actions/update-read-status.actions';
+import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -240,9 +240,9 @@ export class ComicBookPageComponent
     );
   }
 
-  setReadState(status: boolean): void {
+  setReadState(read: boolean): void {
     this.logger.debug(`Marking comic as ${status ? 'read' : 'unread'}`);
-    this.store.dispatch(updateComicReadStatus({ comic: this.comic, status }));
+    this.store.dispatch(setComicsRead({ comics: [this.comic], read }));
   }
 
   onUpdateMetadata(): void {

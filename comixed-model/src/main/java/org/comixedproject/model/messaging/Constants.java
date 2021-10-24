@@ -40,10 +40,10 @@ public interface Constants {
   String CURRENT_USER_UPDATE_TOPIC = "/topic/user/current";
 
   /** Topic which receives notices when last read entries are updated. */
-  String LAST_READ_UPDATE_TOPIC = "/topic/last-read-list.update";
+  String LAST_READ_UPDATED_TOPIC = "/topic/last-read-list.update";
 
   /** Topic which receives notices when last read entries are removed. */
-  String LAST_READ_REMOVAL_TOPIC = "/topic/last-read-list.removal";
+  String LAST_READ_REMOVED_TOPIC = "/topic/last-read-list.remove";
 
   /** Topic which receives notices when the duplicate page list is updated. */
   String DUPLICATE_PAGE_LIST_TOPIC = "/topic/duplicate-page-list.update";

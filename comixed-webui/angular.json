@@ -20,7 +20,9 @@
             "allowedCommonJsDependencies": [
               "lodash",
               "sockjs-client",
-              "file-saver"
+              "file-saver",
+              "zone.js/dist/zone-error",
+              "clone-deep"
             ],
             "outputPath": "target/classes/static",
             "index": "src/index.html",

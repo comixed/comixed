@@ -19,11 +19,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/comic-books/models/comic';
 
-export const updateComics = createAction(
-  '[Library] Library updates received',
-  props<{ updated: Comic[]; removed: number[] }>()
-);
-
 export const selectComics = createAction(
   '[Library] Mark a set of comics as selected',
   props<{ comics: Comic[] }>()
@@ -32,17 +27,4 @@ export const selectComics = createAction(
 export const deselectComics = createAction(
   '[Library] Unmark a set of comics as selected',
   props<{ comics: Comic[] }>()
-);
-
-export const setReadState = createAction(
-  '[Library] Set the read state for comics',
-  props<{ comics: Comic[]; read: boolean }>()
-);
-
-export const readStateSet = createAction(
-  '[Library] Successfully set the read state for comics'
-);
-
-export const setReadStateFailed = createAction(
-  '[Library] Failed to set the read state for comics'
 );

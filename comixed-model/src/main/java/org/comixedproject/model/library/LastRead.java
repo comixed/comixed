@@ -27,7 +27,6 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 /**
  * <code>LastRead</code> holds the date and time for when a user last read a specific comic.
@@ -75,13 +74,6 @@ public class LastRead {
   @Getter
   @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   private Date createdOn = new Date();
-
-  @Column(name = "LastModifiedOn", nullable = false, updatable = true)
-  @LastModifiedDate
-  @Getter
-  @Setter
-  @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
-  private Date lastModifiedOn = new Date();
 
   @Override
   public boolean equals(final Object o) {

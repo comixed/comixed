@@ -29,6 +29,7 @@
       [selected]="isSelected(comic)"
       [comicChanged]="isChanged(comic)"
       [isAdmin]="isAdmin"
+      [isRead]="isRead(comic)"
       [showActions]="showActions"
       (selectionChanged)="onSelectionChanged($event.comic, $event.selected)"
       (showContextMenu)="onShowContextMenu($event.comic, $event.x, $event.y)"
@@ -81,7 +82,7 @@
   <button
     id="mark-one-as-read-button"
     mat-menu-item
-    (click)="onSetOneReadState(comic, true)"
+    (click)="onMarkOneComicRead(comic, true)"
   >
     <mat-icon>turned_in</mat-icon>
     <mat-label>
@@ -91,7 +92,7 @@
   <button
     id="mark-one-as-unread-button"
     mat-menu-item
-    (click)="onSetOneReadState(comic, false)"
+    (click)="onMarkOneComicRead(comic, false)"
   >
     <mat-icon>turned_in_not</mat-icon>
     <mat-label>
@@ -125,7 +126,7 @@
     id="mark-selected-as-read-button"
     *ngIf="selected.length > 0"
     mat-menu-item
-    (click)="onSetSelectedReadState(true)"
+    (click)="onMarkMultipleComicsRead(true)"
   >
     <mat-icon>turned_in</mat-icon>
     <mat-label>
@@ -136,7 +137,7 @@
     id="mark-selected-as-unread-button"
     *ngIf="selected.length > 0"
     mat-menu-item
-    (click)="onSetSelectedReadState(false)"
+    (click)="onMarkMultipleComicsRead(false)"
   >
     <mat-icon>turned_in_not</mat-icon>
     <mat-label>

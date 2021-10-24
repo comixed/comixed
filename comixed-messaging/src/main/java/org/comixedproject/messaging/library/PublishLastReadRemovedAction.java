@@ -37,6 +37,7 @@ public class PublishLastReadRemovedAction extends AbstractPublishAction<LastRead
   @Override
   public void publish(final LastRead lastRead) throws PublishingException {
     log.trace("Publishing last read remove");
-    this.doPublish(Constants.LAST_READ_REMOVAL_TOPIC, lastRead, View.LastReadList.class);
+    this.doPublish(
+        lastRead.getUser(), Constants.LAST_READ_REMOVED_TOPIC, lastRead, View.LastReadList.class);
   }
 }
