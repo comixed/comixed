@@ -34,8 +34,19 @@ import {
   loadComicFilesFailed,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 describe('ComicFileList Reducer', () => {
+  const GROUPS: ComicFileGroup[] = [
+    {
+      directory: 'directory1',
+      files: [COMIC_FILE_1, COMIC_FILE_3]
+    },
+    {
+      directory: 'directory2',
+      files: [COMIC_FILE_2]
+    }
+  ];
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
 
   let state: ComicFileListState;
@@ -78,8 +89,8 @@ describe('ComicFileList Reducer', () => {
   describe('comic files received', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, files: [], selections: FILES },
-        comicFilesLoaded({ files: FILES })
+        { ...state, loading: true, groups: [], files: [], selections: GROUPS },
+        comicFilesLoaded({ groups: GROUPS })
       );
     });
 
@@ -87,8 +98,12 @@ describe('ComicFileList Reducer', () => {
       expect(state.loading).toBeFalse();
     });
 
+    it('sets the comic file groups', () => {
+      expect(state.groups).toEqual(GROUPS);
+    });
+
     it('sets the comic files', () => {
-      expect(state.files).toEqual(FILES);
+      expect(state.files).toEqual([COMIC_FILE_1, COMIC_FILE_3, COMIC_FILE_2]);
     });
 
     it('clears any previous selections', () => {
@@ -99,7 +114,7 @@ describe('ComicFileList Reducer', () => {
   describe('failure to load comic files', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, files: FILES, selections: FILES },
+        { ...state, loading: true, files: GROUPS, selections: GROUPS },
         loadComicFilesFailed()
       );
     });
@@ -120,7 +135,7 @@ describe('ComicFileList Reducer', () => {
   describe('selecting comic files', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: [FILES[0]] },
+        { ...state, selections: [GROUPS[0]] },
         setComicFilesSelectedState({ files: FILES, selected: true })
       );
     });
@@ -131,11 +146,11 @@ describe('ComicFileList Reducer', () => {
   });
 
   describe('deselecting comic files', () => {
-    const DESELECTED_FILE = FILES[1];
+    const DESELECTED_FILE = FILES[0];
 
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: FILES },
+        { ...state, selections: GROUPS },
         setComicFilesSelectedState({
           files: [DESELECTED_FILE],
           selected: false
@@ -151,7 +166,7 @@ describe('ComicFileList Reducer', () => {
   describe('clearing the selections', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: FILES },
+        { ...state, selections: GROUPS },
         clearComicFileSelections()
       );
     });

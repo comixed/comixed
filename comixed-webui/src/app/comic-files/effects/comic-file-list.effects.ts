@@ -54,12 +54,20 @@ export class ComicFileListEffects {
               this.alertService.info(
                 this.translateService.instant(
                   'comic-files.load-comic-files.effect-success',
-                  { count: response.files.length }
+                  {
+                    directories: response.groups.length,
+                    files: response.groups
+                      .map(group => group.files)
+                      .reduce(
+                        (accumulator, files) => accumulator.concat(files),
+                        []
+                      ).length
+                  }
                 )
               )
             ),
             mergeMap((response: LoadComicFilesResponse) => [
-              comicFilesLoaded({ files: response.files }),
+              comicFilesLoaded({ groups: response.groups }),
               saveUserPreference({
                 name: IMPORT_ROOT_DIRECTORY_PREFERENCE,
                 value: action.directory

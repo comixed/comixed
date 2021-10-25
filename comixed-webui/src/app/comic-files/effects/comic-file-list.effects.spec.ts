@@ -46,9 +46,19 @@ import {
 } from '@app/library/library.constants';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 describe('ComicFileListEffects', () => {
-  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+  const GROUPS: ComicFileGroup[] = [
+    {
+      directory: 'directory1',
+      files: [COMIC_FILE_1, COMIC_FILE_3]
+    },
+    {
+      directory: 'directory2',
+      files: [COMIC_FILE_2]
+    }
+  ];
 
   let actions$: Observable<any>;
   let effects: ComicFileListEffects;
@@ -96,12 +106,12 @@ describe('ComicFileListEffects', () => {
     const MAXIMUM_RESULT = 100;
 
     it('fires an action on success', () => {
-      const serviceResponse = { files: FILES } as LoadComicFilesResponse;
+      const serviceResponse = { groups: GROUPS } as LoadComicFilesResponse;
       const action = loadComicFiles({
         directory: ROOT_DIRECTORY,
         maximum: MAXIMUM_RESULT
       });
-      const outcome1 = comicFilesLoaded({ files: FILES });
+      const outcome1 = comicFilesLoaded({ groups: GROUPS });
       const outcome2 = saveUserPreference({
         name: IMPORT_ROOT_DIRECTORY_PREFERENCE,
         value: ROOT_DIRECTORY

@@ -16,7 +16,7 @@
       "maximum-1000-files": "1000 fichiers"
     },
     "load-comic-files": {
-      "effect-success": "{count, plural, =1{1 fichier de bande dessinée trouvé} other{# fichiers de bande dessinée trouvés}}.",
+      "effect-success": "Found {files, plural, =1{one comic file} other{# comic files}} in {directories, plural, =1{one directory} other{# directories}}.",
       "effect-failure": "Impossible de trouver des fichiers de Bande Dessinées pour importation."
     },
     "page-title": "Import de Bandes Dessinées: {selected, plural, =1{Une} other{#}} sur {count, plural, =1{une Bande dessinée sélectionnée} other{# Bandes Dessinées sélectionnées}}",

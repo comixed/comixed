@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicfiles;
+package org.comixedproject.model.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import org.comixedproject.model.comicfiles.ComicFileGroup;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.comixedproject.views.View;
 
-@AllArgsConstructor
-public class LoadComicFilesResponse {
-  @JsonProperty("groups")
-  @Getter
-  @Setter
+/**
+ * <code>ComicFileGroup</code> holds a list of {@link ComicFile} instances that exist in the same
+ * directory.
+ *
+ * @author Darryl L. Pierce
+ */
+@RequiredArgsConstructor
+public class ComicFileGroup {
+  @JsonProperty("directory")
   @JsonView(View.ComicFileList.class)
-  private List<ComicFileGroup> groups = new ArrayList<>();
+  @NonNull
+  @Getter
+  private String directory;
+
+  @JsonProperty("files")
+  @JsonView(View.ComicFileList.class)
+  @Getter
+  private List<ComicFile> files = new ArrayList<>();
 }

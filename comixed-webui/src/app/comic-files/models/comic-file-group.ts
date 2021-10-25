@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.comicfiles;
+import { ComicFile } from './comic-file';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.comixedproject.model.comicfiles.ComicFileGroup;
-import org.comixedproject.views.View;
-
-@AllArgsConstructor
-public class LoadComicFilesResponse {
-  @JsonProperty("groups")
-  @Getter
-  @Setter
-  @JsonView(View.ComicFileList.class)
-  private List<ComicFileGroup> groups = new ArrayList<>();
+export interface ComicFileGroup {
+  directory: string;
+  files: ComicFile[];
 }

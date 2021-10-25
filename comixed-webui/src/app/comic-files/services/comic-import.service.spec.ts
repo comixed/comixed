@@ -32,7 +32,6 @@ import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
-  COMIC_FILE_4,
   ROOT_DIRECTORY
 } from '@app/comic-files/comic-file.fixtures';
 import {
@@ -43,9 +42,20 @@ import {
 import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';
 import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-metadata-request';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 describe('ComicImportService', () => {
-  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
+  const GROUPS: ComicFileGroup[] = [
+    {
+      directory: 'directory1',
+      files: [COMIC_FILE_1, COMIC_FILE_3]
+    },
+    {
+      directory: 'directory2',
+      files: [COMIC_FILE_2]
+    }
+  ];
+  const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
   const MAXIMUM = 100;
   const FILENAME = COMIC_2.baseFilename;
   const SERIES = COMIC_2.series;
@@ -71,7 +81,7 @@ describe('ComicImportService', () => {
 
   it('can load comic files', () => {
     const serviceResponse = {
-      files: FILES
+      groups: GROUPS
     } as LoadComicFilesResponse;
     service
       .loadComicFiles({ directory: ROOT_DIRECTORY, maximum: MAXIMUM })
