@@ -22,5 +22,6 @@
   <include file="/db/migrations/0.10.0/014_426_move_imprints_to_database.xml"/>
   <include file="/db/migrations/0.10.0/015_955_remove_page_types.xml"/>
   <include file="/db/migrations/0.10.0/016_1029_recreate_comic_file_entries_constraints.xml"/>
+  <include file="/db/migrations/0.10.0/017_1066_fix_comic_created_on_column_updating.xml"/>
 
 </databaseChangeLog>
