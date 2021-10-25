@@ -25,17 +25,20 @@ import {
   loadComicFilesFailed,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 export const COMIC_FILE_LIST_FEATURE_KEY = 'comic_file_list';
 
 export interface ComicFileListState {
   loading: boolean;
+  groups: ComicFileGroup[];
   files: ComicFile[];
   selections: ComicFile[];
 }
 
 export const initialState: ComicFileListState = {
   loading: false,
+  groups: [],
   files: [],
   selections: []
 };
@@ -44,12 +47,19 @@ export const reducer = createReducer(
   initialState,
 
   on(loadComicFiles, state => ({ ...state, loading: true })),
-  on(comicFilesLoaded, (state, action) => ({
-    ...state,
-    loading: false,
-    files: action.files,
-    selections: []
-  })),
+  on(comicFilesLoaded, (state, action) => {
+    const groups = action.groups;
+    const files = action.groups
+      .map(entry => entry.files)
+      .reduce((accumulator, entries) => accumulator.concat(entries), []);
+    return {
+      ...state,
+      loading: false,
+      groups,
+      files,
+      selections: []
+    };
+  }),
   on(loadComicFilesFailed, state => ({
     ...state,
     loading: false,

@@ -22,15 +22,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
-import org.comixedproject.repositories.comicbooks.ComicRepository;
+import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
+import org.comixedproject.service.comicbooks.ComicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicFileService {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicService comicService;
   @Autowired private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
 
@@ -54,12 +57,22 @@ public class ComicFileService {
     return this.comicBookAdaptor.loadCover(comicArchive);
   }
 
-  public List<ComicFile> getAllComicsUnder(final String rootDirectory, final Integer maximum)
+  /**
+   * Retrieves up to a maximum number of comic files below a given root directory, groups by
+   * absolute directory. Returns only files that have a comic extension and which do not already
+   * appear in the database.
+   *
+   * @param rootDirectory the root directory
+   * @param maximum the maximum number of files
+   * @return the comic files
+   * @throws IOException if an error occurs
+   */
+  public List<ComicFileGroup> getAllComicsUnder(final String rootDirectory, final int maximum)
       throws IOException {
-    log.debug("Getting comics below root: {}", rootDirectory);
+    log.debug("Getting {} comics below root: {}", maximum == 0 ? "all" : maximum, rootDirectory);
 
     final File rootFile = new File(rootDirectory);
-    final List<ComicFile> result = new ArrayList<>();
+    final List<ComicFileGroup> result = new ArrayList<>();
 
     if (rootFile.exists()) {
       if (rootFile.isDirectory()) {
@@ -75,24 +88,44 @@ public class ComicFileService {
   }
 
   private void loadFilesUnder(
-      final List<ComicFile> files, final File directory, final Integer maximum) throws IOException {
-    log.debug("Loading files in directory: {}", directory);
+      final List<ComicFileGroup> entries, final File directory, final int maximum)
+      throws IOException {
+    log.trace("Loading files in directory: {}", directory);
     if (directory.listFiles() != null) {
       for (File file : directory.listFiles()) {
-        if (maximum > 0 && files.size() == maximum) {
-          log.debug("Loading maximum comics: {}", maximum);
-          return;
+        if (!entries.isEmpty()) {
+          final int total =
+              entries.stream()
+                  .map(comicFileGroup -> comicFileGroup.getFiles().size())
+                  .reduce((runningTotal, entry) -> runningTotal += entry)
+                  .get();
+          if (maximum > 0 && total == maximum) {
+            log.trace("Finished loading comics");
+            return;
+          }
         }
         if (file.isDirectory()) {
-          this.loadFilesUnder(files, file, maximum);
+          this.loadFilesUnder(entries, file, maximum);
         } else {
           if (canBeImported(file)) {
             final String filePath = file.getCanonicalPath();
             final long fileSize = file.length();
 
-            log.debug("Adding file: {} ({} bytes)", file.getAbsolutePath(), file.length());
-
-            files.add(new ComicFile(filePath, fileSize));
+            final String parentPath = FilenameUtils.getPath(filePath);
+            final Optional<ComicFileGroup> entry =
+                entries.stream()
+                    .filter(comicFileGroup -> comicFileGroup.getDirectory().equals(parentPath))
+                    .findFirst();
+            ComicFileGroup group = null;
+            if (entry.isPresent()) {
+              group = entry.get();
+            } else {
+              log.trace("Creating new grouping");
+              group = new ComicFileGroup(parentPath);
+              entries.add(group);
+            }
+            log.trace("Adding comic file");
+            group.getFiles().add(new ComicFile(filePath, fileSize));
           }
         }
       }
@@ -103,7 +136,8 @@ public class ComicFileService {
     boolean isComic = this.comicFileAdaptor.isComicFile(file);
 
     final String filePath = file.getCanonicalPath();
-    final Comic comic = this.comicRepository.findByFilename(filePath);
+    log.trace("Checking if comic file is already in the database");
+    final Comic comic = this.comicService.findByFilename(filePath);
 
     return isComic && (comic == null);
   }

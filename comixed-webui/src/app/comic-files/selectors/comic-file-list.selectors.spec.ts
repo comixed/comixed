@@ -21,6 +21,7 @@ import {
   ComicFileListState
 } from '../reducers/comic-file-list.reducer';
 import {
+  selectComicFileGroups,
   selectComicFileListState,
   selectComicFiles,
   selectComicFileSelections
@@ -30,8 +31,19 @@ import {
   COMIC_FILE_2,
   COMIC_FILE_3
 } from '@app/comic-files/comic-file.fixtures';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 describe('ComicFileList Selectors', () => {
+  const GROUPS: ComicFileGroup[] = [
+    {
+      directory: 'directory1',
+      files: [COMIC_FILE_1, COMIC_FILE_3]
+    },
+    {
+      directory: 'directory2',
+      files: [COMIC_FILE_2]
+    }
+  ];
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
 
   let state: ComicFileListState;
@@ -39,6 +51,7 @@ describe('ComicFileList Selectors', () => {
   beforeEach(() => {
     state = {
       loading: Math.random() > 0.5,
+      groups: GROUPS,
       files: FILES,
       selections: FILES
     };
@@ -50,6 +63,14 @@ describe('ComicFileList Selectors', () => {
         [COMIC_FILE_LIST_FEATURE_KEY]: state
       })
     ).toEqual(state);
+  });
+
+  it('should select the comic groups', () => {
+    expect(
+      selectComicFileGroups({
+        [COMIC_FILE_LIST_FEATURE_KEY]: state
+      })
+    ).toEqual(state.groups);
   });
 
   it('should select the comic files', () => {

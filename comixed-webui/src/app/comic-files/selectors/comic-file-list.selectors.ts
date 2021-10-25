@@ -21,11 +21,16 @@ import {
   COMIC_FILE_LIST_FEATURE_KEY,
   ComicFileListState
 } from '@app/comic-files/reducers/comic-file-list.reducer';
-import { selectComicImportState } from '@app/comic-files/selectors/comic-import.selectors';
 
 /** Selects the comic list feature state. */
 export const selectComicFileListState =
   createFeatureSelector<ComicFileListState>(COMIC_FILE_LIST_FEATURE_KEY);
+
+/** Selects the loaded comic file groups. */
+export const selectComicFileGroups = createSelector(
+  selectComicFileListState,
+  state => state.groups
+);
 
 /** Selects the loaded comic files. */
 export const selectComicFiles = createSelector(

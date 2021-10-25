@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.model.comicfiles.ComicFile;
+import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
 import org.comixedproject.model.net.ImportComicFilesRequest;
 import org.comixedproject.model.net.comicfiles.FilenameMetadataRequest;
@@ -66,7 +66,7 @@ public class ComicFileControllerTest {
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private Job addComicsToLibraryJob;
   @Mock private JobLauncher jobLauncher;
-  @Mock private List<ComicFile> comicFileList;
+  @Mock private List<ComicFileGroup> comicFileGroupList;
   @Mock private List<String> filenameList;
   @Mock private JobExecution jobExecution;
   @Mock private FilenameMetadata filenameMetadata;
@@ -101,13 +101,13 @@ public class ComicFileControllerTest {
   @Test
   public void testGetAllComicsUnderNoLimit() throws IOException {
     Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
-        .thenReturn(comicFileList);
+        .thenReturn(comicFileGroupList);
 
     final LoadComicFilesResponse response =
         controller.loadComicFiles(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_NO_LIMIT));
 
     assertNotNull(response);
-    assertSame(comicFileList, response.getFiles());
+    assertSame(comicFileGroupList, response.getGroups());
 
     Mockito.verify(comicFileService, Mockito.times(1))
         .getAllComicsUnder(TEST_DIRECTORY, TEST_NO_LIMIT);
@@ -116,13 +116,13 @@ public class ComicFileControllerTest {
   @Test
   public void testGetAllComicsUnder() throws IOException {
     Mockito.when(comicFileService.getAllComicsUnder(Mockito.anyString(), Mockito.anyInt()))
-        .thenReturn(comicFileList);
+        .thenReturn(comicFileGroupList);
 
     final LoadComicFilesResponse response =
         controller.loadComicFiles(new GetAllComicsUnderRequest(TEST_DIRECTORY, TEST_LIMIT));
 
     assertNotNull(response);
-    assertSame(comicFileList, response.getFiles());
+    assertSame(comicFileGroupList, response.getGroups());
 
     Mockito.verify(comicFileService, Mockito.times(1))
         .getAllComicsUnder(TEST_DIRECTORY, TEST_LIMIT);

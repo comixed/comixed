@@ -18,6 +18,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { ComicFile } from '@app/comic-files/models/comic-file';
+import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 export const loadComicFiles = createAction(
   '[Comic File List] Load comics in a file system',
@@ -26,7 +27,7 @@ export const loadComicFiles = createAction(
 
 export const comicFilesLoaded = createAction(
   '[Comic File List] Loaded comics in a file system',
-  props<{ files: ComicFile[] }>()
+  props<{ groups: ComicFileGroup[] }>()
 );
 
 export const loadComicFilesFailed = createAction(

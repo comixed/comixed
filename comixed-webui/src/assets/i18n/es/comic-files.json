@@ -16,7 +16,7 @@
       "maximum-1000-files": "1000 archivos"
     },
     "load-comic-files": {
-      "effect-success": "Encontró {count, plural, =1{one comic file} other{# comic files}}.",
+      "effect-success": "Found {files, plural, =1{one comic file} other{# comic files}} in {directories, plural, =1{one directory} other{# directories}}.",
       "effect-failure": "No se pudo encontrar ningún archivo de cómic."
     },
     "page-title": "Importar cómics: {selected, plural, =1{One} other{#}} de {count, plural, =1{One Comic} other{# Comics}} seleccionado",
