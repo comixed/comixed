@@ -32,9 +32,6 @@
 
     <!-- technical debt -->
     <dropIndex tableName="Comics"
-               indexName="idx_added_date"/>
-
-    <dropIndex tableName="Comics"
                indexName="idx_last_updated_date"/>
     <createIndex tableName="Comics"
                  indexName="ComicLastModifiedOnIdx">
