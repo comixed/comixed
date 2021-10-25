@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="017_1066_fix_comic_created_on_column_updating.xml"
+             author="mcpierce">
+
+    <renameColumn tableName="Comics"
+                  oldColumnName="CreatedOn"
+                  newColumnName="OldCreatedOn"
+                  columnDataType="timestamp"/>
+
+    <addColumn tableName="Comics">
+      <column name="CreatedOn"
+              type="datetime"/>
+    </addColumn>
+
+    <sql>UPDATE Comics
+         SET CreatedOn = OldCreatedOn</sql>
+
+    <dropColumn tableName="Comics"
+                columnName="OldCreatedOn"/>
+
+    <addNotNullConstraint tableName="Comics"
+                          columnName="CreatedOn"
+                          columnDataType="datetime"/>
+
+  </changeSet>
+</databaseChangeLog>
