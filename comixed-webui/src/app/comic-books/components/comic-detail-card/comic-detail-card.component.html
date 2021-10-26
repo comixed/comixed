@@ -2,6 +2,13 @@
   <mat-card-title *ngIf="!!title" class="cx-text-nowrap" [matTooltip]="title">
     {{ title }}
   </mat-card-title>
+  <mat-card-subtitle
+    *ngIf="!!subtitle"
+    class="cx-text-nowrap"
+    [matTooltip]="subtitle"
+  >
+    {{ subtitle }}
+  </mat-card-subtitle>
   <mat-card-content>
     <div
       class="cx-detail-card cx-padding-2 cx-margin-2"

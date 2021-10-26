@@ -11,7 +11,16 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.publisher }}
+      <a
+        [routerLink]="[
+          '/library',
+          'collections',
+          'publishers',
+          comic.publisher
+        ]"
+      >
+        {{ comic.publisher }}
+      </a>
     </span>
   </mat-grid-tile>
 
@@ -24,7 +33,9 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.series }}
+      <a [routerLink]="['/library', 'collections', 'series', comic.series]">
+        {{ comic.series }}
+      </a>
     </span>
   </mat-grid-tile>
 
