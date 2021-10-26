@@ -5,29 +5,29 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.10.4-1.0</version>
+    <version>0.10.5-1.0</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-http</artifactId>
-  <version>0.10.4-1.0</version>
+  <version>0.10.5-1.0</version>
   <name>comixed-http</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>
-      <version>0.10.4-1.0</version>
+      <version>0.10.5-1.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
-      <version>0.10.4-1.0</version>
+      <version>0.10.5-1.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-auth</artifactId>
-      <version>0.10.4-1.0</version>
+      <version>0.10.5-1.0</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
