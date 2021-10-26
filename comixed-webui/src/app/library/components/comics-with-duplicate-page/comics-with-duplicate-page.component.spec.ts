@@ -37,10 +37,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import {
   COMIC_1,
@@ -59,7 +55,7 @@ import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 describe('ComicsWithDuplicatePageComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const HASH = PAGE_1.hash;
-  const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
+  const initialState = {};
 
   let component: ComicsWithDuplicatePageComponent;
   let fixture: ComponentFixture<ComicsWithDuplicatePageComponent>;

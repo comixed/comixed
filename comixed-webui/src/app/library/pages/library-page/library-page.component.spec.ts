@@ -35,10 +35,6 @@ import { TitleService } from '@app/core/services/title.service';
 import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -59,7 +55,12 @@ import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
 } from '@app/comic-books/reducers/comic-list.reducer';
-import { COMIC_1, COMIC_3 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3,
+  COMIC_4
+} from '@app/comic-books/comic-books.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -80,7 +81,6 @@ describe('LibraryPageComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: initialUserState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
@@ -231,7 +231,7 @@ describe('LibraryPageComponent', () => {
     });
 
     it('updates the page title for unprocessed comic', () => {
-      component.unreadOnly = true;
+      component.unprocessedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -263,18 +263,22 @@ describe('LibraryPageComponent', () => {
       comicVineId: 54321
     };
     const DELETED = {
-      ...COMIC_3,
+      ...COMIC_2,
       lastRead: new Date().getTime(),
       deletedDate: new Date().getTime(),
       comicVineId: 12345
     };
     const UNSCRAPED = {
-      ...COMIC_1,
+      ...COMIC_3,
       lastRead: null,
       deletedDate: null,
       comicVineId: null
     };
-    const COMICS = [UNREAD, DELETED];
+    const UNPROCESSED = {
+      ...COMIC_4,
+      fileDetails: null
+    };
+    const COMICS = [UNREAD, DELETED, UNSCRAPED, UNPROCESSED];
 
     describe('for deleted comics', () => {
       beforeEach(() => {
@@ -298,6 +302,7 @@ describe('LibraryPageComponent', () => {
         component.unreadOnly = false;
         component.deletedOnly = false;
         component.unscrapedOnly = true;
+        component.unprocessedOnly = false;
         store.setState({
           ...initialState,
           [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
@@ -305,9 +310,24 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unscraped comics', () => {
-        component.comics.every(comic =>
-          expect(comic.comicVineId).not.toBeNull()
-        );
+        component.comics.every(comic => expect(comic.comicVineId).toBeNull());
+      });
+    });
+
+    describe('for unprocessed comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = false;
+        component.deletedOnly = false;
+        component.unscrapedOnly = false;
+        component.unprocessedOnly = true;
+        store.setState({
+          ...initialState,
+          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+        });
+      });
+
+      it('only loads the unprocessed comics', () => {
+        component.comics.every(comic => expect(comic.fileDetails).toBeNull());
       });
     });
   });

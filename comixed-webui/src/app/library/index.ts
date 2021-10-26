@@ -30,11 +30,6 @@ import {
   reducer as libraryReducer
 } from './reducers/library.reducer';
 import {
-  DISPLAY_FEATURE_KEY,
-  DisplayState,
-  reducer as displayReducer
-} from '@app/library/reducers/display.reducer';
-import {
   DUPLICATE_PAGE_LIST_FEATURE_KEY,
   DuplicatePageListState,
   reducer as comicsWithDuplicatePagesReducer
@@ -73,7 +68,6 @@ interface RouterStateUrl {
 
 export interface LibraryModuleState {
   router: RouterReducerState<RouterStateUrl>;
-  [DISPLAY_FEATURE_KEY]: DisplayState;
   [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: DuplicatePageListState;
@@ -88,7 +82,6 @@ export type ModuleState = LibraryModuleState;
 
 export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: routerReducer,
-  [DISPLAY_FEATURE_KEY]: displayReducer,
   [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: comicsWithDuplicatePagesReducer,

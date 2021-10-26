@@ -24,8 +24,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
 import { isAdmin, isReader } from '@app/user/user.functions';
-import { MatDialog } from '@angular/material/dialog';
-import { ComicDisplayOptionsComponent } from '@app/library/components/comic-display-options/comic-display-options.component';
 import {
   LANGUAGE_PREFERENCE,
   LOGGER_LEVEL_PREFERENCE
@@ -72,8 +70,7 @@ export class NavigationBarComponent {
     private router: Router,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private dialog: MatDialog
+    private translateService: TranslateService
   ) {
     this.translateService.onLangChange.subscribe(language => {
       this.logger.debug('Active language changed:', language.lang);
@@ -123,11 +120,6 @@ export class NavigationBarComponent {
         this.router.navigateByUrl('/login');
       }
     });
-  }
-
-  onShowDisplayOptions(): void {
-    this.logger.trace('Showing comic display options dialog');
-    this.dialog.open(ComicDisplayOptionsComponent, {});
   }
 
   onSelectLanguage(language: string): void {

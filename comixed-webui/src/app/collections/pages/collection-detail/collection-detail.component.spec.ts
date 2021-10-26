@@ -38,10 +38,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
   COMIC_LIST_FEATURE_KEY,
@@ -72,7 +68,6 @@ describe('CollectionDetailComponent', () => {
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [USER_FEATURE_KEY]: initialUserState
   };

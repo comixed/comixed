@@ -43,7 +43,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { resetDisplayOptions } from '@app/library/actions/display.actions';
 import { TokenService } from '@app/core/services/token.service';
 import { AlertService } from '@app/core/services/alert.service';
 
@@ -102,13 +101,12 @@ describe('UserEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = USER;
       const action = loadCurrentUser();
-      const outcome1 = currentUserLoaded({ user: USER });
-      const outcome2 = resetDisplayOptions({ user: USER });
+      const outcome = currentUserLoaded({ user: USER });
 
       actions$ = hot('-a', { a: action });
       userService.loadCurrentUser.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-b', { b: outcome });
       expect(effects.loadCurrentUser$).toBeObservable(expected);
     });
 
@@ -185,12 +183,11 @@ describe('UserEffects', () => {
   describe('user logout', () => {
     it('fires an action on success', () => {
       const action = logoutUser();
-      const outcome1 = userLoggedOut();
-      const outcome2 = resetDisplayOptions({});
+      const outcome = userLoggedOut();
 
       actions$ = hot('-a', { a: action });
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-b', { b: outcome });
       expect(effects.logoutUser$).toBeObservable(expected);
       expect(tokenService.clearAuthToken).toHaveBeenCalled();
     });

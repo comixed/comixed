@@ -45,10 +45,6 @@
 </mat-menu>
 
 <mat-menu #userMenu="matMenu">
-  <button *ngIf="isReader" mat-menu-item (click)="onShowDisplayOptions()">
-    <mat-icon>tv</mat-icon>
-    <mat-label>{{ "menu.user-menu.show-options-panel" | translate }}</mat-label>
-  </button>
   <button mat-menu-item [matMenuTriggerFor]="languageMenu">
     <mat-icon>language</mat-icon>
     <mat-label>{{ "menu.language-menu.root" | translate }}</mat-label>

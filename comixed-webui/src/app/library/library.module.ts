@@ -41,12 +41,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { LibraryPageComponent } from './pages/library-page/library-page.component';
-import {
-  DISPLAY_FEATURE_KEY,
-  reducer as displayReducer
-} from '@app/library/reducers/display.reducer';
-import { DisplayEffects } from '@app/library/effects/display.effects';
-import { ComicDisplayOptionsComponent } from './components/comic-display-options/comic-display-options.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -104,7 +98,6 @@ import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effect
 @NgModule({
   declarations: [
     LibraryPageComponent,
-    ComicDisplayOptionsComponent,
     LibraryToolbarComponent,
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
@@ -126,7 +119,6 @@ import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effect
     LibraryRouting,
     ReactiveFormsModule,
     TranslateModule.forRoot(),
-    StoreModule.forFeature(DISPLAY_FEATURE_KEY, displayReducer),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(
       DUPLICATE_PAGE_LIST_FEATURE_KEY,
@@ -144,7 +136,6 @@ import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effect
     ),
     StoreModule.forFeature(CONVERT_COMICS_FEATURE_KEY, convertComicsReducer),
     EffectsModule.forFeature([
-      DisplayEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
       RescanComicsEffects,

@@ -65,11 +65,9 @@ export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
 export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
 
 // display options
+export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
-export const PAGE_SIZE_DEFAULT = 400;
-export const PAGINATION_OPTIONS = [10, 25, 50, 100];
-export const PAGINATION_PREFERENCE = 'preference.pagination';
-export const PAGINATION_DEFAULT = PAGINATION_OPTIONS[0];
+export const PAGE_SIZE_DEFAULT = PAGE_SIZE_OPTIONS[0];
 
 // messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';

@@ -24,7 +24,11 @@ import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { getUserPreference, isAdmin } from '@app/user/user.functions';
+import {
+  getPageSize,
+  getUserPreference,
+  isAdmin
+} from '@app/user/user.functions';
 import { interpolate, updateQueryParam } from '@app/core';
 import {
   API_KEY_PREFERENCE,
@@ -33,7 +37,6 @@ import {
   QUERY_PARAM_TAB,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import {
   loadScrapingVolumes,
   resetScraping
@@ -141,6 +144,8 @@ export class ComicBookPageComponent
 
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.isAdmin = isAdmin(user);
+      this.logger.trace('Loading uer page size preference');
+      this.pageSize = getPageSize(user);
       this.apiKey = getUserPreference(
         user.preferences,
         API_KEY_PREFERENCE,
@@ -157,11 +162,6 @@ export class ComicBookPageComponent
         10
       );
     });
-    this.displaySubscription = this.store
-      .select(selectDisplayState)
-      .subscribe(state => {
-        this.pageSize = state.pageSize;
-      });
     this.volumesSubscription = this.store
       .select(selectScrapingVolumes)
       .subscribe(volumes => (this.volumes = volumes));

@@ -37,20 +37,23 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
-import { setPagination } from '@app/library/actions/display.actions';
 import { STORY_1, STORY_2, STORY_3 } from '@app/lists/lists.fixtures';
 import { TitleService } from '@app/core/services/title.service';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
 
 describe('StoryNameListPageComponent', () => {
   const NAMES = [STORY_1.name, STORY_2.name, STORY_3.name];
+  const USER = USER_READER;
   const initialState = {
     [STORY_LIST_FEATURE_KEY]: { ...initialStoryListState, names: NAMES },
-    [DISPLAY_FEATURE_KEY]: { ...initialDisplayState }
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
   let component: StoryNameListPageComponent;
@@ -118,17 +121,18 @@ describe('StoryNameListPageComponent', () => {
   describe('page size', () => {
     const PAGE_SIZE = 25;
 
-    beforeEach(() => {
-      component.pageSize = -1;
-    });
-
     describe('when the user preference is different', () => {
       beforeEach(() => {
         store.setState({
           ...initialState,
-          [DISPLAY_FEATURE_KEY]: {
-            ...initialDisplayState,
-            pagination: PAGE_SIZE
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            user: {
+              ...USER,
+              preferences: [
+                { name: PAGE_SIZE_PREFERENCE, value: `${PAGE_SIZE}` }
+              ]
+            }
           }
         });
       });
@@ -161,7 +165,10 @@ describe('StoryNameListPageComponent', () => {
 
       it('update the user preference', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setPagination({ pagination: PAGE_SIZE })
+          saveUserPreference({
+            name: PAGE_SIZE_PREFERENCE,
+            value: `${PAGE_SIZE}`
+          })
         );
       });
     });
