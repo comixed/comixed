@@ -83,3 +83,4 @@ Please read the [this](./CONTRIBUTING.md) for guidelines on contributing to the 
 * example.cbz - https://www.contrapositivediary.com/?p=1197
 * missing_page.png - Original found at https://commons.wikimedia.org/wiki/File:Comic_image_missing.svg
 * JWT authentication code based on https://www.devglan.com/spring-security/angular-jwt-authentication
+* credit.png, character.png, team.png, location.png, story.png - https://www.kindpng.com/

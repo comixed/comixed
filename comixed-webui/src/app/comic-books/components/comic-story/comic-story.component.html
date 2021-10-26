@@ -19,11 +19,18 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <cx-comic-detail-card
+      <div
         *ngFor="let credit of comic.credits"
-        [title]="credit.name"
-        [subtitle]="credit.role"
-      ></cx-comic-detail-card>
+        fxFlex.gt-md="20%"
+        fxFlex.md="25%"
+        fxFlex.lg-md="100%"
+      >
+        <cx-comic-detail-card
+          [title]="credit.name"
+          [subtitle]="credit.role"
+          imageUrl="/assets/img/credit.png"
+        ></cx-comic-detail-card>
+      </div>
     </div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="comic.characters.length === 0">
@@ -36,10 +43,18 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <cx-comic-detail-card
+      <div
         *ngFor="let character of comic.characters"
-        [title]="character"
-      ></cx-comic-detail-card>
+        fxFlex.gt-md="20%"
+        fxFlex.md="25%"
+        fxFlex.lg-md="100%"
+      >
+        <cx-comic-detail-card
+          [title]="character"
+          [routerLink]="['/library', 'collections', 'characters', character]"
+          imageUrl="/assets/img/character.png"
+        ></cx-comic-detail-card>
+      </div>
     </div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="comic.teams.length === 0">
@@ -51,10 +66,18 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <cx-comic-detail-card
+      <div
         *ngFor="let team of comic.teams"
-        [title]="team"
-      ></cx-comic-detail-card>
+        fxFlex.gt-md="20%"
+        fxFlex.md="25%"
+        fxFlex.lg-md="100%"
+      >
+        <cx-comic-detail-card
+          [title]="team"
+          [routerLink]="['/library', 'collections', 'teams', team]"
+          imageUrl="/assets/img/team.png"
+        ></cx-comic-detail-card>
+      </div>
     </div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="comic.locations.length === 0">
@@ -67,10 +90,18 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <cx-comic-detail-card
+      <div
         *ngFor="let location of comic.locations"
-        [title]="location"
-      ></cx-comic-detail-card>
+        fxFlex.gt-md="20%"
+        fxFlex.md="25%"
+        fxFlex.lg-md="100%"
+      >
+        <cx-comic-detail-card
+          [title]="location"
+          [routerLink]="['/library', 'collections', 'locations', location]"
+          imageUrl="/assets/img/location.png"
+        ></cx-comic-detail-card>
+      </div>
     </div>
   </mat-expansion-panel>
   <mat-expansion-panel [disabled]="comic.stories.length === 0">
@@ -83,10 +114,18 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <div class="cx-detail-card-container cx-width-100">
-      <cx-comic-detail-card
+      <div
         *ngFor="let story of comic.stories"
-        [title]="story"
-      ></cx-comic-detail-card>
+        fxFlex.gt-md="20%"
+        fxFlex.md="25%"
+        fxFlex.lg-md="100%"
+      >
+        <cx-comic-detail-card
+          [title]="story"
+          [routerLink]="['/library', 'collections', 'stories', story]"
+          imageUrl="/assets/img/story.png"
+        ></cx-comic-detail-card>
+      </div>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

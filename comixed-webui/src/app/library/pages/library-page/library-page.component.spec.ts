@@ -166,7 +166,9 @@ describe('LibraryPageComponent', () => {
 
     describe('when showing unprocessed comics', () => {
       beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ unprocessed: true });
+        (activatedRoute.data as BehaviorSubject<{}>).next({
+          unprocessed: true
+        });
       });
 
       it('sets the unread only flag', () => {

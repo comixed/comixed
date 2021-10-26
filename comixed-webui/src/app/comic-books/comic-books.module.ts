@@ -83,6 +83,7 @@ import {
 } from '@app/comic-books/reducers/imprint-list.reducer';
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
 import { FlexModule } from '@angular/flex-layout';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -141,7 +142,8 @@ import { FlexModule } from '@angular/flex-layout';
     CoreModule,
     MatGridListModule,
     MatDividerModule,
-    FlexModule
+    FlexModule,
+    MatBadgeModule
   ],
   exports: [
     CommonModule,
