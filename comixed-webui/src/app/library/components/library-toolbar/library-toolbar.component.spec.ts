@@ -39,13 +39,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Confirmation } from '@app/core/models/confirmation';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { PAGINATION_PREFERENCE } from '@app/library/library.constants';
+import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -58,7 +54,7 @@ import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
-  const initialState = { [DISPLAY_FEATURE_KEY]: initialDisplayState };
+  const initialState = {};
 
   let component: LibraryToolbarComponent;
   let fixture: ComponentFixture<LibraryToolbarComponent>;
@@ -158,25 +154,15 @@ describe('LibraryToolbarComponent', () => {
     });
   });
 
-  describe('setting the pagination', () => {
+  describe('when the pagination changes', () => {
     beforeEach(() => {
-      component.pagination = PAGINATION;
-    });
-
-    it('updates the component', () => {
-      expect(component.pagination).toEqual(PAGINATION);
-    });
-  });
-
-  describe('when the pagintion changes', () => {
-    beforeEach(() => {
-      component.onPaginationChange(PAGINATION);
+      component.onPageSizeChange(PAGINATION);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveUserPreference({
-          name: PAGINATION_PREFERENCE,
+          name: PAGE_SIZE_PREFERENCE,
           value: `${PAGINATION}`
         })
       );

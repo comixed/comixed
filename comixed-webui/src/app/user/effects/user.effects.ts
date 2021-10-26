@@ -39,7 +39,6 @@ import { UserService } from '@app/user/services/user.service';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { LoginResponse } from '@app/user/models/net/login-response';
-import { resetDisplayOptions } from '@app/library/actions/display.actions';
 import { AlertService } from '@app/core/services/alert.service';
 import { TokenService } from '@app/core/services/token.service';
 import { User } from '@app/user/models/user';
@@ -53,10 +52,7 @@ export class UserEffects {
       switchMap(action =>
         this.userService.loadCurrentUser().pipe(
           tap(response => this.logger.debug('Received response:', response)),
-          mergeMap((response: User) => [
-            currentUserLoaded({ user: response }),
-            resetDisplayOptions({ user: response })
-          ]),
+          map((response: User) => currentUserLoaded({ user: response })),
           catchError(error => {
             this.logger.error('Service failure:', error);
             return of(loadCurrentUserFailed());
@@ -110,10 +106,10 @@ export class UserEffects {
   logoutUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(logoutUser),
-      tap(action => this.logger.debug('Effect: logout out user:', action)),
+      tap(action => this.logger.trace('Logout out user:', action)),
       mergeMap(() => {
         this.tokenService.clearAuthToken();
-        return [userLoggedOut(), resetDisplayOptions({})];
+        return of(userLoggedOut());
       })
     );
   });
@@ -121,7 +117,7 @@ export class UserEffects {
   saveUserPreference$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveUserPreference),
-      tap(action => this.logger.debug('Effect: save user preference:', action)),
+      tap(action => this.logger.trace('Save user preference:', action)),
       mergeMap(action =>
         this.userService
           .saveUserPreference({ name: action.name, value: action.value })
@@ -144,7 +140,7 @@ export class UserEffects {
   saveCurrentUser$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(saveCurrentUser),
-      tap(action => this.logger.debug('Effect: save current user:', action)),
+      tap(action => this.logger.trace('Save current user:', action)),
       switchMap(action =>
         this.userService
           .saveUser({ user: action.user, password: action.password })

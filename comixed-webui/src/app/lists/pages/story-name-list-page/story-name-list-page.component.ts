@@ -35,14 +35,18 @@ import {
 } from '@app/lists/selectors/story-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadStoryNames } from '@app/lists/actions/story-list.actions';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { ActivatedRoute, Router } from '@angular/router';
 import { updateQueryParam } from '@app/core';
-import { PAGINATION_DEFAULT } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
 import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
-import { setPagination } from '@app/library/actions/display.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getPageSize } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-story-name-list-page',
@@ -60,7 +64,7 @@ export class StoryNameListPageComponent
   nameSubscription: Subscription;
   userSubscription: Subscription;
   queryParamSubscription: Subscription;
-  pageSize = PAGINATION_DEFAULT;
+  pageSize = PAGE_SIZE_DEFAULT;
   langChangeSubscription: Subscription;
 
   readonly displayedColumns = ['story-name'];
@@ -91,13 +95,10 @@ export class StoryNameListPageComponent
     this.nameSubscription = this.store
       .select(selectStoryNames)
       .subscribe(names => (this.dataSource.data = names));
-    this.userSubscription = this.store
-      .select(selectDisplayState)
-      .subscribe(state => {
-        if (state.pagination !== this.pageSize) {
-          this.pageSize = state.pagination;
-        }
-      });
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.logger.trace('Setting page size');
+      this.pageSize = getPageSize(user);
+    });
   }
 
   ngOnInit(): void {
@@ -140,7 +141,12 @@ export class StoryNameListPageComponent
         `${pageEvent.pageSize}`
       );
       this.logger.trace('Saving user preference');
-      this.store.dispatch(setPagination({ pagination: pageEvent.pageSize }));
+      this.store.dispatch(
+        saveUserPreference({
+          name: PAGE_SIZE_PREFERENCE,
+          value: `${pageEvent.pageSize}`
+        })
+      );
     }
   }
 

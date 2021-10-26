@@ -27,11 +27,6 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
-import {
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef
-} from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -46,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { GravatarModule } from 'ngx-gravatar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
@@ -56,8 +52,6 @@ describe('NavigationBarComponent', () => {
   let store: MockStore<any>;
   let router: Router;
   let confirmationService: ConfirmationService;
-  let dialog: MatDialog;
-  let dialogRef: jasmine.SpyObj<MatDialogRef<any>>;
   let translateService: TranslateService;
   let logger: LoggerService;
 
@@ -70,24 +64,16 @@ describe('NavigationBarComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         GravatarModule,
-        MatDialogModule,
         MatMenuModule,
         MatIconModule,
         MatToolbarModule,
         MatTooltipModule,
         MatFormFieldModule,
         MatDividerModule,
-        MatSelectModule
+        MatSelectModule,
+        MatDialogModule
       ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: MatDialogRef,
-          useValue: {
-            afterClosed: jasmine.createSpy('MatDialogRef.afterClosed()')
-          }
-        }
-      ]
+      providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationBarComponent);
@@ -97,10 +83,6 @@ describe('NavigationBarComponent', () => {
     router = TestBed.inject(Router);
     spyOn(router, 'navigateByUrl');
     confirmationService = TestBed.inject(ConfirmationService);
-    dialog = TestBed.inject(MatDialog);
-    dialogRef = TestBed.inject(MatDialogRef) as jasmine.SpyObj<
-      MatDialogRef<any>
-    >;
     translateService = TestBed.inject(TranslateService);
     logger = TestBed.inject(LoggerService);
     fixture.detectChanges();
@@ -156,17 +138,6 @@ describe('NavigationBarComponent', () => {
 
     it('clears the admin flag', () => {
       expect(component.isAdmin).toBeFalse();
-    });
-  });
-
-  describe('when the display options menu item is selected', () => {
-    beforeEach(() => {
-      spyOn(dialog, 'open').and.returnValue(dialogRef);
-      component.onShowDisplayOptions();
-    });
-
-    it('invokes the confirm callback', () => {
-      expect(dialog.open).toHaveBeenCalled();
     });
   });
 

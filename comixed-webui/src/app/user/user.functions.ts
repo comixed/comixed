@@ -19,6 +19,10 @@
 import { Preference } from '@app/user/models/preference';
 import { User } from '@app/user/models/user';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
 
 /** Find a specific user preference. */
 export function getUserPreference(
@@ -41,4 +45,18 @@ export function isReader(user: User): boolean {
 /** Returns true if the user is an admin. */
 export function isAdmin(user: User): boolean {
   return !!user && user.roles.map(role => role.name).includes(ROLE_NAME_ADMIN);
+}
+
+export function getPageSize(user: User): number {
+  if (!user) {
+    return PAGE_SIZE_DEFAULT;
+  }
+  const preference = user.preferences.find(
+    entry => entry.name === PAGE_SIZE_PREFERENCE
+  );
+  if (!!preference) {
+    return parseInt(preference.value, 10);
+  } else {
+    return PAGE_SIZE_DEFAULT;
+  }
 }

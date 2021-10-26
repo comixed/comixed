@@ -90,8 +90,7 @@
       "toggle-sidenav": "Muestra/Oculta el panel de navegación lateral..."
     },
     "user-menu": {
-      "root": "Cuenta",
-      "show-options-panel": "Establecer opciones de usuario..."
+      "root": "Cuenta"
     }
   },
   "navigation": {

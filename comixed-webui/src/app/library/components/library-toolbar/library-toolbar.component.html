@@ -1,10 +1,10 @@
 <mat-toolbar class="cx-primary-light-background">
   <mat-paginator
     class="cx-primary-light-background cx-height-100"
-    [pageSizeOptions]="paginationOptions"
+    [pageSizeOptions]="pageSizeOptions"
     [showFirstLastButtons]="true"
-    [pageSize]="pagination"
-    (page)="onPaginationChange($event.pageSize)"
+    [pageSize]="pageSize"
+    (page)="onPageSizeChange($event.pageSize)"
   ></mat-paginator>
   <div class="cx-spacer"></div>
   <mat-form-field appearance="standard">

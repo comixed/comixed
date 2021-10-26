@@ -39,13 +39,12 @@ import {
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
-import { PAGINATION_DEFAULT } from '@app/library/library.constants';
+import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import {
   ArchiveType,
   archiveTypeFromString
@@ -69,19 +68,19 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() selected: Comic[] = [];
   @Input() readingLists: ReadingList[] = [];
   @Input() isAdmin = false;
+  @Input() pageSize = PAGE_SIZE_DEFAULT;
   @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
 
-  pagination = PAGINATION_DEFAULT;
+  pagination = PAGE_SIZE_DEFAULT;
 
   dataSource = new MatTableDataSource<Comic>();
   comic: Comic = null;
   contextMenuX = '';
   contextMenuY = '';
-  displaySubscription: Subscription;
   private _comicObservable = new BehaviorSubject<Comic[]>([]);
 
   constructor(
@@ -92,11 +91,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {
-    this.displaySubscription = this.store
-      .select(selectDisplayState)
-      .subscribe(state => (this.pagination = state.pagination));
-  }
+  ) {}
 
   private _readComicIds: number[] = [];
 
@@ -123,7 +118,6 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.dataSource.disconnect();
-    this.displaySubscription.unsubscribe();
   }
 
   isSelected(comic: Comic): boolean {

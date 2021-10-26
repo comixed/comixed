@@ -90,8 +90,7 @@
       "toggle-sidenav": "Shows/Hides the side navigation panel..."
     },
     "user-menu": {
-      "root": "Account",
-      "show-options-panel": "Set User Options..."
+      "root": "Account"
     }
   },
   "navigation": {

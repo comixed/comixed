@@ -90,8 +90,7 @@
       "toggle-sidenav": "Afficher/Cacher le paneau de navigation latéral..."
     },
     "user-menu": {
-      "root": "Compte",
-      "show-options-panel": "Configurer les options utilisateurs..."
+      "root": "Compte"
     }
   },
   "navigation": {

@@ -37,13 +37,17 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { loadStoriesForName } from '@app/lists/actions/story-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { PAGINATION_DEFAULT } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { updateQueryParam } from '@app/core';
 import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
-import { setPagination } from '@app/library/actions/display.actions';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getPageSize } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-story-list-for-name-page',
@@ -63,8 +67,8 @@ export class StoryListForNamePageComponent
   langChangeSubscription: Subscription;
   storyStateSubscription: Subscription;
   storySubscription: Subscription;
-  displaySubscription: Subscription;
-  pageSize = PAGINATION_DEFAULT;
+  userSubscription: Subscription;
+  pageSize = PAGE_SIZE_DEFAULT;
 
   readonly displayedColumns = [
     'story-name',
@@ -96,13 +100,10 @@ export class StoryListForNamePageComponent
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
-    this.displaySubscription = this.store
-      .select(selectDisplayState)
-      .subscribe(state => {
-        if (state.pagination !== this.pageSize) {
-          this.pageSize = state.pagination;
-        }
-      });
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.logger.trace('Loading user page size preference');
+      this.pageSize = getPageSize(user);
+    });
     this.storyStateSubscription = this.store
       .select(selectStoryListState)
       .subscribe(state => {
@@ -142,7 +143,7 @@ export class StoryListForNamePageComponent
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from display updates');
-    this.displaySubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from story state updates');
     this.storyStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from story updates');
@@ -157,7 +158,12 @@ export class StoryListForNamePageComponent
         QUERY_PARAM_PAGE_SIZE,
         `${pageEvent.pageSize}`
       );
-      this.store.dispatch(setPagination({ pagination: pageEvent.pageSize }));
+      this.store.dispatch(
+        saveUserPreference({
+          name: PAGE_SIZE_PREFERENCE,
+          value: `${pageEvent.pageSize}`
+        })
+      );
     }
   }
 

@@ -26,10 +26,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatTreeModule } from '@angular/material/tree';
 import {
@@ -83,7 +79,6 @@ describe('ComicCoversComponent', () => {
   const READING_LIST = READING_LIST_1;
   const LAST_READ_DATES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
   const initialState = {
-    [DISPLAY_FEATURE_KEY]: initialDisplayState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
   };
 

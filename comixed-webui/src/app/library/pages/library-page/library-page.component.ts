@@ -26,14 +26,17 @@ import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { isAdmin } from '@app/user/user.functions';
+import { getPageSize, isAdmin } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   selectComicList,
   selectComicListState
 } from '@app/comic-books/selectors/comic-list.selectors';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  QUERY_PARAM_ARCHIVE_TYPE
+} from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
@@ -53,6 +56,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   isAdmin = false;
+  pageSize = PAGE_SIZE_DEFAULT;
   showConsolidate = false;
   dataSubscription: Subscription;
   unreadOnly = false;
@@ -118,8 +122,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.logger.trace('Checking if user is admin:', user);
+      this.logger.trace('Setting admin flag');
       this.isAdmin = isAdmin(user);
+      this.logger.trace('Getting page size');
+      this.pageSize = getPageSize(user);
     });
     this.lastReadDatesSubscription = this.store
       .select(selectLastReadEntries)

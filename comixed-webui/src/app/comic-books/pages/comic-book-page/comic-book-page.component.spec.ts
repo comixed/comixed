@@ -44,10 +44,6 @@ import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  DISPLAY_FEATURE_KEY,
-  initialState as initialDisplayState
-} from '@app/library/reducers/display.reducer';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import {
   initialState as initialScrapingState,
@@ -101,7 +97,6 @@ describe('ComicBookPageComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-    [DISPLAY_FEATURE_KEY]: { ...initialDisplayState },
     [SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_FEATURE_KEY]: { ...initialComicState },
     [LAST_READ_LIST_FEATURE_KEY]: { ...initialLastReadState },

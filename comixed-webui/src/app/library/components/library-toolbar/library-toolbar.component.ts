@@ -37,18 +37,20 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Router } from '@angular/router';
 import {
-  PAGINATION_OPTIONS,
-  PAGINATION_PREFERENCE
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
+  PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
-import { selectDisplayState } from '@app/library/selectors/display.selectors';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { User } from '@app/user/models/user';
+import { getPageSize } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -63,23 +65,21 @@ export class LibraryToolbarComponent
   @Input() comics: Comic[] = [];
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
+  @Input() pageSize = PAGE_SIZE_DEFAULT;
   @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
 
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
     { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
     { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
     { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
   ];
-
   langChangSubscription: Subscription;
-
-  paginationSubscription: Subscription;
-  readonly paginationOptions = PAGINATION_OPTIONS;
 
   constructor(
     private logger: LoggerService,
@@ -91,21 +91,6 @@ export class LibraryToolbarComponent
     this.langChangSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
-    this.paginationSubscription = this.store
-      .select(selectDisplayState)
-      .subscribe(state => {
-        this._pagination = state.pagination;
-      });
-  }
-
-  _pagination = this.paginationOptions[0];
-
-  get pagination(): number {
-    return this._pagination;
-  }
-
-  @Input() set pagination(pagination: number) {
-    this._pagination = pagination;
   }
 
   ngAfterViewInit(): void {
@@ -145,12 +130,12 @@ export class LibraryToolbarComponent
     });
   }
 
-  onPaginationChange(pagination: number): void {
-    this.logger.debug('Pagination changed:', pagination);
+  onPageSizeChange(pageSize: number): void {
+    this.logger.trace('Page size changed');
     this.store.dispatch(
       saveUserPreference({
-        name: PAGINATION_PREFERENCE,
-        value: `${pagination}`
+        name: PAGE_SIZE_PREFERENCE,
+        value: `${pageSize}`
       })
     );
   }

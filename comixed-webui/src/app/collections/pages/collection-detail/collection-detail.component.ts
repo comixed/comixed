@@ -31,9 +31,10 @@ import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { isAdmin } from '@app/user/user.functions';
+import { getPageSize, isAdmin } from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
+import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -53,6 +54,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   readingLists: ReadingList[] = [];
   userSubscription: Subscription;
   isAdmin = false;
+  pageSize = PAGE_SIZE_DEFAULT;
   langChangeSubscription: Subscription;
 
   constructor(
@@ -95,7 +97,10 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       }
     });
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.logger.trace('Setting isAdmin flag');
       this.isAdmin = isAdmin(user);
+      this.logger.trace('Loading user page size preference');
+      this.pageSize = getPageSize(user);
     });
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
