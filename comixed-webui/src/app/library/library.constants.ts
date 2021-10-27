@@ -68,6 +68,8 @@ export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
 export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
 export const PAGE_SIZE_DEFAULT = PAGE_SIZE_OPTIONS[0];
+export const SORT_FIELD_PREFERENCE = 'preference.sort-field';
+export const SORT_FIELD_DEFAULT = 'added-date';
 
 // messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';

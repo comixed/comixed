@@ -51,6 +51,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { MatSortModule } from '@angular/material/sort';
 
 describe('ComicsWithDuplicatePageComponent', () => {
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
@@ -91,7 +92,8 @@ describe('ComicsWithDuplicatePageComponent', () => {
         MatCardModule,
         MatExpansionModule,
         MatGridListModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatSortModule
       ],
       providers: [
         provideMockStore({ initialState }),

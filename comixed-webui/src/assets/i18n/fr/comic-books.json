@@ -130,5 +130,12 @@
     "load-scan-types": {
       "effect-failure": "Échec du chargement des types de scan."
     }
+  },
+  "sorting": {
+    "label": {
+      "by-added-date": "Date Added",
+      "by-cover-date": "Cover Date",
+      "sort-by": "Sort Comics"
+    }
   }
 }

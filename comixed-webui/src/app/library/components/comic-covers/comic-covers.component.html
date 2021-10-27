@@ -1,4 +1,5 @@
 <cx-library-toolbar
+  *ngIf="showToolbar"
   [comics]="comics"
   [showActions]="showActions"
   [isAdmin]="isAdmin"
@@ -7,8 +8,9 @@
   [selected]="selected"
   [archiveType]="archiveType"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
+  [sortField]="sortField"
 ></cx-library-toolbar>
-<div id="cx-all-comics" class="cx-detail-card-container">
+<div id="cx-all-comics" class="cx-detail-card-container" matSort>
   <div
     *ngFor="let comic of comics"
     fxFlex.gt-lg="10%"

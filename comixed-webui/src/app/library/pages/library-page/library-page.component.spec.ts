@@ -76,10 +76,13 @@ import {
   reducer as initialReadingListsState
 } from '@app/lists/reducers/reading-lists.reducer';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSortModule } from '@angular/material/sort';
+import { USER_READER } from '@app/user/user.fixtures';
 
 describe('LibraryPageComponent', () => {
+  const USER = USER_READER;
   const initialState = {
-    [USER_FEATURE_KEY]: initialUserState,
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
@@ -122,7 +125,8 @@ describe('LibraryPageComponent', () => {
         MatFormFieldModule,
         MatSelectModule,
         MatOptionModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSortModule
       ],
       providers: [
         provideMockStore({ initialState }),

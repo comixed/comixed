@@ -40,6 +40,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
+import { SORT_FIELD_PREFERENCE } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -55,6 +56,8 @@ import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.
 import { convertComics } from '@app/library/actions/convert-comics.actions';
 import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
+import { MatSort } from '@angular/material/sort';
+import { saveUserPreference } from '@app/user/actions/user.actions';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -64,7 +67,9 @@ import { LastRead } from '@app/last-read/models/last-read';
 export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(LibraryToolbarComponent) toolbar: LibraryToolbarComponent;
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+  @ViewChild(MatSort) sort: MatSort;
 
+  @Input() showToolbar = true;
   @Input() selected: Comic[] = [];
   @Input() readingLists: ReadingList[] = [];
   @Input() isAdmin = false;
@@ -72,11 +77,9 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
-
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
 
   pagination = PAGE_SIZE_DEFAULT;
-
   dataSource = new MatTableDataSource<Comic>();
   comic: Comic = null;
   contextMenuX = '';
@@ -93,6 +96,17 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateService: TranslateService
   ) {}
 
+  private _sortField: string;
+
+  get sortField(): string {
+    return this._sortField;
+  }
+
+  @Input() set sortField(sortField: string) {
+    this._sortField = sortField;
+    this.sortData();
+  }
+
   private _readComicIds: number[] = [];
 
   get readComicIds(): number[] {
@@ -106,6 +120,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() set comics(comics: Comic[]) {
     this.logger.trace('Setting comics:', comics);
     this.dataSource.data = comics;
+    this.sortData();
   }
 
   @Input() set lastRead(lastRead: LastRead[]) {
@@ -158,7 +173,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.toolbar.paginator;
+    if (this.showToolbar) {
+      this.logger.trace('Setting up pagination');
+      this.dataSource.paginator = this.toolbar.paginator;
+    }
   }
 
   isChanged(comic: Comic): boolean {
@@ -281,6 +299,17 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isRead(comic: Comic): boolean {
     return this.readComicIds.includes(comic.id);
+  }
+
+  private sortData(): void {
+    this.dataSource.data = this.dataSource.data.sort((left, right) => {
+      switch (this.sortField) {
+        case 'added-date':
+          return left.addedDate - right.addedDate;
+        case 'cover-date':
+          return left.coverDate - right.coverDate;
+      }
+    });
   }
 
   private doConversion(

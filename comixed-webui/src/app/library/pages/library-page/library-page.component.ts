@@ -26,7 +26,11 @@ import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { getPageSize, isAdmin } from '@app/user/user.functions';
+import {
+  getPageSize,
+  getUserPreference,
+  isAdmin
+} from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   selectComicList,
@@ -35,7 +39,9 @@ import {
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   PAGE_SIZE_DEFAULT,
-  QUERY_PARAM_ARCHIVE_TYPE
+  QUERY_PARAM_ARCHIVE_TYPE,
+  SORT_FIELD_DEFAULT,
+  SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import { LastRead } from '@app/last-read/models/last-read';
@@ -65,6 +71,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   unprocessedOnly = false;
   queryParamSubscription: Subscription;
   archiveTypeFilter = null;
+  sortField = SORT_FIELD_DEFAULT;
   lastReadDatesSubscription: Subscription;
   lastReadDates: LastRead[];
   readingListsSubscription: Subscription;
@@ -126,6 +133,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.isAdmin = isAdmin(user);
       this.logger.trace('Getting page size');
       this.pageSize = getPageSize(user);
+      this.sortField = getUserPreference(
+        user.preferences,
+        SORT_FIELD_PREFERENCE,
+        SORT_FIELD_DEFAULT
+      );
     });
     this.lastReadDatesSubscription = this.store
       .select(selectLastReadEntries)

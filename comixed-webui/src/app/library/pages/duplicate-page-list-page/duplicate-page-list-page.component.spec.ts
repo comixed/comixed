@@ -472,4 +472,30 @@ describe('DuplicatePageListPageComponent', () => {
       });
     });
   });
+
+  describe('when messaging starts', () => {
+    beforeEach(() => {
+      webSocketService.subscribe.and.callFake((destination, callback) => {
+        callback(DUPLICATE_PAGES);
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to the duplicate page list update topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        DUPLICATE_PAGE_LIST_TOPIC,
+        jasmine.anything()
+      );
+    });
+
+    it('processes duplicate page list updates', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        duplicatePagesLoaded({ pages: DUPLICATE_PAGES })
+      );
+    });
+  });
 });

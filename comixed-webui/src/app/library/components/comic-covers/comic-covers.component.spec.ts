@@ -71,6 +71,7 @@ import {
   LAST_READ_5
 } from '@app/last-read/last-read.fixtures';
 import { Comic } from '@app/comic-books/models/comic';
+import { MatSortModule } from '@angular/material/sort';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -109,7 +110,8 @@ describe('ComicCoversComponent', () => {
         MatMenuModule,
         MatSelectModule,
         MatOptionModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSortModule
       ],
       providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
@@ -472,6 +474,41 @@ describe('ComicCoversComponent', () => {
 
     it('identifies read comics', () => {
       expect(component.isRead(LAST_READ_DATES[0].comic as Comic)).toBeTrue();
+    });
+  });
+
+  describe('sorting comics', () => {
+    const LEFT = {
+      ...COMIC,
+      coverDate: new Date().getTime(),
+      addedDate: new Date().getTime() - 24 * 60 * 60 * 1000
+    };
+    const RIGHT = {
+      ...COMIC,
+      coverDate: new Date().getTime() - 24 * 60 * 60 * 1000,
+      addedDate: new Date().getTime()
+    };
+
+    describe('can sorting by added date', () => {
+      beforeEach(() => {
+        component.comics = [RIGHT, LEFT];
+        component.sortField = 'added-date';
+      });
+
+      it('sorts correctly', () => {
+        expect(component.dataSource.data[0]).toBe(LEFT);
+      });
+    });
+
+    describe('can sorting by cover date', () => {
+      beforeEach(() => {
+        component.comics = [LEFT, RIGHT];
+        component.sortField = 'cover-date';
+      });
+
+      it('sorts correctly', () => {
+        expect(component.dataSource.data[0]).toBe(RIGHT);
+      });
     });
   });
 });

@@ -160,6 +160,7 @@ public class Comic {
   @Column(name = "CoverDate", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("coverDate")
+  @JsonFormat(shape = Shape.NUMBER_INT)
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,

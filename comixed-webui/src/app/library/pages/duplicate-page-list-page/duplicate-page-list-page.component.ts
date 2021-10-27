@@ -169,11 +169,6 @@ export class DuplicatePageListPageComponent
     this.blockedPageListSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     if (!!this.pageUpdatesSubscription) {
-      this.logger.trace('Unsubscribing from page updates');
-      this.pageUpdatesSubscription.unsubscribe();
-      this.pageUpdatesSubscription = null;
-    }
-    if (!!this.pageUpdatesSubscription) {
       this.logger.trace('Unsubscribing from duplicate page list updates');
       this.pageUpdatesSubscription.unsubscribe();
       this.pageUpdatesSubscription = null;
