@@ -9,6 +9,13 @@
     <mat-icon *ngIf="showLookupForm">expand_less</mat-icon>
     <mat-icon *ngIf="!showLookupForm">expand_more</mat-icon>
   </button>
+  <mat-paginator
+    class="cx-primary-light-background cx-height-100"
+    [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="true"
+    [pageSize]="pageSize"
+    (page)="onPageSizeChange($event.pageSize)"
+  ></mat-paginator>
   <div class="cx-spacer"></div>
   <button
     id="select-all-button"
