@@ -68,6 +68,7 @@ import {
 } from '@app/comic-files/reducers/import-comic-files.reducer';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -114,7 +115,8 @@ describe('ImportComicsPageComponent', () => {
         MatTableModule,
         MatCardModule,
         MatTooltipModule,
-        MatToolbarModule
+        MatToolbarModule,
+        MatMenuModule
       ],
       providers: [
         provideMockStore({ initialState }),

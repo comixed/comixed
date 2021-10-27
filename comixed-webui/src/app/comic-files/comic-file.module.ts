@@ -64,6 +64,7 @@ import {
 import { ScrapeMetadataEffects } from '@app/comic-files/effects/scrape-metadata.effects';
 import { FlexModule } from '@angular/flex-layout';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatProgressBarModule,
     ComicBooksModule,
     FlexModule,
-    MatMenuModule
+    MatMenuModule,
+    MatPaginatorModule
   ],
   exports: [CommonModule]
 })

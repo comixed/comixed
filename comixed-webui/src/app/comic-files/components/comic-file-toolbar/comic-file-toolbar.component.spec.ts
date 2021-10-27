@@ -36,22 +36,26 @@ import { MatInputModule } from '@angular/material/input';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import {
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
-  IMPORT_ROOT_DIRECTORY_PREFERENCE
+  IMPORT_ROOT_DIRECTORY_PREFERENCE,
+  PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   clearComicFileSelections,
-  loadComicFiles,
-  setComicFilesSelectedState
+  loadComicFiles
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { Preference } from '@app/user/models/preference';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { saveUserPreference } from '@app/user/actions/user.actions';
 
 describe('ComicFileToolbarComponent', () => {
   const USER = USER_ADMIN;
   const MAXIMUM = 100;
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
+  const PAGE_SIZE = 25;
   const initialState = {};
 
   let component: ComicFileToolbarComponent;
@@ -68,11 +72,13 @@ describe('ComicFileToolbarComponent', () => {
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
         MatFormFieldModule,
+        MatButtonModule,
         MatIconModule,
         MatSelectModule,
         MatInputModule,
         MatToolbarModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatPaginatorModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
@@ -125,14 +131,12 @@ describe('ComicFileToolbarComponent', () => {
 
   describe('selecting all comic file', () => {
     beforeEach(() => {
-      component.comicFiles = COMIC_FILES;
+      spyOn(component.selectAll, 'emit');
       component.onSelectAll();
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setComicFilesSelectedState({ files: COMIC_FILES, selected: true })
-      );
+    it('emits an event', () => {
+      expect(component.selectAll.emit).toHaveBeenCalled();
     });
   });
 
@@ -172,6 +176,21 @@ describe('ComicFileToolbarComponent', () => {
 
     it('toggles the setting', () => {
       expect(component.showLookupForm).toEqual(!SETTING);
+    });
+  });
+
+  describe('the page size being changed', () => {
+    beforeEach(() => {
+      component.onPageSizeChange(PAGE_SIZE);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: PAGE_SIZE_PREFERENCE,
+          value: `${PAGE_SIZE}`
+        })
+      );
     });
   });
 });
