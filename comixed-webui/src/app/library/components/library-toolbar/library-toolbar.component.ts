@@ -39,7 +39,8 @@ import { Router } from '@angular/router';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE
+  PAGE_SIZE_PREFERENCE,
+  SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
@@ -49,8 +50,6 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
-import { User } from '@app/user/models/user';
-import { getPageSize } from '@app/user/user.functions';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -69,6 +68,7 @@ export class LibraryToolbarComponent
   @Input() showConsolidate = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
+  @Input() sortField: string;
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
 
@@ -79,6 +79,11 @@ export class LibraryToolbarComponent
     { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
     { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
   ];
+  readonly sortFieldOptions: SelectionOption<string>[] = [
+    { label: 'sorting.label.by-added-date', value: 'added-date' },
+    { label: 'sorting.label.by-cover-date', value: 'cover-date' }
+  ];
+
   langChangSubscription: Subscription;
 
   constructor(
@@ -195,6 +200,13 @@ export class LibraryToolbarComponent
         this.store.dispatch(updateMetadata({ comics }));
       }
     });
+  }
+
+  onSortBy(sortField: string): void {
+    this.logger.trace('Changing sort field');
+    this.store.dispatch(
+      saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: sortField })
+    );
   }
 
   private loadTranslations(): void {

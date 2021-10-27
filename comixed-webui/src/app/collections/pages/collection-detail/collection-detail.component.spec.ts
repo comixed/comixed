@@ -62,6 +62,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { TitleService } from '@app/core/services/title.service';
+import { MatSortModule } from '@angular/material/sort';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -101,7 +102,9 @@ describe('CollectionDetailComponent', () => {
         MatToolbarModule,
         MatSelectModule,
         MatOptionModule,
-        MatDividerModule
+        MatDividerModule,
+        MatSortModule,
+        MatPaginatorModule
       ],
       providers: [
         provideMockStore({ initialState }),

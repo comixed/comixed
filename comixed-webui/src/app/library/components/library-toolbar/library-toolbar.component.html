@@ -8,6 +8,17 @@
   ></mat-paginator>
   <div class="cx-spacer"></div>
   <mat-form-field appearance="standard">
+    <mat-label>{{ "sorting.label.sort-by" | translate }}</mat-label>
+    <mat-select (selectionChange)="onSortBy($event.value)" [value]="sortField">
+      <mat-option
+        *ngFor="let option of sortFieldOptions"
+        [value]="option.value"
+      >
+        {{ option.label | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="standard">
     <mat-label>{{ "archive-type.label.select" | translate }}</mat-label>
     <mat-select
       (selectionChange)="onArchiveTypeChanged($event.value)"

@@ -41,7 +41,10 @@ import { Confirmation } from '@app/core/models/confirmation';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_PREFERENCE,
+  SORT_FIELD_PREFERENCE
+} from '@app/library/library.constants';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -237,6 +240,20 @@ describe('LibraryToolbarComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateMetadata({ comics: COMICS })
+      );
+    });
+  });
+
+  describe('when sorting field changes', () => {
+    const SORT_FIELD = 'sort-field';
+
+    beforeEach(() => {
+      component.onSortBy(SORT_FIELD);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: SORT_FIELD })
       );
     });
   });
