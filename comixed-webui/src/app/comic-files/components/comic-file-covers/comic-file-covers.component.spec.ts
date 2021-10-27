@@ -36,11 +36,23 @@ import {
   clearComicFileSelections,
   setComicFilesSelectedState
 } from '@app/comic-files/actions/comic-file-list.actions';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { ComicFileToolbarComponent } from '@app/comic-files/components/comic-file-toolbar/comic-file-toolbar.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { USER_ADMIN } from '@app/user/user.fixtures';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicFileCoversComponent', () => {
   const initialState = { [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState };
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
   const FILE = COMIC_FILE_4;
+  const USER = USER_ADMIN;
 
   let component: ComicFileCoversComponent;
   let fixture: ComponentFixture<ComicFileCoversComponent>;
@@ -48,11 +60,21 @@ describe('ComicFileCoversComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ComicFileCoversComponent],
+      declarations: [ComicFileCoversComponent, ComicFileToolbarComponent],
       imports: [
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot(),
         LoggerModule.forRoot(),
-        MatMenuModule
+        MatMenuModule,
+        MatPaginatorModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatToolbarModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
@@ -61,6 +83,7 @@ describe('ComicFileCoversComponent', () => {
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    component.user = USER;
     fixture.detectChanges();
   }));
 
@@ -150,6 +173,19 @@ describe('ComicFileCoversComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
       });
+    });
+  });
+
+  describe('selecting all comic files', () => {
+    beforeEach(() => {
+      component.files = FILES;
+      component.onSelectAll();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setComicFilesSelectedState({ files: FILES, selected: true })
+      );
     });
   });
 });

@@ -1,3 +1,17 @@
+<cx-comic-file-toolbar
+  [user]="user"
+  [pageSize]="pageSize"
+  [comicFiles]="dataSource.data"
+  [selectedComicFiles]="selectedFiles"
+  (selectAll)="onSelectAll()"
+></cx-comic-file-toolbar>
+<h2>
+  {{
+    "comic-files.page-title"
+      | translate
+        : { count: dataSource.data.length, selected: selectedFiles.length }
+  }}
+</h2>
 <div class="cx-detail-card-container">
   <div
     *ngFor="let file of files"

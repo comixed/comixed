@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
@@ -25,7 +31,10 @@ import {
   IMPORT_MAXIMUM_RESULTS_DEFAULT,
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
   IMPORT_ROOT_DIRECTORY_DEFAULT,
-  IMPORT_ROOT_DIRECTORY_PREFERENCE
+  IMPORT_ROOT_DIRECTORY_PREFERENCE,
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
+  PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import {
   clearComicFileSelections,
@@ -35,6 +44,8 @@ import {
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { User } from '@app/user/models/user';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'cx-comic-file-toolbar',
@@ -42,11 +53,17 @@ import { User } from '@app/user/models/user';
   styleUrls: ['./comic-file-toolbar.component.scss']
 })
 export class ComicFileToolbarComponent {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   @Input() comicFiles: ComicFile[] = [];
   @Input() selectedComicFiles: ComicFile[] = [];
+  @Input() pageSize = PAGE_SIZE_DEFAULT;
+
+  @Output() selectAll = new EventEmitter<void>();
 
   loadFilesForm: FormGroup;
 
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   maximumOptions = [
     { label: 'comic-files.label.maximum-all-files', value: 0 },
     { label: 'comic-files.label.maximum-10-files', value: 10 },
@@ -98,10 +115,8 @@ export class ComicFileToolbarComponent {
   }
 
   onSelectAll(): void {
-    this.logger.trace('Selecting all comic files');
-    this.store.dispatch(
-      setComicFilesSelectedState({ files: this.comicFiles, selected: true })
-    );
+    this.logger.trace('Firing event: select all');
+    this.selectAll.emit();
   }
 
   onDeselectAll(): void {
@@ -120,5 +135,15 @@ export class ComicFileToolbarComponent {
 
   onToggleFileLookupForm(): void {
     this.showLookupForm = !this.showLookupForm;
+  }
+
+  onPageSizeChange(pageSize: number): void {
+    this.logger.trace('Page size changed');
+    this.store.dispatch(
+      saveUserPreference({
+        name: PAGE_SIZE_PREFERENCE,
+        value: `${pageSize}`
+      })
+    );
   }
 }

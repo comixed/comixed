@@ -3,19 +3,9 @@
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>
 <div *ngIf="!importing">
-  <cx-comic-file-toolbar
-    [user]="user"
-    [comicFiles]="files"
-    [selectedComicFiles]="selectedFiles"
-  ></cx-comic-file-toolbar>
-  <h2>
-    {{
-      "comic-files.page-title"
-        | translate: { count: files.length, selected: selectedFiles.length }
-    }}
-  </h2>
   <cx-comic-file-covers
-    *ngIf="files.length > 0"
+    *ngIf="!!user"
+    [user]="user"
     [files]="files"
     [selectedFiles]="selectedFiles"
   ></cx-comic-file-covers>
