@@ -148,7 +148,8 @@ The application is composed of several modules:
  * **comixed-http**: the web layer,
  * **comixed-rest**: the REST controllers,
  * **comixed-opds**: the OPDS controllers,
- * **comixed-webui**: the Angular frontend, and
+ * **comixed-webui**: the Angular frontend,
+ * **comixed-dbtool**: the database tool module, and
  * **comixed-app**: the core module, which pulls the previous pieces together in a working application.
 
 To build all of them then execute the following from the project's root directory:

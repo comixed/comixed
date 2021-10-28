@@ -33,7 +33,7 @@
       **/*Event,
       **/*Exception,
       **/*StateHandler,
-      **/ComiXedApp
+      **/ComiXed*App
     </sonar.exclusions>
     <sonar.test.inclusions>**/test/**</sonar.test.inclusions>
   </properties>
@@ -237,7 +237,7 @@
             <exclude>**/state/comicbooks/Comic*</exclude>
             <exclude>**/state/lists/ReadingList**</exclude>
             <exclude>**/batch/comicbooks/*Configuration</exclude>
-            <exclude>**/ComixedApp</exclude>
+            <exclude>**/Comixed*App</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -377,6 +377,7 @@
     <module>comixed-opds</module>
     <module>comixed-rest</module>
     <module>comixed-webui</module>
+    <module>comixed-dbtool</module>
     <module>comixed-app</module>
     <module>comixed-release</module>
   </modules>
