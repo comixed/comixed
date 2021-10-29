@@ -20,11 +20,6 @@ import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  COMIC_IMPORT_FEATURE_KEY,
-  ComicImportState,
-  reducer as comicImportReducer
-} from './reducers/comic-import.reducer';
-import {
   COMIC_FILE_LIST_FEATURE_KEY,
   ComicFileListState,
   reducer as comicFileListReducer
@@ -50,7 +45,6 @@ export interface ImportingModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [COMIC_FILE_LIST_FEATURE_KEY]: ComicFileListState;
   [IMPORT_COMIC_FILES_FEATURE_KEY]: ImportComicFilesState;
-  [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [SCRAPE_METADATA_FEATURE_KEY]: ScrapeMetadataState;
 }
 
@@ -58,7 +52,6 @@ export type ModuleState = ImportingModuleState;
 
 export const reducers: ActionReducerMap<ImportingModuleState> = {
   router: routerReducer,
-  [COMIC_IMPORT_FEATURE_KEY]: comicImportReducer,
   [COMIC_FILE_LIST_FEATURE_KEY]: comicFileListReducer,
   [IMPORT_COMIC_FILES_FEATURE_KEY]: importComicFilesReducer,
   [SCRAPE_METADATA_FEATURE_KEY]: scrapeMetadataReducer

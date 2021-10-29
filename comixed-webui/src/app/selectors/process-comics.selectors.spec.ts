@@ -16,17 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
+import {
+  PROCESS_COMICS_FEATURE_KEY,
+  ProcessComicsState
+} from '../reducers/process-comics.reducer';
+import { selectProcessComicsState } from './process-comics.selectors';
 
-export const startImportCount = createAction(
-  '[Import Count] Start tracking the import count'
-);
+describe('ProcessComics Selectors', () => {
+  let state: ProcessComicsState;
 
-export const importCountUpdated = createAction(
-  '[Import Count] Update the import count',
-  props<{ count: number }>()
-);
+  beforeEach(() => {
+    state = {
+      active: Math.random() > 0.5,
+      started: new Date().getTime(),
+      stepName: 'step-name',
+      total: Math.abs(Math.floor(Math.random() * 1000)),
+      processed: Math.abs(Math.floor(Math.random() * 1000))
+    };
+  });
 
-export const stopImportCount = createAction(
-  '[Import Count] Stop tracking the import count'
-);
+  it('should select the feature state', () => {
+    expect(
+      selectProcessComicsState({
+        [PROCESS_COMICS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  ComicImportState
-} from '../reducers/comic-import.reducer';
-import { selectComicImportState } from './comic-import.selectors';
-import {
-  COMIC_FILE_1,
-  COMIC_FILE_2,
-  COMIC_FILE_3
-} from '@app/comic-files/comic-file.fixtures';
+import { createAction, props } from '@ngrx/store';
 
-describe('ComicImport Selectors', () => {
-  let state: ComicImportState;
-
-  beforeEach(() => {
-    state = {
-      importing: Math.random() > 0.5
-    };
-  });
-
-  it('should select the feature state', () => {
-    expect(
-      selectComicImportState({
-        [COMIC_IMPORT_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
-});
+export const processComicsUpdate = createAction(
+  '[Process Comics] Update the process comic state',
+  props<{
+    active: boolean;
+    started: number;
+    stepName: string;
+    total: number;
+    processed: number;
+  }>()
+);

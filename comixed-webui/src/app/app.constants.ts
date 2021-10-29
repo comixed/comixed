@@ -32,6 +32,6 @@ export const QUERY_PARAM_PAGE_SIZE = 'pageSize';
 
 // messaging constants
 
-export const IMPORT_COUNT_TOPIC = '/topic/import.count';
+export const PROCESS_COMICS_TOPIC = '/topic/process-comics.status';
 
 export const TASK_COUNT_TOPIC = '/topic/taskcount';

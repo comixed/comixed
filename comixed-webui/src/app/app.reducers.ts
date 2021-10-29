@@ -28,15 +28,15 @@ import {
   ServerStatusState
 } from '@app/reducers/server-status.reducer';
 import {
-  IMPORT_COUNT_FEATURE_KEY,
-  ImportCountState,
+  PROCESS_COMICS_FEATURE_KEY,
+  ProcessComicsState,
   reducer as importCountReducer
-} from '@app/reducers/import-count.reducer';
+} from '@app/reducers/process-comics.reducer';
 
 export interface AppState {
   [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
   [SERVER_STATUS_FEATURE_KEY]: ServerStatusState;
-  [IMPORT_COUNT_FEATURE_KEY]: ImportCountState;
+  [PROCESS_COMICS_FEATURE_KEY]: ProcessComicsState;
 }
 
 export type State = AppState;
@@ -44,5 +44,5 @@ export type State = AppState;
 export const APP_REDUCERS: ActionReducerMap<State> = {
   [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer,
   [SERVER_STATUS_FEATURE_KEY]: serverStatusReducer,
-  [IMPORT_COUNT_FEATURE_KEY]: importCountReducer
+  [PROCESS_COMICS_FEATURE_KEY]: importCountReducer
 };

@@ -305,6 +305,16 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   }
 
   /**
+   * Retrieves the number of unprocessed comics that are waiting to have their contents loaded.
+   *
+   * @return the count
+   */
+  public long getUnprocessedComicsWithoutContentCount() {
+    log.trace("Getting the number of unprocessed comics without content");
+    return this.comicRepository.findUnprocessedComicsWithoutContent().size();
+  }
+
+  /**
    * Retrieves unprocessed comics that are waiting to have their contents loaded.
    *
    * @return the comics
@@ -315,13 +325,33 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   }
 
   /**
+   * Returns the number of unprocessed comics that are waiting to have the blocked pages marked.
+   *
+   * @return the count
+   */
+  public long getUnprocessedComicsForMarkedPageBlockingCount() {
+    log.trace("Getting unprocessed comics that need page blocking count");
+    return this.comicRepository.findUnprocessedComicsForMarkedPageBlocking().size();
+  }
+
+  /**
    * Retrieves unprocessed comics that are waiting to have the blocked pages marked.
    *
    * @return the comics
    */
   public List<Comic> findUnprocessedComicsForMarkedPageBlocking() {
-    log.trace("Loading unprocessed comics that need to have their blocked pages marked");
+    log.trace("Loading unprocessed comics that need page blocking");
     return this.comicRepository.findUnprocessedComicsForMarkedPageBlocking();
+  }
+
+  /**
+   * Returns the number of unprocessed comics that don't have file details loaded.
+   *
+   * @return the count
+   */
+  public long getUnprocessedComicsWithoutFileDetailsCount() {
+    log.trace("Getting unprocessed comics without file details loaded count");
+    return this.comicRepository.findUnprocessedComicsWithoutFileDetails().size();
   }
 
   /**
@@ -330,8 +360,18 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
    * @return the comics
    */
   public List<Comic> findUnprocessedComicsWithoutFileDetails() {
-    log.trace("Loading unprocessed comics that don't have file details loaded");
+    log.trace("Loading unprocessed comics without file details loaded");
     return this.comicRepository.findUnprocessedComicsWithoutFileDetails();
+  }
+
+  /**
+   * Returns the number of unprocessed comics that have had their contents processed.
+   *
+   * @return the count
+   */
+  public long getProcessedComicsCount() {
+    log.trace("Getting count of unprocessed comics that are fully processed");
+    return this.comicRepository.findProcessedComics().size();
   }
 
   /**

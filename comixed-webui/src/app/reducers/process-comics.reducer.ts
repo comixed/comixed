@@ -16,38 +16,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  IMPORT_COUNT_FEATURE_KEY,
-  ImportCountState
-} from '../reducers/import-count.reducer';
-import {
-  selectImportCount,
-  selectImportCountState
-} from './import-count.selectors';
+import { createReducer, on } from '@ngrx/store';
+import { processComicsUpdate } from '../actions/process-comics.actions';
 
-describe('ImportCount Selectors', () => {
-  let state: ImportCountState;
+export const PROCESS_COMICS_FEATURE_KEY = 'process_comics_state';
 
-  beforeEach(() => {
-    state = {
-      active: Math.random() > 0.5,
-      count: Math.abs(Math.floor(Math.random() * 1000))
-    };
-  });
+export interface ProcessComicsState {
+  active: boolean;
+  started: number;
+  stepName: string;
+  total: number;
+  processed: number;
+}
 
-  it('should select the feature state', () => {
-    expect(
-      selectImportCountState({
-        [IMPORT_COUNT_FEATURE_KEY]: state
-      })
-    ).toEqual(state);
-  });
+export const initialState: ProcessComicsState = {
+  active: false,
+  started: 0,
+  stepName: '',
+  total: 0,
+  processed: 0
+};
 
-  it('should select the import count', () => {
-    expect(
-      selectImportCount({
-        [IMPORT_COUNT_FEATURE_KEY]: state
-      })
-    ).toEqual(state.count);
-  });
-});
+export const reducer = createReducer(
+  initialState,
+
+  on(processComicsUpdate, (state, action) => ({
+    ...state,
+    active: action.active,
+    started: action.started,
+    stepName: action.stepName,
+    total: action.total,
+    processed: action.processed
+  }))
+);

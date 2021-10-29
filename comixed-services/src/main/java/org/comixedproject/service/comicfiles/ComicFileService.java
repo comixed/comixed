@@ -157,6 +157,16 @@ public class ComicFileService {
   }
 
   /**
+   * Returns the number of comic file descriptors.
+   *
+   * @return the count
+   */
+  public long getComicFileDescriptorCount() {
+    log.trace("Getting comic file descriptor count");
+    return this.comicFileDescriptorRepository.count();
+  }
+
+  /**
    * Returns all comic file descriptor records.
    *
    * @return the descriptors

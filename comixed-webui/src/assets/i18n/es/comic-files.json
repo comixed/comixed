@@ -28,6 +28,14 @@
     "placeholder": {
       "root-directory": "Directorio raíz para buscar..."
     },
+    "processing-comics": {
+      "create-insert-step": "Creating Comic Records",
+      "file-contents-processed-step": "Completing Processing",
+      "load-file-contents-step": "Loading File Contents",
+      "load-file-details-step": "Loading Comic File Details",
+      "mark-blocked-pages-step": "Marking Blocked Pages",
+      "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
+    },
     "send-comic-files": {
       "effect-failure": "No se pudieron enviar archivos de cómic para su importación.",
       "effect-success": "{count, plural, =1{one comic file} other{# comic files}} enviado para importación."

@@ -25,10 +25,6 @@ import { ComicFileDetailCardComponent } from './components/comic-file-detail-car
 import { ComicFileCoverUrlPipe } from './pipes/comic-file-cover-url.pipe';
 import { ComicFileRouting } from './comic-file.routing';
 import { StoreModule } from '@ngrx/store';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  reducer as comicImportReducer
-} from './reducers/comic-import.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -86,7 +82,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
       IMPORT_COMIC_FILES_FEATURE_KEY,
       importComicFilesReducer
     ),
-    StoreModule.forFeature(COMIC_IMPORT_FEATURE_KEY, comicImportReducer),
     StoreModule.forFeature(SCRAPE_METADATA_FEATURE_KEY, scrapeMetadataReducer),
     EffectsModule.forFeature([
       ComicFileListEffects,

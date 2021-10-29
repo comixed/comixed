@@ -19,6 +19,9 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.listeners.AddComicsToLibraryJobListener;
+import org.comixedproject.batch.comicbooks.listeners.CreateInsertStepExecutionListener;
+import org.comixedproject.batch.comicbooks.listeners.ProcessedComicChunkListener;
 import org.comixedproject.batch.comicbooks.processors.ComicInsertProcessor;
 import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.ComicFileDescriptorReader;
@@ -63,12 +66,14 @@ public class AddComicsConfiguration {
   @Qualifier("addComicsToLibraryJob")
   public Job addComicsToLibraryJob(
       final JobBuilderFactory jobBuilderFactory,
+      final AddComicsToLibraryJobListener addComicsToLibraryJobListener,
       @Qualifier("createInsertStep") final Step createInsertStep,
       @Qualifier("recordInsertedStep") Step recordInsertedStep,
       @Qualifier("processComicsJobStep") Step processComicsJobStep) {
     return jobBuilderFactory
         .get("addComicsToLibraryJob")
         .incrementer(new RunIdIncrementer())
+        .listener(addComicsToLibraryJobListener)
         .start(createInsertStep)
         .next(recordInsertedStep)
         .next(processComicsJobStep)
@@ -88,11 +93,13 @@ public class AddComicsConfiguration {
   @Qualifier("createInsertStep")
   public Step createInsertStep(
       final StepBuilderFactory stepBuilderFactory,
+      final CreateInsertStepExecutionListener createInsertStepListener,
       final ComicFileDescriptorReader reader,
       final ComicInsertProcessor processor,
       final ComicInsertWriter writer) {
     return stepBuilderFactory
         .get("createInsertStep")
+        .listener(createInsertStepListener)
         .<ComicFileDescriptor, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
@@ -113,6 +120,7 @@ public class AddComicsConfiguration {
   @Qualifier("recordInsertedStep")
   public Step recordInsertedStep(
       final StepBuilderFactory stepBuilderFactory,
+      final ProcessedComicChunkListener processedComicChunkListener,
       final RecordInsertedReader reader,
       final NoopComicProcessor processor,
       final ReaderInsertedWriter writer) {
@@ -122,6 +130,7 @@ public class AddComicsConfiguration {
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(processedComicChunkListener)
         .build();
   }
 }

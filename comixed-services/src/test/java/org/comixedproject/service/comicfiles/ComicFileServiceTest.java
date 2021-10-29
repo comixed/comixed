@@ -50,6 +50,7 @@ public class ComicFileServiceTest {
       TEST_ROOT_DIRECTORY + "/" + TEST_ARCHIVE_FILENAME;
   private static final int TEST_LIMIT = 2;
   private static final int TEST_NO_LIMIT = -1;
+  private static final long TEST_DESCRIPTOR_COUNT = 93L;
 
   @InjectMocks private ComicFileService service;
   @Mock private ComicBookAdaptor comicBookAdaptor;
@@ -159,6 +160,17 @@ public class ComicFileServiceTest {
         filename ->
             Mockito.verify(comicFileDescriptorRepository, Mockito.times(1))
                 .save(new ComicFileDescriptor(filename)));
+  }
+
+  @Test
+  public void testGetComicFileDescriptorCount() {
+    Mockito.when(comicFileDescriptorRepository.count()).thenReturn(TEST_DESCRIPTOR_COUNT);
+
+    final long result = service.getComicFileDescriptorCount();
+
+    assertEquals(TEST_DESCRIPTOR_COUNT, result);
+
+    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).count();
   }
 
   @Test

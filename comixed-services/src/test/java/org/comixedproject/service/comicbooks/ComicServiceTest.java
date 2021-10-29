@@ -433,6 +433,17 @@ public class ComicServiceTest {
   }
 
   @Test
+  public void testGetUnprocessedComicsWithoutContentCount() {
+    Mockito.when(comicRepository.findUnprocessedComicsWithoutContent()).thenReturn(comicList);
+
+    final long result = service.getUnprocessedComicsWithoutContentCount();
+
+    assertEquals(comicList.size(), result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsWithoutContent();
+  }
+
+  @Test
   public void testFindUnprocessedComicsWithoutContent() {
     Mockito.when(comicRepository.findUnprocessedComicsWithoutContent()).thenReturn(comicList);
 
@@ -442,6 +453,18 @@ public class ComicServiceTest {
     assertSame(comicList, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsWithoutContent();
+  }
+
+  @Test
+  public void testGetUnprocessedComicsForMarkedPageBlockingCount() {
+    Mockito.when(comicRepository.findUnprocessedComicsForMarkedPageBlocking())
+        .thenReturn(comicList);
+
+    final long result = service.getUnprocessedComicsForMarkedPageBlockingCount();
+
+    assertEquals(comicList.size(), result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsForMarkedPageBlocking();
   }
 
   @Test
@@ -458,6 +481,17 @@ public class ComicServiceTest {
   }
 
   @Test
+  public void testGetUnprocessedComicsWithoutFileDetailsCount() {
+    Mockito.when(comicRepository.findUnprocessedComicsWithoutFileDetails()).thenReturn(comicList);
+
+    final long result = service.getUnprocessedComicsWithoutFileDetailsCount();
+
+    assertEquals(comicList.size(), result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+  }
+
+  @Test
   public void testFindUnprocessedComicsWithoutFileDetails() {
     Mockito.when(comicRepository.findUnprocessedComicsWithoutFileDetails()).thenReturn(comicList);
 
@@ -467,6 +501,17 @@ public class ComicServiceTest {
     assertSame(comicList, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+  }
+
+  @Test
+  public void testGetProcessedComicsCount() {
+    Mockito.when(comicRepository.findProcessedComics()).thenReturn(comicList);
+
+    final long result = service.getProcessedComicsCount();
+
+    assertEquals(comicList.size(), result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findProcessedComics();
   }
 
   @Test

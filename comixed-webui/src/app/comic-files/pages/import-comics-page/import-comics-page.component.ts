@@ -35,13 +35,13 @@ import {
   selectComicFiles,
   selectComicFileSelections
 } from '@app/comic-files/selectors/comic-file-list.selectors';
-import { selectComicImportState } from '@app/comic-files/selectors/comic-import.selectors';
 import { selectImportComicFilesState } from '@app/comic-files/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
+import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 
 @Component({
   selector: 'cx-import-comics',
@@ -62,6 +62,11 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   selectedFiles: ComicFile[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
   importing = false;
+  started = 0;
+  stepName = '';
+  total = 0;
+  processed = 0;
+  progress = 0;
   private sending = false;
   private loading = false;
 
@@ -108,8 +113,15 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
         this.store.dispatch(setBusyState({ enabled: state.sending }))
       );
     this.comicImportStateSubscription = this.store
-      .select(selectComicImportState)
-      .subscribe(state => (this.importing = state.importing));
+      .select(selectProcessComicsState)
+      .subscribe(state => {
+        this.importing = state.active;
+        this.started = state.started;
+        this.stepName = state.stepName;
+        this.total = state.total;
+        this.processed = state.processed;
+        this.progress = (state.processed / state.total) * 100;
+      });
   }
 
   ngOnInit(): void {

@@ -19,9 +19,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FooterComponent } from './footer.component';
 import {
-  IMPORT_COUNT_FEATURE_KEY,
+  PROCESS_COMICS_FEATURE_KEY,
   initialState as initialImportCountState
-} from '@app/reducers/import-count.reducer';
+} from '@app/reducers/process-comics.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import {
@@ -35,7 +35,7 @@ import {
 
 describe('FooterComponent', () => {
   const initialState = {
-    [IMPORT_COUNT_FEATURE_KEY]: initialImportCountState,
+    [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
   };

@@ -24,7 +24,6 @@ import { getUserPreference } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';
 import { selectBusyState } from '@app/core/selectors/busy.selectors';
 import { TranslateService } from '@ngx-translate/core';
-import { setImportingComicsState } from '@app/comic-files/actions/comic-import.actions';
 import {
   LANGUAGE_PREFERENCE,
   LOGGER_LEVEL_PREFERENCE
@@ -33,7 +32,6 @@ import {
   startMessaging,
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
-import { selectImportCount } from '@app/selectors/import-count.selectors';
 import { Subscription } from 'rxjs';
 import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
 import {
@@ -120,11 +118,6 @@ export class AppComponent implements OnInit {
     this.store
       .select(selectBusyState)
       .subscribe(state => (this.busy = state.enabled));
-    this.store
-      .select(selectImportCount)
-      .subscribe(count =>
-        this.store.dispatch(setImportingComicsState({ importing: count > 0 }))
-      );
   }
 
   ngOnInit(): void {

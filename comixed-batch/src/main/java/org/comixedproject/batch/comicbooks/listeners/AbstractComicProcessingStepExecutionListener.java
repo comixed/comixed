@@ -16,31 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.messaging.library;
+package org.comixedproject.batch.comicbooks.listeners;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.messaging.AbstractPublishAction;
-import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.state.messaging.ImportCountMessage;
-import org.comixedproject.views.View;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>PublishImportCountAction</code> publishes updates to the current import count.
+ * <code>AbstractComicProcessingListener</code> provides a foundation for building listeners that
+ * listen to the batch processes that add comics to, or process comics for, the library.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class PublishImportCountAction extends AbstractPublishAction<ImportCountMessage> {
-  static final String IMPORT_COUNT_TOPIC = "/topic/import.count";
-
+public abstract class AbstractComicProcessingStepExecutionListener
+    extends AbstractComicProcessingListener implements StepExecutionListener {
   @Override
-  public void publish(final ImportCountMessage subject) throws PublishingException {
-    log.trace(
-        "Publishing import count update: add={} processing={}",
-        subject.getAddCount(),
-        subject.getProcessingCount());
-    this.doPublish(IMPORT_COUNT_TOPIC, subject, View.GenericResponseView.class);
+  public ExitStatus afterStep(final StepExecution stepExecution) {
+    final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
+    this.doPublishState(context);
+    return null;
   }
 }

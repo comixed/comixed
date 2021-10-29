@@ -19,17 +19,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComicFileCoversComponent } from './comic-file-covers.component';
 import { LoggerModule } from '@angular-ru/logger';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/comic-files/comic-file.fixtures';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  initialState as initialComicImportState
-} from '@app/comic-files/reducers/comic-import.reducer';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatMenuModule } from '@angular/material/menu';
 import {
@@ -47,9 +42,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 describe('ComicFileCoversComponent', () => {
-  const initialState = { [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState };
+  const initialState = {};
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3, COMIC_FILE_4];
   const FILE = COMIC_FILE_4;
   const USER = USER_ADMIN;

@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
-import { ImportCountService } from '@app/services/import-count.service';
+import { ProcessComicsService } from '@app/services/process-comics.service';
 import { LoggerService } from '@angular-ru/logger';
 
 @Injectable()
@@ -26,6 +26,6 @@ export class ImportCountEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private importCountService: ImportCountService
+    private importCountService: ProcessComicsService
   ) {}
 }
