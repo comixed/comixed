@@ -22,15 +22,15 @@ import { LoggerService } from '@angular-ru/logger';
 import { WebSocketService } from '@app/messaging';
 import { Store } from '@ngrx/store';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { IMPORT_COUNT_TOPIC } from '@app/app.constants';
-import { importCountUpdated } from '@app/actions/import-count.actions';
-import { ImportCount } from '@app/models/messages/import-count';
+import { PROCESS_COMICS_TOPIC } from '@app/app.constants';
+import { processComicsUpdate } from '@app/actions/process-comics.actions';
+import { ProcessComicsStatus } from '@app/models/messages/process-comics-status';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ImportCountService {
+export class ProcessComicsService {
   subscription: Subscription;
 
   constructor(
@@ -44,17 +44,25 @@ export class ImportCountService {
       .subscribe(state => {
         if (state.started && !this.subscription) {
           this.logger.trace('Subscribing to import count updates');
-          this.subscription = this.webSocketService.subscribe<ImportCount>(
-            IMPORT_COUNT_TOPIC,
-            update => {
-              this.logger.debug('Received import count update:', update);
-              this.store.dispatch(
-                importCountUpdated({
-                  count: update.addCount + update.processingCount
-                })
-              );
-            }
-          );
+          this.subscription =
+            this.webSocketService.subscribe<ProcessComicsStatus>(
+              PROCESS_COMICS_TOPIC,
+              update => {
+                this.logger.debug(
+                  'Received process comic status update:',
+                  update
+                );
+                this.store.dispatch(
+                  processComicsUpdate({
+                    active: update.active,
+                    started: update.started,
+                    stepName: update.stepName,
+                    total: update.total,
+                    processed: update.processed
+                  })
+                );
+              }
+            );
         }
         if (!state.started && !!this.subscription) {
           this.logger.trace('Unsubscribing from import count updates');

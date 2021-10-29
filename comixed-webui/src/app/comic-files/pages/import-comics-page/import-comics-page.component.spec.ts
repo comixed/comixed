@@ -22,10 +22,6 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  initialState as initialComicImportState
-} from '@app/comic-files/reducers/comic-import.reducer';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -69,6 +65,10 @@ import {
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatMenuModule } from '@angular/material/menu';
+import {
+  initialState as initialProcessComicsState,
+  PROCESS_COMICS_FEATURE_KEY
+} from '@app/reducers/process-comics.reducer';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -78,7 +78,7 @@ describe('ImportComicsPageComponent', () => {
   const initialState = {
     [COMIC_FILE_LIST_FEATURE_KEY]: initialComicFileListState,
     [IMPORT_COMIC_FILES_FEATURE_KEY]: initialImportComicFilesState,
-    [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState,
+    [PROCESS_COMICS_FEATURE_KEY]: initialProcessComicsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 

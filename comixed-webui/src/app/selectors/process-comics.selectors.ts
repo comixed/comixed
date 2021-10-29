@@ -16,17 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector } from '@ngrx/store';
 import {
-  IMPORT_COUNT_FEATURE_KEY,
-  ImportCountState
-} from '../reducers/import-count.reducer';
+  PROCESS_COMICS_FEATURE_KEY,
+  ProcessComicsState
+} from '../reducers/process-comics.reducer';
 
-export const selectImportCountState = createFeatureSelector<ImportCountState>(
-  IMPORT_COUNT_FEATURE_KEY
-);
-
-export const selectImportCount = createSelector(
-  selectImportCountState,
-  state => state.count
-);
+export const selectProcessComicsState =
+  createFeatureSelector<ProcessComicsState>(PROCESS_COMICS_FEATURE_KEY);

@@ -19,7 +19,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoggerModule } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
-import { selectImportCount } from '@app/selectors/import-count.selectors';
+import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 import { User } from '@app/user/models/user';
 import {
   selectComicListCount,
@@ -42,8 +42,8 @@ export class FooterComponent implements OnInit {
 
   constructor(private logger: LoggerModule, private store: Store<any>) {
     this.store
-      .select(selectImportCount)
-      .subscribe(count => (this.importCount = count));
+      .select(selectProcessComicsState)
+      .subscribe(state => (this.importCount = state.active ? state.total : 0));
     this.store
       .select(selectComicListCount)
       .subscribe(count => (this.comicCount = count));

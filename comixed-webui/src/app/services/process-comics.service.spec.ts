@@ -17,7 +17,7 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { ImportCountService } from './import-count.service';
+import { ProcessComicsService } from './process-comics.service';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -26,10 +26,10 @@ import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { Frame, Subscription } from 'webstomp-client';
-import { IMPORT_COUNT_TOPIC } from '@app/app.constants';
-import { ImportCount } from '@app/models/messages/import-count';
+import { PROCESS_COMICS_TOPIC } from '@app/app.constants';
+import { ProcessComicsStatus } from '@app/models/messages/process-comics-status';
 
-describe('ImportCountService', () => {
+describe('ProcessComicsService', () => {
   const ADD_COUNT = Math.abs(Math.floor(Math.random() * 1000));
   const PROCESSING_COUNT = Math.abs(Math.floor(Math.random() * 1000));
   const IMPORT_COUNT = ADD_COUNT + PROCESSING_COUNT;
@@ -38,7 +38,7 @@ describe('ImportCountService', () => {
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
   };
 
-  let service: ImportCountService;
+  let service: ProcessComicsService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
   const subscription = jasmine.createSpyObj(['unsubscribe']);
   subscription.unsubscribe = jasmine.createSpy('Subscription.unsubscribe()');
@@ -59,7 +59,7 @@ describe('ImportCountService', () => {
       ]
     });
 
-    service = TestBed.inject(ImportCountService);
+    service = TestBed.inject(ProcessComicsService);
     webSocketService = TestBed.inject(
       WebSocketService
     ) as jasmine.SpyObj<WebSocketService>;
@@ -76,9 +76,11 @@ describe('ImportCountService', () => {
       'scan type',
       {},
       JSON.stringify({
-        addCount: ADD_COUNT,
-        processingCount: PROCESSING_COUNT
-      } as ImportCount)
+        started: new Date().getTime(),
+        stepName: 'step-name',
+        total: ADD_COUNT,
+        processed: PROCESSING_COUNT
+      } as ProcessComicsStatus)
     );
 
     beforeEach(() => {
@@ -94,7 +96,7 @@ describe('ImportCountService', () => {
 
     it('subscribes to the scan types topic', () => {
       expect(webSocketService.subscribe).toHaveBeenCalledWith(
-        IMPORT_COUNT_TOPIC,
+        PROCESS_COMICS_TOPIC,
         jasmine.anything()
       );
     });

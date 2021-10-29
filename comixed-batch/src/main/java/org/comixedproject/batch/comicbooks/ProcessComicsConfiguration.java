@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.listeners.*;
 import org.comixedproject.batch.comicbooks.processors.LoadFileContentsProcessor;
 import org.comixedproject.batch.comicbooks.processors.LoadFileDetailsProcessor;
 import org.comixedproject.batch.comicbooks.processors.MarkBlockedPagesProcessor;
@@ -61,6 +62,7 @@ public class ProcessComicsConfiguration {
    * Returns the process comics job.
    *
    * @param jobBuilderFactory the job factory
+   * @param jobListener the job listener
    * @param loadFileContentsStep the load file contents step
    * @param markBlockedPagesStep the mark blocked pages step
    * @param loadFileDetailsStep the load file details step
@@ -71,6 +73,7 @@ public class ProcessComicsConfiguration {
   @Qualifier("processComicsJob")
   public Job processComicsJob(
       final JobBuilderFactory jobBuilderFactory,
+      final ProcessComicsJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
       @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep,
       @Qualifier("loadFileDetailsStep") final Step loadFileDetailsStep,
@@ -78,6 +81,7 @@ public class ProcessComicsConfiguration {
     return jobBuilderFactory
         .get("processComicsJob")
         .incrementer(new RunIdIncrementer())
+        .listener(jobListener)
         .start(loadFileContentsStep)
         .next(markBlockedPagesStep)
         .next(loadFileDetailsStep)
@@ -89,24 +93,30 @@ public class ProcessComicsConfiguration {
    * Returns the load file contents step.
    *
    * @param stepBuilderFactory the step factory
+   * @param stepListener the step listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
+   * @param chunkListener the chunk listener
    * @return the step
    */
   @Bean
   @Qualifier("loadFileContentsStep")
   public Step loadFileContentsStep(
       final StepBuilderFactory stepBuilderFactory,
+      final LoadFileContentsStepListener stepListener,
       final LoadFileContentsReader reader,
       final LoadFileContentsProcessor processor,
-      final LoadFileContentsWriter writer) {
+      final LoadFileContentsWriter writer,
+      final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("loadFileContentsStep")
+        .listener(stepListener)
         .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(chunkListener)
         .build();
   }
 
@@ -114,24 +124,30 @@ public class ProcessComicsConfiguration {
    * Returns the mark blocked pages step.
    *
    * @param stepBuilderFactory the step factory
+   * @param stepListener the step listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
+   * @param chunkListener the chunk listener
    * @return the step
    */
   @Bean
   @Qualifier("markBlockedPagesStep")
   public Step markBlockedPagesStep(
       final StepBuilderFactory stepBuilderFactory,
+      final MarkBlockedPagesStepListener stepListener,
       final MarkBlockedPagesReader reader,
       final MarkBlockedPagesProcessor processor,
-      final MarkBlockedPagesWriter writer) {
+      final MarkBlockedPagesWriter writer,
+      final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("markBlockedPagesStep")
+        .listener(stepListener)
         .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(chunkListener)
         .build();
   }
 
@@ -139,24 +155,30 @@ public class ProcessComicsConfiguration {
    * Returns the load file details step.
    *
    * @param stepBuilderFactory the step factory
+   * @param stepListener the step listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
+   * @param chunkListener the chunk listener
    * @return the step
    */
   @Bean
   @Qualifier("loadFileDetailsStep")
   public Step loadFileDetailsStep(
       final StepBuilderFactory stepBuilderFactory,
+      final LoadFileDetailsStepListener stepListener,
       final LoadFileDetailsReader reader,
       final LoadFileDetailsProcessor processor,
-      final LoadFileDetailsWriter writer) {
+      final LoadFileDetailsWriter writer,
+      final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("loadFileDetailsStep")
+        .listener(stepListener)
         .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(chunkListener)
         .build();
   }
 
@@ -164,24 +186,29 @@ public class ProcessComicsConfiguration {
    * Returns the contents processed step.
    *
    * @param stepBuilderFactory the step factory
+   * @param stepListener the step listener
    * @param reader the reader
    * @param processor the processor
-   * @param writer the writer
+   * @param writer the writer @Param chunkListener the chunk listener
    * @return the step
    */
   @Bean
   @Qualifier("contentsProcessedStep")
   public Step contentsProcessedStep(
       final StepBuilderFactory stepBuilderFactory,
+      final ContentsProcessedStepListener stepListener,
       final ContentsProcessedReader reader,
       final NoopComicProcessor processor,
-      final ContentsProcessedWriter writer) {
+      final ContentsProcessedWriter writer,
+      final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("contentsProcessedStep")
+        .listener(stepListener)
         .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(chunkListener)
         .build();
   }
 }

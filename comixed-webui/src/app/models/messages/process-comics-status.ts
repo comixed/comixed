@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector } from '@ngrx/store';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  ComicImportState
-} from '../reducers/comic-import.reducer';
-
-/** Selects the comic import feature state. */
-export const selectComicImportState = createFeatureSelector<ComicImportState>(
-  COMIC_IMPORT_FEATURE_KEY
-);
+export interface ProcessComicsStatus {
+  started: number;
+  stepName: string;
+  total: number;
+  processed: number;
+}
