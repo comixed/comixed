@@ -28,17 +28,23 @@ import {
   comicUpdated,
   loadComic,
   loadComicFailed,
+  pageDeletionUpdated,
   updateComic,
-  updateComicFailed
+  updateComicFailed,
+  updatePageDeletion,
+  updatePageDeletionFailed
 } from '@app/comic-books/actions/comic.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LoggerModule } from '@angular-ru/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('ComicEffects', () => {
   const COMIC = COMIC_2;
+  const PAGE = PAGE_1;
+  const DELETED = Math.random() > 0.5;
 
   let actions$: Observable<any>;
   let effects: ComicEffects;
@@ -59,7 +65,10 @@ describe('ComicEffects', () => {
           provide: ComicService,
           useValue: {
             loadOne: jasmine.createSpy('ComicService.loadOne()'),
-            updateOne: jasmine.createSpy('ComicService.updateOne()')
+            updateOne: jasmine.createSpy('ComicService.updateOne()'),
+            updatePageDeletion: jasmine.createSpy(
+              'ComicService.updatePageDeletion()'
+            )
           }
         },
         AlertService
@@ -152,6 +161,58 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.saveOne$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('updating page deletion', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = updatePageDeletion({ pages: [PAGE], deleted: DELETED });
+      const outcome = pageDeletionUpdated();
+
+      actions$ = hot('-a', { a: action });
+      comicService.updatePageDeletion
+        .withArgs({ pages: [PAGE], deleted: DELETED })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.updatePageDeletion$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = updatePageDeletion({ pages: [PAGE], deleted: DELETED });
+      const outcome = updatePageDeletionFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.updatePageDeletion
+        .withArgs({
+          pages: [PAGE],
+          deleted: DELETED
+        })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.updatePageDeletion$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = updatePageDeletion({ pages: [PAGE], deleted: DELETED });
+      const outcome = updatePageDeletionFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.updatePageDeletion
+        .withArgs({
+          pages: [PAGE],
+          deleted: DELETED
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.updatePageDeletion$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

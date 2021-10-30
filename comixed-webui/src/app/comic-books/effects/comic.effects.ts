@@ -27,8 +27,11 @@ import {
   comicUpdated,
   loadComic,
   loadComicFailed,
+  pageDeletionUpdated,
   updateComic,
-  updateComicFailed
+  updateComicFailed,
+  updatePageDeletion,
+  updatePageDeletionFailed
 } from '@app/comic-books/actions/comic.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Comic } from '@app/comic-books/models/comic';
@@ -99,6 +102,52 @@ export class ComicEffects {
           )
         );
         return of(updateComicFailed());
+      })
+    );
+  });
+
+  updatePageDeletion$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(updatePageDeletion),
+      tap(action => this.logger.trace('Updating page deletion:', action)),
+      switchMap(action =>
+        this.comicService
+          .updatePageDeletion({ pages: action.pages, deleted: action.deleted })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'comic-page.update-page-deletion.effect-success',
+                  {
+                    count: action.pages.length,
+                    deleted: action.deleted
+                  }
+                )
+              )
+            ),
+            map(() => pageDeletionUpdated()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-page.update-page-deletion.effect-failure',
+                  {
+                    count: action.pages.length,
+                    deleted: action.deleted
+                  }
+                )
+              );
+              return of(updatePageDeletionFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(updatePageDeletionFailed());
       })
     );
   });

@@ -110,44 +110,6 @@ public class PageService implements InitializingBean, PageStateChangeListener {
     return null;
   }
 
-  /**
-   * Marks a page for deletion.
-   *
-   * @param id the page id
-   * @return the comic
-   * @throws PageException if the id is invalid
-   */
-  @Transactional
-  public Comic deletePage(final long id) throws PageException {
-    log.trace("Deleting page: id={}");
-    final Page page = this.doGetPage(id);
-    log.trace("Getting comic id");
-    final Long comicId = page.getComic().getId();
-    log.trace("Firing event: mark page for deletion");
-    this.pageStateHandler.fireEvent(page, PageEvent.markForDeletion);
-    log.trace("Returning updated comic: id={}", comicId);
-    return this.doGetPage(id).getComic();
-  }
-
-  /**
-   * Unmarks a page for deletion.
-   *
-   * @param id the page id
-   * @return the comic
-   * @throws PageException if the id is invalid
-   */
-  @Transactional
-  public Comic undeletePage(final long id) throws PageException {
-    log.trace("Deleting page: id={}");
-    final Page page = this.doGetPage(id);
-    log.trace("Getting comic id");
-    final Long comicId = page.getComic().getId();
-    log.trace("Firing event: unmark page for deletion");
-    this.pageStateHandler.fireEvent(page, PageEvent.unmarkForDeletion);
-    log.trace("Returning updated comic: id={}", comicId);
-    return this.doGetPage(id).getComic();
-  }
-
   private Page doGetPage(final long id) throws PageException {
     final Optional<Page> result = this.pageRepository.findById(id);
     if (result.isEmpty()) throw new PageException("No such page: id=" + id);
@@ -201,5 +163,29 @@ public class PageService implements InitializingBean, PageStateChangeListener {
   public List<Page> getMarkedWithHash(final String hash) {
     log.trace("Fetching marked pages with hash: {}", hash);
     return this.pageRepository.findByHashAndPageState(hash, PageState.DELETED);
+  }
+
+  /**
+   * Updates the deleted state for individual pages.
+   *
+   * @param idList the page id list
+   * @param deleted the deleted state
+   */
+  public void updatePageDeletion(final List<Long> idList, final boolean deleted) {
+    log.trace("Updating page deletion state");
+    idList.forEach(
+        id -> {
+          log.trace("Loading page: id={}", id);
+          final Page page = this.pageRepository.getById(id);
+          if (page != null) {
+            if (deleted) {
+              log.trace("Marking page for deletion");
+              this.pageStateHandler.fireEvent(page, PageEvent.markForDeletion);
+            } else {
+              log.trace("Unmarking page for deletion");
+              this.pageStateHandler.fireEvent(page, PageEvent.unmarkForDeletion);
+            }
+          }
+        });
   }
 }

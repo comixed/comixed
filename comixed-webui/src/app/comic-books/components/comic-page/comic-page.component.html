@@ -14,11 +14,13 @@
     </div>
   </mat-card-content>
   <mat-card-footer *ngIf="page?.blocked">
-    <mat-icon
-      *ngIf="page?.blocked"
-      [matTooltip]="'comic-book.tooltip.blocked-hash' | translate"
-    >
+    <mat-icon [matTooltip]="'comic-book.tooltip.blocked-hash' | translate">
       block
+    </mat-icon>
+    <mat-icon *ngIf="page?.deleted">
+      <mat-icon [matTooltip]="'comic-book.tooltip.deleted-page' | translate">
+        deleted
+      </mat-icon>
     </mat-icon>
   </mat-card-footer>
 </mat-card>

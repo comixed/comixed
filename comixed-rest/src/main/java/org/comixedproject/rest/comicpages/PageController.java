@@ -18,21 +18,19 @@
 
 package org.comixedproject.rest.comicpages;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.auditlog.AuditableEndpoint;
-import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.service.comicpages.PageException;
 import org.comixedproject.service.comicpages.PageService;
-import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,33 +51,16 @@ public class PageController {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   /**
-   * Marks a page for deletion.
-   *
-   * @param id the page id
-   * @return the parent comic
-   * @throws PageException if the id is invalid
-   */
-  @DeleteMapping(value = "/api/pages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ComicDetailsView.class)
-  @AuditableEndpoint
-  public Comic deletePage(@PathVariable("id") long id) throws PageException {
-    log.info("Marking page for deletion: id={}", id);
-    return this.pageService.deletePage(id);
-  }
-
-  /**
    * Retrieves the content for a single comic page by comic id and page index.
    *
    * @param pageId the comic id
    * @return the page content
-   * @throws ComicException if an error occurs
    * @throws PageException if an error occurs
    */
   @GetMapping(value = "/api/pages/{pageId}/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getPageContent(@PathVariable("pageId") long pageId)
-      throws ComicException, PageException {
+      throws PageException {
     log.info("Getting image content for page: pageId={}", pageId);
     return this.getResponseEntityForPage(this.pageService.getForId(pageId));
   }
@@ -89,9 +70,9 @@ public class PageController {
    *
    * @param page the page
    * @return the content
-   * @throws ComicException if the page could not be found in the comic file
+   * @throws PageException if the page could not be found in the comic file
    */
-  private ResponseEntity<byte[]> getResponseEntityForPage(Page page) throws ComicException {
+  private ResponseEntity<byte[]> getResponseEntityForPage(Page page) throws PageException {
     log.debug("creating response entity for page: id={}", page.getId());
     byte[] content = this.pageCacheService.findByHash(page.getHash());
 
@@ -101,8 +82,10 @@ public class PageController {
         content = this.comicBookAdaptor.loadPageContent(page.getComic(), page.getPageNumber());
         log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
         this.pageCacheService.saveByHash(page.getHash(), content);
-      } catch (IOException | AdaptorException error) {
+      } catch (IOException error) {
         log.error("Failed to add comic page to cache", error);
+      } catch (AdaptorException error) {
+        throw new PageException("Failed to load page content", error);
       }
     }
 
@@ -124,46 +107,43 @@ public class PageController {
    *
    * @param hash the page hash
    * @return the page content
-   * @throws ComicException if an error occurs
+   * @throws PageException if an error occurs
    */
   @GetMapping(value = "/api/pages/hashes/{hash}/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getPageForHash(@PathVariable("hash") final String hash)
-      throws ComicException {
+      throws PageException {
     log.info("Getting image content for page hash: {}", hash);
-    return this.getResponseEntityForPage(this.pageService.getOneForHash(hash));
+    final Page page = this.pageService.getOneForHash(hash);
+    if (page == null) return null;
+    return this.getResponseEntityForPage(page);
   }
 
   /**
-   * Retrieves the content for a page by comic id and page index.
+   * Updates the deletion state for individual pages, setting them as deleted.
    *
-   * @param comicId the comic id
-   * @param index the page index
-   * @return the page content
-   * @throws ComicException if the comic is invalid or the page wasn't found
+   * @param request the request body
    */
-  @GetMapping(value = "/comics/{id}/pages/{index}", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
-  public Page getPageInComicByIndex(
-      @PathVariable("id") long comicId, @PathVariable("index") int index) throws ComicException {
-    log.info("Getting page in comic: comic id={} page index={}", comicId, index);
-
-    return this.pageService.getPageInComicByIndex(comicId, index);
-  }
-
-  /**
-   * Unmarks the page for deletion.
-   *
-   * @param id the page id
-   * @return the parent comic
-   * @throws PageException if an error occurs
-   */
-  @PostMapping(value = "/api/pages/{id}/undelete", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/api/pages/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @JsonView(View.ComicDetailsView.class)
   @AuditableEndpoint
-  public Comic undeletePage(@PathVariable("id") long id) throws PageException {
-    log.info("Undeleting page: id={}", id);
-    return this.pageService.undeletePage(id);
+  public void markPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
+    final List<Long> ids = request.getIds();
+    log.info("Marking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
+    this.pageService.updatePageDeletion(ids, true);
+  }
+
+  /**
+   * Updates the deletion state for individual pages, setting them as deleted.
+   *
+   * @param request the request body
+   */
+  @PostMapping(value = "/api/pages/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public void unmarkPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
+    final List<Long> ids = request.getIds();
+    log.info("Unmarking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
+    this.pageService.updatePageDeletion(ids, false);
   }
 }

@@ -79,7 +79,9 @@
       "mark-selected-as-unread": "Cómics seleccionados como no leídos",
       "reading-lists": "Add to list...",
       "set-page-blocked": "Bloquear páginas como esta",
+      "set-page-deleted": "Delete This Page",
       "set-page-unblocked": "No bloquee páginas como esta",
+      "set-page-undeleted": "Don't Delete This Page",
       "undelete-one": "This Comic As Undeleted",
       "undelete-selected": "Selected Comics As Undeleted"
     },

@@ -23,12 +23,18 @@ import {
   comicUpdated,
   loadComic,
   loadComicFailed,
+  pageDeletionUpdated,
   updateComic,
-  updateComicFailed
+  updateComicFailed,
+  updatePageDeletion,
+  updatePageDeletionFailed
 } from '@app/comic-books/actions/comic.actions';
+import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('Comic Reducer', () => {
   const COMIC = COMIC_2;
+  const PAGE = PAGE_1;
+  const DELETED = Math.random() > 0.5;
 
   let state: ComicState;
 
@@ -176,6 +182,39 @@ describe('Comic Reducer', () => {
 
     it('clears the saved flag', () => {
       expect(state.saved).toBeFalse();
+    });
+  });
+
+  describe('setting the deleted state for pages', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, saving: false },
+        updatePageDeletion({ pages: [PAGE], deleted: DELETED })
+      );
+    });
+
+    it('sets the saving flag', () => {
+      expect(state.saving).toBeTrue();
+    });
+  });
+
+  describe('success setting the deleted state', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, pageDeletionUpdated());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
+    });
+  });
+
+  describe('failure setting the deleted state', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, updatePageDeletionFailed());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
     });
   });
 });

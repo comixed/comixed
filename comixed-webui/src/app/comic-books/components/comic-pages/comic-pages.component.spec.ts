@@ -33,11 +33,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { Confirmation } from '@app/core/models/confirmation';
+import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_2;
   const USER = USER_READER;
   const PAGE = PAGE_1;
+  const DELETED = Math.random() > 0.5;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialuUserState, user: USER }
   };
@@ -45,6 +51,7 @@ describe('ComicPagesComponent', () => {
   let component: ComicPagesComponent;
   let fixture: ComponentFixture<ComicPagesComponent>;
   let store: MockStore<any>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -57,10 +64,12 @@ describe('ComicPagesComponent', () => {
           }
         ]),
         LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
         MatCardModule,
-        MatMenuModule
+        MatMenuModule,
+        MatDialogModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicPagesComponent);
@@ -68,6 +77,7 @@ describe('ComicPagesComponent', () => {
     component.comic = COMIC;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   }));
 
@@ -112,6 +122,25 @@ describe('ComicPagesComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         setBlockedState({ hashes: [PAGE.hash], blocked: BLOCKED })
+      );
+    });
+  });
+
+  describe('updating the deleted state for a page', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onSetPageDeleted(PAGE, DELETED);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updatePageDeletion({ pages: [PAGE], deleted: DELETED })
       );
     });
   });

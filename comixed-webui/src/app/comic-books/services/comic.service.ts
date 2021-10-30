@@ -31,9 +31,12 @@ import { LoadComicsRequest } from '@app/comic-books/models/net/load-comics-reque
 import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
-  UPDATE_COMIC_INFO_URL
+  MARK_PAGES_DELETED_URL,
+  MARK_PAGES_UNDELETED_URL
 } from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
+import { Page } from '@app/comic-books/models/page';
+import { MarkPagesDeletedRequest } from '@app/comic-books/models/network/mark-pages-deleted-request';
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +100,25 @@ export class ComicService {
       return this.http.post(interpolate(MARK_COMICS_UNDELETED_URL), {
         ids
       } as MarkComicsDeletedRequest);
+    }
+  }
+
+  updatePageDeletion(args: {
+    pages: Page[];
+    deleted: boolean;
+  }): Observable<any> {
+    if (args.deleted) {
+      this.logger.trace('Marking pages for deletion');
+      return this.http.post(interpolate(MARK_PAGES_DELETED_URL), {
+        ids: args.pages.map(page => page.id),
+        deleted: true
+      } as MarkPagesDeletedRequest);
+    } else {
+      this.logger.trace('Unmarking pages for deletion');
+      return this.http.post(interpolate(MARK_PAGES_UNDELETED_URL), {
+        ids: args.pages.map(page => page.id),
+        deleted: false
+      } as MarkPagesDeletedRequest);
     }
   }
 }
