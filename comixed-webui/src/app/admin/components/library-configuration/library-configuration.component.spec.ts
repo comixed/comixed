@@ -28,7 +28,8 @@ import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
-  LIBRARY_RENAMING_RULE,
+  LIBRARY_COMIC_RENAMING_RULE,
+  LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
 import { Confirmation } from '@app/core/models/confirmation';
@@ -37,15 +38,20 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 describe('LibraryConfigurationComponent', () => {
   const LIBRARY_ROOT = 'The library root';
-  const RENAMING_RULE = 'The renaming rule';
+  const COMIC_RENAMING_RULE = 'The comic renaming rule';
+  const PAGE_RENAMING_RULE = 'The page renaming rule';
   const OPTIONS = [
     {
       name: LIBRARY_ROOT_DIRECTORY,
       value: LIBRARY_ROOT
     },
     {
-      name: LIBRARY_RENAMING_RULE,
-      value: RENAMING_RULE
+      name: LIBRARY_COMIC_RENAMING_RULE,
+      value: COMIC_RENAMING_RULE
+    },
+    {
+      name: LIBRARY_PAGE_RENAMING_RULE,
+      value: PAGE_RENAMING_RULE
     }
   ];
   const initialState = {};
@@ -95,10 +101,16 @@ describe('LibraryConfigurationComponent', () => {
       ).toEqual(LIBRARY_ROOT);
     });
 
-    it('sets the renaming rule value', () => {
+    it('sets the comic renaming rule value', () => {
       expect(
-        component.libraryConfigurationForm.controls.renamingRule.value
-      ).toEqual(RENAMING_RULE);
+        component.libraryConfigurationForm.controls.comicRenamingRule.value
+      ).toEqual(COMIC_RENAMING_RULE);
+    });
+
+    it('sets the page renaming rule value', () => {
+      expect(
+        component.libraryConfigurationForm.controls.pageRenamingRule.value
+      ).toEqual(PAGE_RENAMING_RULE);
     });
   });
 
@@ -120,7 +132,8 @@ describe('LibraryConfigurationComponent', () => {
         saveConfigurationOptions({
           options: [
             { name: LIBRARY_ROOT_DIRECTORY, value: LIBRARY_ROOT },
-            { name: LIBRARY_RENAMING_RULE, value: RENAMING_RULE }
+            { name: LIBRARY_COMIC_RENAMING_RULE, value: COMIC_RENAMING_RULE },
+            { name: LIBRARY_PAGE_RENAMING_RULE, value: PAGE_RENAMING_RULE }
           ]
         })
       );

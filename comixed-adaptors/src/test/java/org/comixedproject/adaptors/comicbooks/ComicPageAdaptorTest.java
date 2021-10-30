@@ -16,14 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.processors;
+package org.comixedproject.adaptors.comicbooks;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
 
-import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicpages.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,35 +31,25 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UpdateMetadataProcessorTest {
-  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
+public class ComicPageAdaptorTest {
+  private static final String TEST_RENAMING_RULE = "page-$INDEX";
+  private static final int TEST_PAGE_INDEX = 3;
+  private static final String TEST_FILENAME = "oldname3.png";
+  private static final String TEST_EXPECTED_PAGE_NAME = "page-4.png";
 
-  @InjectMocks private UpdateMetadataProcessor processor;
-  @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
+  @InjectMocks private ComicPageAdaptor adaptor;
+  @Mock private Page page;
 
   @Before
   public void setUp() {
-    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(page.getFilename()).thenReturn(TEST_FILENAME);
   }
 
   @Test
-  public void testProcessUpdateException() throws Exception {
-    final Comic result = processor.process(comic);
+  public void testCreateFilenameFromRule() {
+    final String result = adaptor.createFilenameFromRule(page, TEST_RENAMING_RULE, TEST_PAGE_INDEX);
 
     assertNotNull(result);
-    assertSame(comic, result);
-
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).save(comic, TEST_ARCHIVE_TYPE, false, "");
-  }
-
-  @Test
-  public void testProcess() throws Exception {
-    final Comic result = processor.process(comic);
-
-    assertNotNull(result);
-    assertSame(comic, result);
-
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).save(comic, TEST_ARCHIVE_TYPE, false, "");
+    assertEquals(TEST_EXPECTED_PAGE_NAME, result);
   }
 }

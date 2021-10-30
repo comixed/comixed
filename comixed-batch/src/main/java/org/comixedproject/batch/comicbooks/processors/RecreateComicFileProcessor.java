@@ -18,12 +18,15 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
@@ -42,6 +45,7 @@ import org.springframework.stereotype.Component;
 public class RecreateComicFileProcessor
     implements ItemProcessor<Comic, Comic>, StepExecutionListener {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ConfigurationService configurationService;
 
   private JobParameters jobParameters;
 
@@ -52,10 +56,12 @@ public class RecreateComicFileProcessor
         ArchiveType.forValue(this.jobParameters.getString(JOB_TARGET_ARCHIVE));
     final boolean removeDeletedPages =
         Boolean.parseBoolean(this.jobParameters.getString(JOB_DELETE_MARKED_PAGES));
-    final boolean renamePages =
-        Boolean.parseBoolean(this.jobParameters.getString(JOB_RENAME_PAGES));
-    log.trace("Recreating comic file{}", renamePages ? ", renaming pages" : "");
-    this.comicBookAdaptor.save(comic, archiveType, removeDeletedPages, renamePages);
+    log.trace("Recreating comic files");
+    this.comicBookAdaptor.save(
+        comic,
+        archiveType,
+        removeDeletedPages,
+        this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
     return comic;
   }
 

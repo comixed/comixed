@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
 import static org.comixedproject.rest.library.LibraryController.MAXIMUM_RECORDS;
-import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_RENAMING_RULE;
+import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
 import java.util.ArrayList;
@@ -112,7 +112,6 @@ public class LibraryControllerTest {
     assertEquals(TEST_ARCHIVE_TYPE.getName(), jobParameters.getString(JOB_TARGET_ARCHIVE));
     assertEquals(
         String.valueOf(TEST_DELETE_MARKED_PAGES), jobParameters.getString(JOB_DELETE_MARKED_PAGES));
-    assertEquals(String.valueOf(TEST_RENAME_PAGES), jobParameters.getString(JOB_RENAME_PAGES));
 
     Mockito.verify(libraryService, Mockito.times(1)).prepareToRecreateComics(idList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(recreateComicFilesJob, jobParameters);
@@ -122,7 +121,7 @@ public class LibraryControllerTest {
   public void testConsolidateServiceThrowsException() throws Exception {
     Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
         .thenReturn(TEST_DESTINATION_DIRECTORY);
-    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_RENAMING_RULE))
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE))
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.doThrow(LibraryException.class)
         .when(libraryService)
@@ -140,7 +139,7 @@ public class LibraryControllerTest {
   public void testConsolidate() throws Exception {
     Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_ROOT_DIRECTORY))
         .thenReturn(TEST_DESTINATION_DIRECTORY);
-    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_RENAMING_RULE))
+    Mockito.when(configurationService.getOptionValue(CFG_LIBRARY_COMIC_RENAMING_RULE))
         .thenReturn(TEST_RENAMING_RULE);
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);

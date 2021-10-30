@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="010_516_add_page_renaming_rule_option.xml"
+             author="mcpierce">
+
+    <insert tableName="ConfigurationOptions">
+      <column name="Name"
+              value="library.comic-page.renaming-rule"/>
+      <column name="Value"
+              value="index-$INDEX"/>
+      <column name="LastModifiedOn"
+              value="NOW()"/>
+    </insert>
+
+    <update tableName="ConfigurationOptions">
+      <column name="Name"
+              value="library.comic-book.renaming-rule"/>
+      <where>Name='library.renaming-rule'</where>
+    </update>
+
+  </changeSet>
+</databaseChangeLog>

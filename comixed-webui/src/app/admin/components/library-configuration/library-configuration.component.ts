@@ -26,7 +26,8 @@ import { LoggerService } from '@angular-ru/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
-  LIBRARY_RENAMING_RULE,
+  LIBRARY_COMIC_RENAMING_RULE,
+  LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
@@ -39,25 +40,34 @@ import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-
 export class LibraryConfigurationComponent implements OnInit {
   @Input() libraryConfigurationForm: FormGroup;
 
-  readonly variableOptions: ListItem<string>[] = [
+  readonly comicVariableOptions: ListItem<string>[] = [
     {
       label: '$PUBLISHER',
-      value: 'configuration.text.renaming-rule-publisher'
+      value: 'configuration.text.comic-renaming-rule-publisher'
     },
-    { label: '$SERIES', value: 'configuration.text.renaming-rule-series' },
-    { label: '$VOLUME', value: 'configuration.text.renaming-rule-volume' },
+    {
+      label: '$SERIES',
+      value: 'configuration.text.comic-renaming-rule-series'
+    },
+    {
+      label: '$VOLUME',
+      value: 'configuration.text.comic-renaming-rule-volume'
+    },
     {
       label: '$ISSUE',
-      value: 'configuration.text.renaming-rule-issue-number'
+      value: 'configuration.text.comic-renaming-rule-issue-number'
     },
     {
       label: '$COVERDATE',
-      value: 'configuration.text.renaming-rule-cover-date'
+      value: 'configuration.text.comic-renaming-rule-cover-date'
     },
     {
       label: '$PUBYEAR',
-      value: 'configuration.text.renaming-rule-published-year'
+      value: 'configuration.text.comic-renaming-rule-published-year'
     }
+  ];
+  readonly pageVariableOptions: ListItem<string>[] = [
+    { label: '$INDEX', value: 'configuration.text.page-renaming-rule-index' }
   ];
 
   constructor(
@@ -69,7 +79,8 @@ export class LibraryConfigurationComponent implements OnInit {
   ) {
     this.libraryConfigurationForm = this.formBuilder.group({
       rootDirectory: ['', [Validators.required]],
-      renamingRule: ['', []]
+      comicRenamingRule: ['', []],
+      pageRenamingRule: ['', []]
     });
   }
 
@@ -78,8 +89,11 @@ export class LibraryConfigurationComponent implements OnInit {
     this.libraryConfigurationForm.controls.rootDirectory.setValue(
       getConfigurationOption(options, LIBRARY_ROOT_DIRECTORY, '')
     );
-    this.libraryConfigurationForm.controls.renamingRule.setValue(
-      getConfigurationOption(options, LIBRARY_RENAMING_RULE, '')
+    this.libraryConfigurationForm.controls.comicRenamingRule.setValue(
+      getConfigurationOption(options, LIBRARY_COMIC_RENAMING_RULE, '')
+    );
+    this.libraryConfigurationForm.controls.pageRenamingRule.setValue(
+      getConfigurationOption(options, LIBRARY_PAGE_RENAMING_RULE, '')
     );
   }
 
@@ -110,8 +124,12 @@ export class LibraryConfigurationComponent implements OnInit {
         value: this.libraryConfigurationForm.controls.rootDirectory.value
       },
       {
-        name: LIBRARY_RENAMING_RULE,
-        value: this.libraryConfigurationForm.controls.renamingRule.value
+        name: LIBRARY_COMIC_RENAMING_RULE,
+        value: this.libraryConfigurationForm.controls.comicRenamingRule.value
+      },
+      {
+        name: LIBRARY_PAGE_RENAMING_RULE,
+        value: this.libraryConfigurationForm.controls.pageRenamingRule.value
       }
     ];
   }

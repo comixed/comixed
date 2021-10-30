@@ -15,5 +15,6 @@
   <include file="/db/migrations/0.11.0/007_1046_make_comicvineid_a_number.xml"/>
   <include file="/db/migrations/0.11.0/008_1053_remove_comic_file_entries.xml"/>
   <include file="/db/migrations/0.11.0/009_1059_removed_dates_from_last_read.xml"/>
+  <include file="/db/migrations/0.11.0/010_516_add_page_renaming_rule_option.xml"/>
 
 </databaseChangeLog>

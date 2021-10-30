@@ -44,7 +44,6 @@ public class RecreateComicFilesConfiguration {
   public static final String JOB_RECREATE_COMICS_STARTED = "job.recreate-comic.started";
   public static final String JOB_TARGET_ARCHIVE = "job.recreate-comic.target-archive";
   public static final String JOB_DELETE_MARKED_PAGES = "job.recreate-comic.delete-blocked-pages";
-  public static final String JOB_RENAME_PAGES = "job.recreate-comic.rename-pages";
 
   @Value("${batch.chunk-size}")
   private int batchChunkSize = 10;

@@ -21,6 +21,7 @@ package org.comixedproject.service.admin;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.repositories.admin.ConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,8 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class ConfigurationService {
   public static final String CFG_LIBRARY_ROOT_DIRECTORY = "library.root-directory";
-  public static final String CFG_LIBRARY_RENAMING_RULE = "library.renaming-rule";
+  public static final String CFG_LIBRARY_COMIC_RENAMING_RULE = "library.comic-book.renaming-rule";
+  public static final String CFG_LIBRARY_PAGE_RENAMING_RULE = "library.comic-page.renaming-rule";
 
   @Autowired private ConfigurationRepository configurationRepository;
 
@@ -70,7 +72,7 @@ public class ConfigurationService {
         throw new ConfigurationOptionException(
             "No such configuration option: name=" + option.getName());
       log.trace("Updating existing record: value={}", option.getValue());
-      existing.setValue(option.getValue());
+      existing.setValue(option.getValue().trim());
       log.trace("Updating existing record");
       this.configurationRepository.save(existing);
     }
@@ -88,5 +90,10 @@ public class ConfigurationService {
     log.trace("Loading option");
     final ConfigurationOption option = this.configurationRepository.findByName(name);
     return option != null ? option.getValue() : null;
+  }
+
+  public String getOptionValue(final String name, final String defaultValue) {
+    final String result = this.getOptionValue(name);
+    return StringUtils.isNotEmpty(result) ? result : defaultValue;
   }
 }
