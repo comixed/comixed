@@ -71,10 +71,10 @@ public class PageServiceTest {
   @Mock private MessageHeaders messageHeaders;
 
   private List<Page> pageList = new ArrayList<>();
+  private List<Long> idList = new ArrayList<>();
 
   @Before
   public void setUp() {
-    Mockito.when(page.getComic()).thenReturn(comic);
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_PAGE, Page.class)).thenReturn(page);
     Mockito.when(state.getId()).thenReturn(TEST_STATE);
@@ -166,56 +166,6 @@ public class PageServiceTest {
   }
 
   @Test(expected = PageException.class)
-  public void testDeletePageInvalidId() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
-    try {
-      service.deletePage(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    }
-  }
-
-  @Test
-  public void testDeletePage() throws PageException {
-    Mockito.when(pageRepository.findById(TEST_PAGE_ID))
-        .thenReturn(Optional.of(page), Optional.of(savedPage));
-    Mockito.when(savedPage.getComic()).thenReturn(comic);
-
-    final Comic result = service.deletePage(TEST_PAGE_ID);
-
-    assertNotNull(result);
-    assertSame(comic, result);
-
-    Mockito.verify(pageRepository, Mockito.times(2)).findById(TEST_PAGE_ID);
-    Mockito.verify(pageStateHandler, Mockito.times(1)).fireEvent(page, PageEvent.markForDeletion);
-  }
-
-  @Test(expected = PageException.class)
-  public void testUndeletePageForNonexistentPage() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
-    try {
-      service.undeletePage(TEST_PAGE_ID);
-    } finally {
-      Mockito.verify(pageRepository, Mockito.times(1)).findById(TEST_PAGE_ID);
-    }
-  }
-
-  @Test
-  public void testUndeletePageForUnmarkedPage() throws PageException {
-    Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(page));
-    Mockito.when(page.getComic()).thenReturn(comic);
-
-    final Comic result = service.undeletePage(TEST_PAGE_ID);
-
-    assertNotNull(result);
-    assertSame(comic, result);
-
-    Mockito.verify(pageRepository, Mockito.times(2)).findById(TEST_PAGE_ID);
-  }
-
-  @Test(expected = PageException.class)
   public void testGetPageByIdWithInvalidId() throws PageException {
     Mockito.when(pageRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
@@ -282,5 +232,29 @@ public class PageServiceTest {
 
     Mockito.verify(pageRepository, Mockito.times(1))
         .findByHashAndPageState(TEST_PAGE_HASH, PageState.DELETED);
+  }
+
+  @Test
+  public void testMarkPagesDeleted() {
+    idList.add(TEST_PAGE_ID);
+
+    Mockito.when(pageRepository.getById(Mockito.anyLong())).thenReturn(page);
+
+    service.updatePageDeletion(idList, true);
+
+    Mockito.verify(pageStateHandler, Mockito.times(idList.size()))
+        .fireEvent(page, PageEvent.markForDeletion);
+  }
+
+  @Test
+  public void testMarkPagesUndeleted() {
+    idList.add(TEST_PAGE_ID);
+
+    Mockito.when(pageRepository.getById(Mockito.anyLong())).thenReturn(page);
+
+    service.updatePageDeletion(idList, false);
+
+    Mockito.verify(pageStateHandler, Mockito.times(idList.size()))
+        .fireEvent(page, PageEvent.unmarkForDeletion);
   }
 }

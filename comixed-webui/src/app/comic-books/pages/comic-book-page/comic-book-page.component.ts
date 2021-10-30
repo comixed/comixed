@@ -54,15 +54,15 @@ import {
   selectComicBusy
 } from '@app/comic-books/selectors/comic.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MessagingSubscription, WebSocketService } from '@app/messaging';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
-import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
-import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -101,6 +101,7 @@ export class ComicBookPageComponent
   isRead = false;
   lastRead: LastRead = null;
   showPages = false;
+  messagingStarted = false;
 
   constructor(
     private logger: LoggerService,
@@ -118,6 +119,7 @@ export class ComicBookPageComponent
     );
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.comicId = +params.comicId;
+      this.unsubscribeFromUpdates();
       this.logger.trace('Comic id parameter:', params.comicId);
       this.store.dispatch(loadComic({ id: this.comicId }));
     });
@@ -137,6 +139,7 @@ export class ComicBookPageComponent
     this.comicSubscription = this.store.select(selectComic).subscribe(comic => {
       this.comic = comic;
       this.loadPageTitle();
+      this.subscribeToUpdates();
     });
     this.comicBusySubscription = this.store
       .select(selectComicBusy)
@@ -177,15 +180,12 @@ export class ComicBookPageComponent
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
-        if (state.started && !this.comicUpdateSubscription) {
-          this.logger.trace('Subscribing to comic book updates');
-          this.comicUpdateSubscription = this.webSocketService.subscribe(
-            interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId }),
-            comic => {
-              this.logger.debug('Comic book update received:', comic);
-              this.store.dispatch(comicLoaded({ comic }));
-            }
-          );
+        this.messagingStarted = state.started;
+        if (state.started) {
+          this.subscribeToUpdates();
+        }
+        if (!state.started) {
+          this.unsubscribeFromUpdates();
         }
       });
   }
@@ -241,7 +241,7 @@ export class ComicBookPageComponent
   }
 
   setReadState(read: boolean): void {
-    this.logger.debug(`Marking comic as ${status ? 'read' : 'unread'}`);
+    this.logger.debug('Marking comic read status:', status);
     this.store.dispatch(setComicsRead({ comics: [this.comic], read }));
   }
 
@@ -281,6 +281,14 @@ export class ComicBookPageComponent
     });
   }
 
+  unsubscribeFromUpdates(): void {
+    if (!!this.comicUpdateSubscription) {
+      this.logger.trace('Unsubscribing from comic book updates');
+      this.comicUpdateSubscription.unsubscribe();
+      this.comicUpdateSubscription = null;
+    }
+  }
+
   private updateShowPages(): void {
     this.showPages = this.showPages || this.currentTab === 2;
   }
@@ -293,6 +301,19 @@ export class ComicBookPageComponent
     if (!!this.comic) {
       this.logger.trace('Updating page title');
       this.titleService.setTitle(this.comicTitlePipe.transform(this.comic));
+    }
+  }
+
+  private subscribeToUpdates(): void {
+    if (!this.comicUpdateSubscription && this.messagingStarted) {
+      this.logger.trace('Subscribing to comic book updates');
+      this.comicUpdateSubscription = this.webSocketService.subscribe<Comic>(
+        interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId }),
+        comic => {
+          this.logger.debug('Comic book update received:', comic);
+          this.store.dispatch(comicLoaded({ comic }));
+        }
+      );
     }
   }
 }

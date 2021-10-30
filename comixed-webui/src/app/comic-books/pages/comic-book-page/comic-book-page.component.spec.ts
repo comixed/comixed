@@ -411,4 +411,22 @@ describe('ComicBookPageComponent', () => {
       );
     });
   });
+
+  describe('unsubscribing from comic updates', () => {
+    const subscription = jasmine.createSpyObj(['unsubscribe']);
+
+    beforeEach(() => {
+      component.comicUpdateSubscription = subscription;
+      component.messagingStarted = true;
+      component.unsubscribeFromUpdates();
+    });
+
+    it('unsubscribes from updates', () => {
+      expect(subscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the subscription', () => {
+      expect(component.comicUpdateSubscription).toBeNull();
+    });
+  });
 });

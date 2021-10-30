@@ -23,6 +23,7 @@ import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -32,6 +33,15 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PageRepository extends CrudRepository<Page, Long> {
+  /**
+   * Fetches a single page by record id.
+   *
+   * @param id the record id
+   * @return the page
+   */
+  @Query("SELECT p FROM Page p WHERE p.id = :id")
+  Page getById(@Param("id") long id);
+
   /**
    * Finds a single page with a given hash.
    *

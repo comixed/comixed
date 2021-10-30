@@ -22,8 +22,11 @@ import {
   comicUpdated,
   loadComic,
   loadComicFailed,
+  pageDeletionUpdated,
   updateComic,
-  updateComicFailed
+  updateComicFailed,
+  updatePageDeletion,
+  updatePageDeletionFailed
 } from '../actions/comic.actions';
 import { Comic } from '@app/comic-books/models/comic';
 
@@ -66,5 +69,8 @@ export const reducer = createReducer(
       return state;
     }
   }),
-  on(updateComicFailed, state => ({ ...state, saving: false, saved: false }))
+  on(updateComicFailed, state => ({ ...state, saving: false, saved: false })),
+  on(updatePageDeletion, state => ({ ...state, saving: true })),
+  on(pageDeletionUpdated, state => ({ ...state, saving: false })),
+  on(updatePageDeletionFailed, state => ({ ...state, saving: false }))
 );

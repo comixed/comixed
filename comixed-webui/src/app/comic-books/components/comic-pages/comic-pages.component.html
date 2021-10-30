@@ -26,7 +26,27 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
     <button
-      *ngIf="page.blocked"
+      *ngIf="isAdmin && page.deleted"
+      mat-menu-item
+      (click)="onSetPageDeleted(page, false)"
+    >
+      <mat-icon>delete</mat-icon>
+      <mat-label>
+        {{ "library.context-menu.set-page-undeleted" | translate }}
+      </mat-label>
+    </button>
+    <button
+      *ngIf="isAdmin && !page.deleted"
+      mat-menu-item
+      (click)="onSetPageDeleted(page, true)"
+    >
+      <mat-icon>delete</mat-icon>
+      <mat-label>
+        {{ "library.context-menu.set-page-deleted" | translate }}
+      </mat-label>
+    </button>
+    <button
+      *ngIf="isAdmin && page.blocked"
       mat-menu-item
       (click)="onSetPageBlocked(page, false)"
     >
@@ -36,7 +56,7 @@
       </mat-label>
     </button>
     <button
-      *ngIf="!page.blocked"
+      *ngIf="isAdmin && !page.blocked"
       mat-menu-item
       (click)="onSetPageBlocked(page, true)"
     >

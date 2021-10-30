@@ -23,6 +23,9 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { Page } from '@app/comic-books/models/page';
 import { Comic } from '@app/comic-books/models/comic';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { TranslateService } from '@ngx-translate/core';
+import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
 
 @Component({
   selector: 'cx-comic-pages',
@@ -34,12 +37,18 @@ export class ComicPagesComponent implements OnInit {
 
   @Input() comic: Comic;
   @Input() pageSize = -1;
+  @Input() isAdmin = false;
 
   page: Page;
   contextMenuX = '';
   contextMenuY = '';
 
-  constructor(private logger: LoggerService, private store: Store<any>) {}
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -54,5 +63,23 @@ export class ComicPagesComponent implements OnInit {
   onSetPageBlocked(page: Page, blocked: boolean): void {
     this.logger.debug('Updating page blocked state:', page, blocked);
     this.store.dispatch(setBlockedState({ hashes: [page.hash], blocked }));
+  }
+
+  onSetPageDeleted(page: Page, deleted: boolean): void {
+    this.logger.trace('Confirming marking page as deleted:', deleted);
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'comic-page.update-page-deletion.confirmation-title',
+        { deleted }
+      ),
+      message: this.translateService.instant(
+        'comic-page.update-page-deletion.confirmation-message',
+        { deleted }
+      ),
+      confirm: () => {
+        this.logger.trace('Marking page as deleted:', deleted);
+        this.store.dispatch(updatePageDeletion({ pages: [page], deleted }));
+      }
+    });
   }
 }

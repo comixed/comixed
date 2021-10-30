@@ -121,6 +121,14 @@
       "effect-failure": "Failed to load comic formats."
     }
   },
+  "comic-page": {
+    "update-page-deletion": {
+      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",
+      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Page",
+      "effect-failure": "Failed to mark {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}.",
+      "effect-success": "Marked {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}."
+    }
+  },
   "imprint": {
     "load-all": {
       "effect-failure": "Failed to load imprints."

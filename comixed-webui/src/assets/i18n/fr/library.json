@@ -79,7 +79,9 @@
       "mark-selected-as-unread": "Les Bandes Dessinées sélectionnées comme Non lues",
       "reading-lists": "Ajouter à la liste...",
       "set-page-blocked": "Bloquer des pages comme celle-ci",
+      "set-page-deleted": "Delete This Page",
       "set-page-unblocked": "Ne pas bloquer des pages comme celle-ci",
+      "set-page-undeleted": "Don't Delete This Page",
       "undelete-one": "Cette bande dessinée comme non supprimée",
       "undelete-selected": "Bandes dessinées sélectionnées comme non supprimées"
     },

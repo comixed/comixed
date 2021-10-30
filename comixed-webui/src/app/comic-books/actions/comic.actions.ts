@@ -18,6 +18,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/comic-books/models/comic';
+import { Page } from '@app/comic-books/models/page';
 
 export const loadComic = createAction(
   '[Comic] Loads a single comic',
@@ -45,4 +46,17 @@ export const comicUpdated = createAction(
 
 export const updateComicFailed = createAction(
   '[Comic] Failed to update a comic'
+);
+
+export const updatePageDeletion = createAction(
+  '[Comic] Update page deletion state',
+  props<{ pages: Page[]; deleted: boolean }>()
+);
+
+export const pageDeletionUpdated = createAction(
+  '[Comic] Page deletion was updated'
+);
+
+export const updatePageDeletionFailed = createAction(
+  '[Comic] Failed to update page deletion state'
 );

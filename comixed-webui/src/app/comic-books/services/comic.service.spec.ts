@@ -41,17 +41,21 @@ import { LoadComicsRequest } from '@app/comic-books/models/net/load-comics-reque
 import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
-  UPDATE_COMIC_INFO_URL
+  MARK_PAGES_DELETED_URL,
+  MARK_PAGES_UNDELETED_URL
 } from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { HttpResponse } from '@angular/common/http';
 import { MarkComicsUndeletedRequest } from '@app/comic-books/models/net/mark-comics-undeleted-request';
+import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { MarkPagesDeletedRequest } from '@app/comic-books/models/network/mark-pages-deleted-request';
 
 describe('ComicService', () => {
   const COMIC = COMIC_2;
   const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
   const LAST_PAGE = Math.random() > 0.5;
+  const PAGE = PAGE_1;
 
   let service: ComicService;
   let httpMock: HttpTestingController;
@@ -142,6 +146,40 @@ describe('ComicService', () => {
     expect(req.request.body).toEqual({
       ids: COMICS.map(comic => comic.id)
     } as MarkComicsUndeletedRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('it can mark pages for deletion', () => {
+    service
+      .updatePageDeletion({
+        pages: [PAGE],
+        deleted: true
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(MARK_PAGES_DELETED_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: [PAGE.id],
+      deleted: true
+    } as MarkPagesDeletedRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('it can unmark pages for deletion', () => {
+    service
+      .updatePageDeletion({
+        pages: [PAGE],
+        deleted: false
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(MARK_PAGES_UNDELETED_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: [PAGE.id],
+      deleted: false
+    } as MarkPagesDeletedRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });
