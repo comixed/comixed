@@ -44,7 +44,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
   COMICVINE_API_KEY,
-  LIBRARY_RENAMING_RULE
+  LIBRARY_COMIC_RENAMING_RULE
 } from '@app/admin/admin.constants';
 import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -61,7 +61,7 @@ import { MatCardModule } from '@angular/material/card';
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
     { ...CONFIGURATION_OPTION_1, name: COMICVINE_API_KEY },
-    { ...CONFIGURATION_OPTION_2, name: LIBRARY_RENAMING_RULE },
+    { ...CONFIGURATION_OPTION_2, name: LIBRARY_COMIC_RENAMING_RULE },
     CONFIGURATION_OPTION_3,
     CONFIGURATION_OPTION_4,
     CONFIGURATION_OPTION_5

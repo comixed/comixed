@@ -118,7 +118,6 @@ public class LibraryController {
             .addLong(JOB_RECREATE_COMICS_STARTED, System.currentTimeMillis())
             .addString(JOB_TARGET_ARCHIVE, archiveType.getName())
             .addString(JOB_DELETE_MARKED_PAGES, String.valueOf(deletePages))
-            .addString(JOB_RENAME_PAGES, String.valueOf(renamePages))
             .toJobParameters());
   }
 
@@ -143,7 +142,8 @@ public class LibraryController {
         this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY);
     log.trace("Loading renaming rule");
     final String renamingRule =
-        this.configurationService.getOptionValue(ConfigurationService.CFG_LIBRARY_RENAMING_RULE);
+        this.configurationService.getOptionValue(
+            ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE);
     this.libraryService.prepareForConsolidation(
         targetDirectory, renamingRule, deleteRemovedComicFiles);
     log.trace("Launch consolidation batch process");

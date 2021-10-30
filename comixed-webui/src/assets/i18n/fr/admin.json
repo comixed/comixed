@@ -1,12 +1,16 @@
 {
   "configuration": {
     "label": {
+      "comic-renaming-rule": "Règle de renommage des bandes dessinées",
+      "comic-renaming-variables": "Comic Renaming Variables",
+      "comic-variable-description": "Description",
+      "comic-variable-name": "Variable",
       "comicvine-api-key": "ComicVine API Key",
-      "renaming-rule": "Règle de renommage des bandes dessinées",
-      "renaming-variables": "Variables de renommage disponibles",
+      "page-renaming-rule": "Page Renaming Rule",
+      "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Répertoire racine de la bibliothèque",
-      "variable-description": "Description du résultat",
-      "variable-name": "Nom de la variable"
+      "page-variable-description": "Description du résultat",
+      "page-variable-name": "Nom de la variable"
     },
     "load-all": {
       "effect-failure": "Échec du chargement des options de configuration."
@@ -19,14 +23,16 @@
     },
     "tab-title": "Configuration",
     "text": {
-      "renaming-rule-cover-date": "La date de couverture",
-      "renaming-rule-issue-number": "Le numéro",
-      "renaming-rule-published-month": "Le mois de publication",
-      "renaming-rule-published-year": "L'année de publication",
-      "renaming-rule-publisher": "Le nom de l'Éditeur",
-      "renaming-rule-series": "Le nom de la série",
-      "renaming-rule-volume": "Le volume",
-      "variable-caption": "Ce sont les variables disponibles qui peuvent être utilisées pour renommer les bandes dessinées."
+      "comic-renaming-rule-cover-date": "La date de couverture",
+      "comic-renaming-rule-issue-number": "Le numéro",
+      "comic-renaming-rule-published-month": "Le mois de publication",
+      "comic-renaming-rule-published-year": "L'année de publication",
+      "comic-renaming-rule-publisher": "Le nom de l'Éditeur",
+      "comic-renaming-rule-series": "Le nom de la série",
+      "comic-renaming-rule-volume": "Le volume",
+      "comic-variable-caption": "Ce sont les variables disponibles qui peuvent être utilisées pour renommer les bandes dessinées.",
+      "page-renaming-rule-index": "The page index (1-based)",
+      "page-variable-caption": "These are the available variables that can be used for renaming pages."
     }
   },
   "filename-scraping-rules": {

@@ -26,6 +26,7 @@ import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -52,9 +53,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComicBookAdaptor {
-  public static final String PAGE_FILENAME_PATTERN = "page-%03d.%s";
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
+  @Autowired private ComicPageAdaptor comicPageAdaptor;
   @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Autowired private FileAdaptor fileAdaptor;
 
@@ -112,14 +113,14 @@ public class ComicBookAdaptor {
    * @param comic the comic
    * @param targetArchiveType the target format
    * @param removeDeletedPages remove deleted pages flag
-   * @param renamePages rename pages flag
+   * @param pageRenamingRule the page renaming rule
    * @throws AdaptorException if an error occurs
    */
   public void save(
       final Comic comic,
       final ArchiveType targetArchiveType,
       final boolean removeDeletedPages,
-      final boolean renamePages)
+      final String pageRenamingRule)
       throws AdaptorException {
     try {
       final ArchiveAdaptor sourceArchive =
@@ -153,9 +154,9 @@ public class ComicBookAdaptor {
         log.trace("Reading comic page content: {}", page.getFilename());
         final byte[] content = sourceArchive.readEntry(readHandle, page.getFilename());
         @NonNull String pageFilename = page.getFilename();
-        if (renamePages) {
+        if (StringUtils.isNotEmpty(pageRenamingRule)) {
           pageFilename =
-              String.format(PAGE_FILENAME_PATTERN, index, FileNameUtils.getExtension(pageFilename));
+              this.comicPageAdaptor.createFilenameFromRule(page, pageRenamingRule, index);
         }
         log.trace("Writing comic page content: {}", pageFilename);
         destinationArchive.writeEntry(writeHandle, pageFilename, content);

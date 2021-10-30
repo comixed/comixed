@@ -19,7 +19,6 @@
 package org.comixedproject.adaptors.comicbooks;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.adaptors.comicbooks.ComicBookAdaptor.PAGE_FILENAME_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +57,8 @@ public class ComicBookAdaptorTest {
   private static final byte[] TEST_COMICINFO_XML_CONTENT = "ComicInfo.xml content".getBytes();
   private static final int TEST_PAGE_INDEX = 0;
   private static final String TEST_REAL_COMIC_FILE = "target/test-classes/example.cbz";
+  private static final String TEST_PAGE_RENAMING_RULE = "page renaming rule";
+  private static final String TEST_NEW_PAGE_FILENAME = "new page filename";
 
   @InjectMocks private ComicBookAdaptor adaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -70,6 +71,7 @@ public class ComicBookAdaptorTest {
   @Mock private ContentAdaptor contentAdaptor;
   @Mock private ComicArchiveEntry archiveEntry;
   @Mock private ComicFileAdaptor comicFileAdaptor;
+  @Mock private ComicPageAdaptor comicPageAdaptor;
   @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Mock private FileAdaptor fileAdaptor;
 
@@ -270,7 +272,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(AdaptorException.class);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, false);
+      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
     }
@@ -283,7 +285,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ArchiveAdaptorException.class);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, false);
+      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
           .openArchiveForRead(TEST_COMIC_FILENAME);
@@ -297,7 +299,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ContentAdaptorException.class);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, false);
+      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comic);
     }
@@ -310,7 +312,7 @@ public class ComicBookAdaptorTest {
         .readEntry(Mockito.any(ArchiveReadHandle.class), Mockito.anyString());
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, false);
+      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
           .readEntry(readHandle, TEST_ENTRY_FILENAME);
@@ -324,7 +326,7 @@ public class ComicBookAdaptorTest {
         .writeEntry(writeHandle, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, false);
+      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
           .writeEntry(writeHandle, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
@@ -334,8 +336,12 @@ public class ComicBookAdaptorTest {
   @Test
   public void testSaveRenamePages()
       throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+    Mockito.when(
+            comicPageAdaptor.createFilenameFromRule(
+                Mockito.any(Page.class), Mockito.anyString(), Mockito.anyInt()))
+        .thenReturn(TEST_NEW_PAGE_FILENAME);
 
-    adaptor.save(comic, TEST_ARCHIVE_TYPE, false, true);
+    adaptor.save(comic, TEST_ARCHIVE_TYPE, false, TEST_PAGE_RENAMING_RULE);
 
     final String temporaryArchiveFilename = temporaryArchiveFile.getValue();
     assertNotNull(temporaryArchiveFilename);
@@ -350,18 +356,17 @@ public class ComicBookAdaptorTest {
         .readEntry(readHandle, TEST_ENTRY_FILENAME);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .writeEntry(writeHandle, "ComicInfo.xml", TEST_COMICINFO_XML_CONTENT);
+    Mockito.verify(comicPageAdaptor, Mockito.times(1))
+        .createFilenameFromRule(page, TEST_PAGE_RENAMING_RULE, 0);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
-        .writeEntry(
-            writeHandle,
-            String.format(PAGE_FILENAME_PATTERN, 0, TEST_PAGE_EXTENSION),
-            TEST_ARCHIVE_ENTRY_CONTENT);
+        .writeEntry(writeHandle, TEST_NEW_PAGE_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
   }
 
   @Test
   public void testSaveRemoveDeletedPages()
       throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException, IOException {
 
-    adaptor.save(comic, TEST_ARCHIVE_TYPE, true, false);
+    adaptor.save(comic, TEST_ARCHIVE_TYPE, true, "");
 
     final String temporaryArchiveFilename = temporaryArchiveFile.getValue();
     assertNotNull(temporaryArchiveFilename);

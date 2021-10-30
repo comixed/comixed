@@ -40,7 +40,7 @@ public class UpdateMetadataProcessor implements ItemProcessor<Comic, Comic> {
   public Comic process(final Comic comic) {
     try {
       log.debug("Updating comic metadata: id={}", comic.getId());
-      this.comicBookAdaptor.save(comic, comic.getArchiveType(), false, false);
+      this.comicBookAdaptor.save(comic, comic.getArchiveType(), false, "");
     } catch (AdaptorException error) {
       log.error("Failed to update metadata for comic", error);
     }

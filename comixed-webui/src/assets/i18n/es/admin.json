@@ -1,12 +1,16 @@
 {
   "configuration": {
     "label": {
+      "comic-renaming-rule": "Comic Renaming Rule",
+      "comic-renaming-variables": "Comic Renaming Variables",
+      "comic-variable-description": "Description",
+      "comic-variable-name": "Variable",
       "comicvine-api-key": "ComicVine API Key",
-      "renaming-rule": "Comic Renaming Rule",
-      "renaming-variables": "Available Renaming Variables",
+      "page-renaming-rule": "Page Renaming Rule",
+      "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Library Root Directory",
-      "variable-description": "Description Of The Output",
-      "variable-name": "Variable Name"
+      "page-variable-description": "Description Of The Output",
+      "page-variable-name": "Variable Name"
     },
     "load-all": {
       "effect-failure": "Failed to load configuration options."
@@ -19,14 +23,16 @@
     },
     "tab-title": "Configuration",
     "text": {
-      "renaming-rule-cover-date": "The cover date",
-      "renaming-rule-issue-number": "The issue number",
-      "renaming-rule-published-month": "The month published",
-      "renaming-rule-published-year": "The year published",
-      "renaming-rule-publisher": "The name of the publisher",
-      "renaming-rule-series": "The name of the series",
-      "renaming-rule-volume": "The volume",
-      "variable-caption": "These are the available variables that can be used for renaming comics."
+      "comic-renaming-rule-cover-date": "The cover date",
+      "comic-renaming-rule-issue-number": "The issue number",
+      "comic-renaming-rule-published-month": "The month published",
+      "comic-renaming-rule-published-year": "The year published",
+      "comic-renaming-rule-publisher": "The name of the publisher",
+      "comic-renaming-rule-series": "The name of the series",
+      "comic-renaming-rule-volume": "The volume",
+      "comic-variable-caption": "These are the available variables that can be used for renaming comics.",
+      "page-renaming-rule-index": "The page index (1-based)",
+      "page-variable-caption": "These are the available variables that can be used for renaming pages."
     }
   },
   "filename-scraping-rules": {

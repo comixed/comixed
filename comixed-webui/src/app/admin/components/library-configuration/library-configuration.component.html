@@ -26,13 +26,13 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{ "configuration.label.renaming-variables" | translate }}
+          {{ "configuration.label.comic-renaming-variables" | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <table class="cx-width-100 cx-border-primary-1 cx-padding-5">
         <caption>
-          {{ "configuration.text.variable-caption" | translate }}
+          {{ "configuration.text.comic-variable-caption" | translate }}
         </caption>
         <colgroup>
           <col class="cx-table-column-medium" />
@@ -40,14 +40,14 @@
         </colgroup>
         <thead>
           <th scope="col">
-            {{ "configuration.label.variable-name" | translate }}
+            {{ "configuration.label.comic-variable-name" | translate }}
           </th>
           <th scope="col">
-            {{ "configuration.label.variable-description" | translate }}
+            {{ "configuration.label.comic-variable-description" | translate }}
           </th>
         </thead>
         <tbody>
-          <tr *ngFor="let option of variableOptions">
+          <tr *ngFor="let option of comicVariableOptions">
             <td>{{ option.label }}</td>
             <td>{{ option.value | translate }}</td>
           </tr>
@@ -57,9 +57,60 @@
   </div>
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>
-      {{ "configuration.label.renaming-rule" | translate }}
+      {{ "configuration.label.comic-renaming-rule" | translate }}
     </mat-label>
-    <input id="renaming-rule-input" matInput formControlName="renamingRule" />
+    <input
+      id="comic-renaming-rule-input"
+      matInput
+      formControlName="comicRenamingRule"
+    />
+    <mat-error>
+      {{ "validation.field-required" | translate }}
+    </mat-error>
+  </mat-form-field>
+
+  <div class="cx-width-100">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ "configuration.label.page-renaming-variables" | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <table class="cx-width-100 cx-border-primary-1 cx-padding-5">
+        <caption>
+          {{ "configuration.text.page-variable-caption" | translate }}
+        </caption>
+        <colgroup>
+          <col class="cx-table-column-medium" />
+          <col />
+        </colgroup>
+        <thead>
+          <th scope="col">
+            {{ "configuration.label.page-variable-name" | translate }}
+          </th>
+          <th scope="col">
+            {{ "configuration.label.page-variable-description" | translate }}
+          </th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let option of pageVariableOptions">
+            <td>{{ option.label }}</td>
+            <td>{{ option.value | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-expansion-panel>
+  </div>
+  <mat-form-field class="cx-width-100" appearance="fill">
+    <mat-label>
+      {{ "configuration.label.page-renaming-rule" | translate }}
+    </mat-label>
+    <input
+      id="page-renaming-rule-input"
+      matInput
+      formControlName="pageRenamingRule"
+    />
     <mat-error>
       {{ "validation.field-required" | translate }}
     </mat-error>
