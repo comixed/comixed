@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.commons.compress.utils.FileNameUtils;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
 import org.comixedproject.adaptors.archive.ArchiveAdaptorException;
@@ -109,26 +110,22 @@ public class ComicBookAdaptor {
    * Renames pages if the flag is set.
    *
    * @param comic the comic
-   * @param archiveType the target format
+   * @param targetArchiveType the target format
    * @param removeDeletedPages remove deleted pages flag
    * @param renamePages rename pages flag
    * @throws AdaptorException if an error occurs
    */
   public void save(
       final Comic comic,
-      final ArchiveType archiveType,
+      final ArchiveType targetArchiveType,
       final boolean removeDeletedPages,
       final boolean renamePages)
       throws AdaptorException {
     try {
-      final String temporaryFilename =
-          this.comicFileAdaptor.findAvailableFilename(
-              comic.getFilename(), 0, archiveType.getExtension());
-
       final ArchiveAdaptor sourceArchive =
           this.fileTypeAdaptor.getArchiveAdaptorFor(comic.getFilename());
       final ArchiveAdaptor destinationArchive =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(archiveType);
+          this.fileTypeAdaptor.getArchiveAdaptorFor(targetArchiveType);
 
       if (removeDeletedPages) {
         log.trace("Removing deleted pages from comic");
@@ -137,6 +134,12 @@ public class ComicBookAdaptor {
 
       log.trace("Preparing to save comic file");
       final ArchiveReadHandle readHandle = sourceArchive.openArchiveForRead(comic.getFilename());
+
+      final String temporaryFilename =
+          File.createTempFile(
+                  "comixed", targetArchiveType.getExtension(), FileUtils.getTempDirectory())
+              .getAbsolutePath();
+
       final ArchiveWriteHandle writeHandle =
           destinationArchive.openArchiveForWrite(temporaryFilename);
 
@@ -152,7 +155,7 @@ public class ComicBookAdaptor {
         @NonNull String pageFilename = page.getFilename();
         if (renamePages) {
           pageFilename =
-              String.format(PAGE_FILENAME_PATTERN, index, FileUtils.getExtension(pageFilename));
+              String.format(PAGE_FILENAME_PATTERN, index, FileNameUtils.getExtension(pageFilename));
         }
         log.trace("Writing comic page content: {}", pageFilename);
         destinationArchive.writeEntry(writeHandle, pageFilename, content);
@@ -164,9 +167,12 @@ public class ComicBookAdaptor {
 
       log.trace("Replacing original file");
       this.fileAdaptor.deleteFile(comic.getFile());
+      final String directory = comic.getFile().getAbsoluteFile().getParent();
       final String destinationFilename =
           this.comicFileAdaptor.findAvailableFilename(
-              comic.getFilename(), 0, archiveType.getExtension());
+              directory + File.separator + FileNameUtils.getBaseName(comic.getFilename()),
+              0,
+              targetArchiveType.getExtension());
       log.trace("Copying file: {} => {}", temporaryFilename, destinationFilename);
       this.fileAdaptor.moveFile(new File(temporaryFilename), new File(destinationFilename));
       log.trace("Updating filename: {}", destinationFilename);
