@@ -17,7 +17,7 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComicFileDetailsComponent } from './comic-file-details.component';
+import { ComicFileDetailCardComponent } from './comic-file-detail-card.component';
 import { LoggerModule } from '@angular-ru/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -33,18 +33,18 @@ describe('ComicFileDetailsComponent', () => {
   const COMIC_FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
   const initialState = {};
 
-  let component: ComicFileDetailsComponent;
-  let fixture: ComponentFixture<ComicFileDetailsComponent>;
+  let component: ComicFileDetailCardComponent;
+  let fixture: ComponentFixture<ComicFileDetailCardComponent>;
   let store: MockStore<any>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [LoggerModule.forRoot()],
-      declarations: [ComicFileDetailsComponent, ComicPageComponent],
+      declarations: [ComicFileDetailCardComponent, ComicPageComponent],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicFileDetailsComponent);
+    fixture = TestBed.createComponent(ComicFileDetailCardComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
@@ -83,6 +83,27 @@ describe('ComicFileDetailsComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           setComicFilesSelectedState({ files: [FILE], selected: false })
         );
+      });
+    });
+  });
+
+  describe('showing the context menu', () => {
+    const XPOS = 1;
+    const YPOS = 29;
+    const event = new MouseEvent('testing');
+
+    beforeEach(() => {
+      component.file = FILE;
+      spyOn(event, 'preventDefault');
+      spyOn(component.showContextMenu, 'emit');
+      component.onContextMenu({ ...event, clientX: XPOS, clientY: YPOS });
+    });
+
+    it('emits an event', () => {
+      expect(component.showContextMenu.emit).toHaveBeenCalledWith({
+        file: FILE,
+        x: `${XPOS}px`,
+        y: `${YPOS}px`
       });
     });
   });

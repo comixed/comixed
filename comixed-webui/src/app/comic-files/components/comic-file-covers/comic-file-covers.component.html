@@ -6,9 +6,48 @@
     fxFlex.md="50%"
     fxFlex.lt-md="100%"
   >
-    <cx-comic-file-details
+    <cx-comic-file-detail-card
       [file]="file"
       [selected]="isFileSelected(file)"
-    ></cx-comic-file-details>
+      (showContextMenu)="onShowContextMenu($event.file, $event.x, $event.y)"
+    ></cx-comic-file-detail-card>
   </div>
 </div>
+
+<div
+  style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuX"
+  [style.top]="contextMenuY"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
+    <button
+      *ngIf="!isFileSelected(file)"
+      mat-menu-item
+      (click)="onSetOneSelected(true)"
+    >
+      <mat-icon>add</mat-icon>
+      <mat-label>
+        {{ "comic-files.context-menu.select-one" | translate }}
+      </mat-label>
+    </button>
+    <button
+      *ngIf="isFileSelected(file)"
+      mat-menu-item
+      (click)="onSetOneSelected(false)"
+    >
+      <mat-icon>remove</mat-icon>
+      <mat-label>
+        {{ "comic-files.context-menu.deselect-one" | translate }}
+      </mat-label>
+    </button>
+    <button *ngIf="hasSelections" mat-menu-item (click)="onDeselectAll()">
+      <mat-icon>clear_all</mat-icon>
+      <mat-label>
+        {{ "comic-files.context-menu.deselect-all" | translate }}
+      </mat-label>
+    </button>
+  </ng-template>
+</mat-menu>

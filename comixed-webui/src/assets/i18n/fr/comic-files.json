@@ -3,6 +3,11 @@
     "busy-title": "Import de Bandes Dessinées en cours",
     "confirm-start-title": "Import des Fichiers de Bandes Dessinées ?",
     "confirm-start-message": "Êtes-vous sûr de vouloir importer {count, plural, =1{le fichier de Bande Dessinée} other{les # fichiers de Bandes Dessinées}} dans la bibliothèque ?",
+    "context-menu": {
+      "deselect-all": "Deselect All",
+      "deselect-one": "Deselect File",
+      "select-one": "Select File"
+    },
     "header": {
       "cover": "Image de couverture",
       "filename": "Nom du fichier",

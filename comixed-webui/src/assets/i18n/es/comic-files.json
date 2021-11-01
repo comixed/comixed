@@ -3,6 +3,11 @@
     "busy-title": "Hay cómics que se importan ahora",
     "confirm-start-title": "¿Importar archivos de cómics?",
     "confirm-start-message": "¿Está seguro de que desea importar el/la {count, plural, =1{one comic} other{# comic files}} a la biblioteca?",
+    "context-menu": {
+      "deselect-all": "Deselect All",
+      "deselect-one": "Deselect File",
+      "select-one": "Select File"
+    },
     "header": {
       "cover": "Imagen de portada",
       "filename": "Nombre de archivo",

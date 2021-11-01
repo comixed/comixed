@@ -72,14 +72,14 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  onContextMenu($event: MouseEvent): void {
-    $event.preventDefault();
+  onContextMenu(mouseEvent: MouseEvent): void {
+    mouseEvent.preventDefault();
     this.logger.trace('Showing context menu for comic:', this.comic);
     this.showContextMenu.emit({
       comic: this.comic,
-      x: `${$event.clientX}px`,
-      y: `${$event.clientY}px`
-    } as ComicContextMenuEvent);
+      x: `${mouseEvent.clientX}px`,
+      y: `${mouseEvent.clientY}px`
+    });
   }
 
   onUpdateComicInfo(comic: Comic): void {
