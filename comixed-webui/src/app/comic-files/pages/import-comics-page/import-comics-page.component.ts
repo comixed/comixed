@@ -30,9 +30,6 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
-import { MatDialog } from '@angular/material/dialog';
-import { ComicFileDetailsComponent } from '@app/comic-files/components/comic-file-details/comic-file-details.component';
-import { ComicFileDetailsData } from '@app/library/models/ui/comic-file-details-data';
 import {
   selectComicFileListState,
   selectComicFiles,
@@ -62,7 +59,7 @@ export class ImportComicsPageComponent implements OnInit, OnDestroy {
   comicFileListStateSubscription: Subscription;
   sendComicFilesStateSubscription: Subscription;
   selectedFilesSubscription: Subscription;
-  selectedFiles: ComicFile[];
+  selectedFiles: ComicFile[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
   importing = false;
   private sending = false;

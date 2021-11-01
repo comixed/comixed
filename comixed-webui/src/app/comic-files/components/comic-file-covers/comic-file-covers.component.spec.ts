@@ -31,6 +31,11 @@ import {
   initialState as initialComicImportState
 } from '@app/comic-files/reducers/comic-import.reducer';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  clearComicFileSelections,
+  setComicFilesSelectedState
+} from '@app/comic-files/actions/comic-file-list.actions';
 
 describe('ComicFileCoversComponent', () => {
   const initialState = { [COMIC_IMPORT_FEATURE_KEY]: initialComicImportState };
@@ -44,7 +49,11 @@ describe('ComicFileCoversComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ComicFileCoversComponent],
-      imports: [TranslateModule.forRoot(), LoggerModule.forRoot()],
+      imports: [
+        TranslateModule.forRoot(),
+        LoggerModule.forRoot(),
+        MatMenuModule
+      ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();
 
@@ -74,6 +83,73 @@ describe('ComicFileCoversComponent', () => {
 
     it('returns false for an unselected file', () => {
       expect(component.isFileSelected(NOT_SELECTED_FILE)).toBeFalse();
+    });
+  });
+
+  describe('showing the context menu', () => {
+    const XPOS = '7';
+    const YPOS = '17';
+
+    beforeEach(() => {
+      component.file = null;
+      spyOn(component.contextMenu, 'openMenu');
+      component.onShowContextMenu(FILE, XPOS, YPOS);
+    });
+
+    it('sets the current comic file', () => {
+      expect(component.file).toEqual(FILE);
+    });
+
+    it('set the context menu x position', () => {
+      expect(component.contextMenuX).toEqual(XPOS);
+    });
+
+    it('set the context menu y position', () => {
+      expect(component.contextMenuY).toEqual(YPOS);
+    });
+
+    it('shows the context menu', () => {
+      expect(component.contextMenu.openMenu).toHaveBeenCalled();
+    });
+  });
+
+  describe('setting the selected state for comic files', () => {
+    beforeEach(() => {
+      component.file = FILE;
+    });
+
+    describe('selecting one file', () => {
+      beforeEach(() => {
+        component.onSetOneSelected(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicFilesSelectedState({ files: [FILE], selected: true })
+        );
+      });
+    });
+
+    describe('deselecting one file', () => {
+      beforeEach(() => {
+        component.onSetOneSelected(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicFilesSelectedState({ files: [FILE], selected: false })
+        );
+      });
+    });
+
+    describe('deselecting all files', () => {
+      beforeEach(() => {
+        component.onDeselectAll();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(clearComicFileSelections());
+      });
     });
   });
 });

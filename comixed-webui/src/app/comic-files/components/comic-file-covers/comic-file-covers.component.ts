@@ -16,10 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
+import { MatMenuTrigger } from '@angular/material/menu';
+import {
+  clearComicFileSelections,
+  setComicFilesSelectedState
+} from '@app/comic-files/actions/comic-file-list.actions';
 
 @Component({
   selector: 'cx-comic-file-covers',
@@ -27,14 +32,52 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./comic-file-covers.component.scss']
 })
 export class ComicFileCoversComponent implements OnInit {
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+
   @Input() files: ComicFile[] = [];
-  @Input() selectedFiles: ComicFile[] = [];
+
+  contextMenuX = '';
+  contextMenuY = '';
+  file: ComicFile = null;
+  fileSelected = false;
+  hasSelections = false;
 
   constructor(private logger: LoggerService, private store: Store<any>) {}
+
+  private _selectedFiles = [];
+
+  get selectedFiles(): ComicFile[] {
+    return this._selectedFiles;
+  }
+
+  @Input() set selectedFiles(selectedFiles: ComicFile[]) {
+    this._selectedFiles = selectedFiles;
+    this.hasSelections = selectedFiles.length > 0;
+  }
 
   ngOnInit(): void {}
 
   isFileSelected(file: ComicFile): boolean {
     return this.selectedFiles.includes(file);
+  }
+
+  onShowContextMenu(file: ComicFile, x: string, y: string): void {
+    this.logger.trace('Popping up context menu for:', file);
+    this.file = file;
+    this.contextMenuX = x;
+    this.contextMenuY = y;
+    this.contextMenu.openMenu();
+  }
+
+  onSetOneSelected(selected: boolean): void {
+    this.logger.trace('Setting file selected:', selected);
+    this.store.dispatch(
+      setComicFilesSelectedState({ files: [this.file], selected })
+    );
+  }
+
+  onDeselectAll(): void {
+    this.logger.trace('Deselecting all comic files');
+    this.store.dispatch(clearComicFileSelections());
   }
 }

@@ -3,6 +3,11 @@
     "busy-title": "There Are Comics Importing Now",
     "confirm-start-title": "Import Comic Files?",
     "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?",
+    "context-menu": {
+      "deselect-all": "Deselect All",
+      "deselect-one": "Deselect File",
+      "select-one": "Select File"
+    },
     "header": {
       "cover": "Cover Image",
       "filename": "Filename",

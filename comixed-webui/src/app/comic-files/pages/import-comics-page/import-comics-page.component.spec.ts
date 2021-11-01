@@ -47,7 +47,7 @@ import { User } from '@app/user/models/user';
 import { MatIconModule } from '@angular/material/icon';
 import { ComicFileToolbarComponent } from '@app/comic-files/components/comic-file-toolbar/comic-file-toolbar.component';
 import { ComicFileCoversComponent } from '@app/comic-files/components/comic-file-covers/comic-file-covers.component';
-import { ComicFileDetailsComponent } from '@app/comic-files/components/comic-file-details/comic-file-details.component';
+import { ComicFileDetailCardComponent } from '@app/comic-files/components/comic-file-detail-card/comic-file-detail-card.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
@@ -95,7 +95,7 @@ describe('ImportComicsPageComponent', () => {
         ImportComicsPageComponent,
         ComicFileToolbarComponent,
         ComicFileCoversComponent,
-        ComicFileDetailsComponent,
+        ComicFileDetailCardComponent,
         ComicFileCoverUrlPipe,
         ComicPageComponent
       ],

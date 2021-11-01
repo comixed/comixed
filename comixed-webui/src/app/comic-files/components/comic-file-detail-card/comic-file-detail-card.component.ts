@@ -16,24 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { LoggerService } from '@angular-ru/logger';
 import { Store } from '@ngrx/store';
 import { setComicFilesSelectedState } from '@app/comic-files/actions/comic-file-list.actions';
+import { ComicFileContextMenuEvent } from '@app/comic-files/model/ui/comic-file-context-menu-event';
 
 export const CARD_WIDTH_PADDING = 20;
 
 @Component({
-  selector: 'cx-comic-file-details',
-  templateUrl: './comic-file-details.component.html',
-  styleUrls: ['./comic-file-details.component.scss']
+  selector: 'cx-comic-file-detail-card',
+  templateUrl: './comic-file-detail-card.component.html',
+  styleUrls: ['./comic-file-detail-card.component.scss']
 })
-export class ComicFileDetailsComponent implements OnInit, OnDestroy {
-  @Input()
-  file: ComicFile;
-  @Input()
-  selected = false;
+export class ComicFileDetailCardComponent implements OnInit, OnDestroy {
+  @Input() file: ComicFile;
+  @Input() selected = false;
+
+  @Output() showContextMenu = new EventEmitter<ComicFileContextMenuEvent>();
 
   constructor(private logger: LoggerService, private store: Store<any>) {}
 
@@ -47,5 +55,15 @@ export class ComicFileDetailsComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       setComicFilesSelectedState({ files: [this.file], selected })
     );
+  }
+
+  onContextMenu(mouseEvent: MouseEvent): void {
+    mouseEvent.preventDefault();
+    this.logger.trace('Showing context menu for comic file:', this.file);
+    this.showContextMenu.emit({
+      file: this.file,
+      x: `${mouseEvent.clientX}px`,
+      y: `${mouseEvent.clientY}px`
+    });
   }
 }

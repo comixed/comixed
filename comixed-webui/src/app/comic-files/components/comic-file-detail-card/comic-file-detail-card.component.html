@@ -3,7 +3,6 @@
     {{ file.baseFilename }}
   </mat-card-title>
   <mat-card-content>
-    <p>selected: {{ selected }}</p>
     <div
       class="cx-detail-card cx-padding-2 cx-margin-2"
       [class.cx-detail-card-selected]="selected"
@@ -14,6 +13,7 @@
         [style.width]="'100%'"
         [style.height]="'auto'"
         (click)="onSelectFile()"
+        (contextmenu)="onContextMenu($event)"
       />
     </div>
   </mat-card-content>
