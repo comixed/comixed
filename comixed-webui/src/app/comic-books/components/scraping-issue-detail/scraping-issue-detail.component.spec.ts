@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ScrapingIssueDetailComponent } from './scraping-issue-detail.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { ScrapingIssueTitlePipe } from '@app/comic-books/pipes/scraping-issue-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { SCRAPING_ISSUE_1 } from '@app/comic-books/comic-books.fixtures';
@@ -44,29 +44,31 @@ describe('ScrapingIssueDetailComponent', () => {
   let component: ScrapingIssueDetailComponent;
   let fixture: ComponentFixture<ScrapingIssueDetailComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ScrapingIssueDetailComponent,
-        ComicPageComponent,
-        ScrapingIssueTitlePipe
-      ],
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatCardModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatTooltipModule
-      ],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ScrapingIssueDetailComponent,
+          ComicPageComponent,
+          ScrapingIssueTitlePipe
+        ],
+        imports: [
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatCardModule,
+          MatFormFieldModule,
+          MatIconModule,
+          MatTooltipModule
+        ],
+        providers: [provideMockStore({ initialState })]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ScrapingIssueDetailComponent);
-    component = fixture.componentInstance;
-    component.issue = SCRAPING_ISSUE;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ScrapingIssueDetailComponent);
+      component = fixture.componentInstance;
+      component.issue = SCRAPING_ISSUE;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -30,7 +30,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { of } from 'rxjs';
 

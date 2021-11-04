@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BlockedHashDetailPageComponent } from './blocked-hash-detail-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   BLOCKED_PAGE_DETAIL_FEATURE_KEY,
   initialState as initialBlockedPageDetailState
@@ -65,34 +65,36 @@ describe('BlockedHashDetailPageComponent', () => {
   let router: Router;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [BlockedHashDetailPageComponent],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        FormsModule,
-        ReactiveFormsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        TragicallySlickEditInPlaceModule
-      ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [BlockedHashDetailPageComponent],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          FormsModule,
+          ReactiveFormsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatCardModule,
+          MatFormFieldModule,
+          MatInputModule,
+          TragicallySlickEditInPlaceModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(BlockedHashDetailPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(BlockedHashDetailPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigateByUrl');
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

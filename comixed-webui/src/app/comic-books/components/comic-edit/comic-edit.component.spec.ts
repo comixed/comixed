@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicEditComponent } from './comic-edit.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -73,37 +73,39 @@ describe('ComicEditComponent', () => {
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicEditComponent],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        FormsModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        MatTooltipModule
-      ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ComicEditComponent],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          FormsModule,
+          ReactiveFormsModule,
+          MatDialogModule,
+          MatFormFieldModule,
+          MatToolbarModule,
+          MatIconModule,
+          MatInputModule,
+          MatSelectModule,
+          MatTooltipModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicEditComponent);
-    component = fixture.componentInstance;
-    component.apiKey = API_KEY;
-    component.maximumRecords = MAXIMUM_RECORDS;
-    component.skipCache = SKIP_CACHE;
-    component.comic = COMIC;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicEditComponent);
+      component = fixture.componentInstance;
+      component.apiKey = API_KEY;
+      component.maximumRecords = MAXIMUM_RECORDS;
+      component.skipCache = SKIP_CACHE;
+      component.comic = COMIC;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

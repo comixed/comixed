@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DuplicatePageListPageComponent } from './duplicate-page-list-page.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -83,58 +83,60 @@ describe('DuplicatePageListPageComponent', () => {
   let dialog: MatDialog;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        DuplicatePageListPageComponent,
-        PageHashUrlPipe,
-        YesNoPipe
-      ],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatToolbarModule,
-        MatPaginatorModule,
-        MatTooltipModule,
-        MatTableModule,
-        MatCheckboxModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: WebSocketService,
-          useValue: {
-            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-            send: jasmine.createSpy('WebSocketService.send()'),
-            requestResponse: jasmine.createSpy(
-              'WebSocketService.requestResponse()'
-            )
-          }
-        },
-        ConfirmationService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          DuplicatePageListPageComponent,
+          PageHashUrlPipe,
+          YesNoPipe
+        ],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatIconModule,
+          MatPaginatorModule,
+          MatToolbarModule,
+          MatPaginatorModule,
+          MatTooltipModule,
+          MatTableModule,
+          MatCheckboxModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: WebSocketService,
+            useValue: {
+              subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+              send: jasmine.createSpy('WebSocketService.send()'),
+              requestResponse: jasmine.createSpy(
+                'WebSocketService.requestResponse()'
+              )
+            }
+          },
+          ConfirmationService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(DuplicatePageListPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    webSocketService = TestBed.inject(
-      WebSocketService
-    ) as jasmine.SpyObj<WebSocketService>;
-    titleService = TestBed.inject(TitleService);
-    setTitleSpy = spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    dialog = TestBed.inject(MatDialog);
-    spyOn(dialog, 'open');
-    confirmationService = TestBed.inject(ConfirmationService);
-    component.pageUpdatesSubscription = null;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(DuplicatePageListPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      webSocketService = TestBed.inject(
+        WebSocketService
+      ) as jasmine.SpyObj<WebSocketService>;
+      titleService = TestBed.inject(TitleService);
+      setTitleSpy = spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      dialog = TestBed.inject(MatDialog);
+      spyOn(dialog, 'open');
+      confirmationService = TestBed.inject(ConfirmationService);
+      component.pageUpdatesSubscription = null;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

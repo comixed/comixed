@@ -36,7 +36,7 @@ import {
 } from '@app/comic-books/actions/comic.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';

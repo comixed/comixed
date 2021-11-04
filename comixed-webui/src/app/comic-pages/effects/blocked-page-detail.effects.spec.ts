@@ -23,7 +23,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { BlockedPageDetailEffects } from './blocked-page-detail.effects';
 import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { BLOCKED_HASH_4 } from '@app/comic-pages/comic-pages.fixtures';

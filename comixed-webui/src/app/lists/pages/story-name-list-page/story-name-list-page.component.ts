@@ -23,7 +23,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';

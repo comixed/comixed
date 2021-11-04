@@ -29,7 +29,7 @@ import {
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {

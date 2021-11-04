@@ -22,12 +22,11 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
   deselectComics,
@@ -56,9 +55,7 @@ import { updateMetadata } from '@app/library/actions/update-metadata.actions';
   templateUrl: './library-toolbar.component.html',
   styleUrls: ['./library-toolbar.component.scss']
 })
-export class LibraryToolbarComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @Input() comics: Comic[] = [];
@@ -101,8 +98,6 @@ export class LibraryToolbarComponent
   ngAfterViewInit(): void {
     this.loadTranslations();
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.langChangSubscription.unsubscribe();

@@ -24,7 +24,7 @@ import {
   FILENAME_SCRAPING_RULE_2,
   FILENAME_SCRAPING_RULE_3
 } from '@app/admin/admin.fixtures';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   HttpClientTestingModule,
   HttpTestingController

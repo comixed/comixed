@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { User } from '@app/user/models/user';
 import { isAdmin } from '@app/user/user.functions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
@@ -34,7 +34,7 @@ import { LastRead } from '@app/last-read/models/last-read';
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss']
 })
-export class SideNavigationComponent implements OnInit, OnDestroy {
+export class SideNavigationComponent implements OnDestroy {
   isAdmin = false;
   comicsCollapsed = false;
   collectionCollapsed = false;
@@ -96,8 +96,6 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription.unsubscribe();
   }
-
-  ngOnInit(): void {}
 
   onCollapseComics(collapsed: boolean): void {
     this.comicsCollapsed = collapsed;

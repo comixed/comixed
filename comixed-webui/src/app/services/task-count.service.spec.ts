@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { TaskCountService } from './task-count.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TASK_COUNT_TOPIC } from '@app/app.constants';
 import { TaskCountMessage } from '@app/models/net/task-count-message';

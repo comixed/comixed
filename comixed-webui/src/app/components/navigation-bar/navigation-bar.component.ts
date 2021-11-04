@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '@app/user/models/user';
-import { LoggerLevel, LoggerService } from '@angular-ru/logger';
+import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';

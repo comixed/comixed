@@ -24,7 +24,7 @@ import {
   loadDuplicatePageDetailFailed
 } from '../actions/duplicate-page-detail.actions';
 import { DuplicatePageService } from '@app/library/services/duplicate-page.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';

@@ -22,7 +22,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ConvertComicsEffects } from './convert-comics.effects';
 import { LibraryService } from '@app/library/services/library.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

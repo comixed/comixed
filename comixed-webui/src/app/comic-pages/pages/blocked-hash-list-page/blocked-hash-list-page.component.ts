@@ -28,7 +28,7 @@ import {
   markPagesWithHash
 } from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import {

@@ -89,7 +89,7 @@ describe('ComicFileList Reducer', () => {
   describe('comic files received', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, groups: [], files: [], selections: GROUPS },
+        { ...state, loading: true, groups: [], files: [], selections: FILES },
         comicFilesLoaded({ groups: GROUPS })
       );
     });
@@ -114,7 +114,7 @@ describe('ComicFileList Reducer', () => {
   describe('failure to load comic files', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, loading: true, files: GROUPS, selections: GROUPS },
+        { ...state, loading: true, files: FILES, selections: FILES },
         loadComicFilesFailed()
       );
     });
@@ -135,7 +135,7 @@ describe('ComicFileList Reducer', () => {
   describe('selecting comic files', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: [GROUPS[0]] },
+        { ...state, selections: [FILES[0]] },
         setComicFilesSelectedState({ files: FILES, selected: true })
       );
     });
@@ -150,7 +150,7 @@ describe('ComicFileList Reducer', () => {
 
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: GROUPS },
+        { ...state, selections: FILES },
         setComicFilesSelectedState({
           files: [DESELECTED_FILE],
           selected: false
@@ -166,7 +166,7 @@ describe('ComicFileList Reducer', () => {
   describe('clearing the selections', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: GROUPS },
+        { ...state, selections: FILES },
         clearComicFileSelections()
       );
     });

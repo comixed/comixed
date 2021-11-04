@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReadingListPageComponent } from './reading-list-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   initialState as initialReadingListDetailsState,
@@ -95,57 +95,59 @@ describe('ReadingListPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ReadingListPageComponent, ComicListViewComponent],
-      imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        FormsModule,
-        ReactiveFormsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatTooltipModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            params: new BehaviorSubject<{}>({})
-          }
-        },
-        ConfirmationService,
-        {
-          provide: WebSocketService,
-          useValue: {
-            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-            unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
-          }
-        },
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ReadingListPageComponent, ComicListViewComponent],
+        imports: [
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          FormsModule,
+          ReactiveFormsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatToolbarModule,
+          MatIconModule,
+          MatTooltipModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              params: new BehaviorSubject<{}>({})
+            }
+          },
+          ConfirmationService,
+          {
+            provide: WebSocketService,
+            useValue: {
+              subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+              unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
+            }
+          },
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ReadingListPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
-    spyOn(router, 'navigate');
-    confirmationService = TestBed.inject(ConfirmationService);
-    webSocketService = TestBed.inject(
-      WebSocketService
-    ) as jasmine.SpyObj<WebSocketService>;
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ReadingListPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      activatedRoute = TestBed.inject(ActivatedRoute);
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigateByUrl');
+      spyOn(router, 'navigate');
+      confirmationService = TestBed.inject(ConfirmationService);
+      webSocketService = TestBed.inject(
+        WebSocketService
+      ) as jasmine.SpyObj<WebSocketService>;
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

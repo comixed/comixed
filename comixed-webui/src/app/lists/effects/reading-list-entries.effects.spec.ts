@@ -24,7 +24,7 @@ import { ReadingListEntriesEffects } from './reading-list-entries.effects';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { ReadingListService } from '@app/lists/services/reading-list.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import {

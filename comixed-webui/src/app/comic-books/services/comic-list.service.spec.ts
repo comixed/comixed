@@ -26,7 +26,7 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Subscription } from 'webstomp-client';
 import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
 import {

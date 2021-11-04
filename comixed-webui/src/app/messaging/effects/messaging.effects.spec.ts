@@ -29,7 +29,7 @@ import {
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import { hot } from 'jasmine-marbles';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 
 describe('MessagingEffects', () => {
   const initialState = {};

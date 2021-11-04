@@ -16,20 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from '@app/user/models/user';
-import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'cx-user-card',
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss']
 })
-export class UserCardComponent implements OnInit {
+export class UserCardComponent {
   @Input() user: User;
   @Input() imageSize = 'auto';
-
-  constructor(private logger: LoggerService) {}
-
-  ngOnInit(): void {}
 }

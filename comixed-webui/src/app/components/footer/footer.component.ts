@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { LoggerModule } from '@angular-ru/logger';
+import { Component, Input } from '@angular/core';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 import { User } from '@app/user/models/user';
@@ -32,7 +32,7 @@ import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.s
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   @Input() user: User;
 
   importCount = 0;
@@ -54,6 +54,4 @@ export class FooterComponent implements OnInit {
       .select(selectComicListDeletedCount)
       .subscribe(count => (this.deletedCount = count));
   }
-
-  ngOnInit(): void {}
 }

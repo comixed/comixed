@@ -23,7 +23,7 @@ import { ScrapeMetadataEffects } from './scrape-metadata.effects';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';

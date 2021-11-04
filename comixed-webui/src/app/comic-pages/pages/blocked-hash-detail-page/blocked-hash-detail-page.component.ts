@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { Component, OnDestroy } from '@angular/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -43,7 +43,7 @@ import { ConfirmationService } from '@app/core/services/confirmation.service';
   templateUrl: './blocked-hash-detail-page.component.html',
   styleUrls: ['./blocked-hash-detail-page.component.scss']
 })
-export class BlockedHashDetailPageComponent implements OnInit, OnDestroy {
+export class BlockedHashDetailPageComponent implements OnDestroy {
   paramsSubscription: Subscription;
   blockedPageDetailStateSubscription: Subscription;
   blockedPageSubscription: Subscription;
@@ -107,8 +107,6 @@ export class BlockedHashDetailPageComponent implements OnInit, OnDestroy {
     this.blockedPageForm.markAsPristine();
     this.editing = false;
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.paramsSubscription.unsubscribe();

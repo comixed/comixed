@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { Component, Input } from '@angular/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
@@ -32,7 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './comic-vine-configuration.component.html',
   styleUrls: ['./comic-vine-configuration.component.scss']
 })
-export class ComicVineConfigurationComponent implements OnInit {
+export class ComicVineConfigurationComponent {
   comicVineConfigForm: FormGroup;
 
   constructor(
@@ -52,8 +52,6 @@ export class ComicVineConfigurationComponent implements OnInit {
       getConfigurationOption(options, COMICVINE_API_KEY, '')
     );
   }
-
-  ngOnInit(): void {}
 
   onSave(): void {
     this.logger.trace('Save configuration called');

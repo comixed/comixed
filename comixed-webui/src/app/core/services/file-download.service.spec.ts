@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { FileDownloadService } from './file-download.service';
 import { FileSaverService } from 'ngx-filesaver';
 import { DownloadDocument } from '@app/core/models/download-document';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 
 describe('FileDownloadService', () => {
   const DOWNLOADED_FILE = {

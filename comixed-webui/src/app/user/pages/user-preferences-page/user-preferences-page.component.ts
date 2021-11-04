@@ -16,16 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -40,9 +34,7 @@ import { TitleService } from '@app/core/services/title.service';
   templateUrl: './user-preferences-page.component.html',
   styleUrls: ['./user-preferences-page.component.scss']
 })
-export class UserPreferencesPageComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class UserPreferencesPageComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   readonly displayedColumns = ['name', 'value', 'actions'];
@@ -87,8 +79,6 @@ export class UserPreferencesPageComponent
     this.logger.trace('Unsubscribing from language change updates');
     this.langChangeSubscription.unsubscribe();
   }
-
-  ngOnInit(): void {}
 
   onDeletePreference(name: string): void {
     this.confirmationService.confirm({

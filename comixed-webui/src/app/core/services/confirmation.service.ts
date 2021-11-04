@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfirmationDialogModel } from '@app/core/models/confirmation-dialog-model';
 import { Confirmation } from '@app/core/models/confirmation';
 import { ConfirmationComponent } from '@app/core/components/confirmation/confirmation.component';

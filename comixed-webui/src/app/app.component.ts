@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { LoggerLevel, LoggerService } from '@angular-ru/logger';
+import { LoggerLevel, LoggerService } from '@angular-ru/cdk/logger';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { loadCurrentUser } from '@app/user/actions/user.actions';

@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'webstomp-client';
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
 import { Comic } from '@app/comic-books/models/comic';

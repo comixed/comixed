@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 import { HttpClient } from '@angular/common/http';

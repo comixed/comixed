@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicListViewComponent } from './comic-list-view.component';
 import {
   initialState as initialReadingListsState,
   READING_LISTS_FEATURE_KEY
 } from '@app/lists/reducers/reading-lists.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   COMIC_1,
@@ -44,22 +44,24 @@ describe('ComicListViewComponent', () => {
   let component: ComicListViewComponent;
   let fixture: ComponentFixture<ComicListViewComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatTableModule,
-        MatCheckboxModule
-      ],
-      declarations: [ComicListViewComponent],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatTableModule,
+          MatCheckboxModule
+        ],
+        declarations: [ComicListViewComponent],
+        providers: [provideMockStore({ initialState })]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicListViewComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicListViewComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

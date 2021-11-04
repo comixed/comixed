@@ -27,7 +27,7 @@ import {
   shutdownServerFailed
 } from '../actions/server-runtime.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ServerRuntimeService } from '@app/admin/services/server-runtime.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

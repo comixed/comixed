@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';

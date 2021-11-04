@@ -41,7 +41,7 @@ import {
 } from '@app/comic-books/actions/scraping.actions';
 import { hot } from 'jasmine-marbles';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';

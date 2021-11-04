@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicStoryComponent } from './comic-story.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -35,25 +35,27 @@ describe('ComicStoryComponent', () => {
   let component: ComicStoryComponent;
   let fixture: ComponentFixture<ComicStoryComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicStoryComponent, ComicDetailCardComponent],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatExpansionModule,
-        MatCardModule,
-        MatChipsModule
-      ],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ComicStoryComponent, ComicDetailCardComponent],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatExpansionModule,
+          MatCardModule,
+          MatChipsModule
+        ],
+        providers: [provideMockStore({ initialState })]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicStoryComponent);
-    component = fixture.componentInstance;
-    component.comic = COMIC;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicStoryComponent);
+      component = fixture.componentInstance;
+      component.comic = COMIC;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

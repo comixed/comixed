@@ -24,7 +24,7 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   HTTP_AUTHORIZATION_HEADER,
   HTTP_REQUESTED_WITH_HEADER,

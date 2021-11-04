@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
 import { Subscription } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TitleService } from '@app/core/services/title.service';

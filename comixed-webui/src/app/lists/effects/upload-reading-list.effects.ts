@@ -23,7 +23,7 @@ import {
   uploadReadingList,
   uploadReadingListFailed
 } from '../actions/upload-reading-list.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { ReadingListService } from '@app/lists/services/reading-list.service';

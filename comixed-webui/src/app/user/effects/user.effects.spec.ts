@@ -38,7 +38,7 @@ import {
   userPreferenceSaved
 } from '@app/user/actions/user.actions';
 import { hot } from 'jasmine-marbles';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginResponse } from '@app/user/models/net/login-response';

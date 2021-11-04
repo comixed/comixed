@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
   AccountEditPageComponent,
   passwordVerifyValidator
 } from './account-edit-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   initialState as initialUserState,
@@ -51,35 +51,37 @@ describe('AccountEditPageComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [AccountEditPageComponent, UserCardComponent],
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatIconModule,
-        MatToolbarModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        TitleService,
-        ConfirmationService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AccountEditPageComponent, UserCardComponent],
+        imports: [
+          FormsModule,
+          ReactiveFormsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatIconModule,
+          MatToolbarModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          TitleService,
+          ConfirmationService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(AccountEditPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(AccountEditPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

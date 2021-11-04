@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SelectedComicsComponent } from './selected-comics.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
   COMIC_1,
@@ -37,19 +37,21 @@ describe('SelectedComicsComponent', () => {
   let fixture: ComponentFixture<SelectedComicsComponent>;
   let dialog: MatDialog;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [SelectedComicsComponent],
-      imports: [NoopAnimationsModule, LoggerModule.forRoot(), MatDialogModule]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SelectedComicsComponent],
+        imports: [NoopAnimationsModule, LoggerModule.forRoot(), MatDialogModule]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(SelectedComicsComponent);
-    component = fixture.componentInstance;
-    spyOn(component.selectionChanged, 'emit');
-    dialog = TestBed.inject(MatDialog);
-    spyOn(dialog, 'open');
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(SelectedComicsComponent);
+      component = fixture.componentInstance;
+      spyOn(component.selectionChanged, 'emit');
+      dialog = TestBed.inject(MatDialog);
+      spyOn(dialog, 'open');
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

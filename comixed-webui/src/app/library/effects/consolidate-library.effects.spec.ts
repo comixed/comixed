@@ -24,7 +24,7 @@ import { LibraryService } from '@app/library/services/library.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   COMIC_1,
   COMIC_3,

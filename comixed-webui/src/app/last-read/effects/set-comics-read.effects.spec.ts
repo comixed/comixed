@@ -24,7 +24,7 @@ import { SetComicsReadEffects } from './set-comics-read.effects';
 import { LastReadService } from '@app/last-read/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

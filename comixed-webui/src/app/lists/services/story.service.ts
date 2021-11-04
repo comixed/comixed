@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   LOAD_ALL_STORY_NAMES_URL,
   LOAD_STORIES_FOR_NAME_URL

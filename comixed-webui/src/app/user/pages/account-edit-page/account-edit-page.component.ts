@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -26,7 +26,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { User } from '@app/user/models/user';
@@ -54,7 +54,7 @@ import {
   templateUrl: './account-edit-page.component.html',
   styleUrls: ['./account-edit-page.component.scss']
 })
-export class AccountEditPageComponent implements OnInit, OnDestroy {
+export class AccountEditPageComponent implements OnDestroy {
   userForm: FormGroup;
   userStateSubscripton: Subscription;
   userSubscription: Subscription;
@@ -116,8 +116,6 @@ export class AccountEditPageComponent implements OnInit, OnDestroy {
       10
     );
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.userStateSubscripton.unsubscribe();

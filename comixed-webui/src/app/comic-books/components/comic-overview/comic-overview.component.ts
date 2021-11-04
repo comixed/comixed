@@ -16,8 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { Component, Input } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
 import { LastRead } from '@app/last-read/models/last-read';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
@@ -27,24 +26,12 @@ import { ComicBookState } from '@app/comic-books/models/comic-book-state';
   templateUrl: './comic-overview.component.html',
   styleUrls: ['./comic-overview.component.scss']
 })
-export class ComicOverviewComponent implements OnInit {
+export class ComicOverviewComponent {
   @Input() comic: Comic;
   @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 
-  readonly labelClasses = [
-    'cx-detail-label',
-    'cx-float-left',
-    'cx-align-text-right',
-    'cx-padding-right-5'
-  ];
-  readonly valueClasses = [];
-
-  constructor(private logger: LoggerService) {}
-
   get comicChanged(): boolean {
     return !!this.comic && this.comic.comicState === ComicBookState.CHANGED;
   }
-
-  ngOnInit(): void {}
 }

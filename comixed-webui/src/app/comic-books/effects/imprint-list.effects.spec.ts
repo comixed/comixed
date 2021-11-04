@@ -22,7 +22,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ImprintListEffects } from './imprint-list.effects';
 import { ImprintService } from '@app/comic-books/services/imprint.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

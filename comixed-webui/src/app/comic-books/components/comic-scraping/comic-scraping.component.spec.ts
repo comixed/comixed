@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
   ComicScrapingComponent,
   EXACT_MATCH,
@@ -24,7 +24,7 @@ import {
   NEAR_MATCH,
   NO_MATCH
 } from './comic-scraping.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -77,38 +77,40 @@ describe('ComicScrapingComponent', () => {
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicScrapingComponent, ScrapingIssueDetailComponent],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatTableModule,
-        MatSortModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatPaginatorModule,
-        MatTooltipModule,
-        MatInputModule
-      ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ComicScrapingComponent, ScrapingIssueDetailComponent],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatTableModule,
+          MatSortModule,
+          MatToolbarModule,
+          MatIconModule,
+          MatFormFieldModule,
+          MatPaginatorModule,
+          MatTooltipModule,
+          MatInputModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicScrapingComponent);
-    component = fixture.componentInstance;
-    component.apiKey = API_KEY;
-    component.comicSeriesName = SCRAPING_VOLUME.name;
-    component.comicVolume = SCRAPING_VOLUME.startYear;
-    component.comicIssueNumber = ISSUE_NUMBER;
-    component.skipCache = SKIP_CACHE;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicScrapingComponent);
+      component = fixture.componentInstance;
+      component.apiKey = API_KEY;
+      component.comicSeriesName = SCRAPING_VOLUME.name;
+      component.comicVolume = SCRAPING_VOLUME.startYear;
+      component.comicIssueNumber = ISSUE_NUMBER;
+      component.skipCache = SKIP_CACHE;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

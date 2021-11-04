@@ -27,7 +27,7 @@ import {
 import { Comic } from '@app/comic-books/models/comic';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ScrapeEvent } from '@app/comic-books/models/ui/scrape-event';
@@ -163,7 +163,12 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     return !!apiKey && apiKey.length > 0;
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from scraped metadata updates');
+    this.scrapedMetadataSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from imprint updates');
+    this.imprintSubscription.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.logger.trace('Loading imprints');

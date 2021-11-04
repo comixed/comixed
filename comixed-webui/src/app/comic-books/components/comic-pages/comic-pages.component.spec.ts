@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
 import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatCardModule } from '@angular/material/card';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
@@ -53,33 +53,39 @@ describe('ComicPagesComponent', () => {
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicPagesComponent, ComicPageComponent, ComicPageUrlPipe],
-      imports: [
-        RouterTestingModule.withRoutes([
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatCardModule,
-        MatMenuModule,
-        MatDialogModule
-      ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ComicPagesComponent,
+          ComicPageComponent,
+          ComicPageUrlPipe
+        ],
+        imports: [
+          RouterTestingModule.withRoutes([
+            {
+              path: '**',
+              redirectTo: ''
+            }
+          ]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatCardModule,
+          MatMenuModule,
+          MatDialogModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicPagesComponent);
-    component = fixture.componentInstance;
-    component.comic = COMIC;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicPagesComponent);
+      component = fixture.componentInstance;
+      component.comic = COMIC;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

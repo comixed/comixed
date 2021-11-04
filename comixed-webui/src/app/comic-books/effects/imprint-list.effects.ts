@@ -23,7 +23,7 @@ import {
   loadImprints,
   loadImprintsFailed
 } from '../actions/imprint-list.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ImprintService } from '@app/comic-books/services/imprint.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LibraryToolbarComponent } from './library-toolbar.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   COMIC_1,
@@ -66,37 +66,39 @@ describe('LibraryToolbarComponent', () => {
   let confirmationService: ConfirmationService;
   let translateService: TranslateService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [LibraryToolbarComponent],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatToolbarModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatTooltipModule,
-        MatDialogModule,
-        MatPaginatorModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatDividerModule
-      ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LibraryToolbarComponent],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatToolbarModule,
+          MatIconModule,
+          MatFormFieldModule,
+          MatTooltipModule,
+          MatDialogModule,
+          MatPaginatorModule,
+          MatSelectModule,
+          MatOptionModule,
+          MatDividerModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(LibraryToolbarComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
-    confirmationService = TestBed.inject(ConfirmationService);
-    translateService = TestBed.inject(TranslateService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(LibraryToolbarComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      confirmationService = TestBed.inject(ConfirmationService);
+      translateService = TestBed.inject(TranslateService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

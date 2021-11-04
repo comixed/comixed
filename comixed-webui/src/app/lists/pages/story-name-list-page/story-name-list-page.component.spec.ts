@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StoryNameListPageComponent } from './story-name-list-page.component';
 import {
   initialState as initialStoryListState,
@@ -30,7 +30,7 @@ import {
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -65,44 +65,46 @@ describe('StoryNameListPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [StoryNameListPageComponent],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatTableModule,
-        MatToolbarModule,
-        MatPaginatorModule,
-        MatSortModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParams: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
-          }
-        },
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [StoryNameListPageComponent],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatTableModule,
+          MatToolbarModule,
+          MatPaginatorModule,
+          MatSortModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              queryParams: new BehaviorSubject<{}>({}),
+              snapshot: {} as ActivatedRouteSnapshot
+            }
+          },
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(StoryNameListPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    dispatchSpy = spyOn(store, 'dispatch');
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
-    translateService = TestBed.inject(TranslateService);
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(StoryNameListPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      dispatchSpy = spyOn(store, 'dispatch');
+      activatedRoute = TestBed.inject(ActivatedRoute);
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      translateService = TestBed.inject(TranslateService);
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

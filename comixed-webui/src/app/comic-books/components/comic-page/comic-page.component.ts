@@ -16,14 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output
-} from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Page } from '@app/comic-books/models/page';
 import { PageContextMenuEvent } from '@app/comic-books/models/event/page-context-menu-event';
 
@@ -33,7 +27,7 @@ import { PageContextMenuEvent } from '@app/comic-books/models/event/page-context
   templateUrl: './comic-page.component.html',
   styleUrls: ['./comic-page.component.scss']
 })
-export class ComicPageComponent implements OnDestroy {
+export class ComicPageComponent {
   @Input() page: Page;
   @Input() imageUrl: string;
   @Input() selected: boolean;
@@ -42,8 +36,6 @@ export class ComicPageComponent implements OnDestroy {
   @Output() showContextMenu = new EventEmitter<PageContextMenuEvent>();
 
   constructor(private logger: LoggerService) {}
-
-  ngOnDestroy(): void {}
 
   onContextMenu($event: MouseEvent): void {
     $event.preventDefault();

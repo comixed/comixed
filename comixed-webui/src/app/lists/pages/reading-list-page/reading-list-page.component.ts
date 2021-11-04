@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -58,7 +58,7 @@ import { TitleService } from '@app/core/services/title.service';
   templateUrl: './reading-list-page.component.html',
   styleUrls: ['./reading-list-page.component.scss']
 })
-export class ReadingListPageComponent implements OnInit, OnDestroy {
+export class ReadingListPageComponent implements OnDestroy {
   paramsSubscription: Subscription;
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
@@ -177,8 +177,6 @@ export class ReadingListPageComponent implements OnInit, OnDestroy {
     this.readingListForm.controls.summary.setValue(readingList.summary);
     this.readingListForm.markAsPristine();
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from param updates');

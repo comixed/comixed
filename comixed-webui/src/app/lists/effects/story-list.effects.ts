@@ -26,7 +26,7 @@ import {
   storiesForNameLoaded,
   storyNamesLoaded
 } from '../actions/story-list.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { StoryService } from '@app/lists/services/story.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

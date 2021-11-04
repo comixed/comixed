@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicOverviewComponent } from './comic-overview.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
@@ -33,31 +33,33 @@ describe('ComicOverviewComponent', () => {
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ComicOverviewComponent,
-        ComicCoverUrlPipe,
-        ComicvineIssueLinkPipe
-      ],
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        RouterTestingModule.withRoutes([
-          {
-            path: '*',
-            redirectTo: ''
-          }
-        ]),
-        MatGridListModule
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ComicOverviewComponent,
+          ComicCoverUrlPipe,
+          ComicvineIssueLinkPipe
+        ],
+        imports: [
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          RouterTestingModule.withRoutes([
+            {
+              path: '*',
+              redirectTo: ''
+            }
+          ]),
+          MatGridListModule
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicOverviewComponent);
-    component = fixture.componentInstance;
-    component.comic = COMIC;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicOverviewComponent);
+      component = fixture.componentInstance;
+      component.comic = COMIC;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

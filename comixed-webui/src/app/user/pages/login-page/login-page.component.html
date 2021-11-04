@@ -3,7 +3,7 @@
     <mat-card-title>
       {{ "user.login-user.page-title" | translate }}
     </mat-card-title>
-    <mat-card-content>
+    <mat-card-content class="cx-padding-left-15 cx-padding-right-15">
       <mat-form-field class="cx-width-100" required>
         <input
           id="cx-login-email"
@@ -53,18 +53,16 @@
           </span>
         </mat-error>
       </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions>
       <button
         id="cx-login-submit-button"
-        mat-flat-button
+        mat-raised-button
         color="primary"
         (click)="onSubmitLogin()"
         [disabled]="!loginForm.valid"
       >
         <mat-label>{{ "button.login" | translate }}</mat-label>
-        <mat-icon>check</mat-icon>
+        <mat-icon>login</mat-icon>
       </button>
-    </mat-card-actions>
+    </mat-card-content>
   </mat-card>
 </form>

@@ -16,16 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComicFile } from '@app/comic-files/models/comic-file';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { setComicFilesSelectedState } from '@app/comic-files/actions/comic-file-list.actions';
 import { ComicFileContextMenuEvent } from '@app/comic-files/model/ui/comic-file-context-menu-event';
@@ -37,17 +30,13 @@ export const CARD_WIDTH_PADDING = 20;
   templateUrl: './comic-file-detail-card.component.html',
   styleUrls: ['./comic-file-detail-card.component.scss']
 })
-export class ComicFileDetailCardComponent implements OnInit, OnDestroy {
+export class ComicFileDetailCardComponent {
   @Input() file: ComicFile;
   @Input() selected = false;
 
   @Output() showContextMenu = new EventEmitter<ComicFileContextMenuEvent>();
 
   constructor(private logger: LoggerService, private store: Store<any>) {}
-
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {}
 
   onSelectFile(): void {
     const selected = this.selected === false;

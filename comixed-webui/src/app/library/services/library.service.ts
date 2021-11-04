@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {

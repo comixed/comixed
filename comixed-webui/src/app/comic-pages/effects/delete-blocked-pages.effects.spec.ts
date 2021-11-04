@@ -23,7 +23,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { DeleteBlockedPagesEffects } from './delete-blocked-pages.effects';
 import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

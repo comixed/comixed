@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { ProcessComicsService } from '@app/services/process-comics.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Injectable()
 export class ImportCountEffects {

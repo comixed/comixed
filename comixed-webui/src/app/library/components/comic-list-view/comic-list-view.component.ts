@@ -21,13 +21,12 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatSort } from '@angular/material/sort';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
@@ -36,7 +35,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
   templateUrl: './comic-list-view.component.html',
   styleUrls: ['./comic-list-view.component.scss']
 })
-export class ComicListViewComponent implements OnInit, AfterViewInit {
+export class ComicListViewComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   @Output() selectedEntries = new EventEmitter<Comic[]>();
@@ -77,8 +76,6 @@ export class ComicListViewComponent implements OnInit, AfterViewInit {
     });
     this.updateAllSelected();
   }
-
-  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;

@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BlockedHashListPageComponent } from './blocked-hash-list-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   BLOCKED_HASH_LIST_FEATURE_KEY,
   initialState as initialBlockedPageListState
@@ -64,40 +64,42 @@ describe('BlockedHashListPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [BlockedHashListPageComponent],
-      imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatToolbarModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatCheckboxModule,
-        MatDialogModule,
-        MatIconModule,
-        MatTooltipModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        ConfirmationService,
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [BlockedHashListPageComponent],
+        imports: [
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatToolbarModule,
+          MatTableModule,
+          MatPaginatorModule,
+          MatCheckboxModule,
+          MatDialogModule,
+          MatIconModule,
+          MatTooltipModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(BlockedHashListPageComponent);
-    component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    confirmationService = TestBed.inject(ConfirmationService);
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(BlockedHashListPageComponent);
+      component = fixture.componentInstance;
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

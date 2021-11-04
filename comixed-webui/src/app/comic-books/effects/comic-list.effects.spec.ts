@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { ComicListEffects } from './comic-list.effects';
 import { ComicListService } from '@app/comic-books/services/comic-list.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   COMIC_1,
   COMIC_3,

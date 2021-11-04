@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicBookPageComponent } from './comic-book-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
@@ -113,73 +113,75 @@ describe('ComicBookPageComponent', () => {
   let confirmationService: ConfirmationService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ComicBookPageComponent,
-        ComicOverviewComponent,
-        ComicStoryComponent,
-        ComicPagesComponent,
-        ComicEditComponent,
-        ComicTitlePipe,
-        ComicPageUrlPipe
-      ],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        RouterTestingModule,
-        MatCardModule,
-        MatToolbarModule,
-        MatDialogModule,
-        MatIconModule,
-        MatExpansionModule,
-        MatGridListModule,
-        MatTabsModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParams: new BehaviorSubject<{}>({}),
-            params: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ComicBookPageComponent,
+          ComicOverviewComponent,
+          ComicStoryComponent,
+          ComicPagesComponent,
+          ComicEditComponent,
+          ComicTitlePipe,
+          ComicPageUrlPipe
+        ],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          RouterTestingModule,
+          MatCardModule,
+          MatToolbarModule,
+          MatDialogModule,
+          MatIconModule,
+          MatExpansionModule,
+          MatGridListModule,
+          MatTabsModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              queryParams: new BehaviorSubject<{}>({}),
+              params: new BehaviorSubject<{}>({}),
+              snapshot: {} as ActivatedRouteSnapshot
+            }
+          },
+          {
+            provide: MatDialogRef,
+            useValue: {}
+          },
+          ConfirmationService,
+          ComicTitlePipe,
+          TitleService,
+          {
+            provide: WebSocketService,
+            useValue: {
+              subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
+              unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
+            }
           }
-        },
-        {
-          provide: MatDialogRef,
-          useValue: {}
-        },
-        ConfirmationService,
-        ComicTitlePipe,
-        TitleService,
-        {
-          provide: WebSocketService,
-          useValue: {
-            subscribe: jasmine.createSpy('WebSocketService.subscribe()'),
-            unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
-          }
-        }
-      ]
-    }).compileComponents();
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicBookPageComponent);
-    component = fixture.componentInstance;
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    translateService = TestBed.inject(TranslateService);
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    confirmationService = TestBed.inject(ConfirmationService);
-    webSocketService = TestBed.inject(
-      WebSocketService
-    ) as jasmine.SpyObj<WebSocketService>;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicBookPageComponent);
+      component = fixture.componentInstance;
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      activatedRoute = TestBed.inject(ActivatedRoute);
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      translateService = TestBed.inject(TranslateService);
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      confirmationService = TestBed.inject(ConfirmationService);
+      webSocketService = TestBed.inject(
+        WebSocketService
+      ) as jasmine.SpyObj<WebSocketService>;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

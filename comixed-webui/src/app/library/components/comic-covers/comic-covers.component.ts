@@ -28,8 +28,8 @@ import {
 } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
+import { BehaviorSubject } from 'rxjs';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -40,7 +40,6 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
-import { SORT_FIELD_PREFERENCE } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
@@ -57,7 +56,6 @@ import { convertComics } from '@app/library/actions/convert-comics.actions';
 import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
 import { MatSort } from '@angular/material/sort';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 
 @Component({
   selector: 'cx-comic-covers',

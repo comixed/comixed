@@ -23,7 +23,7 @@ import {
   markComicsDeleted,
   markComicsDeletedFailed
 } from '../actions/mark-comics-deleted.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicService } from '@app/comic-books/services/comic.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

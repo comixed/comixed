@@ -27,7 +27,7 @@ import {
   LAST_READ_5
 } from '@app/last-read/last-read.fixtures';
 import { LastReadService } from '@app/last-read/services/last-read.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';

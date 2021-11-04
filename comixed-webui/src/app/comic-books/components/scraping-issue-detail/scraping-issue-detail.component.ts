@@ -16,19 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ScrapingIssue } from '@app/comic-books/models/scraping-issue';
-import { LoggerService } from '@angular-ru/logger';
 
 @Component({
   selector: 'cx-scraping-issue-detail',
   templateUrl: './scraping-issue-detail.component.html',
   styleUrls: ['./scraping-issue-detail.component.scss']
 })
-export class ScrapingIssueDetailComponent implements OnInit {
+export class ScrapingIssueDetailComponent {
   @Input() issue: ScrapingIssue;
-
-  constructor(private logger: LoggerService) {}
-
-  ngOnInit(): void {}
 }

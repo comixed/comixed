@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 
@@ -27,7 +27,7 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
   templateUrl: './selected-comics.component.html',
   styleUrls: ['./selected-comics.component.scss']
 })
-export class SelectedComicsComponent implements OnInit {
+export class SelectedComicsComponent {
   @Output() selectionChanged = new EventEmitter<Comic>();
 
   constructor(private logger: LoggerService, public dialog: MatDialog) {}
@@ -44,8 +44,6 @@ export class SelectedComicsComponent implements OnInit {
       this.selectionChanged.emit(this._comics[0]);
     }
   }
-
-  ngOnInit(): void {}
 
   onSelectionChanged(comic: Comic): void {
     this.logger.debug('Selected comic change:', comic);

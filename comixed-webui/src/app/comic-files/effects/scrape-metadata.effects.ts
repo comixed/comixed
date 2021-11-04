@@ -25,7 +25,7 @@ import {
 } from '../actions/scrape-metadata.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';

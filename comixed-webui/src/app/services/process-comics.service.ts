@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Subscription } from 'webstomp-client';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { WebSocketService } from '@app/messaging';
 import { Store } from '@ngrx/store';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';

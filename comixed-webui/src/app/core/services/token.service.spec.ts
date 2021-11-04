@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { TokenService } from './token.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 
 describe('TokenService', () => {

@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { DuplicatePageDetailPageComponent } from './duplicate-page-detail-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -68,49 +68,51 @@ describe('DuplicatePageDetailPageComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        DuplicatePageDetailPageComponent,
-        ComicPageComponent,
-        PageHashUrlPipe
-      ],
-      imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatToolbarModule,
-        MatIconModule,
-        MatTableModule,
-        MatCardModule,
-        MatDialogModule,
-        MatTooltipModule,
-        MatButtonModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            params: new BehaviorSubject<{}>({})
-          }
-        },
-        ConfirmationService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          DuplicatePageDetailPageComponent,
+          ComicPageComponent,
+          PageHashUrlPipe
+        ],
+        imports: [
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatToolbarModule,
+          MatIconModule,
+          MatTableModule,
+          MatCardModule,
+          MatDialogModule,
+          MatTooltipModule,
+          MatButtonModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              params: new BehaviorSubject<{}>({})
+            }
+          },
+          ConfirmationService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(DuplicatePageDetailPageComponent);
-    component = fixture.componentInstance;
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    titleService = TestBed.inject(TitleService);
-    setTitleSpy = spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(DuplicatePageDetailPageComponent);
+      component = fixture.componentInstance;
+      activatedRoute = TestBed.inject(ActivatedRoute);
+      router = TestBed.inject(Router);
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      titleService = TestBed.inject(TitleService);
+      setTitleSpy = spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

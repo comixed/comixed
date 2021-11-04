@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from 'webstomp-client';
 import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { WebSocketService } from '@app/messaging';

@@ -19,7 +19,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Comic } from '@app/comic-books/models/comic';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -241,7 +241,7 @@ export class ComicBookPageComponent
   }
 
   setReadState(read: boolean): void {
-    this.logger.debug('Marking comic read status:', status);
+    this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(setComicsRead({ comics: [this.comic], read }));
   }
 

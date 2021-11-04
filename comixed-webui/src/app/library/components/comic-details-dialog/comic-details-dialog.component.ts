@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Comic } from '@app/comic-books/models/comic';
 
@@ -25,8 +25,6 @@ import { Comic } from '@app/comic-books/models/comic';
   templateUrl: './comic-details-dialog.component.html',
   styleUrls: ['./comic-details-dialog.component.scss']
 })
-export class ComicDetailsDialogComponent implements OnInit {
+export class ComicDetailsDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public comic: Comic) {}
-
-  ngOnInit(): void {}
 }
