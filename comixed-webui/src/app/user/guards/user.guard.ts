@@ -24,7 +24,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { selectUserState } from '@app/user/selectors/user.selectors';
 import { filter } from 'rxjs/operators';

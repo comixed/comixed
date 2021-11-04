@@ -3,11 +3,11 @@
     {{ title }}
   </mat-card-title>
   <mat-card-subtitle
-    *ngIf="!!subtitle"
     class="cx-text-nowrap"
     [matTooltip]="subtitle"
+    [matTooltipDisabled]="!subtitle || !subtitle.length"
   >
-    {{ subtitle }}
+    &nbsp;{{ subtitle }}
   </mat-card-subtitle>
   <mat-card-content>
     <div

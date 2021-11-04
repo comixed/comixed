@@ -44,7 +44,6 @@ import {
   COMIC_FILE_LIST_FEATURE_KEY,
   reducer as comicFileListReducer
 } from '@app/comic-files/reducers/comic-file-list.reducer';
-import { ComicFileLookupComponent } from './components/comic-file-lookup/comic-file-lookup.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -68,8 +67,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ComicFileToolbarComponent,
     ComicFileCoversComponent,
     ComicFileDetailCardComponent,
-    ComicFileCoverUrlPipe,
-    ComicFileLookupComponent
+    ComicFileCoverUrlPipe
   ],
   imports: [
     CommonModule,

@@ -26,7 +26,7 @@ import {
 } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationComponent } from '@app/core/components/confirmation/confirmation.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { of } from 'rxjs';
 
 describe('ConfirmationService', () => {

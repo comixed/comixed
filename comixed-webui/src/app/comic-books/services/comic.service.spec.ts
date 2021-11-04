@@ -35,7 +35,7 @@ import {
   UPDATE_COMIC_URL
 } from '@app/library/library.constants';
 import { interpolate } from '@app/core';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
 import { LoadComicsRequest } from '@app/comic-books/models/net/load-comics-request';
 import {

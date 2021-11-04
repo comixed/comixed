@@ -20,7 +20,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { DuplicatePageListEffects } from './duplicate-page-list.effects';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { DuplicatePageService } from '@app/library/services/duplicate-page.service';
 import { AlertService } from '@app/core/services/alert.service';

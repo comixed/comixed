@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SideNavigationComponent } from './side-navigation.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatListModule } from '@angular/material/list';
@@ -48,23 +48,25 @@ describe('SideNavigationComponent', () => {
   let component: SideNavigationComponent;
   let fixture: ComponentFixture<SideNavigationComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [SideNavigationComponent],
-      imports: [
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatListModule,
-        MatIconModule
-      ],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SideNavigationComponent],
+        imports: [
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatListModule,
+          MatIconModule
+        ],
+        providers: [provideMockStore({ initialState })]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(SideNavigationComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(SideNavigationComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

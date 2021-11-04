@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LibraryPageComponent } from './library-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
@@ -97,63 +97,65 @@ describe('LibraryPageComponent', () => {
   let activatedRoute: ActivatedRoute;
   let router: Router;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        LibraryPageComponent,
-        LibraryToolbarComponent,
-        ComicCoversComponent,
-        DeletedComicsPipe,
-        ArchiveTypePipe,
-        UnreadComicsPipe
-      ],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatSidenavModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatTreeModule,
-        MatBadgeModule,
-        MatPaginatorModule,
-        MatFormFieldModule,
-        MatTooltipModule,
-        MatDialogModule,
-        MatMenuModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatDividerModule,
-        MatSortModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            data: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot,
-            queryParams: new BehaviorSubject<{}>({}),
-            params: new BehaviorSubject<{}>({})
-          }
-        },
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          LibraryPageComponent,
+          LibraryToolbarComponent,
+          ComicCoversComponent,
+          DeletedComicsPipe,
+          ArchiveTypePipe,
+          UnreadComicsPipe
+        ],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatSidenavModule,
+          MatToolbarModule,
+          MatIconModule,
+          MatTreeModule,
+          MatBadgeModule,
+          MatPaginatorModule,
+          MatFormFieldModule,
+          MatTooltipModule,
+          MatDialogModule,
+          MatMenuModule,
+          MatFormFieldModule,
+          MatSelectModule,
+          MatOptionModule,
+          MatDividerModule,
+          MatSortModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              data: new BehaviorSubject<{}>({}),
+              snapshot: {} as ActivatedRouteSnapshot,
+              queryParams: new BehaviorSubject<{}>({}),
+              params: new BehaviorSubject<{}>({})
+            }
+          },
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(LibraryPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    translateService = TestBed.inject(TranslateService);
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(LibraryPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      translateService = TestBed.inject(TranslateService);
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      activatedRoute = TestBed.inject(ActivatedRoute);
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

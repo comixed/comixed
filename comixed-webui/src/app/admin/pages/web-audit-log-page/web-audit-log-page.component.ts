@@ -23,7 +23,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';

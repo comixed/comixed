@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { setServerStatus } from '@app/actions/server-status.actions';
 import { TaskCountMessage } from '@app/models/net/task-count-message';
 import { Subscription } from 'webstomp-client';

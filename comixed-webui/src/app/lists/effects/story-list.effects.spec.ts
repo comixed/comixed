@@ -24,7 +24,7 @@ import { StoryListEffects } from './story-list.effects';
 import { STORY_1, STORY_2, STORY_3 } from '@app/lists/lists.fixtures';
 import { StoryService } from '@app/lists/services/story.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

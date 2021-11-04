@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LoginPageComponent } from './login-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -52,35 +52,37 @@ describe('LoginPageComponent', () => {
   let titleService: TitleService;
   let router: Router;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [LoginPageComponent],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot(),
-        LoggerModule.forRoot(),
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule
-      ],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LoginPageComponent],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          FormsModule,
+          ReactiveFormsModule,
+          TranslateModule.forRoot(),
+          LoggerModule.forRoot(),
+          MatCardModule,
+          MatFormFieldModule,
+          MatInputModule,
+          MatIconModule
+        ],
+        providers: [provideMockStore({ initialState })]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    translateService = TestBed.inject(TranslateService);
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(LoginPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      translateService = TestBed.inject(TranslateService);
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigateByUrl');
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

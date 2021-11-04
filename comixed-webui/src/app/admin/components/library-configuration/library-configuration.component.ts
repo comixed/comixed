@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
@@ -37,7 +37,7 @@ import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-
   templateUrl: './library-configuration.component.html',
   styleUrls: ['./library-configuration.component.scss']
 })
-export class LibraryConfigurationComponent implements OnInit {
+export class LibraryConfigurationComponent {
   @Input() libraryConfigurationForm: FormGroup;
 
   readonly comicVariableOptions: ListItem<string>[] = [
@@ -96,8 +96,6 @@ export class LibraryConfigurationComponent implements OnInit {
       getConfigurationOption(options, LIBRARY_PAGE_RENAMING_RULE, '')
     );
   }
-
-  ngOnInit(): void {}
 
   onSave(): void {
     this.logger.trace('Save configuration called');

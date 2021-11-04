@@ -23,7 +23,7 @@ import {
   saveConfigurationOptions,
   saveConfigurationOptionsFailed
 } from '../actions/save-configuration-options.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationService } from '@app/admin/services/configuration.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

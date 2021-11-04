@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReadingListsPageComponent } from './reading-lists-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   initialState as initialReadingListsState,
   READING_LISTS_FEATURE_KEY
@@ -66,36 +66,38 @@ describe('ReadingListsPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ReadingListsPageComponent],
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatToolbarModule,
-        MatPaginatorModule,
-        MatIconModule,
-        MatTableModule,
-        MatTooltipModule,
-        MatDialogModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        ConfirmationService,
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ReadingListsPageComponent],
+        imports: [
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatToolbarModule,
+          MatPaginatorModule,
+          MatIconModule,
+          MatTableModule,
+          MatTooltipModule,
+          MatDialogModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ReadingListsPageComponent);
-    component = fixture.componentInstance;
-    confirmationService = TestBed.inject(ConfirmationService);
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ReadingListsPageComponent);
+      component = fixture.componentInstance;
+      confirmationService = TestBed.inject(ConfirmationService);
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

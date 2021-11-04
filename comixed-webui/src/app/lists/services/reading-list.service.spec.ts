@@ -41,7 +41,7 @@ import {
   UPDATE_READING_LIST,
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';

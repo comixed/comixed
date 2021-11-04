@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { WS_ROOT_URL } from '@app/core';
 import webstomp, { Client, Frame, over, Subscription } from 'webstomp-client';

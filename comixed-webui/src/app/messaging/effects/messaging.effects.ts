@@ -26,7 +26,7 @@ import {
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import { WebSocketService } from '@app/messaging/services/web-socket.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { of } from 'rxjs';
 
 @Injectable()

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicsWithDuplicatePageComponent } from './comics-with-duplicate-page.component';
 import {
   MAT_DIALOG_DATA,
@@ -24,7 +24,7 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -61,57 +61,59 @@ describe('ComicsWithDuplicatePageComponent', () => {
   let component: ComicsWithDuplicatePageComponent;
   let fixture: ComponentFixture<ComicsWithDuplicatePageComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ComicsWithDuplicatePageComponent,
-        ComicCoversComponent,
-        LibraryToolbarComponent,
-        ComicDetailCardComponent,
-        ComicTitlePipe,
-        ComicCoverUrlPipe
-      ],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ComicsWithDuplicatePageComponent,
+          ComicCoversComponent,
+          LibraryToolbarComponent,
+          ComicDetailCardComponent,
+          ComicTitlePipe,
+          ComicCoverUrlPipe
+        ],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([
+            {
+              path: '**',
+              redirectTo: ''
+            }
+          ]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatMenuModule,
+          MatFormFieldModule,
+          MatIconModule,
+          MatSelectModule,
+          MatToolbarModule,
+          MatPaginatorModule,
+          MatDividerModule,
+          MatCardModule,
+          MatExpansionModule,
+          MatGridListModule,
+          MatTooltipModule,
+          MatSortModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
           {
-            path: '**',
-            redirectTo: ''
+            provide: MatDialogRef,
+            useValue: {}
+          },
+          {
+            provide: MAT_DIALOG_DATA,
+            useValue: { comics: COMICS, hash: HASH } as DuplicatePage
           }
-        ]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatMenuModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatSelectModule,
-        MatToolbarModule,
-        MatPaginatorModule,
-        MatDividerModule,
-        MatCardModule,
-        MatExpansionModule,
-        MatGridListModule,
-        MatTooltipModule,
-        MatSortModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: MatDialogRef,
-          useValue: {}
-        },
-        {
-          provide: MAT_DIALOG_DATA,
-          useValue: { comics: COMICS, hash: HASH } as DuplicatePage
-        }
-      ]
-    }).compileComponents();
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicsWithDuplicatePageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicsWithDuplicatePageComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

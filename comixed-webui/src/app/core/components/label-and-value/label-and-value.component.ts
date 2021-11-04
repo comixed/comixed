@@ -16,18 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'cx-label-and-value',
   templateUrl: './label-and-value.component.html',
   styleUrls: ['./label-and-value.component.scss']
 })
-export class LabelAndValueComponent implements OnInit {
+export class LabelAndValueComponent {
   @Input() label = '';
   @Input() value = '';
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

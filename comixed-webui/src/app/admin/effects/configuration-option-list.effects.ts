@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ConfigurationService } from '@app/admin/services/configuration.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import {
   configurationOptionsLoaded,

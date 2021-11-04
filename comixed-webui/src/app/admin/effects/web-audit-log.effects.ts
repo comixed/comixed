@@ -30,7 +30,7 @@ import {
   webAuditLogCleared,
   webAuditLogEntriesLoaded
 } from '../actions/web-audit-log.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { WebAuditLogService } from '@app/admin/services/web-audit-log.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

@@ -23,7 +23,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ServerRuntimeEffects } from './server-runtime.effects';
 import { ServerRuntimeService } from '@app/admin/services/server-runtime.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';

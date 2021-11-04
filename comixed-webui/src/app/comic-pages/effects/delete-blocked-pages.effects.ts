@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,7 +28,6 @@ import {
   deleteBlockedPagesFailed
 } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { of } from 'rxjs';
 
 @Injectable()

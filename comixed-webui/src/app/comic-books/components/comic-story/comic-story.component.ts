@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatAccordion } from '@angular/material/expansion';
 
@@ -25,12 +25,8 @@ import { MatAccordion } from '@angular/material/expansion';
   templateUrl: './comic-story.component.html',
   styleUrls: ['./comic-story.component.scss']
 })
-export class ComicStoryComponent implements OnInit {
+export class ComicStoryComponent {
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
   @Input() comic: Comic;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

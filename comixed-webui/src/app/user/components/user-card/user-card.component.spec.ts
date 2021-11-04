@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { UserCardComponent } from './user-card.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { USER_READER } from '@app/user/user.fixtures';
 import { GravatarModule } from 'ngx-gravatar';
 
@@ -28,17 +28,19 @@ describe('UserCardComponent', () => {
   let component: UserCardComponent;
   let fixture: ComponentFixture<UserCardComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [UserCardComponent],
-      imports: [LoggerModule.forRoot(), GravatarModule]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [UserCardComponent],
+        imports: [LoggerModule.forRoot(), GravatarModule]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(UserCardComponent);
-    component = fixture.componentInstance;
-    component.user = USER;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(UserCardComponent);
+      component = fixture.componentInstance;
+      component.user = USER;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

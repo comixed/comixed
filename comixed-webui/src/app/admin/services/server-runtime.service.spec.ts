@@ -19,7 +19,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ServerRuntimeService } from './server-runtime.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   HttpClientTestingModule,
   HttpTestingController

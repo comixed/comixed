@@ -37,7 +37,7 @@ import {
   LOAD_LAST_READ_ENTRIES_URL,
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { WebSocketService } from '@app/messaging';

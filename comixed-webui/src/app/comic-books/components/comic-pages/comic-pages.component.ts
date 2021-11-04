@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { Component, Input, ViewChild } from '@angular/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
@@ -32,7 +32,7 @@ import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
   templateUrl: './comic-pages.component.html',
   styleUrls: ['./comic-pages.component.scss']
 })
-export class ComicPagesComponent implements OnInit {
+export class ComicPagesComponent {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
   @Input() comic: Comic;
@@ -49,8 +49,6 @@ export class ComicPagesComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {}
-
-  ngOnInit(): void {}
 
   onShowContextMenu(page: Page, x: string, y: string): void {
     this.logger.debug('Popping up context menu for:', page);

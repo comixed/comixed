@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ConfigurationPageComponent } from './configuration-page.component';
 import {
   CONFIGURATION_OPTION_LIST_FEATURE_KEY,
@@ -31,7 +31,7 @@ import {
 } from '@app/admin/admin.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ComicVineConfigurationComponent } from '@app/admin/components/comic-vine-configuration/comic-vine-configuration.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -82,54 +82,56 @@ describe('ConfigurationPageComponent', () => {
   let activatedRoute: ActivatedRoute;
   let router: Router;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ConfigurationPageComponent,
-        LibraryConfigurationComponent,
-        ComicVineConfigurationComponent
-      ],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        FormsModule,
-        ReactiveFormsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatDialogModule,
-        MatTabsModule,
-        MatCardModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        TitleService,
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParams: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ConfigurationPageComponent,
+          LibraryConfigurationComponent,
+          ComicVineConfigurationComponent
+        ],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          FormsModule,
+          ReactiveFormsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatFormFieldModule,
+          MatInputModule,
+          MatIconModule,
+          MatButtonModule,
+          MatToolbarModule,
+          MatDialogModule,
+          MatTabsModule,
+          MatCardModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          TitleService,
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              queryParams: new BehaviorSubject<{}>({}),
+              snapshot: {} as ActivatedRouteSnapshot
+            }
           }
-        }
-      ]
-    }).compileComponents();
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ConfigurationPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    translateService = TestBed.inject(TranslateService);
-    titleService = TestBed.inject(TitleService);
-    setTitleSpy = spyOn(titleService, 'setTitle');
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ConfigurationPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      translateService = TestBed.inject(TranslateService);
+      titleService = TestBed.inject(TitleService);
+      setTitleSpy = spyOn(titleService, 'setTitle');
+      activatedRoute = TestBed.inject(ActivatedRoute);
+      router = TestBed.inject(Router);
+      spyOn(router, 'navigate');
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

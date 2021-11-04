@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { Store } from '@ngrx/store';
@@ -42,7 +42,7 @@ import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
   styleUrls: ['./duplicate-page-detail-page.component.scss']
 })
 export class DuplicatePageDetailPageComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements AfterViewInit, OnDestroy
 {
   paramSubscription: Subscription;
   duplicatePageStateSubscription: Subscription;
@@ -114,8 +114,6 @@ export class DuplicatePageDetailPageComponent
   ngAfterViewInit(): void {
     this.loadTranslation();
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();

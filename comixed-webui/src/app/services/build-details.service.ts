@@ -19,9 +19,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { LoggerService } from '@angular-ru/logger';
 import { interpolate } from '@app/core';
 import { LOAD_BUILD_DETAILS_URL } from '@app/app.constants';
+import { LoggerService } from '@angular-ru/cdk/logger';
 
 /**
  * Provides methods for loading the build details for the backend server.

@@ -27,7 +27,7 @@ import {
   saveFilenameScrapingRulesFailed
 } from '@app/admin/actions/filename-scraping-rule-list.actions';
 import { FilenameScrapingRuleService } from '@app/admin/services/filename-scraping-rule.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';

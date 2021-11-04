@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { UserPreferencesPageComponent } from './user-preferences-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -49,34 +49,36 @@ describe('UserPreferencesPageComponent', () => {
   let titleService: TitleService;
   let translateService: TranslateService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [UserPreferencesPageComponent],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatTableModule,
-        MatSortModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        ConfirmationService,
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [UserPreferencesPageComponent],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatTableModule,
+          MatSortModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(UserPreferencesPageComponent);
-    component = fixture.componentInstance;
-    confirmationService = TestBed.inject(ConfirmationService);
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(UserPreferencesPageComponent);
+      component = fixture.componentInstance;
+      confirmationService = TestBed.inject(ConfirmationService);
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

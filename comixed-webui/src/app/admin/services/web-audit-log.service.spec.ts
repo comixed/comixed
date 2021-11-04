@@ -34,7 +34,7 @@ import {
   CLEAR_WEB_AUDIT_LOG_ENTRIES_URL,
   LOAD_WEB_AUDIT_LOG_ENTRIES_URL
 } from '@app/admin/admin.constants';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { HttpResponse } from '@angular/common/http';
 
 describe('WebAuditLogService', () => {

@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { getUserPreference } from '@app/user';
 import {
@@ -38,8 +38,7 @@ import {
 } from '@app/library/library.constants';
 import {
   clearComicFileSelections,
-  loadComicFiles,
-  setComicFilesSelectedState
+  loadComicFiles
 } from '@app/comic-files/actions/comic-file-list.actions';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { ComicFile } from '@app/comic-files/models/comic-file';

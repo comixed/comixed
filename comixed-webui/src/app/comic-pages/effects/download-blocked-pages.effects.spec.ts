@@ -30,7 +30,7 @@ import {
 } from '@app/comic-pages/actions/download-blocked-pages.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FileDownloadService } from '@app/core/services/file-download.service';

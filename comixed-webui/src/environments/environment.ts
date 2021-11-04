@@ -20,4 +20,4 @@ export const environment = {
   production: false
 };
 
-import 'zone.js/dist/zone-error';
+import 'zone.js/plugins/zone-error';

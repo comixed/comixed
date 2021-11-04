@@ -26,7 +26,7 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ReadingList } from '@app/lists/models/reading-list';
 import {
   deleteReadingLists,

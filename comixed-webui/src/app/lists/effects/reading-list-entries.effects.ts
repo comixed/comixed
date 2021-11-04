@@ -29,7 +29,7 @@ import {
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ReadingListService } from '@app/lists/services/reading-list.service';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { readingListLoaded } from '@app/lists/actions/reading-list-detail.actions';

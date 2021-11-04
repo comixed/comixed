@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicCoversComponent } from './comic-covers.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -24,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatTreeModule } from '@angular/material/tree';
@@ -90,42 +90,44 @@ describe('ComicCoversComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicCoversComponent, LibraryToolbarComponent],
-      imports: [
-        NoopAnimationsModule,
-        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatSidenavModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatTreeModule,
-        MatBadgeModule,
-        MatFormFieldModule,
-        MatTooltipModule,
-        MatDialogModule,
-        MatMenuModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatDividerModule,
-        MatSortModule
-      ],
-      providers: [provideMockStore({ initialState }), ConfirmationService]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ComicCoversComponent, LibraryToolbarComponent],
+        imports: [
+          NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatSidenavModule,
+          MatToolbarModule,
+          MatIconModule,
+          MatPaginatorModule,
+          MatTreeModule,
+          MatBadgeModule,
+          MatFormFieldModule,
+          MatTooltipModule,
+          MatDialogModule,
+          MatMenuModule,
+          MatSelectModule,
+          MatOptionModule,
+          MatDividerModule,
+          MatSortModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicCoversComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    dialog = TestBed.inject(MatDialog);
-    spyOn(dialog, 'open');
-    translateService = TestBed.inject(TranslateService);
-    confirmationService = TestBed.inject(ConfirmationService);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicCoversComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      dialog = TestBed.inject(MatDialog);
+      spyOn(dialog, 'open');
+      translateService = TestBed.inject(TranslateService);
+      confirmationService = TestBed.inject(ConfirmationService);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

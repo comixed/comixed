@@ -16,15 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Comic } from '@app/comic-books/models/comic';
 import { ComicContextMenuEvent } from '@app/comic-books/models/ui/comic-context-menu-event';
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
@@ -35,11 +28,11 @@ import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic
   templateUrl: './comic-detail-card.component.html',
   styleUrls: ['./comic-detail-card.component.scss']
 })
-export class ComicDetailCardComponent implements OnInit, OnDestroy {
+export class ComicDetailCardComponent {
   @Input() comic: Comic;
   @Input() coverTooltip: string;
   @Input() title: string;
-  @Input() subtitle: string;
+  @Input() subtitle: string = '';
   @Input() imageUrl: string;
   @Input() description: string;
   @Input() detailLink: string;
@@ -56,10 +49,6 @@ export class ComicDetailCardComponent implements OnInit, OnDestroy {
   @Output() updateComicInfo = new EventEmitter<UpdateComicInfoEvent>();
 
   constructor(private logger: LoggerService) {}
-
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {}
 
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic

@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BlockedPageService } from '@app/comic-pages/services/blocked-page.service';
 import { TranslateService } from '@ngx-translate/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   blockedPagesDownloaded,
   downloadBlockedPages,

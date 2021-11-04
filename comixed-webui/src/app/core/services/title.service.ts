@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({

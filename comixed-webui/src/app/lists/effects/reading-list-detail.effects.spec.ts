@@ -23,7 +23,7 @@ import { ReadingListDetailEffects } from './reading-list-detail.effects';
 import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

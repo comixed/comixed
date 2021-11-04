@@ -26,7 +26,7 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 

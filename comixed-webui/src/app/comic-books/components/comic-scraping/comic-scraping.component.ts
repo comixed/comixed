@@ -22,14 +22,13 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ScrapingIssue } from '@app/comic-books/models/scraping-issue';
@@ -63,9 +62,7 @@ export const NO_MATCH_TEXT = 'scraping.text.no-match';
   templateUrl: './comic-scraping.component.html',
   styleUrls: ['./comic-scraping.component.scss']
 })
-export class ComicScrapingComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -135,8 +132,6 @@ export class ComicScrapingComponent
       this.onVolumeSelected(preselect.item);
     }
   }
-
-  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.issueSubscription.unsubscribe();

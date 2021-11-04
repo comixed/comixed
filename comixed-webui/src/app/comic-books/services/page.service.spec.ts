@@ -22,7 +22,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('PageService', () => {

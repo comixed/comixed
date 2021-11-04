@@ -23,7 +23,7 @@ import {
   rescanComics,
   rescanComicsFailed
 } from '../actions/rescan-comics.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryService } from '@app/library/services/library.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';

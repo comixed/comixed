@@ -23,7 +23,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { FilenameScrapingRuleListEffects } from './filename-scraping-rule-list.effects';
 import { FilenameScrapingRuleService } from '@app/admin/services/filename-scraping-rule.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

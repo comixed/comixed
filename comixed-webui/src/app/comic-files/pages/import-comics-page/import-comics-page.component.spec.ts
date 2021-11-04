@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ImportComicsPageComponent } from './import-comics-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -90,53 +90,55 @@ describe('ImportComicsPageComponent', () => {
   let translateService: TranslateService;
   let dialog: MatDialog;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ImportComicsPageComponent,
-        ComicFileToolbarComponent,
-        ComicFileCoversComponent,
-        ComicFileDetailCardComponent,
-        ComicFileCoverUrlPipe,
-        ComicPageComponent
-      ],
-      imports: [
-        NoopAnimationsModule,
-        ReactiveFormsModule,
-        FormsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        MatTableModule,
-        MatCardModule,
-        MatTooltipModule,
-        MatToolbarModule,
-        MatMenuModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        ConfirmationService,
-        TitleService
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ImportComicsPageComponent,
+          ComicFileToolbarComponent,
+          ComicFileCoversComponent,
+          ComicFileDetailCardComponent,
+          ComicFileCoverUrlPipe,
+          ComicPageComponent
+        ],
+        imports: [
+          NoopAnimationsModule,
+          ReactiveFormsModule,
+          FormsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatButtonModule,
+          MatCheckboxModule,
+          MatIconModule,
+          MatInputModule,
+          MatSelectModule,
+          MatTableModule,
+          MatCardModule,
+          MatTooltipModule,
+          MatToolbarModule,
+          MatMenuModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          TitleService
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ImportComicsPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    confirmationService = TestBed.inject(ConfirmationService);
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
-    translateService = TestBed.inject(TranslateService);
-    dialog = TestBed.inject(MatDialog);
-    spyOn(dialog, 'open');
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ImportComicsPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
+      titleService = TestBed.inject(TitleService);
+      spyOn(titleService, 'setTitle');
+      translateService = TestBed.inject(TranslateService);
+      dialog = TestBed.inject(MatDialog);
+      spyOn(dialog, 'open');
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

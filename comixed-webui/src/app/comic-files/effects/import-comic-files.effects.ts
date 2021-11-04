@@ -26,7 +26,7 @@ import {
   sendComicFiles,
   sendComicFilesFailed
 } from '@app/comic-files/actions/import-comic-files.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { FileSaverService } from 'ngx-filesaver';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { DownloadDocument } from '@app/core/models/download-document';
 
 @Injectable({

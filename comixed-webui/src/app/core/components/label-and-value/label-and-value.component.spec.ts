@@ -16,22 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LabelAndValueComponent } from './label-and-value.component';
 
 describe('LabelAndValueComponent', () => {
   let component: LabelAndValueComponent;
   let fixture: ComponentFixture<LabelAndValueComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [LabelAndValueComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LabelAndValueComponent]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(LabelAndValueComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(LabelAndValueComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

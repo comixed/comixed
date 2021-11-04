@@ -32,7 +32,7 @@ import {
   SAVE_USER_PREFERENCE_URL,
   USER_SELF_TOPIC
 } from '@app/user/user.constants';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { LoginResponse } from '@app/user/models/net/login-response';
 import { AUTHENTICATION_TOKEN } from '@app/core/core.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';

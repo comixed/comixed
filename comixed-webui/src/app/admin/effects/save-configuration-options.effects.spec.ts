@@ -22,7 +22,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { SaveConfigurationOptionsEffects } from './save-configuration-options.effects';
 import { ConfigurationService } from '@app/admin/services/configuration.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {

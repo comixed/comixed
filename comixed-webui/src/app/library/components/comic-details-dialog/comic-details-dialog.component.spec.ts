@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicDetailsDialogComponent } from './comic-details-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialUserState,
@@ -41,30 +41,32 @@ describe('ComicDetailsDialogComponent', () => {
   let component: ComicDetailsDialogComponent;
   let fixture: ComponentFixture<ComicDetailsDialogComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        ComicDetailsDialogComponent,
-        ComicPageComponent,
-        ComicTitlePipe,
-        ComicCoverUrlPipe
-      ],
-      imports: [
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatCardModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        { provide: MAT_DIALOG_DATA, useValue: {} }
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ComicDetailsDialogComponent,
+          ComicPageComponent,
+          ComicTitlePipe,
+          ComicCoverUrlPipe
+        ],
+        imports: [
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatCardModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          { provide: MAT_DIALOG_DATA, useValue: {} }
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicDetailsDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicDetailsDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

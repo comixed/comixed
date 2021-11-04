@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ComicFile } from '@app/comic-files/models/comic-file';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
 import {

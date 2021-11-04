@@ -30,7 +30,7 @@ import {
   scrapingVolumesLoaded
 } from '@app/comic-books/actions/scraping.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ScrapingService } from '@app/comic-books/services/scraping.service';
 import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
 import { TranslateService } from '@ngx-translate/core';

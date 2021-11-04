@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 
 const AUTH_TOKEN_KEY = 'comixed.auth-token';
 

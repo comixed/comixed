@@ -26,7 +26,7 @@ import {
   saveReadingList,
   saveReadingListFailed
 } from '../actions/reading-list-detail.actions';
-import { LoggerService } from '@angular-ru/logger';
+import { LoggerService } from '@angular-ru/cdk/logger';
 import { ReadingListService } from '@app/lists/services/reading-list.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';

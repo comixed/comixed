@@ -22,7 +22,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { STORY_1, STORY_2, STORY_3 } from '@app/lists/lists.fixtures';
 import { interpolate } from '@app/core';
 import {

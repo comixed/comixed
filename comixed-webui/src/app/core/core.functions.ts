@@ -25,9 +25,7 @@ export function interpolate(template: string, values: any = {}): string {
   _.merge(values, { API_ROOT_URL });
   _.templateSettings.interpolate = /\${([\s\S]+?)}/g;
   const compiled = _.template(template);
-  const result = compiled(values);
-
-  return result;
+  return compiled(values);
 }
 
 /** Compare two values for sorting purposes. */

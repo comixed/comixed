@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { TitleService } from './title.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 

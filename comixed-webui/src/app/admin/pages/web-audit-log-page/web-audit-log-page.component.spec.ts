@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { WebAuditLogPageComponent } from './web-audit-log-page.component';
 import {
   initialState as initialWebAuditLogState,
   WEB_AUDIT_LOG_FEATURE_KEY
 } from '@app/admin/reducers/web-audit-log.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -54,41 +54,43 @@ describe('WebAuditLogPageComponent', () => {
   let confirmationService: ConfirmationService;
   let sidenav: MatSidenav;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [WebAuditLogPageComponent],
-      imports: [
-        NoopAnimationsModule,
-        LoggerModule.forRoot(),
-        TranslateModule.forRoot(),
-        MatDialogModule,
-        MatPaginatorModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatToolbarModule,
-        MatTableModule,
-        MatFormFieldModule,
-        MatTooltipModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        ConfirmationService,
-        {
-          provide: MatSidenav,
-          useValue: { open: jasmine.createSpy('MatSidenav.open()') }
-        }
-      ]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [WebAuditLogPageComponent],
+        imports: [
+          NoopAnimationsModule,
+          LoggerModule.forRoot(),
+          TranslateModule.forRoot(),
+          MatDialogModule,
+          MatPaginatorModule,
+          MatIconModule,
+          MatSidenavModule,
+          MatToolbarModule,
+          MatTableModule,
+          MatFormFieldModule,
+          MatTooltipModule
+        ],
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          {
+            provide: MatSidenav,
+            useValue: { open: jasmine.createSpy('MatSidenav.open()') }
+          }
+        ]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(WebAuditLogPageComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    translateService = TestBed.inject(TranslateService);
-    confirmationService = TestBed.inject(ConfirmationService);
-    sidenav = TestBed.inject(MatSidenav);
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(WebAuditLogPageComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      translateService = TestBed.inject(TranslateService);
+      confirmationService = TestBed.inject(ConfirmationService);
+      sidenav = TestBed.inject(MatSidenav);
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

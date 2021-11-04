@@ -28,7 +28,7 @@ import {
   BLOCKED_PAGE_FILE,
   PAGE_2
 } from '@app/comic-pages/comic-pages.fixtures';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   HttpClientTestingModule,
   HttpTestingController

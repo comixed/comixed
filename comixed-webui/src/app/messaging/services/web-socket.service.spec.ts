@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { WebSocketService } from './web-socket.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import * as WebStomp from 'webstomp-client';
 import { Client, Frame, Subscription } from 'webstomp-client';

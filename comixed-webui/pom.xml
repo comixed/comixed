@@ -14,7 +14,6 @@
   <url>http://www.comixedproject.org</url>
   <properties>
     <sonar.sources>./src</sonar.sources>
-    <sonar.exclusions>interface/*spec.ts</sonar.exclusions>
     <sonar.test.inclusions>**/*spec.ts</sonar.test.inclusions>
     <sonar.javascript.lcov.reportPaths>coverage/lcov.info</sonar.javascript.lcov.reportPaths>
   </properties>
@@ -73,7 +72,7 @@
             </goals>
             <phase>prepare-package</phase>
             <configuration>
-              <arguments>build --prod</arguments>
+              <arguments>build --configuration production</arguments>
             </configuration>
           </execution>
           <execution>

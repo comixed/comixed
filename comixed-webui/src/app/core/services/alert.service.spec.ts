@@ -24,7 +24,7 @@ import {
   ERROR_MESSAGE_DURATION,
   INFO_MESSAGE_DURATION
 } from './alert.service';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
 

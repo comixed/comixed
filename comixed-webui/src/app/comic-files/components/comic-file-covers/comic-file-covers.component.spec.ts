@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicFileCoversComponent } from './comic-file-covers.component';
-import { LoggerModule } from '@angular-ru/logger';
+import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
   COMIC_FILE_1,
   COMIC_FILE_2,
@@ -54,34 +54,36 @@ describe('ComicFileCoversComponent', () => {
   let fixture: ComponentFixture<ComicFileCoversComponent>;
   let store: MockStore<any>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ComicFileCoversComponent, ComicFileToolbarComponent],
-      imports: [
-        NoopAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot(),
-        LoggerModule.forRoot(),
-        MatMenuModule,
-        MatPaginatorModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatToolbarModule,
-        MatTooltipModule
-      ],
-      providers: [provideMockStore({ initialState })]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ComicFileCoversComponent, ComicFileToolbarComponent],
+        imports: [
+          NoopAnimationsModule,
+          FormsModule,
+          ReactiveFormsModule,
+          TranslateModule.forRoot(),
+          LoggerModule.forRoot(),
+          MatMenuModule,
+          MatPaginatorModule,
+          MatIconModule,
+          MatFormFieldModule,
+          MatInputModule,
+          MatSelectModule,
+          MatToolbarModule,
+          MatTooltipModule
+        ],
+        providers: [provideMockStore({ initialState })]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ComicFileCoversComponent);
-    component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    component.user = USER;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ComicFileCoversComponent);
+      component = fixture.componentInstance;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      component.user = USER;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
