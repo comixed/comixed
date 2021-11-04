@@ -283,6 +283,11 @@ th {
   display: inline-block;
 }
 
+.mat-card {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
 .cx-detail-card-selected {
   filter: sepia(100%) !important;
   background-color: $cx-selected-comic-background-color !important;
@@ -388,4 +393,3 @@ mat-toolbar.mat-toolbar mat-form-field.mat-form-field {
     font-weight: lighter;
   }
 }
-
