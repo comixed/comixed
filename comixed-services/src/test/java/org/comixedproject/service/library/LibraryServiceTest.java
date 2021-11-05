@@ -21,12 +21,10 @@ package org.comixedproject.service.library;
 import static junit.framework.TestCase.assertEquals;
 import static org.comixedproject.state.comicbooks.ComicStateHandler.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
@@ -35,7 +33,6 @@ import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -43,7 +40,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LibraryServiceTest {
-  private static final String TEST_FILENAME = "/home/comixeduser/Library/comicfile.cbz";
   private static final String TEST_IMAGE_CACHE_DIRECTORY =
       "/home/ComiXedReader/.comixed/image-cache";
   private static final String TEST_RENAMING_RULE = "The renaming rule";
@@ -53,7 +49,6 @@ public class LibraryServiceTest {
   @InjectMocks private LibraryService service;
   @Mock private ComicService comicService;
   @Mock private Comic comic;
-  @Mock private File file;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
@@ -61,26 +56,7 @@ public class LibraryServiceTest {
   @Captor private ArgumentCaptor<Map<String, Object>> headersArgumentCaptor;
 
   private List<Comic> comicList = new ArrayList<>();
-  private Comic comic1 = new Comic();
-  private Comic comic2 = new Comic();
-  private Comic comic3 = new Comic();
-  private Comic comic4 = new Comic();
   private List<Long> comicIdList = new ArrayList<>();
-
-  @Before
-  public void setUp() {
-    // updated now
-    comic1.setId(1L);
-    comic1.setFilename(RandomStringUtils.random(128));
-    // updated yesterday
-    comic2.setId(2L);
-    comic2.setFilename(RandomStringUtils.random(128));
-    // updated same as previous comic
-    comic3.setId(3L);
-    comic3.setFilename(RandomStringUtils.random(128));
-    comic4.setId(4L);
-    comic4.setFilename(RandomStringUtils.random(128));
-  }
 
   @Test
   public void testClearImageCache() throws LibraryException, IOException {
@@ -200,5 +176,36 @@ public class LibraryServiceTest {
     }
     Mockito.verify(comicStateHandler, Mockito.never())
         .fireEvent(comic, ComicEvent.recreateComicFile);
+  }
+
+  @Test
+  public void testPrepareForPurge() throws ComicException {
+    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+
+    service.prepareForPurging(comicIdList);
+
+    for (int index = 0; index < comicIdList.size(); index++) {
+      final Long id = comicIdList.get(index);
+      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+    }
+    Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
+        .fireEvent(comic, ComicEvent.prepareToPurge);
+  }
+
+  @Test
+  public void testPrepareForPurgeInvalid() throws ComicException {
+    for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+
+    service.prepareForPurging(comicIdList);
+
+    for (int index = 0; index < comicIdList.size(); index++) {
+      final Long id = comicIdList.get(index);
+      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+    }
+    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.prepareToPurge);
   }
 }

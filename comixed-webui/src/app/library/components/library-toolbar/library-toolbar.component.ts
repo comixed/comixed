@@ -50,6 +50,7 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -65,7 +66,9 @@ export class LibraryToolbarComponent
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
+  @Input() showUpdateMetadata = false;
   @Input() showConsolidate = false;
+  @Input() showPurge = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
   @Input() sortField: string;
@@ -207,6 +210,24 @@ export class LibraryToolbarComponent
     this.store.dispatch(
       saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: sortField })
     );
+  }
+
+  onPurgeLibrary(): void {
+    this.logger.trace('Confirming purging the library');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.purge-library.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.purge-library.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: purge library');
+        this.store.dispatch(
+          purgeLibrary({ ids: this.selected.map(comic => comic.id) })
+        );
+      }
+    });
   }
 
   private loadTranslations(): void {

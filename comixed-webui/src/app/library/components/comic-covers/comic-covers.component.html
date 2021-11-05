@@ -4,12 +4,22 @@
   [showActions]="showActions"
   [isAdmin]="isAdmin"
   [pageSize]="pageSize"
+  [showUpdateMetadata]="showUpdateMetadata"
   [showConsolidate]="showConsolidate"
+  [showPurge]="showPurge"
   [selected]="selected"
   [archiveType]="archiveType"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
   [sortField]="sortField"
 ></cx-library-toolbar>
+
+<h2>
+  {{
+    title
+      | translate: { count: dataSource.data.length, selected: selected.length }
+  }}
+</h2>
+
 <div id="cx-all-comics" class="cx-detail-card-container" matSort>
   <div
     *ngFor="let comic of comics"

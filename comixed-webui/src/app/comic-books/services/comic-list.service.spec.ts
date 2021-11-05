@@ -19,7 +19,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ComicListService } from './comic-list.service';
-import { COMIC_1, COMIC_2 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_1,
+  COMIC_2,
+  COMIC_3
+} from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialMessagingState,
   MESSAGING_FEATURE_KEY
@@ -28,10 +32,13 @@ import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/logger';
 import { Subscription } from 'webstomp-client';
-import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
 import {
-  comicListUpdateReceived,
-  resetComicList
+  COMIC_LIST_REMOVAL_TOPIC,
+  COMIC_LIST_UPDATE_TOPIC
+} from '@app/library/library.constants';
+import {
+  comicListRemovalReceived,
+  comicListUpdateReceived
 } from '@app/comic-books/actions/comic-list.actions';
 
 describe('ComicListService', () => {
@@ -41,8 +48,14 @@ describe('ComicListService', () => {
 
   let service: ComicListService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
-  const subscription = jasmine.createSpyObj(['unsubscribe']);
-  subscription.unsubscribe = jasmine.createSpy('Subscription.unsubscribe()');
+  const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
+  updateSubscription.unsubscribe = jasmine.createSpy(
+    'Subscription.unsubscribe()'
+  );
+  const removalSubscription = jasmine.createSpyObj(['unsubscribe']);
+  removalSubscription.unsubscribe = jasmine.createSpy(
+    'Subscription.unsubscribe()'
+  );
   let store: MockStore<any>;
 
   beforeEach(() => {
@@ -83,10 +96,18 @@ describe('ComicListService', () => {
           return {} as Subscription;
         }
       );
-      webSocketService.subscribe.and.callFake((destination, callback) => {
-        callback(COMIC_2);
-        return {} as Subscription;
-      });
+      webSocketService.subscribe
+        .withArgs(COMIC_LIST_UPDATE_TOPIC, jasmine.anything())
+        .and.callFake((destination, callback) => {
+          callback(COMIC_2);
+          return {} as Subscription;
+        });
+      webSocketService.subscribe
+        .withArgs(COMIC_LIST_REMOVAL_TOPIC, jasmine.anything())
+        .and.callFake((destination, callback) => {
+          callback(COMIC_3);
+          return {} as Subscription;
+        });
       store.setState({
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
@@ -100,16 +121,30 @@ describe('ComicListService', () => {
       );
     });
 
+    it('subscribes to the comic list removals topic', () => {
+      expect(webSocketService.subscribe).toHaveBeenCalledWith(
+        COMIC_LIST_REMOVAL_TOPIC,
+        jasmine.anything()
+      );
+    });
+
     it('processes comic updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         comicListUpdateReceived({ comic: COMIC_2 })
+      );
+    });
+
+    it('processes comic removals', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        comicListRemovalReceived({ comic: COMIC_3 })
       );
     });
   });
 
   describe('when messaging stops', () => {
     beforeEach(() => {
-      service.subscription = subscription;
+      service.updateSubscription = updateSubscription;
+      service.removalSubscription = removalSubscription;
       store.setState({
         ...initialState,
         [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
@@ -117,11 +152,19 @@ describe('ComicListService', () => {
     });
 
     it('unsubscribes from the comic list update queue', () => {
-      expect(subscription.unsubscribe).toHaveBeenCalled();
+      expect(updateSubscription.unsubscribe).toHaveBeenCalled();
     });
 
-    it('clears the subscription', () => {
-      expect(service.subscription).toBeNull();
+    it('clears the update subscription', () => {
+      expect(service.updateSubscription).toBeNull();
+    });
+
+    it('unsubscribes from the comic list removal queue', () => {
+      expect(removalSubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the removal subscription', () => {
+      expect(service.removalSubscription).toBeNull();
     });
   });
 });

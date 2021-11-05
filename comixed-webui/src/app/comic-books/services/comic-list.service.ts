@@ -22,15 +22,22 @@ import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { LoggerService } from '@angular-ru/logger';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { COMIC_LIST_UPDATE_TOPIC } from '@app/library/library.constants';
+import {
+  COMIC_LIST_REMOVAL_TOPIC,
+  COMIC_LIST_UPDATE_TOPIC
+} from '@app/library/library.constants';
 import { Comic } from '@app/comic-books/models/comic';
-import { comicListUpdateReceived } from '@app/comic-books/actions/comic-list.actions';
+import {
+  comicListRemovalReceived,
+  comicListUpdateReceived
+} from '@app/comic-books/actions/comic-list.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComicListService {
-  subscription: Subscription;
+  updateSubscription: Subscription;
+  removalSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
@@ -38,21 +45,34 @@ export class ComicListService {
     private webSocketService: WebSocketService
   ) {
     this.store.select(selectMessagingState).subscribe(state => {
-      if (state.started && !this.subscription) {
+      if (state.started && !this.updateSubscription) {
         this.logger.trace('Subscribing to comic list updates');
-        this.subscription = this.webSocketService.subscribe<Comic>(
+        this.updateSubscription = this.webSocketService.subscribe<Comic>(
           COMIC_LIST_UPDATE_TOPIC,
           comic => {
             this.logger.debug('Received comic list update:', comic);
             this.store.dispatch(comicListUpdateReceived({ comic }));
           }
         );
+        this.logger.trace('Subscribing to comic list removals');
+        this.removalSubscription = this.webSocketService.subscribe<Comic>(
+          COMIC_LIST_REMOVAL_TOPIC,
+          comic => {
+            this.logger.debug('Received comic removal update:', comic);
+            this.store.dispatch(comicListRemovalReceived({ comic }));
+          }
+        );
       }
 
-      if (!state.started && !!this.subscription) {
+      if (!state.started && !!this.updateSubscription) {
         this.logger.trace('Unsubscribing from comic list updates');
-        this.subscription.unsubscribe();
-        this.subscription = null;
+        this.updateSubscription.unsubscribe();
+        this.updateSubscription = null;
+      }
+      if (!state.started && !!this.removalSubscription) {
+        this.logger.trace('Unsubscribing from comic list removals');
+        this.removalSubscription.unsubscribe();
+        this.removalSubscription = null;
       }
     });
   }

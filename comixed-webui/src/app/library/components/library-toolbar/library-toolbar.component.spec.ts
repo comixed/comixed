@@ -53,6 +53,7 @@ import { startLibraryConsolidation } from '@app/library/actions/consolidate-libr
 import { MatDividerModule } from '@angular/material/divider';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
@@ -254,6 +255,26 @@ describe('LibraryToolbarComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: SORT_FIELD })
+      );
+    });
+  });
+
+  describe('purging the library', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onPurgeLibrary();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action to purge the library', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        purgeLibrary({ ids: COMICS.map(comic => comic.id) })
       );
     });
   });

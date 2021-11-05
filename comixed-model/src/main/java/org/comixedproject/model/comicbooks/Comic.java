@@ -355,6 +355,12 @@ public class Comic {
   @Setter
   private Date dateDeleted;
 
+  @Column(name = "PurgeComic", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean purgeComic;
+
   @Column(name = "LastModifiedOn", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)

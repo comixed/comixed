@@ -18,6 +18,7 @@
 
 import { ComicListState, initialState, reducer } from './comic-list.reducer';
 import {
+  comicListRemovalReceived,
   comicListUpdateReceived,
   comicsReceived,
   loadComics,
@@ -224,6 +225,21 @@ describe('Comic List Reducer', () => {
 
     it('adds the updated comic', () => {
       expect(state.comics).toContain(UPDATED);
+    });
+  });
+
+  describe('removing an existing comic', () => {
+    const REMOVED = COMICS[0];
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, comics: COMICS },
+        comicListRemovalReceived({ comic: REMOVED })
+      );
+    });
+
+    it('removes the comic', () => {
+      expect(state.comics).not.toContain(REMOVED);
     });
   });
 });

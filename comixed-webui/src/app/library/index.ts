@@ -18,11 +18,6 @@
 
 import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import {
-  COMIC_IMPORT_FEATURE_KEY,
-  ComicImportState,
-  reducer as libraryImportReducer
-} from '../comic-files/reducers/comic-import.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
   LIBRARY_FEATURE_KEY,
@@ -59,6 +54,11 @@ import {
   ConvertComicsState,
   reducer as convertComicsReducer
 } from './reducers/convert-comics.reducer';
+import {
+  PURGE_LIBRARY_FEATURE_KEY,
+  PurgeLibraryState,
+  reducer as purgeLibraryReducer
+} from './reducers/purge-library.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -68,7 +68,6 @@ interface RouterStateUrl {
 
 export interface LibraryModuleState {
   router: RouterReducerState<RouterStateUrl>;
-  [COMIC_IMPORT_FEATURE_KEY]: ComicImportState;
   [LIBRARY_FEATURE_KEY]: LibraryState;
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: DuplicatePageListState;
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: DuplicatePageDetailState;
@@ -76,18 +75,19 @@ export interface LibraryModuleState {
   [UPDATE_METADATA_FEATURE_KEY]: UpdateMetadataState;
   [CONSOLIDATE_LIBRARY_FEATURE_KEY]: ConsolidateLibraryState;
   [CONVERT_COMICS_FEATURE_KEY]: ConvertComicsState;
+  [PURGE_LIBRARY_FEATURE_KEY]: PurgeLibraryState;
 }
 
 export type ModuleState = LibraryModuleState;
 
 export const reducers: ActionReducerMap<LibraryModuleState> = {
   router: routerReducer,
-  [COMIC_IMPORT_FEATURE_KEY]: libraryImportReducer,
   [LIBRARY_FEATURE_KEY]: libraryReducer,
   [DUPLICATE_PAGE_LIST_FEATURE_KEY]: comicsWithDuplicatePagesReducer,
   [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: duplicatePageDetailReducer,
   [RESCAN_COMICS_FEATURE_KEY]: rescanComicsReducer,
   [UPDATE_METADATA_FEATURE_KEY]: updateMetadataReducer,
   [CONSOLIDATE_LIBRARY_FEATURE_KEY]: consolidateLibraryReducer,
-  [CONVERT_COMICS_FEATURE_KEY]: convertComicsReducer
+  [CONVERT_COMICS_FEATURE_KEY]: convertComicsReducer,
+  [PURGE_LIBRARY_FEATURE_KEY]: purgeLibraryReducer
 };

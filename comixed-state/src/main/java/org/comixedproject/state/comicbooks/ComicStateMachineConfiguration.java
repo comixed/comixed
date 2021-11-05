@@ -57,6 +57,7 @@ public class ComicStateMachineConfiguration
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
   @Autowired private ComicAlreadyReadByUserGuard comicAlreadReadByUserGuard;
   @Autowired private ComicNotAlreadyReadByUserGuard comicNotAlreadReadByUserGuard;
+  @Autowired private PrepareToPurgeComicAction prepareToPurgeComicAction;
 
   @Override
   public void configure(final StateMachineStateConfigurer<ComicState, ComicEvent> states)
@@ -306,6 +307,19 @@ public class ComicStateMachineConfiguration
         .source(ComicState.DELETED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.undeleteComic)
-        .action(unmarkComicForRemovalAction);
+        .action(unmarkComicForRemovalAction)
+        // the comic is being purged from the library
+        .and()
+        .withExternal()
+        .source(ComicState.DELETED)
+        .target(ComicState.DELETED)
+        .event(ComicEvent.prepareToPurge)
+        .action(prepareToPurgeComicAction)
+        // the comic record was actually deleted
+        .and()
+        .withExternal()
+        .source(ComicState.DELETED)
+        .target(ComicState.REMOVED)
+        .event(ComicEvent.comicPurged);
   }
 }
