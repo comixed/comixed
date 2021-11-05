@@ -29,6 +29,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -56,6 +57,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   @Autowired private ComicRepository comicRepository;
   @Autowired private ComicDataAdaptor comicDataAdaptor;
   @Autowired private PublishComicUpdateAction publishComicUpdateAction;
+  @Autowired private PublishComicRemovalAction publishComicRemovalAction;
   @Autowired private ImprintService imprintService;
 
   /**
@@ -258,14 +260,23 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
     final var comic = message.getHeaders().get(HEADER_COMIC, Comic.class);
     if (comic == null) return;
     log.debug("Processing comic state change: [{}] =>  {}", comic.getId(), state.getId());
-    comic.setComicState(state.getId());
-    comic.setLastModifiedOn(new Date());
-    final Comic updated = this.comicRepository.save(comic);
-    log.trace("Publishing updated comic");
-    try {
-      this.publishComicUpdateAction.publish(updated);
-    } catch (PublishingException error) {
-      log.error("Failed to publish comic update", error);
+    if (state.getId() == ComicState.REMOVED) {
+      log.trace("Publishing comic removal");
+      try {
+        this.publishComicRemovalAction.publish(comic);
+      } catch (PublishingException error) {
+        log.error("Failed to publish comic removal", error);
+      }
+    } else {
+      comic.setComicState(state.getId());
+      comic.setLastModifiedOn(new Date());
+      final Comic updated = this.comicRepository.save(comic);
+      log.trace("Publishing comic  update");
+      try {
+        this.publishComicUpdateAction.publish(updated);
+      } catch (PublishingException error) {
+        log.error("Failed to publish comic update", error);
+      }
     }
   }
 
@@ -645,5 +656,15 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public List<String> getAllPublishersForStory(final String name) {
     log.trace("Returning all publishers for a given story");
     return this.comicRepository.findDistinctPublishersForStory(name);
+  }
+
+  /**
+   * Returns comics marked for purging.
+   *
+   * @return the comicms
+   */
+  public List<Comic> findComicsMarkedForPurging() {
+    log.trace("Loading comics marked for purging");
+    return this.comicRepository.findComicsMarkedForPurging();
   }
 }

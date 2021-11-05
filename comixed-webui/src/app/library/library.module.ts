@@ -94,6 +94,11 @@ import {
   reducer as convertComicsReducer
 } from '@app/library/reducers/convert-comics.reducer';
 import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effects';
+import {
+  PURGE_LIBRARY_FEATURE_KEY,
+  reducer as purgeLibraryReducer
+} from '@app/library/reducers/purge-library.reducer';
+import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects';
 
 @NgModule({
   declarations: [
@@ -135,13 +140,15 @@ import { ConvertComicsEffects } from '@app/library/effects/convert-comics.effect
       consolidateLibraryReducer
     ),
     StoreModule.forFeature(CONVERT_COMICS_FEATURE_KEY, convertComicsReducer),
+    StoreModule.forFeature(PURGE_LIBRARY_FEATURE_KEY, purgeLibraryReducer),
     EffectsModule.forFeature([
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
       RescanComicsEffects,
       UpdateMetadataEffects,
       ConsolidateLibraryEffects,
-      ConvertComicsEffects
+      ConvertComicsEffects,
+      PurgeLibraryEffects
     ]),
     MatInputModule,
     MatSelectModule,

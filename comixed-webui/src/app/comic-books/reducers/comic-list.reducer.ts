@@ -18,6 +18,7 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
+  comicListRemovalReceived,
   comicListUpdateReceived,
   comicsReceived,
   loadComics,
@@ -81,6 +82,10 @@ export const reducer = createReducer(
   on(comicListUpdateReceived, (state, action) => {
     const comics = state.comics.filter(comic => comic.id !== action.comic.id);
     comics.push(action.comic);
+    return { ...state, comics };
+  }),
+  on(comicListRemovalReceived, (state, action) => {
+    const comics = state.comics.filter(comic => comic.id !== action.comic.id);
     return { ...state, comics };
   })
 );

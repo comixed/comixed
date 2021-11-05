@@ -52,6 +52,7 @@ export const START_LIBRARY_CONSOLIDATION_URL = `${API_ROOT_URL}/library/consolid
 export const CONVERT_COMICS_URL = `${API_ROOT_URL}/library/convert`;
 export const RESCAN_COMICS_URL = `${API_ROOT_URL}/library/rescan`;
 export const UPDATE_METADATA_URL = `${API_ROOT_URL}/library/metadata`;
+export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
 
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =
@@ -73,4 +74,5 @@ export const SORT_FIELD_DEFAULT = 'added-date';
 
 // messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';
+export const COMIC_LIST_REMOVAL_TOPIC = '/topic/comic-list.removal';
 export const DUPLICATE_PAGE_LIST_TOPIC = '/topic/duplicate-page-list.update';

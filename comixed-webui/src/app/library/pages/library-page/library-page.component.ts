@@ -63,7 +63,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;
   isAdmin = false;
   pageSize = PAGE_SIZE_DEFAULT;
+  showUpdateMetadata = false;
   showConsolidate = false;
+  showPurge = false;
   dataSubscription: Subscription;
   unreadOnly = false;
   unscrapedOnly = false;
@@ -76,6 +78,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   lastReadDates: LastRead[];
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
+  pageContent = 'comics';
 
   constructor(
     private logger: LoggerService,
@@ -90,8 +93,23 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
       this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
+      this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
       this.showConsolidate =
         !this.unreadOnly && !this.unscrapedOnly && !this.deletedOnly;
+      this.showPurge = this.deletedOnly;
+      this.pageContent = 'all';
+      if (this.unreadOnly) {
+        this.pageContent = 'unread-only';
+      }
+      if (this.unscrapedOnly) {
+        this.pageContent = 'unscraped-only';
+      }
+      if (this.deletedOnly) {
+        this.pageContent = 'deleted-only';
+      }
+      if (this.unprocessedOnly) {
+        this.pageContent = 'unprocessed-only';
+      }
     });
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
       params => {

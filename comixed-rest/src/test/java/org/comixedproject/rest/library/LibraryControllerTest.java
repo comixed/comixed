@@ -20,7 +20,9 @@ package org.comixedproject.rest.library;
 
 import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
+import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
 import static org.comixedproject.rest.library.LibraryController.MAXIMUM_RECORDS;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
@@ -33,10 +35,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
-import org.comixedproject.model.net.library.LoadLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryResponse;
-import org.comixedproject.model.net.library.RescanComicsRequest;
-import org.comixedproject.model.net.library.UpdateMetadataRequest;
+import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
@@ -89,6 +88,10 @@ public class LibraryControllerTest {
   @Mock
   @Qualifier("recreateComicFilesJob")
   private Job recreateComicFilesJob;
+
+  @Mock
+  @Qualifier("purgeLibraryJob")
+  private Job purgeLibraryJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -279,5 +282,21 @@ public class LibraryControllerTest {
 
     Mockito.verify(libraryService, Mockito.times(1)).updateMetadata(idList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(updateMetadataJob, jobParameters);
+  }
+
+  @Test
+  public void testPurge() throws Exception {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
+    controller.purgeLibrary(new PurgeLibraryRequest(idList));
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+    assertTrue(jobParameters.getParameters().containsKey(JOB_PURGE_LIBRARY_START));
+
+    Mockito.verify(libraryService, Mockito.times(1)).prepareForPurging(idList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
 }

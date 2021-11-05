@@ -24,6 +24,7 @@ import { interpolate } from '@app/core';
 import {
   CONVERT_COMICS_URL,
   LOAD_COMIC_URL,
+  PURGE_LIBRARY_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
@@ -36,6 +37,7 @@ import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-reque
 import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
+import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 
 @Injectable({
   providedIn: 'root'
@@ -99,5 +101,12 @@ export class LibraryService {
       renamePages: args.renamePages,
       deletePages: args.deletePages
     } as ConvertComicsRequest);
+  }
+
+  purgeLibrary(args: { ids: number[] }): Observable<any> {
+    this.logger.trace('Purging library');
+    return this.http.post(interpolate(PURGE_LIBRARY_URL), {
+      ids: args.ids
+    } as PurgeLibraryRequest);
   }
 }

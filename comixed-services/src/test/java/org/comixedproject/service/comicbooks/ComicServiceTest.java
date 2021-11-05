@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
 import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
@@ -66,8 +67,7 @@ public class ComicServiceTest {
   private static final String TEST_DESCRIPTION = "This description of the issue";
   private static final Date TEST_COVER_DATE = new Date();
   private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
-  private static final ComicState TEST_STATE =
-      ComicState.values()[(RandomUtils.nextInt(ComicState.values().length))];
+  private static final ComicState TEST_STATE = ComicState.CHANGED;
   private static final String TEST_CHARACTER = "Manlyman";
   private static final String TEST_TEAM = "The Boys";
   private static final String TEST_LOCATION = "The Location";
@@ -77,6 +77,7 @@ public class ComicServiceTest {
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicRepository comicRepository;
   @Mock private PublishComicUpdateAction comicUpdatePublishAction;
+  @Mock private PublishComicRemovalAction comicRemovalPublishAction;
   @Mock private ComicDataAdaptor comicDataAdaptor;
   @Mock private Comic comic;
   @Mock private Comic incomingComic;
@@ -119,6 +120,33 @@ public class ComicServiceTest {
     service.afterPropertiesSet();
 
     Mockito.verify(comicStateHandler, Mockito.times(1)).addListener(service);
+  }
+
+  @Test
+  public void testOnComicStateChangePurgeEvent() throws PublishingException {
+    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(comic);
+    Mockito.when(state.getId()).thenReturn(ComicState.REMOVED);
+
+    service.onComicStateChange(state, message);
+
+    Mockito.verify(comicRemovalPublishAction, Mockito.times(1)).publish(comic);
+  }
+
+  @Test
+  public void testOnComicStateChangePurgeEventPublishingException() throws PublishingException {
+    Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
+    Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(comic);
+    Mockito.when(state.getId()).thenReturn(ComicState.REMOVED);
+    Mockito.doThrow(PublishingException.class)
+        .when(comicRemovalPublishAction)
+        .publish(Mockito.any(Comic.class));
+
+    service.onComicStateChange(state, message);
+
+    Mockito.verify(comicRemovalPublishAction, Mockito.times(1)).publish(comic);
   }
 
   @Test
@@ -863,5 +891,17 @@ public class ComicServiceTest {
 
     Mockito.verify(comicRepository, Mockito.times(1))
         .findDistinctPublishersForStory(TEST_STORY_NAME);
+  }
+
+  @Test
+  public void testFindComicsMarkedForPurging() {
+    Mockito.when(comicRepository.findComicsMarkedForPurging()).thenReturn(comicList);
+
+    final List<Comic> result = service.findComicsMarkedForPurging();
+
+    assertNotNull(result);
+    assertSame(comicList, result);
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findComicsMarkedForPurging();
   }
 }

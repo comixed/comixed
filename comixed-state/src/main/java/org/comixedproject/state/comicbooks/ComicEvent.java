@@ -24,27 +24,48 @@ package org.comixedproject.state.comicbooks;
  * @author Darryl L. Pierce
  */
 public enum ComicEvent {
-  recordInserted, // the record has been inserted into the database
-  readyForProcessing, // the record is ready for processing
-  fileContentsLoaded, // the file entries have been loaded
-  blockedPagesMarked, // blocked pages have been marked
-  fileDetailsLoadedAction, // the file details have been created
-  contentsProcessed, // the contents have been processed
-  rescanComic, // rescan a comic,
-  updateMetadata, // prepare to update the metadata within the physical comic file
-  metadataUpdated, // the metadata within the physical comic file has been updated
-  consolidateComic, // marks the comic for consolidation
-  comicConsolidated, // the comic has been consolidated
-  deleteComic, // the comic is being marked for removal
-  undeleteComic, // the comic is being unmarked for removal
-  recreateComicFile, // recreate the comic file
-  comicFileRecreated, // the comic file was recreated
-  markAsRead, // the comic has been marked as read by a user
-  markAsUnread, // the comic has been marked as unread by a user
+  // the record has been inserted into the database
+  recordInserted,
+  // the record is ready for processing
+  readyForProcessing,
+  // the file entries have been loaded
+  fileContentsLoaded,
+  // blocked pages have been marked
+  blockedPagesMarked,
+  // the file details have been created
+  fileDetailsLoadedAction,
+  // the contents have been processed
+  contentsProcessed,
+  // rescan a comic,
+  rescanComic,
+  // prepare to update the metadata within the physical comic file
+  updateMetadata,
+  // the metadata within the physical comic file has been updated
+  metadataUpdated,
+  // marks the comic for consolidation
+  consolidateComic,
+  // the comic has been consolidated
+  comicConsolidated,
+  // the comic is being marked for removal
+  deleteComic,
+  // the comic is being unmarked for removal
+  undeleteComic,
+  // recreate the comic file
+  recreateComicFile,
+  // the comic file was recreated
+  comicFileRecreated,
+  // the comic has been marked as read by a user
+  markAsRead,
+  // the comic has been marked as unread by a user
+  markAsUnread,
   scraped,
   detailsUpdated,
   metadataCleared,
   comicMoved,
   markedForRemoval,
-  unmarkedForRemoval;
+  unmarkedForRemoval,
+  // prepares the comic for purging
+  prepareToPurge,
+  // the comic has been purged from the library
+  comicPurged;
 }

@@ -127,4 +127,22 @@ public class LibraryService {
           }
         });
   }
+
+  /**
+   * Begins the process of purging comics from the library.
+   *
+   * @param ids the ids of comics to be purged
+   */
+  public void prepareForPurging(final List<Long> ids) {
+    ids.forEach(
+        id -> {
+          try {
+            final Comic comic = this.comicService.getComic(id);
+            log.trace("Firing action: purge comic id={}", id);
+            this.comicStateHandler.fireEvent(comic, ComicEvent.prepareToPurge);
+          } catch (ComicException error) {
+            log.error("Failed to prepare comic for purge", error);
+          }
+        });
+  }
 }

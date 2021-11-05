@@ -315,4 +315,12 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   @Query("SELECT DISTINCT c.publisher FROM Comic c JOIN c.stories WHERE :name MEMBER OF c.stories")
   List<String> findDistinctPublishersForStory(@Param("name") String name);
+
+  /**
+   * Returns all comics that are marked for purging.
+   *
+   * @return the comics
+   */
+  @Query("SELECT c FROM Comic c WHERE c.purgeComic = true ORDER BY c.dateDeleted")
+  List<Comic> findComicsMarkedForPurging();
 }

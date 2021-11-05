@@ -19,6 +19,7 @@
 package org.comixedproject.rest.library;
 
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -32,10 +33,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
-import org.comixedproject.model.net.library.LoadLibraryRequest;
-import org.comixedproject.model.net.library.LoadLibraryResponse;
-import org.comixedproject.model.net.library.RescanComicsRequest;
-import org.comixedproject.model.net.library.UpdateMetadataRequest;
+import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
@@ -87,6 +85,10 @@ public class LibraryController {
   @Autowired
   @Qualifier("recreateComicFilesJob")
   private Job recreateComicFilesJob;
+
+  @Autowired
+  @Qualifier("purgeLibraryJob")
+  private Job purgeLibraryJob;
 
   /**
    * Prepares comics to have their underlying file recreated.
@@ -240,6 +242,27 @@ public class LibraryController {
         new JobParametersBuilder()
             .addLong(
                 UpdateMetadataConfiguration.JOB_UPDATE_METADATA_STARTED, System.currentTimeMillis())
+            .toJobParameters());
+  }
+
+  /**
+   * Purges comics from the library.
+   *
+   * @param request the request body
+   * @throws Exception if an error occurs
+   */
+  @PostMapping(value = "/api/library/purge", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint
+  public void purgeLibrary(@RequestBody() final PurgeLibraryRequest request) throws Exception {
+    final List<Long> idList = request.getIds();
+    log.info("Purging {} comic{}", idList.size(), idList.size() == 1 ? "" : "s");
+    this.libraryService.prepareForPurging(idList);
+    log.trace("Launching batch process");
+    this.jobLauncher.run(
+        this.purgeLibraryJob,
+        new JobParametersBuilder()
+            .addLong(JOB_PURGE_LIBRARY_START, System.currentTimeMillis())
             .toJobParameters());
   }
 }

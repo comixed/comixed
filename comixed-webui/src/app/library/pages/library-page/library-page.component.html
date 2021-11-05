@@ -1,5 +1,6 @@
 <cx-comic-covers
   class="cx-overflow-y-scroll"
+  [title]="'library.page-title.' + pageContent"
   [comics]="
     comics
       | archiveType: archiveTypeFilter
@@ -10,7 +11,9 @@
   [readingLists]="readingLists"
   [isAdmin]="isAdmin"
   [pageSize]="pageSize"
+  [showUpdateMetadata]="showUpdateMetadata"
   [showConsolidate]="showConsolidate"
+  [showPurge]="showPurge"
   [sortField]="sortField"
   [archiveType]="archiveTypeFilter"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"

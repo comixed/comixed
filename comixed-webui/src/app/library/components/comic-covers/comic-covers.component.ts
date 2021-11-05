@@ -67,12 +67,15 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
   @ViewChild(MatSort) sort: MatSort;
 
+  @Input() title = '';
   @Input() showToolbar = true;
   @Input() selected: Comic[] = [];
   @Input() readingLists: ReadingList[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
+  @Input() showUpdateMetadata = false;
   @Input() showConsolidate = false;
+  @Input() showPurge = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();

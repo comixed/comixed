@@ -33,6 +33,7 @@ import { interpolate } from '@app/core';
 import {
   CONVERT_COMICS_URL,
   LOAD_COMIC_URL,
+  PURGE_LIBRARY_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
@@ -45,6 +46,7 @@ import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-reque
 import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-request';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
+import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_1;
@@ -53,6 +55,7 @@ describe('LibraryService', () => {
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
+  const IDS = [203, 204, 205];
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -155,6 +158,17 @@ describe('LibraryService', () => {
       deletePages: DELETE_PAGES,
       renamePages: RENAME_PAGES
     } as ConvertComicsRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can purge the library', () => {
+    service
+      .purgeLibrary({ ids: IDS })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(PURGE_LIBRARY_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({ ids: IDS } as PurgeLibraryRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });
