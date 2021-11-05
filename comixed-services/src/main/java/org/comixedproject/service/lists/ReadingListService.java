@@ -411,6 +411,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
    * @param name the reading list name
    * @param input the content stream
    * @throws ReadingListException if an error occurs
+   * @throws IOException if an error occurs
    */
   @Transactional
   public void decodeAndCreateReadingList(

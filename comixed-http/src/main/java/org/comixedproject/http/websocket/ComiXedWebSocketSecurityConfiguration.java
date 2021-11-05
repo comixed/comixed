@@ -65,6 +65,6 @@ public class ComiXedWebSocketSecurityConfiguration
   @Override
   public void registerStompEndpoints(final StompEndpointRegistry registry) {
     log.trace("Configuration STOMP endpoints");
-    registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+    registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
   }
 }

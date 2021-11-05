@@ -223,6 +223,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Returns all comics with a given publisher.
    *
    * @param name the publisher's name
+   * @return the comics
    */
   List<Comic> findAllByPublisher(String name);
 
@@ -238,6 +239,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Returns all comics with a given series.
    *
    * @param name the series's name
+   * @return the comics
    */
   List<Comic> findAllBySeries(String name);
 
@@ -253,6 +255,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Returns all comics with a given character.
    *
    * @param name the character's name
+   * @return the comics
    */
   List<Comic> findAllByCharacters(String name);
 
@@ -268,6 +271,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Returns all comics with a given team.
    *
    * @param name the team's name
+   * @return the comics
    */
   List<Comic> findAllByTeams(String name);
 
@@ -283,6 +287,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Returns all comics with a given location.
    *
    * @param name the location's name
+   * @return the comics
    */
   List<Comic> findAllByLocations(String name);
 
@@ -298,6 +303,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * Returns all comics with a given story.
    *
    * @param name the story's name
+   * @return the comics
    */
   List<Comic> findAllByStories(String name);
 

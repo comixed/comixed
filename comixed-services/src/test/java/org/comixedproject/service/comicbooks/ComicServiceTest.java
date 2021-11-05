@@ -534,7 +534,7 @@ public class ComicServiceTest {
 
     service.rescanComics(idList);
 
-    idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id));
+    idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id.longValue()));
     Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
         .fireEvent(comic, ComicEvent.rescanComic);
   }
@@ -547,7 +547,7 @@ public class ComicServiceTest {
 
     service.rescanComics(idList);
 
-    idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id));
+    idList.forEach(id -> Mockito.verify(comicRepository, Mockito.times(1)).getById(id.longValue()));
     Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.rescanComic);
   }
 

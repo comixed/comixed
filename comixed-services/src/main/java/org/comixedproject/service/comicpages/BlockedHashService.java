@@ -198,6 +198,7 @@ public class BlockedHashService {
    * Creates a CSV file containing the list of all blocked pages.
    *
    * @return the document
+   * @throws IOException if an error occurs
    */
   public DownloadDocument createFile() throws IOException {
     log.debug("Retrieving blocked pages");

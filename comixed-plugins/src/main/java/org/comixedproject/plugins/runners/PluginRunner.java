@@ -41,6 +41,7 @@ public class PluginRunner {
    *
    * @param interpreter the interpreter for the plugin
    * @param plugin the plugin
+   * @throws PluginException if an error occurs
    */
   public void execute(PluginInterpreter interpreter, Plugin plugin) throws PluginException {
     log.debug("invoking interpreter lifecycle method: initialize()");

@@ -190,6 +190,7 @@ public class ProcessComicsConfiguration {
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer @Param chunkListener the chunk listener
+   * @param chunkListener the chunk listener
    * @return the step
    */
   @Bean
