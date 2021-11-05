@@ -148,7 +148,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
     return this.doGetStory(story.getId());
   }
 
-  private Story doGetStory(final Long id) throws StoryException {
+  private Story doGetStory(final long id) throws StoryException {
     final Story result = this.storyRepository.getById(id);
     if (result == null) throw new StoryException("No such story: id=" + id);
     return result;

@@ -478,7 +478,7 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public void undeleteComics(final List<Long> ids) {
     ids.forEach(
         id -> {
-          final Comic comic = this.comicRepository.getById(id);
+          final Comic comic = this.comicRepository.getById(id.longValue());
           if (comic != null) {
             log.trace("Unmarking comic for deletion: id={}", comic.getId());
             this.comicStateHandler.fireEvent(comic, ComicEvent.undeleteComic);

@@ -85,6 +85,7 @@ public class BatchConfiguration {
    * Returns the step that launches the processing batch job.
    *
    * @param stepBuilderFactory the step factory
+   * @param processComicsJob the job
    * @param jobLauncher the job launcher
    * @return the step the step
    */

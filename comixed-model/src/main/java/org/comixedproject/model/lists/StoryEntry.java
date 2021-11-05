@@ -59,7 +59,6 @@ public class StoryEntry {
   @Column(name = "ReadingOrder", nullable = false, updatable = false)
   @JsonProperty("readingOrder")
   @JsonView(View.StoryList.class)
-  @NonNull
   @Getter
   private int readingOrder;
 

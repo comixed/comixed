@@ -57,6 +57,7 @@ public class AddComicsConfiguration {
    * Returns the add comics batch job.
    *
    * @param jobBuilderFactory the job factory
+   * @param jobListener the job listener
    * @param createInsertStep the insert step
    * @param recordInsertedStep the post-insert step
    * @param processComicsJobStep the process comics job launch step
@@ -66,14 +67,14 @@ public class AddComicsConfiguration {
   @Qualifier("addComicsToLibraryJob")
   public Job addComicsToLibraryJob(
       final JobBuilderFactory jobBuilderFactory,
-      final AddComicsToLibraryJobListener addComicsToLibraryJobListener,
+      final AddComicsToLibraryJobListener jobListener,
       @Qualifier("createInsertStep") final Step createInsertStep,
       @Qualifier("recordInsertedStep") Step recordInsertedStep,
       @Qualifier("processComicsJobStep") Step processComicsJobStep) {
     return jobBuilderFactory
         .get("addComicsToLibraryJob")
         .incrementer(new RunIdIncrementer())
-        .listener(addComicsToLibraryJobListener)
+        .listener(jobListener)
         .start(createInsertStep)
         .next(recordInsertedStep)
         .next(processComicsJobStep)
@@ -84,6 +85,7 @@ public class AddComicsConfiguration {
    * Returns the insert step.
    *
    * @param stepBuilderFactory the step factory
+   * @param stepExecutionListener the step listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -93,13 +95,13 @@ public class AddComicsConfiguration {
   @Qualifier("createInsertStep")
   public Step createInsertStep(
       final StepBuilderFactory stepBuilderFactory,
-      final CreateInsertStepExecutionListener createInsertStepListener,
+      final CreateInsertStepExecutionListener stepExecutionListener,
       final ComicFileDescriptorReader reader,
       final ComicInsertProcessor processor,
       final ComicInsertWriter writer) {
     return stepBuilderFactory
         .get("createInsertStep")
-        .listener(createInsertStepListener)
+        .listener(stepExecutionListener)
         .<ComicFileDescriptor, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
@@ -111,6 +113,7 @@ public class AddComicsConfiguration {
    * Returns the record inserted step.
    *
    * @param stepBuilderFactory the step factory
+   * @param chunkListener the chunk listener
    * @param reader the reader
    * @param processor the processor
    * @param writer the writer
@@ -120,7 +123,7 @@ public class AddComicsConfiguration {
   @Qualifier("recordInsertedStep")
   public Step recordInsertedStep(
       final StepBuilderFactory stepBuilderFactory,
-      final ProcessedComicChunkListener processedComicChunkListener,
+      final ProcessedComicChunkListener chunkListener,
       final RecordInsertedReader reader,
       final NoopComicProcessor processor,
       final ReaderInsertedWriter writer) {
@@ -130,7 +133,7 @@ public class AddComicsConfiguration {
         .reader(reader)
         .processor(processor)
         .writer(writer)
-        .listener(processedComicChunkListener)
+        .listener(chunkListener)
         .build();
   }
 }
