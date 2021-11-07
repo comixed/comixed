@@ -52,7 +52,7 @@ public class PluginsController {
    */
   @GetMapping(value = "/plugins", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PluginList.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.PluginList.class)
   public List<PluginDescriptor> getList() {
     log.info("Fetching the list of plugins");
     return this.pluginManager.getPluginList();
@@ -70,7 +70,7 @@ public class PluginsController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PluginList.class)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.PluginList.class)
   public List<PluginDescriptor> reloadPlugins() throws PluginException {
     log.info("Reloading the list of plugins");
     this.pluginManager.loadPlugins();

@@ -126,7 +126,7 @@ public class PageController {
    */
   @PostMapping(value = "/api/pages/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void markPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Marking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
@@ -140,7 +140,7 @@ public class PageController {
    */
   @PostMapping(value = "/api/pages/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void unmarkPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Unmarking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");

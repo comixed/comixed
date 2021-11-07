@@ -38,6 +38,6 @@ public class PublishProcessComicsStatusAction extends AbstractPublishAction<Proc
 
   @Override
   public void publish(final ProcessComicStatus subject) throws PublishingException {
-    this.doPublish(PROCESS_COMIC_STATE_TOPIC, subject, View.GenericResponseView.class);
+    this.doPublish(PROCESS_COMIC_STATE_TOPIC, subject, View.GenericObjectView.class);
   }
 }

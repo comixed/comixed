@@ -51,7 +51,7 @@ public class UserController {
    * @throws ComiXedUserException if no such user exists
    */
   @GetMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.UserDetailsView.class)
+  @AuditableEndpoint(logResponse = true, responseView = View.UserDetailsView.class)
   @PreAuthorize("hasAnyRole('READER','ADMIN')")
   public ComiXedUser loadCurrentUser(final Principal principal) throws ComiXedUserException {
     log.info("Loading current user: {}", principal.getName());
@@ -72,6 +72,10 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
+  @AuditableEndpoint(
+      logRequest = true,
+      logResponse = true,
+      responseView = View.UserDetailsView.class)
   public ComiXedUser saveCurrentUserPreference(
       final Principal principal,
       @PathVariable("name") final String name,
@@ -96,6 +100,10 @@ public class UserController {
       value = "/api/user/preferences/{name}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
+  @AuditableEndpoint(
+      logRequest = true,
+      logResponse = true,
+      responseView = View.UserDetailsView.class)
   public ComiXedUser deleteCurrentUserProperty(
       final Principal principal, @PathVariable("name") final String name)
       throws ComiXedUserException {
@@ -118,7 +126,10 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(
+      logRequest = true,
+      logResponse = true,
+      responseView = View.UserDetailsView.class)
   public ComiXedUser updateCurrentUser(
       @PathVariable("id") final long id, @RequestBody() final UpdateCurrentUserRequest request)
       throws ComiXedUserException {

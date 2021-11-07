@@ -26,7 +26,7 @@ package org.comixedproject.views;
  */
 public interface View {
   /** Used when returning the generic response. */
-  public interface GenericResponseView {}
+  public interface GenericObjectView {}
 
   /** Used when retrieving the list of comic formats. */
   public interface ComicFormatList {}
