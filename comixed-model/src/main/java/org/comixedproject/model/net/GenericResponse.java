@@ -34,7 +34,7 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class GenericResponse {
   @JsonProperty("success")
-  @JsonView(View.GenericResponseView.class)
+  @JsonView(View.GenericObjectView.class)
   @NonNull
   @Getter
   private Boolean success;

@@ -18,10 +18,24 @@
 
 package org.comixedproject.auditlog;
 
+import java.lang.annotation.*;
+
 /**
  * <code>AuditableEndpoint</code> is used to indicate that a method is to be audited whenever it's
  * invoked.
  *
  * @author Darryl L. Pierce
  */
-public @interface AuditableEndpoint {}
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+public @interface AuditableEndpoint {
+  public boolean logRequest() default false;
+
+  public Class requestView() default Class.class;
+
+  public boolean logResponse() default false;
+
+  public Class responseView() default Class.class;
+}

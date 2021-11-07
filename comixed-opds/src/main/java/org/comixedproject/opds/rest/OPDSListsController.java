@@ -57,7 +57,7 @@ public class OPDSListsController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/lists", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed loadReadingLists(final Principal principal) throws OPDSException {
@@ -99,7 +99,7 @@ public class OPDSListsController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/lists/{id}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed loadReadingListEntries(

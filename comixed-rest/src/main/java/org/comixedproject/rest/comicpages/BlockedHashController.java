@@ -81,6 +81,7 @@ public class BlockedHashController {
    */
   @GetMapping(value = "/api/pages/blocked", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.BlockedHashList.class)
+  @AuditableEndpoint(logResponse = true, responseView = View.BlockedHashList.class)
   public List<BlockedHash> getAll() {
     log.info("Load all blocked pages");
     return this.blockedHashService.getAll();
@@ -94,6 +95,7 @@ public class BlockedHashController {
    * @throws BlockedHashException if an error occurs
    */
   @GetMapping(value = "/api/pages/blocked/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint(logResponse = true)
   public BlockedHash getByHash(@PathVariable("hash") final String hash)
       throws BlockedHashException {
     log.info("Loading blocked page: hash={}", hash);
@@ -109,7 +111,7 @@ public class BlockedHashController {
    * @throws BlockedHashException if an error occurs
    */
   @PutMapping(value = "/api/pages/blocked/{hash}")
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.BlockedHashDetail.class)
   @JsonView(View.BlockedHashDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
   public BlockedHash updateBlockedPage(
@@ -133,7 +135,7 @@ public class BlockedHashController {
       value = "/api/pages/blocked/add",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   @PreAuthorize("hasRole('ADMIN')")
   public void blockPageHashes(@RequestBody() final SetBlockedPageRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
@@ -155,6 +157,7 @@ public class BlockedHashController {
    */
   @PostMapping(value = "/api/pages/blocked/mark", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint(logRequest = true)
   public void markPagesWithHash(@RequestBody() final MarkPageWithHashRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -200,7 +203,7 @@ public class BlockedHashController {
       value = "/api/pages/blocked/remove",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   @PreAuthorize("hasRole('ADMIN')")
   public void unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
@@ -222,6 +225,7 @@ public class BlockedHashController {
    */
   @PostMapping(value = "/api/pages/blocked/unmark", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @AuditableEndpoint(logRequest = true)
   public void unmarkPagesWithHash(@RequestBody() final UnmarkPageWithHashRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -276,7 +280,7 @@ public class BlockedHashController {
    * @throws IOException if a file exception occurs
    */
   @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.BlockedHashList.class)
   @JsonView(View.BlockedHashList.class)
   @PreAuthorize("hasRole('ADMIN')")
   public List<BlockedHash> uploadFile(final MultipartFile file)
@@ -295,7 +299,7 @@ public class BlockedHashController {
       value = "/api/pages/blocked/delete",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true, logResponse = true)
   @JsonView(View.BlockedHashList.class)
   @PreAuthorize("hasRole('ADMIN')")
   public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {

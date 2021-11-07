@@ -64,7 +64,7 @@ public class ScrapingController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true, logResponse = true)
   public ScrapingIssue loadScrapingIssue(
       @PathVariable("volumeId") final Integer volume,
       @PathVariable("issueId") final String issue,
@@ -91,7 +91,7 @@ public class ScrapingController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true, logResponse = true)
   public List<ScrapingVolume> loadScrapingVolumes(
       @RequestBody() final LoadScrapingVolumesRequest request) throws ScrapingException {
     String apiKey = request.getApiKey();
@@ -121,7 +121,10 @@ public class ScrapingController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(
+      logRequest = true,
+      logResponse = true,
+      responseView = View.ComicDetailsView.class)
   @JsonView(View.ComicDetailsView.class)
   public Comic scrapeComic(
       @PathVariable("comicId") final Long comicId, @RequestBody() final ScrapeComicRequest request)

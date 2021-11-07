@@ -83,7 +83,10 @@ public class ComicFileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicFileList.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(
+      logRequest = true,
+      logResponse = true,
+      responseView = View.ComicDetailsView.class)
   public LoadComicFilesResponse loadComicFiles(
       @RequestBody() final GetAllComicsUnderRequest request) throws IOException {
     String directory = request.getDirectory();
@@ -145,7 +148,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void importComicFiles(@RequestBody() ImportComicFilesRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -172,7 +175,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true, logResponse = true)
   public FilenameMetadataResponse scrapeFilename(
       @RequestBody() final FilenameMetadataRequest request) {
     final String filename = FilenameUtils.getBaseName(request.getFilename());

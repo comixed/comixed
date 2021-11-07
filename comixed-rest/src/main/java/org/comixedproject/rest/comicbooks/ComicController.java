@@ -35,6 +35,7 @@ import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.comixedproject.views.View;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -65,7 +66,7 @@ public class ComicController {
    */
   @GetMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.ComicDetailsView.class)
   public Comic getComic(@PathVariable("id") long id) throws ComicException {
     log.info("Getting comic: id={}", id);
     return this.comicService.getComic(id);
@@ -80,7 +81,7 @@ public class ComicController {
    */
   @DeleteMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.ComicDetailsView.class)
   public Comic deleteComic(@PathVariable("id") long id) throws ComicException {
     log.info("Marking comic for deletion: id={}", id);
     return this.comicService.deleteComic(id);
@@ -95,7 +96,7 @@ public class ComicController {
    */
   @DeleteMapping(value = "/api/comics/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.ComicDetailsView.class)
   public Comic deleteMetadata(@PathVariable("id") long id) throws ComicException {
     log.debug("Deleting comic metadata: id={}", id);
     return this.comicService.deleteMetadata(id);
@@ -167,7 +168,11 @@ public class ComicController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(
+      logRequest = true,
+      requestView = View.ComicDetailsView.class,
+      logResponse = true,
+      responseView = View.ComicDetailsView.class)
   public Comic updateComic(@PathVariable("id") long id, @RequestBody() Comic comic)
       throws ComicException {
     log.info("Updating comic: id={}", id, comic);
@@ -175,6 +180,15 @@ public class ComicController {
     return this.comicService.updateComic(id, comic);
   }
 
+  /**
+   * Retrieves the cover page content for a comic.
+   *
+   * @param id the comic id
+   * @return the page content
+   * @throws ComicException if an error occurs
+   * @throws IOException if an error occurs
+   * @throws AdaptorException if an error occurs
+   */
   @GetMapping(value = "/api/comics/{id}/cover/content")
   @AuditableEndpoint
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)

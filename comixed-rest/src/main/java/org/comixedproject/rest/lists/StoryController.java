@@ -49,6 +49,7 @@ public class StoryController {
   @GetMapping(value = "/api/lists/stories/names", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryList.class)
   @PreAuthorize("hasRole('READER')")
+  @AuditableEndpoint(logResponse = true, responseView = View.StoryList.class)
   public Set<String> loadAllNames() {
     log.info("Getting all stories");
     return this.storyService.loadAll();
@@ -64,6 +65,7 @@ public class StoryController {
   @GetMapping(value = "/api/lists/stories", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryList.class)
   @PreAuthorize("hasRole('READER')")
+  @AuditableEndpoint(logResponse = true, responseView = View.StoryList.class)
   public Set<Story> loadAllWithName(@RequestParam(value = "name") final String name) {
     log.info("Loading all stories with name: {}", name);
     return this.storyService.findByName(name);
@@ -82,7 +84,7 @@ public class StoryController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true, logResponse = true, responseView = View.StoryDetail.class)
   public Story createStory(@RequestBody() final Story story) throws StoryException {
     log.info("Creating a new story: name={}", story.getName());
     return this.storyService.createStory(story);

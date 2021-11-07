@@ -46,32 +46,32 @@ public class ProcessComicStatus {
   public static final String PROCESSED_COMICS = "add-comic-state.processed-comics";
 
   @JsonProperty("active")
-  @JsonView(View.GenericResponseView.class)
+  @JsonView(View.GenericObjectView.class)
   @Getter
   @Setter
   private boolean active = true;
 
   @JsonProperty("started")
-  @JsonView(View.GenericResponseView.class)
+  @JsonView(View.GenericObjectView.class)
   @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter
   private Date started;
 
   @JsonProperty("stepName")
-  @JsonView(View.GenericResponseView.class)
+  @JsonView(View.GenericObjectView.class)
   @Getter
   @Setter
   private String stepName;
 
   @JsonProperty("total")
-  @JsonView(View.GenericResponseView.class)
+  @JsonView(View.GenericObjectView.class)
   @Getter
   @Setter
   private long total;
 
   @JsonProperty("processed")
-  @JsonView(View.GenericResponseView.class)
+  @JsonView(View.GenericObjectView.class)
   @Getter
   @Setter
   private long processed;

@@ -27,6 +27,7 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.comixedproject.model.auditlog.WebAuditLogEntry;
 import org.comixedproject.service.auditlog.WebAuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,8 @@ public class AuditableEndpointAspect {
   public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
     Throwable thrownError = null;
     Object response = null;
+    final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+    final var annotation = signature.getMethod().getAnnotation(AuditableEndpoint.class);
 
     final var started = new Date();
     try {
@@ -80,8 +83,27 @@ public class AuditableEndpointAspect {
     entry.setMethod(request.getMethod());
     entry.setStartTime(started);
     entry.setEndTime(ended);
-    entry.setRequestContent(
-        new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
+    if (annotation.logRequest()) {
+      log.trace("Logging request content");
+      if (annotation.requestView() != Class.class) {
+        entry.setRequestContent(
+            this.objectMapper.writerWithView(annotation.requestView()).writeValueAsString(request));
+      } else {
+        entry.setRequestContent(
+            new String(((ContentCachingRequestWrapper) request).getContentAsByteArray()));
+      }
+    }
+    if (annotation.logResponse()) {
+      log.trace("Logging response content");
+      if (annotation.responseView() != Class.class) {
+        entry.setResponseContent(
+            this.objectMapper
+                .writerWithView(annotation.responseView())
+                .writeValueAsString(response));
+      } else {
+        entry.setResponseContent(this.objectMapper.writeValueAsString(response));
+      }
+    }
 
     if (thrownError != null) {
       log.debug("Storing method exception stacktrace");

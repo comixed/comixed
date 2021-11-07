@@ -59,7 +59,7 @@ public class OPDSCollectionController {
    * @throws OPDSException if the collection type is unknown
    */
   @GetMapping(value = "/opds/collections/{type}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
@@ -129,7 +129,7 @@ public class OPDSCollectionController {
    * @throws OPDSException if the collection type is unknown
    */
   @GetMapping(value = "/opds/collections/{type}/{name}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(

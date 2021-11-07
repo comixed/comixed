@@ -95,7 +95,7 @@ public class LibraryController {
    * @throws Exception if an error occurs
    */
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void convertComics(@RequestBody() ConvertComicsRequest request) throws Exception {
     List<Long> idList = request.getIds();
     ArchiveType archiveType = request.getArchiveType();
@@ -131,8 +131,7 @@ public class LibraryController {
       value = "/api/library/consolidate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.DeletedComicList.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request)
       throws Exception {
     final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
@@ -157,8 +156,13 @@ public class LibraryController {
             .toJobParameters());
   }
 
+  /**
+   * Clears the library image cache.
+   *
+   * @return the response
+   */
   @DeleteMapping(value = "/api/library/cache/images")
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true)
   public ClearImageCacheResponse clearImageCache() {
     log.info("Clearing the image cache");
 
@@ -183,7 +187,10 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint
+  @AuditableEndpoint(
+      logRequest = false,
+      logResponse = true,
+      responseView = View.ComicListView.class)
   @JsonView(View.ComicListView.class)
   public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
     final Long lastId = request.getLastId();
@@ -208,7 +215,7 @@ public class LibraryController {
    */
   @PostMapping(value = "/api/library/rescan", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void rescanComics(@RequestBody() final RescanComicsRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
@@ -229,7 +236,7 @@ public class LibraryController {
    */
   @PostMapping(value = "/api/library/metadata", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void updateMetadata(@RequestBody() final UpdateMetadataRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Updating the metadata for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");

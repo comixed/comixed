@@ -56,7 +56,7 @@ public class LastReadController {
    */
   @GetMapping(value = "/api/library/read", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LastReadList.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(logResponse = true, responseView = View.LastReadList.class)
   public GetLastReadDatesResponse getLastReadEntries(
       final Principal principal, @RequestParam("lastId") final long lastId)
       throws LastReadException {
@@ -83,7 +83,7 @@ public class LastReadController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LastReadList.class)
-  @AuditableEndpoint
+  @AuditableEndpoint(logRequest = true)
   public void setComicsReadState(
       final Principal principal, @RequestBody() SetComicsReadRequest request)
       throws LastReadException {
