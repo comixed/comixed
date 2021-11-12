@@ -86,7 +86,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       apiKey: [''],
       publisher: [''],
       series: ['', [Validators.required]],
-      volume: [''],
+      volume: ['', [Validators.pattern('[0-9]{4}')]],
       issueNumber: ['', [Validators.required]],
       comicVineId: ['', [Validators.pattern('[0-9]{6}')]],
       imprint: [''],
