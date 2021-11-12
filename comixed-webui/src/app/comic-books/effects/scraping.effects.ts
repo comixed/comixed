@@ -51,7 +51,6 @@ export class ScrapingEffects {
       switchMap(action =>
         this.scrapingService
           .loadScrapingVolumes({
-            apiKey: action.apiKey,
             series: action.series,
             maximumRecords: action.maximumRecords,
             skipCache: action.skipCache
@@ -89,7 +88,6 @@ export class ScrapingEffects {
       switchMap(action =>
         this.scrapingService
           .loadScrapingIssue({
-            apiKey: action.apiKey,
             volumeId: action.volumeId,
             issueNumber: action.issueNumber,
             skipCache: action.skipCache
@@ -127,7 +125,6 @@ export class ScrapingEffects {
       switchMap(action =>
         this.scrapingService
           .scrapeComic({
-            apiKey: action.apiKey,
             issueId: action.issueId,
             comic: action.comic,
             skipCache: action.skipCache

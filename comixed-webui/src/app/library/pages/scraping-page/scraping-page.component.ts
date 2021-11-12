@@ -24,7 +24,6 @@ import { Store } from '@ngrx/store';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE,
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE,
@@ -56,7 +55,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   currentSeries = '';
   currentVolume = '';
   currentIssueNumber = '';
-  apiKey = '';
   skipCache = false;
   maximumRecords = 0;
   scrapingStateSubscription: Subscription;
@@ -74,7 +72,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       () => this.loadTranslations()
     );
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.apiKey = getUserPreference(user.preferences, API_KEY_PREFERENCE, '');
       this.skipCache =
         getUserPreference(
           user.preferences,
@@ -130,7 +127,6 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Fetching scraping volumes:', event);
     this.store.dispatch(
       loadScrapingVolumes({
-        apiKey: event.apiKey,
         series: event.series,
         maximumRecords: event.maximumRecords,
         skipCache: event.skipCache

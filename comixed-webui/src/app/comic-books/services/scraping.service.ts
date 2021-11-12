@@ -43,20 +43,17 @@ export class ScrapingService {
   /**
    * Retrieves volumes that match the series name being scraped.
    *
-   * @param args.apiKey the API key to use
    * @param args.series the series name
    * @param args.maximumRecords the maximum records to return
    * @param args.skipCache the skip cache flag
    */
   loadScrapingVolumes(args: {
-    apiKey: string;
     series: string;
     maximumRecords: number;
     skipCache: boolean;
   }): Observable<any> {
     this.logger.trace('Service: loading scraping volumes:', args);
     return this.http.post(interpolate(LOAD_SCRAPING_VOLUMES_URL), {
-      apiKey: args.apiKey,
       series: args.series,
       maxRecords: args.maximumRecords,
       skipCache: args.skipCache
@@ -66,13 +63,11 @@ export class ScrapingService {
   /**
    * Load a single scraping issue based on the provided details.
    *
-   * @param args.apiKey the API key
    * @param args.volumeId the volume id for the scraping issue
    * @param args.issueNumber the issue number for the comic
    * @param args.skipCache the skip cache flag
    */
   loadScrapingIssue(args: {
-    apiKey: string;
     volumeId: number;
     issueNumber: string;
     skipCache: boolean;
@@ -84,7 +79,6 @@ export class ScrapingService {
         issueNumber: args.issueNumber
       }),
       {
-        apiKey: args.apiKey,
         skipCache: args.skipCache
       } as LoadScrapingIssueRequest
     );
@@ -93,13 +87,11 @@ export class ScrapingService {
   /**
    * Scrape a single comic using the specified issue as the source.
    *
-   * @param args.apiKey the API key
    * @param args.issueId the source issue id
    * @param args.comic the comic to be updated
    * @param args.skipCache the skip cache flag
    */
   scrapeComic(args: {
-    apiKey: string;
     issueId: number;
     comic: Comic;
     skipCache: boolean;
@@ -108,7 +100,6 @@ export class ScrapingService {
     return this.http.post(
       interpolate(SCRAPE_COMIC_URL, { comicId: args.comic.id }),
       {
-        apiKey: args.apiKey,
         issueId: args.issueId,
         skipCache: args.skipCache
       } as ScrapeComicRequest

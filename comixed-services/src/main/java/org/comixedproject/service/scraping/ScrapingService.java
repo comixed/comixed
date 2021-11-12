@@ -18,11 +18,14 @@
 
 package org.comixedproject.service.scraping;
 
+import static org.comixedproject.service.admin.ConfigurationService.CFG_COMICVINE_API_KEY;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.Credit;
 import org.comixedproject.scrapers.ScrapingException;
@@ -31,6 +34,7 @@ import org.comixedproject.scrapers.comicvine.adaptors.ComicVineScrapingAdaptor;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingIssueDetails;
 import org.comixedproject.scrapers.model.ScrapingVolume;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicbooks.ImprintService;
@@ -54,11 +58,11 @@ public class ScrapingService {
   @Autowired private ComicService comicService;
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ImprintService imprintService;
+  @Autowired private ConfigurationService configurationService;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
    *
-   * @param apiKey the api key
    * @param series the series name
    * @param maxRecords the maximum records
    * @param skipCache the skip cache flag
@@ -66,8 +70,9 @@ public class ScrapingService {
    * @throws ScrapingException if an error occurs
    */
   public List<ScrapingVolume> getVolumes(
-      final String apiKey, final String series, final Integer maxRecords, final boolean skipCache)
+      final String series, final Integer maxRecords, final boolean skipCache)
       throws ScrapingException {
+    final String apiKey = this.doGetApiKey();
     List<ScrapingVolume> result = new ArrayList<>();
     final String source = this.scrapingAdaptor.getSource();
     final String key = this.scrapingAdaptor.getVolumeKey(series);
@@ -106,8 +111,14 @@ public class ScrapingService {
     return result;
   }
 
-  private List<ScrapingVolume> doLoadScrapingVolumes(final String source, final String key)
-      throws ScrapingException {
+  private String doGetApiKey() throws ScrapingException {
+    log.trace("Loading ComicVine API key");
+    final String result = this.configurationService.getOptionValue(CFG_COMICVINE_API_KEY);
+    if (StringUtils.isEmpty(result)) throw new ScrapingException("ComicVine API key missing");
+    return result;
+  }
+
+  private List<ScrapingVolume> doLoadScrapingVolumes(final String source, final String key) {
     List<ScrapingVolume> result = new ArrayList<>();
     final List<String> cachedEntries = this.scrapingCacheService.getFromCache(source, key);
     if (cachedEntries != null && !cachedEntries.isEmpty()) {
@@ -115,7 +126,8 @@ public class ScrapingService {
         try {
           result.add(this.objectMapper.readValue(entry, ScrapingVolume.class));
         } catch (JsonProcessingException error) {
-          throw new ScrapingException("Failed to decode scraping volume", error);
+          log.error("Failed to decode scraping volume", error);
+          return new ArrayList<>();
         }
       }
     }
@@ -125,7 +137,6 @@ public class ScrapingService {
   /**
    * Retrieves the specified issue for the given volume.
    *
-   * @param apiKey the api key
    * @param volumeId the volume id
    * @param issueNumber the issue number
    * @param skipCache the skip cache flag
@@ -133,11 +144,9 @@ public class ScrapingService {
    * @throws ScrapingException if an error occurs
    */
   public ScrapingIssue getIssue(
-      final String apiKey,
-      final Integer volumeId,
-      final String issueNumber,
-      final boolean skipCache)
+      final Integer volumeId, final String issueNumber, final boolean skipCache)
       throws ScrapingException {
+    final String apiKey = this.doGetApiKey();
     final String source = this.scrapingAdaptor.getSource();
     final String key = this.scrapingAdaptor.getIssueKey(volumeId, issueNumber);
     log.debug(
@@ -153,7 +162,7 @@ public class ScrapingService {
         try {
           result = this.objectMapper.readValue(cachedEntries.get(0), ScrapingIssue.class);
         } catch (JsonProcessingException error) {
-          throw new ScrapingException("Failed to decode cached scraping issue", error);
+          log.error("Failed to decode cached scraping issue", error);
         }
       }
     }
@@ -180,16 +189,16 @@ public class ScrapingService {
   /**
    * Scrapes a single comic and updates the comic in the database.
    *
-   * @param apiKey the api key
-   * @param comicId the comic id
+   * <p>* @param comicId the comic id
+   *
    * @param issueId the issue id
    * @param skipCache the skip cache flag
    * @return the updated comic
    * @throws ScrapingException if an error occurs
    */
-  public Comic scrapeComic(
-      final String apiKey, final Long comicId, final Integer issueId, final boolean skipCache)
+  public Comic scrapeComic(final Long comicId, final Integer issueId, final boolean skipCache)
       throws ScrapingException {
+    final String apiKey = this.doGetApiKey();
     log.debug("Scraping comic: id={} issueId={} skipCache={}", comicId, issueId, skipCache);
     Comic result = null;
     final String source = this.scrapingAdaptor.getSource();

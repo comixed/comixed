@@ -17,7 +17,6 @@
  */
 
 export interface ScrapeEvent {
-  apiKey: string;
   series: string;
   volume: string;
   issueNumber: string;

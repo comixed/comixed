@@ -49,7 +49,6 @@ import { TitleService } from '@app/core/services/title.service';
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
   const COMIC = COMIC_2;
-  const API_KEY = '1234567890';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const initialState = {
@@ -125,7 +124,6 @@ describe('ScrapingPageComponent', () => {
   describe('when scraping starts', () => {
     beforeEach(() => {
       component.onScrape({
-        apiKey: API_KEY,
         series: COMIC.series,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE,
@@ -137,7 +135,6 @@ describe('ScrapingPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadScrapingVolumes({
-          apiKey: API_KEY,
           series: COMIC.series,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE

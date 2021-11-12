@@ -33,7 +33,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ScrapeEvent } from '@app/comic-books/models/ui/scrape-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
-  API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -83,7 +82,6 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     private translateService: TranslateService
   ) {
     this.comicForm = this.formBuilder.group({
-      apiKey: [''],
       publisher: [''],
       series: ['', [Validators.required]],
       volume: ['', [Validators.pattern('[0-9]{4}')]],
@@ -125,17 +123,6 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _apiKey = '';
-
-  get apiKey(): string {
-    return this._apiKey;
-  }
-
-  @Input() set apiKey(apiKey: string) {
-    this._apiKey = apiKey;
-    this.comicForm.controls.apiKey.setValue(apiKey);
-  }
-
   private _comic: Comic;
 
   get comic(): Comic {
@@ -156,11 +143,6 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.comicForm.controls.title.setValue(comic.title);
     this.comicForm.controls.description.setValue(comic.description);
     this.comicForm.updateValueAndValidity();
-  }
-
-  get hasApiKey(): boolean {
-    const apiKey = this.comicForm.controls.apiKey.value;
-    return !!apiKey && apiKey.length > 0;
   }
 
   ngOnDestroy(): void {
@@ -190,29 +172,12 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   onFetchScrapingVolumes(): void {
     this.logger.trace('Loading scraping volumes');
     this.scrape.emit({
-      apiKey: this.comicForm.controls.apiKey.value,
       series: this.comicForm.controls.series.value,
       volume: this.comicForm.controls.volume.value,
       issueNumber: this.comicForm.controls.issueNumber.value,
       maximumRecords: this.maximumRecords,
       skipCache: this.skipCache
     });
-  }
-
-  onSaveApiKey(): void {
-    this.logger.trace('Saving the new API key');
-    this.store.dispatch(
-      saveUserPreference({
-        name: API_KEY_PREFERENCE,
-        value: this.comicForm.controls.apiKey.value
-      })
-    );
-  }
-
-  onResetApiKey(): void {
-    this.logger.trace('Resetting the API key changes');
-    this.comicForm.controls.apiKey.setValue(this.apiKey);
-    this.comicForm.controls.apiKey.markAsUntouched();
   }
 
   onSkipCacheToggle(): void {
@@ -280,7 +245,6 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.logger.trace('Scraping issue using ComicVine ID');
         this.store.dispatch(
           scrapeComic({
-            apiKey: this.apiKey,
             issueId: this.comic.comicVineId,
             comic: this.comic,
             skipCache: this.skipCache

@@ -17,6 +17,5 @@
  */
 
 export interface LoadScrapingIssueRequest {
-  apiKey: string;
   skipCache: boolean;
 }

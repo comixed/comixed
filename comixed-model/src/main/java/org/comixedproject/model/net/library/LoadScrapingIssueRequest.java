@@ -31,10 +31,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoadScrapingIssueRequest {
-  @JsonProperty("apiKey")
-  @Getter
-  private String apiKey;
-
   @JsonProperty("skipCache")
   @Getter
   private boolean skipCache;

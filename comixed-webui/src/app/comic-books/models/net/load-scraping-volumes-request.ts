@@ -17,7 +17,6 @@
  */
 
 export interface LoadScrapingVolumesRequest {
-  apiKey: string;
   series: string;
   maxRecords: number;
   skipCache: boolean;

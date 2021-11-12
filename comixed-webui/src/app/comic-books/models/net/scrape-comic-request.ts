@@ -17,7 +17,6 @@
  */
 
 export interface ScrapeComicRequest {
-  apiKey: string;
   issueId: number;
   skipCache: boolean;
 }

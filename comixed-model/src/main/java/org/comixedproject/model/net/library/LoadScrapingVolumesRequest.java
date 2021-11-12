@@ -32,10 +32,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoadScrapingVolumesRequest {
-  @JsonProperty("apiKey")
-  @Getter
-  private String apiKey;
-
   @JsonProperty("series")
   @Getter
   private String series;
