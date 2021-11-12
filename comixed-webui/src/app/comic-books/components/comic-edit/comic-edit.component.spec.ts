@@ -39,10 +39,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  API_KEY_PREFERENCE,
-  MAXIMUM_RECORDS_PREFERENCE
-} from '@app/library/library.constants';
+import { MAXIMUM_RECORDS_PREFERENCE } from '@app/library/library.constants';
 import { updateComic } from '@app/comic-books/actions/comic.actions';
 import {
   IMPRINT_LIST_FEATURE_KEY,
@@ -58,7 +55,6 @@ import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const COMIC = COMIC_2;
-  const API_KEY = '1234567890ABCDEF';
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
   const ISSUE_NUMBER = '27';
@@ -96,7 +92,6 @@ describe('ComicEditComponent', () => {
 
       fixture = TestBed.createComponent(ComicEditComponent);
       component = fixture.componentInstance;
-      component.apiKey = API_KEY;
       component.maximumRecords = MAXIMUM_RECORDS;
       component.skipCache = SKIP_CACHE;
       component.comic = COMIC;
@@ -134,10 +129,6 @@ describe('ComicEditComponent', () => {
     });
   });
 
-  it('sets the API key', () => {
-    expect(component.apiKey).toEqual(API_KEY);
-  });
-
   describe('fetching the scraping volumes', () => {
     beforeEach(() => {
       spyOn(component.scrape, 'emit');
@@ -146,38 +137,11 @@ describe('ComicEditComponent', () => {
 
     it('emits an event', () => {
       expect(component.scrape.emit).toHaveBeenCalledWith({
-        apiKey: API_KEY,
         series: COMIC.series,
         volume: COMIC.volume,
         issueNumber: COMIC.issueNumber,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE
-      });
-    });
-  });
-
-  describe('the API key', () => {
-    describe('saving it', () => {
-      beforeEach(() => {
-        component.onSaveApiKey();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          saveUserPreference({ name: API_KEY_PREFERENCE, value: API_KEY })
-        );
-      });
-    });
-
-    describe('resetting it', () => {
-      beforeEach(() => {
-        component.comicForm.controls.apiKey.setValue(API_KEY.substr(1));
-        fixture.detectChanges();
-        component.onResetApiKey();
-      });
-
-      it('restores the original value', () => {
-        expect(component.comicForm.controls.apiKey.value).toEqual(API_KEY);
       });
     });
   });
@@ -224,16 +188,6 @@ describe('ComicEditComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateComic({ comic: COMIC })
       );
-    });
-  });
-
-  describe('checking for the api key', () => {
-    beforeEach(() => {
-      component.comicForm.controls.apiKey.setValue(API_KEY);
-    });
-
-    it('returns true when set', () => {
-      expect(component.hasApiKey).toBeTrue();
     });
   });
 
@@ -332,7 +286,6 @@ describe('ComicEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         scrapeComic({
-          apiKey: API_KEY,
           issueId: COMIC.comicVineId,
           comic: COMIC,
           skipCache: SKIP_CACHE

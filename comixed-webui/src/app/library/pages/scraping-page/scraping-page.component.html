@@ -26,7 +26,6 @@
     <cx-comic-edit
       *ngIf="!!currentComic && scrapingVolumes.length === 0"
       [comic]="currentComic"
-      [apiKey]="apiKey"
       [skipCache]="skipCache"
       [maximumRecords]="maximumRecords"
       [multimode]="true"
@@ -38,7 +37,6 @@
       [comicSeriesName]="currentSeries"
       [comicVolume]="currentVolume"
       [comicIssueNumber]="this.currentIssueNumber"
-      [apiKey]="apiKey"
       [skipCache]="skipCache"
       [pageSize]="pageSize"
       [multimode]="true"

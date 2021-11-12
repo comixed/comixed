@@ -28,7 +28,6 @@ export const resetScraping = createAction(
 export const loadScrapingVolumes = createAction(
   '[Scraping] Loads scraping volumes',
   props<{
-    apiKey: string;
     series: string;
     maximumRecords: number;
     skipCache: boolean;
@@ -47,7 +46,6 @@ export const loadScrapingVolumesFailed = createAction(
 export const loadScrapingIssue = createAction(
   '[Scraping] Load a scraping issue',
   props<{
-    apiKey: string;
     volumeId: number;
     issueNumber: string;
     skipCache: boolean;
@@ -65,7 +63,7 @@ export const loadScrapingIssueFailed = createAction(
 
 export const scrapeComic = createAction(
   '[Scraping] Scrape the details for a comic',
-  props<{ apiKey: string; issueId: number; comic: Comic; skipCache: boolean }>()
+  props<{ issueId: number; comic: Comic; skipCache: boolean }>()
 );
 
 export const comicScraped = createAction(

@@ -66,7 +66,6 @@ describe('ComicScrapingComponent', () => {
     { ...SCRAPING_VOLUME, startYear: '1900' },
     { ...SCRAPING_VOLUME, name: SCRAPING_VOLUME.name.substr(1) }
   ];
-  const API_KEY = '1234567890ABCDEF';
   const SKIP_CACHE = Math.random() > 0.5;
   const ISSUE_NUMBER = '27';
   const COMIC = COMIC_4;
@@ -100,7 +99,6 @@ describe('ComicScrapingComponent', () => {
 
       fixture = TestBed.createComponent(ComicScrapingComponent);
       component = fixture.componentInstance;
-      component.apiKey = API_KEY;
       component.comicSeriesName = SCRAPING_VOLUME.name;
       component.comicVolume = SCRAPING_VOLUME.startYear;
       component.comicIssueNumber = ISSUE_NUMBER;
@@ -243,7 +241,6 @@ describe('ComicScrapingComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadScrapingIssue({
-          apiKey: API_KEY,
           volumeId: SCRAPING_VOLUME.id,
           issueNumber: ISSUE_NUMBER,
           skipCache: SKIP_CACHE
@@ -269,7 +266,6 @@ describe('ComicScrapingComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           scrapeComic({
-            apiKey: API_KEY,
             issueId: SCRAPING_ISSUE.id,
             comic: COMIC,
             skipCache: SKIP_CACHE

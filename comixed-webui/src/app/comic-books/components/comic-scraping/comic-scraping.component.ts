@@ -70,7 +70,6 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
   @Input() comicSeriesName: string;
   @Input() comicVolume: string;
   @Input() comicIssueNumber: string;
-  @Input() apiKey: string;
   @Input() skipCache = false;
   @Input() pageSize: number;
   @Input() multimode = false;
@@ -166,7 +165,6 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
     this.selectedVolume = volume;
     this.store.dispatch(
       loadScrapingIssue({
-        apiKey: this.apiKey,
         volumeId: volume.id,
         issueNumber: this.comicIssueNumber,
         skipCache: this.skipCache
@@ -200,7 +198,6 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
           }
           this.store.dispatch(
             scrapeComic({
-              apiKey: this.apiKey,
               issueId: this.issue.id,
               comic: this.comic,
               skipCache: this.skipCache

@@ -32,11 +32,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScrapeComicRequest {
-  @JsonProperty("apiKey")
-  @Getter
-  @Setter
-  private String apiKey;
-
   @JsonProperty("issueId")
   @Getter
   @Setter

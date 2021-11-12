@@ -61,7 +61,6 @@ export const IMPORT_ROOT_DIRECTORY_DEFAULT = '';
 export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
   'preference.import.maximum-results';
 export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
-export const API_KEY_PREFERENCE = 'preference.scraping.api-key';
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
 export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
 

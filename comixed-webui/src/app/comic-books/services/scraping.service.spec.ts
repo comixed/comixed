@@ -40,7 +40,6 @@ import { LoadScrapingIssueRequest } from '@app/comic-books/models/net/load-scrap
 import { ScrapeComicRequest } from '@app/comic-books/models/net/scrape-comic-request';
 
 describe('ScrapingService', () => {
-  const API_KEY = '1234567890ABCDEF';
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -69,7 +68,6 @@ describe('ScrapingService', () => {
   it('can load scraping volumes', () => {
     service
       .loadScrapingVolumes({
-        apiKey: API_KEY,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE
@@ -82,7 +80,6 @@ describe('ScrapingService', () => {
   it('can load a scraping issue', () => {
     service
       .loadScrapingIssue({
-        apiKey: API_KEY,
         volumeId: VOLUME_ID,
         issueNumber: ISSUE_NUMBER,
         skipCache: SKIP_CACHE
@@ -97,7 +94,6 @@ describe('ScrapingService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      apiKey: API_KEY,
       skipCache: SKIP_CACHE
     } as LoadScrapingIssueRequest);
     req.flush(SCRAPING_ISSUE);
@@ -106,7 +102,6 @@ describe('ScrapingService', () => {
   it('can scrape a comic', () => {
     service
       .scrapeComic({
-        apiKey: API_KEY,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE
@@ -118,7 +113,6 @@ describe('ScrapingService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      apiKey: API_KEY,
       issueId: SCRAPING_ISSUE.id,
       skipCache: SKIP_CACHE
     } as ScrapeComicRequest);

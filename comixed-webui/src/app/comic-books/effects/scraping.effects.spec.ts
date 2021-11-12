@@ -48,7 +48,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { comicLoaded } from '@app/comic-books/actions/comic.actions';
 
 describe('ScrapingEffects', () => {
-  const API_KEY = '1234567890ABCDEF';
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -106,7 +105,6 @@ describe('ScrapingEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = VOLUMES;
       const action = loadScrapingVolumes({
-        apiKey: API_KEY,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE
@@ -123,7 +121,6 @@ describe('ScrapingEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadScrapingVolumes({
-        apiKey: API_KEY,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE
@@ -142,7 +139,6 @@ describe('ScrapingEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadScrapingVolumes({
-        apiKey: API_KEY,
         series: SERIES,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE
@@ -162,7 +158,6 @@ describe('ScrapingEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = SCRAPING_ISSUE;
       const action = loadScrapingIssue({
-        apiKey: API_KEY,
         volumeId: VOLUME_ID,
         issueNumber: ISSUE_NUMBER,
         skipCache: SKIP_CACHE
@@ -179,7 +174,6 @@ describe('ScrapingEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = loadScrapingIssue({
-        apiKey: API_KEY,
         volumeId: VOLUME_ID,
         issueNumber: ISSUE_NUMBER,
         skipCache: SKIP_CACHE
@@ -198,7 +192,6 @@ describe('ScrapingEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = loadScrapingIssue({
-        apiKey: API_KEY,
         volumeId: VOLUME_ID,
         issueNumber: ISSUE_NUMBER,
         skipCache: SKIP_CACHE
@@ -218,7 +211,6 @@ describe('ScrapingEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = COMIC;
       const action = scrapeComic({
-        apiKey: API_KEY,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE
@@ -237,7 +229,6 @@ describe('ScrapingEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = scrapeComic({
-        apiKey: API_KEY,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE
@@ -254,7 +245,6 @@ describe('ScrapingEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = scrapeComic({
-        apiKey: API_KEY,
         issueId: SCRAPING_ISSUE.id,
         comic: COMIC,
         skipCache: SKIP_CACHE

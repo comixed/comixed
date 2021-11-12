@@ -88,7 +88,6 @@ describe('ComicBookPageComponent', () => {
   const LAST_READ_ENTRY = LAST_READ_1;
   const OTHER_COMIC = COMIC_2;
   const USER = USER_READER;
-  const API_KEY = '1234567890ABCDEF';
   const SERIES = 'The Series';
   const VOLUME = '2000';
   const ISSUE_NUMBER = '27';
@@ -229,7 +228,6 @@ describe('ComicBookPageComponent', () => {
   describe('loading the scraping volumes', () => {
     beforeEach(() => {
       component.onLoadScrapingVolumes(
-        API_KEY,
         SERIES,
         VOLUME,
         ISSUE_NUMBER,
@@ -253,7 +251,6 @@ describe('ComicBookPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadScrapingVolumes({
-          apiKey: API_KEY,
           series: SERIES,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE

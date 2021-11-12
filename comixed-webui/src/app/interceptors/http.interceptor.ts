@@ -23,7 +23,7 @@ import {
   HttpHandler,
   HttpRequest
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   HTTP_AUTHORIZATION_HEADER,
@@ -70,7 +70,7 @@ export class HttpInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse) {
           this.logger.error('Error response received', error);
           if (error.status !== 401) {
-            return;
+            return throwError(error);
           }
           this.logger.info('Ensuring user is logged out');
           this.store.dispatch(logoutUser());

@@ -38,7 +38,6 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('Scraping Reducer', () => {
-  const API_KEY = '1234567890ABCDEF';
   const SERIES = 'The Series';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -87,7 +86,6 @@ describe('Scraping Reducer', () => {
       state = reducer(
         { ...state, loadingRecords: false },
         loadScrapingVolumes({
-          apiKey: API_KEY,
           series: SERIES,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE
@@ -135,7 +133,6 @@ describe('Scraping Reducer', () => {
       state = reducer(
         { ...state, loadingRecords: false },
         loadScrapingIssue({
-          apiKey: API_KEY,
           volumeId: VOLUME_ID,
           issueNumber: ISSUE_NUMBER,
           skipCache: SKIP_CACHE
@@ -183,7 +180,6 @@ describe('Scraping Reducer', () => {
       state = reducer(
         { ...state, loadingRecords: false },
         scrapeComic({
-          apiKey: API_KEY,
           comic: COMIC,
           issueId: SCRAPING_ISSUE.id,
           skipCache: SKIP_CACHE

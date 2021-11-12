@@ -71,12 +71,10 @@ public class ScrapingController {
       @RequestBody() final LoadScrapingIssueRequest request)
       throws ScrapingException {
     boolean skipCache = request.isSkipCache();
-    String apiKey = request.getApiKey();
 
-    log.info(
-        "Preparing to retrieve issue={} for volume={} (skipCache={})", issue, volume, skipCache);
+    log.info("Getting scraping issue");
 
-    return this.scrapingService.getIssue(apiKey, volume, issue, skipCache);
+    return this.scrapingService.getIssue(volume, issue, skipCache);
   }
 
   /**
@@ -94,18 +92,13 @@ public class ScrapingController {
   @AuditableEndpoint(logRequest = true, logResponse = true)
   public List<ScrapingVolume> loadScrapingVolumes(
       @RequestBody() final LoadScrapingVolumesRequest request) throws ScrapingException {
-    String apiKey = request.getApiKey();
     String series = request.getSeries();
     final int maxRecords = request.getMaxRecords();
     boolean skipCache = request.getSkipCache();
 
-    log.info(
-        "Getting volumes: series={} (max records={}) {}",
-        series,
-        maxRecords,
-        skipCache ? "(Skipping cache)" : "");
+    log.info("Getting scraping volumes");
 
-    return this.scrapingService.getVolumes(apiKey, series, maxRecords, skipCache);
+    return this.scrapingService.getVolumes(series, maxRecords, skipCache);
   }
 
   /**
@@ -131,11 +124,8 @@ public class ScrapingController {
       throws ScrapingException {
     boolean skipCache = request.getSkipCache();
     Integer issueId = request.getIssueId();
-    String apiKey = request.getApiKey();
 
-    log.info("Scraping code: id={} issue id={} (skip cache={})", comicId, issueId, apiKey);
-
-    log.debug("Scraping comic details");
-    return this.scrapingService.scrapeComic(apiKey, comicId, issueId, skipCache);
+    log.info("Scraping comic");
+    return this.scrapingService.scrapeComic(comicId, issueId, skipCache);
   }
 }

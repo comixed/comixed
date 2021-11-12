@@ -158,12 +158,10 @@
         <cx-comic-edit
           *ngIf="!!comic && volumes.length === 0"
           [comic]="comic"
-          [apiKey]="apiKey"
           [skipCache]="skipCache"
           [maximumRecords]="maximumRecords"
           (scrape)="
             onLoadScrapingVolumes(
-              $event.apiKey,
               $event.series,
               $event.volume,
               $event.issueNumber,
@@ -178,7 +176,6 @@
           [comicSeriesName]="scrapingSeriesName"
           [comicVolume]="scrapingVolume"
           [comicIssueNumber]="scrapingIssueNumber"
-          [apiKey]="apiKey"
           [skipCache]="skipCache"
           [pageSize]="pageSize"
           [volumes]="volumes"

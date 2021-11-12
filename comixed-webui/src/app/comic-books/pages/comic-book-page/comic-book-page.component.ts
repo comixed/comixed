@@ -31,7 +31,6 @@ import {
 } from '@app/user/user.functions';
 import { interpolate, updateQueryParam } from '@app/core';
 import {
-  API_KEY_PREFERENCE,
   MAXIMUM_RECORDS_PREFERENCE,
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_TAB,
@@ -87,7 +86,6 @@ export class ComicBookPageComponent
   displaySubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
   volumesSubscription: Subscription;
-  apiKey = '';
   skipCache = false;
   maximumRecords = 0;
   volumes: ScrapingVolume[] = [];
@@ -149,11 +147,6 @@ export class ComicBookPageComponent
       this.isAdmin = isAdmin(user);
       this.logger.trace('Loading uer page size preference');
       this.pageSize = getPageSize(user);
-      this.apiKey = getUserPreference(
-        user.preferences,
-        API_KEY_PREFERENCE,
-        this.apiKey
-      );
       this.skipCache =
         getUserPreference(
           user.preferences,
@@ -224,7 +217,6 @@ export class ComicBookPageComponent
   }
 
   onLoadScrapingVolumes(
-    apiKey: string,
     series: string,
     volume: string,
     issueNumber: string,
@@ -236,7 +228,7 @@ export class ComicBookPageComponent
     this.scrapingVolume = volume;
     this.scrapingIssueNumber = issueNumber;
     this.store.dispatch(
-      loadScrapingVolumes({ apiKey, series, maximumRecords, skipCache })
+      loadScrapingVolumes({ series, maximumRecords, skipCache })
     );
   }
 
