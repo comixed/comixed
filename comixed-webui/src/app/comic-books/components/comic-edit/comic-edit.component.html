@@ -49,23 +49,10 @@
     </mat-select>
   </mat-form-field>
   <button
-    id="scrape-with-comicvine-id-button"
-    mat-icon-button
-    color="primary"
-    [disabled]="
-      (this.comicForm.controls.comicVineId.value || '').length === 0 ||
-      !this.comicForm.controls.comicVineId.valid
-    "
-    [matTooltip]="'scraping.tooltip.use-comicvine-id' | translate"
-    (click)="onScrapeUsingComicVineId()"
-  >
-    <mat-icon>download_for_offline</mat-icon>
-  </button>
-  <button
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="accent"
+    color="warn"
     [matTooltip]="
       'scraping.tooltip.skip-cache' | translate: { enabled: skipCache }
     "
@@ -78,12 +65,12 @@
     id="scrape-comic"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button
-    color="accent"
+    color="primary"
     [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
     [disabled]="!comicForm.valid || !hasApiKey"
     (click)="onFetchScrapingVolumes()"
   >
-    <mat-icon>find_replace</mat-icon>
+    <mat-icon>cloud_download</mat-icon>
   </button>
 </mat-toolbar>
 <form *ngIf="!!comic" [formGroup]="comicForm">
@@ -179,6 +166,20 @@
       formControlName="comicVineId"
       [placeholder]="'comic-book.placeholder.comicvine-id' | translate"
     />
+    <button
+      id="scrape-with-comicvine-id-button"
+      mat-icon-button
+      matSuffix
+      color="primary"
+      [disabled]="
+        (this.comicForm.controls.comicVineId.value || '').length === 0 ||
+        !this.comicForm.controls.comicVineId.valid
+      "
+      [matTooltip]="'scraping.tooltip.use-comicvine-id' | translate"
+      (click)="onScrapeUsingComicVineId()"
+    >
+      <mat-icon>cloud_download</mat-icon>
+    </button>
     <mat-hint>
       {{ "comic-book.hint.useful-for-scraping" | translate }}
     </mat-hint>
