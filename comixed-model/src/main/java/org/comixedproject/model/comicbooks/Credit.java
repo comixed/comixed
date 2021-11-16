@@ -40,13 +40,13 @@ public class Credit {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicId")
+  @JoinColumn(name = "ComicId", nullable = false, updatable = false)
   @JsonIgnore
   @Getter
   @NonNull
   private Comic comic;
 
-  @Column(name = "Name")
+  @Column(name = "Name", length = 255, nullable = false, updatable = false)
   @JsonProperty("name")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
@@ -54,7 +54,7 @@ public class Credit {
   @NonNull
   private String name;
 
-  @Column(name = "Role")
+  @Column(name = "Role", length = 255, nullable = false, updatable = false)
   @JsonProperty("role")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter

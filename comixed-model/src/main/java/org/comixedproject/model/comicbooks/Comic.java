@@ -184,7 +184,7 @@ public class Comic {
   @Setter
   private Date storeDate;
 
-  @Column(name = "Publisher", length = 128)
+  @Column(name = "Publisher", length = 255)
   @JsonProperty("publisher")
   @JsonView({
     View.ComicListView.class,
@@ -196,7 +196,7 @@ public class Comic {
   @Setter
   private String publisher;
 
-  @Column(name = "Series", length = 128)
+  @Column(name = "Series", length = 255)
   @JsonProperty("series")
   @JsonView({
     View.ComicListView.class,
