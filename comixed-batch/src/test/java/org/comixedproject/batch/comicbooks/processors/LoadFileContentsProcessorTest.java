@@ -18,8 +18,10 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import java.util.List;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicpages.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,11 +34,15 @@ public class LoadFileContentsProcessorTest {
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private Comic comic;
+  @Mock private List<Page> pageList;
 
   @Test
   public void testProcess() throws Exception {
+    Mockito.when(comic.getPages()).thenReturn(pageList);
+
     processor.process(comic);
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comic);
+    Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
   }
 }
