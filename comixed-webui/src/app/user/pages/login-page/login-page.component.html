@@ -10,6 +10,7 @@
           matInput
           type="email"
           formControlName="email"
+          [readonly]="busy"
           [placeholder]="'user.login-user.email-placeholder' | translate"
         />
         <mat-error>
@@ -27,6 +28,7 @@
           matInput
           type="password"
           formControlName="password"
+          [readonly]="busy"
           [placeholder]="'user.login-user.password-placeholder' | translate"
         />
         <mat-error>
@@ -58,7 +60,8 @@
         mat-raised-button
         color="primary"
         (click)="onSubmitLogin()"
-        [disabled]="!loginForm.valid"
+        [disabled]="!loginForm.valid || busy"
+        [class.cx-spinner]="busy"
       >
         <mat-label>{{ "button.login" | translate }}</mat-label>
         <mat-icon>login</mat-icon>
@@ -66,3 +69,4 @@
     </mat-card-content>
   </mat-card>
 </form>
+<p>busy: {{ busy }}</p>

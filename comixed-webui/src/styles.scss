@@ -340,6 +340,26 @@ th {
   text-overflow: ellipsis;
 }
 
+@keyframes cx-button-spinner {
+  to {transform: rotate(360deg);}
+}
+
+.cx-spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  border-top-color: #000000;
+  animation: cx-button-spinner .8s linear infinite;
+}
+
 // alerts
 
 .cx-info-alert {

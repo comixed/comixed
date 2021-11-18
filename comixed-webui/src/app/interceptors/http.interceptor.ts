@@ -76,7 +76,7 @@ export class HttpInterceptor implements HttpInterceptor {
           this.store.dispatch(logoutUser());
           this.logger.info('Redirecting to login page');
           this.router.navigateByUrl('/login');
-          return;
+          return throwError(error);
         }
         return of(error);
       })
