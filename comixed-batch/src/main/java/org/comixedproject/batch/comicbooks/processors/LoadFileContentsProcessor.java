@@ -39,6 +39,8 @@ public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
   public Comic process(final Comic comic) throws Exception {
     log.debug("Loading comic file contents: id={}", comic.getId());
     this.comicBookAdaptor.load(comic);
+    log.trace("Sorting comic pages");
+    comic.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
     log.trace("Returning updated comic");
     return comic;
   }
