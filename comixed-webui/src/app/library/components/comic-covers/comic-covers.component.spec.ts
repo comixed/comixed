@@ -444,7 +444,7 @@ describe('ComicCoversComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.selected = COMICS;
-      component.onConvertSelected('CBZ');
+      component.onConvertSelected('CB7');
     });
 
     it('confirms with the user', () => {
@@ -455,7 +455,7 @@ describe('ComicCoversComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         convertComics({
           comics: COMICS,
-          archiveType: archiveTypeFromString('CBZ'),
+          archiveType: archiveTypeFromString('CB7'),
           renamePages: true,
           deletePages: true
         })

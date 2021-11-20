@@ -84,6 +84,7 @@ import {
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
 import { FlexModule } from '@angular/flex-layout';
 import { MatBadgeModule } from '@angular/material/badge';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatGridListModule,
     MatDividerModule,
     FlexModule,
-    MatBadgeModule
+    MatBadgeModule,
+    DragDropModule
   ],
   exports: [
     CommonModule,

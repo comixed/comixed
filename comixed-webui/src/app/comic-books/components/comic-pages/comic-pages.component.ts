@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -26,6 +32,9 @@ import { Comic } from '@app/comic-books/models/comic';
 import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
+import { MatTableDataSource } from '@angular/material/table';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'cx-comic-pages',
@@ -35,10 +44,18 @@ import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
 export class ComicPagesComponent {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
-  @Input() comic: Comic;
-  @Input() pageSize = -1;
+  @Input() showPagesAsGrid = true;
   @Input() isAdmin = false;
 
+  @Output() pagesChanged = new EventEmitter<Page[]>();
+
+  readonly displayedColumns = [
+    'thumbnail',
+    'position',
+    'filename',
+    'dimensions'
+  ];
+  dataSource = new MatTableDataSource<Page>([]);
   page: Page;
   contextMenuX = '';
   contextMenuY = '';
@@ -49,6 +66,29 @@ export class ComicPagesComponent {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {}
+
+  private _pages: Page[] = [];
+
+  get pages(): Page[] {
+    return this._pages;
+  }
+
+  set pages(pages: Page[]) {
+    this._pages = pages;
+    this.pagesChanged.emit(pages);
+    this.dataSource.data = this.pages;
+  }
+
+  private _comic: Comic = null;
+
+  get comic(): Comic {
+    return this._comic;
+  }
+
+  @Input() set comic(comic: Comic) {
+    this._comic = comic;
+    this.pages = comic?.pages || [];
+  }
 
   onShowContextMenu(page: Page, x: string, y: string): void {
     this.logger.debug('Popping up context menu for:', page);
@@ -79,5 +119,18 @@ export class ComicPagesComponent {
         this.store.dispatch(updatePageDeletion({ pages: [page], deleted }));
       }
     });
+  }
+
+  onReorderPages(dragDropEvent: CdkDragDrop<Page[], any>): void {
+    this.logger.trace('Pages reordered');
+    const pages = _.cloneDeep(this.pages);
+    moveItemInArray(
+      pages,
+      dragDropEvent.previousIndex,
+      dragDropEvent.currentIndex
+    );
+    this.logger.trace('Updating page index');
+    pages.forEach((page, index) => (page.index = index));
+    this.pages = pages;
   }
 }

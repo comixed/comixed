@@ -24,6 +24,9 @@ import {
   loadComic,
   loadComicFailed,
   pageDeletionUpdated,
+  pageOrderSaved,
+  savePageOrder,
+  savePageOrderFailed,
   updateComic,
   updateComicFailed,
   updatePageDeletion,
@@ -211,6 +214,42 @@ describe('Comic Reducer', () => {
   describe('failure setting the deleted state', () => {
     beforeEach(() => {
       state = reducer({ ...state, saving: true }, updatePageDeletionFailed());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
+    });
+  });
+
+  describe('saving the page order', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, saving: false },
+        savePageOrder({
+          comic: COMIC,
+          entries: [{ index: 0, filename: PAGE.filename }]
+        })
+      );
+    });
+
+    it('sets the saving flag', () => {
+      expect(state.saving).toBeTrue();
+    });
+  });
+
+  describe('page order saved', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, pageOrderSaved());
+    });
+
+    it('clears the saving flag', () => {
+      expect(state.saving).toBeFalse();
+    });
+  });
+
+  describe('save page order failed', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, saving: true }, savePageOrderFailed());
     });
 
     it('clears the saving flag', () => {

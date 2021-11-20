@@ -23,6 +23,34 @@
   </button>
   <div class="cx-spacer"></div>
   <button
+    *ngIf="showPages"
+    id="toggle-page-view-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
+    (click)="onTogglePageView()"
+  >
+    <mat-icon *ngIf="showPagesAsGrid">grid_view</mat-icon>
+    <mat-icon *ngIf="!showPagesAsGrid">list_view</mat-icon>
+  </button>
+  <button
+    *ngIf="isAdmin && showPages"
+    id="save-page-order-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'comic-book.tooltip.save-page-order' | translate"
+    (click)="onSavePageOrder()"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+  <mat-divider
+    *ngIf="showPages"
+    class="cx-height-100"
+    vertical="true"
+  ></mat-divider>
+  <button
     id="update-comic-info-button"
     class="cx-toolbar-button"
     mat-icon-button
@@ -147,8 +175,9 @@
           class="cx-width-100"
           *ngIf="showPages"
           [comic]="comic"
-          [pageSize]="pageSize"
+          [showPagesAsGrid]="showPagesAsGrid"
           [isAdmin]="isAdmin"
+          (pagesChanged)="onPagesChanged($event)"
         ></cx-comic-pages>
       </mat-tab>
       <mat-tab

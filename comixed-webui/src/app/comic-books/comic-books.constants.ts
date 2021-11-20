@@ -21,8 +21,9 @@ import { API_ROOT_URL } from '../core';
 export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
 export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
 export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
-export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
+export const SAVE_PAGE_ORDER_URL = `${API_ROOT_URL}/comics/\${id}/pages/order`;
 
+export const GET_IMPRINTS_URL = `${API_ROOT_URL}/comics/imprints`;
 export const PAGE_URL_FROM_HASH = `${API_ROOT_URL}/pages/hashes/\${hash}/content`;
 export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;

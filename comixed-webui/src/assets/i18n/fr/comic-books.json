@@ -78,6 +78,12 @@
       "message": "Êtes-vous sûr de vouloir modifier manuellement cette bande dessinée ?",
       "title": "Enregistrer les changements dans la bande dessinée"
     },
+    "save-page-order": {
+      "confirmation-message": "Are you sure you want to save the new page ordering?",
+      "confirmation-title": "Save Page Order",
+      "effect-failure": "Failed to save page ordering.",
+      "effect-success": "Page ordering saved."
+    },
     "text": {
       "comic-changed": "Écrire les métadonnées dans le fichier de la bande dessinée.",
       "comicvine-issue-link": "Page de détails de ComicVine",
@@ -103,10 +109,12 @@
       "match-1": "Correspondance partielle.",
       "match-2": "Correspondance exacte.",
       "save-changes": "Enregistrer les modifications de cette Bande Dessinée.",
+      "save-page-order": "Save page ordering.",
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
       "scrape-filename": "Scrape the filename.",
       "show-next-comic-page": "Aller à la page suivante...",
       "show-previous-comic-page": "Aller à la page précédente...",
+      "toggle-page-view": "Toggle showing pages as a grid or a list.",
       "undelete-comic": "Annulez le marquage de la bande dessinée comme supprimée.",
       "undo-changes": "Annulez les modifications de cette Bande Dessinée",
       "update-comic-info": "Mise à jour des métadonnées du fichier de la bande dessinée."
@@ -122,6 +130,12 @@
     }
   },
   "comic-page": {
+    "label": {
+      "dimensions": "Dimensions",
+      "filename": "Filename",
+      "page-number": "Page #",
+      "thumbnail": "Thumbnail"
+    },
     "update-page-deletion": {
       "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",
       "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Page",

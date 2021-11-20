@@ -22,6 +22,7 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,8 @@ import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
@@ -666,5 +669,43 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
   public List<Comic> findComicsMarkedForPurging() {
     log.trace("Loading comics marked for purging");
     return this.comicRepository.findComicsMarkedForPurging();
+  }
+
+  /**
+   * Saves the new order for the pages of a comic.
+   *
+   * @param comicId the comic id
+   * @param entryList the page order entries
+   * @throws ComicException if the id is invalid, or there is a problem with the entry list
+   */
+  public void savePageOrder(final long comicId, final List<PageOrderEntry> entryList)
+      throws ComicException {
+    log.trace("Loading comic");
+    final Comic comic = this.doGetComic(comicId);
+    log.trace("Sorting new page list");
+    entryList.sort(Comparator.comparingInt(PageOrderEntry::getPosition));
+    log.trace("Checking for holes in order");
+    for (int index = 0; index < entryList.size(); index++) {
+      final PageOrderEntry entry = entryList.get(index);
+      if (entry.getPosition() != index)
+        throw new ComicException(
+            "Invalid page order list: " + index + " != " + entry.getPosition());
+    }
+
+    log.trace("Applying order");
+    for (int index = 0; index < comic.getPages().size(); index++) {
+      final Page page = comic.getPages().get(index);
+      final Optional<PageOrderEntry> position =
+          entryList.stream()
+              .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
+              .findFirst();
+      if (position.isEmpty())
+        throw new ComicException("No such order entry: filename=" + page.getFilename());
+      log.trace("Applying position");
+      page.setPageNumber(position.get().getPosition());
+    }
+
+    log.trace("Firing event: details updated");
+    this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
   }
 }

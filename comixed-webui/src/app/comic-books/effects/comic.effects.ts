@@ -28,6 +28,9 @@ import {
   loadComic,
   loadComicFailed,
   pageDeletionUpdated,
+  pageOrderSaved,
+  savePageOrder,
+  savePageOrderFailed,
   updateComic,
   updateComicFailed,
   updatePageDeletion,
@@ -148,6 +151,44 @@ export class ComicEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(updatePageDeletionFailed());
+      })
+    );
+  });
+
+  savePageOrder$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(savePageOrder),
+      tap(action => this.logger.trace('Saving page order:', action)),
+      switchMap(action =>
+        this.comicService
+          .savePageOrder({ comic: action.comic, entries: action.entries })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'comic-book.save-page-order.effect-success'
+                )
+              )
+            ),
+            map(() => pageOrderSaved()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'comic-book.save-page-order.effect-failure'
+                )
+              );
+              return of(savePageOrderFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(savePageOrderFailed());
       })
     );
   });

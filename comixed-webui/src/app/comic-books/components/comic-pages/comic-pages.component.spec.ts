@@ -18,7 +18,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
-import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -38,9 +38,11 @@ import { Confirmation } from '@app/core/models/confirmation';
 import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatTableModule } from '@angular/material/table';
 
 describe('ComicPagesComponent', () => {
-  const COMIC = COMIC_2;
+  const COMIC = COMIC_1;
   const USER = USER_READER;
   const PAGE = PAGE_1;
   const DELETED = Math.random() > 0.5;
@@ -72,7 +74,9 @@ describe('ComicPagesComponent', () => {
           TranslateModule.forRoot(),
           MatCardModule,
           MatMenuModule,
-          MatDialogModule
+          MatDialogModule,
+          MatTableModule,
+          DragDropModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
@@ -148,6 +152,26 @@ describe('ComicPagesComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updatePageDeletion({ pages: [PAGE], deleted: DELETED })
       );
+    });
+  });
+
+  describe('reordering the pages', () => {
+    const PAGES = COMIC.pages;
+    const COPY = [].concat(COMIC.pages);
+
+    beforeEach(() => {
+      component.comic = { ...COMIC, pages: COPY };
+      component.showPagesAsGrid = false;
+      component.onReorderPages({
+        previousIndex: 0,
+        currentIndex: 1,
+        container: COPY
+      } as any);
+    });
+
+    it('reorders the pages', () => {
+      expect(component.pages[0].id).toEqual(PAGES[1].id);
+      expect(component.pages[1].id).toEqual(PAGES[0].id);
     });
   });
 });

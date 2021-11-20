@@ -41,7 +41,10 @@ import { ComicStoryComponent } from '@app/comic-books/components/comic-story/com
 import { ComicPagesComponent } from '@app/comic-books/components/comic-pages/comic-pages.component';
 import { ComicEditComponent } from '@app/comic-books/components/comic-edit/comic-edit.component';
 import { BehaviorSubject } from 'rxjs';
-import { QUERY_PARAM_TAB } from '@app/library/library.constants';
+import {
+  QUERY_PARAM_PAGES_AS_GRID,
+  QUERY_PARAM_TAB
+} from '@app/library/library.constants';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -75,7 +78,10 @@ import { WebSocketService } from '@app/messaging';
 import { Subscription } from 'webstomp-client';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { interpolate } from '@app/core';
-import { comicLoaded } from '@app/comic-books/actions/comic.actions';
+import {
+  comicLoaded,
+  savePageOrder
+} from '@app/comic-books/actions/comic.actions';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -222,6 +228,22 @@ describe('ComicBookPageComponent', () => {
     it('updates the URL when the tab changes', () => {
       component.onTabChange(TAB);
       expect(router.navigate).toHaveBeenCalled();
+    });
+
+    it('sets the grid view', () => {
+      component.showPagesAsGrid = false;
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        [QUERY_PARAM_PAGES_AS_GRID]: 'true'
+      });
+      expect(component.showPagesAsGrid).toBeTrue();
+    });
+
+    it('clears the grid view', () => {
+      component.showPagesAsGrid = true;
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        [QUERY_PARAM_PAGES_AS_GRID]: 'false'
+      });
+      expect(component.showPagesAsGrid).toBeFalse();
     });
   });
 
@@ -426,6 +448,73 @@ describe('ComicBookPageComponent', () => {
 
     it('clears the subscription', () => {
       expect(component.comicUpdateSubscription).toBeNull();
+    });
+  });
+
+  describe('toggling show pages as grid on', () => {
+    beforeEach(() => {
+      component.showPagesAsGrid = false;
+      component.onTogglePageView();
+    });
+
+    it('sets the flag', () => {
+      expect(component.showPagesAsGrid).toBeTrue();
+    });
+
+    it('updates the URL when the tab changes', () => {
+      expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggling show pages as grid off', () => {
+    beforeEach(() => {
+      component.showPagesAsGrid = true;
+      component.onTogglePageView();
+    });
+
+    it('sets the flag', () => {
+      expect(component.showPagesAsGrid).toBeFalse();
+    });
+
+    it('updates the URL when the tab changes', () => {
+      expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('when the pages are changed', () => {
+    beforeEach(() => {
+      component.pages = [];
+      component.onPagesChanged(COMIC.pages);
+    });
+
+    it('updates the pages', () => {
+      expect(component.pages).toEqual(COMIC.pages);
+    });
+  });
+
+  describe('saving the page order', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.comic = COMIC;
+      component.pages = COMIC.pages;
+      component.onSavePageOrder();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        savePageOrder({
+          comic: COMIC,
+          entries: COMIC.pages.map((page, index) => {
+            return { index, filename: page.filename };
+          })
+        })
+      );
     });
   });
 });

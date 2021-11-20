@@ -78,6 +78,12 @@
       "message": "¿Estás seguro de que quieres cambios manuales a este cómic?",
       "title": "Guardar cambios en el cómic"
     },
+    "save-page-order": {
+      "confirmation-message": "Are you sure you want to save the new page ordering?",
+      "confirmation-title": "Save Page Order",
+      "effect-failure": "Failed to save page ordering.",
+      "effect-success": "Page ordering saved."
+    },
     "text": {
       "comic-changed": "Write metadata to the comic file.",
       "comicvine-issue-link": "ComicVine Details Page",
@@ -103,10 +109,12 @@
       "match-1": "Partido parcial.",
       "match-2": "Coincidencia exacta.",
       "save-changes": "Guarda los cambios en este cómic.",
+      "save-page-order": "Save page ordering.",
       "scrape-comic": "Raspa este cómic.",
       "scrape-filename": "Scrape the filename.",
       "show-next-comic-page": "Ir a la página siguiente...",
       "show-previous-comic-page": "Ir a la página anterior...",
+      "toggle-page-view": "Toggle showing pages as a grid or a list.",
       "undelete-comic": "Unmark comic as deleted.",
       "undo-changes": "Deshacer cambios en este cómic.",
       "update-comic-info": "Update comic file metadata."
@@ -122,6 +130,12 @@
     }
   },
   "comic-page": {
+    "label": {
+      "dimensions": "Dimensions",
+      "filename": "Filename",
+      "page-number": "Page #",
+      "thumbnail": "Thumbnail"
+    },
     "update-page-deletion": {
       "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",
       "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Page",

@@ -42,13 +42,15 @@ import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
   MARK_PAGES_DELETED_URL,
-  MARK_PAGES_UNDELETED_URL
+  MARK_PAGES_UNDELETED_URL,
+  SAVE_PAGE_ORDER_URL
 } from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { HttpResponse } from '@angular/common/http';
 import { MarkComicsUndeletedRequest } from '@app/comic-books/models/net/mark-comics-undeleted-request';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/network/mark-pages-deleted-request';
+import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 
 describe('ComicService', () => {
   const COMIC = COMIC_2;
@@ -149,7 +151,7 @@ describe('ComicService', () => {
     req.flush(new HttpResponse({ status: 200 }));
   });
 
-  it('it can mark pages for deletion', () => {
+  it('can mark pages for deletion', () => {
     service
       .updatePageDeletion({
         pages: [PAGE],
@@ -166,7 +168,7 @@ describe('ComicService', () => {
     req.flush(new HttpResponse({ status: 200 }));
   });
 
-  it('it can unmark pages for deletion', () => {
+  it('can unmark pages for deletion', () => {
     service
       .updatePageDeletion({
         pages: [PAGE],
@@ -180,6 +182,24 @@ describe('ComicService', () => {
       ids: [PAGE.id],
       deleted: false
     } as MarkPagesDeletedRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can save the page order', () => {
+    service
+      .savePageOrder({
+        comic: COMIC,
+        entries: [{ index: 0, filename: PAGE.filename }]
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(SAVE_PAGE_ORDER_URL, { id: COMIC.id })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      entries: [{ index: 0, filename: PAGE.filename }]
+    } as SavePageOrderRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });

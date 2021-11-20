@@ -20,6 +20,7 @@ import { API_ROOT_URL } from '../core';
 
 export const QUERY_PARAM_TAB = 'tab';
 export const QUERY_PARAM_ARCHIVE_TYPE = 'archive';
+export const QUERY_PARAM_PAGES_AS_GRID = 'grid';
 
 export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
 
