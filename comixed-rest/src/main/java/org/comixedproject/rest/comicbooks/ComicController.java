@@ -31,6 +31,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.MarkComicsDeletedRequest;
 import org.comixedproject.model.net.comicbooks.MarkComicsUndeletedRequest;
+import org.comixedproject.model.net.comicbooks.SavePageOrderRequest;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -230,5 +232,22 @@ public class ComicController {
         .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
         .contentType(MediaType.valueOf(type))
         .body(content);
+  }
+
+  /**
+   * Updates the order of pages in a comic.
+   *
+   * @param id the comic id
+   * @param request the request body
+   * @throws ComicException if an error occurs
+   */
+  @PostMapping(value = "/api/comics/{id}/pages/order", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableEndpoint(logRequest = true)
+  @PreAuthorize("hasRole('ADMIN')")
+  public void savePageOrder(
+      @PathVariable("id") final long id, @RequestBody() final SavePageOrderRequest request)
+      throws ComicException {
+    log.info("Updating page order: comic id={}", id);
+    this.comicService.savePageOrder(id, request.getEntries());
   }
 }

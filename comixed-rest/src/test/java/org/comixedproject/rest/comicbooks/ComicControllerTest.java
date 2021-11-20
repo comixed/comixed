@@ -32,6 +32,8 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.MarkComicsDeletedRequest;
 import org.comixedproject.model.net.comicbooks.MarkComicsUndeletedRequest;
+import org.comixedproject.model.net.comicbooks.PageOrderEntry;
+import org.comixedproject.model.net.comicbooks.SavePageOrderRequest;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicfiles.ComicFileService;
@@ -66,6 +68,7 @@ public class ComicControllerTest {
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private Page page;
   @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private List<PageOrderEntry> pageOrderEntrylist;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
@@ -337,5 +340,26 @@ public class ComicControllerTest {
     assertSame(comic, result);
 
     Mockito.verify(comicService, Mockito.times(1)).deleteMetadata(TEST_COMIC_ID);
+  }
+
+  @Test(expected = ComicException.class)
+  public void testSavePageOrderServiceException() throws ComicException {
+    Mockito.doThrow(ComicException.class)
+        .when(comicService)
+        .savePageOrder(Mockito.anyLong(), Mockito.anyList());
+
+    try {
+      controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntrylist));
+    } finally {
+      Mockito.verify(comicService, Mockito.times(1))
+          .savePageOrder(TEST_COMIC_ID, pageOrderEntrylist);
+    }
+  }
+
+  @Test
+  public void testSavePageOrder() throws ComicException {
+    controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntrylist));
+
+    Mockito.verify(comicService, Mockito.times(1)).savePageOrder(TEST_COMIC_ID, pageOrderEntrylist);
   }
 }

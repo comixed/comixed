@@ -1,0 +1,22 @@
+@import 'styles';
+
+.mat-column-position {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-thumbnail {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-filename {
+}
+
+.mat-column-dimensions {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

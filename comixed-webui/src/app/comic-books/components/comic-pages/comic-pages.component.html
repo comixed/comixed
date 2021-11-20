@@ -1,4 +1,4 @@
-<div id="cx-all-pages" class="cx-detail-card-container">
+<div id="cx-all-pages" *ngIf="showPagesAsGrid" class="cx-detail-card-container">
   <div
     *ngFor="let page of comic.pages; let i = index"
     fxFlex.gt-md="25%"
@@ -15,6 +15,60 @@
     ></cx-comic-page>
   </div>
 </div>
+
+<mat-table
+  *ngIf="!showPagesAsGrid"
+  cdkDropList
+  [cdkDropListData]="pages"
+  [dataSource]="dataSource"
+  (cdkDropListDropped)="onReorderPages($event)"
+>
+  <ng-container matColumnDef="position">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-page.label.page-number" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let page">{{ page.index }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="thumbnail">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-page.label.thumbnail" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let page">
+      <img
+        [src]="page | comicPageUrl"
+        [alt]="page.filename"
+        width="100%"
+        height="auto"
+      />
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="filename">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-page.label.filename" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let page">
+      <span class="cx-text-nowrap">{{ page.filename }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="dimensions">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "comic-page.label.dimensions" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let page">
+      <span class="cx-text-nowrap">{{ page.width }}x{{ page.height }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    cdkDrag
+    [cdkDragData]="row.item"
+    *matRowDef="let row; columns: displayedColumns"
+  ></mat-row>
+</mat-table>
 
 <div
   style="visibility: hidden; position: fixed"

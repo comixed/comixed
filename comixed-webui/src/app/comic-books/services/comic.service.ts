@@ -32,11 +32,14 @@ import {
   MARK_COMICS_DELETED_URL,
   MARK_COMICS_UNDELETED_URL,
   MARK_PAGES_DELETED_URL,
-  MARK_PAGES_UNDELETED_URL
+  MARK_PAGES_UNDELETED_URL,
+  SAVE_PAGE_ORDER_URL
 } from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { Page } from '@app/comic-books/models/page';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/network/mark-pages-deleted-request';
+import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
+import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 
 @Injectable({
   providedIn: 'root'
@@ -120,5 +123,16 @@ export class ComicService {
         deleted: false
       } as MarkPagesDeletedRequest);
     }
+  }
+
+  savePageOrder(args: {
+    comic: Comic;
+    entries: PageOrderEntry[];
+  }): Observable<any> {
+    this.logger.trace('Saving page order');
+    return this.http.post(
+      interpolate(SAVE_PAGE_ORDER_URL, { id: args.comic.id }),
+      { entries: args.entries } as SavePageOrderRequest
+    );
   }
 }

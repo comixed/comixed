@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -31,6 +32,8 @@ import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.repositories.comicbooks.ComicRepository;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -88,6 +91,7 @@ public class ComicServiceTest {
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
   @Mock private List<String> publisherList;
+  @Mock private Page page;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -903,5 +907,87 @@ public class ComicServiceTest {
     assertSame(comicList, result);
 
     Mockito.verify(comicRepository, Mockito.times(1)).findComicsMarkedForPurging();
+  }
+
+  @Test(expected = ComicException.class)
+  public void testSavePageOrderInvalidId() throws ComicException {
+    List<PageOrderEntry> entryList = new ArrayList<>();
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      service.savePageOrder(TEST_COMIC_ID, entryList);
+    } finally {
+      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    }
+  }
+
+  @Test(expected = ComicException.class)
+  public void testSavePageOrderContainsGap() throws ComicException {
+    List<PageOrderEntry> entryList = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      entryList.add(new PageOrderEntry(String.format("filename-%d", index), index + 1));
+    }
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    try {
+      service.savePageOrder(TEST_COMIC_ID, entryList);
+    } finally {
+      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    }
+  }
+
+  @Test(expected = ComicException.class)
+  public void testSavePageOrderMissingFilename() throws ComicException {
+    List<PageOrderEntry> entryList = new ArrayList<>();
+    List<Page> pageList = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      final String filename = String.format("filename-%d", index);
+      entryList.add(new PageOrderEntry(filename, 24 - index));
+      final Page page = new Page();
+      page.setFilename(filename.substring(1));
+      pageList.add(page);
+    }
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comic.getPages()).thenReturn(pageList);
+
+    try {
+      service.savePageOrder(TEST_COMIC_ID, entryList);
+    } finally {
+      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    }
+  }
+
+  @Test
+  public void testSavePageOrder() throws ComicException {
+    List<PageOrderEntry> entryList = new ArrayList<>();
+    List<Page> pageList = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      final String filename = String.format("filename-%d", index);
+      entryList.add(new PageOrderEntry(filename, 24 - index));
+      final Page page = new Page();
+      page.setFilename(filename);
+      pageList.add(page);
+    }
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comic.getPages()).thenReturn(pageList);
+
+    service.savePageOrder(TEST_COMIC_ID, entryList);
+
+    for (int index = 0; index < entryList.size(); index++) {
+      final PageOrderEntry pageOrderEntry = entryList.get(index);
+      final Optional<Page> pageListEntry =
+          pageList.stream()
+              .filter(entry -> entry.getFilename().equals(pageOrderEntry.getFilename()))
+              .findFirst();
+
+      assertTrue(pageListEntry.isPresent());
+      assertEquals(pageOrderEntry.getPosition(), pageListEntry.get().getPageNumber().intValue());
+    }
+
+    Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
   }
 }

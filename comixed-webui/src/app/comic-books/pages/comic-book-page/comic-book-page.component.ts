@@ -33,6 +33,7 @@ import { interpolate, updateQueryParam } from '@app/core';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
   PAGE_SIZE_DEFAULT,
+  QUERY_PARAM_PAGES_AS_GRID,
   QUERY_PARAM_TAB,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
@@ -47,7 +48,11 @@ import {
 import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { comicLoaded, loadComic } from '@app/comic-books/actions/comic.actions';
+import {
+  comicLoaded,
+  loadComic,
+  savePageOrder
+} from '@app/comic-books/actions/comic.actions';
 import {
   selectComic,
   selectComicBusy
@@ -62,6 +67,7 @@ import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
+import { Page } from '@app/comic-books/models/page';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -81,6 +87,7 @@ export class ComicBookPageComponent
   comicId = -1;
   pageIndex = 0;
   comic: Comic;
+  pages: Page[];
   userSubscription: Subscription;
   isAdmin = false;
   displaySubscription: Subscription;
@@ -100,6 +107,7 @@ export class ComicBookPageComponent
   lastRead: LastRead = null;
   showPages = false;
   messagingStarted = false;
+  showPagesAsGrid = true;
 
   constructor(
     private logger: LoggerService,
@@ -126,6 +134,9 @@ export class ComicBookPageComponent
         if (+params[QUERY_PARAM_TAB]) {
           this.currentTab = +params[QUERY_PARAM_TAB];
           this.updateShowPages();
+        }
+        if (!!params[QUERY_PARAM_PAGES_AS_GRID]) {
+          this.showPagesAsGrid = params[QUERY_PARAM_PAGES_AS_GRID] === 'true';
         }
       }
     );
@@ -279,6 +290,46 @@ export class ComicBookPageComponent
       this.comicUpdateSubscription.unsubscribe();
       this.comicUpdateSubscription = null;
     }
+  }
+
+  onTogglePageView(): void {
+    this.logger.trace('Toggling showing pages as grid');
+    this.showPagesAsGrid = !this.showPagesAsGrid;
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_PAGES_AS_GRID,
+      `${this.showPagesAsGrid}`
+    );
+  }
+
+  onPagesChanged(pages: Page[]): void {
+    this.pages = pages;
+  }
+
+  onSavePageOrder(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'comic-book.save-page-order.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'comic-book.save-page-order.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing event: save page order');
+        this.store.dispatch(
+          savePageOrder({
+            comic: this.comic,
+            entries: this.pages.map((page, index) => {
+              return {
+                index,
+                filename: page.filename
+              };
+            })
+          })
+        );
+      }
+    });
   }
 
   private updateShowPages(): void {

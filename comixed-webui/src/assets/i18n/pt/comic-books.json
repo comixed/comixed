@@ -79,6 +79,12 @@
       "message": "Are you sure you want to manual changes to this comic?",
       "title": "Save Changes To Comic"
     },
+    "save-page-order": {
+      "confirmation-message": "Are you sure you want to save the new page ordering?",
+      "confirmation-title": "Save Page Order",
+      "effect-failure": "Failed to save page ordering.",
+      "effect-success": "Page ordering saved."
+    },
     "text": {
       "comic-changed": "Write metadata to the comic file.",
       "comic-deleted-date": "Comic marked as deleted on {date}.",
@@ -105,10 +111,12 @@
       "match-1": "Partial match.",
       "match-2": "Exact match.",
       "save-changes": "Saves changes to this comic.",
+      "save-page-order": "Save page ordering.",
       "scrape-comic": "Scrape this comic.",
       "scrape-filename": "Scrape the filename.",
       "show-next-comic-page": "Go to next page...",
       "show-previous-comic-page": "Go to previous page...",
+      "toggle-page-view": "Toggle showing pages as a grid or a list.",
       "undelete-comic": "Unmark comic as deleted.",
       "undo-changes": "Undo changes to this comic.",
       "update-comic-info": "Update comic file metadata."
@@ -124,6 +132,12 @@
     }
   },
   "comic-page": {
+    "label": {
+      "dimensions": "Dimensions",
+      "filename": "Filename",
+      "page-number": "Page #",
+      "thumbnail": "Thumbnail"
+    },
     "update-page-deletion": {
       "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",
       "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Page",

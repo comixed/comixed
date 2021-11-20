@@ -29,6 +29,9 @@ import {
   loadComic,
   loadComicFailed,
   pageDeletionUpdated,
+  pageOrderSaved,
+  savePageOrder,
+  savePageOrderFailed,
   updateComic,
   updateComicFailed,
   updatePageDeletion,
@@ -68,7 +71,8 @@ describe('ComicEffects', () => {
             updateOne: jasmine.createSpy('ComicService.updateOne()'),
             updatePageDeletion: jasmine.createSpy(
               'ComicService.updatePageDeletion()'
-            )
+            ),
+            savePageOrder: jasmine.createSpy('ComicService.savePageOrder()')
           }
         },
         AlertService
@@ -213,6 +217,70 @@ describe('ComicEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.updatePageDeletion$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('saving the page order', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = savePageOrder({
+        comic: COMIC,
+        entries: [{ index: 0, filename: PAGE.filename }]
+      });
+      const outcome = pageOrderSaved();
+
+      actions$ = hot('-a', { a: action });
+      comicService.savePageOrder
+        .withArgs({
+          comic: COMIC,
+          entries: [{ index: 0, filename: PAGE.filename }]
+        })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.savePageOrder$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = savePageOrder({
+        comic: COMIC,
+        entries: [{ index: 0, filename: PAGE.filename }]
+      });
+      const outcome = savePageOrderFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.savePageOrder
+        .withArgs({
+          comic: COMIC,
+          entries: [{ index: 0, filename: PAGE.filename }]
+        })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.savePageOrder$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = savePageOrder({
+        comic: COMIC,
+        entries: [{ index: 0, filename: PAGE.filename }]
+      });
+      const outcome = savePageOrderFailed();
+
+      actions$ = hot('-a', { a: action });
+      comicService.savePageOrder
+        .withArgs({
+          comic: COMIC,
+          entries: [{ index: 0, filename: PAGE.filename }]
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.savePageOrder$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

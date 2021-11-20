@@ -23,6 +23,9 @@ import {
   loadComic,
   loadComicFailed,
   pageDeletionUpdated,
+  pageOrderSaved,
+  savePageOrder,
+  savePageOrderFailed,
   updateComic,
   updateComicFailed,
   updatePageDeletion,
@@ -72,5 +75,8 @@ export const reducer = createReducer(
   on(updateComicFailed, state => ({ ...state, saving: false, saved: false })),
   on(updatePageDeletion, state => ({ ...state, saving: true })),
   on(pageDeletionUpdated, state => ({ ...state, saving: false })),
-  on(updatePageDeletionFailed, state => ({ ...state, saving: false }))
+  on(updatePageDeletionFailed, state => ({ ...state, saving: false })),
+  on(savePageOrder, state => ({ ...state, saving: true })),
+  on(pageOrderSaved, state => ({ ...state, saving: false })),
+  on(savePageOrderFailed, state => ({ ...state, saving: false }))
 );

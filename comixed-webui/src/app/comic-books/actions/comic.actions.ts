@@ -19,6 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/comic-books/models/comic';
 import { Page } from '@app/comic-books/models/page';
+import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 
 export const loadComic = createAction(
   '[Comic] Loads a single comic',
@@ -59,4 +60,15 @@ export const pageDeletionUpdated = createAction(
 
 export const updatePageDeletionFailed = createAction(
   '[Comic] Failed to update page deletion state'
+);
+
+export const savePageOrder = createAction(
+  '[Comic] Save page order',
+  props<{ comic: Comic; entries: PageOrderEntry[] }>()
+);
+
+export const pageOrderSaved = createAction('[Comic] Page order saved');
+
+export const savePageOrderFailed = createAction(
+  '[Comic] Save page order failed'
 );
