@@ -32,6 +32,7 @@
       "comicvine-id": "ComicVine ID",
       "comicvine-issue-details": "Page de détails de Bande Dessinée",
       "credits": "Équipe créative ({count})",
+      "deleted-date": "Maked For Deletion",
       "description": "Description de ce numéro",
       "file-details": "Détails du fichier de la Bande Dessinée",
       "filename": "Nom du fichier",
@@ -80,6 +81,7 @@
     },
     "text": {
       "comic-changed": "Écrire les métadonnées dans le fichier de la bande dessinée.",
+      "comic-deleted-date": "Comic marked as deleted on {date}.",
       "comicvine-issue-link": "Page de détails de ComicVine",
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
       "no-matching-volumes": "No matching volumes were found...",

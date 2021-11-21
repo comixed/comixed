@@ -41,10 +41,20 @@
         <mat-basic-chip
           *ngIf="comicChanged && isAdmin"
           color="warn"
-          (click)="onUpdateComicInfo(comic)"
           [matTooltip]="'comic-book.text.comic-changed' | translate"
+          (click)="onUpdateComicInfo(comic)"
         >
           <mat-icon>sync_alt</mat-icon>
+        </mat-basic-chip>
+        <mat-basic-chip
+          *ngIf="!!comic?.deletedDate"
+          color="warn"
+          [matTooltip]="
+            'comic-book.text.comic-deleted-date'
+              | translate: { date: comic.deletedDate | date }
+          "
+        >
+          <mat-icon>deleted</mat-icon>
         </mat-basic-chip>
       </mat-chip-list>
     </div>
