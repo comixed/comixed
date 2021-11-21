@@ -178,6 +178,8 @@ public class ComicBookAdaptor {
       this.fileAdaptor.moveFile(new File(temporaryFilename), new File(destinationFilename));
       log.trace("Updating filename: {}", destinationFilename);
       comic.setFilename(destinationFilename);
+      log.debug("Assigning archive type to comic: {}", targetArchiveType);
+      comic.setArchiveType(targetArchiveType);
     } catch (AdaptorException
         | ArchiveAdaptorException
         | IOException
