@@ -95,6 +95,24 @@
     </span>
   </mat-grid-tile>
 
+  <mat-grid-tile
+    *ngIf="!!comic.deletedDate"
+    class="cx-accent-light-background"
+    colspan="1"
+    rowspan="1"
+  >
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.deleted-date" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="!!comic.deletedDate" colspan="3" rowspan="1">
+    <span
+      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
+    >
+      {{ comic.deletedDate | date }}
+    </span>
+  </mat-grid-tile>
+
   <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
     <span class="cx-align-text-right">
       {{ "comic-book.label.filename" | translate }}

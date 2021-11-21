@@ -32,6 +32,7 @@
       "comicvine-id": "ComicVine ID",
       "comicvine-issue-details": "Comic Details Page",
       "credits": "Creative Team ({count})",
+      "deleted-date": "Maked For Deletion",
       "description": "Issue Description",
       "file-details": "Comic File Details",
       "filename": "Filename",
@@ -80,6 +81,7 @@
     },
     "text": {
       "comic-changed": "Write metadata to the comic file.",
+      "comic-deleted-date": "Comic marked as deleted on {date}.",
       "comicvine-issue-link": "ComicVine Details Page",
       "filesize": "{size, plural, =1{One byte} other{# bytes}}",
       "no-matching-volumes": "No matching volumes were found...",
