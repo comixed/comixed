@@ -131,7 +131,7 @@ The application depends on the following pieces:
 
 Once you've installed the requirements, you need to setup your environment:
 
-1. Install [yarn](https://yarnpkg.com/en/): ```npm install -g yarn```
+1. Install [yarn](https://yarnpkg.com/) following [their instructions](https://yarnpkg.com/getting-started/install).
 
 ### Running The Build
 
