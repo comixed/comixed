@@ -526,6 +526,33 @@ public class ScrapingServiceTest {
   }
 
   @Test
+  public void testScrapeComicCachingError()
+      throws ComicException, ScrapingException, JsonProcessingException {
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
+    Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(cachedEntryList);
+    Mockito.when(scrapingAdaptor.getIssueDetails(Mockito.anyString(), Mockito.anyInt()))
+        .thenReturn(scrapingIssueDetails);
+    Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssueDetails.class)))
+        .thenThrow(JsonProcessingException.class);
+
+    final Comic result = scrapingService.scrapeComic(TEST_COMIC_ID, TEST_ISSUE_ID, false);
+
+    assertNotNull(result);
+    assertSame(savedComic, result);
+
+    Mockito.verify(comicService, Mockito.times(2)).getComic(TEST_COMIC_ID);
+    Mockito.verify(scrapingCacheService, Mockito.times(1))
+        .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
+    Mockito.verify(scrapingAdaptor, Mockito.times(1)).getIssueDetails(TEST_API_KEY, TEST_ISSUE_ID);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(loadedComic, ComicEvent.scraped);
+    Mockito.verify(scrapingCacheService, Mockito.never())
+        .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
+
+    this.verifyComicScraping(loadedComic);
+  }
+
+  @Test
   public void testScrapeComicCachedDate()
       throws ComicException, JsonProcessingException, ScrapingException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
@@ -567,8 +594,10 @@ public class ScrapingServiceTest {
     Mockito.verify(this.loadedComic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(this.loadedComic, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
-    Mockito.verify(this.loadedComic, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
+    Mockito.verify(this.loadedComic, Mockito.times(1))
+        .setCoverDate(this.scrapingService.adjustForTimezone(TEST_COVER_DATE));
+    Mockito.verify(this.loadedComic, Mockito.times(1))
+        .setStoreDate(this.scrapingService.adjustForTimezone(TEST_STORE_DATE));
     Mockito.verify(this.loadedComic, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(this.imprintService, Mockito.times(1)).update(comic);

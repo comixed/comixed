@@ -22,8 +22,10 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_COMICVIN
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.model.comicbooks.Comic;
@@ -226,11 +228,11 @@ public class ScrapingService {
         List<String> encodedDetails = new ArrayList<>();
         try {
           encodedDetails.add(this.objectMapper.writeValueAsString(issueDetails));
+          log.debug("Caching fetched issue details");
+          this.scrapingCacheService.saveToCache(source, key, encodedDetails);
         } catch (JsonProcessingException error) {
-          throw new ScrapingException("failed to encode issue details", error);
+          log.error("Failed to cache issue details", error);
         }
-        log.debug("Caching fetched issue details");
-        this.scrapingCacheService.saveToCache(source, key, encodedDetails);
       }
     }
 
@@ -243,8 +245,8 @@ public class ScrapingService {
       comic.setSeries(issueDetails.getSeries());
       comic.setVolume(issueDetails.getVolume());
       comic.setIssueNumber(issueDetails.getIssueNumber());
-      comic.setCoverDate(issueDetails.getCoverDate());
-      comic.setStoreDate(issueDetails.getStoreDate());
+      comic.setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
+      comic.setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
       comic.setTitle(issueDetails.getTitle());
       comic.setDescription(issueDetails.getDescription());
       comic.getCharacters().clear();
@@ -272,6 +274,12 @@ public class ScrapingService {
     } catch (ComicException error) {
       throw new ScrapingException("failed to load comic", error);
     }
+  }
+
+  Date adjustForTimezone(final Date date) {
+    final LocalDateTime localDateTime =
+        LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    return new Date(localDateTime.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli());
   }
 
   private ScrapingIssueDetails doLoadIssueDetails(final String source, final String key)
