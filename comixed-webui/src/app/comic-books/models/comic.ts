@@ -38,6 +38,7 @@ export interface Comic {
   volume: string;
   issueNumber: string;
   coverDate: number;
+  storeDate: number;
   yearPublished: number;
   title: string;
   sortableIssueNumber: string;

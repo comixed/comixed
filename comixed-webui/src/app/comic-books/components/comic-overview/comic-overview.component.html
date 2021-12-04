@@ -74,7 +74,20 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.coverDate | date: "MM/yyyy" }}
+      {{ comic.coverDate | date: "MMMM yyyy" }}
+    </span>
+  </mat-grid-tile>
+
+  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
+    <span class="cx-align-text-right">
+      {{ "comic-book.label.store-date" | translate }}
+    </span>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="3" rowspan="1">
+    <span
+      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
+    >
+      {{ comic.storeDate | date: "longDate" }}
     </span>
   </mat-grid-tile>
 
