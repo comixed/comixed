@@ -54,7 +54,10 @@ export const reducer = createReducer(
   })),
   on(loadComics, state => ({ ...state, loading: true })),
   on(comicsReceived, (state, action) => {
-    const comics = state.comics.concat(action.comics);
+    let comics = state.comics.filter(
+      comic => !action.comics.some(entry => entry.id === comic.id)
+    );
+    comics = comics.concat(action.comics);
     const lastId = action.lastId;
     const lastPayload = action.lastPayload;
     return { ...state, comics, lastId, lastPayload, loading: false };
