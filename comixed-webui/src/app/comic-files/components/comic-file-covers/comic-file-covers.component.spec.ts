@@ -43,6 +43,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('ComicFileCoversComponent', () => {
   const initialState = {};
@@ -71,7 +72,8 @@ describe('ComicFileCoversComponent', () => {
           MatInputModule,
           MatSelectModule,
           MatToolbarModule,
-          MatTooltipModule
+          MatTooltipModule,
+          MatDialogModule
         ],
         providers: [provideMockStore({ initialState })]
       }).compileComponents();

@@ -50,6 +50,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import { Confirmation } from '@app/core/models/confirmation';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('ComicFileToolbarComponent', () => {
   const USER = USER_ADMIN;
@@ -61,6 +64,7 @@ describe('ComicFileToolbarComponent', () => {
   let component: ComicFileToolbarComponent;
   let fixture: ComponentFixture<ComicFileToolbarComponent>;
   let store: MockStore<any>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(
     waitForAsync(() => {
@@ -79,15 +83,17 @@ describe('ComicFileToolbarComponent', () => {
           MatInputModule,
           MatToolbarModule,
           MatTooltipModule,
-          MatPaginatorModule
+          MatPaginatorModule,
+          MatDialogModule
         ],
-        providers: [provideMockStore({ initialState })]
+        providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(ComicFileToolbarComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
       fixture.detectChanges();
     })
   );
@@ -155,8 +161,15 @@ describe('ComicFileToolbarComponent', () => {
 
   describe('starting the import process', () => {
     beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
       component.selectedComicFiles = COMIC_FILES;
       component.onStartImport();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
     });
 
     it('fires an action', () => {

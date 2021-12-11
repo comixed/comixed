@@ -13,6 +13,12 @@
       "filename": "Filename",
       "size": "File Size (kb)"
     },
+    "import-comic-files": {
+      "confirmation-message": "Are you sure you want to import the selected {count, plural, =1{comic} other{# comics}}?",
+      "confirmation-title": "Import Selected Comics",
+      "effect-failure": "Failed to send comic files for import.",
+      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
+    },
     "label": {
       "maximum-all-files": "All files",
       "maximum-10-files": "10 files",
@@ -30,10 +36,6 @@
     },
     "processing-comics": {
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
-    },
-    "send-comic-files": {
-      "effect-failure": "Failed to send comic files for import.",
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
     },
     "tab-title": "Import Comics",
     "text": {
