@@ -137,7 +137,12 @@ describe('Comic List Reducer', () => {
   });
 
   describe('receiving a batch of comics', () => {
-    const BATCH = [COMIC_2, COMIC_4];
+    const EXISTING_COMIC = COMICS[0];
+    const UPDATED_COMIC = {
+      ...EXISTING_COMIC,
+      filename: EXISTING_COMIC.filename.substr(1)
+    };
+    const BATCH = [UPDATED_COMIC, COMIC_2, COMIC_4];
     const LAST_PAGE = Math.random() > 0.5;
 
     beforeEach(() => {
@@ -169,12 +174,13 @@ describe('Comic List Reducer', () => {
       expect(state.lastPayload).toEqual(LAST_PAGE);
     });
 
-    it('leaves the existing comics intact', () => {
-      COMICS.every(comic => expect(state.comics).toContain(comic));
-    });
-
     it('adds the received comics', () => {
       BATCH.every(comic => expect(state.comics).toContain(comic));
+    });
+
+    it('replaces existing comics', () => {
+      expect(state.comics).not.toContain(EXISTING_COMIC);
+      expect(state.comics).toContain(UPDATED_COMIC);
     });
   });
 
