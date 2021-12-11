@@ -13,6 +13,12 @@
       "filename": "Nombre de archivo",
       "size": "Tamaño del archivo (kb)"
     },
+    "import-comic-files": {
+      "confirmation-message": "Are you sure you want to import the selected {count, plural, =1{comic} other{# comics}}?",
+      "confirmation-title": "Import Selected Comics",
+      "effect-failure": "No se pudieron enviar archivos de cómic para su importación.",
+      "effect-success": "{count, plural, =1{one comic file} other{# comic files}} enviado para importación."
+    },
     "label": {
       "maximum-all-files": "Todos los archivos",
       "maximum-10-files": "10 archivos",
@@ -35,10 +41,6 @@
       "load-file-details-step": "Loading Comic File Details",
       "mark-blocked-pages-step": "Marking Blocked Pages",
       "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
-    },
-    "send-comic-files": {
-      "effect-failure": "No se pudieron enviar archivos de cómic para su importación.",
-      "effect-success": "{count, plural, =1{one comic file} other{# comic files}} enviado para importación."
     },
     "tab-title": "Importar cómics",
     "text": {

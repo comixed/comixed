@@ -45,6 +45,8 @@ import { ComicFile } from '@app/comic-files/models/comic-file';
 import { User } from '@app/user/models/user';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MatPaginator } from '@angular/material/paginator';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from '@app/core/services/confirmation.service';
 
 @Component({
   selector: 'cx-comic-file-toolbar',
@@ -75,7 +77,9 @@ export class ComicFileToolbarComponent {
   constructor(
     private logger: LoggerService,
     private formBuilder: FormBuilder,
-    private store: Store<any>
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
   ) {
     this.loadFilesForm = this.formBuilder.group({
       rootDirectory: ['', Validators.required],
@@ -124,12 +128,23 @@ export class ComicFileToolbarComponent {
   }
 
   onStartImport(): void {
-    this.logger.trace('Starting the import process');
-    this.store.dispatch(
-      sendComicFiles({
-        files: this.selectedComicFiles
-      })
-    );
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'comic-files.import-comic-files.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'comic-files.import-comic-files.confirmation-message',
+        { count: this.selectedComicFiles.length }
+      ),
+      confirm: () => {
+        this.logger.trace('Starting the import process');
+        this.store.dispatch(
+          sendComicFiles({
+            files: this.selectedComicFiles
+          })
+        );
+      }
+    });
   }
 
   onToggleFileLookupForm(): void {
