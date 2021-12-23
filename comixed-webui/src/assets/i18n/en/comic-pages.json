@@ -66,5 +66,14 @@
       "effect-failure": "Failed to upload blocked page file.",
       "effect-success": "Blocked pages now contains {count, plural, =1{one entry} other{# entries}}."
     }
+  },
+  "deleted-page-list": {
+    "header": {
+      "comic": "Comic Issue",
+      "filename": "Page Filename",
+      "hash": "Page Hash"
+    },
+    "page-title": "Deleted Page List",
+    "tab-title": "Deleted Page List"
   }
 }

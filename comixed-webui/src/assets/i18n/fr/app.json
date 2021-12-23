@@ -108,6 +108,7 @@
       "character-collection": "Personnages",
       "comics-section": "Bandes Dessinées",
       "deleted-comics": "Bandes Dessinées supprimées",
+      "deleted-pages": "Deleted Pages",
       "location-collection": "Lieux",
       "publisher-collection": "Éditeurs",
       "reading-lists-section": "Listes de lecture",
@@ -120,7 +121,7 @@
     },
     "option": {
       "all-comics": "Toutes les bandes dessinées",
-      "blocked-hashs": "Pages bloquées",
+      "blocked-hashes": "Pages bloquées",
       "build-details": "Détails du build",
       "character-collection": "Personnages",
       "configuration": "Configuration",
