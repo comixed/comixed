@@ -123,7 +123,18 @@
   routerLinkActive="active"
 >
   <mat-icon>block</mat-icon>
-  <span>{{ "navigation.option.blocked-hashs" | translate }}</span>
+  <span>{{ "navigation.option.blocked-hashes" | translate }}</span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
+  routerLink="/library/pages/deleted"
+  routerLinkActive="active"
+>
+  <mat-icon>delete_sweep</mat-icon>
+  <span>{{ "navigation.option.deleted-pages" | translate }}</span>
 </button>
 
 <mat-divider *ngIf="!!user"></mat-divider>

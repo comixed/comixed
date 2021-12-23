@@ -136,7 +136,7 @@ public class Comic {
   @OrderColumn(name = "PageNumber")
   @JsonProperty("pages")
   @JsonView({
-    View.ComicDetailsView.class,
+    View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.ReadingListDetail.class
   })

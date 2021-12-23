@@ -65,7 +65,7 @@ public class Page {
 
   @Column(name = "Filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull
@@ -73,7 +73,7 @@ public class Page {
 
   @Column(name = "FileHash", length = 32, updatable = true, nullable = false)
   @JsonProperty("hash")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   private String hash;
@@ -103,7 +103,7 @@ public class Page {
   @Formula(
       "(SELECT CASE WHEN (FileHash IN (SELECT b.hash FROM BlockedHashes b)) THEN true ELSE false END)")
   @JsonProperty("blocked")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   private boolean blocked;
 
@@ -138,7 +138,7 @@ public class Page {
 
   @Transient
   @JsonProperty("deleted")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   public boolean isDeleted() {
     return PageState.DELETED.equals(this.pageState);
   }

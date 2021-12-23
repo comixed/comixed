@@ -21,11 +21,17 @@ import { BlockedHashListPageComponent } from './pages/blocked-hash-list-page/blo
 import { AdminGuard } from '../user';
 import { NgModule } from '@angular/core';
 import { BlockedHashDetailPageComponent } from '@app/comic-pages/pages/blocked-hash-detail-page/blocked-hash-detail-page.component';
+import { DeletedListPageComponent } from '@app/comic-pages/pages/deleted-list-page/deleted-list-page.component';
 
 const routes: Routes = [
   {
     path: 'library/pages/blocked',
     component: BlockedHashListPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'library/pages/deleted',
+    component: DeletedListPageComponent,
     canActivate: [AdminGuard]
   },
   {

@@ -66,9 +66,16 @@ import {
   reducer as deleteBlockedPagesReducer
 } from '@app/comic-pages/reducers/delete-blocked-pages.reducer';
 import { DeleteBlockedPagesEffects } from '@app/comic-pages/effects/delete-blocked-pages.effects';
+import { DeletedListPageComponent } from './pages/deleted-list-page/deleted-list-page.component';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
-  declarations: [BlockedHashListPageComponent, BlockedHashDetailPageComponent],
+  declarations: [
+    BlockedHashListPageComponent,
+    BlockedHashDetailPageComponent,
+    DeletedListPageComponent
+  ],
   imports: [
     CommonModule,
     ComicPagesRouting,
@@ -113,7 +120,9 @@ import { DeleteBlockedPagesEffects } from '@app/comic-pages/effects/delete-block
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ComicBooksModule,
+    MatSortModule
   ],
   exports: [CommonModule]
 })

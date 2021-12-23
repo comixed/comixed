@@ -1,0 +1,37 @@
+<h2>{{ "deleted-page-list.page-title" | translate }}</h2>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="comic">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "deleted-page-list.header.comic" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">
+        <a [routerLink]="['/comics', entry.comic.id]">
+          {{ entry.comic | comicTitle }}
+        </a>
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="filename">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "deleted-page-list.header.filename" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.page.filename }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hash">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "deleted-page-list.header.hash" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.page.hash }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

@@ -104,11 +104,12 @@
     },
     "option": {
       "all-comics": "All comics",
-      "blocked-hashs": "Blocked Pages",
+      "blocked-hashes": "Blocked Pages",
       "build-details": "Build Details",
       "character-collection": "Characters",
       "configuration": "Configuration",
       "deleted-comics": "Deleted Comics",
+      "deleted-pages": "Deleted Pages",
       "duplicate-pages": "Duplicate Pages",
       "import-comics": "Import Comics",
       "location-collection": "Locations",
