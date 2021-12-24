@@ -79,6 +79,24 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
+  routerLink="/library/changed"
+  routerLinkActive="active"
+>
+  <mat-icon>cloud_download</mat-icon>
+  <span
+    [matBadge]="changedComics$ | async"
+    matBadgePosition="after"
+    matBadgeOverlap="false"
+    matBadgeColor="accent"
+  >
+    {{ "navigation.option.changed-comics" | translate }}
+  </span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
   routerLink="/library/deleted"
   routerLinkActive="active"
 >

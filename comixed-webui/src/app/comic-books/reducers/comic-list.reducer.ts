@@ -26,6 +26,7 @@ import {
   resetComicList
 } from '../actions/comic-list.actions';
 import { Comic } from '@app/comic-books/models/comic';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 export const COMIC_LIST_FEATURE_KEY = 'comic_list_state';
 
@@ -36,6 +37,7 @@ export interface ComicListState {
   comics: Comic[];
   unprocessed: Comic[];
   unscraped: Comic[];
+  changed: Comic[];
   deleted: Comic[];
 }
 
@@ -46,6 +48,7 @@ export const initialState: ComicListState = {
   comics: [],
   unprocessed: [],
   unscraped: [],
+  changed: [],
   deleted: []
 };
 
@@ -60,6 +63,7 @@ export const reducer = createReducer(
     comics: [],
     unprocessed: [],
     unscraped: [],
+    changed: [],
     deleted: []
   })),
   on(loadComics, state => ({ ...state, loading: true })),
@@ -75,6 +79,9 @@ export const reducer = createReducer(
       comics,
       unprocessed: comics.filter(comic => !comic.fileDetails),
       unscraped: comics.filter(comic => !comic.comicVineId),
+      changed: comics.filter(
+        comic => comic.comicState == ComicBookState.CHANGED
+      ),
       deleted: comics.filter(comic => !!comic.deletedDate),
       lastId,
       lastPayload,

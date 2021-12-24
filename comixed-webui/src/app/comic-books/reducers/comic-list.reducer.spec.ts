@@ -72,6 +72,10 @@ describe('Comic List Reducer', () => {
       expect(state.unscraped).toEqual([]);
     });
 
+    it('has no changed comics', () => {
+      expect(state.changed).toEqual([]);
+    });
+
     it('has no deleted comics', () => {
       expect(state.deleted).toEqual([]);
     });
@@ -88,6 +92,7 @@ describe('Comic List Reducer', () => {
           comics: [COMIC_1, COMIC_3, COMIC_5],
           unprocessed: [COMIC_1, COMIC_3, COMIC_5],
           unscraped: [COMIC_1, COMIC_3, COMIC_5],
+          changed: [COMIC_1, COMIC_3, COMIC_5],
           deleted: [COMIC_1, COMIC_3, COMIC_5]
         },
         resetComicList()
@@ -116,6 +121,10 @@ describe('Comic List Reducer', () => {
 
     it('has no unscraped comics', () => {
       expect(state.unscraped).toEqual([]);
+    });
+
+    it('has no changed comics', () => {
+      expect(state.changed).toEqual([]);
     });
 
     it('has no deleted comics', () => {
