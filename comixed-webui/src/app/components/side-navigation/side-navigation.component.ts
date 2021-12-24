@@ -47,6 +47,7 @@ export class SideNavigationComponent implements OnDestroy {
   unprocessedComics$ = new BehaviorSubject<number>(0);
   unreadComics$ = new BehaviorSubject<number>(0);
   unscrapedComics$ = new BehaviorSubject<number>(0);
+  changedComics$ = new BehaviorSubject<number>(0);
   deletedComics$ = new BehaviorSubject<number>(0);
   duplicateComics = new BehaviorSubject<number>(0);
   readingListsSubscription: Subscription;
@@ -63,6 +64,7 @@ export class SideNavigationComponent implements OnDestroy {
         );
         this.unreadComics$.next(this.getUnreadComicCount());
         this.unscrapedComics$.next(state.unscraped.length);
+        this.changedComics$.next(state.changed.length);
         this.deletedComics$.next(state.deleted.length);
       });
     this.lastReadSubscription = this.store

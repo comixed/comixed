@@ -49,6 +49,7 @@
     },
     "all-comics": {
       "tab-title": "Todos los cómics",
+      "tab-title-changed": "Changed Comics",
       "tab-title-deleted": "Cómics eliminados",
       "tab-title-unprocessed": "Unprocessed Comics",
       "tab-title-unread": "Cómics no leídos",
@@ -116,6 +117,7 @@
     },
     "page-title": {
       "all": "All Comics: {selected} of {count} Selected",
+      "changed-only": "Changed Comics: {selected} of {count} Selected",
       "deleted-only": "Deleted Comics: {selected} of {count} Selected",
       "unprocessed-only": "Unprocessed Comics: {selected} of {count} Selected",
       "unread-only": "Unread Comics: {selected} of {count} Selected",

@@ -78,6 +78,7 @@ import {
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -166,8 +167,8 @@ describe('LibraryPageComponent', () => {
       component.unprocessedOnly = false;
       component.unreadOnly = false;
       component.unscrapedOnly = false;
+      component.changedOnly = false;
       component.deletedOnly = false;
-      component.unscrapedOnly = false;
     });
 
     describe('when showing unprocessed comics', () => {
@@ -202,6 +203,16 @@ describe('LibraryPageComponent', () => {
       });
     });
 
+    describe('when changedOnly unscraped comics', () => {
+      beforeEach(() => {
+        (activatedRoute.data as BehaviorSubject<{}>).next({ changed: true });
+      });
+
+      it('sets the unscraped only flag', () => {
+        expect(component.changedOnly).toBeTrue();
+      });
+    });
+
     describe('when showing deleted comics', () => {
       beforeEach(() => {
         (activatedRoute.data as BehaviorSubject<{}>).next({ deleted: true });
@@ -211,16 +222,6 @@ describe('LibraryPageComponent', () => {
         expect(component.deletedOnly).toBeTrue();
       });
     });
-
-    describe('when showing unscraped comics', () => {
-      beforeEach(() => {
-        (activatedRoute.data as BehaviorSubject<{}>).next({ unscraped: true });
-      });
-
-      it('sets the deleted only flag', () => {
-        expect(component.unscrapedOnly).toBeTrue();
-      });
-    });
   });
 
   describe('when the language changes', () => {
@@ -228,6 +229,7 @@ describe('LibraryPageComponent', () => {
       component.unprocessedOnly = false;
       component.unreadOnly = false;
       component.unscrapedOnly = false;
+      component.changedOnly = false;
       component.deletedOnly = false;
     });
 
@@ -250,6 +252,12 @@ describe('LibraryPageComponent', () => {
 
     it('updates the page title for unscraped comic', () => {
       component.unscrapedOnly = true;
+      translateService.use('fr');
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('updates the page title for changed comic', () => {
+      component.changedOnly = true;
       translateService.use('fr');
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
     });
@@ -284,7 +292,10 @@ describe('LibraryPageComponent', () => {
       ...COMIC_4,
       fileDetails: null
     };
-    const COMICS = [UNREAD, DELETED, UNSCRAPED, UNPROCESSED];
+    const CHANGED = {
+      ...COMIC_4,
+      comicState: ComicBookState.CHANGED
+    };
 
     describe('for deleted comics', () => {
       beforeEach(() => {
@@ -292,7 +303,13 @@ describe('LibraryPageComponent', () => {
         component.deletedOnly = true;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+          [COMIC_LIST_FEATURE_KEY]: {
+            ...initialComicListState,
+            unprocessed: [UNPROCESSED],
+            unscraped: [UNSCRAPED],
+            changed: [CHANGED],
+            deleted: [DELETED]
+          }
         });
       });
 
@@ -308,10 +325,17 @@ describe('LibraryPageComponent', () => {
         component.unreadOnly = false;
         component.deletedOnly = false;
         component.unscrapedOnly = true;
+        component.changedOnly = false;
         component.unprocessedOnly = false;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+          [COMIC_LIST_FEATURE_KEY]: {
+            ...initialComicListState,
+            unprocessed: [UNPROCESSED],
+            unscraped: [UNSCRAPED],
+            changed: [CHANGED],
+            deleted: [DELETED]
+          }
         });
       });
 
@@ -320,15 +344,48 @@ describe('LibraryPageComponent', () => {
       });
     });
 
+    describe('for changed comics', () => {
+      beforeEach(() => {
+        component.unreadOnly = false;
+        component.deletedOnly = false;
+        component.unscrapedOnly = false;
+        component.changedOnly = true;
+        component.unprocessedOnly = false;
+        store.setState({
+          ...initialState,
+          [COMIC_LIST_FEATURE_KEY]: {
+            ...initialComicListState,
+            unprocessed: [UNPROCESSED],
+            unscraped: [UNSCRAPED],
+            changed: [CHANGED],
+            deleted: [DELETED]
+          }
+        });
+      });
+
+      it('only loads the changed comics', () => {
+        component.comics.every(comic =>
+          expect(comic.comicState).toEqual(ComicBookState.CHANGED)
+        );
+      });
+    });
+
     describe('for unprocessed comics', () => {
       beforeEach(() => {
         component.unreadOnly = false;
         component.deletedOnly = false;
         component.unscrapedOnly = false;
+        component.changedOnly = false;
         component.unprocessedOnly = true;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+          [COMIC_LIST_FEATURE_KEY]: {
+            ...initialComicListState,
+            unprocessed: [UNPROCESSED],
+            unscraped: [UNSCRAPED],
+            changed: [CHANGED],
+            deleted: [DELETED]
+          }
         });
       });
 

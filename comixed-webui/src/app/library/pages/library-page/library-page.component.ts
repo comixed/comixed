@@ -32,10 +32,7 @@ import {
   isAdmin
 } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  selectComicList,
-  selectComicListState
-} from '@app/comic-books/selectors/comic-list.selectors';
+import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   PAGE_SIZE_DEFAULT,
@@ -56,7 +53,6 @@ import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selec
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
   comicListStateSubscription: Subscription;
-  comicSubscription: Subscription;
   selectedSubscription: Subscription;
   selected: Comic[] = [];
   langChangeSubscription: Subscription;
@@ -69,6 +65,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   dataSubscription: Subscription;
   unreadOnly = false;
   unscrapedOnly = false;
+  changedOnly = false;
   deletedOnly = false;
   unprocessedOnly = false;
   queryParamSubscription: Subscription;
@@ -91,6 +88,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
+      this.changedOnly = !!data.changed && data.changed === true;
       this.deletedOnly = !!data.deleted && data.deleted === true;
       this.unprocessedOnly = !!data.unprocessed && data.unprocessed === true;
       this.showUpdateMetadata = !this.unprocessedOnly && !this.deletedOnly;
@@ -103,6 +101,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       }
       if (this.unscrapedOnly) {
         this.pageContent = 'unscraped-only';
+      }
+      if (this.changedOnly) {
+        this.pageContent = 'changed-only';
       }
       if (this.deletedOnly) {
         this.pageContent = 'deleted-only';
@@ -137,12 +138,20 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
     this.comicListStateSubscription = this.store
       .select(selectComicListState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.loading }))
-      );
-    this.comicSubscription = this.store
-      .select(selectComicList)
-      .subscribe(comics => (this.comics = comics));
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.loading }));
+        if (this.unscrapedOnly) {
+          this._comics = state.unscraped;
+        } else if (this.changedOnly) {
+          this._comics = state.changed;
+        } else if (this.deletedOnly) {
+          this._comics = state.deleted;
+        } else if (this.unprocessedOnly) {
+          this._comics = state.unprocessed;
+        } else {
+          this._comics = state.comics;
+        }
+      });
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.selected = selected));
@@ -174,16 +183,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     return this._comics;
   }
 
-  set comics(comics: Comic[]) {
-    this.logger.trace('Showing all comics:', comics);
-    this._comics = comics.filter(
-      comic =>
-        (!this.unscrapedOnly || !comic.comicVineId) &&
-        (!this.deletedOnly || !!comic.deletedDate) &&
-        (!this.unprocessedOnly || !comic.fileDetails)
-    );
-  }
-
   ngOnInit(): void {
     this.loadTranslations();
   }
@@ -191,7 +190,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
     this.comicListStateSubscription.unsubscribe();
-    this.comicSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
@@ -223,6 +221,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     } else if (this.unscrapedOnly) {
       this.titleService.setTitle(
         this.translateService.instant('library.all-comics.tab-title-unscraped')
+      );
+    } else if (this.changedOnly) {
+      this.titleService.setTitle(
+        this.translateService.instant('library.all-comics.tab-title-changed')
       );
     } else if (this.unreadOnly) {
       this.titleService.setTitle(

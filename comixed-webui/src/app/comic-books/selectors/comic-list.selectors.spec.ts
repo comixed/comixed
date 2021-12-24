@@ -50,6 +50,7 @@ describe('Comic List Selectors', () => {
       comics: COMICS,
       unprocessed: COMICS,
       unscraped: COMICS,
+      changed: COMICS,
       deleted: COMICS
     };
   });

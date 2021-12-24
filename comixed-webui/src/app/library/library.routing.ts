@@ -49,6 +49,12 @@ const routes: Routes = [
     data: { unscraped: true }
   },
   {
+    path: 'library/changed',
+    component: LibraryPageComponent,
+    canActivate: [AdminGuard],
+    data: { changed: true }
+  },
+  {
     path: 'library/deleted',
     component: LibraryPageComponent,
     canActivate: [AdminGuard],
