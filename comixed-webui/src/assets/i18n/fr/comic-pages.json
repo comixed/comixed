@@ -47,7 +47,7 @@
     "mark-pages-with-hash": {
       "confirm-clear-message": "Etes-vous sûr de vouloir annuler la suppression des pages avec ce hash ?",
       "confirm-clear-title": "Ne pas supprimer les pages affectées",
-      "confirm-mark-message": "Etes-vous sûr de vouloir marquer les pages avec ce hash pour la suppression ?",
+      "confirm-mark-message": "Êtes-vous sûr de vouloir marquer les pages avec ce hash pour la suppression ?",
       "confirm-mark-title": "Marquer les pages pour suppression",
       "effect-failure": "Échec {deleted, select, true{de l'ajout} other{de l'annulation}} du flag de suppression.",
       "effect-success": "{deleted, select, true{Marquage} other{Nettoyage}} pour suppression."
@@ -69,11 +69,11 @@
   },
   "deleted-page-list": {
     "header": {
-      "comic": "Comic Issue",
-      "filename": "Page Filename",
-      "hash": "Page Hash"
+      "comic": "Numéro de bande dessinée",
+      "filename": "Nom du fichier de la page",
+      "hash": "Hash de la page"
     },
-    "page-title": "Deleted Page List",
-    "tab-title": "Deleted Page List"
+    "page-title": "Liste des pages supprimées",
+    "tab-title": "Liste des pages supprimées"
   }
 }
