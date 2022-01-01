@@ -19,7 +19,7 @@
       "remote-origin-url": "Cette branche suit la branche distante {url}"
     },
     "load-effect-failure": "Échec de la récupération des détails du build...",
-    "page-title": "Détails du Build"
+    "page-title": "Détails du Build",
     "tab-title": "Détails du Build"
   },
   "button": {
@@ -55,24 +55,24 @@
   },
   "home": {
     "label": {
-      "character": "Character",
-      "comics-by-character": "Comics By Character",
-      "comics-by-location": "Comics By Location",
-      "comics-by-publisher": "Comics By Publisher",
-      "comics-by-series": "Comics By Series",
-      "comics-by-story": "Comics By Story",
-      "comics-by-team": "Comics By Team",
-      "comic-count": "# Of Comics",
-      "location": "Location",
-      "publisher": "Publisher",
-      "series": "Series",
-      "story": "Story",
-      "team": "Team"
+      "character": "Personnage",
+      "comics-by-character": "Bandes dessinées par personnage",
+      "comics-by-location": "Bandes dessinées par lieu",
+      "comics-by-publisher": "Bandes dessinées par éditeur",
+      "comics-by-series": "Bandes dessinées par série",
+      "comics-by-story": "Bandes dessinées par histoire",
+      "comics-by-team": "Bandes dessinées par équipe",
+      "comic-count": "Numéro de bandes dessinées",
+      "location": "Lieu",
+      "publisher": "Éditeur",
+      "series": "Série",
+      "story": "Histoire",
+      "team": "Équipe"
     },
     "tab-title": "Accueil",
     "title": {
-      "comic-statistics": "Comic Library Statistics",
-      "loading-comics": "Loading library..."
+      "comic-statistics": "Statistiques de la bande dessinée",
+      "loading-comics": "Chargement de la bibliothèque..."
     }
   },
   "menu": {
@@ -105,39 +105,40 @@
     "label": {
       "all-comics": "Toutes les bandes dessinées",
       "build-details": "Détails du build",
-      "changed-comics": "Changed Comics",
+      "changed-comics": "Bandes dessinées modifiées",
       "character-collection": "Personnages",
       "comics-section": "Bandes Dessinées",
       "deleted-comics": "Bandes Dessinées supprimées",
-      "deleted-pages": "Deleted Pages",
+      "deleted-pages": "Pages supprimées",
       "location-collection": "Lieux",
       "publisher-collection": "Éditeurs",
       "reading-lists-section": "Listes de lecture",
       "series-collection": "Séries",
-      "story-collection": "Histoires",
-      "story-names": "Stories",
+      "story-collection": "Collections",
+      "story-names": "Histoires",
       "system-status-section": "Systeme",
       "team-collection": "Équipes",
       "unread-comics": "Bandes Dessinées non lues"
     },
     "option": {
-      "all-comics": "Toutes les bandes dessinées",
+      "all-comics": "Toutes les BD",
       "blocked-hashes": "Pages bloquées",
       "build-details": "Détails du build",
       "character-collection": "Personnages",
       "configuration": "Configuration",
-      "deleted-comics": "Bandes Dessinées supprimées",
-      "duplicate-pages": "Duplicate pages",
-      "import-comics": "Bandes Dessinées importées",
+      "deleted-comics": "BD supprimées",
+      "deleted-pages": "Pages supprimées",
+      "duplicate-pages": "Pages dupliquées",
+      "import-comics": "BD importées",
       "location-collection": "Lieux",
       "publisher-collection": "Éditeurs",
       "reading-lists": "Listes de lecture",
       "series-collection": "Séries",
       "story-collection": "Histoires",
       "team-collection": "Équipes",
-      "unprocessed-comics": "Unprocessed Imports",
-      "unread-comics": "Bandes Dessinées non lues",
-      "unscraped-comics": "Bandes Dessinées sans détails récupérés",
+      "unprocessed-comics": "Imports non traités",
+      "unread-comics": "BD non lues",
+      "unscraped-comics": "BD sans détails récupérés",
       "user-preferences": "Préférences",
       "web-audit-log": "journal d'Audit Web"
     },
@@ -150,13 +151,13 @@
   },
   "text": {
     "archive-type": "{type, select, CBZ{Fichier Zip (CBZ)} CBR{Fichier RAR (CBR)} CB7{Fichier 7Zip (CB7)} other{Inconnu}}",
-    "clear-value": "Clear value",
+    "clear-value": "Effacer la valeur",
     "no": "Non",
     "view-details": "Voir les détails",
     "yes": "Oui"
   },
   "validation": {
-    "email-required": "Value must be a valid email address.",
+    "email-required": "La valeur doit être un email valide.",
     "field-required": "Ce champ est obligatoire",
     "value-too-long": "La longueur maximal est {length, plural, =1{un caractère} other{# caractères}}.",
     "value-too-short": "La longueur minimal est {length, plural, =1{un caractère} other{# caractères}}."

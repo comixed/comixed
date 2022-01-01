@@ -1,13 +1,13 @@
 {
   "collection-detail": {
-    "tab-title": "{collection, select, characters{Character} teams{Team} locations{Location} stories{Storie} publishers{Publisher} series{Series} other{Unknown}}: {name}"
+    "tab-title": "{collection, select, characters{Personnage} teams{Equipe} locations{Lieu} stories{Histoire} publishers{Éditeur} series{Série} other{Inconnu}}: {name}"
   },
   "collection-list": {
     "label": {
       "comic-count": "# Bandes dessinées",
       "name": "Nom de la collection"
     },
-    "tab-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
+    "tab-title": "Collections: {collection, select, characters{Personnage} teams{Equipes} locations{Lieux} stories{Histoires} publishers{Éditeurs} series{Séries} other{Inconnu}}",
     "text": {
       "undefined": "[NON DEFINIE]"
     }

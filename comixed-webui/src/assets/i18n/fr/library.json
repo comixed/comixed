@@ -49,11 +49,11 @@
     },
     "all-comics": {
       "tab-title": "Toutes les Bandes Dessinées",
-      "tab-title-changed": "Changed Comics",
+      "tab-title-changed": "Bandes dessinées modifiées",
       "tab-title-deleted": "Bandes dessinées supprimées",
-      "tab-title-unprocessed": "Unprocessed Comics",
+      "tab-title-unprocessed": "Bandes dessinées non traitées",
       "tab-title-unread": "Bandes dessinées non lues",
-      "tab-title-unscraped": "Unscraped Comics"
+      "tab-title-unscraped": "Metadonnées de Bandes dessinées non récupérées"
     },
     "comic-group": {
       "invalid-grouping": "Le groupe \"{name}\" n'est pas valide."
@@ -80,9 +80,9 @@
       "mark-selected-as-unread": "Les Bandes Dessinées sélectionnées comme Non lues",
       "reading-lists": "Ajouter à la liste...",
       "set-page-blocked": "Bloquer des pages comme celle-ci",
-      "set-page-deleted": "Delete This Page",
+      "set-page-deleted": "Supprimer cette page",
       "set-page-unblocked": "Ne pas bloquer des pages comme celle-ci",
-      "set-page-undeleted": "Don't Delete This Page",
+      "set-page-undeleted": "Ne pas supprimer cette page",
       "undelete-one": "Cette bande dessinée comme non supprimée",
       "undelete-selected": "Bandes dessinées sélectionnées comme non supprimées"
     },
@@ -116,18 +116,18 @@
       "stories": "Histoires"
     },
     "page-title": {
-      "all": "All Comics: {selected} of {count} Selected",
-      "changed-only": "Changed Comics: {selected} of {count} Selected",
-      "deleted-only": "Deleted Comics: {selected} of {count} Selected",
-      "unprocessed-only": "Unprocessed Comics: {selected} of {count} Selected",
-      "unread-only": "Unread Comics: {selected} of {count} Selected",
-      "unscraped-only": "Unscraped Comics: {selected} of {count} Selected"
+      "all": "Toutes les bandes dessinées: {selected} sur {count} sélectionnées",
+      "changed-only": "Bandes dessinées modifiées: {selected} sur {count} sélectionnées",
+      "deleted-only": "Bandes dessinées supprimées: {selected} sur {count} sélectionnées",
+      "unprocessed-only": "Bandes dessinées non traitées: {selected} sur {count} sélectionnées",
+      "unread-only": "Bandes dessinées non lues: {selected} sur {count} sélectionnées",
+      "unscraped-only": "Metadonnées de Bandes dessinées non récupérées: {selected} sur {count} sélectionnées"
     },
     "purge-library": {
-      "confirmation-message": "Are you sure you want to purge the selected deleted comics? This action cannot be undone.",
-      "confirmation-title": "Purge Library",
-      "effect-failure": "Failed to start purging the library.",
-      "effect-success": "The library is now purging."
+      "confirmation-message": "Êtes-vous sûr de vouloir purger les bandes dessinées supprimées sélectionnées ? Cette action ne peut pas être annulée.",
+      "confirmation-title": "Purger la bibliothèque",
+      "effect-failure": "Échec du lancement de la purge de la bibliothèque.",
+      "effect-success": "La bibliothèque est désormais purger."
     },
     "rescan-comics": {
       "confirmation-message": "Êtes-vous sûr de vouloir rescanner {count, plural, =1{la bande dessinnée} other{les # bandes dessinées}} ? Ce processus peut prendre beaucoup de temps",
@@ -142,7 +142,7 @@
     "tooltip": {
       "consolidate-library": "Consolider la bibliothèque.",
       "deselect-all": "Désélectionner toutes les bandes dessinées.",
-      "purge-library": "Remove deleted comics from library.",
+      "purge-library": "Retirer les bandes dessinées supprimées de la bibliothèque.",
       "rescan-comics": "Rescanner les bandes dessinées sélectionnées.",
       "scrape-comics": "Commencer la récupération des détails",
       "select-all": "Sélectionner toutes les bandes dessinées.",
@@ -198,7 +198,7 @@
       "select-scraping-issue": "Sélectionner ce numéro.",
       "show-comic-details": "Afficher les détails",
       "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération.",
-      "use-comicvine-id": "Scrape using the ComicVine id."
+      "use-comicvine-id": "Récupération des métadonnées en utilisant l'identifiant ComicVine."
     },
     "volume-list": {
       "issue-count-header": "# Numéros",

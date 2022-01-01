@@ -20,7 +20,7 @@
       "effect-failure": "Échec de la sauvegarde de la liste de lecture.",
       "effect-success": "Liste de lecture sauvegardée."
     },
-    "tab-title": "Reading List: {name}",
+    "tab-title": "Liste de lecture: {name}",
     "text": {
       "no-name": "Liste de lecture sans nom"
     },
@@ -60,7 +60,7 @@
     "load-for-user": {
       "effect-failure": "Échec du chargement des listes de lecture."
     },
-    "tab-title": "Reading Lists",
+    "tab-title": "Listes de lecture",
     "tooltip": {
       "add-reading-list": "Ajouter une nouvelle liste de lecture.",
       "delete-reading-lists": "Supprimer les listes de lecture sélectionnées."
@@ -80,24 +80,24 @@
   },
   "story-list": {
     "label": {
-      "entry-count": "# Of Entries",
-      "publisher": "Published By",
-      "story-name": "Story Name"
+      "entry-count": "# d'entrées",
+      "publisher": "Publié par",
+      "story-name": "Nom de l'arc narratif"
     },
     "load-stories-for-name": {
-      "effect-failure": "Failed to load stories for {name}."
+      "effect-failure": "Échec du chargement des arcs narratifs pour {name}."
     },
     "load-story-names": {
-      "effect-failure": "Failed to load all story names."
+      "effect-failure": "Échec du chargement de tous les des arcs narratifs."
     },
-    "page-title": "All Story Names",
-    "tab-title": "All Story Names",
+    "page-title": "Tous les arcs narratifs",
+    "tab-title": "Tous les arcs narratifs",
     "tooltip": {
-      "scrape-story": "Scrape this story."
+      "scrape-story": "Récupérer les métadonnées de cet arc narratif"
     }
   },
   "story-list-for-name": {
-    "page-title": "Stories With The Name \"{name}\"",
-    "tab-title": "Stories Named: \"{name}\""
+    "page-title": "Arcs narratifs avec le nom \"{name}\"",
+    "tab-title": "Arcs narratifs: \"{name}\""
   }
 }
