@@ -32,7 +32,7 @@
       "comicvine-id": "ComicVine ID",
       "comicvine-issue-details": "Page de détails de Bande Dessinée",
       "credits": "Équipe créative ({count})",
-      "deleted-date": "Maked For Deletion",
+      "deleted-date": "Marqué pour suppression",
       "description": "Description de ce numéro",
       "file-details": "Détails du fichier de la Bande Dessinée",
       "filename": "Nom du fichier",
@@ -81,23 +81,23 @@
       "title": "Enregistrer les changements dans la bande dessinée"
     },
     "save-page-order": {
-      "confirmation-message": "Are you sure you want to save the new page ordering?",
-      "confirmation-title": "Save Page Order",
-      "effect-failure": "Failed to save page ordering.",
-      "effect-success": "Page ordering saved."
+      "confirmation-message": "Êtes-vous sûr de vouloir enregistrer le nouvel ordre des pages ?",
+      "confirmation-title": "Enregistrer l'ordre des pages",
+      "effect-failure": "Échec de l'enregistrement de l'ordre des pages.",
+      "effect-success": "Ordre des pages sauvegardé."
     },
     "text": {
       "comic-changed": "Écrire les métadonnées dans le fichier de la bande dessinée.",
-      "comic-deleted-date": "Comic marked as deleted on {date}.",
+      "comic-deleted-date": "Bande dessinée marquée comme supprimée le {date}.",
       "comicvine-issue-link": "Page de détails de ComicVine",
       "filesize": "{size, plural, =1{Un byte} other{# bytes}}",
-      "no-matching-volumes": "No matching volumes were found...",
+      "no-matching-volumes": "Aucun volume correspondant n'a été trouvé...",
       "state-ADDED": "Non modifié",
       "state-CHANGED": "Modifié",
-      "state-REMOVED": "Removed",
+      "state-REMOVED": "Supprimé",
       "state-DELETED": "Marqué pour suppression",
       "state-STABLE": "Non modifié",
-      "state-UNPROCESSED": "Unprocessed"
+      "state-UNPROCESSED": "Non traité"
     },
     "tooltip": {
       "blocked-hash": "Les pages comme celle-ci sont bloquées...",
@@ -112,12 +112,12 @@
       "match-1": "Correspondance partielle.",
       "match-2": "Correspondance exacte.",
       "save-changes": "Enregistrer les modifications de cette Bande Dessinée.",
-      "save-page-order": "Save page ordering.",
+      "save-page-order": "Enregistrer l'ordre des pages",
       "scrape-comic": "Récupérer les détails de cette Bande Dessinée.",
-      "scrape-filename": "Scrape the filename.",
+      "scrape-filename": "Extraire le nom du fichier.",
       "show-next-comic-page": "Aller à la page suivante...",
       "show-previous-comic-page": "Aller à la page précédente...",
-      "toggle-page-view": "Toggle showing pages as a grid or a list.",
+      "toggle-page-view": "Basculer l'affichage des pages sous forme de grille ou de liste.",
       "undelete-comic": "Annulez le marquage de la bande dessinée comme supprimée.",
       "undo-changes": "Annulez les modifications de cette Bande Dessinée",
       "update-comic-info": "Mise à jour des métadonnées du fichier de la bande dessinée."
@@ -135,20 +135,20 @@
   "comic-page": {
     "label": {
       "dimensions": "Dimensions",
-      "filename": "Filename",
+      "filename": "Nom de fichier",
       "page-number": "Page #",
-      "thumbnail": "Thumbnail"
+      "thumbnail": "Miniature"
     },
     "update-page-deletion": {
-      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",
-      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Page",
-      "effect-failure": "Failed to mark {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}.",
-      "effect-success": "Marked {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}."
+      "confirmation-message": "Etes-vous sûr de vouloir {deleted, select, true{marquer} other{annuler le marquage}} ce cette page?",
+      "confirmation-title": "{deleted, select, true{Marquer} other{Annuler le marquage}} de page",
+      "effect-failure": "Échec du marquage {count, plural, =1{de la page} other{des # pages}} comme {deleted, select, true{supprimées} other{non supprimées}}.",
+      "effect-success": "{count, plural, =1{Une page marquée} other{# pages marquées}} as {deleted, select, true{supprimées} other{non supprimées}}."
     }
   },
   "imprint": {
     "load-all": {
-      "effect-failure": "Failed to load imprints."
+      "effect-failure": "Impossible de charger les impressions."
     }
   },
   "scan-type": {
@@ -158,9 +158,9 @@
   },
   "sorting": {
     "label": {
-      "by-added-date": "Date Added",
-      "by-cover-date": "Cover Date",
-      "sort-by": "Sort Comics"
+      "by-added-date": "Date d'ajout",
+      "by-cover-date": "Date de couverture",
+      "sort-by": "Trier les bandes dessinées"
     }
   }
 }

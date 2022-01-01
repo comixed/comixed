@@ -4,9 +4,9 @@
     "confirm-start-title": "Import des Fichiers de Bandes Dessinées ?",
     "confirm-start-message": "Êtes-vous sûr de vouloir importer {count, plural, =1{le fichier de Bande Dessinée} other{les # fichiers de Bandes Dessinées}} dans la bibliothèque ?",
     "context-menu": {
-      "deselect-all": "Deselect All",
-      "deselect-one": "Deselect File",
-      "select-one": "Select File"
+      "deselect-all": "Désélectionner tout",
+      "deselect-one": "Désélectionner le fichier",
+      "select-one": "Sélectionnez le fichier"
     },
     "header": {
       "cover": "Image de couverture",
@@ -14,8 +14,8 @@
       "size": "Taille du fichier (kb)"
     },
     "import-comic-files": {
-      "confirmation-message": "Are you sure you want to import the selected {count, plural, =1{comic} other{# comics}}?",
-      "confirmation-title": "Import Selected Comics",
+      "confirmation-message": "Êtes-vous sûr de vouloir importer {count, plural, =1{la bande dessinée} other{les # bandes dessinées}}?",
+      "confirmation-title": "Imports de bandes dessinées sélectionnées",
       "effect-failure": "Échec de l'envoi des fichiers de Bande Dessinée pour import.",
       "effect-success": "{count, plural, =1{un fichier} other{# fichiers}} de Bandes Dessinées soumis pour import."
     },
@@ -27,20 +27,20 @@
       "maximum-1000-files": "1000 fichiers"
     },
     "load-comic-files": {
-      "effect-success": "Found {files, plural, =1{one comic file} other{# comic files}} in {directories, plural, =1{one directory} other{# directories}}.",
-      "effect-failure": "Impossible de trouver des fichiers de Bande Dessinées pour importation."
+      "effect-success": "{files, plural, =1{un fichier de bande dessinée trouvée} other{# fichiers de bande dessinée trouvées}} dans {directories, plural, =1{un dossier} other{# dossiers}}.",
+      "effect-failure": "Impossible de trouver des fichiers de Bandes Dessinées pour importation."
     },
-    "page-title": "Import de Bandes Dessinées: {selected, plural, =1{Une} other{#}} sur {count, plural, =1{une Bande dessinée sélectionnée} other{# Bandes Dessinées sélectionnées}}",
+    "page-title": "Import de Bandes Dessinées: {selected, plural, =1{Une} other{#}} sur {count, plural, =1{une Bande Dessinée sélectionnée} other{# Bandes Dessinées sélectionnées}}",
     "placeholder": {
       "root-directory": "Répertoire parent pour la Recherche..."
     },
     "processing-comics": {
-      "create-insert-step": "Creating Comic Records",
-      "file-contents-processed-step": "Completing Processing",
-      "load-file-contents-step": "Loading File Contents",
-      "load-file-details-step": "Loading Comic File Details",
-      "mark-blocked-pages-step": "Marking Blocked Pages",
-      "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
+      "create-insert-step": "Création de registres de bande dessinée",
+      "file-contents-processed-step": "Achèvement du traitement",
+      "load-file-contents-step": "Chargement du contenu des fichiers",
+      "load-file-details-step": "Chargement des détails de fichiers de bande dessinée",
+      "mark-blocked-pages-step": "Marquage des pages bloquées",
+      "subtitle": "{processed} traitées sur {total} Bandes Dessinées ({percentage}%)"
     },
     "tab-title": "Import de Bandes Dessinées",
     "text": {
@@ -55,7 +55,7 @@
     }
   },
   "scrape-filename": {
-    "effect-failure": "Failed to scrape filename.",
-    "effect-success": "Metadata {found, select, true{was scraped} other{was not scraped}} from the filename."
+    "effect-failure": "Échec de l'extraction du nom de fichier.",
+    "effect-success": "Les métadonnées {found, select, true{ont été extraites} other{n'ont pas été extraites}} du nom du fichier."
   }
 }
