@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>0.11.0-1.0</version>
+    <version>0.11.0-2.0</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-release</artifactId>
-  <version>0.11.0-1.0</version>
+  <version>0.11.0-2.0</version>
   <name>comixed-release</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -21,47 +21,47 @@
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-repositories</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-adaptors</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-scrapers</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-plugins</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-rest</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-dbtool</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-app</artifactId>
-      <version>0.11.0-1.0</version>
+      <version>0.11.0-2.0</version>
     </dependency>
   </dependencies>
   <build>
