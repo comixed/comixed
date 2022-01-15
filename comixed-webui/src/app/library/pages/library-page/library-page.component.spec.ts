@@ -64,7 +64,10 @@ import {
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { QUERY_PARAM_ARCHIVE_TYPE } from '@app/library/library.constants';
+import {
+  QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_PAGE_INDEX
+} from '@app/library/library.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { UnreadComicsPipe } from '@app/library/pipes/unread-comics.pipe';
 import {
@@ -82,6 +85,7 @@ import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
+  const PAGE_INDEX = 23;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -397,6 +401,19 @@ describe('LibraryPageComponent', () => {
 
   describe('loading the translations', () => {});
 
+  describe('the page index query parameter', () => {
+    beforeEach(() => {
+      component.pageIndex = 0;
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`
+      });
+    });
+
+    it('sets the page index', () => {
+      expect(component.pageIndex).toEqual(PAGE_INDEX);
+    });
+  });
+
   describe('filtering by archive type', () => {
     describe('when it is CBZ', () => {
       const ARCHIVE_TYPE = ArchiveType.CBZ;
@@ -491,6 +508,16 @@ describe('LibraryPageComponent', () => {
       it('redirects the browser', () => {
         expect(router.navigate).toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('when the page index changes', () => {
+    beforeEach(() => {
+      component.onPageIndexChange(PAGE_INDEX);
+    });
+
+    it('redirects the browser', () => {
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 });

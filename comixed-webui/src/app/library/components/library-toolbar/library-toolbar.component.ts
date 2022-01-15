@@ -63,6 +63,7 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
+  @Input() pageIndex = 0;
   @Input() showUpdateMetadata = false;
   @Input() showConsolidate = false;
   @Input() showPurge = false;
@@ -71,6 +72,7 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   @Input() sortField: string;
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
+  @Output() pageIndexChanged = new EventEmitter<number>();
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
@@ -133,7 +135,11 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
     });
   }
 
-  onPageSizeChange(pageSize: number): void {
+  onLibraryDisplayChange(
+    pageSize: number,
+    pageIndex: number,
+    previousPageIndex: number
+  ): void {
     this.logger.trace('Page size changed');
     this.store.dispatch(
       saveUserPreference({
@@ -141,6 +147,10 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
         value: `${pageSize}`
       })
     );
+    if (pageIndex !== previousPageIndex) {
+      this.logger.debug('Page index changed:', pageIndex);
+      this.pageIndexChanged.emit(pageIndex);
+    }
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {

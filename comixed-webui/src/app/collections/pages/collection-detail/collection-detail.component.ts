@@ -34,7 +34,11 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { getPageSize, isAdmin } from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
+import {
+  PAGE_SIZE_DEFAULT,
+  QUERY_PARAM_PAGE_INDEX
+} from '@app/library/library.constants';
+import { updateQueryParam } from '@app/core';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -42,7 +46,8 @@ import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
   styleUrls: ['./collection-detail.component.scss']
 })
 export class CollectionDetailComponent implements OnInit, OnDestroy {
-  paramSubscription: Subscription;
+  paramsSubscription: Subscription;
+  queryParamsSubscribe: Subscription;
   comicSubscription: Subscription;
   routableTypeName: string;
   collectionType: CollectionType;
@@ -55,6 +60,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   userSubscription: Subscription;
   isAdmin = false;
   pageSize = PAGE_SIZE_DEFAULT;
+  pageIndex = 0;
   langChangeSubscription: Subscription;
 
   constructor(
@@ -65,15 +71,15 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private titleService: TitleService
   ) {
-    this.paramSubscription = this.activatedRoute.params.subscribe(params => {
+    this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.collectionName = params.collectionName;
       this.collectionType = collectionTypeFromString(this.routableTypeName);
-      this.loadTranslations();
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
         this.router.navigateByUrl('/library');
       } else {
+        this.loadTranslations();
         this.comicSubscription = this.store
           .select(selectComicList)
           .subscribe(entries => {
@@ -96,6 +102,14 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
           });
       }
     });
+    this.queryParamsSubscribe = this.activatedRoute.queryParams.subscribe(
+      params => {
+        if (!!params[QUERY_PARAM_PAGE_INDEX]) {
+          this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
+          this.logger.debug(`Page index: ${this.pageIndex}`);
+        }
+      }
+    );
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.logger.trace('Setting isAdmin flag');
       this.isAdmin = isAdmin(user);
@@ -119,7 +133,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from parameter updates');
-    this.paramSubscription.unsubscribe();
+    this.paramsSubscription.unsubscribe();
+    this.queryParamsSubscribe.unsubscribe();
     if (!!this.comicSubscription) {
       this.comicSubscription.unsubscribe();
     }
@@ -128,6 +143,16 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.logger.trace('Unsubscribing from reading list updats');
     this.readingListsSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
+  }
+
+  onPageIndexChanged(pageIndex: number): void {
+    this.logger.debug('Page index changed:', pageIndex);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_PAGE_INDEX,
+      `${pageIndex}`
+    );
   }
 
   private loadTranslations(): void {

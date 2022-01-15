@@ -78,7 +78,9 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showPurge = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
+
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
+  @Output() pageIndexChanged = new EventEmitter<number>();
 
   pagination = PAGE_SIZE_DEFAULT;
   dataSource = new MatTableDataSource<Comic>();
@@ -96,6 +98,18 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {}
+
+  private _pageIndex = 0;
+  get pageIndex(): number {
+    return this._pageIndex;
+  }
+
+  @Input() set pageIndex(pageIndex: number) {
+    this._pageIndex = pageIndex;
+    if (!!this.dataSource.paginator) {
+      this.dataSource.paginator.pageIndex = this._pageIndex;
+    }
+  }
 
   private _sortField: string;
 
@@ -121,6 +135,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() set comics(comics: Comic[]) {
     this.logger.trace('Setting comics:', comics);
     this.dataSource.data = comics;
+    this.pageIndex = this._pageIndex;
     this.sortData();
   }
 
@@ -300,6 +315,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isRead(comic: Comic): boolean {
     return this.readComicIds.includes(comic.id);
+  }
+
+  onPageIndexChanged(pageIndex: number): void {
+    this.pageIndexChanged.emit(pageIndex);
   }
 
   private sortData(): void {

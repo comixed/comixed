@@ -4,7 +4,14 @@
     [pageSizeOptions]="pageSizeOptions"
     [showFirstLastButtons]="true"
     [pageSize]="pageSize"
-    (page)="onPageSizeChange($event.pageSize)"
+    [pageIndex]="pageIndex"
+    (page)="
+      onLibraryDisplayChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
+    "
   ></mat-paginator>
   <div class="cx-spacer"></div>
   <mat-form-field appearance="standard">

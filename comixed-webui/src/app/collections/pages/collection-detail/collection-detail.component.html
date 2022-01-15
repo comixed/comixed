@@ -5,4 +5,6 @@
   [showConsolidate]="isAdmin"
   [isAdmin]="isAdmin"
   [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  (pageIndexChanged)="onPageIndexChanged($event)"
 ></cx-comic-covers>

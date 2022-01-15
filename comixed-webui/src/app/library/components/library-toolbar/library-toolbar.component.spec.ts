@@ -58,6 +58,7 @@ import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
+  const PAGE_INDEX = 2;
   const initialState = {};
 
   let component: LibraryToolbarComponent;
@@ -160,9 +161,9 @@ describe('LibraryToolbarComponent', () => {
     });
   });
 
-  describe('when the pagination changes', () => {
+  describe('when the page size changes', () => {
     beforeEach(() => {
-      component.onPageSizeChange(PAGINATION);
+      component.onLibraryDisplayChange(PAGINATION, PAGE_INDEX, PAGE_INDEX);
     });
 
     it('fires an action', () => {
@@ -172,6 +173,17 @@ describe('LibraryToolbarComponent', () => {
           value: `${PAGINATION}`
         })
       );
+    });
+  });
+
+  describe('when the page index changes', () => {
+    beforeEach(() => {
+      spyOn(component.pageIndexChanged, 'emit');
+      component.onLibraryDisplayChange(PAGINATION, PAGE_INDEX, PAGE_INDEX - 1);
+    });
+
+    it('emits an event', () => {
+      expect(component.pageIndexChanged.emit).toHaveBeenCalledWith(PAGE_INDEX);
     });
   });
 
