@@ -20,7 +20,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CollectionDetailComponent } from './collection-detail.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router
+} from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
@@ -63,9 +67,11 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { TitleService } from '@app/core/services/title.service';
 import { MatSortModule } from '@angular/material/sort';
+import { QUERY_PARAM_PAGE_INDEX } from '@app/library/library.constants';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
+  const PAGE_INDEX = 22;
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -115,7 +121,9 @@ describe('CollectionDetailComponent', () => {
               params: new BehaviorSubject<{}>({
                 collectionType: CollectionType.CHARACTERS,
                 collectionName: 'Batman'
-              })
+              }),
+              queryParams: new BehaviorSubject<{}>({}),
+              snapshot: {} as ActivatedRouteSnapshot
             }
           },
           TitleService
@@ -277,6 +285,29 @@ describe('CollectionDetailComponent', () => {
       it('selects comics', () => {
         expect(component.comics).not.toEqual([]);
       });
+    });
+  });
+
+  describe('when the page index is provided', () => {
+    beforeEach(() => {
+      component.pageIndex = 0;
+      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+        [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`
+      });
+    });
+
+    it('set the page index', () => {
+      expect(component.pageIndex).toEqual(PAGE_INDEX);
+    });
+  });
+
+  describe('when the page index changes', () => {
+    beforeEach(() => {
+      component.onPageIndexChanged(PAGE_INDEX);
+    });
+
+    it('redirects the browsers', () => {
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 });

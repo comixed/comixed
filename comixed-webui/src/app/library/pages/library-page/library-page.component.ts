@@ -37,6 +37,7 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_PAGE_INDEX,
   SORT_FIELD_DEFAULT,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
@@ -70,6 +71,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   unprocessedOnly = false;
   queryParamSubscription: Subscription;
   archiveTypeFilter = null;
+  pageIndex = 0;
   sortField = SORT_FIELD_DEFAULT;
   lastReadDatesSubscription: Subscription;
   lastReadDates: LastRead[];
@@ -134,6 +136,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           this.logger.debug('Resetting archive type filter');
           this.archiveTypeFilter = null;
         }
+        if (!!params[QUERY_PARAM_PAGE_INDEX]) {
+          this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
+          this.logger.debug(`Page index: ${this.pageIndex}`);
+        }
       }
     );
     this.comicListStateSubscription = this.store
@@ -197,12 +203,22 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
-    this.logger.trace('Archive type changed:', archiveType);
+    this.logger.debug('Archive type changed:', archiveType);
     updateQueryParam(
       this.activatedRoute,
       this.router,
       QUERY_PARAM_ARCHIVE_TYPE,
       !!archiveType ? `${archiveType}` : null
+    );
+  }
+
+  onPageIndexChange(pageIndex: number): void {
+    this.logger.debug('Page index changed:', pageIndex);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_PAGE_INDEX,
+      `${pageIndex}`
     );
   }
 

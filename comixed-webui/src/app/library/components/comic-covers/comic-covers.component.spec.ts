@@ -22,7 +22,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -75,6 +75,7 @@ import { MatSortModule } from '@angular/material/sort';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
+  const PAGE_INDEX = 23;
   const COMIC = COMIC_2;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
   const READING_LIST = READING_LIST_1;
@@ -89,6 +90,7 @@ describe('ComicCoversComponent', () => {
   let dialog: MatDialog;
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
+  let paginator: ComponentFixture<MatPaginator>;
 
   beforeEach(
     waitForAsync(() => {
@@ -125,6 +127,7 @@ describe('ComicCoversComponent', () => {
       spyOn(dialog, 'open');
       translateService = TestBed.inject(TranslateService);
       confirmationService = TestBed.inject(ConfirmationService);
+      paginator = TestBed.createComponent(MatPaginator);
       fixture.detectChanges();
     })
   );
@@ -511,6 +514,28 @@ describe('ComicCoversComponent', () => {
       it('sorts correctly', () => {
         expect(component.dataSource.data[0]).toBe(RIGHT);
       });
+    });
+  });
+
+  describe('when the page index changes', () => {
+    beforeEach(() => {
+      spyOn(component.pageIndexChanged, 'emit');
+      component.onPageIndexChanged(PAGE_INDEX);
+    });
+
+    it('emits an event', () => {
+      expect(component.pageIndexChanged.emit).toHaveBeenCalledWith(PAGE_INDEX);
+    });
+  });
+
+  describe('setting the page index', () => {
+    beforeEach(() => {
+      component.dataSource.paginator = paginator.componentInstance;
+      component.pageIndex = PAGE_INDEX;
+    });
+
+    it('sets the page index for the paginator', () => {
+      expect(paginator.componentInstance.pageIndex).toEqual(PAGE_INDEX);
     });
   });
 });

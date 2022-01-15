@@ -4,13 +4,15 @@
   [showActions]="showActions"
   [isAdmin]="isAdmin"
   [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
   [showUpdateMetadata]="showUpdateMetadata"
   [showConsolidate]="showConsolidate"
   [showPurge]="showPurge"
   [selected]="selected"
   [archiveType]="archiveType"
-  (archiveTypeChanged)="onArchiveTypeChanged($event)"
   [sortField]="sortField"
+  (archiveTypeChanged)="onArchiveTypeChanged($event)"
+  (pageIndexChanged)="onPageIndexChanged($event)"
 ></cx-library-toolbar>
 
 <h2>
