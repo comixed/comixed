@@ -166,12 +166,16 @@ describe('ComicFileList Reducer', () => {
   describe('clearing the selections', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, selections: FILES },
+        { ...state, files: FILES, selections: FILES },
         clearComicFileSelections()
       );
     });
 
-    it('removes all selection entries', () => {
+    it('clears the comic files', () => {
+      expect(state.files).toEqual([]);
+    });
+
+    it('clears the selections', () => {
       expect(state.selections).toEqual([]);
     });
   });
