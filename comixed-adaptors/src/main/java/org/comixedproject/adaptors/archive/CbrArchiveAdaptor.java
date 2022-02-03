@@ -19,7 +19,6 @@
 package org.comixedproject.adaptors.archive;
 
 import com.github.junrar.Archive;
-import com.github.junrar.impl.FileVolumeManager;
 import com.github.junrar.rarfile.FileHeader;
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +51,7 @@ public class CbrArchiveAdaptor
 
   @Override
   protected CbrArchiveReadHandle doOpenArchiveForRead(final String filename) throws Exception {
-    return new CbrArchiveReadHandle(
-        new Archive(new FileVolumeManager(new File(filename))), filename);
+    return new CbrArchiveReadHandle(new Archive(new File(filename)), filename);
   }
 
   @Override
@@ -75,7 +73,7 @@ public class CbrArchiveAdaptor
       final InputStream stream = archiveHandle.getArchiveHandle().getInputStream(fileHeader);
       result.add(
           createArchiveEntry(
-              index++, fileHeader.getFileNameString(), fileHeader.getFullUnpackSize(), stream));
+              index++, fileHeader.getFileName(), fileHeader.getFullUnpackSize(), stream));
     }
     log.trace("Returning entries");
     return result;
@@ -86,7 +84,7 @@ public class CbrArchiveAdaptor
       throws Exception {
     final Optional<FileHeader> fileHeader =
         archiveHandle.getArchiveHandle().getFileHeaders().stream()
-            .filter(header -> header.getFileNameString().equals(filename))
+            .filter(header -> header.getFileName().equals(filename))
             .findFirst();
 
     if (fileHeader.isEmpty()) throw new ArchiveAdaptorException("No such entry: " + filename);
