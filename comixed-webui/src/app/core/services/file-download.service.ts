@@ -40,9 +40,13 @@ export class FileDownloadService {
     }
     const byteArray = new Uint8Array(byteNumbers);
     this.logger.trace('Saving downloaded document:', args.document.filename);
-    this.fileSaverService.save(
-      new Blob([byteArray], { type: args.document.mediaType }),
-      args.document.filename
-    );
+    this.saveFileContent({
+      content: new Blob([byteArray], { type: args.document.mediaType }),
+      filename: args.document.filename
+    });
+  }
+
+  saveFileContent(args: { content: Blob; filename: string }): void {
+    this.fileSaverService.save(args.content, args.filename);
   }
 }

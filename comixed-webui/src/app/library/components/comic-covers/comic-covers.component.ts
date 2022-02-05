@@ -56,6 +56,7 @@ import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { FileDownloadService } from '@app/core/services/file-download.service';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -96,7 +97,8 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private fileDownloadService: FileDownloadService
   ) {}
 
   private _pageIndex = 0;
@@ -321,7 +323,15 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageIndexChanged.emit(pageIndex);
   }
 
-  private sortData(): void {
+  downloadComicData(comics: Comic[]): void {
+    this.logger.debug('Downloading comic metadata:', comics);
+    this.fileDownloadService.saveFileContent({
+      content: new Blob([JSON.stringify(comics)], { type: 'application/json' }),
+      filename: 'debug-metadata.json'
+    });
+  }
+
+  sortData(): void {
     this.dataSource.data = this.dataSource.data.sort((left, right) => {
       switch (this.sortField) {
         case 'added-date':
@@ -332,7 +342,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private doConversion(
+  doConversion(
     title: string,
     message: string,
     format: string,
