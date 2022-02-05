@@ -50,13 +50,15 @@ import {
   resetScraping,
   scrapeComic
 } from '@app/comic-books/actions/scraping.actions';
-import { Confirmation } from '@app/core/models/confirmation';
 import { deselectComics } from '@app/library/actions/library.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ScrapingIssueDetailComponent } from '@app/comic-books/components/scraping-issue-detail/scraping-issue-detail.component';
 import { MatInputModule } from '@angular/material/input';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicScrapingComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;

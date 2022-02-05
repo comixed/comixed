@@ -28,7 +28,6 @@ import { Comic } from '@app/comic-books/models/comic';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ScrapeEvent } from '@app/comic-books/models/ui/scrape-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -49,6 +48,7 @@ import {
 import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-metadata.selectors';
 import { filter } from 'rxjs/operators';
 import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-comic-edit',

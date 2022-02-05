@@ -40,15 +40,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-pages.actions';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Confirmation } from '@app/core/models/confirmation';
 import { uploadBlockedPages } from '@app/comic-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { markPagesWithHash } from '@app/comic-pages/actions/blocked-hash-list.actions';
 import { TitleService } from '@app/core/services/title.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];

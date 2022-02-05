@@ -37,7 +37,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { Confirmation } from '@app/core/models/confirmation';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -45,7 +44,6 @@ import {
   PAGE_SIZE_PREFERENCE,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -54,6 +52,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];

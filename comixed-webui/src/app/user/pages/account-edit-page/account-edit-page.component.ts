@@ -38,7 +38,6 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { saveCurrentUser } from '@app/user/actions/user.actions';
 import { TitleService } from '@app/core/services/title.service';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { getUserPreference } from '@app/user';
 import {
   PAGE_SIZE_DEFAULT,
@@ -48,6 +47,7 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH
 } from '@app/user/user.constants';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-account-edit',

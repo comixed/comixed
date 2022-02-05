@@ -36,7 +36,6 @@ import {
   COMIC_FILE_3,
   COMIC_FILE_4
 } from '@app/comic-files/comic-file.fixtures';
-import { Confirmation } from '@app/core/models/confirmation';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { User } from '@app/user/models/user';
@@ -63,12 +62,15 @@ import {
   initialState as initialImportComicFilesState
 } from '@app/comic-files/reducers/import-comic-files.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   initialState as initialProcessComicsState,
   PROCESS_COMICS_FEATURE_KEY
 } from '@app/reducers/process-comics.reducer';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;

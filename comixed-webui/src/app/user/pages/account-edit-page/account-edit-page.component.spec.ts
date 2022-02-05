@@ -32,12 +32,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { USER_READER } from '@app/user/user.fixtures';
 import { saveCurrentUser } from '@app/user/actions/user.actions';
-import { Confirmation } from '@app/core/models/confirmation';
 import { TitleService } from '@app/core/services/title.service';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UserCardComponent } from '@app/user/components/user-card/user-card.component';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('AccountEditPageComponent', () => {
   const USER = USER_READER;

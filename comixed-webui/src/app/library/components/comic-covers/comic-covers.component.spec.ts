@@ -50,9 +50,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
-import { Confirmation } from '@app/core/models/confirmation';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -72,6 +70,10 @@ import {
 } from '@app/last-read/last-read.fixtures';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatSortModule } from '@angular/material/sort';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;

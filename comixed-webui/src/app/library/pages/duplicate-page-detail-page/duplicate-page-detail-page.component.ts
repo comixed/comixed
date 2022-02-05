@@ -33,8 +33,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Comic } from '@app/comic-books/models/comic';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',

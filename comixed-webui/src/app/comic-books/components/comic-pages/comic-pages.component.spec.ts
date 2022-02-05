@@ -33,13 +33,15 @@ import { MatMenuModule } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
 import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTableModule } from '@angular/material/table';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_1;

@@ -43,9 +43,9 @@ import { uploadBlockedPages } from '@app/comic-pages/actions/upload-blocked-page
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-blocked-hash-list',

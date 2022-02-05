@@ -20,7 +20,6 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
@@ -31,6 +30,7 @@ import {
   LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-library-configuration',

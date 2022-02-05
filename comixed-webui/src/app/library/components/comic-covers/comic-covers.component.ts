@@ -42,7 +42,6 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
 import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import {
@@ -56,6 +55,7 @@ import { convertComics } from '@app/library/actions/convert-comics.actions';
 import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
 import { MatSort } from '@angular/material/sort';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-comic-covers',

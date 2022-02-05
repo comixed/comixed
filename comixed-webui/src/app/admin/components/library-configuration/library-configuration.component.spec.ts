@@ -32,9 +32,11 @@ import {
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
-import { Confirmation } from '@app/core/models/confirmation';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('LibraryConfigurationComponent', () => {
   const LIBRARY_ROOT = 'The library root';

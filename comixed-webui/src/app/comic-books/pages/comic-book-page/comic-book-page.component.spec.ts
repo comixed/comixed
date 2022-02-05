@@ -64,9 +64,7 @@ import {
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
-import { Confirmation } from '@app/core/models/confirmation';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
@@ -88,6 +86,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicBookPageComponent', () => {
   const COMIC = COMIC_1;

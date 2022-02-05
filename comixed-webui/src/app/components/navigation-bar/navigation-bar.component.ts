@@ -29,9 +29,9 @@ import {
   LOGGER_LEVEL_PREFERENCE
 } from '@app/app.constants';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ListItem } from '@app/core/models/ui/list-item';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-navigation-bar',

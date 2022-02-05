@@ -60,7 +60,6 @@ import {
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
@@ -68,6 +67,7 @@ import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { Page } from '@app/comic-books/models/page';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-comic-book-page',

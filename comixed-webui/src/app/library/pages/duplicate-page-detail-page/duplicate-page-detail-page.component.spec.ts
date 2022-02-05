@@ -43,11 +43,13 @@ import {
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { loadDuplicatePageDetail } from '@app/library/actions/duplicate-page-detail.actions';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('DuplicatePageDetailPageComponent', () => {
   const DETAIL = DUPLICATE_PAGE_1;

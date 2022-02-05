@@ -50,9 +50,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { Confirmation } from '@app/core/models/confirmation';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicFileToolbarComponent', () => {
   const USER = USER_ADMIN;

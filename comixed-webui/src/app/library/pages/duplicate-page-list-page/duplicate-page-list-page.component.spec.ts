@@ -44,8 +44,6 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics-with-duplicate-page/comics-with-duplicate-page.component';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
 import {
   BLOCKED_HASH_LIST_FEATURE_KEY,
   initialState as initialBlockedPageListState
@@ -60,6 +58,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 import { YesNoPipe } from '@app/core/pipes/yes-no.pipe';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('DuplicatePageListPageComponent', () => {
   const DUPLICATE_PAGES = [

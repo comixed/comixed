@@ -27,8 +27,6 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
 import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { USER_ADMIN, USER_READER } from '@app/user/user.fixtures';
 import { MatMenuModule } from '@angular/material/menu';
@@ -46,6 +44,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { GravatarModule } from 'ngx-gravatar';
 import { MatDialogModule } from '@angular/material/dialog';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;

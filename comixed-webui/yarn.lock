@@ -1774,10 +1774,17 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tragically-slick/edit-in-place@^0.1.0-2":
-  version "0.1.0-2"
-  resolved "https://registry.yarnpkg.com/@tragically-slick/edit-in-place/-/edit-in-place-0.1.0-2.tgz#13510ccb16d277ecaff151e940235205000ff066"
-  integrity sha512-XoKNTAhT4BdmeenVfHgMfXdMks29gn+RW684OZM4EUDvlRaVPf+JuXyoerg+XpIikWOUtsmvXgUEDUbyacfBwA==
+"@tragically-slick/confirmation@^0.1.2-2":
+  version "0.1.2-2"
+  resolved "https://registry.yarnpkg.com/@tragically-slick/confirmation/-/confirmation-0.1.2-2.tgz#d832a6fdb0d9eac7ddd596ffab6eb780dbbadb96"
+  integrity sha512-2O6qF4KuXUK6AvN1rJNYzZWWDH21CkKwizsDqMB5aj0TdtPsUl1619Yvol1T95KNAm0QJAOhUQkrMKnlifPOmQ==
+  dependencies:
+    tslib "^2.0.0"
+
+"@tragically-slick/edit-in-place@^0.1.1-2":
+  version "0.1.1-2"
+  resolved "https://registry.yarnpkg.com/@tragically-slick/edit-in-place/-/edit-in-place-0.1.1-2.tgz#a7edb1c7624b31bf4e72f11d9ba45678160cdd64"
+  integrity sha512-x67D5taBnEUbd9RQhQQ2mFLHBrsL/JW6vLfT6VscU0p0ZM4aAOmgzrvd1MbFN9RqYifERaKEcSx5djMesvaNfA==
   dependencies:
     tslib "^2.0.0"
 

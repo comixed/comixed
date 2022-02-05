@@ -23,11 +23,11 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { Preference } from '@app/user/models/preference';
 import { TitleService } from '@app/core/services/title.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-user-preferences-page',

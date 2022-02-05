@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { UserPreferencesPageComponent } from './user-preferences-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   initialState as initialUserState,
@@ -32,8 +31,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { Confirmation } from '@app/core/models/confirmation';
 import { TitleService } from '@app/core/services/title.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('UserPreferencesPageComponent', () => {
   const USER = USER_READER;
