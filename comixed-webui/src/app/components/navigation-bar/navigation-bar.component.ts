@@ -174,4 +174,8 @@ export class NavigationBarComponent {
     this.logger.trace('Toggling sidebar');
     this.toggleSidebar.emit(!this.sidebarOpened);
   }
+
+  openWikiPage(): void {
+    window.open('https://github.com/comixed/comixed/wiki', '_help');
+  }
 }

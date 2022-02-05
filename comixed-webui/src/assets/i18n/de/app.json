@@ -76,6 +76,7 @@
     }
   },
   "menu": {
+    "help": "Project help page...",
     "language-menu": {
       "root": "Select Language"
     },
@@ -127,7 +128,8 @@
       "web-audit-log": "Web Audit Log"
     },
     "tooltip": {
-      "account": "View account details."
+      "account": "View account details.",
+      "wiki": "Open the project wiki."
     }
   },
   "session": {
