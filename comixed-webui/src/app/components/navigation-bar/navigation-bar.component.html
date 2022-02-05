@@ -8,8 +8,11 @@
   >
     <mat-icon>menu</mat-icon>
   </button>
+
   <span id="cx-logo">ComiXed</span>
+
   <div class="cx-spacer"></div>
+
   <button
     *ngIf="!!user"
     mat-icon-button
@@ -21,11 +24,18 @@
 
   <button
     id="toolbar-menu-trigger-button"
-    mat-flat-button
-    color="primary"
+    mat-icon-button
     [mat-menu-trigger-for]="mainMenu"
   >
     <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <button
+    mat-icon-button
+    [matTooltip]="'navigation.tooltip.wiki' | translate"
+    (click)="openWikiPage()"
+  >
+    <mat-icon>help_center</mat-icon>
   </button>
 </mat-toolbar>
 
@@ -38,6 +48,12 @@
     <mat-icon>login</mat-icon>
     <mat-label>{{ "button.login" | translate }}</mat-label>
   </button>
+  <mat-divider *ngIf="!!user"></mat-divider>
+  <button mat-menu-item (click)="openWikiPage()">
+    <mat-icon>help_center</mat-icon>
+    <mat-label>{{ "menu.help" | translate }}</mat-label>
+  </button>
+  <mat-divider *ngIf="!!user"></mat-divider>
   <button *ngIf="!!user" mat-menu-item (click)="onLogout()">
     <mat-icon>logout</mat-icon>
     <mat-label>{{ "button.logout" | translate }}</mat-label>

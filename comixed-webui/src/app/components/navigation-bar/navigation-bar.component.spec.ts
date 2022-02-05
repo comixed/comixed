@@ -274,4 +274,18 @@ describe('NavigationBarComponent', () => {
     component.sidebarOpened = opened;
     expect(component.sidebarOpened).toEqual(opened);
   });
+
+  describe('opening the wiki page for help', () => {
+    beforeEach(() => {
+      spyOn(window, 'open');
+      component.openWikiPage();
+    });
+
+    it('opens a new page', () => {
+      expect(window.open).toHaveBeenCalledWith(
+        'https://github.com/comixed/comixed/wiki',
+        '_help'
+      );
+    });
+  });
 });
