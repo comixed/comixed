@@ -81,6 +81,10 @@
         {{ "library.context-menu.reading-lists" | translate }}
       </mat-label>
     </button>
+    <button *ngIf="isAdmin" mat-menu-item [matMenuTriggerFor]="downloadMenu">
+      <mat-icon>download</mat-icon>
+      <mat-label>{{ "library.context-menu.download" | translate }}</mat-label>
+    </button>
     <button
       mat-menu-item
       [matMenuTriggerFor]="convertMenu"
@@ -190,6 +194,27 @@
   >
     <mat-icon>playlist_add</mat-icon>
     <mat-label>{{ list.name }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #downloadMenu="matMenu">
+  <mat-divider *ngIf="isAdmin"></mat-divider>
+  <button *ngIf="isAdmin" mat-menu-item (click)="downloadComicData([comic])">
+    <mat-icon>data_array</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.download-one-data" | translate }}
+    </mat-label>
+  </button>
+  <button
+    *ngIf="isAdmin"
+    mat-menu-item
+    [disabled]="!selected.length"
+    (click)="downloadComicData(selected)"
+  >
+    <mat-icon>data_array</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.download-selected-data" | translate }}
+    </mat-label>
   </button>
 </mat-menu>
 

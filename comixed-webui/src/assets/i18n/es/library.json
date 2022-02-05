@@ -45,7 +45,7 @@
   "library": {
     "add-to-reading-list": {
       "confirmation-message": "Are you sure you want to add {count, plural, =1{one comic} other{# comics}} to {name}?",
-      "confirmation-title":  "Add Comics To Reading List"
+      "confirmation-title": "Add Comics To Reading List"
     },
     "all-comics": {
       "tab-title": "Todos los cómics",
@@ -73,6 +73,9 @@
       "convert-selected-to-cbz": "Convert selections to CBZ",
       "delete-one": "This Comic As Deleted",
       "delete-selected": "Selected Comics As Deleted",
+      "download": "Download...",
+      "download-one-data": "This comic's data",
+      "download-selected-data": "Selected comics' data",
       "mark-as": "Marque...",
       "mark-one-as-read": "Este cómic como leído",
       "mark-one-as-unread": "Este cómic como no leído",

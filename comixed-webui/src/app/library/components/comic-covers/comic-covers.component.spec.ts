@@ -74,6 +74,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { FileDownloadService } from '@app/core/services/file-download.service';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
@@ -93,6 +94,7 @@ describe('ComicCoversComponent', () => {
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
   let paginator: ComponentFixture<MatPaginator>;
+  let fileDownloadService: FileDownloadService;
 
   beforeEach(
     waitForAsync(() => {
@@ -118,7 +120,11 @@ describe('ComicCoversComponent', () => {
           MatDividerModule,
           MatSortModule
         ],
-        providers: [provideMockStore({ initialState }), ConfirmationService]
+        providers: [
+          provideMockStore({ initialState }),
+          ConfirmationService,
+          FileDownloadService
+        ]
       }).compileComponents();
 
       fixture = TestBed.createComponent(ComicCoversComponent);
@@ -130,6 +136,7 @@ describe('ComicCoversComponent', () => {
       translateService = TestBed.inject(TranslateService);
       confirmationService = TestBed.inject(ConfirmationService);
       paginator = TestBed.createComponent(MatPaginator);
+      fileDownloadService = TestBed.inject(FileDownloadService);
       fixture.detectChanges();
     })
   );
@@ -538,6 +545,17 @@ describe('ComicCoversComponent', () => {
 
     it('sets the page index for the paginator', () => {
       expect(paginator.componentInstance.pageIndex).toEqual(PAGE_INDEX);
+    });
+  });
+
+  describe('downloading comic metadata', () => {
+    beforeEach(() => {
+      spyOn(fileDownloadService, 'saveFileContent');
+      component.downloadComicData(COMICS);
+    });
+
+    it('downloads the file detail', () => {
+      expect(fileDownloadService.saveFileContent).toHaveBeenCalled();
     });
   });
 });
