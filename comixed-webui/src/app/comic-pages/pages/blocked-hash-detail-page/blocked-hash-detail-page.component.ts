@@ -36,7 +36,7 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { isAdmin } from '@app/user/user.functions';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-blocked-hash-detail-page',

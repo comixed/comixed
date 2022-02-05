@@ -29,12 +29,12 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { Page } from '@app/comic-books/models/page';
 import { Comic } from '@app/comic-books/models/comic';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
 import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
 import { MatTableDataSource } from '@angular/material/table';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as _ from 'lodash';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-comic-pages',

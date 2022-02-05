@@ -46,8 +46,8 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 export const MATCHABILITY = 'sortOrder';
 export const EXACT_MATCH = 2;

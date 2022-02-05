@@ -25,13 +25,15 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Confirmation } from '@app/core/models/confirmation';
 import {
   loadServerHealth,
   shutdownServer
 } from '@app/admin/actions/server-runtime.actions';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ServerRuntimeComponent', () => {
   const initialState = {

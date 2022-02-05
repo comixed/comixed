@@ -41,8 +41,8 @@ import {
 } from '@app/admin/actions/web-audit-log.actions';
 import { MatSort } from '@angular/material/sort';
 import { MatSidenav } from '@angular/material/sidenav';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TitleService } from '@app/core/services/title.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-web-audit-log-page',

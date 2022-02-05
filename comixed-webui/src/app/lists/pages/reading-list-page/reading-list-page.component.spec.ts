@@ -40,8 +40,6 @@ import {
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
 import { ComicListViewComponent } from '@app/library/components/comic-list-view/comic-list-view.component';
 import {
   COMIC_1,
@@ -67,6 +65,10 @@ import { Subscription as WebstompSubscription } from 'webstomp-client';
 import { downloadReadingList } from '@app/lists/actions/download-reading-list.actions';
 import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;

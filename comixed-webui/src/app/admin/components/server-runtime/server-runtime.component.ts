@@ -18,7 +18,6 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -31,6 +30,7 @@ import {
   shutdownServer
 } from '@app/admin/actions/server-runtime.actions';
 import { ServerHealth } from '@app/admin/models/server-health';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-server-runtime',

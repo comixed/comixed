@@ -40,11 +40,11 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
 import { selectUploadReadingListState } from '@app/lists/selectors/upload-reading-list.selectors';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-reading-lists-page',

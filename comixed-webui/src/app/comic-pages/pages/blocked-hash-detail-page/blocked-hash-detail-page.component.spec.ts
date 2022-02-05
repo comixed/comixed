@@ -39,14 +39,16 @@ import {
   BLOCKED_HASH_5
 } from '@app/comic-pages/comic-pages.fixtures';
 import { Router } from '@angular/router';
-import { Confirmation } from '@app/core/models/confirmation';
 import { saveBlockedPage } from '@app/comic-pages/actions/blocked-page-detail.actions';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { TragicallySlickEditInPlaceModule } from '@tragically-slick/edit-in-place';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('BlockedHashDetailPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];

@@ -30,7 +30,6 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TitleService } from '@app/core/services/title.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
@@ -40,10 +39,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { Confirmation } from '@app/core/models/confirmation';
 import { saveFilenameScrapingRules } from '@app/admin/actions/filename-scraping-rule-list.actions';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('FilenameScrapingRulesConfigurationComponent', () => {
   const RULES = [

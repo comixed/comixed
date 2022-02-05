@@ -44,13 +44,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics-with-duplicate-page/comics-with-duplicate-page.component';
 import { MatSort } from '@angular/material/sort';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { DUPLICATE_PAGE_LIST_TOPIC } from '@app/library/library.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',

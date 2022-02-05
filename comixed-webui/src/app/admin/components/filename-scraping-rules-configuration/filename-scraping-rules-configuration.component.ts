@@ -36,7 +36,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { EditableListItem } from '@app/core/models/ui/editable-list-item';
 import { MatTableDataSource } from '@angular/material/table';
 import * as _ from 'lodash';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-scraping-rules-configuration',

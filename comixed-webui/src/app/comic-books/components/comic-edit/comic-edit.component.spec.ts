@@ -29,8 +29,6 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
-import { Confirmation } from '@app/core/models/confirmation';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -51,6 +49,10 @@ import {
 } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
 import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];

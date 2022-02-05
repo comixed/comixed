@@ -39,14 +39,16 @@ import {
   initialState as initialUploadReadingListState,
   UPLOAD_READING_LIST_FEATURE_KEY
 } from '@app/lists/reducers/upload-reading-list.reducer';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Confirmation } from '@app/core/models/confirmation';
 import { uploadReadingList } from '@app/lists/actions/upload-reading-list.actions';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { deleteReadingLists } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];

@@ -38,10 +38,10 @@ import {
 import { selectImportComicFilesState } from '@app/comic-files/selectors/import-comic-files.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { sendComicFiles } from '@app/comic-files/actions/import-comic-files.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
 import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-import-comics',

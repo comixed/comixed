@@ -19,7 +19,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -37,7 +36,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
 import { LabelAndValueComponent } from './components/label-and-value/label-and-value.component';
 
 @NgModule({
-  declarations: [ConfirmationComponent, YesNoPipe, LabelAndValueComponent],
+  declarations: [YesNoPipe, LabelAndValueComponent],
   imports: [
     CommonModule,
     TranslateModule.forRoot(),

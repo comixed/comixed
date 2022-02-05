@@ -33,7 +33,6 @@ import {
   selectComics
 } from '@app/library/actions/library.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Router } from '@angular/router';
 import {
   PAGE_SIZE_DEFAULT,
@@ -50,6 +49,7 @@ import { startLibraryConsolidation } from '@app/library/actions/consolidate-libr
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-library-toolbar',

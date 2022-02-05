@@ -37,7 +37,6 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { Comic } from '@app/comic-books/models/comic';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
@@ -52,6 +51,7 @@ import {
   readingListRemoved
 } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-user-reading-list-page',

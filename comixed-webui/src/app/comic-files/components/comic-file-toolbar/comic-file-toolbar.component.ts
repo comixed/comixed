@@ -46,7 +46,7 @@ import { User } from '@app/user/models/user';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-comic-file-toolbar',

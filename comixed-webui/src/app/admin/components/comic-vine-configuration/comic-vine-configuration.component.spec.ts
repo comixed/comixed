@@ -25,11 +25,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { COMICVINE_API_KEY } from '@app/admin/admin.constants';
-import { Confirmation } from '@app/core/models/confirmation';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
 
 describe('ComicVineConfigurationComponent', () => {
   const API_KEY = 'The ComicVine API key';

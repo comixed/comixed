@@ -24,8 +24,8 @@ import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import { COMICVINE_API_KEY } from '@app/admin/admin.constants';
 import { saveConfigurationOptions } from '@app/admin/actions/save-configuration-options.actions';
-import { ConfirmationService } from '@app/core/services/confirmation.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmationService } from '@tragically-slick/confirmation';
 
 @Component({
   selector: 'cx-comic-vine-configuration',
