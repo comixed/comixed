@@ -18,11 +18,15 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
+import static org.apache.commons.lang.StringUtils.leftPad;
+
 import java.io.File;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comicbooks.Comic;
@@ -42,6 +46,13 @@ public class ComicFileAdaptor {
   private static final String FORBIDDEN_PROPERTY_CHARACTERS = "[\"':\\\\/*?|<>]";
   static final String UNKNOWN_VALUE = "Unknown";
   public static final String NO_COVER_DATE = "No Cover Date";
+  public static final String PLACEHOLDER_PUBLISHER = "$PUBLISHER";
+  public static final String PLACEHOLDER_SERIES = "$SERIES";
+  public static final String PLACEHOLDER_VOLUME = "$VOLUME";
+  public static final String PLACEHOLDER_ISSUE_NUMBER = "$ISSUE";
+  public static final String PLACEHOLDER_COVER_DATE = "$COVERDATE";
+  public static final String PLACEHOLDER_PUBLISHED_YEAR = "$PUBYEAR";
+  public static final String PLACEHOLDER_PUBLISHED_MONTH = "$PUBMONTH";
 
   private final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
 
@@ -105,10 +116,11 @@ public class ComicFileAdaptor {
         StringUtils.isEmpty(comic.getSeries()) ? UNKNOWN_VALUE : scrub(comic.getSeries());
     final String volume =
         StringUtils.isEmpty(comic.getVolume()) ? UNKNOWN_VALUE : comic.getVolume();
-    final String issueNumber =
+    String issueNumber =
         StringUtils.isEmpty(comic.getIssueNumber()) ? UNKNOWN_VALUE : scrub(comic.getIssueNumber());
     final String coverDate =
         comic.getCoverDate() != null ? coverDateFormat.format(comic.getCoverDate()) : NO_COVER_DATE;
+    issueNumber = this.checkForPadding(rule, PLACEHOLDER_ISSUE_NUMBER, issueNumber);
     String publishedMonth = "";
     String publishedYear = "";
     if (comic.getStoreDate() != null) {
@@ -121,17 +133,41 @@ public class ComicFileAdaptor {
     }
 
     String result =
-        rule.replace("$PUBLISHER", publisher)
-            .replace("$SERIES", series)
-            .replace("$VOLUME", volume)
-            .replace("$ISSUE", issueNumber)
-            .replace("$COVERDATE", coverDate)
-            .replace("$PUBYEAR", publishedYear)
-            .replace("$PUBMONTH", publishedMonth);
+        rule.replace(PLACEHOLDER_PUBLISHER, publisher)
+            .replace(PLACEHOLDER_SERIES, series)
+            .replace(PLACEHOLDER_VOLUME, volume)
+            .replaceAll(
+                // need to look for the longer version of the regex first
+                String.format(
+                    "(\\%s\\([\\d]+\\)|\\%s)", PLACEHOLDER_ISSUE_NUMBER, PLACEHOLDER_ISSUE_NUMBER),
+                issueNumber)
+            .replace(PLACEHOLDER_COVER_DATE, coverDate)
+            .replace(PLACEHOLDER_PUBLISHED_YEAR, publishedYear)
+            .replace(PLACEHOLDER_PUBLISHED_MONTH, publishedMonth);
 
     log.trace("Relative comic filename: {}", result);
 
     return String.format("%s.%s", result, comic.getArchiveType().getExtension());
+  }
+
+  private String checkForPadding(final String rule, final String placeholder, final String value) {
+    log.trace(
+        "Checking if value needs padding: rule={} placeholder={} value={}",
+        rule,
+        placeholder,
+        value);
+    final Pattern pattern = Pattern.compile(String.format(".*(\\%s\\([\\d]+\\)).*", placeholder));
+    final Matcher matcher = pattern.matcher(rule);
+    if (matcher.find()) {
+      log.trace("Extracting full placeholder");
+      final String fullValue = matcher.group(1);
+      final int length =
+          Integer.parseInt(fullValue.substring(fullValue.indexOf("(") + 1, fullValue.length() - 1));
+      return leftPad(value, length, "0");
+    } else {
+      log.trace("Not padding value");
+      return value;
+    }
   }
 
   private String scrub(final String text) {
