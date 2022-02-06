@@ -25,6 +25,7 @@
     "text": {
       "comic-renaming-rule-cover-date": "The cover date",
       "comic-renaming-rule-issue-number": "The issue number",
+      "comic-renaming-rule-issue-number-with-length": "The issue number with a minimum length",
       "comic-renaming-rule-published-month": "The month published",
       "comic-renaming-rule-published-year": "The year published",
       "comic-renaming-rule-publisher": "The name of the publisher",

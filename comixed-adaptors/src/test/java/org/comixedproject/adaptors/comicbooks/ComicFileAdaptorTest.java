@@ -49,10 +49,13 @@ public class ComicFileAdaptorTest {
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = TEST_COMIC_FILENAME;
   private static final String TEST_RENAMING_RULE =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $PUBMONTH $PUBYEAR $COVERDATE";
+  private static final String TEST_RENAMING_RULE_PADDED_ISSUE =
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE(8) $PUBMONTH $PUBYEAR $COVERDATE";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2020";
   private static final String TEST_ISSUE = "717";
+  private static final String TEST_PADDED_ISSUE = "00000717";
   private static final Date TEST_COVER_DATE = new Date(120, 6, 1);
   private static final LocalDate TEST_COVER_DATE_LOCALDATE =
       TEST_COVER_DATE.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -106,6 +109,23 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR,
+            TEST_EXTENSION),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRulePaddedIssue() {
+    final String result = adaptor.createFilenameFromRule(comic, TEST_RENAMING_RULE_PADDED_ISSUE);
+
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_PADDED_ISSUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR,
