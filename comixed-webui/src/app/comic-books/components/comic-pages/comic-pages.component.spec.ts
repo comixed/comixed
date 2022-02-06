@@ -42,6 +42,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatSortModule } from '@angular/material/sort';
 
 describe('ComicPagesComponent', () => {
   const COMIC = COMIC_1;
@@ -78,7 +79,8 @@ describe('ComicPagesComponent', () => {
           MatMenuModule,
           MatDialogModule,
           MatTableModule,
-          DragDropModule
+          DragDropModule,
+          MatSortModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
@@ -174,6 +176,26 @@ describe('ComicPagesComponent', () => {
     it('reorders the pages', () => {
       expect(component.pages[0].id).toEqual(PAGES[1].id);
       expect(component.pages[1].id).toEqual(PAGES[0].id);
+    });
+  });
+
+  describe('sorting pages', () => {
+    it('can sort by position', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PAGE, 'position')
+      ).toEqual(PAGE.index);
+    });
+
+    it('can sort by filename', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PAGE, 'filename')
+      ).toEqual(PAGE.filename);
+    });
+
+    it('does not sort on unknown fields', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PAGE, 'farkle')
+      ).toBeNull();
     });
   });
 });

@@ -17,6 +17,7 @@
  */
 
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -35,14 +36,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as _ from 'lodash';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'cx-comic-pages',
   templateUrl: './comic-pages.component.html',
   styleUrls: ['./comic-pages.component.scss']
 })
-export class ComicPagesComponent {
+export class ComicPagesComponent implements AfterViewInit {
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+  @ViewChild(MatSort) sort: MatSort;
 
   @Input() showPagesAsGrid = true;
   @Input() isAdmin = false;
@@ -66,6 +69,20 @@ export class ComicPagesComponent {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {}
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'position':
+          return data.index;
+        case 'filename':
+          return data.filename;
+        default:
+          return null;
+      }
+    };
+  }
 
   private _pages: Page[] = [];
 

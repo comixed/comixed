@@ -22,9 +22,10 @@
   [cdkDropListData]="pages"
   [dataSource]="dataSource"
   (cdkDropListDropped)="onReorderPages($event)"
+  matSort
 >
   <ng-container matColumnDef="position">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-page.label.page-number" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let page">{{ page.index }}</mat-cell>
@@ -45,7 +46,7 @@
   </ng-container>
 
   <ng-container matColumnDef="filename">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-page.label.filename" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let page">
