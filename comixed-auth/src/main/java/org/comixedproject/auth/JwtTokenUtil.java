@@ -28,8 +28,7 @@ import java.util.function.Function;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
+import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,7 +46,7 @@ public class JwtTokenUtil {
   private static final String ROLE_PREFIX = "ROLE_";
   private static final String SIGNING_KEY = "comixedproject";
 
-  @Autowired private UserService userService;
+  @Autowired private ComiXedUserRepository userRepository;
 
   public String getEmailFromToken(String token) {
     return getClaimFromToken(token, Claims::getSubject);
@@ -79,14 +78,14 @@ public class JwtTokenUtil {
 
     var claims = Jwts.claims().setSubject(email);
     List<GrantedAuthority> authorities = new ArrayList<>();
-    try {
-      ComiXedUser user = this.userService.findByEmail(email);
+
+    ComiXedUser user = this.userRepository.findByEmail(email);
+    if (user != null) {
       for (Role role : user.getRoles()) {
         authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()));
       }
-    } catch (ComiXedUserException error) {
-      log.error("Setting user authorities", error);
     }
+
     claims.put("scopes", authorities);
 
     return Jwts.builder()

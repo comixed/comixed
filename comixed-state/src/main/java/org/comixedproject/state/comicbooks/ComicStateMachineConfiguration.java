@@ -53,7 +53,6 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
   @Autowired private RecreateComicFileAction recreateComicFileAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
-  @Autowired private MarkComicForRemovalAction markComicForRemovalAction;
   @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
   @Autowired private ComicAlreadyReadByUserGuard comicAlreadReadByUserGuard;
   @Autowired private ComicNotAlreadyReadByUserGuard comicNotAlreadReadByUserGuard;
@@ -286,21 +285,18 @@ public class ComicStateMachineConfiguration
         .source(ComicState.ADDED)
         .target(ComicState.DELETED)
         .event(ComicEvent.deleteComic)
-        .action(markComicForRemovalAction)
         // the comic was marked for deletion
         .and()
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.DELETED)
         .event(ComicEvent.deleteComic)
-        .action(markComicForRemovalAction)
         // the comic was marked for deletion
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.DELETED)
         .event(ComicEvent.deleteComic)
-        .action(markComicForRemovalAction)
         // the comic was unmarked for deletion
         .and()
         .withExternal()
