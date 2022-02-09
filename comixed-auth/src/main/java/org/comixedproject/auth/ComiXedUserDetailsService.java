@@ -20,8 +20,7 @@ package org.comixedproject.auth;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.user.ComiXedUser;
-import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
+import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
@@ -39,18 +38,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComiXedUserDetailsService implements UserDetailsService {
-  @Autowired private UserService userService;
+  @Autowired private ComiXedUserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     log.debug("Loading user: email={}", email);
 
-    ComiXedUser user = null;
-
-    try {
-      user = userService.findByEmail(email);
-    } catch (ComiXedUserException error) {
-      throw new UsernameNotFoundException("User not found", error);
+    ComiXedUser user = userRepository.findByEmail(email);
+    if (user == null) {
+      throw new UsernameNotFoundException("User not found");
     }
 
     UserBuilder result = User.withUsername(email);

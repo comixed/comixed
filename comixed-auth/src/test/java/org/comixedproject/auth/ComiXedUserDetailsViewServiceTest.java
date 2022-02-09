@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.model.user.Role;
+import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class ComiXedUserDetailsViewServiceTest {
   private static final String TEST_USER_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private ComiXedUserDetailsService userDetailsService;
-  @Mock private UserService userService;
+  @Mock private ComiXedUserRepository userRepository;
   @Mock private ComiXedUser user;
 
   private List<Role> roles = new ArrayList<>();
@@ -55,19 +55,18 @@ public class ComiXedUserDetailsViewServiceTest {
 
   @Test(expected = UsernameNotFoundException.class)
   public void testLoadUserByUsernameNotFound() throws ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString()))
-        .thenThrow(ComiXedUserException.class);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(null);
 
     try {
       userDetailsService.loadUserByUsername(TEST_USER_EMAIL);
     } finally {
-      Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
+      Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
     }
   }
 
   @Test
   public void testLoadUserByUsername() throws ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(user.getPasswordHash()).thenReturn(TEST_PASSWORD_HASH);
     Mockito.when(user.getRoles()).thenReturn(roles);
 
@@ -78,6 +77,6 @@ public class ComiXedUserDetailsViewServiceTest {
     assertEquals(TEST_PASSWORD_HASH, result.getPassword());
     assertEquals(roles.size(), result.getAuthorities().size());
 
-    Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
   }
 }

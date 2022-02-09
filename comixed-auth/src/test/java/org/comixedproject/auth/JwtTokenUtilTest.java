@@ -3,8 +3,8 @@ package org.comixedproject.auth;
 import static junit.framework.TestCase.*;
 
 import org.comixedproject.model.user.ComiXedUser;
+import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.comixedproject.service.user.ComiXedUserException;
-import org.comixedproject.service.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,13 +21,13 @@ public class JwtTokenUtilTest {
   @InjectMocks private JwtTokenUtil tokenUtil;
   @Mock private ComiXedUser user;
   @Mock private UserDetails userDetails;
-  @Mock private UserService userService;
+  @Mock private ComiXedUserRepository userRepository;
 
   private String token;
 
   @Before
   public void setUp() throws ComiXedUserException {
-    Mockito.when(userService.findByEmail(Mockito.anyString())).thenReturn(user);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(user);
     Mockito.when(user.getEmail()).thenReturn(TEST_EMAIL);
     Mockito.when(userDetails.getUsername()).thenReturn(TEST_EMAIL);
 
