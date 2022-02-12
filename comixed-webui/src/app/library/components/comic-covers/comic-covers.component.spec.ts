@@ -558,4 +558,18 @@ describe('ComicCoversComponent', () => {
       expect(fileDownloadService.saveFileContent).toHaveBeenCalled();
     });
   });
+
+  describe('checking if a comic is deleted', () => {
+    it('returns true when the comic is in the deleted state', () => {
+      expect(
+        component.isDeleted({ ...COMIC, comicState: ComicBookState.DELETED })
+      ).toBeTrue();
+    });
+
+    it('returns false when the comic is not in the deleted state', () => {
+      expect(
+        component.isDeleted({ ...COMIC, comicState: ComicBookState.CHANGED })
+      ).toBeFalse();
+    });
+  });
 });

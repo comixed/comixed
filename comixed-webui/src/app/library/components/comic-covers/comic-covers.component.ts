@@ -331,6 +331,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  isDeleted(comic: Comic): boolean {
+    return comic.comicState === ComicBookState.DELETED;
+  }
+
   sortData(): void {
     this.dataSource.data = this.dataSource.data.sort((left, right) => {
       switch (this.sortField) {

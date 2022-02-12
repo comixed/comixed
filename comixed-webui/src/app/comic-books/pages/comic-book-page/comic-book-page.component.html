@@ -94,7 +94,7 @@
     <mat-icon>turned_in</mat-icon>
   </button>
   <button
-    *ngIf="isAdmin && !comic.deletedDate"
+    *ngIf="isAdmin && !isDelete"
     id="delete-button"
     class="cx-toolbar-button"
     mat-icon-button
@@ -105,7 +105,7 @@
     <mat-icon>delete</mat-icon>
   </button>
   <button
-    *ngIf="isAdmin && !!comic.deletedDate"
+    *ngIf="isAdmin && isDeleted"
     id="undelete-button"
     class="cx-toolbar-button"
     mat-icon-button

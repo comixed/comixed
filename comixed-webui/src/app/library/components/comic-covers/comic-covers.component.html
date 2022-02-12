@@ -118,7 +118,7 @@
     </mat-label>
   </button>
   <button
-    *ngIf="!!comic && !comic.deletedDate"
+    *ngIf="!!comic && !isDeleted(comic)"
     id="delete-one-button"
     mat-menu-item
     (click)="onMarkAsDeleted(comic, true)"
@@ -129,7 +129,7 @@
     </mat-label>
   </button>
   <button
-    *ngIf="!!comic && !!comic.deletedDate"
+    *ngIf="!!comic && isDeleted(comic)"
     id="undelete-one-button"
     mat-menu-item
     (click)="onMarkAsDeleted(comic, false)"

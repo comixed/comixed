@@ -90,6 +90,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 describe('ComicBookPageComponent', () => {
   const COMIC = COMIC_1;
@@ -517,6 +518,22 @@ describe('ComicBookPageComponent', () => {
           })
         })
       );
+    });
+  });
+
+  describe('checking if a comic is deleted', () => {
+    beforeEach(() => {
+      component.comic = COMIC;
+    });
+
+    it('returns true when the state is DELETED', () => {
+      component.comic.comicState = ComicBookState.DELETED;
+      expect(component.isDeleted).toBeTrue();
+    });
+
+    it('returns true when the state is not DELETED', () => {
+      component.comic.comicState = ComicBookState.CHANGED;
+      expect(component.isDeleted).toBeFalse();
     });
   });
 });
