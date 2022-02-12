@@ -68,6 +68,7 @@ import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
 import { Page } from '@app/comic-books/models/page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -192,6 +193,10 @@ export class ComicBookPageComponent
           this.unsubscribeFromUpdates();
         }
       });
+  }
+
+  get isDeleted(): boolean {
+    return this.comic.comicState === ComicBookState.DELETED;
   }
 
   ngOnInit(): void {
