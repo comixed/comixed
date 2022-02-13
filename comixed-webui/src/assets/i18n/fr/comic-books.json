@@ -42,6 +42,8 @@
       "issue-number": "Numéro #",
       "last-read-date": "Dernière lecture",
       "locations": "Lieux dans ce numéro ({count})",
+      "metadata-load-limit": "Maximum Records",
+      "metadata-source": "Metadata Source",
       "other-details": "Autres détails de cette Bande Dessinée",
       "page-count": "# de pages",
       "page-title": "Page {which} sur {count}",

@@ -33,24 +33,26 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   initialState as initialScrapingState,
   SCRAPING_FEATURE_KEY
-} from '@app/comic-books/reducers/scraping.reducer';
+} from '@app/comic-metadata/reducers/scraping.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
-  LIBRARY_FEATURE_KEY,
-  initialState as initialLibraryState
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
-import { loadScrapingVolumes } from '@app/comic-books/actions/scraping.actions';
+import { loadScrapingVolumes } from '@app/comic-metadata/actions/scraping.actions';
 import { TitleService } from '@app/core/services/title.service';
+import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
   const COMIC = COMIC_2;
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
@@ -123,6 +125,7 @@ describe('ScrapingPageComponent', () => {
 
   describe('when scraping starts', () => {
     beforeEach(() => {
+      component.metadataSource = METADATA_SOURCE;
       component.onScrape({
         series: COMIC.series,
         maximumRecords: MAXIMUM_RECORDS,
@@ -135,6 +138,7 @@ describe('ScrapingPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadScrapingVolumes({
+          metadataSource: METADATA_SOURCE,
           series: COMIC.series,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE

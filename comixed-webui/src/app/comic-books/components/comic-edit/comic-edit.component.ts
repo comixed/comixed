@@ -29,7 +29,7 @@ import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
-import { ScrapeEvent } from '@app/comic-books/models/ui/scrape-event';
+import { ScrapeEvent } from '@app/comic-metadata/models/event/scrape-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
@@ -47,8 +47,15 @@ import {
 } from '@app/comic-files/actions/scrape-metadata.actions';
 import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-metadata.selectors';
 import { filter } from 'rxjs/operators';
-import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
+import {
+  scrapeComic,
+  setChosenMetadataSource
+} from '@app/comic-metadata/actions/scraping.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { ListItem } from '@app/core/models/ui/list-item';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
+import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -58,10 +65,11 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 export class ComicEditComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
+  @Input() metadataSource: MetadataSource = null;
+
   @Input() multimode = false;
 
   @Output() scrape = new EventEmitter<ScrapeEvent>();
-
   readonly maximumRecordsOptions = [
     { value: 0, label: 'scraping.label.all-records' },
     { value: 100, label: 'scraping.label.100-records' },
@@ -70,6 +78,8 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   comicForm: FormGroup;
   scrapingMode = false;
   scrapedMetadataSubscription: Subscription;
+  metadataSourceListSubscription: Subscription;
+  metadataSourceList: ListItem<MetadataSource>[] = [];
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
@@ -102,6 +112,16 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.comicForm.controls.volume.setValue(state.volume);
         this.comicForm.controls.issueNumber.setValue(state.issueNumber);
       });
+    this.metadataSourceListSubscription = this.store
+      .select(selectMetadataSourceList)
+      .subscribe(sources => {
+        this.metadataSourceList = sources.map(source => {
+          return { label: source.name, value: source };
+        });
+        this.store.dispatch(
+          setChosenMetadataSource({ metadataSource: sources[0] })
+        );
+      });
     this.imprintSubscription = this.store
       .select(selectImprints)
       .subscribe(imprints => {
@@ -109,7 +129,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.imprints = imprints;
         this.imprintOptions = [
           {
-            label: this.translateService.instant('text.clear-value'),
+            label: '---',
             value: { id: -1, name: '', publisher: '' }
           } as SelectionOption<Imprint>
         ].concat(
@@ -145,14 +165,22 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.comicForm.updateValueAndValidity();
   }
 
+  get readyToScrape(): boolean {
+    return !!this.metadataSource && this.comicForm.valid;
+  }
+
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from scraped metadata updates');
     this.scrapedMetadataSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from metadata source list');
+    this.metadataSourceListSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from imprint updates');
     this.imprintSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
+    this.logger.trace('Loading metadata sources');
+    this.store.dispatch(loadMetadataSources());
     this.logger.trace('Loading imprints');
     this.store.dispatch(loadImprints());
   }
@@ -245,6 +273,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.logger.trace('Scraping issue using ComicVine ID');
         this.store.dispatch(
           scrapeComic({
+            metadataSource: this.metadataSource,
             issueId: this.comic.comicVineId,
             comic: this.comic,
             skipCache: this.skipCache
@@ -252,6 +281,12 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  onMetadataSourceChosen(metadataSource: MetadataSource): void {
+    this.logger.trace('Metadata source selected:', metadataSource);
+    console.log('Metadata source selected:', metadataSource);
+    this.store.dispatch(setChosenMetadataSource({ metadataSource }));
   }
 
   private encodeForm(): Comic {

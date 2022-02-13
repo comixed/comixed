@@ -157,57 +157,5 @@
       "effect-failure": "Failed to update metadata.",
       "effect-success": "Started updating metadata."
     }
-  },
-  "scraping": {
-    "current-comic": {
-      "title": "Actualmente cómico ({count} Total)"
-    },
-    "label": {
-      "100-records": "100 registros",
-      "1000-records": "1000 registros",
-      "all-records": "Todos los registros",
-      "issue-count": "# ediciónes",
-      "matchability": "Partido",
-      "publisher": "Editor",
-      "series-name": "Serie",
-      "start-year": "Año de inicio"
-    },
-    "load-scraping-volumes": {
-      "effect-failure": "No se pudo cargar ningún volumen..."
-    },
-    "load-scraping-issue": {
-      "effect-failure": "No se pudo cargar la edición..."
-    },
-    "page-title": "Raspado de biblioteca",
-    "scrape-comic": {
-      "effect-success": "¡Cómic raspado con éxito!",
-      "effect-failure": "No pudo raspar el cómic."
-    },
-    "scrape-comic-confirmation-title": "Reemplazar datos de cómics",
-    "scrape-comic-confirmation-message": "¿Estás seguro de que quieres reemplazar los detalles de este cómic?",
-    "scraping-issue-detail-subtitle": "Fecha de portada: {date}",
-    "start-scraping": {
-      "confirmation-title": "Raspar cómics",
-      "confirmation-message": "¿Está seguro de que desea reemplazar los detalles de los/las {count, plural, =1{comic} other{# comics}} cómics seleccionados?"
-    },
-    "text": {
-      "exact-match": "Exacta",
-      "near-match": "Cerca",
-      "no-match": "No"
-    },
-    "tooltip": {
-      "cancel-scraping": "Deja de raspar cómics.",
-      "reject-scraping-issue": "Rechazar este problema.",
-      "select-scraping-issue": "Seleccione este problema.",
-      "show-comic-details": "Mostrar detalles",
-      "skip-cache": "Raspado será {enabled, select, true{skip} other{use}} la caché de raspado.",
-      "use-comicvine-id": "Scrape using the ComicVine id."
-    },
-    "volume-list": {
-      "issue-count-header": "# de ediciones",
-      "name-header": "Nombre de la serie",
-      "publisher-header": "Editor",
-      "start-year-header": "Año de inicio"
-    }
   }
 }

@@ -24,8 +24,8 @@ import java.util.Date;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
-import org.comixedproject.model.scraping.FilenameMetadata;
-import org.comixedproject.model.scraping.FilenameScrapingRule;
+import org.comixedproject.model.metadata.FilenameMetadata;
+import org.comixedproject.model.metadata.FilenameScrapingRule;
 import org.springframework.stereotype.Component;
 
 /**

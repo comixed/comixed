@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Comic } from '@app/comic-books/models/comic';
-import { ComicContextMenuEvent } from '@app/comic-books/models/ui/comic-context-menu-event';
+import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
 

@@ -37,7 +37,7 @@ import {
 } from '@app/comic-books/comic-books.constants';
 import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comics-deleted-request';
 import { Page } from '@app/comic-books/models/page';
-import { MarkPagesDeletedRequest } from '@app/comic-books/models/network/mark-pages-deleted-request';
+import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 

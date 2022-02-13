@@ -19,9 +19,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ScrapingIssueDetailComponent } from './scraping-issue-detail.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { ScrapingIssueTitlePipe } from '@app/comic-books/pipes/scraping-issue-title.pipe';
+import { ScrapingIssueTitlePipe } from '@app/comic-metadata/pipes/scraping-issue-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
-import { SCRAPING_ISSUE_1 } from '@app/comic-books/comic-books.fixtures';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
@@ -33,6 +32,7 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SCRAPING_ISSUE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('ScrapingIssueDetailComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;

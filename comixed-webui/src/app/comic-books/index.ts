@@ -20,11 +20,6 @@ import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  reducer as scrapingReducer,
-  SCRAPING_FEATURE_KEY,
-  ScrapingState
-} from './reducers/scraping.reducer';
-import {
   COMIC_LIST_FEATURE_KEY,
   ComicListState,
   reducer as comicListReducer
@@ -53,7 +48,6 @@ interface RouterStateUrl {
 
 export interface ComicModuleState {
   router: RouterReducerState<RouterStateUrl>;
-  [SCRAPING_FEATURE_KEY]: ScrapingState;
   [COMIC_LIST_FEATURE_KEY]: ComicListState;
   [COMIC_FEATURE_KEY]: ComicState;
   [IMPRINT_LIST_FEATURE_KEY]: ImprintListState;
@@ -64,7 +58,6 @@ export type ModuleState = ComicModuleState;
 
 export const reducers: ActionReducerMap<ComicModuleState> = {
   router: routerReducer,
-  [SCRAPING_FEATURE_KEY]: scrapingReducer,
   [COMIC_LIST_FEATURE_KEY]: comicListReducer,
   [COMIC_FEATURE_KEY]: comicReducer,
   [IMPRINT_LIST_FEATURE_KEY]: imprintListReducer,

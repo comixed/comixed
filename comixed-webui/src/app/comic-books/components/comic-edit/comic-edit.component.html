@@ -34,20 +34,6 @@
     <mat-icon>undo</mat-icon>
   </button>
   <div class="cx-spacer"></div>
-  <mat-form-field appearance="fill">
-    <mat-select
-      id="maximum-records-select"
-      [(value)]="maximumRecords"
-      (selectionChange)="onMaximumRecordsChanged($event.value)"
-    >
-      <mat-option
-        *ngFor="let option of maximumRecordsOptions"
-        [value]="option.value"
-      >
-        {{ option.label | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
   <button
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
@@ -67,13 +53,46 @@
     mat-icon-button
     color="primary"
     [matTooltip]="'comic-book.tooltip.scrape-comic' | translate"
-    [disabled]="!comicForm.valid"
+    [disabled]="!readyToScrape"
     (click)="onFetchScrapingVolumes()"
   >
     <mat-icon>find_replace</mat-icon>
   </button>
 </mat-toolbar>
 <form *ngIf="!!comic" [formGroup]="comicForm">
+  <mat-form-field class="cx-width-50" appearance="fill">
+    <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
+    <mat-select
+      [value]="metadataSource"
+      (selectionChange)="onMetadataSourceChosen($event.value)"
+      required
+    >
+      <mat-option
+        *ngFor="let source of metadataSourceList"
+        [value]="source.value"
+      >
+        {{ source.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="cx-width-50" appearance="fill">
+    <mat-label>
+      {{ "comic-book.label.metadata-load-limit" | translate }}
+    </mat-label>
+    <mat-select
+      id="maximum-records-select"
+      [(value)]="maximumRecords"
+      (selectionChange)="onMaximumRecordsChanged($event.value)"
+      required
+    >
+      <mat-option
+        *ngFor="let option of maximumRecordsOptions"
+        [value]="option.value"
+      >
+        {{ option.label | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
     <input
@@ -142,6 +161,7 @@
       matSuffix
       color="primary"
       [disabled]="
+        !this.metadataSource ||
         (this.comicForm.controls.comicVineId.value || '').length === 0 ||
         !this.comicForm.controls.comicVineId.valid
       "

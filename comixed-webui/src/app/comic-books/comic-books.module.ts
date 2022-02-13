@@ -46,11 +46,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { ScrapingIssueTitlePipe } from '@app/comic-books/pipes/scraping-issue-title.pipe';
+import { ScrapingIssueTitlePipe } from '@app/comic-metadata/pipes/scraping-issue-title.pipe';
 import {
   reducer as scrapingReducer,
   SCRAPING_FEATURE_KEY
-} from '@app/comic-books/reducers/scraping.reducer';
+} from '@app/comic-metadata/reducers/scraping.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
   reducer as comicListReducer
@@ -59,7 +59,7 @@ import {
   COMIC_FEATURE_KEY,
   reducer as comicReducer
 } from '@app/comic-books/reducers/comic.reducer';
-import { ScrapingEffects } from '@app/comic-books/effects/scraping.effects';
+import { ScrapingEffects } from '@app/comic-metadata/effects/scraping.effects';
 import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
 import { ComicEffects } from '@app/comic-books/effects/comic.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -69,7 +69,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ComicvineIssueLinkPipe } from './pipes/comicvine-issue-link.pipe';
+import { ComicvineIssueLinkPipe } from '../comic-metadata/pipes/comicvine-issue-link.pipe';
 import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
 import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
 import {

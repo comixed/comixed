@@ -42,6 +42,8 @@
       "issue-number": "Issue #",
       "last-read-date": "Last Read",
       "locations": "Locations In This Issue ({count})",
+      "metadata-load-limit": "Maximum Records",
+      "metadata-source": "Metadata Source",
       "other-details": "Other Comic Details",
       "page-count": "# Of Pages",
       "page-title": "Page {which} Of {count}",

@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { ScrapingIssue } from '@app/comic-books/models/scraping-issue';
+import { ScrapingIssue } from '@app/comic-metadata/models/scraping-issue';
 
 @Component({
   selector: 'cx-scraping-issue-detail',

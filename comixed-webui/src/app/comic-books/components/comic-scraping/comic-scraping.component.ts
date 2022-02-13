@@ -25,29 +25,30 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
+import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ScrapingIssue } from '@app/comic-books/models/scraping-issue';
+import { ScrapingIssue } from '@app/comic-metadata/models/scraping-issue';
 import { Store } from '@ngrx/store';
 import {
   loadScrapingIssue,
   resetScraping,
   scrapeComic
-} from '@app/comic-books/actions/scraping.actions';
+} from '@app/comic-metadata/actions/scraping.actions';
 import { Subscription } from 'rxjs';
 import {
   selectScrapingIssue,
   selectScrapingState
-} from '@app/comic-books/selectors/scraping.selectors';
+} from '@app/comic-metadata/selectors/scraping.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export const MATCHABILITY = 'sortOrder';
 export const EXACT_MATCH = 2;
@@ -67,6 +68,7 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   @Input() comic: Comic;
+  @Input() metadataSource: MetadataSource;
   @Input() comicSeriesName: string;
   @Input() comicVolume: string;
   @Input() comicIssueNumber: string;
@@ -165,6 +167,7 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
     this.selectedVolume = volume;
     this.store.dispatch(
       loadScrapingIssue({
+        metadataSource: this.metadataSource,
         volumeId: volume.id,
         issueNumber: this.comicIssueNumber,
         skipCache: this.skipCache
@@ -198,6 +201,7 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
           }
           this.store.dispatch(
             scrapeComic({
+              metadataSource: this.metadataSource,
               issueId: this.issue.id,
               comic: this.comic,
               skipCache: this.skipCache

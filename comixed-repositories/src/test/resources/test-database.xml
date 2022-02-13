@@ -512,7 +512,14 @@
                      Negative="false"
                      MatcherOperator="1"
                      MatcherValue="Image"/>
-  <scrapingcache Id="1000"
+  <MetadataSources Id="1000"
+                   BeanName="farkleScrapingAdaptor"
+                   Name="Farkle Metadata Source"/>
+  <MetadataSourceProperties Id="1000"
+                            MetadataSourceId="1000"
+                            Name="api-key"
+                            Value="0192837465FAEBDC"/>
+  <ScrapingCache Id="1000"
                  Source="ComicVine"
                  CacheKey="volumes[Iron Man]"
                  CreatedON="[now]"/>

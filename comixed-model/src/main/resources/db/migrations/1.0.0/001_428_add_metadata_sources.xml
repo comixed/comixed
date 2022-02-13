@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="001_428_add_metadata_sources.xml"
+             author="mcpierce">
+
+    <createTable tableName="MetadataSources">
+      <column name="Id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="BeanName"
+              type="varchar(255)">
+        <constraints nullable="false"
+                     unique="true"/>
+      </column>
+      <column name="Name"
+              type="varchar(64)">
+        <constraints nullable="false"
+                     unique="true"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="MetadataSources"
+                      columnName="Id"
+                      columnDataType="bigint"
+                      startWith="1"/>
+
+    <createTable tableName="MetadataSourceProperties">
+      <column name="Id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="MetadataSourceId"
+              type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="Name"
+              type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="Value"
+              type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="MetadataSourceProperties"
+                      columnName="Id"
+                      columnDataType="bigint"
+                      startWith="1"/>
+
+    <addForeignKeyConstraint baseTableName="MetadataSourceProperties"
+                             baseColumnNames="MetadataSourceId"
+                             constraintName="MetadataSourcePropertyMetadataSourceFk"
+                             referencedTableName="MetadataSources"
+                             referencedColumnNames="Id"/>
+
+    <addUniqueConstraint tableName="MetadataSourceProperties"
+                         columnNames="MetadataSourceId,Name"
+                         constraintName="MetadataSourcePropertyNameUniq"/>
+
+    <!-- insert ComicVine as the first metadata source entry -->
+    <insert tableName="MetadataSources">
+      <column name="Id"
+              value="1"/>
+      <column name="BeanName"
+              value="comicVineScrapingAdaptor"/>
+      <column name="Name"
+              value="ComicVine"/>
+    </insert>
+
+    <insert tableName="MetadataSourceProperties">
+      <column name="Id"
+              value="1"/>
+      <column name="MetadataSourceId"
+              value="1"/>
+      <column name="Name"
+              value="api-key"/>
+    </insert>
+
+  </changeSet>
+</databaseChangeLog>
