@@ -49,7 +49,7 @@ import { MarkComicsDeletedRequest } from '@app/comic-books/models/net/mark-comic
 import { HttpResponse } from '@angular/common/http';
 import { MarkComicsUndeletedRequest } from '@app/comic-books/models/net/mark-comics-undeleted-request';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
-import { MarkPagesDeletedRequest } from '@app/comic-books/models/network/mark-pages-deleted-request';
+import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
 
 describe('ComicService', () => {

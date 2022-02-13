@@ -187,6 +187,7 @@
         <cx-comic-edit
           *ngIf="!!comic && volumes.length === 0"
           [comic]="comic"
+          [metadataSource]="metadataSource"
           [skipCache]="skipCache"
           [maximumRecords]="maximumRecords"
           (scrape)="
@@ -202,6 +203,7 @@
         <cx-comic-scraping
           *ngIf="volumes.length > 0"
           [comic]="comic"
+          [metadataSource]="metadataSource"
           [comicSeriesName]="scrapingSeriesName"
           [comicVolume]="scrapingVolume"
           [comicIssueNumber]="scrapingIssueNumber"

@@ -157,57 +157,5 @@
       "effect-failure": "Failed to update metadata.",
       "effect-success": "Started updating metadata."
     }
-  },
-  "scraping": {
-    "current-comic": {
-      "title": "Currently Comic ({count} Total)"
-    },
-    "label": {
-      "100-records": "100 Records",
-      "1000-records": "1000 Records",
-      "all-records": "All Records",
-      "issue-count": "# Issues",
-      "matchability": "Match",
-      "publisher": "Publisher",
-      "series-name": "Series",
-      "start-year": "Start Year"
-    },
-    "load-scraping-volumes": {
-      "effect-failure": "Failed to load any volumes..."
-    },
-    "load-scraping-issue": {
-      "effect-failure": "Failed to load issue..."
-    },
-    "page-title": "Library Scraping",
-    "scrape-comic": {
-      "effect-success": "Comic successfully scraped!",
-      "effect-failure": "Failed to scrape comic."
-    },
-    "scrape-comic-confirmation-title": "Replace Comic Data",
-    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
-    "scraping-issue-detail-subtitle": "Cover Date: {date}",
-    "start-scraping": {
-      "confirmation-title": "Scrape Comics",
-      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
-    },
-    "text": {
-      "exact-match": "Exact",
-      "near-match": "Near",
-      "no-match": "No"
-    },
-    "tooltip": {
-      "cancel-scraping": "Stop scraping comics.",
-      "reject-scraping-issue": "Reject this issue.",
-      "select-scraping-issue": "Select this issue.",
-      "show-comic-details": "Show Details",
-      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
-      "use-comicvine-id": "Scrape using the ComicVine id."
-    },
-    "volume-list": {
-      "issue-count-header": "# Of Issues",
-      "name-header": "Series Name",
-      "publisher-header": "Publisher",
-      "start-year-header": "Start Year"
-    }
   }
 }

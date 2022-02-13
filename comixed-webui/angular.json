@@ -141,6 +141,6 @@
   },
   "defaultProject": "comixed-webui",
   "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
+    "defaultCollection": "@ngrx/schematics"
   }
 }

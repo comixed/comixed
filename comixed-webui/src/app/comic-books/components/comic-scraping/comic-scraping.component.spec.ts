@@ -27,15 +27,11 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  COMIC_4,
-  SCRAPING_ISSUE_1,
-  SCRAPING_VOLUME_3
-} from '@app/comic-books/comic-books.fixtures';
+import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
   SCRAPING_FEATURE_KEY
-} from '@app/comic-books/reducers/scraping.reducer';
+} from '@app/comic-metadata/reducers/scraping.reducer';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -44,12 +40,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
-import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
+import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
 import {
   loadScrapingIssue,
   resetScraping,
   scrapeComic
-} from '@app/comic-books/actions/scraping.actions';
+} from '@app/comic-metadata/actions/scraping.actions';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -59,6 +55,11 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import {
+  METADATA_SOURCE_1,
+  SCRAPING_ISSUE_1,
+  SCRAPING_VOLUME_3
+} from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('ComicScrapingComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -71,6 +72,7 @@ describe('ComicScrapingComponent', () => {
   const SKIP_CACHE = Math.random() > 0.5;
   const ISSUE_NUMBER = '27';
   const COMIC = COMIC_4;
+  const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = { [SCRAPING_FEATURE_KEY]: { ...initialScrapingState } };
 
   let component: ComicScrapingComponent;
@@ -237,12 +239,14 @@ describe('ComicScrapingComponent', () => {
 
   describe('when a volume is selected', () => {
     beforeEach(() => {
+      component.metadataSource = METADATA_SOURCE;
       component.onVolumeSelected(SCRAPING_VOLUME);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadScrapingIssue({
+          metadataSource: METADATA_SOURCE,
           volumeId: SCRAPING_VOLUME.id,
           issueNumber: ISSUE_NUMBER,
           skipCache: SKIP_CACHE
@@ -255,6 +259,7 @@ describe('ComicScrapingComponent', () => {
     beforeEach(() => {
       component.issue = SCRAPING_ISSUE;
       component.comic = COMIC;
+      component.metadataSource = METADATA_SOURCE;
     });
 
     describe('when selected', () => {
@@ -268,6 +273,7 @@ describe('ComicScrapingComponent', () => {
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           scrapeComic({
+            metadataSource: METADATA_SOURCE,
             issueId: SCRAPING_ISSUE.id,
             comic: COMIC,
             skipCache: SKIP_CACHE

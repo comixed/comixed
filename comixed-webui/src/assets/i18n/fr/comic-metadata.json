@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "load-sources": {
+      "effect-failure": "Failed to load metadata sources."
+    }
+  },
+  "scraping": {
+    "current-comic": {
+      "title": "Bande Dessinée actuelle ({count} Total)"
+    },
+    "label": {
+      "100-records": "100 enregistrements",
+      "1000-records": "1000 enregistrements",
+      "all-records": "Toutes les enregistrements",
+      "issue-count": "Nombre de numéro",
+      "matchability": "Correspondance",
+      "publisher": "Éditeur",
+      "series-name": "Série",
+      "start-year": "Année de lancement"
+    },
+    "load-scraping-volumes": {
+      "effect-failure": "Impossible d'obtenir des volumes..."
+    },
+    "load-scraping-issue": {
+      "effect-failure": "Impossible d'obtenir ce numéro..."
+    },
+    "page-title": "Récupération des détails",
+    "scrape-comic": {
+      "effect-success": "Détails de la Bande Dessinée récupérés avec succès !",
+      "effect-failure": "Échec de la récupération des détails de la Bande Dessinée."
+    },
+    "scrape-comic-confirmation-title": "Remplacer les données de la bande dessinée",
+    "scrape-comic-confirmation-message": "Êtes-vous sûr de vouloir remplacer les détails de cette bande dessinée ?",
+    "scraping-issue-detail-subtitle": "Date de couverture : {date}",
+    "start-scraping": {
+      "confirmation-title": "Récupération des détails des Bandes Dessinées",
+      "confirmation-message": "Êtes-vous sûr de vouloir remplacer les détails {count, plural, =1{de la Bande Dessinée sélectionnée} other{des # Bandes Dessinées sélectionnées}} ?"
+    },
+    "text": {
+      "exact-match": "Exacte",
+      "near-match": "Proche",
+      "no-match": "Non"
+    },
+    "tooltip": {
+      "cancel-scraping": "Arrêt de la récupération des détails des Bandes Dessinées.",
+      "reject-scraping-issue": "Rejeter ce numéro.",
+      "select-scraping-issue": "Sélectionner ce numéro.",
+      "show-comic-details": "Afficher les détails",
+      "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération.",
+      "use-comicvine-id": "Récupération des métadonnées en utilisant l'identifiant ComicVine."
+    },
+    "volume-list": {
+      "issue-count-header": "# Numéros",
+      "name-header": "Nom de la série",
+      "publisher-header": "Éditeur",
+      "start-year-header": "Année de lancement"
+    }
+  }
+}

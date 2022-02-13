@@ -22,8 +22,8 @@ import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertNotNull;
 
 import java.text.MessageFormat;
-import org.comixedproject.model.scraping.FilenameMetadata;
-import org.comixedproject.model.scraping.FilenameScrapingRule;
+import org.comixedproject.model.metadata.FilenameMetadata;
+import org.comixedproject.model.metadata.FilenameScrapingRule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

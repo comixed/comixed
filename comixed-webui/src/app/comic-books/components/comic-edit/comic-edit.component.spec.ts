@@ -48,11 +48,20 @@ import {
   SCRAPE_METADATA_FEATURE_KEY
 } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
-import { scrapeComic } from '@app/comic-books/actions/scraping.actions';
+import {
+  scrapeComic,
+  setChosenMetadataSource
+} from '@app/comic-metadata/actions/scraping.actions';
 import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import {
+  initialState as initialMetadataSourceListState,
+  METADATA_SOURCE_LIST_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata-source-list.reducer';
+import { Comic } from '@app/comic-books/models/comic';
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -60,10 +69,13 @@ describe('ComicEditComponent', () => {
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
   const ISSUE_NUMBER = '27';
+  const METADATA_SOURCE = METADATA_SOURCE_1;
+  const METADATA_SOURCES = [METADATA_SOURCE_1];
 
   const initialState = {
     [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES },
-    [SCRAPE_METADATA_FEATURE_KEY]: initialScrapeMetadataState
+    [SCRAPE_METADATA_FEATURE_KEY]: initialScrapeMetadataState,
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState
   };
 
   let component: ComicEditComponent;
@@ -115,6 +127,25 @@ describe('ComicEditComponent', () => {
 
     it('updates the comic reference', () => {
       expect(component.comic).toEqual(COMIC);
+    });
+  });
+
+  describe('loading the metadata sources', () => {
+    beforeEach(() => {
+      component.metadataSource = null;
+      store.setState({
+        ...initialState,
+        [METADATA_SOURCE_LIST_FEATURE_KEY]: {
+          ...initialMetadataSourceListState,
+          sources: METADATA_SOURCES
+        }
+      });
+    });
+
+    it('sets the initial source', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setChosenMetadataSource({ metadataSource: METADATA_SOURCES[0] })
+      );
     });
   });
 
@@ -272,9 +303,10 @@ describe('ComicEditComponent', () => {
     });
   });
 
-  describe('scraping a comic using the ComicVine id', () => {
+  describe('scraping a comic using the selected metadata source', () => {
     beforeEach(() => {
       component.comic = COMIC;
+      component.metadataSource = METADATA_SOURCE;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -288,11 +320,41 @@ describe('ComicEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         scrapeComic({
+          metadataSource: METADATA_SOURCE,
           issueId: COMIC.comicVineId,
           comic: COMIC,
           skipCache: SKIP_CACHE
         })
       );
+    });
+  });
+
+  describe('selecting a metadata source', () => {
+    beforeEach(() => {
+      component.onMetadataSourceChosen(METADATA_SOURCE);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setChosenMetadataSource({ metadataSource: METADATA_SOURCE })
+      );
+    });
+  });
+
+  describe('checking if ready to scrape', () => {
+    beforeEach(() => {
+      component.metadataSource = METADATA_SOURCE;
+      component.comic = COMIC;
+    });
+
+    it('requires a metadata source', () => {
+      component.metadataSource = null;
+      expect(component.readyToScrape).toBeFalse();
+    });
+
+    it('requires a validate form', () => {
+      component.comic = {} as Comic;
+      expect(component.readyToScrape).toBeFalse();
     });
   });
 });

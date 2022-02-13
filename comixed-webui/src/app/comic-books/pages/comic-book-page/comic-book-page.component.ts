@@ -40,12 +40,13 @@ import {
 import {
   loadScrapingVolumes,
   resetScraping
-} from '@app/comic-books/actions/scraping.actions';
+} from '@app/comic-metadata/actions/scraping.actions';
 import {
+  selectChosenMetadataSource,
   selectScrapingState,
   selectScrapingVolumes
-} from '@app/comic-books/selectors/scraping.selectors';
-import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
+} from '@app/comic-metadata/selectors/scraping.selectors';
+import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
@@ -69,6 +70,7 @@ import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants'
 import { Page } from '@app/comic-books/models/page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -84,6 +86,8 @@ export class ComicBookPageComponent
   scrapingStateSubscription: Subscription;
   comicSubscription: Subscription;
   comicUpdateSubscription: MessagingSubscription;
+  metadataSourceSubscription: Subscription;
+  metadataSource: MetadataSource;
   messagingSubscription: Subscription;
   comicId = -1;
   pageIndex = 0;
@@ -154,7 +158,9 @@ export class ComicBookPageComponent
     this.comicBusySubscription = this.store
       .select(selectComicBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
-
+    this.metadataSourceSubscription = this.store
+      .select(selectChosenMetadataSource)
+      .subscribe(metadataSource => (this.metadataSource = metadataSource));
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.isAdmin = isAdmin(user);
       this.logger.trace('Loading uer page size preference');
@@ -209,6 +215,7 @@ export class ComicBookPageComponent
     this.scrapingStateSubscription.unsubscribe();
     this.comicSubscription.unsubscribe();
     this.comicBusySubscription.unsubscribe();
+    this.metadataSourceSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.volumesSubscription.unsubscribe();
     this.lastReadSubscription.unsubscribe();
@@ -244,7 +251,12 @@ export class ComicBookPageComponent
     this.scrapingVolume = volume;
     this.scrapingIssueNumber = issueNumber;
     this.store.dispatch(
-      loadScrapingVolumes({ series, maximumRecords, skipCache })
+      loadScrapingVolumes({
+        metadataSource: this.metadataSource,
+        series,
+        maximumRecords,
+        skipCache
+      })
     );
   }
 

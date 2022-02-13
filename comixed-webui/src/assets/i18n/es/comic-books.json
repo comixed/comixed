@@ -42,6 +42,8 @@
       "issue-number": "Edición #",
       "last-read-date": "Se leyó por última vez",
       "locations": "Ubicaciones en esta edición ({count})",
+      "metadata-load-limit": "Maximum Records",
+      "metadata-source": "Metadata Source",
       "other-details": "Otros detalles del cómic",
       "page-count": "# de páginas",
       "page-title": "Página {which} de {count}",

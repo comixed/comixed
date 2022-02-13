@@ -31,15 +31,17 @@ import {
 } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { ScrapeEvent } from '@app/comic-books/models/ui/scrape-event';
-import { loadScrapingVolumes } from '@app/comic-books/actions/scraping.actions';
-import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
+import { ScrapeEvent } from '@app/comic-metadata/models/event/scrape-event';
+import { loadScrapingVolumes } from '@app/comic-metadata/actions/scraping.actions';
+import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
 import {
+  selectChosenMetadataSource,
   selectScrapingState,
   selectScrapingVolumes
-} from '@app/comic-books/selectors/scraping.selectors';
+} from '@app/comic-metadata/selectors/scraping.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -50,6 +52,8 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   selectedComicsSubscription: Subscription;
+  metadataSourceSubscription: Subscription;
+  metadataSource: MetadataSource;
   comics: Comic[] = [];
   currentComic: Comic = null;
   currentSeries = '';
@@ -94,6 +98,9 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.selectedComicsSubscription = this.store
       .select(selectSelectedComics)
       .subscribe(selected => (this.comics = selected));
+    this.metadataSourceSubscription = this.store
+      .select(selectChosenMetadataSource)
+      .subscribe(metadataSource => (this.metadataSource = metadataSource));
     this.scrapingStateSubscription = this.store
       .select(selectScrapingState)
       .subscribe(state => {
@@ -111,6 +118,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
+    this.metadataSourceSubscription.unsubscribe();
     this.scrapingVolumeSubscription.unsubscribe();
   }
 
@@ -127,6 +135,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Fetching scraping volumes:', event);
     this.store.dispatch(
       loadScrapingVolumes({
+        metadataSource: this.metadataSource,
         series: event.series,
         maximumRecords: event.maximumRecords,
         skipCache: event.skipCache

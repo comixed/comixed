@@ -73,6 +73,7 @@ import { ListsModule } from '@app/lists/lists.module';
 import { MatBadgeModule } from '@angular/material/badge';
 import { BarChartModule, NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     LastReadModule,
     CollectionsModule,
     ListsModule,
+    ComicMetadataModule,
     BrowserModule,
     AppRouting,
     BrowserAnimationsModule,

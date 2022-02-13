@@ -19,8 +19,6 @@
 import { FileDetails } from '@app/comic-books/models/file-details';
 import { ComicCredit } from '@app/comic-books/models/comic-credit';
 import { Comic } from '@app/comic-books/models/comic';
-import { ScrapingVolume } from '@app/comic-books/models/scraping-volume';
-import { ScrapingIssue } from '@app/comic-books/models/scraping-issue';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
@@ -254,42 +252,4 @@ export const COMIC_5: Comic = {
   nextIssueId: null,
   previousIssueId: null,
   fileDetails: FILE_DETAILS_1
-};
-
-export const SCRAPING_VOLUME_1: ScrapingVolume = {
-  id: 1,
-  name: 'Scraping Series 1',
-  publisher: 'Publisher 1',
-  startYear: '2000',
-  imageUrl: 'http://sitecom/what',
-  issueCount: 17
-};
-
-export const SCRAPING_VOLUME_2: ScrapingVolume = {
-  id: 2,
-  name: 'Scraping Series 2',
-  publisher: 'Publisher 1',
-  startYear: '2010',
-  imageUrl: 'http://sitecom/what',
-  issueCount: 17
-};
-
-export const SCRAPING_VOLUME_3: ScrapingVolume = {
-  id: 3,
-  name: 'Scraping Series 3',
-  publisher: 'Publisher 1',
-  startYear: '2020',
-  imageUrl: 'http://sitecom/what',
-  issueCount: 17
-};
-
-export const SCRAPING_ISSUE_1: ScrapingIssue = {
-  id: 1,
-  coverDate: new Date().getTime(),
-  storeDate: new Date().getTime(),
-  coverUrl: 'http://localhost/scraping-issue-cover',
-  volumeName: '2020',
-  name: 'Scraping Series 1',
-  issueNumber: '27',
-  description: 'This is my scraping issue.'
 };

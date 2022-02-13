@@ -108,4 +108,7 @@ public interface View {
 
   /** Used when retrieving a story. */
   public interface StoryDetail {}
+
+  /** Used when retrieving a list of metadata sources. */
+  public interface MetadataSourceList {}
 }

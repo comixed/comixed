@@ -40,10 +40,10 @@ export const LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
-export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/scraping/volumes`;
-export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/scraping/volumes/\${volumeId}/issues/\${issueNumber}`;
+export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/volumes`;
+export const LOAD_SCRAPING_ISSUE_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/volumes/\${volumeId}/issues/\${issueNumber}`;
 
-export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/scraping/comics/\${comicId}`;
+export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/comics/\${comicId}`;
 
 export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 

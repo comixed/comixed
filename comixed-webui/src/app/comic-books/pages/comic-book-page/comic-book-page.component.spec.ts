@@ -51,9 +51,9 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import {
   initialState as initialScrapingState,
   SCRAPING_FEATURE_KEY
-} from '@app/comic-books/reducers/scraping.reducer';
+} from '@app/comic-metadata/reducers/scraping.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
-import { loadScrapingVolumes } from '@app/comic-books/actions/scraping.actions';
+import { loadScrapingVolumes } from '@app/comic-metadata/actions/scraping.actions';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_FEATURE_KEY,
@@ -91,6 +91,7 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
 describe('ComicBookPageComponent', () => {
   const COMIC = COMIC_1;
@@ -102,6 +103,7 @@ describe('ComicBookPageComponent', () => {
   const ISSUE_NUMBER = '27';
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
+  const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -252,6 +254,7 @@ describe('ComicBookPageComponent', () => {
 
   describe('loading the scraping volumes', () => {
     beforeEach(() => {
+      component.metadataSource = METADATA_SOURCE;
       component.onLoadScrapingVolumes(
         SERIES,
         VOLUME,
@@ -276,6 +279,7 @@ describe('ComicBookPageComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         loadScrapingVolumes({
+          metadataSource: METADATA_SOURCE,
           series: SERIES,
           maximumRecords: MAXIMUM_RECORDS,
           skipCache: SKIP_CACHE

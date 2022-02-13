@@ -19,7 +19,9 @@
 package org.comixedproject.scrapers.comicvine.adaptors;
 
 import java.util.List;
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.adaptors.AbstractScrapingAdaptor;
 import org.comixedproject.scrapers.adaptors.ScrapingAdaptor;
@@ -43,6 +45,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
   public static final String BASE_URL = "https://comicvine.gamespot.com";
+  static final String API_KEY = "api-key";
 
   @Autowired private ObjectFactory<ComicVineGetVolumesAction> getVolumesActionObjectFactory;
   @Autowired private ObjectFactory<ComicVineGetIssueAction> getIssueActionObjectFactory;
@@ -56,13 +59,15 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
 
   @Override
   public List<ScrapingVolume> getVolumes(
-      final String apiKey, final String seriesName, final Integer maxRecords)
+      final String seriesName,
+      final Integer maxRecords,
+      final Set<MetadataSourceProperty> properties)
       throws ScrapingException {
     log.debug("Fetching volumes from ComicVine: seriesName={}", seriesName);
 
     final ComicVineGetVolumesAction action = this.getVolumesActionObjectFactory.getObject();
     action.setBaseUrl(BASE_URL);
-    action.setApiKey(apiKey);
+    action.setApiKey(this.getSourcePropertyByName(properties, API_KEY, true));
     action.setSeries(seriesName);
     action.setMaxRecords(maxRecords);
 
@@ -75,14 +80,14 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
 
   @Override
   public ScrapingIssue doGetIssue(
-      final String apiKey, final Integer volume, final String issueNumber)
+      final Integer volume, final String issueNumber, final Set<MetadataSourceProperty> properties)
       throws ScrapingException {
     log.debug("Fetching issue from ComicVine: volume={} issueNumber={}", volume, issueNumber);
 
     final ComicVineGetIssueAction getIssuesAction = this.getIssueActionObjectFactory.getObject();
 
     getIssuesAction.setBaseUrl(BASE_URL);
-    getIssuesAction.setApiKey(apiKey);
+    getIssuesAction.setApiKey(this.getSourcePropertyByName(properties, API_KEY, true));
     getIssuesAction.setVolumeId(volume);
     getIssuesAction.setIssueNumber(issueNumber);
 
@@ -92,7 +97,8 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
   }
 
   @Override
-  public ScrapingIssueDetails getIssueDetails(final String apiKey, final Integer issueId)
+  public ScrapingIssueDetails getIssueDetails(
+      final Integer issueId, final Set<MetadataSourceProperty> properties)
       throws ScrapingException {
     log.debug("Fetching issue details: issueId={}", issueId);
 
@@ -100,7 +106,7 @@ public class ComicVineScrapingAdaptor extends AbstractScrapingAdaptor {
         this.getIssueDetailsActionObjectFactory.getObject();
 
     action.setBaseUrl(BASE_URL);
-    action.setApiKey(apiKey);
+    action.setApiKey(this.getSourcePropertyByName(properties, API_KEY, true));
     action.setIssueId(issueId);
 
     return action.execute();
