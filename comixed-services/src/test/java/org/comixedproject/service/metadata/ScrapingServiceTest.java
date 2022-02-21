@@ -25,10 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.metadata.MetadataSource;
-import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.adaptors.ScrapingAdaptor;
 import org.comixedproject.scrapers.model.ScrapingIssue;
@@ -66,8 +64,8 @@ public class ScrapingServiceTest {
   private static final String TEST_TITLE = "The Title";
   private static final String TEST_DESCRIPTION = "This is the comic's description";
   private static final String TEST_ISSUE_DETAILS_KEY = "IssueDetailsKey";
-  private static final Integer TEST_SOURCE_ID = 71765;
   private static final String TEST_METADATA_SOURCE_BEAN_NAME = "farkleScrapingAdaptor";
+  private static final String TEST_SOURCE_ID = "93782";
 
   @InjectMocks private ScrapingService scrapingService;
   @Mock private MetadataSourceService metadataSourceService;
@@ -85,7 +83,6 @@ public class ScrapingServiceTest {
   @Mock private ScrapingIssueDetails scrapingIssueDetails;
   @Mock private ImprintService imprintService;
   @Mock private MetadataSource metadataSource;
-  @Mock private Set<MetadataSourceProperty> sourceProperties;
 
   private List<String> cachedEntryList = new ArrayList<>();
   private List<ScrapingVolume> fetchedVolumeList = new ArrayList<>();
@@ -99,7 +96,6 @@ public class ScrapingServiceTest {
     Mockito.when(scrapingAdaptor.getIssueDetailsKey(Mockito.anyInt()))
         .thenReturn(TEST_ISSUE_DETAILS_KEY);
 
-    Mockito.when(scrapingIssueDetails.getSourceId()).thenReturn(TEST_SOURCE_ID);
     Mockito.when(scrapingIssueDetails.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(scrapingIssueDetails.getSeries()).thenReturn(TEST_SERIES_NAME);
     Mockito.when(scrapingIssueDetails.getVolume()).thenReturn(TEST_VOLUME);
@@ -108,12 +104,12 @@ public class ScrapingServiceTest {
     Mockito.when(scrapingIssueDetails.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(scrapingIssueDetails.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(scrapingIssueDetails.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(scrapingIssueDetails.getSourceId()).thenReturn(TEST_SOURCE_ID);
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(metadataSource.getBeanName()).thenReturn(TEST_METADATA_SOURCE_BEAN_NAME);
     Mockito.when(applicationContext.getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class))
         .thenReturn(scrapingAdaptor);
-    Mockito.when(metadataSource.getProperties()).thenReturn(sourceProperties);
   }
 
   @Test(expected = ScrapingException.class)
@@ -132,7 +128,8 @@ public class ScrapingServiceTest {
   public void testGetVolumesSkipCacheNoResults() throws ScrapingException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
-            scrapingAdaptor.getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.anySet()))
+            scrapingAdaptor.getVolumes(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(fetchedVolumeList);
 
     final List<ScrapingVolume> result =
@@ -146,7 +143,7 @@ public class ScrapingServiceTest {
     Mockito.verify(applicationContext, Mockito.times(1))
         .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+        .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(scrapingCacheService, Mockito.never())
@@ -160,7 +157,8 @@ public class ScrapingServiceTest {
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
-            scrapingAdaptor.getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.anySet()))
+            scrapingAdaptor.getVolumes(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(fetchedVolumeList);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingVolume.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -186,7 +184,7 @@ public class ScrapingServiceTest {
     Mockito.verify(applicationContext, Mockito.times(1))
         .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+        .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(objectMapper, Mockito.times(fetchedVolumeList.size()))
@@ -202,7 +200,8 @@ public class ScrapingServiceTest {
 
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
-            scrapingAdaptor.getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.anySet()))
+            scrapingAdaptor.getVolumes(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(fetchedVolumeList);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingVolume.class)))
         .thenThrow(JsonProcessingException.class);
@@ -214,7 +213,7 @@ public class ScrapingServiceTest {
       Mockito.verify(applicationContext, Mockito.times(1))
           .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
       Mockito.verify(scrapingAdaptor, Mockito.times(1))
-          .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+          .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
       Mockito.verify(scrapingCacheService, Mockito.never())
           .getFromCache(Mockito.anyString(), Mockito.anyString());
       Mockito.verify(scrapingCacheService, Mockito.never())
@@ -231,7 +230,8 @@ public class ScrapingServiceTest {
     Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
     Mockito.when(
-            scrapingAdaptor.getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.anySet()))
+            scrapingAdaptor.getVolumes(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(fetchedVolumeList);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingVolume.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -256,7 +256,7 @@ public class ScrapingServiceTest {
     Mockito.verify(applicationContext, Mockito.times(1))
         .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+        .getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_VOLUME_KEY);
     Mockito.verify(objectMapper, Mockito.times(fetchedVolumeList.size()))
@@ -291,7 +291,7 @@ public class ScrapingServiceTest {
     Mockito.verify(objectMapper, Mockito.times(1))
         .readValue(TEST_ENCODED_VALUE, ScrapingVolume.class);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.anySet());
+        .getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class));
     Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(scrapingVolume);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
@@ -326,7 +326,7 @@ public class ScrapingServiceTest {
     Mockito.verify(objectMapper, Mockito.times(cachedEntryList.size()))
         .readValue(TEST_ENCODED_VALUE, ScrapingVolume.class);
     Mockito.verify(scrapingAdaptor, Mockito.never())
-        .getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.anySet());
+        .getVolumes(Mockito.anyString(), Mockito.anyInt(), Mockito.any(MetadataSource.class));
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
     Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(scrapingVolume);
@@ -350,7 +350,9 @@ public class ScrapingServiceTest {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(scrapingAdaptor.getIssueKey(Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_ISSUE_KEY);
-    Mockito.when(scrapingAdaptor.getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssue(
+                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(null);
 
     final ScrapingIssue result =
@@ -362,7 +364,7 @@ public class ScrapingServiceTest {
     Mockito.verify(applicationContext, Mockito.times(1))
         .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, sourceProperties);
+        .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(scrapingCacheService, Mockito.never())
@@ -373,7 +375,9 @@ public class ScrapingServiceTest {
   public void testGetIssueSkipCache()
       throws ScrapingException, JsonProcessingException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
-    Mockito.when(scrapingAdaptor.getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssue(
+                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssue);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssue.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -394,7 +398,7 @@ public class ScrapingServiceTest {
     Mockito.verify(applicationContext, Mockito.times(1))
         .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, sourceProperties);
+        .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
     Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(scrapingIssue);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_KEY, cacheEntryList.getValue());
@@ -406,7 +410,9 @@ public class ScrapingServiceTest {
   public void testGetIssueJsonEncoding()
       throws ScrapingException, JsonProcessingException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
-    Mockito.when(scrapingAdaptor.getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssue(
+                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssue);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssue.class)))
         .thenThrow(JsonProcessingException.class);
@@ -418,7 +424,7 @@ public class ScrapingServiceTest {
       Mockito.verify(applicationContext, Mockito.times(1))
           .getBean(TEST_METADATA_SOURCE_BEAN_NAME, ScrapingAdaptor.class);
       Mockito.verify(scrapingAdaptor, Mockito.times(1))
-          .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, sourceProperties);
+          .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
       Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(scrapingIssue);
       Mockito.verify(scrapingCacheService, Mockito.never())
           .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
@@ -433,7 +439,9 @@ public class ScrapingServiceTest {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(null);
-    Mockito.when(scrapingAdaptor.getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssue(
+                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssue);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssue.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -456,7 +464,7 @@ public class ScrapingServiceTest {
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, sourceProperties);
+        .getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
     Mockito.verify(objectMapper, Mockito.times(1)).writeValueAsString(scrapingIssue);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_KEY, cacheEntryList.getValue());
@@ -472,7 +480,9 @@ public class ScrapingServiceTest {
         .thenReturn(cachedEntryList);
     Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
         .thenThrow(JsonProcessingException.class);
-    Mockito.when(scrapingAdaptor.getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssue(
+                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssue);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssue.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -524,7 +534,7 @@ public class ScrapingServiceTest {
         .readValue(TEST_ENCODED_VALUE, ScrapingIssue.class);
     Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(Mockito.any());
     Mockito.verify(scrapingAdaptor, Mockito.never())
-        .getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.anySet());
+        .getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class));
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
   }
@@ -543,14 +553,15 @@ public class ScrapingServiceTest {
   @Test
   public void testScrapeComicSkipCacheNoResult() throws ScrapingException, ComicException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
-    Mockito.when(scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(null);
 
     scrapingService.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, true);
 
     Mockito.verify(comicService, Mockito.times(2)).getComic(TEST_COMIC_ID);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssueDetails(TEST_ISSUE_ID, sourceProperties);
+        .getIssueDetails(TEST_ISSUE_ID, metadataSource);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .getFromCache(Mockito.anyString(), Mockito.anyString());
     Mockito.verify(scrapingCacheService, Mockito.never())
@@ -563,7 +574,8 @@ public class ScrapingServiceTest {
   public void testScrapeComicSkipCache()
       throws ScrapingException, ComicException, JsonProcessingException {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
-    Mockito.when(scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssueDetails);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssueDetails.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -582,7 +594,7 @@ public class ScrapingServiceTest {
 
     Mockito.verify(comicService, Mockito.times(2)).getComic(TEST_COMIC_ID);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssueDetails(TEST_ISSUE_ID, sourceProperties);
+        .getIssueDetails(TEST_ISSUE_ID, metadataSource);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .saveToCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY, cacheEntryList.getValue());
     Mockito.verify(scrapingCacheService, Mockito.never())
@@ -598,7 +610,8 @@ public class ScrapingServiceTest {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
     Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
-    Mockito.when(scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssueDetails);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssueDetails.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -619,7 +632,7 @@ public class ScrapingServiceTest {
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssueDetails(TEST_ISSUE_ID, sourceProperties);
+        .getIssueDetails(TEST_ISSUE_ID, metadataSource);
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(loadedComic, ComicEvent.scraped);
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
@@ -633,7 +646,8 @@ public class ScrapingServiceTest {
     Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
     Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
-    Mockito.when(scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.anySet()))
+    Mockito.when(
+            scrapingAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
         .thenReturn(scrapingIssueDetails);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(ScrapingIssueDetails.class)))
         .thenThrow(JsonProcessingException.class);
@@ -648,7 +662,7 @@ public class ScrapingServiceTest {
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(scrapingAdaptor, Mockito.times(1))
-        .getIssueDetails(TEST_ISSUE_ID, sourceProperties);
+        .getIssueDetails(TEST_ISSUE_ID, metadataSource);
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(loadedComic, ComicEvent.scraped);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
@@ -677,12 +691,54 @@ public class ScrapingServiceTest {
     Mockito.verify(scrapingCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(scrapingAdaptor, Mockito.never())
-        .getIssueDetails(Mockito.anyInt(), Mockito.anySet());
+        .getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class));
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(loadedComic, ComicEvent.scraped);
     Mockito.verify(scrapingCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
     this.verifyComicScraping(loadedComic);
+  }
+
+  @Test
+  public void testScrapeComicNoCoverDate()
+      throws ComicException, JsonProcessingException, ScrapingException {
+    cachedEntryList.add(TEST_ENCODED_VALUE);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
+    Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(cachedEntryList);
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(scrapingIssueDetails);
+    Mockito.when(scrapingIssueDetails.getCoverDate()).thenReturn(null);
+
+    final Comic result =
+        scrapingService.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, false);
+
+    assertNotNull(result);
+    assertSame(savedComic, result);
+
+    Mockito.verify(this.loadedComic, Mockito.never()).setCoverDate(Mockito.any(Date.class));
+  }
+
+  @Test
+  public void testScrapeComicNoStoreDate()
+      throws ComicException, JsonProcessingException, ScrapingException {
+    cachedEntryList.add(TEST_ENCODED_VALUE);
+
+    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(loadedComic, savedComic);
+    Mockito.when(scrapingCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(cachedEntryList);
+    Mockito.when(objectMapper.readValue(Mockito.anyString(), Mockito.any(Class.class)))
+        .thenReturn(scrapingIssueDetails);
+    Mockito.when(scrapingIssueDetails.getStoreDate()).thenReturn(null);
+
+    final Comic result =
+        scrapingService.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, false);
+
+    assertNotNull(result);
+    assertSame(savedComic, result);
+
+    Mockito.verify(this.loadedComic, Mockito.never()).setStoreDate(Mockito.any(Date.class));
   }
 
   private void verifyComicScrapingNotDone() {
@@ -695,7 +751,7 @@ public class ScrapingServiceTest {
   }
 
   private void verifyComicScraping(final Comic comic) {
-    Mockito.verify(this.loadedComic, Mockito.times(1)).setComicVineId(TEST_SOURCE_ID);
+    // TODO verify metadata source reference
     Mockito.verify(this.loadedComic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
     Mockito.verify(this.loadedComic, Mockito.times(1)).setVolume(TEST_VOLUME);

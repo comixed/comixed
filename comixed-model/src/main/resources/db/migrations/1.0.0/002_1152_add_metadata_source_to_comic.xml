@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="002_1152_add_metadata_source_to_comic.xml"
+             author="mcpierce">
+
+    <createTable tableName="ComicMetadataSources">
+      <column name="Id"
+              type="bigint">
+        <constraints nullable="false"
+                     unique="true"
+                     primaryKey="true"/>
+      </column>
+      <column name="ComicId"
+              type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="MetadataSourceId"
+              type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ReferenceId"
+              type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addAutoIncrement tableName="ComicMetadataSources"
+                      columnName="Id"
+                      startWith="1"
+                      columnDataType="bigint"/>
+
+    <addForeignKeyConstraint baseTableName="ComicMetadataSources"
+                             baseColumnNames="ComicId"
+                             constraintName="ComicMetadataSourceComicFk"
+                             referencedTableName="Comics"
+                             referencedColumnNames="Id"/>
+
+    <addForeignKeyConstraint baseTableName="ComicMetadataSources"
+                             baseColumnNames="MetadataSourceId"
+                             constraintName="ComicMetadataSourceMetadataSourceFk"
+                             referencedTableName="MetadataSources"
+                             referencedColumnNames="Id"/>
+
+    <!-- copy existing comicvine ids to new records -->
+    <sql>INSERT INTO ComicMetadataSources(ComicId, MetadataSourceId, ReferenceId)
+         SELECT Id, 1, ComicVineId
+         FROM Comics
+         WHERE ComicVineId IS NOT NULL</sql>
+
+    <dropIndex tableName="Comics"
+               indexName="ComicComicVineIdIdx"/>
+
+    <dropColumn tableName="Comics"
+                columnName="ComicVineId"/>
+
+  </changeSet>
+</databaseChangeLog>
