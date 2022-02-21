@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicbooks.Credit;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.scrapers.ScrapingException;
@@ -91,7 +92,7 @@ public class ScrapingService {
     if (result.isEmpty()) {
       log.debug("Fetching from scraping source");
       final List<ScrapingVolume> fetched =
-          scrapingAdaptor.getVolumes(series, maxRecords, metadataSource.getProperties());
+          scrapingAdaptor.getVolumes(series, maxRecords, metadataSource);
 
       log.debug("Fetched {} volume{}", fetched.size(), fetched.size() == 1 ? "" : "s");
       if (fetched.isEmpty()) {
@@ -188,7 +189,7 @@ public class ScrapingService {
 
     if (result == null) {
       log.debug("Fetching from scraping source");
-      result = scrapingAdaptor.getIssue(volumeId, issueNumber, metadataSource.getProperties());
+      result = scrapingAdaptor.getIssue(volumeId, issueNumber, metadataSource);
       if (result != null) {
         log.debug("Encoding fetched issue");
         final List<String> encodedValues = new ArrayList<>();
@@ -245,7 +246,7 @@ public class ScrapingService {
 
     if (issueDetails == null) {
       log.debug("Fetching issue details");
-      issueDetails = scrapingAdaptor.getIssueDetails(issueId, metadataSource.getProperties());
+      issueDetails = scrapingAdaptor.getIssueDetails(issueId, metadataSource);
 
       if (issueDetails != null) {
         log.debug("Encoding fetched issue details");
@@ -264,13 +265,14 @@ public class ScrapingService {
       // have to use a final reference here due to the lambdas later in this block
       final Comic comic = result;
       log.debug("Updating comic with scraped data");
-      comic.setComicVineId(issueDetails.getSourceId());
       comic.setPublisher(issueDetails.getPublisher());
       comic.setSeries(issueDetails.getSeries());
       comic.setVolume(issueDetails.getVolume());
       comic.setIssueNumber(issueDetails.getIssueNumber());
-      comic.setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
-      comic.setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
+      if (issueDetails.getCoverDate() != null)
+        comic.setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
+      if (issueDetails.getStoreDate() != null)
+        comic.setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
       comic.setTitle(issueDetails.getTitle());
       comic.setDescription(issueDetails.getDescription());
       comic.getCharacters().clear();
@@ -286,6 +288,9 @@ public class ScrapingService {
           .getCredits()
           .forEach(
               entry -> comic.getCredits().add(new Credit(comic, entry.getName(), entry.getRole())));
+      log.trace("Creating comic metadata record");
+      comic.setMetadataSource(
+          new ComicMetadataSource(comic, metadataSource, issueDetails.getSourceId()));
       comic.setNotes(String.format("Comic details scraped by %s", scrapingAdaptor.getIdentifier()));
       log.trace("Checking for imprint");
       this.imprintService.update(comic);

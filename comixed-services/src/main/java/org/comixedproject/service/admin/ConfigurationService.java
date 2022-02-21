@@ -39,7 +39,6 @@ public class ConfigurationService {
   public static final String CFG_LIBRARY_ROOT_DIRECTORY = "library.root-directory";
   public static final String CFG_LIBRARY_COMIC_RENAMING_RULE = "library.comic-book.renaming-rule";
   public static final String CFG_LIBRARY_PAGE_RENAMING_RULE = "library.comic-page.renaming-rule";
-  public static final String CFG_COMICVINE_API_KEY = "comicvine.api-key";
 
   @Autowired private ConfigurationRepository configurationRepository;
 

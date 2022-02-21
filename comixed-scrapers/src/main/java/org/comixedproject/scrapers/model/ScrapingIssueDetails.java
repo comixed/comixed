@@ -35,7 +35,7 @@ public class ScrapingIssueDetails {
   @JsonProperty("sourceId")
   @Getter
   @Setter
-  private Integer sourceId;
+  private String sourceId;
 
   @JsonProperty("publisher")
   @Getter

@@ -19,8 +19,7 @@
 package org.comixedproject.scrapers.adaptors;
 
 import java.util.List;
-import java.util.Set;
-import org.comixedproject.model.metadata.MetadataSourceProperty;
+import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.model.ScrapingIssue;
 import org.comixedproject.scrapers.model.ScrapingIssueDetails;
@@ -54,12 +53,12 @@ public interface ScrapingAdaptor {
    *
    * @param seriesName the series name
    * @param maxRecords the maximum records to fetch
-   * @param properties the source's properties
+   * @param metadataSource the metadata source
    * @return the list of volumes
    * @throws ScrapingException if an error occurs
    */
   List<ScrapingVolume> getVolumes(
-      String seriesName, Integer maxRecords, Set<MetadataSourceProperty> properties)
+      String seriesName, Integer maxRecords, MetadataSource metadataSource)
       throws ScrapingException;
 
   /**
@@ -75,22 +74,22 @@ public interface ScrapingAdaptor {
    *
    * @param volume the volume
    * @param issueNumber the issue number within the volume
-   * @param properties the source's properties
+   * @param metadataSource the metadata source
    * @return the issue or null
    * @throws ScrapingException if an error occurs
    */
-  ScrapingIssue getIssue(Integer volume, String issueNumber, Set<MetadataSourceProperty> properties)
+  ScrapingIssue getIssue(Integer volume, String issueNumber, MetadataSource metadataSource)
       throws ScrapingException;
 
   /**
    * Returns ta single issue with details.
    *
    * @param issueId the issue id
-   * @param properties the source's properties
+   * @param metadataSource the metadata source
    * @return the issue details
    * @throws ScrapingException if an error occurs
    */
-  ScrapingIssueDetails getIssueDetails(Integer issueId, Set<MetadataSourceProperty> properties)
+  ScrapingIssueDetails getIssueDetails(Integer issueId, MetadataSource metadataSource)
       throws ScrapingException;
 
   /**

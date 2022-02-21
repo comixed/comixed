@@ -32,6 +32,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Log4j2
 public abstract class AbstractScrapingAction<T> implements ScrapingAction<T> {
+
   /**
    * Creates a consistent {@link WebClient} instance to use for requests.
    *

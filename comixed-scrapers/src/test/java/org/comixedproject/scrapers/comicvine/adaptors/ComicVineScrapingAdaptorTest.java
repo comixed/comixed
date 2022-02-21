@@ -66,22 +66,22 @@ public class ComicVineScrapingAdaptorTest {
   private List<ScrapingVolume> scrapingVolumeList = new ArrayList<>();
   private List<ScrapingIssue> scrapingIssueList = new ArrayList<>();
   private List<String> entries = new ArrayList<>();
-  private List<ScrapingIssueDetails> comicWithDetailsList = new ArrayList<>();
-  private Set<MetadataSourceProperty> sourceProperties = new HashSet<>();
+  private Set<MetadataSourceProperty> metadataSourceProperties = new HashSet<>();
 
   @Before
   public void setUp() {
-    sourceProperties.add(
+    Mockito.when(metadataSource.getProperties()).thenReturn(metadataSourceProperties);
+    metadataSourceProperties.add(
         new MetadataSourceProperty(metadataSource, ComicVineScrapingAdaptor.API_KEY, TEST_API_KEY));
   }
 
   @Test(expected = ScrapingException.class)
   public void testGetVolumesMissingApiKey() throws ScrapingException {
-    sourceProperties.clear();
+    metadataSourceProperties.clear();
     Mockito.when(getVolumesActionObjectFactory.getObject()).thenReturn(getVolumesAction);
 
     try {
-      scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+      scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     } finally {
       Mockito.verify(getVolumesAction, Mockito.times(1))
           .setBaseUrl(ComicVineScrapingAdaptor.BASE_URL);
@@ -90,7 +90,7 @@ public class ComicVineScrapingAdaptorTest {
 
   @Test(expected = ScrapingException.class)
   public void testGetVolumesUnsetApiKey() throws ScrapingException {
-    sourceProperties.stream()
+    metadataSourceProperties.stream()
         .filter(property -> property.getName().equals(ComicVineScrapingAdaptor.API_KEY))
         .findFirst()
         .get()
@@ -98,7 +98,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getVolumesActionObjectFactory.getObject()).thenReturn(getVolumesAction);
 
     try {
-      scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+      scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
     } finally {
       Mockito.verify(getVolumesAction, Mockito.times(1))
           .setBaseUrl(ComicVineScrapingAdaptor.BASE_URL);
@@ -111,7 +111,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getVolumesAction.execute()).thenReturn(scrapingVolumeList);
 
     final List<ScrapingVolume> result =
-        scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+        scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -131,7 +131,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getVolumesAction.execute()).thenReturn(scrapingVolumeList);
 
     final List<ScrapingVolume> result =
-        scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, sourceProperties);
+        scrapingAdaptor.getVolumes(TEST_SERIES_NAME, TEST_MAX_RECORDS, metadataSource);
 
     assertNotNull(result);
     assertEquals(scrapingVolumeList.size(), result.size());
@@ -149,7 +149,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getIssueAction.execute()).thenReturn(scrapingIssueList);
 
     final ScrapingIssue result =
-        scrapingAdaptor.getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, sourceProperties);
+        scrapingAdaptor.getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
 
     assertNull(result);
 
@@ -166,7 +166,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getIssueAction.execute()).thenReturn(scrapingIssueList);
 
     final ScrapingIssue result =
-        scrapingAdaptor.getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, sourceProperties);
+        scrapingAdaptor.getIssue(TEST_VOLUME_ID, TEST_ISSUE_NUMBER, metadataSource);
 
     assertNotNull(result);
     assertSame(scrapingIssue, result);
@@ -186,7 +186,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getIssueAction.execute()).thenReturn(scrapingIssueList);
 
     final ScrapingIssue result =
-        scrapingAdaptor.getIssue(TEST_VOLUME_ID, "0000" + TEST_ISSUE_NUMBER, sourceProperties);
+        scrapingAdaptor.getIssue(TEST_VOLUME_ID, "0000" + TEST_ISSUE_NUMBER, metadataSource);
 
     assertNotNull(result);
     assertSame(scrapingIssue, result);
@@ -205,7 +205,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getIssueActionObjectFactory.getObject()).thenReturn(getIssueAction);
     Mockito.when(getIssueAction.execute()).thenReturn(scrapingIssueList);
 
-    final ScrapingIssue result = scrapingAdaptor.getIssue(TEST_VOLUME_ID, "000", sourceProperties);
+    final ScrapingIssue result = scrapingAdaptor.getIssue(TEST_VOLUME_ID, "000", metadataSource);
 
     assertNotNull(result);
     assertSame(scrapingIssue, result);
@@ -222,7 +222,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getIssueDetailsAction.execute()).thenReturn(scrapingIssueDetails);
 
     final ScrapingIssueDetails result =
-        scrapingAdaptor.getIssueDetails(TEST_ISSUE_ID, sourceProperties);
+        scrapingAdaptor.getIssueDetails(TEST_ISSUE_ID, metadataSource);
 
     assertNotNull(result);
     assertSame(scrapingIssueDetails, result);
@@ -237,7 +237,7 @@ public class ComicVineScrapingAdaptorTest {
     Mockito.when(getIssueDetailsAction.execute()).thenReturn(scrapingIssueDetails);
 
     final ScrapingIssueDetails result =
-        scrapingAdaptor.getIssueDetails(TEST_ISSUE_ID, sourceProperties);
+        scrapingAdaptor.getIssueDetails(TEST_ISSUE_ID, metadataSource);
 
     assertNotNull(result);
     assertSame(scrapingIssueDetails, result);

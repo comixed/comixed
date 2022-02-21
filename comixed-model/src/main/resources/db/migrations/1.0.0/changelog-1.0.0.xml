@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/1.0.0/001_428_add_metadata_sources.xml"/>
+  <include file="/db/migrations/1.0.0/002_1152_add_metadata_source_to_comic.xml"/>
 
 </databaseChangeLog>

@@ -370,12 +370,10 @@ public class Comic {
   @Setter
   private Date lastModifiedOn = new Date();
 
-  @Column(name = "ComicVineId")
-  @JsonProperty("comicVineId")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @OneToOne(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
   @Getter
   @Setter
-  private Integer comicVineId;
+  private ComicMetadataSource metadataSource;
 
   @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")
@@ -472,6 +470,7 @@ public class Comic {
    * @return the offset
    * @deprecated use #getPages() instead
    */
+  @Deprecated
   public Page getPage(int index) {
     log.trace("Returning offset: index=" + index);
     return this.pages.get(index);

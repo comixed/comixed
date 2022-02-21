@@ -59,7 +59,7 @@ public class ComicVineGetIssueDetailsAction
 
   @Override
   public ScrapingIssueDetails execute() throws ScrapingException {
-    if (StringUtils.isEmpty(this.apiKey)) throw new ScrapingException("Missing API key");
+    if (!StringUtils.hasLength(this.apiKey)) throw new ScrapingException("Missing API key");
     if (this.issueId == null) throw new ScrapingException("Missing issue id");
 
     final ComicVineIssue issueDetails = this.getIssueDetails();

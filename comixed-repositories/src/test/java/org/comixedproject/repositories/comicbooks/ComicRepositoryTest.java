@@ -123,31 +123,6 @@ public class ComicRepositoryTest {
   }
 
   @Test
-  public void testComicVineId() {
-    assertEquals(TEST_COMIC_VINE_ID, comic.getComicVineId());
-  }
-
-  @Test
-  public void testComicVineIdIsNullable() {
-    comic.setComicVineId(null);
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertNull(result.getComicVineId());
-  }
-
-  @Test
-  public void testComicVineIdIsUpdatable() {
-    comic.setComicVineId(comic.getComicVineId() + 1);
-    repository.save(comic);
-
-    Comic result = repository.findById(comic.getId()).get();
-
-    assertEquals(comic.getComicVineId(), result.getComicVineId());
-  }
-
-  @Test
   public void testCoverDateCanBeNull() {
     comic.setCoverDate(null);
 

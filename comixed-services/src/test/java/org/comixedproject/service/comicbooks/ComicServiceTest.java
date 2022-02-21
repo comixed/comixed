@@ -330,7 +330,7 @@ public class ComicServiceTest {
     Mockito.when(incomingComic.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(incomingComic.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(incomingComic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(incomingComic.getComicVineId()).thenReturn(TEST_COMIC_VINE_ID);
+    // TODO update metadata source
     Mockito.when(incomingComic.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComic.getSortName()).thenReturn(TEST_SORTABLE_NAME);
     Mockito.when(incomingComic.getTitle()).thenReturn(TEST_TITLE);
@@ -346,7 +346,7 @@ public class ComicServiceTest {
     Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
     Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
     Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comic, Mockito.times(1)).setComicVineId(TEST_COMIC_VINE_ID);
+    // TODO update metadata source
     Mockito.verify(comic, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
     Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comic, Mockito.times(1)).setTitle(TEST_TITLE);

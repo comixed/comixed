@@ -22,8 +22,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.comixedproject.scrapers.ScrapingException;
 import org.comixedproject.scrapers.model.ScrapingIssue;
@@ -45,8 +47,8 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
 
   @Autowired protected ObjectMapper objectMapper;
 
-  @Getter private final String identifier;
-  @Getter private final String source;
+  @Getter @NonNull private final String source;
+  @Getter @NonNull private final String identifier;
 
   /**
    * Generates a consistent key for storing and fetching volume data.
@@ -72,7 +74,7 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
 
   @Override
   public ScrapingIssue getIssue(
-      final Integer volume, final String issueNumber, final Set<MetadataSourceProperty> properties)
+      final Integer volume, final String issueNumber, final MetadataSource metadataSource)
       throws ScrapingException {
     String issue = issueNumber;
     while (!issue.isEmpty()
@@ -82,7 +84,7 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
       issue = issue.substring(1);
     }
 
-    return this.doGetIssue(volume, issue, properties);
+    return this.doGetIssue(volume, issue, metadataSource);
   }
 
   protected String getSourcePropertyByName(
@@ -109,11 +111,11 @@ public abstract class AbstractScrapingAdaptor implements ScrapingAdaptor {
    *
    * @param volume the volume name
    * @param issueNumber the issue number
-   * @param properties the source's properties
+   * @param metadataSource the metadata source
    * @return the issue
    * @throws ScrapingException if an error occurs
    */
   protected abstract ScrapingIssue doGetIssue(
-      final Integer volume, final String issueNumber, final Set<MetadataSourceProperty> properties)
+      final Integer volume, final String issueNumber, final MetadataSource metadataSource)
       throws ScrapingException;
 }
