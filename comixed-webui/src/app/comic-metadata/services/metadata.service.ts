@@ -79,7 +79,7 @@ export class MetadataService {
    */
   loadScrapingIssue(args: {
     metadataSource: MetadataSource;
-    volumeId: number;
+    volumeId: string;
     issueNumber: string;
     skipCache: boolean;
   }): Observable<any> {
@@ -106,7 +106,7 @@ export class MetadataService {
    */
   scrapeComic(args: {
     metadataSource: MetadataSource;
-    issueId: number;
+    issueId: string;
     comic: Comic;
     skipCache: boolean;
   }): Observable<any> {

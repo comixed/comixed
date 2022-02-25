@@ -62,6 +62,7 @@ import {
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import { Comic } from '@app/comic-books/models/comic';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -71,6 +72,7 @@ describe('ComicEditComponent', () => {
   const ISSUE_NUMBER = '27';
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const METADATA_SOURCES = [METADATA_SOURCE_1];
+  const REFERENCE_ID = `${new Date().getTime()}`;
 
   const initialState = {
     [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES },
@@ -81,6 +83,7 @@ describe('ComicEditComponent', () => {
   let component: ComicEditComponent;
   let fixture: ComponentFixture<ComicEditComponent>;
   let store: MockStore<any>;
+  let storeDispatchSpy: jasmine.Spy<any>;
   let confirmationService: ConfirmationService;
 
   beforeEach(
@@ -110,7 +113,7 @@ describe('ComicEditComponent', () => {
       component.skipCache = SKIP_CACHE;
       component.comic = COMIC;
       store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
+      storeDispatchSpy = spyOn(store, 'dispatch');
       confirmationService = TestBed.inject(ConfirmationService);
       fixture.detectChanges();
     })
@@ -127,6 +130,30 @@ describe('ComicEditComponent', () => {
 
     it('updates the comic reference', () => {
       expect(component.comic).toEqual(COMIC);
+    });
+
+    describe('if the comic has an associated metadata source', () => {
+      beforeEach(() => {
+        component.comic = {
+          ...COMIC,
+          metadata: {
+            metadataSource: METADATA_SOURCE,
+            referenceId: REFERENCE_ID
+          }
+        };
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setChosenMetadataSource({ metadataSource: METADATA_SOURCE })
+        );
+      });
+
+      it('loads the reference id', () => {
+        expect(component.comicForm.controls.referenceId.value).toEqual(
+          REFERENCE_ID
+        );
+      });
     });
   });
 
@@ -210,6 +237,7 @@ describe('ComicEditComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.comic = COMIC;
+      storeDispatchSpy.calls.reset();
       component.onSaveChanges();
     });
 
@@ -303,35 +331,16 @@ describe('ComicEditComponent', () => {
     });
   });
 
-  describe('scraping a comic using the selected metadata source', () => {
-    beforeEach(() => {
-      component.comic = COMIC;
-      component.metadataSource = METADATA_SOURCE;
-      spyOn(confirmationService, 'confirm').and.callFake(
-        (confirmation: Confirmation) => confirmation.confirm()
-      );
-      component.onScrapeUsingComicVineId();
-    });
-
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        scrapeComic({
-          metadataSource: METADATA_SOURCE,
-          issueId: COMIC.comicVineId,
-          comic: COMIC,
-          skipCache: SKIP_CACHE
-        })
-      );
-    });
-  });
-
   describe('selecting a metadata source', () => {
     beforeEach(() => {
-      component.onMetadataSourceChosen(METADATA_SOURCE);
+      component.metadataSourceList = [
+        { label: 'first', value: METADATA_SOURCE },
+        {
+          label: 'second',
+          value: { id: METADATA_SOURCE.id + 100 } as MetadataSource
+        }
+      ];
+      component.onMetadataSourceChosen(METADATA_SOURCE.id);
     });
 
     it('fires an action', () => {
@@ -355,6 +364,41 @@ describe('ComicEditComponent', () => {
     it('requires a validate form', () => {
       component.comic = {} as Comic;
       expect(component.readyToScrape).toBeFalse();
+    });
+  });
+
+  describe('scraping a comic using the reference id', () => {
+    const SCRAPING_COMIC = {
+      ...COMIC,
+      metadata: {
+        metadataSource: METADATA_SOURCE,
+        referenceId: REFERENCE_ID
+      }
+    };
+
+    beforeEach(() => {
+      component.comic = SCRAPING_COMIC;
+      component.metadataSource = METADATA_SOURCE;
+      storeDispatchSpy.calls.reset();
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onScrapeWithReferenceId();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        scrapeComic({
+          metadataSource: METADATA_SOURCE,
+          issueId: REFERENCE_ID,
+          comic: SCRAPING_COMIC,
+          skipCache: SKIP_CACHE
+        })
+      );
     });
   });
 });

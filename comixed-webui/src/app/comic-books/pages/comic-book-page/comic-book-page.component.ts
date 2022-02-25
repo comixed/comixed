@@ -39,7 +39,8 @@ import {
 } from '@app/library/library.constants';
 import {
   loadVolumeMetadata,
-  resetMetadataState
+  resetMetadataState,
+  setChosenMetadataSource
 } from '@app/comic-metadata/actions/metadata.actions';
 import {
   selectChosenMetadataSource,
@@ -152,6 +153,14 @@ export class ComicBookPageComponent
       );
     this.comicSubscription = this.store.select(selectComic).subscribe(comic => {
       this.comic = comic;
+      if (!!this.comic?.metadata) {
+        this.logger.trace('Preselecting previous metadata source');
+        this.store.dispatch(
+          setChosenMetadataSource({
+            metadataSource: this.comic.metadata.metadataSource
+          })
+        );
+      }
       this.loadPageTitle();
       this.subscribeToUpdates();
     });

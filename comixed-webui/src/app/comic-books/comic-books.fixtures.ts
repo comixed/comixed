@@ -82,7 +82,6 @@ export const COMIC_1: Comic = {
   notes: '',
   missing: false,
   archiveType: ArchiveType.CBZ,
-  comicVineId: 71765,
   addedDate: new Date().getTime(),
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
@@ -98,7 +97,8 @@ export const COMIC_1: Comic = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  metadata: null
 };
 
 export const COMIC_2: Comic = {
@@ -119,7 +119,6 @@ export const COMIC_2: Comic = {
   notes: '',
   missing: false,
   archiveType: ArchiveType.CBR,
-  comicVineId: 7283,
   addedDate: new Date().getTime(),
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
@@ -135,7 +134,8 @@ export const COMIC_2: Comic = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  metadata: null
 };
 
 export const COMIC_3: Comic = {
@@ -156,7 +156,6 @@ export const COMIC_3: Comic = {
   notes: '',
   missing: false,
   archiveType: ArchiveType.CB7,
-  comicVineId: null,
   addedDate: new Date().getTime(),
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
@@ -172,7 +171,8 @@ export const COMIC_3: Comic = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  metadata: null
 };
 
 export const COMIC_4: Comic = {
@@ -193,7 +193,6 @@ export const COMIC_4: Comic = {
   notes: '',
   missing: false,
   archiveType: ArchiveType.CBZ,
-  comicVineId: null,
   addedDate: new Date().getTime(),
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
@@ -209,7 +208,8 @@ export const COMIC_4: Comic = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  metadata: null
 };
 
 export const COMIC_5: Comic = {
@@ -230,7 +230,6 @@ export const COMIC_5: Comic = {
   notes: '',
   missing: false,
   archiveType: ArchiveType.CBZ,
-  comicVineId: 24601,
   addedDate: new Date().getTime(),
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
@@ -246,5 +245,6 @@ export const COMIC_5: Comic = {
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
-  fileDetails: FILE_DETAILS_1
+  fileDetails: FILE_DETAILS_1,
+  metadata: null
 };

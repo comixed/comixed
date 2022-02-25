@@ -29,7 +29,7 @@ public class ComicDataAdaptor {
    * @param comic the comic
    */
   public void clear(Comic comic) {
-    comic.setMetadataSource(null);
+    comic.setMetadata(null);
     comic.setPublisher("");
     comic.setSeries("");
     comic.setVolume("");

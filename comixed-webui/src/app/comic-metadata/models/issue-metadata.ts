@@ -17,7 +17,7 @@
  */
 
 export interface IssueMetadata {
-  id: number;
+  id: string;
   coverDate: number;
   storeDate: number;
   coverUrl: string;
