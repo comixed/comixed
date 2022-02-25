@@ -19,7 +19,7 @@
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export interface VolumeMetadata {
-  id: number;
+  id: string;
   name: string;
   issueCount: number;
   imageUrl: string;

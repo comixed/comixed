@@ -57,7 +57,8 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    */
   List<Comic> findBySeries(String series);
 
-  @Query("SELECT c FROM Comic c LEFT JOIN FETCH c.pages WHERE c.id = :id")
+  @Query(
+      "SELECT c FROM Comic c LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.pages WHERE c.id = :id")
   Comic getById(@Param("id") long id);
 
   @Query(

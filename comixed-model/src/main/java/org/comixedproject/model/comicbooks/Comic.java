@@ -368,9 +368,11 @@ public class Comic {
   private Date lastModifiedOn = new Date();
 
   @OneToOne(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonProperty("metadata")
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
-  private ComicMetadataSource metadataSource;
+  private ComicMetadataSource metadata;
 
   @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")

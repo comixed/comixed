@@ -293,8 +293,7 @@ public class MetadataService {
           .forEach(
               entry -> comic.getCredits().add(new Credit(comic, entry.getName(), entry.getRole())));
       log.trace("Creating comic metadata record");
-      comic.setMetadataSource(
-          new ComicMetadataSource(comic, metadataSource, issueDetails.getSourceId()));
+      comic.setMetadata(new ComicMetadataSource(comic, metadataSource, issueDetails.getSourceId()));
       comic.setNotes(
           String.format("Comic metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");

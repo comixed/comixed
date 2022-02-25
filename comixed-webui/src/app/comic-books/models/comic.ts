@@ -21,6 +21,7 @@ import { ComicCredit } from '@app/comic-books/models/comic-credit';
 import { Page } from '@app/comic-books/models/page';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 
 export interface Comic {
   id: number;
@@ -43,7 +44,6 @@ export interface Comic {
   sortableIssueNumber: string;
   sortName: string;
   imprint: string;
-  comicVineId: number;
   pageCount: number;
   characters: string[];
   teams: string[];
@@ -58,4 +58,5 @@ export interface Comic {
   notes: string;
   pages?: Page[];
   duplicateCount?: number;
+  metadata: ComicMetadataSource;
 }

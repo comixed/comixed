@@ -53,7 +53,10 @@ import {
   METADATA_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
-import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
+import {
+  loadVolumeMetadata,
+  setChosenMetadataSource
+} from '@app/comic-metadata/actions/metadata.actions';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_FEATURE_KEY,
@@ -104,6 +107,7 @@ describe('ComicBookPageComponent', () => {
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const REFERENCE_ID = `${new Date().getTime()}`;
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -208,6 +212,7 @@ describe('ComicBookPageComponent', () => {
         expect(titleService.setTitle).not.toHaveBeenCalled();
       });
     });
+
     describe('with a comic set', () => {
       beforeEach(() => {
         component.comic = COMIC;
@@ -217,6 +222,30 @@ describe('ComicBookPageComponent', () => {
       it('updates the page title', () => {
         expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
       });
+    });
+  });
+
+  describe('when the comic has a metadata source', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [COMIC_FEATURE_KEY]: {
+          ...initialComicState,
+          comic: {
+            ...COMIC,
+            metadata: {
+              metadataSource: METADATA_SOURCE,
+              referenceId: REFERENCE_ID
+            }
+          }
+        }
+      });
+    });
+
+    it('sets the chosen metadata source', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setChosenMetadataSource({ metadataSource: METADATA_SOURCE })
+      );
     });
   });
 

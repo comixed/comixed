@@ -99,7 +99,7 @@ function comicListUpdate(
     ...state,
     comics,
     unprocessed: comics.filter(comic => !comic.fileDetails),
-    unscraped: comics.filter(comic => !comic.comicVineId),
+    unscraped: comics.filter(comic => !comic.metadata),
     changed: comics.filter(comic => comic.comicState == ComicBookState.CHANGED),
     deleted: comics.filter(
       comic => comic.comicState === ComicBookState.DELETED

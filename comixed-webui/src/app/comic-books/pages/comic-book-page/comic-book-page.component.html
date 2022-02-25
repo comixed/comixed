@@ -194,7 +194,7 @@
         <cx-comic-edit
           *ngIf="!!comic && volumes.length === 0"
           [comic]="comic"
-          [metadataSource]="metadataSource"
+          [metadataSource]="comic.metadata?.metadataSource || metadataSource"
           [skipCache]="skipCache"
           [maximumRecords]="maximumRecords"
           (scrape)="

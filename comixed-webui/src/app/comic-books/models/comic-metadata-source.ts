@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicvineIssueLinkPipe } from './comicvine-issue-link.pipe';
-import { COMIC_5 } from '@app/comic-books/comic-books.fixtures';
-import { interpolate } from '@app/core';
-import { COMICVINE_ISSUE_LINK } from '@app/comic-metadata/comic-metadata.constants';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
-describe('ComicvineIssueLinkPipe', () => {
-  const COMIC = COMIC_5;
-
-  let pipe: ComicvineIssueLinkPipe;
-
-  beforeEach(() => {
-    pipe = new ComicvineIssueLinkPipe();
-  });
-
-  it('create an instance', () => {
-    expect(pipe).toBeTruthy();
-  });
-
-  it('returns the correct URL', () => {
-    expect(pipe.transform(COMIC)).toEqual(
-      interpolate(COMICVINE_ISSUE_LINK, { id: COMIC.comicVineId })
-    );
-  });
-});
+export interface ComicMetadataSource {
+  metadataSource: MetadataSource;
+  referenceId: string;
+}

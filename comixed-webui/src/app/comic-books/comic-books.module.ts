@@ -69,7 +69,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSortModule } from '@angular/material/sort';
 import { CoreModule } from '@app/core/core.module';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ComicvineIssueLinkPipe } from '../comic-metadata/pipes/comicvine-issue-link.pipe';
 import { PageHashUrlPipe } from './pipes/page-hash-url.pipe';
 import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
 import {
@@ -101,7 +100,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ComicPageUrlPipe,
     ComicTitlePipe,
     IssueMetadataTitlePipe,
-    ComicvineIssueLinkPipe,
     PageHashUrlPipe
   ],
   imports: [
