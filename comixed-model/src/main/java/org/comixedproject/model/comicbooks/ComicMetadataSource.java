@@ -18,10 +18,13 @@
 
 package org.comixedproject.model.comicbooks;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.views.View;
 
 /**
  * <code>ComicMetadataSource</code> connects a {@link Comic} to the record containing its metadata
@@ -47,12 +50,16 @@ public class ComicMetadataSource {
 
   @ManyToOne
   @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
+  @JsonProperty("metadataSource")
+  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull
   private MetadataSource metadataSource;
 
   @Column(name = "ReferenceId", length = 32, nullable = false, updatable = true)
+  @JsonProperty("referenceId")
+  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull

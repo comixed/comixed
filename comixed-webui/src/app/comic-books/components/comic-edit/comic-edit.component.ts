@@ -96,7 +96,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       series: ['', [Validators.required]],
       volume: ['', [Validators.pattern('[0-9]{4}')]],
       issueNumber: ['', [Validators.required]],
-      metadataSourceId: [''],
+      referenceId: [''],
       imprint: [''],
       sortName: [''],
       title: [''],
@@ -153,7 +153,15 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.logger.trace('Loading comic form:', comic);
     this._comic = comic;
     this.logger.trace('Loading form fields');
-    this.comicForm.controls.metadataSourceId.setValue(comic.comicVineId);
+    if (!!comic.metadata) {
+      this.logger.trace('Preselecting metadata source');
+      this.store.dispatch(
+        setChosenMetadataSource({
+          metadataSource: comic.metadata.metadataSource
+        })
+      );
+    }
+    this.comicForm.controls.referenceId.setValue(comic.metadata?.referenceId);
     this.comicForm.controls.publisher.setValue(comic.publisher);
     this.comicForm.controls.series.setValue(comic.series);
     this.comicForm.controls.volume.setValue(comic.volume);
@@ -260,30 +268,10 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.store.dispatch(scrapeMetadataFromFilename({ filename }));
   }
 
-  onScrapeUsingComicVineId(): void {
-    this.logger.trace('Confirming scraping the issue');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'scraping.scrape-comic-confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'scraping.scrape-comic-confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.trace('Scraping issue using ComicVine ID');
-        this.store.dispatch(
-          scrapeComic({
-            metadataSource: this.metadataSource,
-            issueId: this.comic.comicVineId,
-            comic: this.comic,
-            skipCache: this.skipCache
-          })
-        );
-      }
-    });
-  }
-
-  onMetadataSourceChosen(metadataSource: MetadataSource): void {
+  onMetadataSourceChosen(id: number): void {
+    const metadataSource = this.metadataSourceList.find(
+      entry => entry.value.id === id
+    ).value;
     this.logger.trace('Metadata source selected:', metadataSource);
     console.log('Metadata source selected:', metadataSource);
     this.store.dispatch(setChosenMetadataSource({ metadataSource }));
@@ -300,8 +288,30 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       imprint: this.comicForm.controls.imprint.value,
       sortName: this.comicForm.controls.sortName.value,
       title: this.comicForm.controls.title.value,
-      description: this.comicForm.controls.description.value,
-      comicVineId: this.comicForm.controls.metadataSourceId.value
+      description: this.comicForm.controls.description.value
     } as Comic;
+  }
+
+  onScrapeWithReferenceId(): void {
+    const referenceId = this.comicForm.controls.referenceId.value;
+    this.logger.trace('Confirming scrape coming using reference id');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'scraping.scrape-comic-confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'scraping.scrape-comic-confirmation-message'
+      ),
+      confirm: () => {
+        this.store.dispatch(
+          scrapeComic({
+            comic: this.comic,
+            metadataSource: this.metadataSource,
+            issueId: referenceId,
+            skipCache: this.skipCache
+          })
+        );
+      }
+    });
   }
 }

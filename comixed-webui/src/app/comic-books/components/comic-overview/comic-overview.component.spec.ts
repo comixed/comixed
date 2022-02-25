@@ -25,7 +25,6 @@ import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ComicvineIssueLinkPipe } from '@app/comic-metadata/pipes/comicvine-issue-link.pipe';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = COMIC_1;
@@ -36,11 +35,7 @@ describe('ComicOverviewComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [
-          ComicOverviewComponent,
-          ComicCoverUrlPipe,
-          ComicvineIssueLinkPipe
-        ],
+        declarations: [ComicOverviewComponent, ComicCoverUrlPipe],
         imports: [
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),

@@ -86,6 +86,8 @@ import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -283,19 +285,23 @@ describe('LibraryPageComponent', () => {
       ...COMIC_1,
       lastRead: null,
       comicState: ComicBookState.STABLE,
-      comicVineId: 54321
+      metadataSource: {
+        metadataSource: { id: 54321 } as MetadataSource
+      } as ComicMetadataSource
     };
     const DELETED = {
       ...COMIC_2,
       lastRead: new Date().getTime(),
       comicState: ComicBookState.DELETED,
-      comicVineId: 12345
+      metadataSource: {
+        metadataSource: { id: 12345 } as MetadataSource
+      } as ComicMetadataSource
     };
     const UNSCRAPED = {
       ...COMIC_3,
       lastRead: null,
       comicState: ComicBookState.STABLE,
-      comicVineId: null
+      metadataSource: null
     };
     const UNPROCESSED = {
       ...COMIC_4,
@@ -349,7 +355,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unscraped comics', () => {
-        component.comics.every(comic => expect(comic.comicVineId).toBeNull());
+        component.comics.every(comic => expect(comic.metadata).toBeNull());
       });
     });
 

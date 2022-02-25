@@ -40,7 +40,11 @@ public class MetadataSource {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.MetadataSourceList.class, View.MetadataAuditLogEntryList.class})
+  @JsonView({
+    View.MetadataSourceList.class,
+    View.ComicDetailsView.class,
+    View.MetadataAuditLogEntryList.class
+  })
   @Getter
   private Long id;
 
@@ -52,7 +56,11 @@ public class MetadataSource {
       updatable = true,
       nullable = false)
   @JsonProperty("beanName")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView({
+    View.MetadataSourceList.class,
+    View.ComicDetailsView.class,
+    View.AuditLogEntryDetail.class
+  })
   @Getter
   @Setter
   @NonNull
@@ -66,7 +74,11 @@ public class MetadataSource {
       updatable = true,
       nullable = false)
   @JsonProperty("name")
-  @JsonView({View.MetadataSourceList.class, View.MetadataAuditLogEntryList.class})
+  @JsonView({
+    View.MetadataSourceList.class,
+    View.ComicDetailsView.class,
+    View.MetadataAuditLogEntryList.class
+  })
   @Getter
   @Setter
   @NonNull

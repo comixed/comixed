@@ -30,7 +30,7 @@ export const METADATA_SOURCE_1: MetadataSource = {
 };
 
 export const SCRAPING_VOLUME_1: VolumeMetadata = {
-  id: 1,
+  id: '19352',
   name: 'Scraping Series 1',
   publisher: 'Publisher 1',
   startYear: '2000',
@@ -40,7 +40,7 @@ export const SCRAPING_VOLUME_1: VolumeMetadata = {
 };
 
 export const SCRAPING_VOLUME_2: VolumeMetadata = {
-  id: 2,
+  id: '12395',
   name: 'Scraping Series 2',
   publisher: 'Publisher 1',
   startYear: '2010',
@@ -49,7 +49,7 @@ export const SCRAPING_VOLUME_2: VolumeMetadata = {
   metadataSource: METADATA_SOURCE_1
 };
 export const SCRAPING_VOLUME_3: VolumeMetadata = {
-  id: 3,
+  id: '39823',
   name: 'Scraping Series 3',
   publisher: 'Publisher 1',
   startYear: '2020',
@@ -59,7 +59,7 @@ export const SCRAPING_VOLUME_3: VolumeMetadata = {
 };
 
 export const SCRAPING_ISSUE_1: IssueMetadata = {
-  id: 1,
+  id: '17239',
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   coverUrl: 'http://localhost/scraping-issue-cover',

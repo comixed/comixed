@@ -54,7 +54,7 @@ export const loadIssueMetadata = createAction(
   '[Metadata] Load a scraping issue',
   props<{
     metadataSource: MetadataSource;
-    volumeId: number;
+    volumeId: string;
     issueNumber: string;
     skipCache: boolean;
   }>()
@@ -73,7 +73,7 @@ export const scrapeComic = createAction(
   '[Metadata] Scrape the details for a comic',
   props<{
     metadataSource: MetadataSource;
-    issueId: number;
+    issueId: string;
     comic: Comic;
     skipCache: boolean;
   }>()

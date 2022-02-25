@@ -63,13 +63,13 @@
   <mat-form-field class="cx-width-50" appearance="fill">
     <mat-label>{{ "comic-book.label.metadata-source" | translate }}</mat-label>
     <mat-select
-      [value]="metadataSource"
+      [value]="metadataSource?.id"
       (selectionChange)="onMetadataSourceChosen($event.value)"
       required
     >
       <mat-option
         *ngFor="let source of metadataSourceList"
-        [value]="source.value"
+        [value]="source.value.id"
       >
         {{ source.label }}
       </mat-option>
@@ -155,7 +155,7 @@
       type="number"
       matInput
       readonly
-      formControlName="metadataSourceId"
+      formControlName="referenceId"
       [placeholder]="'comic-book.placeholder.metadata-source-id' | translate"
     />
     <button
@@ -165,11 +165,11 @@
       color="primary"
       [disabled]="
         !this.metadataSource ||
-        (this.comicForm.controls.metadataSourceId.value || '').length === 0 ||
-        !this.comicForm.controls.metadataSourceId.valid
+        (this.comicForm.controls.referenceId.value || '').length === 0 ||
+        !this.comicForm.controls.referenceId.valid
       "
       [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
-      (click)="onScrapeUsingComicVineId()"
+      (click)="onScrapeWithReferenceId()"
     >
       <mat-icon>find_replace</mat-icon>
     </button>
