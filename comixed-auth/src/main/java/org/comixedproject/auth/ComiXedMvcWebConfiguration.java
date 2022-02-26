@@ -36,7 +36,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 public class ComiXedMvcWebConfiguration implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(final CorsRegistry registry) {
-    registry.addMapping("/opds/**").allowCredentials(true);
+    registry.addMapping("/opds/**").allowedOriginPatterns("*").allowCredentials(true);
   }
 
   @Override
