@@ -19,6 +19,7 @@
 package org.comixedproject.adaptors.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.stereotype.Component;
@@ -34,20 +35,21 @@ public class ComicPageAdaptor {
   private static final String FORBIDDEN_RULE_CHARACTERS = "[\"':\\\\*?|<>]";
 
   /**
-   * Generates a new filename for the given page.
+   * Generates a new filename for the given page with a specified length for the page number.
    *
    * @param page the page
    * @param renamingRule the renaming rule
    * @param pageIndex the page index in the comic
+   * @param length the length
    * @return the page name
    */
   public String createFilenameFromRule(
-      final Page page, final String renamingRule, final int pageIndex) {
+      final Page page, final String renamingRule, final int pageIndex, final int length) {
     log.debug("Scrubbing renaming rule: {}", renamingRule);
     final String rule = this.scrub(renamingRule, FORBIDDEN_RULE_CHARACTERS);
 
     log.debug("Generating relative filename based on renaming rule: {}", rule);
-    final String index = String.valueOf(pageIndex + 1);
+    final String index = StringUtils.leftPad(String.valueOf(pageIndex + 1), length, '0');
 
     String result = rule.replace("$INDEX", index);
 

@@ -149,6 +149,7 @@ public class ComicBookAdaptor {
           writeHandle, "ComicInfo.xml", this.comicMetadataContentAdaptor.createContent(comic));
 
       log.trace("Writing comic pages");
+      final int length = String.valueOf(comic.getPages().size()).length();
       for (int index = 0; index < comic.getPages().size(); index++) {
         final Page page = comic.getPages().get(index);
         log.trace("Reading comic page content: {}", page.getFilename());
@@ -156,7 +157,7 @@ public class ComicBookAdaptor {
         @NonNull String pageFilename = page.getFilename();
         if (StringUtils.isNotEmpty(pageRenamingRule)) {
           pageFilename =
-              this.comicPageAdaptor.createFilenameFromRule(page, pageRenamingRule, index);
+              this.comicPageAdaptor.createFilenameFromRule(page, pageRenamingRule, index, length);
         }
         log.trace("Writing comic page content: {}", pageFilename);
         destinationArchive.writeEntry(writeHandle, pageFilename, content);

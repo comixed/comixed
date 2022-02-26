@@ -35,7 +35,8 @@ public class ComicPageAdaptorTest {
   private static final String TEST_RENAMING_RULE = "page-$INDEX";
   private static final int TEST_PAGE_INDEX = 3;
   private static final String TEST_FILENAME = "oldname3.png";
-  private static final String TEST_EXPECTED_PAGE_NAME = "page-4.png";
+  private static final String TEST_EXPECTED_PAGE_NAME = "page-0004.png";
+  private static final int TEST_PAGE_COUNT_LENGTH = 4;
 
   @InjectMocks private ComicPageAdaptor adaptor;
   @Mock private Page page;
@@ -47,7 +48,9 @@ public class ComicPageAdaptorTest {
 
   @Test
   public void testCreateFilenameFromRule() {
-    final String result = adaptor.createFilenameFromRule(page, TEST_RENAMING_RULE, TEST_PAGE_INDEX);
+    final String result =
+        adaptor.createFilenameFromRule(
+            page, TEST_RENAMING_RULE, TEST_PAGE_INDEX, TEST_PAGE_COUNT_LENGTH);
 
     assertNotNull(result);
     assertEquals(TEST_EXPECTED_PAGE_NAME, result);
