@@ -34,7 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FilenameScrapingRuleServiceTest {
-  private static final int TEST_PRIORITY = 0;
+  private static final Integer TEST_PRIORITY = 0;
   private static final String TEST_NAME = "Rule name";
   private static final String TEST_RULE = "Rule value";
   private static final Integer TEST_SERIES_POSITION = 1;
@@ -97,7 +97,7 @@ public class FilenameScrapingRuleServiceTest {
     assertFalse(savedRules.isEmpty());
 
     final FilenameScrapingRule created = savedRules.get(0);
-    assertEquals(TEST_PRIORITY, created.getPriority().intValue());
+    assertEquals(TEST_PRIORITY, created.getPriority());
     assertEquals(TEST_NAME, created.getName());
     assertEquals(TEST_RULE, created.getRule());
     assertEquals(TEST_SERIES_POSITION, created.getSeriesPosition());

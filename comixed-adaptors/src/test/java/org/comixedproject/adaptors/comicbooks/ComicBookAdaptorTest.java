@@ -52,13 +52,13 @@ public class ComicBookAdaptorTest {
   private static final String TEST_ENTRY_FILENAME = "Entry filename." + TEST_PAGE_EXTENSION;
   private static final byte[] TEST_ARCHIVE_ENTRY_CONTENT = "Some data".getBytes();
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
-  private static final String TEST_TEMPORARY_FILENAME = "The temporary filename";
   private static final String TEST_FINAL_FILENAME = "The final filename";
   private static final byte[] TEST_COMICINFO_XML_CONTENT = "ComicInfo.xml content".getBytes();
   private static final int TEST_PAGE_INDEX = 0;
   private static final String TEST_REAL_COMIC_FILE = "target/test-classes/example.cbz";
   private static final String TEST_PAGE_RENAMING_RULE = "page renaming rule";
   private static final String TEST_NEW_PAGE_FILENAME = "new page filename";
+  private static final int TEST_PAGE_COUNT_LENGTH = 5;
 
   @InjectMocks private ComicBookAdaptor adaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -338,7 +338,7 @@ public class ComicBookAdaptorTest {
       throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
     Mockito.when(
             comicPageAdaptor.createFilenameFromRule(
-                Mockito.any(Page.class), Mockito.anyString(), Mockito.anyInt()))
+                Mockito.any(Page.class), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
         .thenReturn(TEST_NEW_PAGE_FILENAME);
 
     adaptor.save(comic, TEST_ARCHIVE_TYPE, false, TEST_PAGE_RENAMING_RULE);
@@ -357,7 +357,8 @@ public class ComicBookAdaptorTest {
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .writeEntry(writeHandle, "ComicInfo.xml", TEST_COMICINFO_XML_CONTENT);
     Mockito.verify(comicPageAdaptor, Mockito.times(1))
-        .createFilenameFromRule(page, TEST_PAGE_RENAMING_RULE, 0);
+        .createFilenameFromRule(
+            page, TEST_PAGE_RENAMING_RULE, 0, String.valueOf(pageList.size()).length());
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .writeEntry(writeHandle, TEST_NEW_PAGE_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
   }
