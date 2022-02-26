@@ -33,12 +33,17 @@ import {
   COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 describe('Comic List Selectors', () => {
   const COMICS = [
-    { ...COMIC_1, lastRead: new Date().getTime(), deletedDate: null },
-    { ...COMIC_3, lastRead: null, deletedDate: null },
-    { ...COMIC_5, lastRead: null, deletedDate: new Date().getTime() }
+    {
+      ...COMIC_1,
+      lastRead: new Date().getTime(),
+      comicState: ComicBookState.STABLE
+    },
+    { ...COMIC_3, lastRead: null, comicState: ComicBookState.STABLE },
+    { ...COMIC_5, lastRead: null, comicState: ComicBookState.DELETED }
   ];
   let state: ComicListState;
 
@@ -78,7 +83,10 @@ describe('Comic List Selectors', () => {
   it('should select the number of deleted comics in the list', () => {
     expect(
       selectComicListDeletedCount({ [COMIC_LIST_FEATURE_KEY]: state })
-    ).toEqual(state.comics.filter(comic => !!comic.deletedDate).length);
+    ).toEqual(
+      state.comics.filter(comic => comic.comicState === ComicBookState.DELETED)
+        .length
+    );
   });
 
   describe('collection types', () => {

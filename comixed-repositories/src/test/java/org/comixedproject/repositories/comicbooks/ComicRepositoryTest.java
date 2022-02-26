@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -391,7 +392,7 @@ public class ComicRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     for (Comic comic : result) {
-      assertNotNull(comic.getDateDeleted());
+      assertEquals(ComicState.DELETED, comic.getComicState());
     }
   }
 

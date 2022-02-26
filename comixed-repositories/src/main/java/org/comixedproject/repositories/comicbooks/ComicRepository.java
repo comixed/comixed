@@ -174,7 +174,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM Comic c WHERE c.consolidating = true AND c.dateDeleted IS NULL ORDER BY c.lastModifiedOn")
+      "SELECT c FROM Comic c WHERE c.consolidating = true AND c.comicState != 'DELETED' ORDER BY c.lastModifiedOn")
   List<Comic> findComicsToBeMoved();
 
   /**
@@ -321,6 +321,6 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the comics
    */
-  @Query("SELECT c FROM Comic c WHERE c.purgeComic = true ORDER BY c.dateDeleted")
+  @Query("SELECT c FROM Comic c WHERE c.purgeComic = true")
   List<Comic> findComicsMarkedForPurging();
 }

@@ -31,6 +31,10 @@ export class ComicOverviewComponent {
   @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 
+  get deleted(): boolean {
+    return this.comic.comicState === ComicBookState.DELETED;
+  }
+
   get comicChanged(): boolean {
     return !!this.comic && this.comic.comicState === ComicBookState.CHANGED;
   }

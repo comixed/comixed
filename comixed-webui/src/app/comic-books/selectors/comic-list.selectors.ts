@@ -25,6 +25,7 @@ import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import { Comic } from '@app/comic-books/models/comic';
 import { CollectionListProperties } from '@app/collections/models/collection-list-properties';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 export const selectComicListState = createFeatureSelector<ComicListState>(
   COMIC_LIST_FEATURE_KEY
@@ -42,7 +43,9 @@ export const selectComicListCount = createSelector(
 
 export const selectComicListDeletedCount = createSelector(
   selectComicListState,
-  state => state.comics.filter(comic => !!comic.deletedDate).length
+  state =>
+    state.comics.filter(comic => comic.comicState === ComicBookState.DELETED)
+      .length
 );
 
 export const selectComicListCollection = createSelector(

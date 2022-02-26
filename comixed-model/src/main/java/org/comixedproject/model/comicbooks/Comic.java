@@ -346,15 +346,6 @@ public class Comic {
   @Getter
   private Date dateAdded = new Date();
 
-  @Column(name = "DeletedOn", updatable = true, nullable = true)
-  @JsonProperty("deletedDate")
-  @JsonFormat(shape = Shape.NUMBER)
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Temporal(TemporalType.TIMESTAMP)
-  @Getter
-  @Setter
-  private Date dateDeleted;
-
   @Column(name = "PurgeComic", nullable = false, updatable = true)
   @JsonIgnore
   @Getter

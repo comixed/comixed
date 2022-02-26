@@ -22,6 +22,7 @@ import { Comic } from '@app/comic-books/models/comic';
 import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 @Component({
   selector: 'cx-comic-detail-card',
@@ -49,6 +50,10 @@ export class ComicDetailCardComponent {
   @Output() updateComicInfo = new EventEmitter<UpdateComicInfoEvent>();
 
   constructor(private logger: LoggerService) {}
+
+  get deleted(): boolean {
+    return this.comic?.comicState === ComicBookState.DELETED;
+  }
 
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic

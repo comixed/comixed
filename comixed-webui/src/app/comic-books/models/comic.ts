@@ -31,7 +31,6 @@ export interface Comic {
   missing: boolean;
   fileDetails: FileDetails;
   addedDate: number;
-  deletedDate: number;
   lastModifiedOn: number;
   publisher: string;
   series: string;
