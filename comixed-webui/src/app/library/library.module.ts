@@ -53,7 +53,6 @@ import { SelectedComicsComponent } from './components/selected-comics/selected-c
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { DeletedComicsPipe } from './pipes/deleted-comics.pipe';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
@@ -106,7 +105,6 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
     LibraryToolbarComponent,
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
-    DeletedComicsPipe,
     ScrapingPageComponent,
     ComicCoversComponent,
     ArchiveTypePipe,

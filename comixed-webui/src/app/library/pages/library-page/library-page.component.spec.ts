@@ -50,7 +50,6 @@ import {
   Router
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { DeletedComicsPipe } from '@app/library/pipes/deleted-comics.pipe';
 import {
   COMIC_LIST_FEATURE_KEY,
   initialState as initialComicListState
@@ -109,7 +108,6 @@ describe('LibraryPageComponent', () => {
           LibraryPageComponent,
           LibraryToolbarComponent,
           ComicCoversComponent,
-          DeletedComicsPipe,
           ArchiveTypePipe,
           UnreadComicsPipe
         ],
@@ -277,19 +275,19 @@ describe('LibraryPageComponent', () => {
     const UNREAD = {
       ...COMIC_1,
       lastRead: null,
-      deletedDate: null,
+      comicState: ComicBookState.STABLE,
       comicVineId: 54321
     };
     const DELETED = {
       ...COMIC_2,
       lastRead: new Date().getTime(),
-      deletedDate: new Date().getTime(),
+      comicState: ComicBookState.DELETED,
       comicVineId: 12345
     };
     const UNSCRAPED = {
       ...COMIC_3,
       lastRead: null,
-      deletedDate: null,
+      comicState: ComicBookState.STABLE,
       comicVineId: null
     };
     const UNPROCESSED = {
@@ -319,7 +317,7 @@ describe('LibraryPageComponent', () => {
 
       it('only loads the unread comics', () => {
         component.comics.every(comic =>
-          expect(comic.deletedDate).not.toBeNull()
+          expect(comic.comicState).toEqual(ComicBookState.DELETED)
         );
       });
     });

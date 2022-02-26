@@ -53,7 +53,6 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
   @Autowired private RecreateComicFileAction recreateComicFileAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
-  @Autowired private UnmarkComicForRemovalAction unmarkComicForRemovalAction;
   @Autowired private ComicAlreadyReadByUserGuard comicAlreadReadByUserGuard;
   @Autowired private ComicNotAlreadyReadByUserGuard comicNotAlreadReadByUserGuard;
   @Autowired private PrepareToPurgeComicAction prepareToPurgeComicAction;
@@ -303,7 +302,6 @@ public class ComicStateMachineConfiguration
         .source(ComicState.DELETED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.undeleteComic)
-        .action(unmarkComicForRemovalAction)
         // the comic is being purged from the library
         .and()
         .withExternal()

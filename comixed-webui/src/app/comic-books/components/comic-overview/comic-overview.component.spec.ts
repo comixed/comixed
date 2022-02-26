@@ -74,6 +74,10 @@ describe('ComicOverviewComponent', () => {
       it('sets it to false', () => {
         expect(component.comicChanged).toBeFalse();
       });
+
+      it('is not marked as deleted', () => {
+        expect(component.deleted).toBeFalse();
+      });
     });
 
     describe('when CHANGED', () => {
@@ -83,6 +87,10 @@ describe('ComicOverviewComponent', () => {
 
       it('sets it to true', () => {
         expect(component.comicChanged).toBeTrue();
+      });
+
+      it('is not marked as deleted', () => {
+        expect(component.deleted).toBeFalse();
       });
     });
 
@@ -94,6 +102,10 @@ describe('ComicOverviewComponent', () => {
       it('sets it to false', () => {
         expect(component.comicChanged).toBeFalse();
       });
+
+      it('is not marked as deleted', () => {
+        expect(component.deleted).toBeFalse();
+      });
     });
 
     describe('when DELETED', () => {
@@ -103,6 +115,10 @@ describe('ComicOverviewComponent', () => {
 
       it('sets it to false', () => {
         expect(component.comicChanged).toBeFalse();
+      });
+
+      it('is marked as deleted', () => {
+        expect(component.deleted).toBeTrue();
       });
     });
   });

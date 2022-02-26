@@ -82,7 +82,9 @@ export const reducer = createReducer(
       changed: comics.filter(
         comic => comic.comicState == ComicBookState.CHANGED
       ),
-      deleted: comics.filter(comic => !!comic.deletedDate),
+      deleted: comics.filter(
+        comic => comic.comicState === ComicBookState.DELETED
+      ),
       lastId,
       lastPayload,
       loading: false

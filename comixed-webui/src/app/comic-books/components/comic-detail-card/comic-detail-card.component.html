@@ -47,12 +47,9 @@
           <mat-icon>sync_alt</mat-icon>
         </mat-basic-chip>
         <mat-basic-chip
-          *ngIf="!!comic?.deletedDate"
+          *ngIf="deleted"
           color="warn"
-          [matTooltip]="
-            'comic-book.text.comic-deleted-date'
-              | translate: { date: comic.deletedDate | date }
-          "
+          [matTooltip]="'comic-book.text.comic-marked-for-deletion' | translate"
         >
           <mat-icon>deleted</mat-icon>
         </mat-basic-chip>
