@@ -24,7 +24,7 @@ import static org.comixedproject.opds.rest.OPDSLibraryController.START;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.*;
@@ -57,7 +57,7 @@ public class OPDSListsController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/lists", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint(logResponse = true)
+  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed loadReadingLists(final Principal principal) throws OPDSException {
@@ -99,7 +99,7 @@ public class OPDSListsController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/lists/{id}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint(logResponse = true)
+  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed loadReadingListEntries(

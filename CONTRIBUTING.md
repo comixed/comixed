@@ -141,7 +141,7 @@ The application is composed of several modules:
  * **comixed-adaptors**: the various adaptors for loading archives, images, etc.,
  * **comixed-messaging**: the messaging layer for browser/server communications,  
  * **comixed-services**: the business logic layer,
- * **comixed-scrapers**: the library for building comic data scrapers,
+ * **comixed-metadata**: the library for building comic metadata,
  * **comixed-state**: state management layer,
  * **comixed-batch**: batch processing layer,
  * **comixed-auth**: the authentication layer,

@@ -25,24 +25,24 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { Comic } from '@app/comic-books/models/comic';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ScrapingIssue } from '@app/comic-metadata/models/scraping-issue';
+import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { Store } from '@ngrx/store';
 import {
-  loadScrapingIssue,
-  resetScraping,
+  loadIssueMetadata,
+  resetMetadataState,
   scrapeComic
-} from '@app/comic-metadata/actions/scraping.actions';
+} from '@app/comic-metadata/actions/metadata.actions';
 import { Subscription } from 'rxjs';
 import {
-  selectScrapingIssue,
-  selectScrapingState
-} from '@app/comic-metadata/selectors/scraping.selectors';
+  selectIssueMetadata,
+  selectMetadataState
+} from '@app/comic-metadata/selectors/metadata.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
@@ -79,11 +79,11 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
   @Output() comicScraped = new EventEmitter<Comic>();
 
   issueSubscription: Subscription;
-  issue: ScrapingIssue;
+  issue: IssueMetadata;
   scrapingStateSubscription: Subscription;
-  selectedVolume: ScrapingVolume;
+  selectedVolume: VolumeMetadata;
 
-  dataSource = new MatTableDataSource<SortableListItem<ScrapingVolume>>();
+  dataSource = new MatTableDataSource<SortableListItem<VolumeMetadata>>();
   displayedColumns = [
     MATCHABILITY,
     'publisher',
@@ -100,16 +100,16 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
     private translateService: TranslateService
   ) {
     this.issueSubscription = this.store
-      .select(selectScrapingIssue)
+      .select(selectIssueMetadata)
       .subscribe(issue => (this.issue = issue));
     this.scrapingStateSubscription = this.store
-      .select(selectScrapingState)
+      .select(selectMetadataState)
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
       );
   }
 
-  @Input() set volumes(volumes: ScrapingVolume[]) {
+  @Input() set volumes(volumes: VolumeMetadata[]) {
     this.logger.trace('Received scraping volumes');
     this.dataSource.data = volumes.map(volume => {
       const sortOrder =
@@ -122,7 +122,7 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
       return {
         item: volume,
         sortOrder
-      } as SortableListItem<ScrapingVolume>;
+      } as SortableListItem<VolumeMetadata>;
     });
     this.selectedVolume = null;
     const preselect = this.dataSource.data.find(
@@ -162,11 +162,11 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
     };
   }
 
-  onVolumeSelected(volume: ScrapingVolume): void {
+  onVolumeSelected(volume: VolumeMetadata): void {
     this.logger.trace('Volume selected:', volume);
     this.selectedVolume = volume;
     this.store.dispatch(
-      loadScrapingIssue({
+      loadIssueMetadata({
         metadataSource: this.metadataSource,
         volumeId: volume.id,
         issueNumber: this.comicIssueNumber,
@@ -216,7 +216,7 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
 
   onCancelScraping(): void {
     this.logger.trace('Canceling scraping');
-    this.store.dispatch(resetScraping());
+    this.store.dispatch(resetMetadataState());
   }
 
   private matchesFilter(value: string, filter: string): boolean {

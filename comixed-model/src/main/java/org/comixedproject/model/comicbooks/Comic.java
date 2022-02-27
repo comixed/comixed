@@ -31,6 +31,7 @@ import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.lists.ReadingList;
+import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
@@ -385,6 +386,10 @@ public class Comic {
   @JsonIgnore
   @Getter
   private List<LastRead> lastReads = new ArrayList<>();
+
+  @OneToMany(mappedBy = "comic", orphanRemoval = true, fetch = FetchType.LAZY)
+  @Getter
+  private Set<MetadataAuditLogEntry> metadataAuditLogEntries = new HashSet<>();
 
   /**
    * Returns just the filename without the path.

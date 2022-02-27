@@ -50,10 +50,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import {
   initialState as initialScrapingState,
-  SCRAPING_FEATURE_KEY
-} from '@app/comic-metadata/reducers/scraping.reducer';
+  METADATA_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
-import { loadScrapingVolumes } from '@app/comic-metadata/actions/scraping.actions';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
   COMIC_FEATURE_KEY,
@@ -107,7 +107,7 @@ describe('ComicBookPageComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-    [SCRAPING_FEATURE_KEY]: { ...initialScrapingState },
+    [METADATA_FEATURE_KEY]: { ...initialScrapingState },
     [COMIC_FEATURE_KEY]: { ...initialComicState },
     [LAST_READ_LIST_FEATURE_KEY]: { ...initialLastReadState },
     [MESSAGING_FEATURE_KEY]: { ...initialMessagingState }
@@ -278,7 +278,7 @@ describe('ComicBookPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadScrapingVolumes({
+        loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
           series: SERIES,
           maximumRecords: MAXIMUM_RECORDS,

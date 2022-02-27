@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { ScrapingIssue } from '@app/comic-metadata/models/scraping-issue';
+import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 
 @Component({
   selector: 'cx-scraping-issue-detail',
@@ -25,5 +25,5 @@ import { ScrapingIssue } from '@app/comic-metadata/models/scraping-issue';
   styleUrls: ['./scraping-issue-detail.component.scss']
 })
 export class ScrapingIssueDetailComponent {
-  @Input() issue: ScrapingIssue;
+  @Input() issue: IssueMetadata;
 }

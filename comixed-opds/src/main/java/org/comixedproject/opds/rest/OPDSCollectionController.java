@@ -25,7 +25,7 @@ import java.util.List;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.*;
@@ -59,7 +59,7 @@ public class OPDSCollectionController {
    * @throws OPDSException if the collection type is unknown
    */
   @GetMapping(value = "/opds/collections/{type}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint(logResponse = true)
+  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
@@ -129,7 +129,7 @@ public class OPDSCollectionController {
    * @throws OPDSException if the collection type is unknown
    */
   @GetMapping(value = "/opds/collections/{type}/{name}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint(logResponse = true)
+  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(

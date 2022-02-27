@@ -32,8 +32,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   initialState as initialScrapingState,
-  SCRAPING_FEATURE_KEY
-} from '@app/comic-metadata/reducers/scraping.reducer';
+  METADATA_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata.reducer';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   initialState as initialLibraryState,
@@ -43,7 +43,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
-import { loadScrapingVolumes } from '@app/comic-metadata/actions/scraping.actions';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
@@ -56,7 +56,7 @@ describe('ScrapingPageComponent', () => {
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
-    [SCRAPING_FEATURE_KEY]: { ...initialScrapingState }
+    [METADATA_FEATURE_KEY]: { ...initialScrapingState }
   };
 
   let component: ScrapingPageComponent;
@@ -137,7 +137,7 @@ describe('ScrapingPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadScrapingVolumes({
+        loadVolumeMetadata({
           metadataSource: METADATA_SOURCE,
           series: COMIC.series,
           maximumRecords: MAXIMUM_RECORDS,

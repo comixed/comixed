@@ -375,7 +375,7 @@
     <module>comixed-messaging</module>
     <module>comixed-services</module>
     <module>comixed-batch</module>
-    <module>comixed-scrapers</module>
+    <module>comixed-metadata</module>
     <module>comixed-plugins</module>
     <module>comixed-auth</module>
     <module>comixed-auditlog</module>

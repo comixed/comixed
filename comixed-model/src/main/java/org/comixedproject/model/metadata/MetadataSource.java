@@ -78,6 +78,10 @@ public class MetadataSource {
   @Getter
   private Set<MetadataSourceProperty> properties = new HashSet<>();
 
+  @OneToMany(mappedBy = "metadataSource", orphanRemoval = true, fetch = FetchType.LAZY)
+  @Getter
+  private Set<MetadataAuditLogEntry> metadataAuditLogEntries = new HashSet<>();
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;

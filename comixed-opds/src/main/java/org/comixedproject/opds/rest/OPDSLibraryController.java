@@ -21,7 +21,7 @@ package org.comixedproject.opds.rest;
 import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.opds.model.OPDSLink;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeedContent;
@@ -49,7 +49,7 @@ public class OPDSLibraryController {
    * @return the feed
    */
   @GetMapping(value = "/opds", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint(logResponse = true)
+  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getRootFeed() {
@@ -76,7 +76,7 @@ public class OPDSLibraryController {
    * @return the feed
    */
   @GetMapping(value = "/opds/library", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableEndpoint(logResponse = true)
+  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getLibraryFeed() {
