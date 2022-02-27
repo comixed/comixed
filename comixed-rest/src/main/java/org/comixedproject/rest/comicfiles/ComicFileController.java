@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.batch.comicbooks.AddComicsConfiguration;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.model.net.GetAllComicsUnderRequest;
@@ -83,7 +83,7 @@ public class ComicFileController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ComicFileList.class)
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       logResponse = true,
       responseView = View.ComicDetailsView.class)
@@ -107,7 +107,7 @@ public class ComicFileController {
    * @return the image content, or null
    */
   @GetMapping(value = "/api/files/import/cover")
-  @AuditableEndpoint
+  @AuditableRestEndpoint
   public byte[] getImportFileCover(@RequestParam("filename") String filename) {
     // for some reason, during development, this value ALWAYS had a trailing
     // space...
@@ -148,7 +148,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint(logRequest = true)
+  @AuditableRestEndpoint(logRequest = true)
   public void importComicFiles(@RequestBody() ImportComicFilesRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -175,7 +175,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint(logRequest = true, logResponse = true)
+  @AuditableRestEndpoint(logRequest = true, logResponse = true)
   public FilenameMetadataResponse scrapeFilename(
       @RequestBody() final FilenameMetadataRequest request) {
     final String filename = FilenameUtils.getBaseName(request.getFilename());

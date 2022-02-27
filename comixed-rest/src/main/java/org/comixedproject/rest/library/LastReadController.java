@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
 import org.comixedproject.model.net.library.library.SetComicsReadRequest;
@@ -56,7 +56,7 @@ public class LastReadController {
    */
   @GetMapping(value = "/api/library/read", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LastReadList.class)
-  @AuditableEndpoint(logResponse = true, responseView = View.LastReadList.class)
+  @AuditableRestEndpoint(logResponse = true, responseView = View.LastReadList.class)
   public GetLastReadDatesResponse getLastReadEntries(
       final Principal principal, @RequestParam("lastId") final long lastId)
       throws LastReadException {
@@ -83,7 +83,7 @@ public class LastReadController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LastReadList.class)
-  @AuditableEndpoint(logRequest = true)
+  @AuditableRestEndpoint(logRequest = true)
   public void setComicsReadState(
       final Principal principal, @RequestBody() SetComicsReadRequest request)
       throws LastReadException {

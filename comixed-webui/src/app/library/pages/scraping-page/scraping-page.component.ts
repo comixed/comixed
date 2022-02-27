@@ -31,14 +31,14 @@ import {
 } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { ScrapeEvent } from '@app/comic-metadata/models/event/scrape-event';
-import { loadScrapingVolumes } from '@app/comic-metadata/actions/scraping.actions';
-import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
+import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
+import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
   selectChosenMetadataSource,
-  selectScrapingState,
-  selectScrapingVolumes
-} from '@app/comic-metadata/selectors/scraping.selectors';
+  selectMetadataState,
+  selectVolumeMetadata
+} from '@app/comic-metadata/selectors/metadata.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
@@ -63,7 +63,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   maximumRecords = 0;
   scrapingStateSubscription: Subscription;
   scrapingVolumeSubscription: Subscription;
-  scrapingVolumes: ScrapingVolume[] = [];
+  scrapingVolumes: VolumeMetadata[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
 
   constructor(
@@ -102,12 +102,12 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       .select(selectChosenMetadataSource)
       .subscribe(metadataSource => (this.metadataSource = metadataSource));
     this.scrapingStateSubscription = this.store
-      .select(selectScrapingState)
+      .select(selectMetadataState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
       });
     this.scrapingVolumeSubscription = this.store
-      .select(selectScrapingVolumes)
+      .select(selectVolumeMetadata)
       .subscribe(volumes => (this.scrapingVolumes = volumes));
   }
 
@@ -127,14 +127,14 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.currentComic = comic;
   }
 
-  onScrape(event: ScrapeEvent): void {
+  onScrape(event: MetadataEvent): void {
     this.logger.trace('Storing comic details');
     this.currentSeries = event.series;
     this.currentVolume = event.volume;
     this.currentIssueNumber = event.issueNumber;
     this.logger.trace('Fetching scraping volumes:', event);
     this.store.dispatch(
-      loadScrapingVolumes({
+      loadVolumeMetadata({
         metadataSource: this.metadataSource,
         series: event.series,
         maximumRecords: event.maximumRecords,

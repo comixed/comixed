@@ -19,7 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ScrapingIssueDetailComponent } from './scraping-issue-detail.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { ScrapingIssueTitlePipe } from '@app/comic-metadata/pipes/scraping-issue-title.pipe';
+import { IssueMetadataTitlePipe } from '@app/comic-metadata/pipes/issue-metadata-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -50,7 +50,7 @@ describe('ScrapingIssueDetailComponent', () => {
         declarations: [
           ScrapingIssueDetailComponent,
           ComicPageComponent,
-          ScrapingIssueTitlePipe
+          IssueMetadataTitlePipe
         ],
         imports: [
           LoggerModule.forRoot(),

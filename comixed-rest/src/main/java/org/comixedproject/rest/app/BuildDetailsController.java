@@ -21,7 +21,7 @@ package org.comixedproject.rest.app;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.text.ParseException;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.app.BuildDetails;
 import org.comixedproject.service.app.DetailsService;
 import org.comixedproject.views.View;
@@ -47,7 +47,7 @@ public class BuildDetailsController {
    * @throws ParseException if an error occurs
    */
   @GetMapping(value = "/api/build-details", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint
+  @AuditableRestEndpoint
   @JsonView(View.BuildDetails.class)
   public BuildDetails getBuildDetails() throws ParseException {
     log.info("Getting application build details");

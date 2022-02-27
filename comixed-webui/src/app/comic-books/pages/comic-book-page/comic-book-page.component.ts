@@ -38,15 +38,15 @@ import {
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import {
-  loadScrapingVolumes,
-  resetScraping
-} from '@app/comic-metadata/actions/scraping.actions';
+  loadVolumeMetadata,
+  resetMetadataState
+} from '@app/comic-metadata/actions/metadata.actions';
 import {
   selectChosenMetadataSource,
-  selectScrapingState,
-  selectScrapingVolumes
-} from '@app/comic-metadata/selectors/scraping.selectors';
-import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
+  selectMetadataState,
+  selectVolumeMetadata
+} from '@app/comic-metadata/selectors/metadata.selectors';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
@@ -100,7 +100,7 @@ export class ComicBookPageComponent
   volumesSubscription: Subscription;
   skipCache = false;
   maximumRecords = 0;
-  volumes: ScrapingVolume[] = [];
+  volumes: VolumeMetadata[] = [];
   scrapingSeriesName = '';
   scrapingVolume = '';
   scrapingIssueNumber = '';
@@ -146,7 +146,7 @@ export class ComicBookPageComponent
       }
     );
     this.scrapingStateSubscription = this.store
-      .select(selectScrapingState)
+      .select(selectMetadataState)
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
       );
@@ -177,7 +177,7 @@ export class ComicBookPageComponent
       );
     });
     this.volumesSubscription = this.store
-      .select(selectScrapingVolumes)
+      .select(selectVolumeMetadata)
       .subscribe(volumes => (this.volumes = volumes));
     this.lastReadSubscription = this.store
       .select(selectLastReadEntries)
@@ -225,7 +225,7 @@ export class ComicBookPageComponent
   }
 
   ngAfterViewInit(): void {
-    this.store.dispatch(resetScraping());
+    this.store.dispatch(resetMetadataState());
   }
 
   onTabChange(index: number): void {
@@ -251,7 +251,7 @@ export class ComicBookPageComponent
     this.scrapingVolume = volume;
     this.scrapingIssueNumber = issueNumber;
     this.store.dispatch(
-      loadScrapingVolumes({
+      loadVolumeMetadata({
         metadataSource: this.metadataSource,
         series,
         maximumRecords,

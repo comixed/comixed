@@ -9,5 +9,6 @@
   <include file="/db/migrations/1.0.0/001_428_add_metadata_sources.xml"/>
   <include file="/db/migrations/1.0.0/002_1152_add_metadata_source_to_comic.xml"/>
   <include file="/db/migrations/1.0.0/003_1145_remove_comic_deleted_date.xml"/>
+  <include file="/db/migrations/1.0.0/004_439_add_metadata_audit_log.xml"/>
 
 </databaseChangeLog>

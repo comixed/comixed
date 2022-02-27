@@ -29,7 +29,7 @@ import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
-import { ScrapeEvent } from '@app/comic-metadata/models/event/scrape-event';
+import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
@@ -50,7 +50,7 @@ import { filter } from 'rxjs/operators';
 import {
   scrapeComic,
   setChosenMetadataSource
-} from '@app/comic-metadata/actions/scraping.actions';
+} from '@app/comic-metadata/actions/metadata.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
@@ -69,7 +69,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
 
   @Input() multimode = false;
 
-  @Output() scrape = new EventEmitter<ScrapeEvent>();
+  @Output() scrape = new EventEmitter<MetadataEvent>();
   readonly maximumRecordsOptions = [
     { value: 0, label: 'scraping.label.all-records' },
     { value: 100, label: 'scraping.label.100-records' },
