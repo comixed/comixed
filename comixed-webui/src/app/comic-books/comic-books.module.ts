@@ -46,11 +46,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { ScrapingIssueTitlePipe } from '@app/comic-metadata/pipes/scraping-issue-title.pipe';
+import { IssueMetadataTitlePipe } from '@app/comic-metadata/pipes/issue-metadata-title.pipe';
 import {
   reducer as scrapingReducer,
-  SCRAPING_FEATURE_KEY
-} from '@app/comic-metadata/reducers/scraping.reducer';
+  METADATA_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata.reducer';
 import {
   COMIC_LIST_FEATURE_KEY,
   reducer as comicListReducer
@@ -59,7 +59,7 @@ import {
   COMIC_FEATURE_KEY,
   reducer as comicReducer
 } from '@app/comic-books/reducers/comic.reducer';
-import { ScrapingEffects } from '@app/comic-metadata/effects/scraping.effects';
+import { MetadataEffects } from '@app/comic-metadata/effects/metadata.effects';
 import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
 import { ComicEffects } from '@app/comic-books/effects/comic.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -100,14 +100,14 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
     ComicTitlePipe,
-    ScrapingIssueTitlePipe,
+    IssueMetadataTitlePipe,
     ComicvineIssueLinkPipe,
     PageHashUrlPipe
   ],
   imports: [
     CommonModule,
     ComicBooksRouting,
-    StoreModule.forFeature(SCRAPING_FEATURE_KEY, scrapingReducer),
+    StoreModule.forFeature(METADATA_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
     StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
     StoreModule.forFeature(IMPRINT_LIST_FEATURE_KEY, imprintListReducer),
@@ -116,7 +116,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       markComicsDeletedReducer
     ),
     EffectsModule.forFeature([
-      ScrapingEffects,
+      MetadataEffects,
       ComicListEffects,
       ComicEffects,
       ImprintListEffects,

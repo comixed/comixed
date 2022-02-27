@@ -21,7 +21,7 @@ package org.comixedproject.rest.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
 import org.comixedproject.model.net.user.UpdateCurrentUserRequest;
 import org.comixedproject.model.user.ComiXedUser;
@@ -51,7 +51,7 @@ public class UserController {
    * @throws ComiXedUserException if no such user exists
    */
   @GetMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint(logResponse = true, responseView = View.UserDetailsView.class)
+  @AuditableRestEndpoint(logResponse = true, responseView = View.UserDetailsView.class)
   @PreAuthorize("hasAnyRole('READER','ADMIN')")
   public ComiXedUser loadCurrentUser(final Principal principal) throws ComiXedUserException {
     log.info("Loading current user: {}", principal.getName());
@@ -72,7 +72,7 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       logResponse = true,
       responseView = View.UserDetailsView.class)
@@ -100,7 +100,7 @@ public class UserController {
       value = "/api/user/preferences/{name}",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       logResponse = true,
       responseView = View.UserDetailsView.class)
@@ -126,7 +126,7 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.UserDetailsView.class)
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       logResponse = true,
       responseView = View.UserDetailsView.class)

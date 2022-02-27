@@ -21,7 +21,7 @@ package org.comixedproject.rest.core;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.plugins.PluginException;
 import org.comixedproject.plugins.PluginManager;
 import org.comixedproject.plugins.model.PluginDescriptor;
@@ -52,7 +52,7 @@ public class PluginsController {
    */
   @GetMapping(value = "/plugins", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PluginList.class)
-  @AuditableEndpoint(logResponse = true, responseView = View.PluginList.class)
+  @AuditableRestEndpoint(logResponse = true, responseView = View.PluginList.class)
   public List<PluginDescriptor> getList() {
     log.info("Fetching the list of plugins");
     return this.pluginManager.getPluginList();
@@ -70,7 +70,7 @@ public class PluginsController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PluginList.class)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableEndpoint(logResponse = true, responseView = View.PluginList.class)
+  @AuditableRestEndpoint(logResponse = true, responseView = View.PluginList.class)
   public List<PluginDescriptor> reloadPlugins() throws PluginException {
     log.info("Reloading the list of plugins");
     this.pluginManager.loadPlugins();

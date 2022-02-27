@@ -51,7 +51,7 @@ import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-meta
 import {
   scrapeComic,
   setChosenMetadataSource
-} from '@app/comic-metadata/actions/scraping.actions';
+} from '@app/comic-metadata/actions/metadata.actions';
 import {
   Confirmation,
   ConfirmationService

@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
-import { ScrapingIssue } from '@app/comic-metadata/models/scraping-issue';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
+import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export const METADATA_SOURCE_1: MetadataSource = {
@@ -27,7 +27,7 @@ export const METADATA_SOURCE_1: MetadataSource = {
   properties: []
 };
 
-export const SCRAPING_VOLUME_1: ScrapingVolume = {
+export const SCRAPING_VOLUME_1: VolumeMetadata = {
   id: 1,
   name: 'Scraping Series 1',
   publisher: 'Publisher 1',
@@ -36,7 +36,7 @@ export const SCRAPING_VOLUME_1: ScrapingVolume = {
   issueCount: 17,
   metadataSource: METADATA_SOURCE_1
 };
-export const SCRAPING_VOLUME_2: ScrapingVolume = {
+export const SCRAPING_VOLUME_2: VolumeMetadata = {
   id: 2,
   name: 'Scraping Series 2',
   publisher: 'Publisher 1',
@@ -45,7 +45,7 @@ export const SCRAPING_VOLUME_2: ScrapingVolume = {
   issueCount: 17,
   metadataSource: METADATA_SOURCE_1
 };
-export const SCRAPING_VOLUME_3: ScrapingVolume = {
+export const SCRAPING_VOLUME_3: VolumeMetadata = {
   id: 3,
   name: 'Scraping Series 3',
   publisher: 'Publisher 1',
@@ -54,7 +54,7 @@ export const SCRAPING_VOLUME_3: ScrapingVolume = {
   issueCount: 17,
   metadataSource: METADATA_SOURCE_1
 };
-export const SCRAPING_ISSUE_1: ScrapingIssue = {
+export const SCRAPING_ISSUE_1: IssueMetadata = {
   id: 1,
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),

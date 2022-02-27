@@ -24,7 +24,7 @@ import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.comixedproject.auditlog.AuditableEndpoint;
+import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
 import org.comixedproject.model.net.DownloadDocument;
@@ -64,7 +64,7 @@ public class ReadingListController {
   @GetMapping(value = "/api/lists/reading", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingLists.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint(logResponse = true, responseView = View.ReadingLists.class)
+  @AuditableRestEndpoint(logResponse = true, responseView = View.ReadingLists.class)
   public List<ReadingList> loadReadingListsForUser(Principal principal)
       throws ReadingListException {
     final String email = principal.getName();
@@ -86,7 +86,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       requestView = View.ReadingListDetail.class,
       logResponse = true,
@@ -118,7 +118,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       requestView = View.ReadingListDetail.class,
       logResponse = true,
@@ -153,7 +153,7 @@ public class ReadingListController {
   @GetMapping(value = "/api/lists/reading/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint(logResponse = true, responseView = View.ReadingListDetail.class)
+  @AuditableRestEndpoint(logResponse = true, responseView = View.ReadingListDetail.class)
   public ReadingList loadReadingList(final Principal principal, @PathVariable("id") final long id)
       throws ReadingListException {
     final String email = principal.getName();
@@ -176,7 +176,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       logResponse = true,
       responseView = View.ReadingListDetail.class)
@@ -212,7 +212,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint(
+  @AuditableRestEndpoint(
       logRequest = true,
       logResponse = true,
       responseView = View.ReadingListDetail.class)
@@ -245,7 +245,7 @@ public class ReadingListController {
       value = "/api/lists/reading/{id}/download",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @AuditableEndpoint
+  @AuditableRestEndpoint
   public DownloadDocument downloadReadingList(
       final Principal principal, @PathVariable("id") final long readingListId)
       throws ReadingListException {
@@ -263,7 +263,7 @@ public class ReadingListController {
    * @throws ReadingListException if there is an error creating the reading list
    */
   @PostMapping(value = "/api/lists/reading/upload")
-  @AuditableEndpoint(logRequest = true)
+  @AuditableRestEndpoint(logRequest = true)
   @PreAuthorize("hasRole('READER')")
   public void uploadReadingList(final Principal principal, final MultipartFile file)
       throws IOException, ReadingListException {
@@ -281,7 +281,7 @@ public class ReadingListController {
    * @throws ReadingListException if an error occurs
    */
   @PostMapping(value = "/api/lists/reading/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableEndpoint(logRequest = true)
+  @AuditableRestEndpoint(logRequest = true)
   @PreAuthorize("hasRole('READER')")
   public void deleteReadingLists(
       final Principal principal, @RequestBody() final DeleteReadingListsRequest request)

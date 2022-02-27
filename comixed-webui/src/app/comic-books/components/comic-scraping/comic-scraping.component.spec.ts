@@ -30,8 +30,8 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
-  SCRAPING_FEATURE_KEY
-} from '@app/comic-metadata/reducers/scraping.reducer';
+  METADATA_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata.reducer';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -40,12 +40,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
-import { ScrapingVolume } from '@app/comic-metadata/models/scraping-volume';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import {
-  loadScrapingIssue,
-  resetScraping,
+  loadIssueMetadata,
+  resetMetadataState,
   scrapeComic
-} from '@app/comic-metadata/actions/scraping.actions';
+} from '@app/comic-metadata/actions/metadata.actions';
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -73,7 +73,7 @@ describe('ComicScrapingComponent', () => {
   const ISSUE_NUMBER = '27';
   const COMIC = COMIC_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
-  const initialState = { [SCRAPING_FEATURE_KEY]: { ...initialScrapingState } };
+  const initialState = { [METADATA_FEATURE_KEY]: { ...initialScrapingState } };
 
   let component: ComicScrapingComponent;
   let fixture: ComponentFixture<ComicScrapingComponent>;
@@ -204,7 +204,7 @@ describe('ComicScrapingComponent', () => {
     const ELEMENT = {
       item: SCRAPING_VOLUME,
       sortOrder: SORT_ORDER
-    } as SortableListItem<ScrapingVolume>;
+    } as SortableListItem<VolumeMetadata>;
 
     it('uses the sort value for an entry', () => {
       expect(
@@ -245,7 +245,7 @@ describe('ComicScrapingComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        loadScrapingIssue({
+        loadIssueMetadata({
           metadataSource: METADATA_SOURCE,
           volumeId: SCRAPING_VOLUME.id,
           issueNumber: ISSUE_NUMBER,
@@ -312,7 +312,7 @@ describe('ComicScrapingComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(resetScraping());
+      expect(store.dispatch).toHaveBeenCalledWith(resetMetadataState());
     });
   });
 
@@ -320,7 +320,7 @@ describe('ComicScrapingComponent', () => {
     const VOLUME = {
       item: SCRAPING_VOLUME,
       sortOrder: 1
-    } as SortableListItem<ScrapingVolume>;
+    } as SortableListItem<VolumeMetadata>;
 
     it('can handle null values', () => {
       expect(
