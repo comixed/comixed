@@ -59,7 +59,6 @@ export class ServerRuntimeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.trace('Loading server health');
-    console.log('*** GOT HERE!');
     this.store.dispatch(loadServerHealth());
   }
 

@@ -24,7 +24,7 @@ export const METADATA_SOURCE_1: MetadataSource = {
   id: 1,
   beanName: 'farkleVineScrapingAdaptor',
   name: 'Farkle Comic Data',
-  properties: []
+  properties: [{ name: 'property.name', value: 'property.value' }]
 };
 
 export const SCRAPING_VOLUME_1: VolumeMetadata = {

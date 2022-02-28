@@ -1,59 +1,95 @@
 {
-  "metadata": {
+  "metadata-source": {
+    "delete-source": {
+      "confirm-message": "Are you sure you want to delete the metadata source {name}?",
+      "confirm-title": "Delete Metadata Source",
+      "effect-failure": "Failed to delete metadata source.",
+      "effect-success": "Deleted metadata source: {name}"
+    },
+    "label": {
+      "bean-name": "Bean Name",
+      "property-name": "Property Name",
+      "property-value": "Property Value",
+      "source-name": "Source Name"
+    },
+    "load-source": {
+      "effect-failure": "Failed to load metadata source."
+    },
     "load-sources": {
       "effect-failure": "Failed to load metadata sources."
+    },
+    "save-source": {
+      "confirm-message": "Are you sure you want to save the metadata source {name}?",
+      "confirm-title": "Save Metadata Source Changes",
+      "effect-failure": "Failed to save metadata source.",
+      "effect-success": "Saved metadata source: {name}"
+    },
+    "tooltip": {
+      "create-source": "Create a new metadata source.",
+      "delete-property": "Delete property {name}.",
+      "delete-source": "Delete this metadata source.",
+      "reset-source": "Undo changes to the metadata source.",
+      "save-source": "Save the current metadata source."
+    }
+  },
+  "metadata-source-list": {
+    "label": {
+      "actions": "Actions",
+      "bean-name": "Bean Name",
+      "name": "Source Name",
+      "property-count": "# of Properties"
     }
   },
   "scraping": {
     "current-comic": {
-      "title": "Actualmente cómico ({count} Total)"
+      "title": "Currently Comic ({count} Total)"
     },
     "label": {
-      "100-records": "100 registros",
-      "1000-records": "1000 registros",
-      "all-records": "Todos los registros",
-      "issue-count": "# ediciónes",
-      "matchability": "Partido",
-      "publisher": "Editor",
-      "series-name": "Serie",
-      "start-year": "Año de inicio"
+      "100-records": "100 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records",
+      "issue-count": "# Issues",
+      "matchability": "Match",
+      "publisher": "Publisher",
+      "series-name": "Series",
+      "start-year": "Start Year"
     },
     "load-scraping-volumes": {
-      "effect-failure": "No se pudo cargar ningún volumen..."
+      "effect-failure": "Failed to load any volumes..."
     },
     "load-scraping-issue": {
-      "effect-failure": "No se pudo cargar la edición..."
+      "effect-failure": "Failed to load issue..."
     },
-    "page-title": "Raspado de biblioteca",
+    "page-title": "Library Scraping",
     "scrape-comic": {
-      "effect-success": "¡Cómic raspado con éxito!",
-      "effect-failure": "No pudo raspar el cómic."
+      "effect-success": "Comic successfully scraped!",
+      "effect-failure": "Failed to scrape comic."
     },
-    "scrape-comic-confirmation-title": "Reemplazar datos de cómics",
-    "scrape-comic-confirmation-message": "¿Estás seguro de que quieres reemplazar los detalles de este cómic?",
-    "scraping-issue-detail-subtitle": "Fecha de portada: {date}",
+    "scrape-comic-confirmation-title": "Replace Comic Data",
+    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
+    "scraping-issue-detail-subtitle": "Cover Date: {date}",
     "start-scraping": {
-      "confirmation-title": "Raspar cómics",
-      "confirmation-message": "¿Está seguro de que desea reemplazar los detalles de los/las {count, plural, =1{comic} other{# comics}} cómics seleccionados?"
+      "confirmation-title": "Scrape Comics",
+      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
     },
     "text": {
-      "exact-match": "Exacta",
-      "near-match": "Cerca",
+      "exact-match": "Exact",
+      "near-match": "Near",
       "no-match": "No"
     },
     "tooltip": {
-      "cancel-scraping": "Deja de raspar cómics.",
-      "reject-scraping-issue": "Rechazar este problema.",
-      "select-scraping-issue": "Seleccione este problema.",
-      "show-comic-details": "Mostrar detalles",
-      "skip-cache": "Raspado será {enabled, select, true{skip} other{use}} la caché de raspado.",
+      "cancel-scraping": "Stop scraping comics.",
+      "reject-scraping-issue": "Reject this issue.",
+      "select-scraping-issue": "Select this issue.",
+      "show-comic-details": "Show Details",
+      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
       "use-comicvine-id": "Scrape using the ComicVine id."
     },
     "volume-list": {
-      "issue-count-header": "# de ediciones",
-      "name-header": "Nombre de la serie",
-      "publisher-header": "Editor",
-      "start-year-header": "Año de inicio"
+      "issue-count-header": "# Of Issues",
+      "name-header": "Series Name",
+      "publisher-header": "Publisher",
+      "start-year-header": "Start Year"
     }
   }
 }

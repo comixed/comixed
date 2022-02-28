@@ -40,7 +40,7 @@ export class MetadataSourceListEffects {
       ofType(MetadataSourceListActions.loadMetadataSources),
       tap(() => this.logger.trace('Loading metadata source list')),
       switchMap(() =>
-        this.metadataSourceService.loadMetadataSourceList().pipe(
+        this.metadataSourceService.loadAll().pipe(
           tap(response => this.logger.debug('Response received:', response)),
           map((response: MetadataSource[]) =>
             metadataSourcesLoaded({ sources: response })
@@ -49,7 +49,7 @@ export class MetadataSourceListEffects {
             this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
-                'metadata.load-sources.effect-failure'
+                'metadata-sourceload-sources.effect-failure'
               )
             );
             return of(loadMetadataSourcesFailed());
