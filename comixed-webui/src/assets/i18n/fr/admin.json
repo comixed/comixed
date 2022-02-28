@@ -18,6 +18,7 @@
     "tab": {
       "comicvine": "Paramètres de ComicVine",
       "library": "Bibliothèque",
+      "metadata-sources": "Metadata Sources",
       "server-runtime": "Temps d'exécution",
       "scraping-rules": "Règles d'extraction"
     },

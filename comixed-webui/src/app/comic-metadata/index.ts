@@ -20,15 +20,20 @@ import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  reducer as scrapingReducer,
   METADATA_FEATURE_KEY,
-  MetadataState
+  MetadataState,
+  reducer as scrapingReducer
 } from '@app/comic-metadata/reducers/metadata.reducer';
 import {
   METADATA_SOURCE_LIST_FEATURE_KEY,
   MetadataSourceListState,
   reducer as metadataSourceListReducer
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
+import {
+  METADATA_SOURCE_FEATURE_KEY,
+  MetadataSourceState,
+  reducer as metadataSourceReducer
+} from '@app/comic-metadata/reducers/metadata-source.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -40,6 +45,7 @@ export interface ComicMetadataModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [METADATA_FEATURE_KEY]: MetadataState;
   [METADATA_SOURCE_LIST_FEATURE_KEY]: MetadataSourceListState;
+  [METADATA_SOURCE_FEATURE_KEY]: MetadataSourceState;
 }
 
 export type ModuleState = ComicMetadataModuleState;
@@ -47,5 +53,6 @@ export type ModuleState = ComicMetadataModuleState;
 export const reducers: ActionReducerMap<ComicMetadataModuleState> = {
   router: routerReducer,
   [METADATA_FEATURE_KEY]: scrapingReducer,
-  [METADATA_SOURCE_LIST_FEATURE_KEY]: metadataSourceListReducer
+  [METADATA_SOURCE_LIST_FEATURE_KEY]: metadataSourceListReducer,
+  [METADATA_SOURCE_FEATURE_KEY]: metadataSourceReducer
 };

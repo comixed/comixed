@@ -66,13 +66,11 @@ public class MetadataSourceProperty {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final MetadataSourceProperty that = (MetadataSourceProperty) o;
-    return source.equals(that.source)
-        && name.equals(that.name)
-        && Objects.equals(value, that.value);
+    return name.equals(that.name) && value.equals(that.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(source, name, value);
+    return Objects.hash(name, value);
   }
 }

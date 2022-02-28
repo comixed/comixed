@@ -25,10 +25,18 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { interpolate } from '@app/core';
-import { LOAD_METADATA_SOURCE_LIST_URL } from '@app/comic-metadata/comic-metadata.constants';
+import {
+  CREATE_METADATA_SOURCE_URL,
+  DELETE_METADATA_SOURCE_URL,
+  LOAD_METADATA_SOURCE_LIST_URL,
+  LOAD_METADATA_SOURCE_URL,
+  UPDATE_METADATA_SOURCE_URL
+} from '@app/comic-metadata/comic-metadata.constants';
+import { HttpResponse } from '@angular/common/http';
 
 describe('MetadataSourceService', () => {
-  const SOURCES = [METADATA_SOURCE_1];
+  const METADATA_SOURCE = METADATA_SOURCE_1;
+  const METADATA_SOURCES = [METADATA_SOURCE_1];
 
   let service: MetadataSourceService;
   let httpMock: HttpTestingController;
@@ -48,11 +56,68 @@ describe('MetadataSourceService', () => {
 
   it('can load the list of metadata sources', () => {
     service
-      .loadMetadataSourceList()
-      .subscribe(response => expect(response).toEqual(SOURCES));
+      .loadAll()
+      .subscribe(response => expect(response).toEqual(METADATA_SOURCES));
 
     const req = httpMock.expectOne(interpolate(LOAD_METADATA_SOURCE_LIST_URL));
     expect(req.request.method).toEqual('GET');
-    req.flush(SOURCES);
+    req.flush(METADATA_SOURCES);
+  });
+
+  it('can load a metadata source', () => {
+    service
+      .loadOne({ id: METADATA_SOURCE.id })
+      .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_METADATA_SOURCE_URL, { id: METADATA_SOURCE.id })
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(METADATA_SOURCE);
+  });
+
+  describe('saving a metadata source', () => {
+    it('can create a new source', () => {
+      service
+        .save({
+          source: {
+            ...METADATA_SOURCE,
+            id: null
+          }
+        })
+        .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
+
+      const req = httpMock.expectOne(interpolate(CREATE_METADATA_SOURCE_URL));
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({ ...METADATA_SOURCE, id: null });
+      req.flush(METADATA_SOURCE);
+    });
+
+    it('can update an existing source', () => {
+      service
+        .save({
+          source: METADATA_SOURCE
+        })
+        .subscribe(response => expect(response).toEqual(METADATA_SOURCE));
+
+      const req = httpMock.expectOne(
+        interpolate(UPDATE_METADATA_SOURCE_URL, { id: METADATA_SOURCE.id })
+      );
+      expect(req.request.method).toEqual('PUT');
+      expect(req.request.body).toEqual(METADATA_SOURCE);
+      req.flush(METADATA_SOURCE);
+    });
+  });
+
+  it('can delete a metadata source', () => {
+    service
+      .delete({ source: METADATA_SOURCE })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(DELETE_METADATA_SOURCE_URL, { id: METADATA_SOURCE.id })
+    );
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(new HttpResponse({ status: 200 }));
   });
 });

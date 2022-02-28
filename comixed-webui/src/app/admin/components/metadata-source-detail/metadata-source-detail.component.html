@@ -1,0 +1,124 @@
+<form [formGroup]="sourceForm">
+  <mat-form-field class="cx-width-100" appearance="fill" required>
+    <mat-label>
+      {{ "metadata-source.label.source-name" | translate }}
+    </mat-label>
+    <input
+      id="source-name-input"
+      matInput
+      class="cx-width-100"
+      type="text"
+      formControlName="name"
+    />
+    <mat-error>
+      <span *ngIf="controls.name.errors?.required">
+        {{ "validation.field-required" | translate }}
+      </span>
+      <span *ngIf="!!controls.name.errors?.minlength">
+        {{
+          "validation.value-too-short"
+            | translate
+              : {
+                  length: controls.name.errors.minlength.requiredLength
+                }
+        }}
+      </span>
+      <span *ngIf="!!controls.name.errors?.maxlength">
+        {{
+          "validation.value-too-long"
+            | translate
+              : {
+                  length: controls.name.errors.maxlength.requiredLength
+                }
+        }}
+      </span>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="cx-width-100" appearance="fill" required>
+    <mat-label>
+      {{ "metadata-source.label.bean-name" | translate }}
+    </mat-label>
+    <input
+      id="bean-name-input"
+      matInput
+      class="cx-width-100"
+      type="text"
+      formControlName="beanName"
+    />
+    <mat-error>
+      <span *ngIf="controls.beanName.errors?.required">
+        {{ "validation.field-required" | translate }}
+      </span>
+      <span *ngIf="!!controls.beanName.errors?.minlength">
+        {{
+          "validation.value-too-short"
+            | translate
+              : {
+                  length: controls.beanName.errors.minlength.requiredLength
+                }
+        }}
+      </span>
+      <span *ngIf="!!controls.beanName.errors?.maxlength">
+        {{
+          "validation.value-too-long"
+            | translate
+              : {
+                  length: controls.beanName.errors.maxlength.requiredLength
+                }
+        }}
+      </span>
+    </mat-error>
+  </mat-form-field>
+  <table class="table cx-width-100" formArrayName="properties">
+    <caption>Metadata source properties</caption>
+    <colgroup>
+      <col class="cx-width-25" />
+      <col class="cx-width-75" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>{{ "metadata-source.label.property-name" | translate }}</th>
+        <th>{{ "metadata-source.label.property-value" | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let sourceProperty of properties.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <td>
+          <mat-form-field class="cx-width-100" appearance="fill" required>
+            <mat-icon
+              matPrefix
+              color="warn"
+              [matTooltip]="
+                'metadata-source.tooltip.delete-property'
+                  | translate: { name: sourceProperty.value.propertyName }
+              "
+              (click)="onDeleteProperty(sourceProperty.value.propertyName)"
+            >
+              delete
+            </mat-icon>
+
+            <input
+              [id]="'property-name-' + i"
+              matInput
+              class="cx-width-100"
+              formControlName="propertyName"
+            />
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field class="cx-width-100" appearance="fill" required>
+            <input
+              [id]="'property-value-' + i"
+              matInput
+              class="cx-width-100"
+              formControlName="propertyValue"
+            />
+          </mat-form-field>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</form>

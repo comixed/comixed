@@ -22,13 +22,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.service.metadata.MetadataSourceException;
 import org.comixedproject.service.metadata.MetadataSourceService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>MetadataSourceController</code> provides endpoints for working with comic metadata sources.
@@ -51,5 +51,73 @@ public class MetadataSourceController {
   public List<MetadataSource> loadMetadataSources() {
     log.info("Loading metadata source list");
     return this.metadataSourceService.loadMetadataSources();
+  }
+
+  /**
+   * Creates a new metadata source.
+   *
+   * @param source the new source
+   * @return the saved source
+   * @throws MetadataSourceException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/metadata/sources",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.MetadataSourceDetail.class)
+  public MetadataSource create(@RequestBody() final MetadataSource source)
+      throws MetadataSourceException {
+    log.info("Saving new metadata source: {}", source.getName());
+    return this.metadataSourceService.create(source);
+  }
+
+  /**
+   * Loads an existing metadata source.
+   *
+   * @param id the record id
+   * @return the saved source
+   * @throws MetadataSourceException if an error occurs
+   */
+  @GetMapping(value = "/api/metadata/sources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.MetadataSourceDetail.class)
+  public MetadataSource getOne(@PathVariable("id") final Long id) throws MetadataSourceException {
+    log.info("Getting metadata source: id={}", id);
+    return this.metadataSourceService.getById(id);
+  }
+
+  /**
+   * Updates an existing metadata source.
+   *
+   * @param id the record id
+   * @param source the updated source
+   * @return the saved source
+   * @throws MetadataSourceException if an error occurs
+   */
+  @PutMapping(
+      value = "/api/metadata/sources/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @JsonView(View.MetadataSourceDetail.class)
+  public MetadataSource update(
+      @PathVariable("id") final Long id, @RequestBody() final MetadataSource source)
+      throws MetadataSourceException {
+    log.info("Updating metadata source: id={}", id);
+    return this.metadataSourceService.update(id, source);
+  }
+
+  /**
+   * Deletes the metadata source with the given record id.
+   *
+   * @param id the record id
+   * @throws MetadataSourceException if an error occurs
+   */
+  @DeleteMapping(value = "/api/metadata/sources/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public void delete(@PathVariable("id") final Long id) throws MetadataSourceException {
+    log.info("Deleting metadata source: id={}", id);
+    this.metadataSourceService.delete(id);
   }
 }

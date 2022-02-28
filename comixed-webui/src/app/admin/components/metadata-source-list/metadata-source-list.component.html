@@ -1,0 +1,47 @@
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "metadata-source-list.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.name }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="bean-name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "metadata-source-list.label.bean-name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.beanName }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="property-count">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "metadata-source-list.label.property-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.properties.length }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "metadata-source-list.label.actions" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry"></mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onSelectSource(row)"
+  ></mat-row>
+</mat-table>

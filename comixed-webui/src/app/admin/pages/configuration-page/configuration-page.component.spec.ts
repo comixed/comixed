@@ -57,6 +57,31 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { MatCardModule } from '@angular/material/card';
+import { MetadataSourcesViewComponent } from '@app/admin/components/metadata-sources-view/metadata-sources-view.component';
+import { ServerRuntimeComponent } from '@app/admin/components/server-runtime/server-runtime.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { FilenameScrapingRulesConfigurationComponent } from '@app/admin/components/filename-scraping-rules-configuration/filename-scraping-rules-configuration.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MetadataSourceListComponent } from '@app/admin/components/metadata-source-list/metadata-source-list.component';
+import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import {
+  initialState as initialServerRuntimeState,
+  SERVER_RUNTIME_FEATURE_KEY
+} from '@app/admin/reducers/server-runtime.reducer';
+import {
+  METADATA_SOURCE_LIST_FEATURE_KEY,
+  initialState as initialMetadataSourceListState
+} from '@app/comic-metadata/reducers/metadata-source-list.reducer';
+import {
+  METADATA_SOURCE_FEATURE_KEY,
+  initialState as initialMetadataSourceState
+} from '@app/comic-metadata/reducers/metadata-source.reducer';
+import {
+  FILENAME_SCRAPING_RULES_FEATURE_KEY,
+  initialState as initialFilenameScrapingRulesState
+} from '@app/admin/reducers/filename-scraping-rule-list.reducer';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -67,10 +92,14 @@ describe('ConfigurationPageComponent', () => {
     CONFIGURATION_OPTION_5
   ];
   const initialState = {
+    [SERVER_RUNTIME_FEATURE_KEY]: initialServerRuntimeState,
     [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: {
       ...initialConfigurationOptionListState,
       options: OPTIONS
-    }
+    },
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
+    [METADATA_SOURCE_FEATURE_KEY]: initialMetadataSourceState,
+    [FILENAME_SCRAPING_RULES_FEATURE_KEY]: initialFilenameScrapingRulesState
   };
 
   let component: ConfigurationPageComponent;
@@ -88,7 +117,12 @@ describe('ConfigurationPageComponent', () => {
         declarations: [
           ConfigurationPageComponent,
           LibraryConfigurationComponent,
-          ComicVineConfigurationComponent
+          ComicVineConfigurationComponent,
+          ServerRuntimeComponent,
+          FilenameScrapingRulesConfigurationComponent,
+          MetadataSourcesViewComponent,
+          MetadataSourceListComponent,
+          MetadataSourceDetailComponent
         ],
         imports: [
           NoopAnimationsModule,
@@ -104,7 +138,11 @@ describe('ConfigurationPageComponent', () => {
           MatToolbarModule,
           MatDialogModule,
           MatTabsModule,
-          MatCardModule
+          MatCardModule,
+          MatExpansionModule,
+          MatTableModule,
+          MatTooltipModule,
+          DragDropModule
         ],
         providers: [
           provideMockStore({ initialState }),
