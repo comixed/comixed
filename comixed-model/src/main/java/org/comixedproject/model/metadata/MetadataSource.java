@@ -72,15 +72,25 @@ public class MetadataSource {
   @NonNull
   private String name;
 
-  @OneToMany(mappedBy = "source", orphanRemoval = true, fetch = FetchType.EAGER)
+  @OneToMany(
+      mappedBy = "source",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.EAGER)
   @JsonProperty("properties")
   @JsonView(View.MetadataSourceList.class)
   @Getter
   private Set<MetadataSourceProperty> properties = new HashSet<>();
 
-  @OneToMany(mappedBy = "metadataSource", orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(
+      mappedBy = "metadataSource",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  @JsonProperty("auditLogEntries")
+  @JsonView(View.MetadataSourceDetail.class)
   @Getter
-  private Set<MetadataAuditLogEntry> metadataAuditLogEntries = new HashSet<>();
+  private Set<MetadataAuditLogEntry> auditLogEntries = new HashSet<>();
 
   @Override
   public boolean equals(final Object o) {

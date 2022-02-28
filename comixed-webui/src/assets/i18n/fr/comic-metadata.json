@@ -1,59 +1,95 @@
 {
-  "metadata": {
+  "metadata-source": {
+    "delete-source": {
+      "confirm-message": "Are you sure you want to delete the metadata source {name}?",
+      "confirm-title": "Delete Metadata Source",
+      "effect-failure": "Failed to delete metadata source.",
+      "effect-success": "Deleted metadata source: {name}"
+    },
+    "label": {
+      "bean-name": "Bean Name",
+      "property-name": "Property Name",
+      "property-value": "Property Value",
+      "source-name": "Source Name"
+    },
+    "load-source": {
+      "effect-failure": "Failed to load metadata source."
+    },
     "load-sources": {
       "effect-failure": "Failed to load metadata sources."
+    },
+    "save-source": {
+      "confirm-message": "Are you sure you want to save the metadata source {name}?",
+      "confirm-title": "Save Metadata Source Changes",
+      "effect-failure": "Failed to save metadata source.",
+      "effect-success": "Saved metadata source: {name}"
+    },
+    "tooltip": {
+      "create-source": "Create a new metadata source.",
+      "delete-property": "Delete property {name}.",
+      "delete-source": "Delete this metadata source.",
+      "reset-source": "Undo changes to the metadata source.",
+      "save-source": "Save the current metadata source."
+    }
+  },
+  "metadata-source-list": {
+    "label": {
+      "actions": "Actions",
+      "bean-name": "Bean Name",
+      "name": "Source Name",
+      "property-count": "# of Properties"
     }
   },
   "scraping": {
     "current-comic": {
-      "title": "Bande Dessinée actuelle ({count} Total)"
+      "title": "Currently Comic ({count} Total)"
     },
     "label": {
-      "100-records": "100 enregistrements",
-      "1000-records": "1000 enregistrements",
-      "all-records": "Toutes les enregistrements",
-      "issue-count": "Nombre de numéro",
-      "matchability": "Correspondance",
-      "publisher": "Éditeur",
-      "series-name": "Série",
-      "start-year": "Année de lancement"
+      "100-records": "100 Records",
+      "1000-records": "1000 Records",
+      "all-records": "All Records",
+      "issue-count": "# Issues",
+      "matchability": "Match",
+      "publisher": "Publisher",
+      "series-name": "Series",
+      "start-year": "Start Year"
     },
     "load-scraping-volumes": {
-      "effect-failure": "Impossible d'obtenir des volumes..."
+      "effect-failure": "Failed to load any volumes..."
     },
     "load-scraping-issue": {
-      "effect-failure": "Impossible d'obtenir ce numéro..."
+      "effect-failure": "Failed to load issue..."
     },
-    "page-title": "Récupération des détails",
+    "page-title": "Library Scraping",
     "scrape-comic": {
-      "effect-success": "Détails de la Bande Dessinée récupérés avec succès !",
-      "effect-failure": "Échec de la récupération des détails de la Bande Dessinée."
+      "effect-success": "Comic successfully scraped!",
+      "effect-failure": "Failed to scrape comic."
     },
-    "scrape-comic-confirmation-title": "Remplacer les données de la bande dessinée",
-    "scrape-comic-confirmation-message": "Êtes-vous sûr de vouloir remplacer les détails de cette bande dessinée ?",
-    "scraping-issue-detail-subtitle": "Date de couverture : {date}",
+    "scrape-comic-confirmation-title": "Replace Comic Data",
+    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
+    "scraping-issue-detail-subtitle": "Cover Date: {date}",
     "start-scraping": {
-      "confirmation-title": "Récupération des détails des Bandes Dessinées",
-      "confirmation-message": "Êtes-vous sûr de vouloir remplacer les détails {count, plural, =1{de la Bande Dessinée sélectionnée} other{des # Bandes Dessinées sélectionnées}} ?"
+      "confirmation-title": "Scrape Comics",
+      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
     },
     "text": {
-      "exact-match": "Exacte",
-      "near-match": "Proche",
-      "no-match": "Non"
+      "exact-match": "Exact",
+      "near-match": "Near",
+      "no-match": "No"
     },
     "tooltip": {
-      "cancel-scraping": "Arrêt de la récupération des détails des Bandes Dessinées.",
-      "reject-scraping-issue": "Rejeter ce numéro.",
-      "select-scraping-issue": "Sélectionner ce numéro.",
-      "show-comic-details": "Afficher les détails",
-      "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération.",
-      "use-comicvine-id": "Récupération des métadonnées en utilisant l'identifiant ComicVine."
+      "cancel-scraping": "Stop scraping comics.",
+      "reject-scraping-issue": "Reject this issue.",
+      "select-scraping-issue": "Select this issue.",
+      "show-comic-details": "Show Details",
+      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
+      "use-comicvine-id": "Scrape using the ComicVine id."
     },
     "volume-list": {
-      "issue-count-header": "# Numéros",
-      "name-header": "Nom de la série",
-      "publisher-header": "Éditeur",
-      "start-year-header": "Année de lancement"
+      "issue-count-header": "# Of Issues",
+      "name-header": "Series Name",
+      "publisher-header": "Publisher",
+      "start-year-header": "Start Year"
     }
   }
 }

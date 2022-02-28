@@ -18,12 +18,15 @@
 
 package org.comixedproject.repositories.metadata;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertNotNull;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
 import org.comixedproject.model.metadata.MetadataSource;
+import org.comixedproject.model.metadata.MetadataSourceProperty;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +50,10 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class MetadataSourceRepositoryTest {
+  private static final long TEST_EXISTING_ID = 1000L;
+  private static final String TEST_NEW_NAME = "The New Name";
+  private static final String TEST_NEW_BEAN_NAME = "The New Bean Name";
+
   @Autowired private MetadataSourceRepository repository;
 
   @Test
@@ -55,5 +62,42 @@ public class MetadataSourceRepositoryTest {
 
     assertNotNull(result);
     assertNotNull(result.get(0).getProperties());
+  }
+
+  @Test
+  public void testSaveAsUpdate() {
+    final MetadataSource source = this.repository.getById(TEST_EXISTING_ID);
+
+    assertNotNull(source);
+
+    final MetadataSourceProperty property = source.getProperties().stream().findFirst().get();
+    source.setName(TEST_NEW_NAME);
+    source.setBeanName(TEST_NEW_BEAN_NAME);
+    source.getProperties().clear();
+    source
+        .getProperties()
+        .add(new MetadataSourceProperty(source, property.getName(), property.getValue()));
+
+    this.repository.save(source);
+
+    final MetadataSource record = this.repository.getById(TEST_EXISTING_ID);
+
+    assertNotNull(record);
+
+    assertEquals(TEST_NEW_NAME, record.getName());
+    assertEquals(TEST_NEW_BEAN_NAME, record.getBeanName());
+  }
+
+  @Test
+  public void testDelete() {
+    final MetadataSource source = this.repository.getById(TEST_EXISTING_ID);
+
+    assertNotNull(source);
+
+    this.repository.delete(source);
+
+    final MetadataSource record = this.repository.getById(TEST_EXISTING_ID);
+
+    assertNull(record);
   }
 }

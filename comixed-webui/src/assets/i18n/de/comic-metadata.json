@@ -1,7 +1,43 @@
 {
-  "metadata": {
+  "metadata-source": {
+    "delete-source": {
+      "confirm-message": "Are you sure you want to delete the metadata source {name}?",
+      "confirm-title": "Delete Metadata Source",
+      "effect-failure": "Failed to delete metadata source.",
+      "effect-success": "Deleted metadata source: {name}"
+    },
+    "label": {
+      "bean-name": "Bean Name",
+      "property-name": "Property Name",
+      "property-value": "Property Value",
+      "source-name": "Source Name"
+    },
+    "load-source": {
+      "effect-failure": "Failed to load metadata source."
+    },
     "load-sources": {
       "effect-failure": "Failed to load metadata sources."
+    },
+    "save-source": {
+      "confirm-message": "Are you sure you want to save the metadata source {name}?",
+      "confirm-title": "Save Metadata Source Changes",
+      "effect-failure": "Failed to save metadata source.",
+      "effect-success": "Saved metadata source: {name}"
+    },
+    "tooltip": {
+      "create-source": "Create a new metadata source.",
+      "delete-property": "Delete property {name}.",
+      "delete-source": "Delete this metadata source.",
+      "reset-source": "Undo changes to the metadata source.",
+      "save-source": "Save the current metadata source."
+    }
+  },
+  "metadata-source-list": {
+    "label": {
+      "actions": "Actions",
+      "bean-name": "Bean Name",
+      "name": "Source Name",
+      "property-count": "# of Properties"
     }
   },
   "scraping": {

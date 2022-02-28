@@ -26,6 +26,11 @@ import {
 import { EffectsModule } from '@ngrx/effects';
 import { MetadataSourceListEffects } from '@app/comic-metadata/effects/metadata-source-list.effects';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  METADATA_SOURCE_FEATURE_KEY,
+  reducer as metadataSourceReducer
+} from '@app/comic-metadata/reducers/metadata-source.reducer';
+import { MetadataSourceEffects } from '@app/comic-metadata/effects/metadata-source.effects';
 
 @NgModule({
   declarations: [],
@@ -36,7 +41,8 @@ import { TranslateModule } from '@ngx-translate/core';
       METADATA_SOURCE_LIST_FEATURE_KEY,
       metadataSourceListReducer
     ),
-    EffectsModule.forFeature([MetadataSourceListEffects])
+    StoreModule.forFeature(METADATA_SOURCE_FEATURE_KEY, metadataSourceReducer),
+    EffectsModule.forFeature([MetadataSourceListEffects, MetadataSourceEffects])
   ],
   exports: [CommonModule]
 })

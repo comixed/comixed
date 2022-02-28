@@ -16,22 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.metadata;
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  METADATA_SOURCE_FEATURE_KEY,
+  MetadataSourceState
+} from '../reducers/metadata-source.reducer';
 
-import org.comixedproject.model.metadata.MetadataSource;
+export const selectMetadataSourceState =
+  createFeatureSelector<MetadataSourceState>(METADATA_SOURCE_FEATURE_KEY);
 
-/**
- * <code>MetadataSourceException</code> is thrown when an error occurs while working with a {@link
- * MetadataSource}.
- *
- * @author Darryl L. Pierce
- */
-public class MetadataSourceException extends Exception {
-  public MetadataSourceException(final String message) {
-    super(message);
-  }
-
-  public MetadataSourceException(final String message, final Exception cause) {
-    super(message, cause);
-  }
-}
+export const selectMetadataSource = createSelector(
+  selectMetadataSourceState,
+  state => state.source
+);

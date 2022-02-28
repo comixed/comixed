@@ -18,6 +18,7 @@
     "tab": {
       "comicvine": "ComicVine Settings",
       "library": "Library",
+      "metadata-sources": "Metadata Sources",
       "server-runtime": "Runtime",
       "scraping-rules": "Scraping Rules"
     },

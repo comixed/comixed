@@ -55,9 +55,7 @@ describe('MetadataSourceListEffects', () => {
         {
           provide: MetadataSourceService,
           useValue: {
-            loadMetadataSourceList: jasmine.createSpy(
-              'MetadataSourceService.loadMetadataSourceList()'
-            )
+            loadAll: jasmine.createSpy('MetadataSourceService.loadAll()')
           }
         },
         AlertService
@@ -83,9 +81,7 @@ describe('MetadataSourceListEffects', () => {
       const outcome = metadataSourcesLoaded({ sources: SOURCES });
 
       actions$ = hot('-a', { a: action });
-      metadataSourceService.loadMetadataSourceList.and.returnValue(
-        of(serviceResponse)
-      );
+      metadataSourceService.loadAll.and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadMetadataSources$).toBeObservable(expected);
@@ -97,7 +93,7 @@ describe('MetadataSourceListEffects', () => {
       const outcome = loadMetadataSourcesFailed();
 
       actions$ = hot('-a', { a: action });
-      metadataSourceService.loadMetadataSourceList.and.returnValue(
+      metadataSourceService.loadAll.and.returnValue(
         throwError(serviceResponse)
       );
 
@@ -111,7 +107,7 @@ describe('MetadataSourceListEffects', () => {
       const outcome = loadMetadataSourcesFailed();
 
       actions$ = hot('-a', { a: action });
-      metadataSourceService.loadMetadataSourceList.and.throwError('expected');
+      metadataSourceService.loadAll.and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadMetadataSources$).toBeObservable(expected);

@@ -20,8 +20,15 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LOAD_METADATA_SOURCE_LIST_URL } from '@app/comic-metadata/comic-metadata.constants';
+import {
+  CREATE_METADATA_SOURCE_URL,
+  DELETE_METADATA_SOURCE_URL,
+  LOAD_METADATA_SOURCE_LIST_URL,
+  LOAD_METADATA_SOURCE_URL,
+  UPDATE_METADATA_SOURCE_URL
+} from '@app/comic-metadata/comic-metadata.constants';
 import { interpolate } from '@app/core';
+import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +36,38 @@ import { interpolate } from '@app/core';
 export class MetadataSourceService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
-  loadMetadataSourceList(): Observable<any> {
+  loadAll(): Observable<any> {
     this.logger.trace('Loading metadata source list');
     return this.http.get(interpolate(LOAD_METADATA_SOURCE_LIST_URL));
+  }
+
+  loadOne(args: { id: number }): Observable<any> {
+    this.logger.trace('Loading  metadata source:', args);
+    return this.http.get(
+      interpolate(LOAD_METADATA_SOURCE_URL, { id: args.id })
+    );
+  }
+
+  save(args: { source: MetadataSource }): Observable<any> {
+    if (!!args.source.id) {
+      this.logger.trace('Updating metadata source:', args);
+      return this.http.put(
+        interpolate(UPDATE_METADATA_SOURCE_URL, { id: args.source.id }),
+        args.source
+      );
+    } else {
+      this.logger.trace('Creating metadata source:', args);
+      return this.http.post(
+        interpolate(CREATE_METADATA_SOURCE_URL),
+        args.source
+      );
+    }
+  }
+
+  delete(args: { source: MetadataSource }): Observable<any> {
+    this.logger.trace('Deleting metadata source:', args);
+    return this.http.delete(
+      interpolate(DELETE_METADATA_SOURCE_URL, { id: args.source.id })
+    );
   }
 }

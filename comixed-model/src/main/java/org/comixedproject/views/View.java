@@ -111,4 +111,7 @@ public interface View {
 
   /** Used when retrieving a list of metadata sources. */
   public interface MetadataSourceList {}
+
+  /** Used when retrieving a single metadata source. */
+  public interface MetadataSourceDetail extends MetadataSourceList {}
 }

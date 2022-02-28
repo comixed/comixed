@@ -18,6 +18,8 @@
 
 package org.comixedproject.model.metadata;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
@@ -26,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.views.View;
 
 /**
  * <code>MetadataAuditLogEntry</code> represents a single auditable metadata event.
@@ -44,6 +47,8 @@ public class MetadataAuditLogEntry {
 
   @ManyToOne
   @JoinColumn(name = "ComicId", nullable = false, updatable = false)
+  @JsonProperty("comic")
+  @JsonView(View.MetadataSourceDetail.class)
   @Getter
   @NonNull
   private Comic comic;
@@ -55,11 +60,15 @@ public class MetadataAuditLogEntry {
   private MetadataSource metadataSource;
 
   @Column(name = "ReferenceId", length = 32, nullable = false, updatable = false)
+  @JsonProperty("referenceId")
+  @JsonView(View.MetadataSourceDetail.class)
   @Getter
   @NonNull
   private String referenceId;
 
   @Column(name = "CreatedOn", nullable = false, updatable = false)
+  @JsonProperty("createdOn")
+  @JsonView(View.MetadataSourceDetail.class)
   @Getter
   private Date createdOn = new Date();
 
