@@ -29,7 +29,7 @@
       "comic-pages": "Páginas",
       "comic-state": "Estado",
       "comic-story": "Historia",
-      "comicvine-id": "ComicVine ID",
+      "metadata-source-id": "Metadata Source ID",
       "comicvine-issue-details": "Comic Details Page",
       "credits": "Equipo creativo ({count})",
       "description": "Descripción de la edición",
@@ -68,7 +68,7 @@
     },
     "placeholder": {
       "api-key": "La clave de API utilizada al raspar cómics...",
-      "comicvine-id": "######",
+      "metadata-source-id": "######",
       "issue-number": "El número de emisión...",
       "publisher": "El editor...",
       "scraping-filter": "Filter volumes",

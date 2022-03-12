@@ -103,7 +103,7 @@
       "select-scraping-issue": "Select this issue.",
       "show-comic-details": "Show Details",
       "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
-      "use-comicvine-id": "Scrape using the ComicVine id."
+      "use-metadata-source-id": "Scrape using the ComicVine id."
     },
     "volume-list": {
       "issue-count-header": "# Of Issues",

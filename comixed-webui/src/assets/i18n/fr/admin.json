@@ -5,7 +5,6 @@
       "comic-renaming-variables": "Variables de renommage des bandes dessinées",
       "comic-variable-description": "Description",
       "comic-variable-name": "Variable",
-      "comicvine-api-key": "ComicVine API Key",
       "page-renaming-rule": "Règle de renommage des pages",
       "page-renaming-variables": "Variables de renomamge des pages",
       "root-directory": "Répertoire racine de la bibliothèque",
@@ -16,7 +15,6 @@
       "effect-failure": "Échec du chargement des options de configuration."
     },
     "tab": {
-      "comicvine": "Paramètres de ComicVine",
       "library": "Bibliothèque",
       "metadata-audit-log": "Metadata Audit Log",
       "metadata-sources": "Metadata Sources",

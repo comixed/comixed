@@ -223,23 +223,4 @@
       {{ comic.imprint }}
     </span>
   </mat-grid-tile>
-  <mat-grid-tile
-    *ngIf="!!comic.comicVineId"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
-  >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.comicvine-issue-details" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="!!comic.comicVineId" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      <a [href]="comic | comicvineIssueLink" target="cx-issue-details">
-        {{ "comic-book.text.comicvine-issue-link" | translate }}
-      </a>
-    </span>
-  </mat-grid-tile>
 </mat-grid-list>
