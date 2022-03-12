@@ -29,7 +29,7 @@
       "comic-pages": "Pages",
       "coic-state": "État",
       "comic-story": "Histoire",
-      "comicvine-id": "ComicVine ID",
+      "metadata-source-id": "Metadata Source ID",
       "comicvine-issue-details": "Page de détails de Bande Dessinée",
       "credits": "Équipe créative ({count})",
       "description": "Description de ce numéro",
@@ -68,7 +68,7 @@
     },
     "placeholder": {
       "api-key": "L'API key utilisé lors de la récupération des détails des Bandes Dessinées...",
-      "comicvine-id": "######",
+      "metadata-source-id": "######",
       "issue-number": "Le numéro de cette Bande Dessinée...",
       "publisher": "L'éditeur...",
       "scraping-filter": "Filter volumes",

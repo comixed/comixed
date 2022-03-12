@@ -37,7 +37,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { ConfigurationPageComponent } from './pages/configuration-page/configuration-page.component';
-import { ComicVineConfigurationComponent } from './components/comic-vine-configuration/comic-vine-configuration.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -80,7 +79,6 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
   declarations: [
     WebAuditLogPageComponent,
     ConfigurationPageComponent,
-    ComicVineConfigurationComponent,
     LibraryConfigurationComponent,
     FilenameScrapingRulesConfigurationComponent,
     ServerRuntimeComponent,

@@ -96,7 +96,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       series: ['', [Validators.required]],
       volume: ['', [Validators.pattern('[0-9]{4}')]],
       issueNumber: ['', [Validators.required]],
-      comicVineId: ['', [Validators.pattern('[0-9]{6}')]],
+      metadataSourceId: [''],
       imprint: [''],
       sortName: [''],
       title: [''],
@@ -153,7 +153,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.logger.trace('Loading comic form:', comic);
     this._comic = comic;
     this.logger.trace('Loading form fields');
-    this.comicForm.controls.comicVineId.setValue(comic.comicVineId);
+    this.comicForm.controls.metadataSourceId.setValue(comic.comicVineId);
     this.comicForm.controls.publisher.setValue(comic.publisher);
     this.comicForm.controls.series.setValue(comic.series);
     this.comicForm.controls.volume.setValue(comic.volume);
@@ -301,7 +301,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       sortName: this.comicForm.controls.sortName.value,
       title: this.comicForm.controls.title.value,
       description: this.comicForm.controls.description.value,
-      comicVineId: this.comicForm.controls.comicVineId.value
+      comicVineId: this.comicForm.controls.metadataSourceId.value
     } as Comic;
   }
 }

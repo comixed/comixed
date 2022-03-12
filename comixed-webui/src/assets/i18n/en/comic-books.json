@@ -29,7 +29,7 @@
       "comic-pages": "Pages",
       "comic-state": "State",
       "comic-story": "Story",
-      "comicvine-id": "ComicVine ID",
+      "metadata-source-id": "Metadata Source ID",
       "comicvine-issue-details": "Comic Details Page",
       "credits": "Creative Team ({count})",
       "description": "Issue Description",
@@ -68,7 +68,7 @@
     },
     "placeholder": {
       "api-key": "The API key used when scraping comics...",
-      "comicvine-id": "######",
+      "metadata-source-id": "######",
       "issue-number": "The issue number...",
       "publisher": "The publisher...",
       "scraping-filter": "Filter volumes",

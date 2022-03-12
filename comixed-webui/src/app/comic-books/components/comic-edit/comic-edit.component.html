@@ -147,25 +147,28 @@
     </mat-error>
   </mat-form-field>
   <mat-form-field class="cx-width-34" appearance="fill">
-    <mat-label>{{ "comic-book.label.comicvine-id" | translate }}</mat-label>
+    <mat-label>
+      {{ "comic-book.label.metadata-source-id" | translate }}
+    </mat-label>
     <input
-      id="comicvine-id-input"
+      id="metadata-source-id-input"
       type="number"
       matInput
-      formControlName="comicVineId"
-      [placeholder]="'comic-book.placeholder.comicvine-id' | translate"
+      readonly
+      formControlName="metadataSourceId"
+      [placeholder]="'comic-book.placeholder.metadata-source-id' | translate"
     />
     <button
-      id="scrape-with-comicvine-id-button"
+      id="scrape-with-metadata-source-id-button"
       mat-icon-button
       matSuffix
       color="primary"
       [disabled]="
         !this.metadataSource ||
-        (this.comicForm.controls.comicVineId.value || '').length === 0 ||
-        !this.comicForm.controls.comicVineId.valid
+        (this.comicForm.controls.metadataSourceId.value || '').length === 0 ||
+        !this.comicForm.controls.metadataSourceId.valid
       "
-      [matTooltip]="'scraping.tooltip.use-comicvine-id' | translate"
+      [matTooltip]="'scraping.tooltip.use-metadata-source-id' | translate"
       (click)="onScrapeUsingComicVineId()"
     >
       <mat-icon>find_replace</mat-icon>

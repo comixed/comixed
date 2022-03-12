@@ -30,7 +30,6 @@ import {
   CONFIGURATION_OPTION_5
 } from '@app/admin/admin.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { ComicVineConfigurationComponent } from '@app/admin/components/comic-vine-configuration/comic-vine-configuration.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -71,12 +70,12 @@ import {
   SERVER_RUNTIME_FEATURE_KEY
 } from '@app/admin/reducers/server-runtime.reducer';
 import {
-  METADATA_SOURCE_LIST_FEATURE_KEY,
-  initialState as initialMetadataSourceListState
+  initialState as initialMetadataSourceListState,
+  METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import {
-  METADATA_SOURCE_FEATURE_KEY,
-  initialState as initialMetadataSourceState
+  initialState as initialMetadataSourceState,
+  METADATA_SOURCE_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-source.reducer';
 import {
   FILENAME_SCRAPING_RULES_FEATURE_KEY,
@@ -117,7 +116,6 @@ describe('ConfigurationPageComponent', () => {
         declarations: [
           ConfigurationPageComponent,
           LibraryConfigurationComponent,
-          ComicVineConfigurationComponent,
           ServerRuntimeComponent,
           FilenameScrapingRulesConfigurationComponent,
           MetadataSourcesViewComponent,

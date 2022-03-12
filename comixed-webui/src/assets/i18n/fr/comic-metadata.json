@@ -98,12 +98,12 @@
       "no-match": "No"
     },
     "tooltip": {
-      "cancel-scraping": "Stop scraping comics.",
-      "reject-scraping-issue": "Reject this issue.",
-      "select-scraping-issue": "Select this issue.",
-      "show-comic-details": "Show Details",
-      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
-      "use-comicvine-id": "Scrape using the ComicVine id."
+      "cancel-scraping": "Arrêt de la récupération des détails des Bandes Dessinées.",
+      "reject-scraping-issue": "Rejeter ce numéro.",
+      "select-scraping-issue": "Sélectionner ce numéro.",
+      "show-comic-details": "Afficher les détails",
+      "skip-cache": "La récupération des détails {enabled, select, true{évitera} other{utilisera}} le cache de récupération.",
+      "use-metadata-source-id": "Récupération des métadonnées en utilisant l'identifiant ComicVine."
     },
     "volume-list": {
       "issue-count-header": "# Of Issues",

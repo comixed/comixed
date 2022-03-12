@@ -5,7 +5,6 @@
       "comic-renaming-variables": "Comic Renaming Variables",
       "comic-variable-description": "Description",
       "comic-variable-name": "Variable",
-      "comicvine-api-key": "ComicVine API Key",
       "page-renaming-rule": "Page Renaming Rule",
       "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Library Root Directory",
@@ -16,7 +15,6 @@
       "effect-failure": "Failed to load configuration options."
     },
     "tab": {
-      "comicvine": "ComicVine Settings",
       "library": "Library",
       "metadata-audit-log": "Metadata Audit Log",
       "metadata-sources": "Metadata Sources",
