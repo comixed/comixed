@@ -105,7 +105,8 @@ public class ComicVineGetVolumesAction
                 entry.setId(volume.getId());
                 entry.setName(volume.getName());
                 entry.setIssueCount(volume.getIssueCount());
-                if (StringUtils.hasLength(volume.getPublisher().getName()))
+                if (volume.getPublisher() != null
+                    && StringUtils.hasLength(volume.getPublisher().getName()))
                   entry.setPublisher(volume.getPublisher().getName());
                 entry.setStartYear(volume.getStartYear());
                 entry.setImageURL(volume.getImage().getScreenUrl());
