@@ -40,6 +40,26 @@
       "property-count": "# of Properties"
     }
   },
+  "metadata-audit-log": {
+    "clear-entries": {
+      "confirm-message": "Are you sure you want to delete all metadata audit log entries? This action cannot be undone.",
+      "confirm-title": "Clear Metadata Audit Log",
+      "effect-failure": "Failed to clear metadata audit log.",
+      "effect-success": "Metadata audit log cleared."
+    },
+    "label": {
+      "comic": "Comic",
+      "created-on": "Created On",
+      "metadata-source": "Metadata Source"
+    },
+    "load-entries": {
+      "effect-failure": "Failed to load metadata audit log."
+    },
+    "tooltip": {
+      "clear-entries": "Clear the metadata audit log.",
+      "reload-entries": "Reload the metadata audit log."
+    }
+  },
   "scraping": {
     "current-comic": {
       "title": "Currently Comic ({count} Total)"

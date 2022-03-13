@@ -39,6 +39,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { updateQueryParam } from '@app/core';
 import {
   PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
@@ -65,6 +66,7 @@ export class StoryNameListPageComponent
   userSubscription: Subscription;
   queryParamSubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   langChangeSubscription: Subscription;
 
   readonly displayedColumns = ['story-name'];

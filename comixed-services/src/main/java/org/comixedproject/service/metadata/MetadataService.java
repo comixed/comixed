@@ -47,6 +47,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>MetadataService</code> handles interacting with the selected {@link MetadataAdaptor} and
@@ -329,5 +330,22 @@ public class MetadataService {
     }
     log.trace("No cached entries found");
     return null;
+  }
+
+  /**
+   * Returns all audit log entries.
+   *
+   * @return the entry list
+   */
+  public List<MetadataAuditLogEntry> loadAuditLogEntries() {
+    log.trace("Loading all metadata audit log entries");
+    return this.metadataAuditLogRepository.loadAll();
+  }
+
+  /** Deletes all metadata audit log entries. */
+  @Transactional
+  public void clearAuditLog() {
+    log.trace("Deleting all metadata audit log entries");
+    this.metadataAuditLogRepository.deleteAll();
   }
 }

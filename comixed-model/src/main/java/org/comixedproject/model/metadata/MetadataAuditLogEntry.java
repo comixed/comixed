@@ -18,6 +18,7 @@
 
 package org.comixedproject.model.metadata;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Date;
@@ -48,27 +49,30 @@ public class MetadataAuditLogEntry {
   @ManyToOne
   @JoinColumn(name = "ComicId", nullable = false, updatable = false)
   @JsonProperty("comic")
-  @JsonView(View.MetadataSourceDetail.class)
+  @JsonView({View.MetadataSourceDetail.class, View.MetadataAuditLogEntryList.class})
   @Getter
   @NonNull
   private Comic comic;
 
   @ManyToOne
   @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
+  @JsonProperty("metadataSource")
+  @JsonView(View.MetadataAuditLogEntryList.class)
   @Getter
   @NonNull
   private MetadataSource metadataSource;
 
   @Column(name = "ReferenceId", length = 32, nullable = false, updatable = false)
   @JsonProperty("referenceId")
-  @JsonView(View.MetadataSourceDetail.class)
+  @JsonView({View.MetadataSourceDetail.class, View.MetadataAuditLogEntryList.class})
   @Getter
   @NonNull
   private String referenceId;
 
   @Column(name = "CreatedOn", nullable = false, updatable = false)
   @JsonProperty("createdOn")
-  @JsonView(View.MetadataSourceDetail.class)
+  @JsonView({View.MetadataSourceDetail.class, View.MetadataAuditLogEntryList.class})
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   private Date createdOn = new Date();
 

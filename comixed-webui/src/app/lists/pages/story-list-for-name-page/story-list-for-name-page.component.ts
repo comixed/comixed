@@ -39,6 +39,7 @@ import { loadStoriesForName } from '@app/lists/actions/story-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
   PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { TranslateService } from '@ngx-translate/core';
@@ -69,6 +70,7 @@ export class StoryListForNamePageComponent
   storySubscription: Subscription;
   userSubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
   readonly displayedColumns = [
     'story-name',

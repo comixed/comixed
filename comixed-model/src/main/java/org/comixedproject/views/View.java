@@ -114,4 +114,7 @@ public interface View {
 
   /** Used when retrieving a single metadata source. */
   public interface MetadataSourceDetail extends MetadataSourceList {}
+
+  /** Used when viewing the metadata audit log entry list. */
+  public interface MetadataAuditLogEntryList {}
 }

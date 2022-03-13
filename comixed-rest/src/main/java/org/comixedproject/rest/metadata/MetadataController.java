@@ -26,6 +26,7 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
@@ -34,10 +35,7 @@ import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>MetadataController</code> processes REST APIs relating to comic metadata events.
@@ -137,5 +135,26 @@ public class MetadataController {
     Integer issueId = request.getIssueId();
     log.info("Scraping comic");
     return this.metadataService.scrapeComic(sourceId, comicId, issueId, skipCache);
+  }
+
+  /**
+   * Loads all metadata audit log entries.
+   *
+   * @return the list of entries
+   */
+  @GetMapping(value = "/api/metadata/log", produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView(View.MetadataAuditLogEntryList.class)
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<MetadataAuditLogEntry> loadAuditLog() {
+    log.info("Loading metadata audit log");
+    return this.metadataService.loadAuditLogEntries();
+  }
+
+  /** Clears the metadata audit log. */
+  @DeleteMapping(value = "/api/metadata/log")
+  @PreAuthorize("hasRole('ADMIN')")
+  public void clearAuditLog() {
+    log.info("Clearing metadata audit log");
+    this.metadataService.clearAuditLog();
   }
 }

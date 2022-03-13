@@ -1,0 +1,62 @@
+<mat-toolbar class="cx-primary-light-background">
+  <button
+    id="reload-audit-log-entries-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'metadata-audit-log.tooltip.reload-entries' | translate"
+    (click)="onReloadEntries()"
+  >
+    <mat-icon>refresh</mat-icon>
+  </button>
+  <mat-paginator
+    class="cx-primary-light-background cx-height-100"
+    showFirstLastButtons="true"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
+  <div class="cx-spacer"></div>
+  <button
+    id="clear-audit-log-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'metadata-audit-log.tooltip.clear-entries' | translate"
+    (click)="onClearEntries()"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="created-on">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "metadata-audit-log.label.created-on" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <div class="cx-width-100">{{ entry.createdOn | date: "medium" }}</div>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="metadata-source">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "metadata-audit-log.label.metadata-source" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">{{ entry.metadataSource.name }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "metadata-audit-log.label.comic" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <a [routerLink]="['/library/comics', entry.comic.id]">
+        {{ entry.comic | comicTitle }}
+      </a>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

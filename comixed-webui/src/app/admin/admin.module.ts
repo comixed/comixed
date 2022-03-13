@@ -73,6 +73,8 @@ import { MetadataSourceListComponent } from './components/metadata-source-list/m
 import { MetadataSourcesViewComponent } from './components/metadata-sources-view/metadata-sources-view.component';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MetadataAuditLogListComponent } from './components/metadata-audit-log-list/metadata-audit-log-list.component';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
   declarations: [
@@ -84,7 +86,8 @@ import { MatDividerModule } from '@angular/material/divider';
     ServerRuntimeComponent,
     MetadataSourceListComponent,
     MetadataSourceDetailComponent,
-    MetadataSourcesViewComponent
+    MetadataSourcesViewComponent,
+    MetadataAuditLogListComponent
   ],
   imports: [
     CommonModule,
@@ -127,7 +130,8 @@ import { MatDividerModule } from '@angular/material/divider';
     DragDropModule,
     TragicallySlickEditInPlaceModule,
     FlexModule,
-    MatDividerModule
+    MatDividerModule,
+    ComicBooksModule
   ],
   exports: [CommonModule, CoreModule]
 })
