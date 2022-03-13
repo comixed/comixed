@@ -18,8 +18,10 @@
 
 package org.comixedproject.repositories.metadata;
 
+import java.util.List;
 import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,4 +31,12 @@ import org.springframework.stereotype.Repository;
  * @author Darryl L. Pierce
  */
 @Repository
-public interface MetadataAuditLogRepository extends JpaRepository<MetadataAuditLogEntry, Long> {}
+public interface MetadataAuditLogRepository extends JpaRepository<MetadataAuditLogEntry, Long> {
+  /**
+   * Loads all audit log entries.
+   *
+   * @return the entry list
+   */
+  @Query("SELECT e FROM MetadataAuditLogEntry e ORDER BY e.createdOn")
+  List<MetadataAuditLogEntry> loadAll();
+}

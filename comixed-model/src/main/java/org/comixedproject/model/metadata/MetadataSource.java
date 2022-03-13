@@ -40,7 +40,7 @@ public class MetadataSource {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView({View.MetadataSourceList.class, View.MetadataAuditLogEntryList.class})
   @Getter
   private Long id;
 
@@ -66,7 +66,7 @@ public class MetadataSource {
       updatable = true,
       nullable = false)
   @JsonProperty("name")
-  @JsonView(View.MetadataSourceList.class)
+  @JsonView({View.MetadataSourceList.class, View.MetadataAuditLogEntryList.class})
   @Getter
   @Setter
   @NonNull

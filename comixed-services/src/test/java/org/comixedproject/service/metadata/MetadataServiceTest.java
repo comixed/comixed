@@ -87,6 +87,7 @@ public class MetadataServiceTest {
   @Mock private MetadataSource metadataSource;
   @Mock private MetadataAuditLogRepository metadataAuditLogRepository;
   @Mock private MetadataAuditLogEntry savedAuditLogEntry;
+  @Mock private List<MetadataAuditLogEntry> metadataAuditLogEntryList;
 
   @Captor private ArgumentCaptor<MetadataAuditLogEntry> metadataAuditLogEntryArgumentCaptor;
 
@@ -779,5 +780,24 @@ public class MetadataServiceTest {
     Mockito.verify(this.loadedComic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(this.imprintService, Mockito.times(1)).update(comic);
     Mockito.verify(metadataAuditLogRepository, Mockito.times(1)).save(auditLogEntry);
+  }
+
+  @Test
+  public void testLoadAuditLogEntries() {
+    Mockito.when(metadataAuditLogRepository.loadAll()).thenReturn(metadataAuditLogEntryList);
+
+    final List<MetadataAuditLogEntry> result = metadataService.loadAuditLogEntries();
+
+    assertNotNull(result);
+    assertSame(metadataAuditLogEntryList, result);
+
+    Mockito.verify(metadataAuditLogRepository, Mockito.times(1)).loadAll();
+  }
+
+  @Test
+  public void testClearAuditLog() {
+    metadataService.clearAuditLog();
+
+    Mockito.verify(metadataAuditLogRepository, Mockito.times(1)).deleteAll();
   }
 }

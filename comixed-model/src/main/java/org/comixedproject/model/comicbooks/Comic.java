@@ -58,7 +58,8 @@ public class Comic {
     View.LastReadList.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.MetadataAuditLogEntryList.class
   })
   @Getter
   @Setter
@@ -191,7 +192,8 @@ public class Comic {
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
     View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.MetadataAuditLogEntryList.class
   })
   @Getter
   @Setter
@@ -203,7 +205,8 @@ public class Comic {
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.MetadataAuditLogEntryList.class
   })
   @Getter
   @Setter
@@ -215,7 +218,8 @@ public class Comic {
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.MetadataAuditLogEntryList.class
   })
   @Getter
   @Setter
@@ -227,7 +231,8 @@ public class Comic {
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.MetadataAuditLogEntryList.class
   })
   @Getter
   private String issueNumber;
