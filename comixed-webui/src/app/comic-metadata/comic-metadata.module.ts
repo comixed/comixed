@@ -31,6 +31,11 @@ import {
   reducer as metadataSourceReducer
 } from '@app/comic-metadata/reducers/metadata-source.reducer';
 import { MetadataSourceEffects } from '@app/comic-metadata/effects/metadata-source.effects';
+import { MetadataAuditLogEffects } from '@app/comic-metadata/effects/metadata-audit-log.effects';
+import {
+  METADATA_AUDIT_LOG_FEATURE_KEY,
+  reducer as metadataAuditLogReducer
+} from '@app/comic-metadata/reducers/metadata-audit-log.reducer';
 
 @NgModule({
   declarations: [],
@@ -42,7 +47,15 @@ import { MetadataSourceEffects } from '@app/comic-metadata/effects/metadata-sour
       metadataSourceListReducer
     ),
     StoreModule.forFeature(METADATA_SOURCE_FEATURE_KEY, metadataSourceReducer),
-    EffectsModule.forFeature([MetadataSourceListEffects, MetadataSourceEffects])
+    StoreModule.forFeature(
+      METADATA_AUDIT_LOG_FEATURE_KEY,
+      metadataAuditLogReducer
+    ),
+    EffectsModule.forFeature([
+      MetadataSourceListEffects,
+      MetadataSourceEffects,
+      MetadataAuditLogEffects
+    ])
   ],
   exports: [CommonModule]
 })

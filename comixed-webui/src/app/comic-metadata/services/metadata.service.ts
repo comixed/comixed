@@ -22,6 +22,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
+  CLEAR_METADATA_AUDIT_LOG_URL,
+  LOAD_METADATA_AUDIT_LOG_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
   SCRAPE_COMIC_URL
@@ -55,7 +57,7 @@ export class MetadataService {
     maximumRecords: number;
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Service: loading scraping volumes:', args);
+    this.logger.trace('Loading scraping volumes:', args);
     return this.http.post(
       interpolate(LOAD_SCRAPING_VOLUMES_URL, {
         sourceId: args.metadataSource.id
@@ -81,7 +83,7 @@ export class MetadataService {
     issueNumber: string;
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Service: loading scraping issue:', args);
+    this.logger.trace('Loading scraping issue:', args);
     return this.http.post(
       interpolate(LOAD_SCRAPING_ISSUE_URL, {
         sourceId: args.metadataSource.id,
@@ -108,7 +110,7 @@ export class MetadataService {
     comic: Comic;
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Service: scrape comic:', args);
+    this.logger.trace('Scrape comic:', args);
     return this.http.post(
       interpolate(SCRAPE_COMIC_URL, {
         sourceId: args.metadataSource.id,
@@ -119,5 +121,21 @@ export class MetadataService {
         skipCache: args.skipCache
       } as ScrapeComicRequest
     );
+  }
+
+  /**
+   * Loads all metadata audit log entries.
+   */
+  loadAuditLog(): Observable<any> {
+    this.logger.trace('Loading metadata audit log entries');
+    return this.http.get(interpolate(LOAD_METADATA_AUDIT_LOG_URL));
+  }
+
+  /**
+   * Clears the metadata audit log.
+   */
+  clearAuditLog(): Observable<any> {
+    this.logger.trace('Clear metadata audit log entries');
+    return this.http.delete(interpolate(CLEAR_METADATA_AUDIT_LOG_URL));
   }
 }
