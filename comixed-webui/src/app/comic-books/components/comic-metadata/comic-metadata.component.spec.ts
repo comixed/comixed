@@ -18,12 +18,12 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
-  ComicScrapingComponent,
+  ComicMetadataComponent,
   EXACT_MATCH,
   MATCHABILITY,
   NEAR_MATCH,
   NO_MATCH
-} from './comic-scraping.component';
+} from './comic-metadata.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -49,7 +49,7 @@ import {
 import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ScrapingIssueDetailComponent } from '@app/comic-books/components/scraping-issue-detail/scraping-issue-detail.component';
+import { IssueMetadataDetailComponent } from '@app/comic-books/components/issue-metadata-detail/issue-metadata-detail.component';
 import { MatInputModule } from '@angular/material/input';
 import {
   Confirmation,
@@ -75,15 +75,15 @@ describe('ComicScrapingComponent', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = { [METADATA_FEATURE_KEY]: { ...initialScrapingState } };
 
-  let component: ComicScrapingComponent;
-  let fixture: ComponentFixture<ComicScrapingComponent>;
+  let component: ComicMetadataComponent;
+  let fixture: ComponentFixture<ComicMetadataComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComicScrapingComponent, ScrapingIssueDetailComponent],
+        declarations: [ComicMetadataComponent, IssueMetadataDetailComponent],
         imports: [
           NoopAnimationsModule,
           LoggerModule.forRoot(),
@@ -101,7 +101,7 @@ describe('ComicScrapingComponent', () => {
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicScrapingComponent);
+      fixture = TestBed.createComponent(ComicMetadataComponent);
       component = fixture.componentInstance;
       component.comicSeriesName = SCRAPING_VOLUME.name;
       component.comicVolume = SCRAPING_VOLUME.startYear;
@@ -226,13 +226,13 @@ describe('ComicScrapingComponent', () => {
 
     it('uses the start year', () => {
       expect(
-        component.dataSource.sortingDataAccessor(ELEMENT, 'startYear')
+        component.dataSource.sortingDataAccessor(ELEMENT, 'start-year')
       ).toEqual(SCRAPING_VOLUME.startYear);
     });
 
     it('uses the issue count', () => {
       expect(
-        component.dataSource.sortingDataAccessor(ELEMENT, 'issueCount')
+        component.dataSource.sortingDataAccessor(ELEMENT, 'issue-count')
       ).toEqual(SCRAPING_VOLUME.issueCount);
     });
   });

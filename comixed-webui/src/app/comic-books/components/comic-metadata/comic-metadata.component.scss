@@ -1,11 +1,11 @@
 @import 'styles';
 
-#cx-scraping-issue-detail-content {
+#cx-issue-metadata-detail-content {
 }
 
 .mat-column-matchability {
-  width: $cx-column-medium;
-  max-width: $cx-column-medium;
+  width: $cx-column-small;
+  max-width: $cx-column-small;
   resize: none;
 }
 
@@ -13,13 +13,27 @@
   width: $cx-column-large;
   max-width: $cx-column-large;
   resize: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .mat-column-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.mat-column-start-year {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issue-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issue-action {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
 }
 
 .mat-column-startYear {

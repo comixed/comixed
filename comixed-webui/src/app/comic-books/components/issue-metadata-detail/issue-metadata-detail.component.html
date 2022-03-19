@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-title [matTooltip]="issue | issueMetadataTitle">
+    <div class="cx-text-nowrap">
+      {{ issue | issueMetadataTitle }}
+    </div>
+  </mat-card-title>
+  <mat-card-subtitle>
+    <div class="cx-text-nowrap cx-width-100">
+      {{ issue.coverDate | date: "MMMM y" }}
+    </div>
+  </mat-card-subtitle>
+  <mat-card-content class="cx-padding-none cx-margin-none">
+    <img
+      [src]="issue.coverUrl"
+      [alt]="issue.coverUrl"
+      [style.width]="'100%'"
+      [style.height]="'auto'"
+    />
+  </mat-card-content>
+</mat-card>

@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ScrapingIssueDetailComponent } from './scraping-issue-detail.component';
+import { IssueMetadataDetailComponent } from './issue-metadata-detail.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { IssueMetadataTitlePipe } from '@app/comic-metadata/pipes/issue-metadata-title.pipe';
 import { TranslateModule } from '@ngx-translate/core';
@@ -34,21 +34,21 @@ import { USER_READER } from '@app/user/user.fixtures';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SCRAPING_ISSUE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
 
-describe('ScrapingIssueDetailComponent', () => {
+describe('IssueMetadataDetailComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const USER = USER_READER;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
-  let component: ScrapingIssueDetailComponent;
-  let fixture: ComponentFixture<ScrapingIssueDetailComponent>;
+  let component: IssueMetadataDetailComponent;
+  let fixture: ComponentFixture<IssueMetadataDetailComponent>;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [
-          ScrapingIssueDetailComponent,
+          IssueMetadataDetailComponent,
           ComicPageComponent,
           IssueMetadataTitlePipe
         ],
@@ -63,7 +63,7 @@ describe('ScrapingIssueDetailComponent', () => {
         providers: [provideMockStore({ initialState })]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ScrapingIssueDetailComponent);
+      fixture = TestBed.createComponent(IssueMetadataDetailComponent);
       component = fixture.componentInstance;
       component.issue = SCRAPING_ISSUE;
       fixture.detectChanges();
