@@ -30,8 +30,14 @@ export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 export const QUERY_PARAM_SIDEBAR = 'sidebar';
 export const QUERY_PARAM_PAGE_SIZE = 'pageSize';
 
+// external pages
+
+export const WIKI_PAGE_URL = 'https://github.com/comixed/comixed/wiki';
+export const WIKI_PAGE_TARGET = '_cx_wiki';
+export const ISSUE_PAGE_URL = 'https://github.com/comixed/comixed/issues';
+export const ISSUE_PAGE_TARGET = '_cx_issues';
+
 // messaging constants
 
 export const PROCESS_COMICS_TOPIC = '/topic/process-comics.status';
-
 export const TASK_COUNT_TOPIC = '/topic/taskcount';

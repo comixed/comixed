@@ -129,6 +129,7 @@
     },
     "tooltip": {
       "account": "Ver detalles de la cuenta.",
+      "bug-report": "Search or open a bug report.",
       "wiki": "Open the project wiki."
     }
   },

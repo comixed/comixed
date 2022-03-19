@@ -332,6 +332,16 @@ th {
   margin-right: 5px !important;
 }
 
+.cx-toolbar-link {
+  background-color: var(--primary-color) !important;
+  color: var(--text-primary-color) !important;
+  text-decoration: none;
+}
+
+.cx-toolbar-link-active {
+  color: var(--text-accent-color) !important;
+}
+
 .cx-action-button {
   min-width: 100px !important;
   padding-bottom: 5px !important;
@@ -341,7 +351,9 @@ th {
 }
 
 @keyframes cx-button-spinner {
-  to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .cx-spinner:before {
@@ -357,7 +369,7 @@ th {
   border-radius: 50%;
   border: 2px solid #ffffff;
   border-top-color: #000000;
-  animation: cx-button-spinner .8s linear infinite;
+  animation: cx-button-spinner 0.8s linear infinite;
 }
 
 // alerts

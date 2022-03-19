@@ -13,8 +13,18 @@
 
   <div class="cx-spacer"></div>
 
+  <a
+    *ngIf="!!user"
+    class="cx-toolbar-link cx-padding-right-5"
+    routerLink="/account"
+    routerLinkActive="cx-toolbar-link-active"
+  >
+    {{ user.email }}
+  </a>
+  &nbsp;
   <button
     *ngIf="!!user"
+    class="cx-toolbar-button"
     mat-icon-button
     [matTooltip]="'navigation.tooltip.account' | translate"
     [routerLink]="'/account'"
@@ -23,19 +33,31 @@
   </button>
 
   <button
-    id="toolbar-menu-trigger-button"
-    mat-icon-button
-    [mat-menu-trigger-for]="mainMenu"
-  >
-    <mat-icon>more_vert</mat-icon>
-  </button>
-
-  <button
+    id="wiki-page-button"
+    class="cx-toolbar-button"
     mat-icon-button
     [matTooltip]="'navigation.tooltip.wiki' | translate"
     (click)="openWikiPage()"
   >
     <mat-icon>help_center</mat-icon>
+  </button>
+
+  <button
+    id="issue-page-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    [matTooltip]="'navigation.tooltip.bug-report' | translate"
+    (click)="openBugReport()"
+  >
+    <mat-icon>bug_report</mat-icon>
+  </button>
+
+  <button
+    id="toolbar-menu-trigger-button"
+    mat-icon-button
+    [mat-menu-trigger-for]="mainMenu"
+  >
+    <mat-icon>more_vert</mat-icon>
   </button>
 </mat-toolbar>
 

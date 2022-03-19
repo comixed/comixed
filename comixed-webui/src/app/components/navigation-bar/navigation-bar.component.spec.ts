@@ -36,8 +36,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import {
+  ISSUE_PAGE_TARGET,
+  ISSUE_PAGE_URL,
   LANGUAGE_PREFERENCE,
-  LOGGER_LEVEL_PREFERENCE
+  LOGGER_LEVEL_PREFERENCE,
+  WIKI_PAGE_TARGET,
+  WIKI_PAGE_URL
 } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -284,9 +288,20 @@ describe('NavigationBarComponent', () => {
     });
 
     it('opens a new page', () => {
+      expect(window.open).toHaveBeenCalledWith(WIKI_PAGE_URL, WIKI_PAGE_TARGET);
+    });
+  });
+
+  describe('opening the issue page', () => {
+    beforeEach(() => {
+      spyOn(window, 'open');
+      component.openBugReport();
+    });
+
+    it('opens a new page', () => {
       expect(window.open).toHaveBeenCalledWith(
-        'https://github.com/comixed/comixed/wiki',
-        '_help'
+        ISSUE_PAGE_URL,
+        ISSUE_PAGE_TARGET
       );
     });
   });
