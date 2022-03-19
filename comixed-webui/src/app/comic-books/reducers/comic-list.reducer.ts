@@ -74,30 +74,36 @@ export const reducer = createReducer(
     comics = comics.concat(action.comics);
     const lastId = action.lastId;
     const lastPayload = action.lastPayload;
-    return {
-      ...state,
-      comics,
-      unprocessed: comics.filter(comic => !comic.fileDetails),
-      unscraped: comics.filter(comic => !comic.comicVineId),
-      changed: comics.filter(
-        comic => comic.comicState == ComicBookState.CHANGED
-      ),
-      deleted: comics.filter(
-        comic => comic.comicState === ComicBookState.DELETED
-      ),
-      lastId,
-      lastPayload,
-      loading: false
-    };
+    return comicListUpdate(
+      { ...state, lastId, lastPayload, loading: false },
+      comics
+    );
   }),
   on(loadComicsFailed, state => ({ ...state, loading: false })),
   on(comicListUpdateReceived, (state, action) => {
     const comics = state.comics.filter(comic => comic.id !== action.comic.id);
     comics.push(action.comic);
-    return { ...state, comics };
+    return comicListUpdate(state, comics);
   }),
   on(comicListRemovalReceived, (state, action) => {
     const comics = state.comics.filter(comic => comic.id !== action.comic.id);
-    return { ...state, comics };
+    return comicListUpdate(state, comics);
   })
 );
+
+function comicListUpdate(
+  state: ComicListState,
+  comics: Comic[]
+): ComicListState {
+  return {
+    ...state,
+    comics,
+    unprocessed: comics.filter(comic => !comic.fileDetails),
+    unscraped: comics.filter(comic => !comic.comicVineId),
+    changed: comics.filter(comic => comic.comicState == ComicBookState.CHANGED),
+    deleted: comics.filter(
+      comic => comic.comicState === ComicBookState.DELETED
+    ),
+    loading: false
+  };
+}
