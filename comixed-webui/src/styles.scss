@@ -341,6 +341,16 @@ th {
   margin-right: 5px !important;
 }
 
+.cx-toolbar-link {
+  background-color: var(--primary-color) !important;
+  color: var(--text-primary-color) !important;
+  text-decoration: none;
+}
+
+.cx-toolbar-link-active {
+  color: var(--text-accent-color) !important;
+}
+
 .cx-action-button {
   min-width: 100px !important;
   padding-bottom: 5px !important;

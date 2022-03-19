@@ -25,8 +25,12 @@ import { logoutUser, saveUserPreference } from '@app/user/actions/user.actions';
 import { Store } from '@ngrx/store';
 import { isAdmin, isReader } from '@app/user/user.functions';
 import {
+  ISSUE_PAGE_TARGET,
+  ISSUE_PAGE_URL,
   LANGUAGE_PREFERENCE,
-  LOGGER_LEVEL_PREFERENCE
+  LOGGER_LEVEL_PREFERENCE,
+  WIKI_PAGE_TARGET,
+  WIKI_PAGE_URL
 } from '@app/app.constants';
 import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
@@ -176,6 +180,12 @@ export class NavigationBarComponent {
   }
 
   openWikiPage(): void {
-    window.open('https://github.com/comixed/comixed/wiki', '_help');
+    this.logger.trace('Opening the app wiki');
+    window.open(WIKI_PAGE_URL, WIKI_PAGE_TARGET);
+  }
+
+  openBugReport(): void {
+    this.logger.trace('Opening the app bug report page');
+    window.open(ISSUE_PAGE_URL, ISSUE_PAGE_TARGET);
   }
 }
