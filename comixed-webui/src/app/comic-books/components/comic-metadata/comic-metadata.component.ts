@@ -49,8 +49,9 @@ import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { PAGE_SIZE_OPTIONS } from '@app/library/library.constants';
 
-export const MATCHABILITY = 'sortOrder';
+export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
 export const EXACT_MATCH_TEXT = 'scraping.text.exact-match';
 export const NEAR_MATCH = 1;
@@ -59,13 +60,15 @@ export const NO_MATCH = 0;
 export const NO_MATCH_TEXT = 'scraping.text.no-match';
 
 @Component({
-  selector: 'cx-comic-scraping',
-  templateUrl: './comic-scraping.component.html',
-  styleUrls: ['./comic-scraping.component.scss']
+  selector: 'cx-comic-metadata',
+  templateUrl: './comic-metadata.component.html',
+  styleUrls: ['./comic-metadata.component.scss']
 })
-export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
+export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
   @Input() comic: Comic;
   @Input() metadataSource: MetadataSource;
@@ -88,8 +91,8 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
     MATCHABILITY,
     'publisher',
     'name',
-    'startYear',
-    'issueCount',
+    'start-year',
+    'issue-count',
     'action'
   ];
 
@@ -148,6 +151,10 @@ export class ComicScrapingComponent implements OnDestroy, AfterViewInit {
       switch (property) {
         case MATCHABILITY:
           return element.sortOrder;
+        case 'start-year':
+          return element.item.startYear;
+        case 'issue-count':
+          return element.item.issueCount;
         default:
           return element.item[property];
       }

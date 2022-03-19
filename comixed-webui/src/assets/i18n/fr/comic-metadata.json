@@ -87,7 +87,6 @@
     },
     "scrape-comic-confirmation-title": "Replace Comic Data",
     "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
-    "scraping-issue-detail-subtitle": "Cover Date: {date}",
     "start-scraping": {
       "confirmation-title": "Scrape Comics",
       "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"

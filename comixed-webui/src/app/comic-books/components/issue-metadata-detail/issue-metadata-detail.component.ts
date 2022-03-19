@@ -18,12 +18,13 @@
 
 import { Component, Input } from '@angular/core';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
+import { PAGE_SIZE_OPTIONS } from '@app/library/library.constants';
 
 @Component({
-  selector: 'cx-scraping-issue-detail',
-  templateUrl: './scraping-issue-detail.component.html',
-  styleUrls: ['./scraping-issue-detail.component.scss']
+  selector: 'cx-issue-metadata-detail',
+  templateUrl: './issue-metadata-detail.component.html',
+  styleUrls: ['./issue-metadata-detail.component.scss']
 })
-export class ScrapingIssueDetailComponent {
+export class IssueMetadataDetailComponent {
   @Input() issue: IssueMetadata;
 }

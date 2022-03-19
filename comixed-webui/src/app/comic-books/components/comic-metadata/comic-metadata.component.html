@@ -1,12 +1,12 @@
-<mat-toolbar class="cx-primary-light-background">
+<mat-toolbar class="cx-accent-light-background">
   <mat-paginator
-    class="cx-primary-light-background cx-height-100"
+    class="cx-accent-light-background cx-height-100"
     *ngIf="!!comic"
-    [pageSizeOptions]="[5, 10, 20]"
+    [pageSizeOptions]="pageSizeOptions"
     showFirstLastButtons
   ></mat-paginator>
   <div class="cx-spacer"></div>
-  <mat-form-field appearance="fill" class="cx-width-100">
+  <mat-form-field appearance="standard" class="cx-width-50">
     <input
       #filterInput
       id="filter-input"
@@ -32,13 +32,14 @@
   <div fxFlex.gt-sm="75%" fxFlex.sm="100%">
     <mat-table
       aria-label="Comic files available for import"
+      class="cx-width-100"
       [dataSource]="dataSource"
       matSort
       matSortActive="sortOrder"
       matSortDirection="desc"
       matSortDisableClear="false"
     >
-      <ng-container matColumnDef="sortOrder">
+      <ng-container matColumnDef="matchability">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "scraping.label.matchability" | translate }}
         </mat-header-cell>
@@ -60,7 +61,9 @@
           {{ "scraping.label.publisher" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.item.publisher }}
+          <div class="cx-width-100 cx-text-nowrap">
+            {{ element.item.publisher }}
+          </div>
         </mat-cell>
       </ng-container>
 
@@ -69,25 +72,29 @@
           {{ "scraping.label.series-name" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.item.name }}
+          <div class="cx-width-100 cx-text-nowrap">{{ element.item.name }}</div>
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="startYear">
+      <ng-container matColumnDef="start-year">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "scraping.label.start-year" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.item.startYear }}
+          <div class="cx-width-100 cx-text-nowrap">
+            {{ element.item.startYear }}
+          </div>
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="issueCount">
+      <ng-container matColumnDef="issue-count">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ "scraping.label.issue-count" | translate }}
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.item.issueCount }}
+          <div class="cx-width-100 cx-text-nowrap">
+            {{ element.item.issueCount }}
+          </div>
         </mat-cell>
       </ng-container>
 
@@ -120,8 +127,8 @@
     </mat-table>
   </div>
   <div fxFlex.gt-xs="25%" fxFlex.sm="100%">
-    <div *ngIf="!!issue" id="cx-scraping-issue-detail-content">
-      <cx-scraping-issue-detail [issue]="issue"></cx-scraping-issue-detail>
+    <div *ngIf="!!issue" id="cx-issue-metadata-detail-content">
+      <cx-issue-metadata-detail [issue]="issue"></cx-issue-metadata-detail>
     </div>
   </div>
 </div>

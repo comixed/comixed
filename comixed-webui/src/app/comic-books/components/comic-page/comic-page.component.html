@@ -1,5 +1,5 @@
 <mat-card class="cx-width-100">
-  <mat-card-title>{{ page?.filename }}</mat-card-title>
+  <mat-card-title *ngIf="!!page">{{ page?.filename }}</mat-card-title>
   <mat-card-content>
     <div class="cx-detail-card cx-padding-2 cx-margin-2">
       <img

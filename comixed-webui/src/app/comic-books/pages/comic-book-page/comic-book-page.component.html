@@ -117,7 +117,14 @@
   </button>
 </mat-toolbar>
 
-<h2 *ngIf="!!comic">{{ comic | comicTitle }}</h2>
+<div
+  *ngIf="!!comic"
+  class="cx-width-100 cx-padding-5 cx-accent-dark-background"
+>
+  <h1>
+    {{ comic | comicTitle }}
+  </h1>
+</div>
 
 <div *ngIf="!!comic" class="cx-detail-card-container">
   <div
@@ -200,7 +207,7 @@
             )
           "
         ></cx-comic-edit>
-        <cx-comic-scraping
+        <cx-comic-metadata
           *ngIf="volumes.length > 0"
           [comic]="comic"
           [metadataSource]="metadataSource"
@@ -210,7 +217,7 @@
           [skipCache]="skipCache"
           [pageSize]="pageSize"
           [volumes]="volumes"
-        ></cx-comic-scraping>
+        ></cx-comic-metadata>
       </mat-tab>
     </mat-tab-group>
   </div>

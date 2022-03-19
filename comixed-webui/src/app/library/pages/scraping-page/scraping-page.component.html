@@ -31,7 +31,7 @@
       [multimode]="true"
       (scrape)="onScrape($event)"
     ></cx-comic-edit>
-    <cx-comic-scraping
+    <cx-comic-metadata
       *ngIf="scrapingVolumes.length > 0"
       [comic]="currentComic"
       [metadataSource]="selectedMetadataSource"
@@ -42,6 +42,6 @@
       [pageSize]="pageSize"
       [multimode]="true"
       [volumes]="scrapingVolumes"
-    ></cx-comic-scraping>
+    ></cx-comic-metadata>
   </div>
 </div>

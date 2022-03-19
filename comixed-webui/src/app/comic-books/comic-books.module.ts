@@ -26,9 +26,9 @@ import { ComicEditComponent } from './components/comic-edit/comic-edit.component
 import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
 import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
 import { ComicPageComponent } from './components/comic-page/comic-page.component';
-import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
+import { ComicMetadataComponent } from './components/comic-metadata/comic-metadata.component';
 import { ComicStoryComponent } from './components/comic-story/comic-story.component';
-import { ScrapingIssueDetailComponent } from './components/scraping-issue-detail/scraping-issue-detail.component';
+import { IssueMetadataDetailComponent } from './components/issue-metadata-detail/issue-metadata-detail.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
@@ -93,9 +93,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ComicOverviewComponent,
     ComicPagesComponent,
     ComicPageComponent,
-    ComicScrapingComponent,
+    ComicMetadataComponent,
     ComicStoryComponent,
-    ScrapingIssueDetailComponent,
+    IssueMetadataDetailComponent,
     ComicDetailCardComponent,
     ComicCoverUrlPipe,
     ComicPageUrlPipe,
@@ -151,7 +151,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CommonModule,
     ComicPageComponent,
     ComicEditComponent,
-    ComicScrapingComponent,
+    ComicMetadataComponent,
     ComicDetailCardComponent,
     ComicTitlePipe,
     ComicCoverUrlPipe,
