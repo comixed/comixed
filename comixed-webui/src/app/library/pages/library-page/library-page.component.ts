@@ -46,6 +46,10 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
+import {
+  deselectComics,
+  selectComics
+} from '@app/library/actions/library.actions';
 
 @Component({
   selector: 'cx-library-page',
@@ -185,6 +189,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   private _comics: Comic[] = [];
 
+  set comics(comics: Comic[]) {
+    this._comics = comics;
+  }
+
   get comics(): Comic[] {
     return this._comics;
   }
@@ -220,6 +228,16 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       QUERY_PARAM_PAGE_INDEX,
       `${pageIndex}`
     );
+  }
+
+  onSelectAllComics(selected: boolean): void {
+    if (selected) {
+      this.logger.trace('Selecting all comics');
+      this.store.dispatch(selectComics({ comics: this.comics }));
+    } else {
+      this.logger.trace('Deselecting all comics');
+      this.store.dispatch(deselectComics({ comics: this.selected }));
+    }
   }
 
   private loadTranslations(): void {

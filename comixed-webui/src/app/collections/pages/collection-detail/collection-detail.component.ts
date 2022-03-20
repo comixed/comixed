@@ -39,6 +39,10 @@ import {
   QUERY_PARAM_PAGE_INDEX
 } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
+import {
+  deselectComics,
+  selectComics
+} from '@app/library/actions/library.actions';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -153,6 +157,16 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       QUERY_PARAM_PAGE_INDEX,
       `${pageIndex}`
     );
+  }
+
+  onSelectAllComics(selected: boolean): void {
+    if (selected) {
+      this.logger.trace('Selecting all comics');
+      this.store.dispatch(selectComics({ comics: this.comics }));
+    } else {
+      this.logger.trace('Deselecting all comics');
+      this.store.dispatch(deselectComics({ comics: this.selected }));
+    }
   }
 
   private loadTranslations(): void {

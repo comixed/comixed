@@ -13,13 +13,11 @@
   [sortField]="sortField"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
   (pageIndexChanged)="onPageIndexChanged($event)"
+  (selectAllComics)="selectAllComics.emit($event)"
 ></cx-library-toolbar>
 
 <h2>
-  {{
-    title
-      | translate: { count: dataSource.data.length, selected: selected.length }
-  }}
+  {{ title | translate: { count: dataSource.data.length } }}
 </h2>
 
 <div id="cx-all-comics" class="cx-detail-card-container" matSort>

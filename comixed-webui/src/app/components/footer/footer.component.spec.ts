@@ -32,12 +32,17 @@ import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
+import {
+  LIBRARY_FEATURE_KEY,
+  initialState as initialLibraryState
+} from '@app/library/reducers/library.reducer';
 
 describe('FooterComponent', () => {
   const initialState = {
     [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
-    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
+    [LIBRARY_FEATURE_KEY]: initialLibraryState
   };
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;

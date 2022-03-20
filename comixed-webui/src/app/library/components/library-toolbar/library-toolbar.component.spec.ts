@@ -25,10 +25,6 @@ import {
   COMIC_2,
   COMIC_3
 } from '@app/comic-books/comic-books.fixtures';
-import {
-  deselectComics,
-  selectComics
-} from '@app/library/actions/library.actions';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -106,32 +102,6 @@ describe('LibraryToolbarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('selecting all comics', () => {
-    beforeEach(() => {
-      component.comics = COMICS;
-      component.onSelectAll();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        selectComics({ comics: COMICS })
-      );
-    });
-  });
-
-  describe('deselecting all comics', () => {
-    beforeEach(() => {
-      component.selected = COMICS;
-      component.onDeselectAll();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        deselectComics({ comics: COMICS })
-      );
-    });
   });
 
   describe('starting the scraping process', () => {
@@ -292,6 +262,30 @@ describe('LibraryToolbarComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         purgeLibrary({ ids: COMICS.map(comic => comic.id) })
       );
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+      spyOn(component.selectAllComics, 'emit');
+      component.onSelectAll();
+    });
+
+    it('emits an event', () => {
+      expect(component.selectAllComics.emit).toHaveBeenCalledWith(true);
+    });
+  });
+
+  describe('deselecting all comics', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      spyOn(component.selectAllComics, 'emit');
+      component.onDeselectAll();
+    });
+
+    it('emits an event', () => {
+      expect(component.selectAllComics.emit).toHaveBeenCalledWith(false);
     });
   });
 });

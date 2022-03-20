@@ -119,12 +119,12 @@
       "stories": "Historias"
     },
     "page-title": {
-      "all": "All Comics: {selected} of {count} Selected",
-      "changed-only": "Changed Comics: {selected} of {count} Selected",
-      "deleted-only": "Deleted Comics: {selected} of {count} Selected",
-      "unprocessed-only": "Unprocessed Comics: {selected} of {count} Selected",
-      "unread-only": "Unread Comics: {selected} of {count} Selected",
-      "unscraped-only": "Unscraped Comics: {selected} of {count} Selected"
+      "all": "All Comics ({count} Comics)",
+      "changed-only": "Changed Comics ({count} Comics)",
+      "deleted-only": "Deleted Comics ({count} Comics)",
+      "unprocessed-only": "Unprocessed Comics ({count} Comics)",
+      "unread-only": "Unread Comics ({count} Comics)",
+      "unscraped-only": "Unscraped Comics ({count} Comics)"
     },
     "purge-library": {
       "confirmation-message": "Are you sure you want to purge the selected deleted comics? This action cannot be undone.",

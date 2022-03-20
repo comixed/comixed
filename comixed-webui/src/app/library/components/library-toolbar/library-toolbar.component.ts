@@ -28,10 +28,6 @@ import {
 import { Comic } from '@app/comic-books/models/comic';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import {
-  deselectComics,
-  selectComics
-} from '@app/library/actions/library.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import {
@@ -73,6 +69,7 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
   @Output() pageIndexChanged = new EventEmitter<number>();
+  @Output() selectAllComics = new EventEmitter<boolean>();
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
@@ -109,13 +106,11 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   }
 
   onSelectAll(): void {
-    this.logger.debug('Selecting all comics');
-    this.store.dispatch(selectComics({ comics: this.comics }));
+    this.selectAllComics.emit(true);
   }
 
   onDeselectAll(): void {
-    this.logger.debug('Deselecting all comics');
-    this.store.dispatch(deselectComics({ comics: this.selected }));
+    this.selectAllComics.emit(false);
   }
 
   onScrapeComics(): void {
