@@ -58,7 +58,8 @@ import {
   COMIC_1,
   COMIC_2,
   COMIC_3,
-  COMIC_4
+  COMIC_4,
+  COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
@@ -81,10 +82,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import {
+  deselectComics,
+  selectComics
+} from '@app/library/actions/library.actions';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
   const PAGE_INDEX = 23;
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -150,6 +156,7 @@ describe('LibraryPageComponent', () => {
       fixture = TestBed.createComponent(LibraryPageComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
       translateService = TestBed.inject(TranslateService);
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
@@ -516,6 +523,32 @@ describe('LibraryPageComponent', () => {
 
     it('redirects the browser', () => {
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+      component.onSelectAllComics(true);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        selectComics({ comics: COMICS })
+      );
+    });
+  });
+
+  describe('deselecting comics', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      component.onSelectAllComics(false);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deselectComics({ comics: COMICS })
+      );
     });
   });
 });

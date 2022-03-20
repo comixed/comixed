@@ -1,3 +1,9 @@
+<h1>
+  {{
+    "collection-detail.title." + collectionType
+      | translate: { name: collectionName, count: comics?.length || 0 }
+  }}
+</h1>
 <cx-comic-covers
   [comics]="comics"
   [selected]="selected"
@@ -7,4 +13,5 @@
   [pageSize]="pageSize"
   [pageIndex]="pageIndex"
   (pageIndexChanged)="onPageIndexChanged($event)"
+  (selectAllComics)="onSelectAllComics($event)"
 ></cx-comic-covers>

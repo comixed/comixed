@@ -1,6 +1,14 @@
 {
   "collection-detail": {
-    "tab-title": "{collection, select, characters{Personnage} teams{Equipe} locations{Lieu} stories{Histoire} publishers{Éditeur} series{Série} other{Inconnu}}: {name}"
+    "tab-title": "{collection, select, characters{Personnage} teams{Equipe} locations{Lieu} stories{Histoire} publishers{Éditeur} series{Série} other{Inconnu}}: {name}",
+    "title": {
+      "characters": "Character: {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "locations": "Location: {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "publishers": "Publisher: {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "series": "Series: {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "stories": "Story: {name} ({count, plural, =1{One Comic} other{# Comics}})",
+      "teams": "Team: {name} ({count, plural, =1{One Comic} other{# Comics}})"
+    }
   },
   "collection-list": {
     "label": {

@@ -68,6 +68,10 @@ import {
 import { TitleService } from '@app/core/services/title.service';
 import { MatSortModule } from '@angular/material/sort';
 import { QUERY_PARAM_PAGE_INDEX } from '@app/library/library.constants';
+import {
+  deselectComics,
+  selectComics
+} from '@app/library/actions/library.actions';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -133,6 +137,7 @@ describe('CollectionDetailComponent', () => {
       fixture = TestBed.createComponent(CollectionDetailComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
       activatedRoute = TestBed.inject(ActivatedRoute);
       router = TestBed.inject(Router);
       spyOn(router, 'navigate');
@@ -308,6 +313,32 @@ describe('CollectionDetailComponent', () => {
 
     it('redirects the browsers', () => {
       expect(router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('selecting all comics', () => {
+    beforeEach(() => {
+      component.comics = COMICS;
+      component.onSelectAllComics(true);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        selectComics({ comics: COMICS })
+      );
+    });
+  });
+
+  describe('deselecting comics', () => {
+    beforeEach(() => {
+      component.selected = COMICS;
+      component.onSelectAllComics(false);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        deselectComics({ comics: COMICS })
+      );
     });
   });
 });

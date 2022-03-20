@@ -82,6 +82,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
   @Output() pageIndexChanged = new EventEmitter<number>();
+  @Output() selectAllComics = new EventEmitter<boolean>();
 
   pagination = PAGE_SIZE_DEFAULT;
   dataSource = new MatTableDataSource<Comic>();

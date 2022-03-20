@@ -119,12 +119,12 @@
       "stories": "Histoires"
     },
     "page-title": {
-      "all": "Toutes les bandes dessinées: {selected} sur {count} sélectionnées",
-      "changed-only": "Bandes dessinées modifiées: {selected} sur {count} sélectionnées",
-      "deleted-only": "Bandes dessinées supprimées: {selected} sur {count} sélectionnées",
-      "unprocessed-only": "Bandes dessinées non traitées: {selected} sur {count} sélectionnées",
-      "unread-only": "Bandes dessinées non lues: {selected} sur {count} sélectionnées",
-      "unscraped-only": "Metadonnées de Bandes dessinées non récupérées: {selected} sur {count} sélectionnées"
+      "all": "All Comics ({count} Comics)",
+      "changed-only": "Changed Comics ({count} Comics)",
+      "deleted-only": "Deleted Comics ({count} Comics)",
+      "unprocessed-only": "Unprocessed Comics ({count} Comics)",
+      "unread-only": "Unread Comics ({count} Comics)",
+      "unscraped-only": "Unscraped Comics ({count} Comics)"
     },
     "purge-library": {
       "confirmation-message": "Êtes-vous sûr de vouloir purger les bandes dessinées supprimées sélectionnées ? Cette action ne peut pas être annulée.",

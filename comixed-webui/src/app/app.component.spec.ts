@@ -48,8 +48,8 @@ import {
 } from '@app/messaging/reducers/messaging.reducer';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
-  PROCESS_COMICS_FEATURE_KEY,
-  initialState as initialImportCountState
+  initialState as initialImportCountState,
+  PROCESS_COMICS_FEATURE_KEY
 } from '@app/reducers/process-comics.reducer';
 import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
@@ -71,6 +71,10 @@ import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
+import {
+  LIBRARY_FEATURE_KEY,
+  initialState as initialLibraryState
+} from '@app/library/reducers/library.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -86,7 +90,8 @@ describe('AppComponent', () => {
     [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
-    [READING_LISTS_FEATURE_KEY]: initialReadingListsState
+    [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
+    [LIBRARY_FEATURE_KEY]: initialLibraryState
   };
 
   let component: AppComponent;

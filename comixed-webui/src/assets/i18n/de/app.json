@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "A general error has occurred.",
     "logged-in": "Logged in: {email}",
-    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Deleted: {deletedCount}"
+    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Selected: {selectedCount} | Deleted: {deletedCount}"
   },
   "build-details": {
     "label": {

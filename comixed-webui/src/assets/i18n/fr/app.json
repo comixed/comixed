@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "Un dysfonctionnement général du système s'est produit.",
     "logged-in": "Connecté avec le compte : {email}",
-    "system-status": "Imports: {importCount} | Bandes dessinées: {comicCount} | Lues: {readCount} | Supprimées: {deletedCount}"
+    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Selected: {selectedCount} | Deleted: {deletedCount}"
   },
   "build-details": {
     "label": {
