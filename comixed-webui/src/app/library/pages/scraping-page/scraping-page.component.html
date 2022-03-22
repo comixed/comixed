@@ -26,6 +26,7 @@
     <cx-comic-edit
       *ngIf="!!currentComic && scrapingVolumes.length === 0"
       [comic]="currentComic"
+      [metadataSource]="metadataSource"
       [skipCache]="skipCache"
       [maximumRecords]="maximumRecords"
       [multimode]="true"
@@ -34,7 +35,7 @@
     <cx-comic-metadata
       *ngIf="scrapingVolumes.length > 0"
       [comic]="currentComic"
-      [metadataSource]="selectedMetadataSource"
+      [metadataSource]="metadataSource"
       [comicSeriesName]="currentSeries"
       [comicVolume]="currentVolume"
       [comicIssueNumber]="this.currentIssueNumber"
