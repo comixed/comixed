@@ -295,7 +295,8 @@ public class MetadataService {
       log.trace("Creating comic metadata record");
       comic.setMetadataSource(
           new ComicMetadataSource(comic, metadataSource, issueDetails.getSourceId()));
-      comic.setNotes(String.format("Comic details scraped by %s", metadataAdaptor.getIdentifier()));
+      comic.setNotes(
+          String.format("Comic metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");
       this.imprintService.update(comic);
       log.info("Creating metadata audit log entry");
