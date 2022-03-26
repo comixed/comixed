@@ -56,6 +56,7 @@
     "@tragically-slick/confirmation": "^0.1.2-2",
     "@tragically-slick/edit-in-place": "^0.1.1-2",
     "@types/file-saver": "^2.0.0",
+    "ansi-html": "^0.0.8",
     "ansi-regex": "^4.1.1",
     "color-string": "^1.5.5",
     "css-what": "^5.0.1",
