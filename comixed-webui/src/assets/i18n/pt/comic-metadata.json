@@ -25,6 +25,7 @@
       "effect-success": "Saved metadata source: {name}"
     },
     "tooltip": {
+      "add-property": "Added a new property.",
       "create-source": "Create a new metadata source.",
       "delete-property": "Delete property {name}.",
       "delete-source": "Delete this metadata source.",
