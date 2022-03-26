@@ -7,23 +7,24 @@
     <button
       id="set-deleted-button"
       mat-icon-button
-      color="warn"
+      color="primary"
       [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
       [disabled]="!someSelected"
       (click)="onMarkSelectedForDeletion()"
     >
-      <mat-icon>block</mat-icon>
+      <mat-icon>flag</mat-icon>
     </button>
     <button
       id="clear-deleted-button"
       mat-icon-button
-      color="accent"
+      color="primary"
       [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
       [disabled]="!someSelected"
       (click)="onClearSelectedForDeletion()"
     >
-      <mat-icon>remove_circle_outline</mat-icon>
+      <mat-icon>outlined_flag</mat-icon>
     </button>
+    <mat-divider vertical="true"></mat-divider>
     <button
       id="delete-entries"
       mat-icon-button
@@ -34,10 +35,11 @@
     >
       <mat-icon>delete</mat-icon>
     </button>
+    <mat-divider vertical="true"></mat-divider>
     <button
       id="upload-button"
       mat-icon-button
-      color="primary"
+      color="accent"
       [matTooltip]="'blocked-hash-list.tooltip.upload-file' | translate"
       (click)="onShowUploadRow()"
     >
@@ -46,7 +48,7 @@
     <button
       id="download-button"
       mat-icon-button
-      color="primary"
+      color="accent"
       [matTooltip]="'blocked-hash-list.tooltip.download-file' | translate"
       (click)="onDownloadFile()"
     >

@@ -1,5 +1,9 @@
 @import 'styles';
 
+mat-divider {
+  height: 50%;
+}
+
 .mat-column-selected {
   width: $cx-column-small;
   max-width: $cx-column-small;
