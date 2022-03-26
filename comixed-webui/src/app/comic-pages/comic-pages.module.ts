@@ -69,6 +69,7 @@ import { DeleteBlockedPagesEffects } from '@app/comic-pages/effects/delete-block
 import { DeletedListPageComponent } from './pages/deleted-list-page/deleted-list-page.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { MatSortModule } from '@angular/material/sort';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatButtonModule,
     MatTooltipModule,
     ComicBooksModule,
-    MatSortModule
+    MatSortModule,
+    MatDividerModule
   ],
   exports: [CommonModule]
 })
