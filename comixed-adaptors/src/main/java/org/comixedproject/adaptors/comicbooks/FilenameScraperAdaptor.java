@@ -95,7 +95,7 @@ public class FilenameScraperAdaptor {
 
   private boolean ruleApplies(final Pattern expression, final String filename) {
     log.trace("Checking if filename matches scraping pattern");
-    return expression.matcher(filename).matches();
+    return expression.matcher(filename) != null && expression.matcher(filename).matches();
   }
 
   private String[] extractElements(final Pattern expression, final String filename) {
