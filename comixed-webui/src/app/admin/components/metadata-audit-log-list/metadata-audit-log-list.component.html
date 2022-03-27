@@ -51,9 +51,15 @@
       {{ "metadata-audit-log.label.comic" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <a [routerLink]="['/library/comics', entry.comic.id]">
+      <a
+        *ngIf="!!entry.comic?.id"
+        [routerLink]="['/library/comics', entry.comic.id]"
+      >
         {{ entry.comic | comicTitle }}
       </a>
+      <strong *ngIf="!entry.comic?.id">
+        {{ "metadata-audit-log.text.comic-is-missing" | translate }}
+      </strong>
     </mat-cell>
   </ng-container>
 

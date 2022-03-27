@@ -23,6 +23,7 @@
     },
     "tab-title": "Configuration",
     "text": {
+      "comic-is-missing": "Comic is no longer available.",
       "comic-renaming-rule-cover-date": "The cover date",
       "comic-renaming-rule-issue-number": "The issue number",
       "comic-renaming-rule-issue-number-with-length": "The issue number with a minimum length",

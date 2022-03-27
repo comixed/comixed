@@ -56,6 +56,9 @@
     "load-entries": {
       "effect-failure": "Failed to load metadata audit log."
     },
+    "text": {
+      "comic-is-missing": "Comic is no longer available."
+    },
     "tooltip": {
       "clear-entries": "Clear the metadata audit log.",
       "reload-entries": "Reload the metadata audit log."

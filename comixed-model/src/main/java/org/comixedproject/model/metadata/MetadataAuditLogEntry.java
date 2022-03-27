@@ -18,9 +18,7 @@
 
 package org.comixedproject.model.metadata;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
@@ -40,9 +38,12 @@ import org.comixedproject.views.View;
 @Table(name = "MetadataAuditLogEntries")
 @NoArgsConstructor
 @RequiredArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class MetadataAuditLogEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonProperty("id")
+  @JsonView({View.MetadataSourceDetail.class, View.MetadataAuditLogEntryList.class})
   @Getter
   private Long id;
 
