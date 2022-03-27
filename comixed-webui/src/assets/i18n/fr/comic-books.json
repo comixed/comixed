@@ -101,9 +101,10 @@
       "state-UNPROCESSED": "Non traité"
     },
     "tooltip": {
-      "blocked-hash": "Les pages comme celle-ci sont bloquées...",
+      "blocked-hash": "Les pages comme celle-ci sont bloquées.",
       "cancel-scraping": "Arrêter la récupération des détails de cette Bande Dessinées.",
       "delete-comic": "Marquer les bandes dessinées comme supprimées.",
+      "deleted-page": "Page is marked for deletion.",
       "download-comic": "Télécharger cette Bande Dessinée...",
       "go-to-next-comic": "Aller à la prochaine Bande Dessinée de cette série...",
       "go-to-previous-comic": "Aller à la précédente Bande Dessinée de cette série...",

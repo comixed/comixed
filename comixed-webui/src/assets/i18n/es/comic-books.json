@@ -101,9 +101,10 @@
       "state-UNPROCESSED": "Unprocessed"
     },
     "tooltip": {
-      "blocked-hash": "Páginas como esta están bloqueadas...",
+      "blocked-hash": "Páginas como esta están bloqueadas.",
       "cancel-scraping": "Deja de raspar este cómic.",
       "delete-comic": "Mark comics as deleted.",
+      "deleted-page": "Page is marked for deletion.",
       "download-comic": "Descarga este cómic...",
       "go-to-next-comic": "Ir al siguiente cómic de esta serie...",
       "go-to-previous-comic": "Ir al cómic anterior de esta serie...",
