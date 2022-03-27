@@ -17,10 +17,7 @@
 
 package org.comixedproject.model.comicpages;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
@@ -39,7 +36,7 @@ import org.hibernate.annotations.Formula;
 @Log4j2
 @NoArgsConstructor
 @RequiredArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Page {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

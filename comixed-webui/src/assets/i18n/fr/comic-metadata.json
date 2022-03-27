@@ -56,6 +56,9 @@
     "load-entries": {
       "effect-failure": "Échec du chargement du journal d'audit des métadonnées."
     },
+    "text": {
+      "comic-is-missing": "Comic is no longer available."
+    },
     "tooltip": {
       "clear-entries": "Effacer le journal d'audit des métadonnées.",
       "reload-entries": "Rechargez le journal d'audit des métadonnées."

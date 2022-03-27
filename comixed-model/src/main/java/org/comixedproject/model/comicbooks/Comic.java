@@ -48,7 +48,7 @@ import org.springframework.data.annotation.CreatedDate;
 @Log4j2
 @NoArgsConstructor
 @RequiredArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Comic {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -395,6 +395,7 @@ public class Comic {
   private List<LastRead> lastReads = new ArrayList<>();
 
   @OneToMany(mappedBy = "comic", orphanRemoval = true, fetch = FetchType.LAZY)
+  @OrderColumn(name = "createdOn")
   @Getter
   private Set<MetadataAuditLogEntry> metadataAuditLogEntries = new HashSet<>();
 

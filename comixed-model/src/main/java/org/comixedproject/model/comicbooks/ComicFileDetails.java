@@ -18,10 +18,7 @@
 
 package org.comixedproject.model.comicbooks;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
 import lombok.*;
 import org.comixedproject.views.View;
@@ -35,7 +32,7 @@ import org.comixedproject.views.View;
 @Table(name = "ComicFileDetails")
 @NoArgsConstructor
 @RequiredArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ComicFileDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
