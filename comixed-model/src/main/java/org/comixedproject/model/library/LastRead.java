@@ -35,9 +35,9 @@ import org.springframework.data.annotation.CreatedDate;
  */
 @Entity
 @Table(name = "LastReadDates")
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 @RequiredArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class LastRead {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

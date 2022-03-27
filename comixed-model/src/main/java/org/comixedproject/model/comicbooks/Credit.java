@@ -30,9 +30,9 @@ import org.comixedproject.views.View;
  */
 @Entity
 @Table(name = "Credits")
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@id")
 @NoArgsConstructor
 @RequiredArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Credit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
