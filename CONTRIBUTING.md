@@ -237,11 +237,14 @@ Please also be sure that the contribution does not break any existing unit
 tests. So be sure to run the full suite of unit tests for the entire project
 before submitting your pull request.
 
+
+
 # Translations
 
 Translating the application in a new language, or updating an existing
 translation, is a relatively easy method of contributing to the project.
 However, there are some elements to understand.
+
 
 ## File Locations
 
@@ -254,11 +257,13 @@ A different subdirectory exists for each language supported, using the [ISO
 for each; i.e., American English is in a directory named **en**, French is
 in the directory **fr**, etc.
 
+
 ## Adding A New Language
 
 To add a new language, create a subdirectory using the appropriate 2-letter
 code. Then, copy the files from the **en** directory (which is the reference
 translation) into this new directory.
+
 
 ## Translating Entries
 
@@ -267,6 +272,7 @@ The majority of entries are simple sentences and can be directly translated.
 
 However there are other kinds of entries and their translations are
 slightly different.
+
 
 ### Entries With Variable Text
 
@@ -282,6 +288,7 @@ For example:
 If "{name}" is equal to "Age Of Apocalypse", then this entry translates to:
 
     Reading List: Age Of Apocalypse
+
 
 ### Entries With Plurality
 
@@ -339,6 +346,49 @@ So, for example, if "type" is equal to "CBZ", then this entry translates to:
 However, if it is equal to "CB7", then this entry translates to:
 
     7Zip File (CB7)
+
+
+## Enabling The Translation
+
+The last step is to add the language to the list of available languages in
+the application itself. To do so, you only need to add an entry to the
+list of languages in the ```navigation-bar.component.ts``` file. The file,
+by default, contains the following:
+
+```typescript
+  readonly languages: ListItem<string>[] = [
+    { label: 'English', value: 'en' }
+  ];
+```
+
+Here, **label** is the value shown in the navigation bar, and **value** is
+the two letter directory name containing the translation files.
+
+To add a new language, you would copy the above row, and add a label, which
+is the name of the language, and a value, which is the directory name that
+holds those files.
+
+
+## Example: Adding French Translations
+
+Let's suppose you were adding support for the French language. Here are the
+steps that you would follow:
+
+1. Create the directory ```comixed-webgui/src/assets/i18n/fr``` to hold the files.
+2. Copy the files from ```comixed-webgui/src/assets/i18n/en``` into this directory.
+3. Translate the text in each of the files, following the previous guidelines.
+4. Add an entry to ```navigation-bar.component.ts``` file, to look like the following:
+    ```typescript
+      readonly languages: ListItem<string>[] = [
+        { label: 'English', value: 'en' },
+        { label: 'Français', value: 'fr' }
+      ];
+    ```
+5. [Commit all the changes](#use-a-single-commit-for-each-feature-or-bug-fix) using a commit message like the following:
+    ```
+    Added support for the French language [#XXXX]
+   ````
+6. Submit a PR.
 
 # Pull Requests
 

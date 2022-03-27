@@ -46,13 +46,7 @@ export class NavigationBarComponent {
   @Output() toggleSidebar = new EventEmitter<boolean>();
   isReader = false;
   isAdmin = false;
-  readonly languages: ListItem<string>[] = [
-    { label: 'English', value: 'en' },
-    { label: 'Français', value: 'fr' }
-    // { label: 'Español', value: 'es' },
-    // { label: 'Português', value: 'pt' },
-    // { label: 'Deutsche', value: 'de' }
-  ];
+  readonly languages: ListItem<string>[] = [{ label: 'English', value: 'en' }];
   currentLanguage = '';
   readonly loggingOptions = [
     LoggerLevel.INFO,
