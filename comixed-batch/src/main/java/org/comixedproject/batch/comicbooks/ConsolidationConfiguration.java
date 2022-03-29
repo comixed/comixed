@@ -24,7 +24,7 @@ import org.comixedproject.batch.comicbooks.processors.MoveComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.DeleteComicReader;
 import org.comixedproject.batch.comicbooks.readers.MoveComicReader;
 import org.comixedproject.batch.comicbooks.writers.MoveComicWriter;
-import org.comixedproject.batch.writers.NoopWriter;
+import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicsWriter;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -90,10 +90,10 @@ public class ConsolidationConfiguration {
       final StepBuilderFactory stepBuilderFactory,
       final DeleteComicReader reader,
       final DeleteComicProcessor processor,
-      final NoopWriter<Void> writer) {
+      final PurgeMarkedComicsWriter writer) {
     return stepBuilderFactory
         .get("deleteComicStep")
-        .<Comic, Void>chunk(this.batchChunkSize)
+        .<Comic, Comic>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

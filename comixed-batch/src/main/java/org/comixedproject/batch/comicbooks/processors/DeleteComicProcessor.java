@@ -40,21 +40,22 @@ import org.springframework.boot.test.context.TestComponent;
  */
 @TestComponent
 @Log4j2
-public class DeleteComicProcessor implements ItemProcessor<Comic, Void>, StepExecutionListener {
+public class DeleteComicProcessor implements ItemProcessor<Comic, Comic>, StepExecutionListener {
   @Autowired private ComicService comicService;
   @Autowired private FileAdaptor fileAdaptor;
 
   private ExecutionContext executionContext;
 
   @Override
-  public Void process(final Comic comic) {
+  public Comic process(final Comic comic) {
     log.debug("Removing comic from database: id={}", comic.getId());
     this.comicService.deleteComic(comic);
-    if (Boolean.parseBoolean(this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES))) {
+    if (Boolean.parseBoolean(
+        this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
       log.trace("Deleting physical file: {}", comic.getFilename());
       this.fileAdaptor.deleteFile(comic.getFile());
     }
-    return null;
+    return comic;
   }
 
   @Override
