@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
 
 import java.io.File;
@@ -60,10 +60,14 @@ public class DeleteComicProcessorTest {
 
   @Test
   public void testProcessWithDeleteFile() {
-    Mockito.when(executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES))
+    Mockito.when(
+            executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(true));
 
-    processor.process(comic);
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
 
     Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
@@ -71,10 +75,14 @@ public class DeleteComicProcessorTest {
 
   @Test
   public void testProcessWithDeleteFileThrowsException() {
-    Mockito.when(executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES))
+    Mockito.when(
+            executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(true));
 
-    processor.process(comic);
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
 
     Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
@@ -82,10 +90,14 @@ public class DeleteComicProcessorTest {
 
   @Test
   public void testProcess() {
-    Mockito.when(executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES))
+    Mockito.when(
+            executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))
         .thenReturn(String.valueOf(false));
 
-    processor.process(comic);
+    final Comic result = processor.process(comic);
+
+    assertNotNull(result);
+    assertSame(comic, result);
 
     Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
     Mockito.verify(fileAdaptor, Mockito.never()).deleteFile(Mockito.any());
