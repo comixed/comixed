@@ -61,23 +61,21 @@ public class ComicFileAdaptor {
    *
    * @param filename the root filename
    * @param attempt the current attempt
-   * @param defaultExtension the extension for the file
+   * @param extension the extension for the file
    * @return the filename to use
    */
   public String findAvailableFilename(
-      final String filename, final int attempt, final String defaultExtension) {
+      final String filename, final int attempt, final String extension) {
     String candidate = null;
 
     if (attempt > 0) {
-      candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, defaultExtension);
+      candidate = MessageFormat.format("{0}-{1}.{2}", filename, attempt, extension);
     } else {
-      candidate = MessageFormat.format("{0}.{1}", filename, defaultExtension);
+      candidate = MessageFormat.format("{0}.{1}", filename, extension);
     }
 
     var file = new File(candidate);
-    return (!file.exists())
-        ? candidate
-        : findAvailableFilename(filename, attempt + 1, defaultExtension);
+    return (!file.exists()) ? candidate : findAvailableFilename(filename, attempt + 1, extension);
   }
 
   /**
@@ -146,8 +144,7 @@ public class ComicFileAdaptor {
             .replace(PLACEHOLDER_PUBLISHED_MONTH, publishedMonth);
 
     log.trace("Relative comic filename: {}", result);
-
-    return String.format("%s.%s", result, comic.getArchiveType().getExtension());
+    return result;
   }
 
   private String checkForPadding(final String rule, final String placeholder, final String value) {
