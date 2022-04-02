@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="005_1211_fix_metadata_cache_entry_column_type.xml"
+             author="mcpierce">
+
+    <sql dbms="mysql">
+      ALTER TABLE MetadataCacheEntries CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    </sql>
+
+  </changeSet>
+</databaseChangeLog>
