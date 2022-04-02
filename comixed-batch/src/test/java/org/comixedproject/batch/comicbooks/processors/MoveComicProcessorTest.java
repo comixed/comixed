@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,9 +39,13 @@ import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MoveComicProcessorTest {
-  private static final String TEST_TARGET_DIRECTORY = "The target directory";
+  private static final String TEST_TARGET_DIRECTORY = "/Users/comixed/Documents/Comics";
   private static final String TEST_RENAMING_RULE = "The renaming rule";
-  private static final String TEST_NEW_FILENAME = "comic.cbz";
+  private static final String TEST_NEW_FILENAME = "comic";
+  private static final String TEST_NEW_FILENAME_WITH_PATH = TEST_TARGET_DIRECTORY + "/" + "comic";
+  private static final String TEST_EXTENSION = "cbz";
+  private static final String TEST_NEW_FILENAME_WITH_EXTENSION =
+      TEST_NEW_FILENAME_WITH_PATH + "." + TEST_EXTENSION;
 
   @InjectMocks private MoveComicProcessor processor;
   @Mock private StepExecution stepExecution;
@@ -55,11 +60,14 @@ public class MoveComicProcessorTest {
   @Captor private ArgumentCaptor<File> sourceFileArgumentCaptor;
   @Captor private ArgumentCaptor<File> targetFileArgumentCaptor;
 
+  private ArchiveType archiveType = ArchiveType.CBZ;
+
   @Before
   public void setUp() {
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     processor.beforeStep(stepExecution);
+    Mockito.when(comic.getArchiveType()).thenReturn(archiveType);
   }
 
   @Test
@@ -70,6 +78,10 @@ public class MoveComicProcessorTest {
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(Mockito.any(Comic.class), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME);
+    Mockito.when(
+            comicFileAdaptor.findAvailableFilename(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
     Mockito.when(comic.getFile()).thenReturn(comicFile);
     Mockito.doNothing()
         .when(fileAdaptor)
@@ -83,13 +95,15 @@ public class MoveComicProcessorTest {
     assertEquals(TEST_TARGET_DIRECTORY, createDirectoryArgumentCaptor.getValue().getPath());
     assertSame(comicFile, sourceFileArgumentCaptor.getValue());
     assertEquals(
-        new File(TEST_TARGET_DIRECTORY, TEST_NEW_FILENAME).getAbsolutePath(),
+        new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
         targetFileArgumentCaptor.getValue().getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .createDirectory(createDirectoryArgumentCaptor.getValue());
     Mockito.verify(comicFileAdaptor, Mockito.times(1))
         .createFilenameFromRule(comic, TEST_RENAMING_RULE);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1))
+        .findAvailableFilename(TEST_NEW_FILENAME_WITH_PATH, 0, TEST_EXTENSION);
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(sourceFileArgumentCaptor.getValue(), targetFileArgumentCaptor.getValue());
   }
@@ -102,6 +116,10 @@ public class MoveComicProcessorTest {
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(Mockito.any(Comic.class), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME);
+    Mockito.when(
+            comicFileAdaptor.findAvailableFilename(
+                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
     Mockito.when(comic.getFile()).thenReturn(comicFile);
     Mockito.doThrow(IOException.class)
         .when(fileAdaptor)
@@ -115,7 +133,7 @@ public class MoveComicProcessorTest {
     assertEquals(TEST_TARGET_DIRECTORY, createDirectoryArgumentCaptor.getValue().getPath());
     assertSame(comicFile, sourceFileArgumentCaptor.getValue());
     assertEquals(
-        new File(TEST_TARGET_DIRECTORY, TEST_NEW_FILENAME).getAbsolutePath(),
+        new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
         targetFileArgumentCaptor.getValue().getAbsolutePath());
 
     Mockito.verify(fileAdaptor, Mockito.times(1))

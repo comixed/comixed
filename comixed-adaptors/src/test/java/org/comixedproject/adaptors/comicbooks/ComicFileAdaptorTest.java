@@ -29,7 +29,6 @@ import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.Locale;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.Comic;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,10 +41,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ComicFileAdaptorTest {
   private static final String TEST_COMIC_FILENAME = "Super Awesome Issue #3";
-  private static final String TEST_EXTENSION = "cbz";
   private static final String TEST_ROOT_DIRECTORY = "/Users/comixedreader/Documents/comics/library";
   private static final String TEST_FULL_COMIC_FILENAME =
-      TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME + "." + TEST_EXTENSION;
+      TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME;
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = TEST_COMIC_FILENAME;
   private static final String TEST_RENAMING_RULE =
       "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $PUBMONTH $PUBYEAR $COVERDATE";
@@ -77,7 +75,6 @@ public class ComicFileAdaptorTest {
 
   @InjectMocks private ComicFileAdaptor adaptor;
   @Mock private Comic comic;
-  @Mock private ArchiveType archiveAdaptor;
 
   @Before
   public void setUp() {
@@ -87,9 +84,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comic.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE);
     Mockito.when(comic.getCoverDate()).thenReturn(TEST_COVER_DATE);
-    Mockito.when(comic.getArchiveType()).thenReturn(archiveAdaptor);
     Mockito.when(comic.getStoreDate()).thenReturn(TEST_STORE_DATE);
-    Mockito.when(archiveAdaptor.getExtension()).thenReturn(TEST_EXTENSION);
   }
 
   @Test
@@ -111,8 +106,7 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -128,8 +122,7 @@ public class ComicFileAdaptorTest {
             TEST_PADDED_ISSUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -140,15 +133,14 @@ public class ComicFileAdaptorTest {
 
     assertEquals(
         String.format(
-            "__%s/____%s/__%s/%s v%s #%s (%s).%s",
+            "__%s/____%s/__%s/%s v%s #%s (%s)",
             TEST_PUBLISHER,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
-            TEST_FORMATTED_COVER_DATE,
-            TEST_EXTENSION),
+            TEST_FORMATTED_COVER_DATE),
         result);
   }
 
@@ -168,8 +160,7 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -187,8 +178,7 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -206,8 +196,7 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -225,8 +214,7 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -237,10 +225,9 @@ public class ComicFileAdaptorTest {
       final String issueNumber,
       final String coverDate,
       final String publishedMonth,
-      final String publishedYear,
-      final String extension) {
+      final String publishedYear) {
     return String.format(
-        "%s/%s/%s/%s v%s #%s %s %s %s.%s",
+        "%s/%s/%s/%s v%s #%s %s %s %s",
         publisher,
         series,
         volume,
@@ -249,8 +236,7 @@ public class ComicFileAdaptorTest {
         issueNumber,
         publishedMonth,
         publishedYear,
-        coverDate,
-        extension);
+        coverDate);
   }
 
   @Test
@@ -267,8 +253,7 @@ public class ComicFileAdaptorTest {
             UNKNOWN_VALUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
@@ -286,8 +271,7 @@ public class ComicFileAdaptorTest {
             TEST_ISSUE,
             NO_COVER_DATE,
             TEST_PUBLISHED_MONTH,
-            TEST_PUBLISHED_YEAR,
-            TEST_EXTENSION),
+            TEST_PUBLISHED_YEAR),
         result);
   }
 
