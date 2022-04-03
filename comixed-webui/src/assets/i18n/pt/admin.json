@@ -1,130 +1,129 @@
 {
   "configuration": {
     "label": {
-      "comic-renaming-rule": "Comic Renaming Rule",
-      "comic-renaming-variables": "Comic Renaming Variables",
-      "comic-variable-description": "Description",
-      "comic-variable-name": "Variable",
-      "page-renaming-rule": "Page Renaming Rule",
-      "page-renaming-variables": "Page Renaming Variables",
-      "root-directory": "Library Root Directory",
-      "page-variable-description": "Description Of The Output",
-      "page-variable-name": "Variable Name"
+      "comic-renaming-rule": "Regra de renomeação de comic",
+      "comic-renaming-variables": "Variáveis de renomeação de comic",
+      "comic-variable-description": "Descrição",
+      "comic-variable-name": "Variável",
+      "page-renaming-rule": "Regra de renomeação de página",
+      "page-renaming-variables": "Variáveis de renomeação de página",
+      "root-directory": "Pasta raiz da biblioteca",
+      "page-variable-description": "Descrição da saida",
+      "page-variable-name": "Nome da variável"
     },
     "load-all": {
-      "effect-failure": "Failed to load configuration options."
+      "effect-failure": "Falhou ao carregar as opções de configuração."
     },
     "tab": {
-      "library": "Library",
-      "metadata-audit-log": "Metadata Audit Log",
-      "metadata-sources": "Metadata Sources",
-      "server-runtime": "Runtime",
-      "scraping-rules": "Scraping Rules"
+      "library": "Biblioteca",
+      "metadata-audit-log": "Registro de metadados",
+      "metadata-sources": "Origens dos metadados",
+      "server-runtime": "Tempo em execução",
+      "scraping-rules": "Regras de recuperação de dados"
     },
-    "tab-title": "Configuration",
+    "tab-title": "Configuração",
     "text": {
-      "comic-is-missing": "Comic is no longer available.",
-      "comic-renaming-rule-cover-date": "The cover date",
-      "comic-renaming-rule-issue-number": "The issue number",
-      "comic-renaming-rule-issue-number-with-length": "The issue number with a minimum length",
-      "comic-renaming-rule-published-month": "The month published",
-      "comic-renaming-rule-published-year": "The year published",
-      "comic-renaming-rule-publisher": "The name of the publisher",
-      "comic-renaming-rule-series": "The name of the series",
-      "comic-renaming-rule-volume": "The volume",
-      "comic-variable-caption": "These are the available variables that can be used for renaming comics.",
-      "page-renaming-rule-index": "The page index (1-based)",
-      "page-variable-caption": "These are the available variables that can be used for renaming pages."
+      "comic-renaming-rule-cover-date": "A data da capa",
+      "comic-renaming-rule-issue-number": "O número",
+      "comic-renaming-rule-issue-number-with-length": "O número com o tamanho mínimo",
+      "comic-renaming-rule-published-month": "O mês de publicação",
+      "comic-renaming-rule-published-year": "O ano de publicação",
+      "comic-renaming-rule-publisher": "O nome da editora",
+      "comic-renaming-rule-series": "O nome da série",
+      "comic-renaming-rule-volume": "O volume",
+      "comic-variable-caption": "Estas são as variáveis que podem ser usadas para renomear os comics.",
+      "page-renaming-rule-index": "O índice da página (começa em 1)",
+      "page-variable-caption": "Estas são as variáveis que podem ser usadas para renomear páginas."
     }
   },
   "filename-scraping-rules": {
     "label": {
-      "cover-date-format": "Cover Date Format",
-      "cover-date-position": "Cover Date Position",
-      "issue-number-position": "Issue # Position",
+      "cover-date-format": "Formato da data da capa",
+      "cover-date-position": "Posição da data da capa",
+      "issue-number-position": "Número # Posição",
       "priority": "#",
-      "rule-name": "Name",
-      "rule-value": "Rule",
-      "series-position": "Series Position",
-      "volume-position": "Volume Position"
+      "rule-name": "Nome",
+      "rule-value": "Regra",
+      "series-position": "Posição da série",
+      "volume-position": "Posição do volume"
     },
     "load-all": {
-      "effect-failure": "Failed to load all filename scraping rules."
+      "effect-failure": "Falhou ao carregar todas a regras de recuperação dos dados do nome do ficheiro."
     },
     "save-all": {
-      "confirmation-message": "Are you sure you want to replace all filename scraping rules?",
-      "confirmation-title": "Save Filename Scraping Rules",
-      "effect-failure": "Failed to save filename scraping rules.",
-      "effect-success": "Filename scraping rules saved."
+      "confirmation-message": "Tem a certeza que quer substituir todas as regras de recuperação de dados do nome do ficheiro?",
+      "confirmation-title": "Gravar regras de recuperação de dados do nome do ficheiro",
+      "effect-failure": "Falhou ao gravar regras de recuperação de dados do nome do ficheiro.",
+      "effect-success": "Regras de recuperação de dados do nome do ficheiro gravadas."
     },
-    "tab-title": "Filename Scraping Rules"
+    "tab-title": "Regras de recuperação de dados do nome do ficheiro"
   },
   "save-configuration": {
-    "confirmation-message": "Save changes to the configuration?",
-    "confirmation-title": "Save Configuration",
-    "effect-failure": "Failed to save configuration changes.",
-    "effect-success": "Configuration changes saved."
+    "confirmation-message": "Gravar alterações à configuração?",
+    "confirmation-title": "Gravara Configuração",
+    "effect-failure": "Falhou ao gravar alterações à configuração.",
+    "effect-success": "Alterações à configuração gravadas."
   },
   "server-health": {
     "database-status": {
-      "title": "Database Status"
+      "title": "Estado da Base de Dados"
     },
     "disk-status":  {
-      "exists": "Exists: {exists}",
-      "free-space": "Free Space: {size}MB",
-      "total-space": "Total Space: {size}MB",
-      "threshold": "Threshold: {size}MB",
-      "title": "Disk Status"
+      "exists": "Existe: {exists}",
+      "free-space": "Espaço Lives: {size}MB",
+      "total-space": "Espaço Total: {size}MB",
+      "threshold": "Limite: {size}MB",
+      "title": "Estado do Disco"
     },
-    "effect-failure": "Failed to load server health status.",
+    "effect-failure": "Falhou ao carregar o estado do servidor.",
     "ping-status": {
-      "title": "Ping Status"
+      "title": "Estado do Ping"
     },
     "server-status": {
-      "title": "Server Status"
+      "title": "Estado do Servidor"
     },
     "text": {
-      "status": "Current Status: {status}"
+      "status": "Estado corrente: {status}"
     }
   },
   "server-runtime": {
     "tooltip": {
-      "refresh": "Refresh the server health details.",
-      "shutdown": "Shutdown the server."
+      "refresh": "Atualizar detalhes do servidor.",
+      "shutdown": "Desligar o servidor."
     }
   },
   "shutdown-server": {
-    "confirmation-message": "Are you sure you want to shutdown the ComiXed server? This cannot be stopped once started.",
-    "confirmation-title": "Shutdown ComiXed",
-    "effect-failure": "Failed to shutdown server.",
-    "effect-success": "Server shutting down."
+    "confirmation-message": "Tem a certeza que quer desligar o servidor do ComiXed? Não pode ser parado depois de começar.",
+    "confirmation-title": "Desligar ComiXed",
+    "effect-failure": "Falhou ao desligar o servidor.",
+    "effect-success": "Servidor a desligar."
   },
   "web-audit-log": {
     "clear": {
-      "confirmation-message": "Are you sure you want to clear the audit log? This action cannot be undone.",
-      "confirmation-title": "Clear Web Audit Log",
-      "effect-failure": "Failed to clear the web audit logs.",
-      "effect-success": "Web audit logs cleared."
+      "confirmation-message": "Tem a certeza que quer limpar ao registro? Isto não pode ser revertido.",
+      "confirmation-title": "Limpar Registro de Web",
+      "effect-failure": "Falhou ao limpar o registro de web.",
+      "effect-success": "Registro de web limpos."
     },
     "label": {
-      "actions": "Actions",
-      "bytes-sent": "Bytes Sent",
-      "bytes-received": "Bytes Received",
-      "method": "HTTP Method",
-      "pagination-items-per-page": "Entries Per Page",
-      "account": "Account",
-      "remote-ip": "Remote IP",
-      "runtime": "Duration",
-      "started": "Started",
-      "success": "Successful?",
-      "url": "URL Accessed"
+      "actions": "Ações",
+      "bytes-sent": "Bytes Enviados",
+      "bytes-received": "Bytes Recebidos",
+      "method": "Método HTTP",
+      "pagination-items-per-page": "Entradas por Página",
+      "account": "Conta",
+      "remote-ip": "IP Remoto",
+      "runtime": "Duração",
+      "started": "Começou",
+      "success": "Com Sucesso?",
+      "url": "URL Acedido"
     },
     "load-entries": {
-      "effect-failure": "Failed to load web audit log entries."
+      "effect-failure": "Falhou ao carregar as entradas dos registro web."
     },
-    "request-content-title": "Request Content",
-    "response-content-title": "Response Content",
-    "tab-title": "Web Audit Log",
+    "request-content-title": "Conteúdo do Pedido",
+    "response-content-title": "Conteúdo da Resposta",
+    "tab-title": "Registro de Web",
     "text": {
       "runtime": "{time}ms"
     }
