@@ -38,14 +38,14 @@
       "unblock-selections": "Débloquer les hashs de pages sélectionnés"
     },
     "unblock-selection": {
-      "confirmation-message": "Etes-vous sûr de vouloir débloquer {count, plural, =1{la page} other{les # pages}}.",
+      "confirmation-message": "Êtes-vous sûr de vouloir débloquer {count, plural, =1{la page} other{les # pages}}.",
       "confirmation-title": "Débloquer les hashs de pages sélectionnées"
     }
   },
   "library": {
     "add-to-reading-list": {
-      "confirmation-message": "Etes-vous sûr de vouloir ajouter {count, plural, =1{une bande dessinée} other{# bandes dessinées}} à {name} ?",
-      "confirmation-title":  "Ajouter des bandes dessinées à la liste de lecture"
+      "confirmation-message": "Êtes-vous sûr de vouloir ajouter {count, plural, =1{une bande dessinée} other{# bandes dessinées}} à {name} ?",
+      "confirmation-title": "Ajouter des bandes dessinées à la liste de lecture"
     },
     "all-comics": {
       "tab-title": "Toutes les Bandes Dessinées",
@@ -73,9 +73,9 @@
       "convert-selected-to-cbz": "Convertir les sélections en CBZ",
       "delete-one": "Cette bande dessinée comme supprimée",
       "delete-selected": "Les bandes dessinées sélectionnées comme supprimées",
-      "download": "Download...",
-      "download-one-data": "This comic's data",
-      "download-selected-data": "Selected comics' data",
+      "download": "Téléchargement...",
+      "download-one-data": "Les données de la bande dessinée",
+      "download-selected-data": "Données des bandes dessinées sélectionnées",
       "mark-as": "Marquer...",
       "mark-one-as-read": "Cette Bande Dessinée comme Lue",
       "mark-one-as-unread": "Cette Bande Dessinée comme Non lue",
@@ -119,12 +119,12 @@
       "stories": "Histoires"
     },
     "page-title": {
-      "all": "All Comics ({count} Comics)",
-      "changed-only": "Changed Comics ({count} Comics)",
-      "deleted-only": "Deleted Comics ({count} Comics)",
-      "unprocessed-only": "Unprocessed Comics ({count} Comics)",
-      "unread-only": "Unread Comics ({count} Comics)",
-      "unscraped-only": "Unscraped Comics ({count} Comics)"
+      "all": "Toutes les bandes dessinées ({count} bandes dessinées)",
+      "changed-only": "Bandes dessinées modifiées ({count} bandes dessinées)",
+      "deleted-only": "Bandes dessinées supprimées ({count} bandes dessinées)",
+      "unprocessed-only": "Bandes dessinées non traitées ({count} bandes dessinées)",
+      "unread-only": "Bandes dessinées non lues ({count} bandes dessinées)",
+      "unscraped-only": "Metadonnées non récupérées ({count} bandes dessinées)"
     },
     "purge-library": {
       "confirmation-message": "Êtes-vous sûr de vouloir purger les bandes dessinées supprimées sélectionnées ? Cette action ne peut pas être annulée.",
