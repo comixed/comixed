@@ -1,23 +1,23 @@
 {
   "collection-detail": {
-    "tab-title": "{collection, select, characters{Character} teams{Team} locations{Location} stories{Storie} publishers{Publisher} series{Series} other{Unknown}}: {name}",
+    "tab-title": "{collection, select, characters{Personagem} teams{Equipa} locations{Localização} stories{Estória} publishers{Editora} series{Série} other{Desconhecido}}: {name}",
     "title": {
-      "characters": "Character: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "locations": "Location: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "publishers": "Publisher: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "series": "Series: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "stories": "Story: {name} ({count, plural, =1{One Comic} other{# Comics}})",
-      "teams": "Team: {name} ({count, plural, =1{One Comic} other{# Comics}})"
+      "characters": "Personagem: {name} ({count, plural, =1{Um Comic} other{# Comics}})",
+      "locations": "Localização: {name} ({count, plural, =1{Um Comic} other{# Comics}})",
+      "publishers": "Editora: {name} ({count, plural, =1{Um Comic} other{# Comics}})",
+      "series": "Série: {name} ({count, plural, =1{Um Comic} other{# Comics}})",
+      "stories": "Estória: {name} ({count, plural, =1{Um Comic} other{# Comics}})",
+      "teams": "Equipa: {name} ({count, plural, =1{Um Comic} other{# Comics}})"
     }
   },
   "collection-list": {
     "label": {
       "comic-count": "# Comics",
-      "name": "Collection Name"
+      "name": "Nome da Coleção"
     },
-    "tab-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
+    "tab-title": "Coleções: {collection, select, characters{Personagens} teams{Equipas} locations{Localizações} stories{Estórias} publishers{Editoras} series{Série} other{Desconhecido}}",
     "text": {
-      "undefined": "[UNDEFINED]"
+      "undefined": "[NÃO DEFINIDO]"
     }
   }
 }

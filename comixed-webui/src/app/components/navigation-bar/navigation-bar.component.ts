@@ -48,9 +48,9 @@ export class NavigationBarComponent {
   isAdmin = false;
   readonly languages: ListItem<string>[] = [
     { label: 'English', value: 'en' },
-    { label: 'Français', value: 'fr' }
+    { label: 'Français', value: 'fr' },
+    { label: 'Português', value: 'pt' }
     // { label: 'Español', value: 'es' },
-    // { label: 'Português', value: 'pt' },
     // { label: 'Deutsche', value: 'de' }
   ];
   currentLanguage = '';

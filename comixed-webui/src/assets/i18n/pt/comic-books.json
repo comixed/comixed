@@ -5,164 +5,164 @@
       "cb7": "CB7",
       "cbr": "CBR",
       "cbz": "CBZ",
-      "select": "Archive Type"
+      "select": "Tipos de ficheiro"
     }
   },
   "comic-book": {
     "deleted-state": {
-      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic as deleted?",
-      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comic As Deleted"
+      "confirmation-message": "Tem a certeza que quer {deleted, select, true{marcar} other{desmarcar}} este comic para ser apagado?",
+      "confirmation-title": "{deleted, select, true{Marcar} other{Desmarcar}} Comic Como Apagado"
     },
     "hint": {
-      "required-for-scraping": "This value is required for scraping...",
-      "useful-for-scraping": "This value is used when scraping..."
+      "required-for-scraping": "Este campo é obrigatório para recuperar dados...",
+      "useful-for-scraping": "Este campo é usado quando é feito a recuperação de dados..."
     },
     "label": {
-      "added-date": "Added To Library",
-      "archive-type": "File Encoded As",
-      "api-key": "API Key",
-      "characters": "Characters In This Issue ({count})",
-      "cover-date": "Cover Date",
-      "comic-edit": "Edit Details",
-      "comic-format": "Comic Format",
-      "comic-overview": "Overview",
-      "comic-pages": "Pages",
-      "comic-state": "State",
-      "comic-story": "Story",
-      "comicvine-issue-details": "Comic Details Page",
-      "credits": "Creative Team ({count})",
-      "description": "Issue Description",
-      "file-details": "Comic File Details",
-      "filename": "Filename",
-      "filesize": "Filesize",
-      "imprint": "Imprint",
-      "issue-details": "Issue Details",
-      "issue-number": "Issue #",
-      "last-read-date": "Last Read",
-      "locations": "Locations In This Issue ({count})",
-      "metadata-load-limit": "Maximum Records",
-      "metadata-source": "Metadata Source",
-      "metadata-source-id": "Metadata Source ID",
-      "other-details": "Other Comic Details",
-      "page-count": "# Of Pages",
-      "page-title": "Page {which} Of {count}",
-      "publisher": "Publisher",
-      "scan-type": "Scan Type",
-      "scraping-notes": "Scraping Notes",
-      "series": "Series Name",
-      "sort-name": "Sort Name",
-      "store-date": "Store Date",
-      "stories": "Story Arcs In This Issue ({count})",
-      "teams": "Teams In This Issue ({count})",
-      "title": "Title",
+      "added-date": "Adicionado à Biblioteca",
+      "archive-type": "Ficheiro Codificado Como",
+      "api-key": "Chave da API",
+      "characters": "Personagens neste número ({count})",
+      "cover-date": "Data da Capa",
+      "comic-edit": "Editar Detalhes",
+      "comic-format": "Formato Do Comic",
+      "comic-overview": "Visão Geral",
+      "comic-pages": "Páginas",
+      "comic-state": "Estado",
+      "comic-story": "Estória",
+      "comicvine-issue-details": "Detalhes da Pagina Do Comic",
+      "credits": "Equipa Criativa ({count})",
+      "description": "Descrição Do número",
+      "file-details": "Detalhes Do Ficheiro Do Comic",
+      "filename": "Nome Do Ficheiro",
+      "filesize": "Tamanho Do Ficheiro",
+      "imprint": "Impressão",
+      "issue-details": "Detalhes Do Número",
+      "issue-number": "Número #",
+      "last-read-date": "Último Lido",
+      "locations": "Localizações Neste Número ({count})",
+      "metadata-load-limit": "Máximo De Entradas",
+      "metadata-source": "Origem Dos Metadados",
+      "metadata-source-id": "ID da origem dos metadados",
+      "other-details": "Outros Detalhes",
+      "page-count": "# De Páginas",
+      "page-title": "Página {which} De {count}",
+      "publisher": "Editora",
+      "scan-type": "Tipo De Digitalização",
+      "scraping-notes": "Notas De Recuperação De Dados",
+      "series": "Nome Da Série",
+      "sort-name": "Nome Da Classificação",
+      "store-date": "Data Da Loja",
+      "stories": "Arcos De Estória Neste Número ({count})",
+      "teams": "Equina Neste Número ({count})",
+      "title": "Titulo",
       "volume": "Volume"
     },
     "load-comic": {
-      "effect-failure": "Failed to load comic."
+      "effect-failure": "Falhou ao carregar o comic."
     },
     "mark-as-deleted": {
-      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this comic for deletion?",
-      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} For Deletion",
-      "effect-failure": "Failed to {deleted, select, true{mark} other{unmark}} for deletion.",
-      "effect-success": "{deleted, select, true{Marked} other{Unmarked}} for deletion."
+      "confirmation-message": "Tem a certeza que quer {deleted, select, true{marcar} other{desmarcar}} este comic para ser apagado?",
+      "confirmation-title": "{deleted, select, true{Marcar} other{desmarcar}} Para Ser Apagado",
+      "effect-failure": "Falhou ao {deleted, select, true{marcar} other{desmarcar}} para ser apagado.",
+      "effect-success": "{deleted, select, true{Marcado} other{desmarcado}} para ser apagado."
     },
     "placeholder": {
-      "api-key": "The API key used when scraping comics...",
+      "api-key": "A chave da API usada para recuperar dados dos comics...",
       "metadata-source-id": "######",
-      "issue-number": "The issue number...",
-      "publisher": "The publisher...",
-      "scraping-filter": "Filter volumes",
-      "series": "The series name...",
-      "volume": "The volume..."
+      "issue-number": "O número do comic...",
+      "publisher": "A editora...",
+      "scraping-filter": "Filtrar volumes",
+      "series": "O nome da série...",
+      "volume": "O volume..."
     },
     "save-changes": {
-      "effect-failure": "Failed to save changes.",
-      "effect-success": "Changes saved.",
-      "message": "Are you sure you want to manual changes to this comic?",
-      "title": "Save Changes To Comic"
+      "effect-failure": "Falhou ao gravar alterações.",
+      "effect-success": "Alterações gravadas.",
+      "message": "Tem a certeza que quer fazer alterações manuais a este comic?",
+      "title": "Gravar Alterações ao Comic"
     },
     "save-page-order": {
-      "confirmation-message": "Are you sure you want to save the new page ordering?",
-      "confirmation-title": "Save Page Order",
-      "effect-failure": "Failed to save page ordering.",
-      "effect-success": "Page ordering saved."
+      "confirmation-message": "Tem a certeza que quer gravar a nova ordem das páginas?",
+      "confirmation-title": "Gravar Ordem Das Páginas",
+      "effect-failure": "Falhou ao gravar ordem das páginas.",
+      "effect-success": "Ordem das páginas gravada."
     },
     "text": {
-      "comic-changed": "Write metadata to the comic file.",
-      "comic-marked-for-deletion": "Comic marked for deleted.",
-      "comicvine-issue-link": "ComicVine Details Page",
-      "filesize": "{size, plural, =1{One byte} other{# bytes}}",
-      "no-matching-volumes": "No matching volumes were found...",
-      "state-ADDED": "Unchanged",
-      "state-CHANGED": "Changed",
-      "state-DELETED": "Marked For Deletion",
-      "state-REMOVED": "Removed",
-      "state-STABLE": "Unchanged",
-      "state-UNPROCESSED": "Unprocessed"
+      "comic-changed": "Gravar metadados no ficheiro do comic.",
+      "comic-marked-for-deletion": "Comic marcado para ser apagado.",
+      "comicvine-issue-link": "Página De Detalhes Do ComicVine",
+      "filesize": "{size, plural, =1{Um byte} other{# bytes}}",
+      "no-matching-volumes": "Nenhum volumes encontrado...",
+      "state-ADDED": "Adicionado",
+      "state-CHANGED": "Alterado",
+      "state-DELETED": "Marcado Para Ser Apagado",
+      "state-REMOVED": "Removido",
+      "state-STABLE": "Inalterado",
+      "state-UNPROCESSED": "Não Processado"
     },
     "tooltip": {
-      "blocked-hash": "Pages like this are blocked.",
-      "cancel-scraping": "Stop scraping this comic.",
-      "delete-comic": "Mark comics as deleted.",
-      "deleted-page": "Page is marked for deletion.",
-      "download-comic": "Download this comic...",
-      "go-to-next-comic": "Go to the next comic in this series...",
-      "go-to-previous-comic": "Go to the previous comic in this series...",
-      "mark-read": "Mark this comic as read.",
-      "mark-unread": "Mark this comic as unread.",
-      "match-0": "Not a match.",
-      "match-1": "Partial match.",
-      "match-2": "Exact match.",
-      "save-changes": "Saves changes to this comic.",
-      "save-page-order": "Save page ordering.",
-      "scrape-comic": "Scrape this comic.",
-      "scrape-filename": "Scrape the filename.",
-      "show-next-comic-page": "Go to next page...",
-      "show-previous-comic-page": "Go to previous page...",
-      "toggle-page-view": "Toggle showing pages as a grid or a list.",
-      "undelete-comic": "Unmark comic as deleted.",
-      "undo-changes": "Undo changes to this comic.",
-      "update-comic-info": "Update comic file metadata."
+      "blocked-hash": "Páginas como esta estão bloqueadas.",
+      "cancel-scraping": "Parar recuperar dados deste comic.",
+      "delete-comic": "Marcar comic como apagados.",
+      "deleted-page": "Página está marcada para ser apagada.",
+      "download-comic": "Descarregar este comic...",
+      "go-to-next-comic": "Ir para o próximo comic desta série...",
+      "go-to-previous-comic": "Ir para o comic anterior desta série...",
+      "mark-read": "Marcar este comic como lido.",
+      "mark-unread": "Marcar este comic como não lido.",
+      "match-0": "Não corresponde.",
+      "match-1": "Corresponde parcialmente.",
+      "match-2": "Correspondência exacta.",
+      "save-changes": "Gravar alterações neste comic.",
+      "save-page-order": "Gravar ordem das páginas.",
+      "scrape-comic": "Recuperar dados deste comic.",
+      "scrape-filename": "Recuperar dados do nome do ficheiro.",
+      "show-next-comic-page": "Ir para a próxima página...",
+      "show-previous-comic-page": "Ir para a página anterior...",
+      "toggle-page-view": "Alternar entre mostrar páginas em rede ou como lista.",
+      "undelete-comic": "Desmarcar comic apagado.",
+      "undo-changes": "Reverter alterações feitas ao comic.",
+      "update-comic-info": "Atualizar metadados do comic."
     },
     "undo-changes": {
-      "message": "Are you sure you want to undo changes to this comic?",
-      "title": "Undo Changes"
+      "message": "Tem a certeza que quer reverter as alterações feitas ao comic?",
+      "title": "Reverter Alterações"
     }
   },
   "comic-format": {
     "load-formats": {
-      "effect-failure": "Failed to load comic formats."
+      "effect-failure": "Falou ao carregar os formatos do comic."
     }
   },
   "comic-page": {
     "label": {
-      "dimensions": "Dimensions",
-      "filename": "Filename",
-      "page-number": "Page #",
-      "thumbnail": "Thumbnail"
+      "dimensions": "Dimensões",
+      "filename": "Nome do ficheiro",
+      "page-number": "Página #",
+      "thumbnail": "Miniatura"
     },
     "update-page-deletion": {
-      "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} this page?",
-      "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Page",
-      "effect-failure": "Failed to mark {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}.",
-      "effect-success": "Marked {count, plural, =1{one page} other{# pages}} as {deleted, select, true{deleted} other{not deleted}}."
+      "confirmation-message": "Tem a certeza que quer {deleted, select, true{marcar} other{desmarcar}} esta página?",
+      "confirmation-title": "{deleted, select, true{Marcar} other{Desmarcar}} Página",
+      "effect-failure": "Falhou ao marcar {count, plural, =1{uma página} other{# páginas}} como {deleted, select, true{apagadas} other{não apagadas}}.",
+      "effect-success": "Marcada {count, plural, =1{uma página} other{# páginas}} como {deleted, select, true{apagadas} other{não apagadas}}."
     }
   },
   "imprint": {
     "load-all": {
-      "effect-failure": "Failed to load imprints."
+      "effect-failure": "Falhou ao carregar impressões."
     }
   },
   "scan-type": {
     "load-scan-types": {
-      "effect-failure": "Failed to load scan types."
+      "effect-failure": "Falhou ao carregar tipo de digitalização."
     }
   },
   "sorting": {
     "label": {
-      "by-added-date": "Date Added",
-      "by-cover-date": "Cover Date",
-      "sort-by": "Sort Comics"
+      "by-added-date": "Data de Adição",
+      "by-cover-date": "Data da Página",
+      "sort-by": "Ordenar Comics"
     }
   }
 }

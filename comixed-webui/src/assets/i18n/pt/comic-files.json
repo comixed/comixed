@@ -1,56 +1,56 @@
 {
   "comic-files": {
-    "busy-title": "There Are Comics Importing Now",
-    "confirm-start-title": "Import Comic Files?",
-    "confirm-start-message": "Are you sure you want to import the {count, plural, =1{one comic} other{# comic files}} into the library?",
+    "busy-title": "A Comics A Serem Importados Agora",
+    "confirm-start-title": "Importar Ficheiro De Comic?",
+    "confirm-start-message": "Tem a certeza que quer importar {count, plural, =1{um comic} other{# comics}} para a biblioteca?",
     "context-menu": {
-      "deselect-all": "Deselect All",
-      "deselect-one": "Deselect File",
-      "select-one": "Select File"
+      "deselect-all": "Desmarcar Todos",
+      "deselect-one": "Desmarcar Ficheiro",
+      "select-one": "Marcar Ficheiro"
     },
     "header": {
-      "cover": "Cover Image",
-      "filename": "Filename",
-      "size": "File Size (kb)"
+      "cover": "Imagem da Capa",
+      "filename": "Nome do Ficheiro",
+      "size": "Tamanho do Ficheiro (kb)"
     },
     "import-comic-files": {
-      "confirmation-message": "Are you sure you want to import the selected {count, plural, =1{comic} other{# comics}}?",
-      "confirmation-title": "Import Selected Comics",
-      "effect-failure": "Failed to send comic files for import.",
-      "effect-success": "Submitted {count, plural, =1{one comic file} other{# comic files}} for import."
+      "confirmation-message": "Tem a certeza que quer importar {count, plural, =1{o comic selecionado} other{# comics selecionados}}?",
+      "confirmation-title": "Importar Comics Selecionados",
+      "effect-failure": "Falhou ao submeter comics para serem importados.",
+      "effect-success": "Submetido {count, plural, =1{um ficheiro} other{# ficheiro}} para serem importados."
     },
     "label": {
-      "maximum-all-files": "All files",
-      "maximum-10-files": "10 files",
-      "maximum-50-files": "50 files",
-      "maximum-100-files": "100 files",
-      "maximum-1000-files": "1000 files"
+      "maximum-all-files": "Todos os ficheiros",
+      "maximum-10-files": "10 ficheiros",
+      "maximum-50-files": "50 ficheiros",
+      "maximum-100-files": "100 ficheiros",
+      "maximum-1000-files": "1000 ficheiros"
     },
     "load-comic-files": {
-      "effect-success": "Found {files, plural, =1{one comic file} other{# comic files}} in {directories, plural, =1{one directory} other{# directories}}.",
-      "effect-failure": "Failed to find any comic files."
+      "effect-success": "Encontrado{files, plural, =1{ um ficheiro} other{s # ficheiros}} {directories, plural, =1{numa pasta} other{em # pastas}}.",
+      "effect-failure": "Falhou ao encontrar ficheiros de comics."
     },
-    "page-title": "Import Comics: {selected, plural, =1{One} other{#}} Of {count, plural, =1{One Comic} other{# Comics}} Selected",
+    "page-title": "Importar Comics: {selected, plural, =1{Um} other{#}} De {count, plural, =1{Um Comic} other{# Comics}} Selecionados",
     "placeholder": {
-      "root-directory": "Root Directory To Search..."
+      "root-directory": "Pasta raiz para procurar..."
     },
     "processing-comics": {
-      "subtitle": "Processed {processed} Of {total} Comics ({percentage}%)"
+      "subtitle": "Analisados {processed} de {total} Comics ({percentage}%)"
     },
-    "tab-title": "Import Comics",
+    "tab-title": "Importar Comics",
     "text": {
       "file-size": "{size} bytes",
-      "selected-for-import": "This file will be imported."
+      "selected-for-import": "Este ficheiro será importado."
     },
     "tooltip": {
-      "deselect-all": "Clear the comic file selections.",
-      "select-all": "Select all comic files for import.",
-      "start-import": "Start importing the selected comic files.",
-      "toggle-file-lookup-form": "Toggle the comic file lookup form."
+      "deselect-all": "Limpar ficheiros selecionados.",
+      "select-all": "Selecionar todos os ficheiros para serem importados.",
+      "start-import": "Começar a importar os ficheiros selecionados.",
+      "toggle-file-lookup-form": "Alternar o formulário de pesquisa dos ficheiros dos comics."
     }
   },
   "scrape-filename": {
-    "effect-failure": "Failed to scrape filename.",
-    "effect-success": "Metadata {found, select, true{was scraped} other{was not scraped}} from the filename."
+    "effect-failure": "Falhou ao recuperar dados do nome do ficheiro.",
+    "effect-success": "Metadados {found, select, true{foram} other{não foram}} recuperados a partir do nome do ficheiro."
   }
 }
