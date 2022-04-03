@@ -1,52 +1,52 @@
 {
   "login": {
-    "title": "Login"
+    "title": "Entrada"
   },
   "user": {
     "edit-current-user": {
       "label": {
-        "email": "Email Address",
-        "password": "Password",
-        "password-verify": "Verify The Password"
+        "email": "Endereço de Email",
+        "password": "Senha",
+        "password-verify": "Verificar Senha"
       },
-      "page-title": "Edit User Account",
-      "tab-title": "Account: {email}",
+      "page-title": "Editar Conta do Utilizador",
+      "tab-title": "Conta: {email}",
       "validation": {
-        "passwords-dont-match": "Passwords do not match..."
+        "passwords-dont-match": "Senhas não são iguais..."
       }
     },
     "login-user": {
-      "page-title": "Please Enter Your User Details",
-      "email-placeholder": "Your email address",
-      "password-placeholder": "Your password",
-      "effect-failure": "Email or password is invalid.",
-      "login-tooltip": "Go to the login page...",
-      "logout-tooltip": "Log out..."
+      "page-title": "Por Favor Introduza os dados do Utilizador",
+      "email-placeholder": "O seu endereço de email",
+      "password-placeholder": "Sua senha",
+      "effect-failure": "Email ou senha inválidos.",
+      "login-tooltip": "Ir para a página de entrada...",
+      "logout-tooltip": "Sair..."
     },
     "logout": {
-      "confirmation-title": "Logout",
-      "confirmation-message": "Are you sure you want to logout?"
+      "confirmation-title": "Saida",
+      "confirmation-message": "Tem a certeza que quer sair?"
     },
     "reset-user-changes": {
-      "confirmation-message": "Discard changes to your account?",
-      "confirmation-title": "Revert Changes"
+      "confirmation-message": "Cancelar alterações à sua conta?",
+      "confirmation-title": "Reverter Alterações"
     },
     "save-current-user": {
-      "confirmation-message": "Are you sure you want to save the changes to your user account?",
-      "confirmation-title": "Save Account Changes",
-      "effect-failure": "Failed to save changes to account.",
-      "effect-success": "Saved changes to account."
+      "confirmation-message": "Tem a certeza que quer gravar as alterações à sua conta de utilizador?",
+      "confirmation-title": "Gravar Alterações à Conta",
+      "effect-failure": "Falhou a gravar as alterações da conta.",
+      "effect-success": "Alterações à conta gravadas."
     },
     "user-preferences": {
-      "delete-confirmation-message": "Are you sure you want to delete this user preference?",
-      "delete-confirmation-title": "Delete User Preference",
+      "delete-confirmation-message": "Tem a certeza ue quer apagar esta opção de utilizador?",
+      "delete-confirmation-title": "Apagar Opção de Utilizador",
       "label": {
-        "preference-name": "Preference Name",
-        "preference-value": "Value"
+        "preference-name": "Nome",
+        "preference-value": "Valor"
       },
-      "tab-title": "User Preferences",
+      "tab-title": "Opções de Utilizador",
       "tooltip": {
-        "delete-preference": "Delete this user preference."
+        "delete-preference": "Apagar esta opção do utilizador."
       }
     }
   }

@@ -1,118 +1,118 @@
 {
   "metadata-source": {
     "delete-source": {
-      "confirm-message": "Are you sure you want to delete the metadata source {name}?",
-      "confirm-title": "Delete Metadata Source",
-      "effect-failure": "Failed to delete metadata source.",
-      "effect-success": "Deleted metadata source: {name}"
+      "confirm-message": "Tem a certeza que quer apagar a origem {name} dos metadados?",
+      "confirm-title": "Apagar Origem de Metadados",
+      "effect-failure": "Falhou ao apagar origem de metadados.",
+      "effect-success": "Origem de metadados apagada: {name}"
     },
     "label": {
-      "bean-name": "Bean Name",
-      "property-name": "Property Name",
-      "property-value": "Property Value",
-      "source-name": "Source Name"
+      "bean-name": "Nome do Bean",
+      "property-name": "Nome da Propriedade",
+      "property-value": "Valor da Propriedade",
+      "source-name": "Nome da Origem"
     },
     "load-source": {
-      "effect-failure": "Failed to load metadata source."
+      "effect-failure": "Falhou ao carregar origem dos metadados."
     },
     "load-sources": {
-      "effect-failure": "Failed to load metadata sources."
+      "effect-failure": "Falhou ao carregar origem dos metadados."
     },
     "save-source": {
-      "confirm-message": "Are you sure you want to save the metadata source {name}?",
-      "confirm-title": "Save Metadata Source Changes",
-      "effect-failure": "Failed to save metadata source.",
-      "effect-success": "Saved metadata source: {name}"
+      "confirm-message": "Tem a certeza que quer gravar a origem de metadados {name}?",
+      "confirm-title": "Gravar alterações da origem do metadados",
+      "effect-failure": "Falhou ao gravar a origem dos metadados.",
+      "effect-success": "Gravada origem do metadados: {name}"
     },
     "tooltip": {
-      "add-property": "Added a new property.",
-      "create-source": "Create a new metadata source.",
-      "delete-property": "Delete property {name}.",
-      "delete-source": "Delete this metadata source.",
-      "reset-source": "Undo changes to the metadata source.",
-      "save-source": "Save the current metadata source."
+      "add-property": "Adicionada nova propriedade.",
+      "create-source": "Criar nova origem dos metadados.",
+      "delete-property": "apagar propriedade {name}.",
+      "delete-source": "Apagar esta origem dos metadados.",
+      "reset-source": "Repor alterações a esta origem dos metadados.",
+      "save-source": "Gravar estar origem dos metadados."
     }
   },
   "metadata-source-list": {
     "label": {
-      "actions": "Actions",
-      "bean-name": "Bean Name",
-      "name": "Source Name",
-      "property-count": "# of Properties"
+      "actions": "Ações",
+      "bean-name": "Nome do Bean",
+      "name": "Nome da Origem",
+      "property-count": "# de Propriedades"
     }
   },
   "metadata-audit-log": {
     "clear-entries": {
-      "confirm-message": "Are you sure you want to delete all metadata audit log entries? This action cannot be undone.",
-      "confirm-title": "Clear Metadata Audit Log",
-      "effect-failure": "Failed to clear metadata audit log.",
-      "effect-success": "Metadata audit log cleared."
+      "confirm-message": "Tem a certeza que quer apagar todas as entradas metadados no relatório? Esta ação não pode ser desfeita.",
+      "confirm-title": "Limpar Relatório de Metadados",
+      "effect-failure": "Falhou ao apagar relatório de metadados.",
+      "effect-success": "Relatório de metadados limpo."
     },
     "label": {
       "comic": "Comic",
-      "created-on": "Created On",
-      "metadata-source": "Metadata Source"
+      "created-on": "Criado em",
+      "metadata-source": "Origem dos Metadados"
     },
     "load-entries": {
-      "effect-failure": "Failed to load metadata audit log."
+      "effect-failure": "Falhou ao carregar o relatório dos metadados."
     },
     "text": {
-      "comic-is-missing": "Comic is no longer available."
+      "comic-is-missing": "Comic já não está disponível."
     },
     "tooltip": {
-      "clear-entries": "Clear the metadata audit log.",
-      "reload-entries": "Reload the metadata audit log."
+      "clear-entries": "Limpar o relatório dos metadados.",
+      "reload-entries": "Recarregar o relatório dos metadados."
     }
   },
   "scraping": {
     "current-comic": {
-      "title": "Currently Comic ({count} Total)"
+      "title": "Comic actual ({count} Total)"
     },
     "label": {
-      "100-records": "100 Records",
-      "1000-records": "1000 Records",
-      "all-records": "All Records",
-      "issue-count": "# Issues",
-      "matchability": "Match",
-      "publisher": "Publisher",
-      "series-name": "Series",
-      "start-year": "Start Year"
+      "100-records": "100 Entradas",
+      "1000-records": "1000 Entradas",
+      "all-records": "Todas as Entradas",
+      "issue-count": "# Números",
+      "matchability": "Correspondência",
+      "publisher": "Editora",
+      "series-name": "Série",
+      "start-year": "Ano do Começo"
     },
     "load-scraping-volumes": {
-      "effect-failure": "Failed to load any volumes..."
+      "effect-failure": "Falhou ao carregar volumes..."
     },
     "load-scraping-issue": {
-      "effect-failure": "Failed to load issue..."
+      "effect-failure": "Falhou ao carregar número..."
     },
-    "page-title": "Library Scraping",
+    "page-title": "Recuperação de dados da Biblioteca",
     "scrape-comic": {
-      "effect-success": "Comic successfully scraped!",
-      "effect-failure": "Failed to scrape comic."
+      "effect-success": "Dados de Comic recuperados com sucesso!",
+      "effect-failure": "Falhou ao recuperar dados do comic."
     },
-    "scrape-comic-confirmation-title": "Replace Comic Data",
-    "scrape-comic-confirmation-message": "Are you sure you want to replace the details for this comic?",
+    "scrape-comic-confirmation-title": "Substituir Dados do Comic",
+    "scrape-comic-confirmation-message": "Tem a certeza que quer substituir os dados deste comic?",
     "start-scraping": {
-      "confirmation-title": "Scrape Comics",
-      "confirmation-message": "Are you sure you want to replace the details for the {count, plural, =1{comic} other{# comics}} selected comics?"
+      "confirmation-title": "Recuperar dados dos Comics",
+      "confirmation-message": "Tem a certeza que quer substituir os dados para {count, plural, =1{um comic} other{# comics}} selected comics?"
     },
     "text": {
-      "exact-match": "Exact",
-      "near-match": "Near",
-      "no-match": "No"
+      "exact-match": "Exacta",
+      "near-match": "Semelhante",
+      "no-match": "Não"
     },
     "tooltip": {
-      "cancel-scraping": "Stop scraping comics.",
-      "reject-scraping-issue": "Reject this issue.",
-      "select-scraping-issue": "Select this issue.",
-      "show-comic-details": "Show Details",
-      "skip-cache": "Scraping will {enabled, select, true{skip} other{use}} the scraping cache.",
+      "cancel-scraping": "Para de recuperar dados de comics.",
+      "reject-scraping-issue": "Rejeitar este número.",
+      "select-scraping-issue": "Selecionar este número.",
+      "show-comic-details": "Mostrar Dados",
+      "skip-cache": "Recuperação de dados irá {enabled, select, true{pular} other{usar}} a cache de recuperação.",
       "use-metadata-source-id": "Scrape using the ComicVine id."
     },
     "volume-list": {
-      "issue-count-header": "# Of Issues",
-      "name-header": "Series Name",
-      "publisher-header": "Publisher",
-      "start-year-header": "Start Year"
+      "issue-count-header": "# de Números",
+      "name-header": "Nome da Série",
+      "publisher-header": "Editora",
+      "start-year-header": "Ano Inicial"
     }
   }
 }
