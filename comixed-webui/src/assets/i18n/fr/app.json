@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "Un dysfonctionnement général du système s'est produit.",
     "logged-in": "Connecté avec le compte : {email}",
-    "system-status": "Imports: {importCount} | Comics: {comicCount} | Read: {readCount} | Selected: {selectedCount} | Deleted: {deletedCount}"
+    "system-status": "Imports: {importCount} | Bandes dessinées: {comicCount} | Lues: {readCount} | Sélectionnées: {selectedCount} | Supprimées: {deletedCount}"
   },
   "build-details": {
     "label": {
@@ -76,7 +76,7 @@
     }
   },
   "menu": {
-    "help": "Project help page...",
+    "help": "Page d'aide du projet...",
     "language-menu": {
       "root": "Choix de la langue"
     },
@@ -101,7 +101,7 @@
       "collections": "Collections",
       "comics": "Bandes Dessinées",
       "reading-lists": "Listes de lecture",
-      "system-status": "Systeme"
+      "system-status": "Système"
     },
     "label": {
       "all-comics": "Toutes les bandes dessinées",
@@ -117,7 +117,7 @@
       "series-collection": "Séries",
       "story-collection": "Collections",
       "story-names": "Histoires",
-      "system-status-section": "Systeme",
+      "system-status-section": "Système",
       "team-collection": "Équipes",
       "unread-comics": "Bandes Dessinées non lues"
     },
@@ -145,12 +145,12 @@
     },
     "tooltip": {
       "account": "Voir les détails du compte.",
-      "bug-report": "Search or open a bug report.",
-      "wiki": "Open the project wiki."
+      "bug-report": "Rechercher ou ouvrir un rapport de bug.",
+      "wiki": "Ouvrir le wiki du projet."
     }
   },
   "session": {
-    "load-effect-failure": "Echec du chargement de la session de l'utilisateur"
+    "load-effect-failure": "Échec du chargement de la session de l'utilisateur"
   },
   "text": {
     "archive-type": "{type, select, CBZ{Fichier Zip (CBZ)} CBR{Fichier RAR (CBR)} CB7{Fichier 7Zip (CB7)} other{Inconnu}}",

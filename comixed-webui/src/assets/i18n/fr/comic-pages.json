@@ -52,7 +52,7 @@
       "effect-failure": "Échec {deleted, select, true{de l'ajout} other{de l'annulation}} du flag de suppression.",
       "effect-success": "{deleted, select, true{Marquage} other{Nettoyage}} pour suppression."
     },
-    "tab-title": "Blocked Hash List",
+    "tab-title": "Liste des hashs bloqués",
     "tooltip": {
       "clear-deleted": "Effacer les pages sélectionnées de la suppression.",
       "delete-entries": "Supprimer les entrées de pages bloquées sélectionnées.",
