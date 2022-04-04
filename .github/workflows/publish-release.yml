@@ -32,6 +32,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 1.0.0-1
+          title: Changes For 1.0.0-2
           files: |
-            comixed-release-1.0.0-1-RELEASE.zip
+            comixed-release-1.0.0-2-RELEASE.zip
