@@ -2,7 +2,7 @@
   "app": {
     "general-effect-failure": "Um erro geral aconteceu.",
     "logged-in": "Logado como: {email}",
-    "system-status": "Importações: {importCount} | Comics: {comicCount} | Lidos: {readCount} | Marcados {selectedCount} | Apagados: {deletedCount}"
+    "system-status": "Importados: {importCount} | Comics: {comicCount} | Lidos: {readCount} | Marcados {selectedCount} | Apagados: {deletedCount}"
   },
   "build-details": {
     "label": {
@@ -16,7 +16,7 @@
       "commit-user": "Commit criado por {name} <{email}>",
       "dirty": "O ramo {dirty, select, true{contem} other{não contem}} alterações por fazer commit.",
       "jdbc-url": "O URL da base de dados usada é {url}",
-      "remote-origin-url": "Este ramo est+a a seguir o ramo remoto {url}"
+      "remote-origin-url": "Este ramo está a seguir o ramo remoto {url}"
     },
     "load-effect-failure": "Falhou ao carregar os detalhes da build.",
     "page-title": "Detalhes da Build",
@@ -121,7 +121,7 @@
       "story-collection": "Estórias",
       "story-names": "Estórias",
       "team-collection": "Equipas",
-      "unprocessed-comics": "Importações não processadas",
+      "unprocessed-comics": "Importados p/ processar",
       "unread-comics": "Comics não lidos",
       "unscraped-comics": "Comics não recuperados",
       "user-preferences": "Preferências",
