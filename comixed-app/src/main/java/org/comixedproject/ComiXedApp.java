@@ -52,7 +52,6 @@ public class ComiXedApp implements CommandLineRunner, ApplicationContextAware {
     log.info("Closing application context");
     ((ConfigurableApplicationContext) this.applicationContext).close();
     log.info("Shutting down");
-    System.exit(0);
   }
 
   @Override
