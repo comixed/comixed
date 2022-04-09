@@ -1,0 +1,35 @@
+<div
+  *ngIf="!!comics && collectionData.length > 0"
+  #container
+  class="cx-width-100 cx-height-100"
+>
+  <h2>
+    {{ "home.title.comic-collections-chart" | translate }}
+  </h2>
+  <ngx-charts-bar-horizontal
+    [results]="collectionData[currentCollection].results"
+    [view]="[chartWidth$ | async, chartHeight$ | async]"
+    [roundEdges]="true"
+    xAxis="true"
+    yAxis="true"
+    noBarWhenZero="false"
+    [xScaleMin]="0"
+    [xScaleMax]="currentCollection.maxX"
+    [xAxisLabel]="'home.legend.collections-top-entries-x-axis' | translate"
+    [showXAxisLabel]="true"
+  ></ngx-charts-bar-horizontal>
+  <mat-form-field class="cx-width-100" appearance="fill">
+    <mat-label>{{ "home.label.select-collection-type" | translate }}</mat-label>
+    <mat-select
+      [value]="currentCollection"
+      (selectionChange)="onSwitchCollection($event.value)"
+    >
+      <mat-option
+        *ngFor="let option of collectionData; let i = index"
+        [value]="i"
+      >
+        {{ "home.label." + option.title | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

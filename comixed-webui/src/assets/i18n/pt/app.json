@@ -56,21 +56,26 @@
   "home": {
     "label": {
       "character": "Personagem",
-      "comics-by-character": "Comics Por Personagem",
-      "comics-by-location": "Comics Por Localização",
-      "comics-by-publisher": "Comics Por Editora",
-      "comics-by-series": "Comics Por Série",
-      "comics-by-story": "Comics Por Estória",
-      "comics-by-team": "Comics Por Equipa",
-      "comic-count": "# de Comics",
+      "comic-state-added": "Added",
+      "comic-state-changed": "Changed",
+      "comic-state-deleted": "Deleted",
+      "comic-state-stable": "Stable",
+      "comic-state-unprocessed": "Unprocessed",
       "location": "Localização",
       "publisher": "Editora",
+      "select-collection-type": "Collection Type",
       "series": "Série",
       "story": "Estória",
       "team": "Equipa"
     },
+    "legend": {
+      "collections-top-entries-x-axis": "Number Of Comics",
+      "comic-state-x-axis": "Number Of Comics In Each State"
+    },
     "tab-title": "Início",
     "title": {
+      "comic-collections-chart": "Top Collection Entries",
+      "comic-state-chart": "Comics By State",
       "comic-statistics": "Estatísticas da Biblioteca de Comics",
       "loading-comics": "Carregando Biblioteca..."
     }

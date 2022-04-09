@@ -2,27 +2,22 @@
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
   <h2>{{ "home.title.loading-comics" | translate }}</h2>
 </div>
-<mat-toolbar *ngIf="!loading" class="cx-accent-light-background">
-  <mat-form-field class="cx-height-100" appearance="fill">
-    <mat-select [value]="chart" (selectionChange)="onShowChart($event.value)">
-      <mat-option *ngFor="let option of charts" [value]="option">
-        {{ "home.label." + option.title | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <div class="cx-spacer"></div>
-</mat-toolbar>
-<h2 *ngIf="!!chart">{{ "home.title.comic-statistics" | translate }}</h2>
-<div style="display: block" class="cx-width-100 cx-height-75">
-  <ngx-charts-bar-vertical
-    *ngIf="!!chart"
-    [results]="chart.results"
-    [legendTitle]="'home.label.comics-by-' + chart.title | translate"
-    [xAxisLabel]="'home.label.comic-count' | translate"
-    [yAxisLabel]="'home.label.' + chart.title | json"
-    [legend]="true"
-    [showXAxisLabel]="true"
-    [showYAxisLabel]="true"
-    [gradient]="true"
-  ></ngx-charts-bar-vertical>
+
+<h1 *ngIf="!loading">{{ "home.title.comic-statistics" | translate }}</h1>
+
+<div *ngIf="!loading && comics.length > 0" class="cx-width-100 cx-margin-2">
+  <mat-grid-list *ngIf="!loading" [cols]="10" rowHeight="100px">
+    <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="6">
+      <cx-collections-chart
+        class="cx-width-100"
+        [comics]="comics"
+      ></cx-collections-chart>
+    </mat-grid-tile>
+    <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="3">
+      <cx-comic-state-chart
+        class="cx-width-100 cx-height-100"
+        [comics]="comics"
+      ></cx-comic-state-chart>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>

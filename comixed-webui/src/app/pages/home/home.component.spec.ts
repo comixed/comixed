@@ -40,13 +40,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CollectionsChartComponent } from '@app/components/collections-chart/collections-chart.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ComicStateChartComponent } from '@app/components/comic-state-chart/comic-state-chart.component';
 
 describe('HomeComponent', () => {
-  const COMICS = [
-    { ...COMIC_1, publisher: null, series: null },
-    COMIC_3,
-    COMIC_5
-  ];
+  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
   const initialState = {
     [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState,
     [COMIC_LIST_FEATURE_KEY]: initialComicListState
@@ -61,7 +61,11 @@ describe('HomeComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [HomeComponent],
+        declarations: [
+          HomeComponent,
+          CollectionsChartComponent,
+          ComicStateChartComponent
+        ],
         imports: [
           NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -69,7 +73,9 @@ describe('HomeComponent', () => {
           TranslateModule.forRoot(),
           MatToolbarModule,
           MatSelectModule,
-          MatFormFieldModule
+          MatFormFieldModule,
+          MatGridListModule,
+          NgxChartsModule
         ],
         providers: [TitleService, provideMockStore({ initialState })]
       }).compileComponents();
@@ -98,9 +104,9 @@ describe('HomeComponent', () => {
     });
   });
 
-  describe('when comics are loaded', () => {
+  describe('when comics are finished loading', () => {
     beforeEach(() => {
-      component.charts = [];
+      component.comics = [];
       store.setState({
         ...initialState,
         [COMIC_LIST_FEATURE_KEY]: {
@@ -112,18 +118,8 @@ describe('HomeComponent', () => {
       });
     });
 
-    it('loads the set of charts', () => {
-      expect(component.charts).not.toEqual([]);
-    });
-
-    describe('changing the current chart', () => {
-      beforeEach(() => {
-        component.onShowChart(component.charts[1]);
-      });
-
-      it('changes the current chart', () => {
-        expect(component.chart).toEqual(component.charts[1]);
-      });
+    it('sets the comics', () => {
+      expect(component.comics).toEqual(COMICS);
     });
   });
 });
