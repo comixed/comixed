@@ -72,6 +72,10 @@ $cx-selected-comic-color: #ffffff;
   width: 100% !important;
 }
 
+.cx-height-50 {
+  height: 50% !important;
+}
+
 .cx-height-75 {
   height: 75% !important;
 }
@@ -191,7 +195,8 @@ $cx-selected-comic-color: #ffffff;
 }
 
 .cx-margin-2 {
-  margin: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 // table column widths

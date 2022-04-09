@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ChartDataResultSet } from '@app/models/ui/chart-data-result-set';
-
-export interface ChartData {
-  title: string;
-  results: ChartDataResultSet[];
-  maxX: number;
+export interface ComicStateData {
+  name: string;
+  value: number;
 }

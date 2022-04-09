@@ -24,9 +24,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { selectServerStatusState } from '@app/selectors/server-status.selectors';
 import { Store } from '@ngrx/store';
 import { Comic } from '@app/comic-books/models/comic';
-import { ChartData } from '@app/models/ui/chart-data';
 import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
-import { ChartDataResultSet } from '@app/models/ui/chart-data-result-set';
 
 @Component({
   selector: 'cx-home',
@@ -40,8 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   loading = false;
 
   taskCount = 0;
-  charts: ChartData[] = [];
-  chart: ChartData;
+  comics: Comic[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -68,19 +65,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
   }
 
-  set comics(comics: Comic[]) {
-    this.logger.trace('Loading library statistics by publisher');
-    this.charts = [
-      this.comicsByPublisher(comics),
-      this.comicsBySeries(comics),
-      this.comicsByCharacter(comics),
-      this.comicsByTeam(comics),
-      this.comicsByLocation(comics),
-      this.comicsByStory(comics)
-    ];
-    this.chart = this.charts[0];
-  }
-
   ngOnInit(): void {
     this.loadTranslations();
   }
@@ -94,152 +78,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.comicStateSubscription.unsubscribe();
   }
 
-  onShowChart(chart: ChartData): void {
-    this.logger.trace('Changing chart');
-    this.chart = chart;
-  }
-
-  private comicsByPublisher(comics: Comic[]): ChartData {
-    const publishers = comics
-      .map(comic => comic.publisher)
-      .filter((publisher, index, self) => self.indexOf(publisher) === index);
-
-    const results = this.limitResults(
-      publishers.map(publisher => {
-        return {
-          name: publisher || 'UNKNOWN',
-          value: comics.filter(entry => entry.publisher === publisher).length
-        };
-      })
-    );
-    return {
-      title: 'publisher',
-      results
-    };
-  }
-
-  private comicsBySeries(comics: Comic[]): ChartData {
-    const seriesNames = comics
-      .map(comic => comic.series)
-      .filter((entry, index, self) => self.indexOf(entry) === index);
-
-    const results = this.limitResults(
-      seriesNames.map(series => {
-        return {
-          name: series || 'UNKNOWN',
-          value: comics.filter(entry => entry.series === series).length
-        };
-      })
-    );
-    return {
-      title: 'series',
-      results
-    };
-  }
-
   private loadTranslations(): void {
     this.logger.trace('Loading translations');
     this.titleService.setTitle(this.translateService.instant('home.tab-title'));
-  }
-
-  private comicsByCharacter(comics: Comic[]): ChartData {
-    const characters = [];
-    comics.forEach(comic =>
-      comic.characters.forEach(character => {
-        if (!characters.includes(character)) {
-          characters.push(character);
-        }
-      })
-    );
-    const results = this.limitResults(
-      characters.map(character => {
-        return {
-          name: character,
-          value: comics.filter(entry => entry.characters.includes(character))
-            .length
-        };
-      })
-    );
-    return {
-      title: 'character',
-      results
-    };
-  }
-
-  private comicsByTeam(comics: Comic[]): ChartData {
-    const teams = [];
-    comics.forEach(comic =>
-      comic.characters.forEach(team => {
-        if (!teams.includes(team)) {
-          teams.push(team);
-        }
-      })
-    );
-    const results = this.limitResults(
-      teams.map(team => {
-        return {
-          name: team,
-          value: comics.filter(entry => entry.teams.includes(team)).length
-        };
-      })
-    );
-    return {
-      title: 'team',
-      results
-    };
-  }
-
-  private comicsByLocation(comics: Comic[]): ChartData {
-    const locations = [];
-    comics.forEach(comic =>
-      comic.locations.forEach(location => {
-        if (!locations.includes(location)) {
-          locations.push(location);
-        }
-      })
-    );
-    const results = this.limitResults(
-      locations.map(location => {
-        return {
-          name: location,
-          value: comics.filter(entry => entry.locations.includes(location))
-            .length
-        };
-      })
-    );
-    return {
-      title: 'location',
-      results
-    };
-  }
-
-  private comicsByStory(comics: Comic[]): ChartData {
-    const stories = [];
-    comics.forEach(comic =>
-      comic.stories.forEach(story => {
-        if (!stories.includes(story)) {
-          stories.push(story);
-        }
-      })
-    );
-    const results = this.limitResults(
-      stories.map(story => {
-        return {
-          name: story,
-          value: comics.filter(entry => entry.stories.includes(story)).length
-        };
-      })
-    );
-    return {
-      title: 'story',
-      results
-    };
-  }
-
-  private limitResults(results: ChartDataResultSet[]): ChartDataResultSet[] {
-    const MAXIMUM_RESULTS = 10;
-    const right =
-      results.length > MAXIMUM_RESULTS ? MAXIMUM_RESULTS : results.length;
-    return results.sort((a, b) => b.value - a.value).slice(0, right);
   }
 }

@@ -56,21 +56,26 @@
   "home": {
     "label": {
       "character": "Personnage",
-      "comics-by-character": "Bandes dessinées par personnage",
-      "comics-by-location": "Bandes dessinées par lieu",
-      "comics-by-publisher": "Bandes dessinées par éditeur",
-      "comics-by-series": "Bandes dessinées par série",
-      "comics-by-story": "Bandes dessinées par histoire",
-      "comics-by-team": "Bandes dessinées par équipe",
-      "comic-count": "Numéro de bandes dessinées",
+      "comic-state-added": "Added",
+      "comic-state-changed": "Changed",
+      "comic-state-deleted": "Deleted",
+      "comic-state-stable": "Stable",
+      "comic-state-unprocessed": "Unprocessed",
       "location": "Lieu",
       "publisher": "Éditeur",
+      "select-collection-type": "Collection Type",
       "series": "Série",
       "story": "Histoire",
       "team": "Équipe"
     },
+    "legend": {
+      "collections-top-entries-x-axis": "Number Of Comics",
+      "comic-state-x-axis": "Number Of Comics In Each State"
+    },
     "tab-title": "Accueil",
     "title": {
+      "comic-collections-chart": "Top Collection Entries",
+      "comic-state-chart": "Comics By State",
       "comic-statistics": "Statistiques de la bande dessinée",
       "loading-comics": "Chargement de la bibliothèque..."
     }

@@ -1,0 +1,19 @@
+<div
+  *ngIf="!!comics && comicStateData.length > 0"
+  #container
+  class="cx-width-100 cx-height-100"
+>
+  <h2>{{ "home.title.comic-state-chart" | translate }}</h2>
+  <ngx-charts-bar-horizontal
+    [results]="comicStateData"
+    [view]="[chartWidth$ | async, chartHeight$ | async]"
+    [roundEdges]="true"
+    xAxis="true"
+    yAxis="true"
+    noBarWhenZero="false"
+    [xScaleMin]="0"
+    [xScaleMax]="comicStateMaxX"
+    [xAxisLabel]="'home.legend.comic-state-x-axis' | translate"
+    [showXAxisLabel]="true"
+  ></ngx-charts-bar-horizontal>
+</div>

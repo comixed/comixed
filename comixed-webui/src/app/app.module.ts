@@ -74,6 +74,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { BarChartModule, NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { CollectionsChartComponent } from './components/collections-chart/collections-chart.component';
+import { ComicStateChartComponent } from './components/comic-state-chart/comic-state-chart.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +85,9 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
     NavigationBarComponent,
     BuildDetailsComponent,
     FooterComponent,
-    SideNavigationComponent
+    SideNavigationComponent,
+    CollectionsChartComponent,
+    ComicStateChartComponent
   ],
   imports: [
     AdminModule,
@@ -141,7 +146,8 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
     MatBadgeModule,
     BarChartModule,
     NgxChartsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatGridListModule
   ],
   providers: [
     [
