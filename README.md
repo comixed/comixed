@@ -42,7 +42,7 @@ To achieve this goal, the project will:
 
 ## What The Project Will Not Do
  * It is not a comic reading application.
-    * For that, we recommend applications like [Chunky](http://chunkyreader.com/) (iOS), [YACReader](https://www.yacreader.com/) (iOS), [Kuboo](https://play.google.com/store/apps/details?id=com.sethchhim.kuboo) (Android), [Challenger Viewer](https://play.google.com/store/apps/details?id=org.kill.geek.bdviewer) (Android)
+    * For that, we recommend applications like [Chunky](http://chunkyreader.com/) (iOS), [YACReader](https://www.yacreader.com/) (iOS), [Librera](https://play.google.com/store/apps/details?id=com.foobnix.pdf.reader) (Android)
 
 ## Supported Comic Formats
 

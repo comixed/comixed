@@ -16,9 +16,9 @@
   <url>http://www.comixedproject.org</url>
   <dependencies>
     <dependency>
-      <groupId>com.github.downgoon</groupId>
-      <artifactId>MarvinPlugins</artifactId>
-      <version>1.5.5</version>
+      <groupId>org.imgscalr</groupId>
+      <artifactId>imgscalr-lib</artifactId>
+      <version>4.2</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>

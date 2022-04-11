@@ -46,6 +46,7 @@ public class OPDSUtils {
   static final String COMIC_COVER_URL = "/opds/comics/%d/pages/%d/%d";
   public static final String OPDS_ACQUISITION_RELATION = "http://opds-spec.org/acquisition";
   public static final String OPDS_IMAGE_RELATION = "http://opds-spec.org/image";
+  public static final String OPDS_IMAGE_THUMBNAIL = "http://opds-spec.org/image/thumbnail";
   public static final String IMAGE_MIME_TYPE = "image/jpeg";
 
   /**
@@ -75,6 +76,13 @@ public class OPDSUtils {
     return new OPDSLink(
         IMAGE_MIME_TYPE,
         OPDS_IMAGE_RELATION,
+        String.format(COMIC_COVER_URL, comic.getId(), 0, 160));
+  }
+
+  public static OPDSLink createComicThumbnailLink(final Comic comic) {
+    return new OPDSLink(
+        IMAGE_MIME_TYPE,
+        OPDS_IMAGE_THUMBNAIL,
         String.format(COMIC_COVER_URL, comic.getId(), 0, 160));
   }
 
@@ -130,8 +138,9 @@ public class OPDSUtils {
       result.setSummary(comic.getDescription());
     }
     log.trace("Setting comic link");
-    result.getLinks().add(OPDSUtils.createComicLink(comic));
     result.getLinks().add(OPDSUtils.createComicCoverLink(comic));
+    result.getLinks().add(OPDSUtils.createComicThumbnailLink(comic));
+    result.getLinks().add(OPDSUtils.createComicLink(comic));
     result.setContent(new OPDSAcquisitionFeedContent(comic.getBaseFilename()));
     return result;
   }

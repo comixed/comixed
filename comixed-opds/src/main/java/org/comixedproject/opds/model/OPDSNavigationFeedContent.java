@@ -25,6 +25,6 @@ package org.comixedproject.opds.model;
  */
 public class OPDSNavigationFeedContent extends OPDSFeedContent<String> {
   public OPDSNavigationFeedContent(final String content) {
-    super("text", content);
+    super("html", content);
   }
 }

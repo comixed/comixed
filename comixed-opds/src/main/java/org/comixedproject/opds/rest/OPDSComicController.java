@@ -22,8 +22,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
-import marvin.image.MarvinImage;
-import marvinplugins.MarvinPluginCollection;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.encoders.WebResponseEncoder;
@@ -33,6 +31,7 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
@@ -109,17 +108,15 @@ public class OPDSComicController {
       if (maxWidth > 0 && page.getWidth() > maxWidth) {
         log.trace("Scaling page");
         ByteArrayInputStream bais = new ByteArrayInputStream(content);
-        BufferedImage image = ImageIO.read(bais);
-
-        MarvinImage unscaledImage = new MarvinImage(image);
-        MarvinImage scaledImage = new MarvinImage();
-        MarvinPluginCollection.scale(unscaledImage, scaledImage, maxWidth);
-
+        BufferedImage originalImage = ImageIO.read(bais);
+        BufferedImage resizedImage =
+            Scalr.resize(
+                originalImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, maxWidth);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        BufferedImage buffered = scaledImage.getBufferedImage();
-        ImageIO.write(buffered, "jpg", baos);
+        ImageIO.write(resizedImage, "jpg", baos);
         baos.flush();
         content = baos.toByteArray();
+
         baos.close();
       }
 

@@ -7,9 +7,9 @@ package org.comixedproject.opds.model;
  */
 public class OPDSAcquisitionFeed extends OPDSFeed<OPDSAcquisitionFeedEntry> {
   public static final String ACQUISITION_FEED_LINK_TYPE =
-      "application/atom+xml; profile=opds-catalog; kind=navigation";
+      "application/atom+xml; profile=opds-catalog; kind=acquisition";
 
   public OPDSAcquisitionFeed(final String title) {
-    super(title, ACQUISITION_FEED_LINK_TYPE);
+    super(title);
   }
 }

@@ -18,6 +18,9 @@
 
 package org.comixedproject.opds.model;
 
+import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -43,15 +46,29 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   @NonNull
   private String title;
 
-  @Getter @NonNull private final String linkType;
+  @JacksonXmlProperty(localName = "icon")
+  @Getter
+  @NonNull
+  private String icon = "/favicon.ico";
 
   @JacksonXmlProperty(localName = "author")
   @Getter
   private OPDSAuthor author = new OPDSAuthor("ComiXed");
 
   @JacksonXmlProperty(localName = "updated")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
   @Getter
   private Date updated = new Date();
+
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "link")
+  @Getter
+  private List<OPDSLink> links =
+      new ArrayList<>() {
+        {
+          add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", "/opds/"));
+        }
+      };
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "entry")
