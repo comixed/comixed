@@ -19,6 +19,7 @@
 package org.comixedproject.opds.rest;
 
 import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
+import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
@@ -40,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class OPDSLibraryController {
-  public static final String START = "start";
+  public static final String SUBSECTION = "subsection";
   public static final String SELF = "self";
 
   /**
@@ -54,18 +55,19 @@ public class OPDSLibraryController {
   @ResponseBody
   public OPDSNavigationFeed getRootFeed() {
     log.info("Fetching root navigation feed");
-    final OPDSNavigationFeed response = new OPDSNavigationFeed("Root");
+    final OPDSNavigationFeed response = new OPDSNavigationFeed("Comixed Comics Catalog");
+    response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/"));
     log.trace("Adding library root feed");
     OPDSNavigationFeedEntry entry;
     // add the library link
     entry = new OPDSNavigationFeedEntry("Library");
     entry.setContent(new OPDSNavigationFeedContent("The library root"));
-    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/library"));
+    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/library/"));
     response.getEntries().add(entry);
     // add the reading lists link
     entry = new OPDSNavigationFeedEntry("Reading Lists");
     entry.setContent(new OPDSNavigationFeedContent("Your reading lists"));
-    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/lists"));
+    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/lists/"));
     response.getEntries().add(entry);
     return response;
   }
@@ -82,49 +84,49 @@ public class OPDSLibraryController {
   public OPDSNavigationFeed getLibraryFeed() {
     log.info("Fetching the library root feed");
     final OPDSNavigationFeed response = new OPDSNavigationFeed("Library");
-
+    response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/library/"));
     OPDSNavigationFeedEntry entry;
     log.trace("Adding publishers link");
     entry = new OPDSNavigationFeedEntry("Publishers");
     entry.setContent(new OPDSNavigationFeedContent("For Publishers"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/publishers"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/publishers/"));
     response.getEntries().add(entry);
 
     log.trace("Adding series link");
     entry = new OPDSNavigationFeedEntry("Series");
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/series"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/series/"));
     response.getEntries().add(entry);
 
     log.trace("Adding characters link");
     entry = new OPDSNavigationFeedEntry("Characters");
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/characters"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/characters/"));
     response.getEntries().add(entry);
 
     log.trace("Adding teams link");
     entry = new OPDSNavigationFeedEntry("Teams");
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/teams"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/teams/"));
     response.getEntries().add(entry);
 
     log.trace("Adding locations link");
     entry = new OPDSNavigationFeedEntry("Locations");
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/locations"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/locations/"));
     response.getEntries().add(entry);
 
     log.trace("Adding stories link");
     entry = new OPDSNavigationFeedEntry("Stories");
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, START, "/opds/collections/stories"));
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/stories/"));
     response.getEntries().add(entry);
     return response;
   }

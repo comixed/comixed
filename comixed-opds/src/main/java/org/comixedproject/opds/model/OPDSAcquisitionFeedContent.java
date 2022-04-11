@@ -10,6 +10,6 @@ import lombok.NonNull;
  */
 public class OPDSAcquisitionFeedContent extends OPDSFeedContent<String> {
   public OPDSAcquisitionFeedContent(@NonNull final String value) {
-    super("text", value);
+    super("html", value);
   }
 }
