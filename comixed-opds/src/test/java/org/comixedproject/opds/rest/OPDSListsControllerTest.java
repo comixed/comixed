@@ -91,7 +91,7 @@ public class OPDSListsControllerTest {
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
     assertEquals(
-        String.format("/opds/lists/%d", TEST_READING_LIST_ID),
+        String.format("/opds/lists/%d/", TEST_READING_LIST_ID),
         result.getEntries().get(0).getLinks().get(0).getReference());
 
     Mockito.verify(readingListService, Mockito.times(1)).loadReadingListsForUser(TEST_EMAIL);

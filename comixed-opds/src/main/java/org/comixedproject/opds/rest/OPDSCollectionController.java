@@ -19,7 +19,9 @@
 package org.comixedproject.opds.rest;
 
 import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.rest.OPDSLibraryController.START;
+import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
+import static org.comixedproject.opds.rest.OPDSLibraryController.SELF;
+import static org.comixedproject.opds.rest.OPDSLibraryController.SUBSECTION;
 
 import java.util.List;
 import lombok.NonNull;
@@ -111,12 +113,18 @@ public class OPDSCollectionController {
               .add(
                   new OPDSLink(
                       ACQUISITION_FEED_LINK_TYPE,
-                      START,
+                      SUBSECTION,
                       String.format(
-                          "/opds/collections/%s/%s",
+                          "/opds/collections/%s/%s/",
                           collectionType, OPDSUtils.urlEncodeString(name))));
           feed.getEntries().add(entry);
         });
+    feed.getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format("/opds/collections/%s/", feed.getTitle())));
     return feed;
   }
 
@@ -174,6 +182,14 @@ public class OPDSCollectionController {
           log.trace("Adding comic to collection entries: {}", comic.getId());
           feed.getEntries().add(OPDSUtils.createComicEntry(comic));
         });
+    String type = feed.getTitle().split(": ")[0];
+    String name = OPDSUtils.urlEncodeString(feed.getTitle().split(": ")[1]);
+    feed.getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format("/opds/collections/%s/%s/", type, name)));
     return feed;
   }
 }

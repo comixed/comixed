@@ -25,9 +25,9 @@ package org.comixedproject.opds.model;
  */
 public class OPDSNavigationFeed extends OPDSFeed<OPDSNavigationFeedEntry> {
   public static final String NAVIGATION_FEED_LINK_TYPE =
-      "application/atom+xml;profile=opds-catalog;kind=navigation";
+      "application/atom+xml; profile=opds-catalog; kind=navigation";
 
   public OPDSNavigationFeed(final String title) {
-    super(title, NAVIGATION_FEED_LINK_TYPE);
+    super(title);
   }
 }

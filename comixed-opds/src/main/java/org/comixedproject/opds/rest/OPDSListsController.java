@@ -19,7 +19,9 @@
 package org.comixedproject.opds.rest;
 
 import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.rest.OPDSLibraryController.START;
+import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
+import static org.comixedproject.opds.rest.OPDSLibraryController.SELF;
+import static org.comixedproject.opds.rest.OPDSLibraryController.SUBSECTION;
 
 import java.security.Principal;
 import java.util.List;
@@ -67,6 +69,7 @@ public class OPDSListsController {
     try {
       lists = this.readingListService.loadReadingListsForUser(email);
       final OPDSNavigationFeed response = new OPDSNavigationFeed("Reading lists");
+      response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/lists/"));
       lists.forEach(
           readingList -> {
             log.trace("Adding reading list: {}", readingList.getName());
@@ -80,8 +83,8 @@ public class OPDSListsController {
                 .add(
                     new OPDSLink(
                         ACQUISITION_FEED_LINK_TYPE,
-                        START,
-                        String.format("/opds/lists/%d", readingList.getId())));
+                        SUBSECTION,
+                        String.format("/opds/lists/%d/", readingList.getId())));
             response.getEntries().add(entry);
           });
       return response;
@@ -112,6 +115,9 @@ public class OPDSListsController {
       final OPDSAcquisitionFeed response =
           new OPDSAcquisitionFeed(
               String.format("Reading List: %s (%d)", list.getName(), list.getComics().size()));
+      response
+          .getLinks()
+          .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d/", id)));
       list.getComics()
           .forEach(
               comic -> {
