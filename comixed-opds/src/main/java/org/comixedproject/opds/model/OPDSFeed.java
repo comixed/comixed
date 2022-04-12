@@ -30,7 +30,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.comixedproject.opds.utils.OPDSUtils;
 
 /**
  * <code>OPDSFeed</code> contains the content for a feed request.
@@ -46,6 +45,11 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   @NonNull
   private String title;
 
+  @JacksonXmlProperty(localName = "id")
+  @Getter
+  @NonNull
+  private String id;
+
   @JacksonXmlProperty(localName = "icon")
   @Getter
   @NonNull
@@ -53,7 +57,7 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
 
   @JacksonXmlProperty(localName = "author")
   @Getter
-  private OPDSAuthor author = new OPDSAuthor("ComiXed");
+  private OPDSAuthor author = new OPDSAuthor("ComiXed", "0");
 
   @JacksonXmlProperty(localName = "updated")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -74,14 +78,4 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
   @JacksonXmlProperty(localName = "entry")
   @Getter
   private List<E> entries = new ArrayList<>();
-
-  private String id;
-
-  @JacksonXmlProperty(localName = "id")
-  public String getId() {
-    if (this.id == null) {
-      this.id = OPDSUtils.generateID();
-    }
-    return this.id;
-  }
 }

@@ -29,7 +29,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.comixedproject.opds.utils.OPDSUtils;
 
 /**
  * <code>OPDSFeedEntry</code> defines a type that is an entry in an OPDS feed.
@@ -43,6 +42,11 @@ public abstract class OPDSFeedEntry<C extends OPDSFeedContent> {
   @Getter
   @NonNull
   private String title;
+
+  @JacksonXmlProperty(localName = "id")
+  @Getter
+  @NonNull
+  private String id;
 
   @Override
   public boolean equals(final Object o) {
@@ -77,14 +81,4 @@ public abstract class OPDSFeedEntry<C extends OPDSFeedContent> {
   @JacksonXmlProperty(localName = "link")
   @Getter
   private List<OPDSLink> links = new ArrayList<>();
-
-  private String id;
-
-  @JacksonXmlProperty(localName = "id")
-  public String getId() {
-    if (this.id == null) {
-      this.id = OPDSUtils.generateID();
-    }
-    return this.id;
-  }
 }

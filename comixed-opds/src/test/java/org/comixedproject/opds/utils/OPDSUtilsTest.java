@@ -20,7 +20,6 @@ package org.comixedproject.opds.utils;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.comixedproject.opds.utils.OPDSUtils.*;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.comixedproject.model.archives.ArchiveType;
@@ -28,7 +27,6 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.opds.model.OPDSLink;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -45,14 +43,6 @@ public class OPDSUtilsTest {
   public void setUp() {
     Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comic.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
-  }
-
-  @Test
-  public void testGenerateUUID() {
-    final String result = OPDSUtils.generateID();
-
-    assertNotNull(result);
-    assertFalse(StringUtils.isBlank(result));
   }
 
   @Test
