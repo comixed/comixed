@@ -36,7 +36,7 @@ public class OPDSAcquisitionFeedEntry extends OPDSFeedEntry<OPDSAcquisitionFeedC
   @Setter
   private String summary;
 
-  public OPDSAcquisitionFeedEntry(@NonNull final String title) {
-    super(title);
+  public OPDSAcquisitionFeedEntry(@NonNull final String title, @NonNull final String id) {
+    super(title, id);
   }
 }

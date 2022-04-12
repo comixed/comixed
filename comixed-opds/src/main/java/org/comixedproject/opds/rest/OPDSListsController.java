@@ -49,6 +49,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class OPDSListsController {
+  private static final String READING_LISTS_ID = "20";
+  public static final long READING_LIST_FACTOR_ID = 1000000L;
   @Autowired private ReadingListService readingListService;
 
   /**
@@ -68,7 +70,7 @@ public class OPDSListsController {
     final List<ReadingList> lists;
     try {
       lists = this.readingListService.loadReadingListsForUser(email);
-      final OPDSNavigationFeed response = new OPDSNavigationFeed("Reading lists");
+      final OPDSNavigationFeed response = new OPDSNavigationFeed("Reading lists", READING_LISTS_ID);
       response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/lists/"));
       lists.forEach(
           readingList -> {
@@ -76,7 +78,8 @@ public class OPDSListsController {
             final OPDSNavigationFeedEntry entry =
                 new OPDSNavigationFeedEntry(
                     String.format(
-                        "%s (%d comics)", readingList.getName(), readingList.getComics().size()));
+                        "%s (%d comics)", readingList.getName(), readingList.getComics().size()),
+                    String.valueOf(READING_LIST_FACTOR_ID + readingList.getId()));
             entry.setContent(new OPDSNavigationFeedContent(readingList.getSummary()));
             entry
                 .getLinks()
@@ -114,7 +117,8 @@ public class OPDSListsController {
       list = this.readingListService.loadReadingListForUser(email, id);
       final OPDSAcquisitionFeed response =
           new OPDSAcquisitionFeed(
-              String.format("Reading List: %s (%d)", list.getName(), list.getComics().size()));
+              String.format("Reading List: %s (%d)", list.getName(), list.getComics().size()),
+              String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
       response
           .getLinks()
           .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d/", id)));
