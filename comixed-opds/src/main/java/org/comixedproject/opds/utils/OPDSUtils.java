@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -48,15 +47,6 @@ public class OPDSUtils {
   public static final String OPDS_IMAGE_RELATION = "http://opds-spec.org/image";
   public static final String OPDS_IMAGE_THUMBNAIL = "http://opds-spec.org/image/thumbnail";
   public static final String IMAGE_MIME_TYPE = "image/jpeg";
-
-  /**
-   * Generates a consistent URI value for the given value.
-   *
-   * @return the URI
-   */
-  public static String generateID() {
-    return String.format(URN_UUID_FORMAT_STRING, UUID.randomUUID().toString());
-  }
 
   /**
    * Creates a link for the given comic.
@@ -123,14 +113,17 @@ public class OPDSUtils {
    * @return the entry
    */
   public static OPDSAcquisitionFeedEntry createComicEntry(final Comic comic) {
-    final OPDSAcquisitionFeedEntry result = new OPDSAcquisitionFeedEntry(comic.getBaseFilename());
+    final OPDSAcquisitionFeedEntry result =
+        new OPDSAcquisitionFeedEntry(comic.getBaseFilename(), String.valueOf(comic.getId()));
     comic
         .getCredits()
         .forEach(
             credit -> {
               if (StringUtils.contains(credit.getRole(), "writer")) {
                 log.trace("Adding writer: {}", credit.getName());
-                result.getAuthors().add(new OPDSAuthor(credit.getName()));
+                result
+                    .getAuthors()
+                    .add(new OPDSAuthor(credit.getName(), String.valueOf(credit.getId())));
               }
             });
     if (StringUtils.isNotEmpty(comic.getDescription())) {

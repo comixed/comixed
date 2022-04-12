@@ -37,6 +37,7 @@ public class Credit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @Getter
   private Long id;
 
   @ManyToOne

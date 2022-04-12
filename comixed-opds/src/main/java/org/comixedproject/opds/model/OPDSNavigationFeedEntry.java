@@ -26,7 +26,7 @@ import lombok.NonNull;
  * @author Darryl L. Pierce
  */
 public class OPDSNavigationFeedEntry extends OPDSFeedEntry<OPDSNavigationFeedContent> {
-  public OPDSNavigationFeedEntry(@NonNull final String title) {
-    super(title);
+  public OPDSNavigationFeedEntry(@NonNull final String title, @NonNull final String id) {
+    super(title, id);
   }
 }

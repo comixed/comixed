@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,18 @@
 
 package org.comixedproject.opds.model;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * <code>OPDSAuthor</code> is an author for content on a {@link OPDSFeedEntry}.
+ * <code>CollectionFeedEntry</code> is used to generate an OPDS feed.
  *
  * @author Darryl L. Pierce
  */
 @RequiredArgsConstructor
-public class OPDSAuthor {
-  @JacksonXmlProperty(localName = "name")
-  @Getter
-  @NonNull
-  private String name;
+public class CollectionFeedEntry {
+  @Getter @NonNull private String name;
 
-  @JacksonXmlProperty(localName = "uri")
-  @Getter
-  @NonNull
-  private String uri;
+  @Getter @NonNull private Long id;
 }
