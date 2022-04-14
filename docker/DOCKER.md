@@ -11,7 +11,7 @@ docker run -it -p 7171:7171/tcp comixed/comixed
 ```
 ## Tag Push
 ```
-docker tag comixed/comixed comixed/comixed:1.0.0-2
+docker tag comixed/comixed comixed/comixed:1.0.1-1
 docker push comixed/comixed
 ```
 
