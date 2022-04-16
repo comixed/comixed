@@ -19,7 +19,12 @@
 ></cx-navigation-bar>
 
 <mat-sidenav-container class="cx-width-100 cx-height-100 cx-navbar-margin">
-  <mat-sidenav #sidenav class="cx-primary-dark-background" mode="over">
+  <mat-sidenav
+    #sidenav
+    class="cx-primary-dark-background"
+    mode="over"
+    (click)="sidenav.close()"
+  >
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
   <mat-sidenav-content #sidebar class="cx-width-100 cx-overflow-y-scroll">
