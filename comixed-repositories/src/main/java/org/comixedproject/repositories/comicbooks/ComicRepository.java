@@ -217,7 +217,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the publisher names
    */
-  @Query("SELECT DISTINCT c.publisher FROM Comic c")
+  @Query("SELECT DISTINCT c.publisher FROM Comic c WHERE c.publisher IS NOT NULL")
   List<String> findDistinctPublishers();
 
   /**
@@ -233,7 +233,7 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
    *
    * @return the series names
    */
-  @Query("SELECT DISTINCT c.series FROM Comic c")
+  @Query("SELECT DISTINCT c.series FROM Comic c WHERE c.series IS NOT NULL")
   List<String> findDistinctSeries();
 
   /**
