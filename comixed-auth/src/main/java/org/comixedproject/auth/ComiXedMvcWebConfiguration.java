@@ -42,7 +42,7 @@ public class ComiXedMvcWebConfiguration implements WebMvcConfigurer {
   @Override
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
     registry
-        .addResourceHandler("/*")
+        .addResourceHandler("/**")
         .addResourceLocations("classpath:/static/")
         .resourceChain(true)
         .addResolver(
