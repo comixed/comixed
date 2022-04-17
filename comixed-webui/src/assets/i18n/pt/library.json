@@ -76,6 +76,7 @@
       "download": "Descarregar...",
       "download-one-data": "Dados deste comic",
       "download-selected-data": "Dados de comics selecionados",
+      "edit-multiple-comics": "Edit Selected Comics' Details",
       "mark-as": "Marcar...",
       "mark-one-as-read": "Este Comic Como Lido",
       "mark-one-as-unread": "Este Comic Como Não Lido",
@@ -100,6 +101,14 @@
       },
       "effect-failure": "Falhou o começo da conversão.",
       "effect-success": "A começar a conversão de {count, plural, =1{um comic} other{# comics}} para {archiveType}."
+    },
+    "edit-multiple-comics": {
+      "confirm-message": "Are you sure you want to edit the details for {count, plural, =1{one comic} other{# comics}}?",
+      "confirm-title": "Edit Details For {count, plural, =1{One Comic} other{# Comics}}?",
+      "effect-failure": "Failed to edit multiple comics.",
+      "effect-success": "Multiple comics edited.",
+      "header": "WARNING: The values entered here will be applied to {count, plural, =1{the selected comic} other{all # selected comics}}.",
+      "title": "Edit The Details For {count, plural, =1{One Comic} other{# Comics}}..."
     },
     "label": {
       "no-publisher": "Editora Desconhecida",

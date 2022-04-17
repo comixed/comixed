@@ -1,0 +1,104 @@
+<h2 mat-dialog-title>
+  {{
+    "library.edit-multiple-comics.title"
+      | translate: { count: this.comics.length }
+  }}
+</h2>
+
+<mat-dialog-content class="cx-width-100">
+  <div class="cx-warn-dark-background cx-width-100 cx-padding-5">
+    <p>
+      {{
+        "library.edit-multiple-comics.header"
+          | translate: { count: this.comics.length }
+      }}
+    </p>
+  </div>
+
+  <form [formGroup]="detailsForm">
+    <mat-form-field class="cx-width-100" appearance="fill">
+      <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
+      <input
+        id="publisher-input"
+        matInput
+        formControlName="publisher"
+        [placeholder]="'comic-book.placeholder.publisher' | translate"
+      />
+    </mat-form-field>
+    <mat-form-field class="cx-width-100" appearance="fill">
+      <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
+      <input
+        id="series-input"
+        matInput
+        formControlName="series"
+        [placeholder]="'comic-book.placeholder.series' | translate"
+        required
+      />
+      <mat-error *ngIf="detailsForm.controls.series.errors?.required">
+        {{ "validation.field-required" | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="cx-width-25" appearance="fill">
+      <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
+      <input
+        id="volume-input"
+        matInput
+        formControlName="volume"
+        [placeholder]="'comic-book.placeholder.volume' | translate"
+      />
+    </mat-form-field>
+    <mat-form-field class="cx-width-25" appearance="fill">
+      <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
+      <input
+        id="issue-number-input"
+        matInput
+        formControlName="issueNumber"
+        [placeholder]="'comic-book.placeholder.issue-number' | translate"
+        required
+      />
+      <mat-error *ngIf="detailsForm.controls.issueNumber.errors?.required">
+        {{ "validation.field-required" | translate }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="cx-width-50" appearance="fill">
+      <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
+      <mat-select
+        id="imprint-select"
+        formControlName="imprint"
+        (selectionChange)="onImprintSelected($event.value)"
+      >
+        <mat-option
+          *ngFor="let option of imprintOptions"
+          [value]="option.value.name"
+        >
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+    class="cx-action-button"
+    mat-icon-button
+    color="warn"
+    mat-dialog-close
+  >
+    <mat-icon>cancel</mat-icon>
+    <mat-label>
+      {{ "button.cancel" | translate }}
+    </mat-label>
+  </button>
+  <button
+    class="cx-action-button"
+    mat-icon-button
+    color="primary"
+    [mat-dialog-close]="encodeDetails()"
+  >
+    <mat-icon>save</mat-icon>
+    <mat-label>
+      {{ "button.save" | translate }}
+    </mat-label>
+  </button>
+</mat-dialog-actions>

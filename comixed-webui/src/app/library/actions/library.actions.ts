@@ -18,6 +18,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { Comic } from '@app/comic-books/models/comic';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 
 export const selectComics = createAction(
   '[Library] Mark a set of comics as selected',
@@ -27,4 +28,17 @@ export const selectComics = createAction(
 export const deselectComics = createAction(
   '[Library] Unmark a set of comics as selected',
   props<{ comics: Comic[] }>()
+);
+
+export const editMultipleComics = createAction(
+  '[Library] Edit multiple comics',
+  props<{ comics: Comic[]; details: EditMultipleComics }>()
+);
+
+export const multipleComicsEdited = createAction(
+  '[Library] Multiple comics edited'
+);
+
+export const editMultipleComicsFailed = createAction(
+  '[Library] Failed to edit multiple comics'
 );

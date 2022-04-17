@@ -47,6 +47,7 @@ import org.springframework.messaging.Message;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>ComicService</code> provides business rules for instances of {@link Comic}.
@@ -706,5 +707,54 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
 
     log.trace("Firing event: details updated");
     this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  /**
+   * Updates the details for a set of comics. If any value is null then it is not updated.
+   *
+   * @param comicIds the comics' ids
+   * @param publisher the publisher
+   * @param series the series
+   * @param issueNumber the issue number
+   * @param imprint the imprint
+   * @throws ComicException if comic id is invalid
+   */
+  public void updateMultipleComics(
+      final List<Long> comicIds,
+      final String publisher,
+      final String series,
+      final String volume,
+      final String issueNumber,
+      final String imprint)
+      throws ComicException {
+    for (long id : comicIds) {
+      log.trace(
+          "Updating multiple comics: publisher={} series={} volume={} issue number={} imprint={}",
+          publisher,
+          series,
+          issueNumber,
+          imprint);
+      log.trace("Loading comic: id={}", id);
+      final Comic comic = this.doGetComic(id);
+
+      if (StringUtils.hasLength(publisher)) {
+        comic.setPublisher(publisher);
+      }
+      if (StringUtils.hasLength(series)) {
+        comic.setSeries(series);
+      }
+      if (StringUtils.hasLength(volume)) {
+        comic.setVolume(volume);
+      }
+      if (StringUtils.hasLength(issueNumber)) {
+        comic.setIssueNumber(issueNumber);
+      }
+      if (StringUtils.hasLength(imprint)) {
+        comic.setImprint(imprint);
+      }
+
+      log.trace("Firing event: comic details changed");
+      this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
+    }
   }
 }

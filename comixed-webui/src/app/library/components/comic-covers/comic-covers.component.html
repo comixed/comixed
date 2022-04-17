@@ -65,6 +65,17 @@
         {{ "library.context-menu.comic-details" | translate }}
       </mat-label>
     </button>
+    <button
+      *ngIf="isAdmin"
+      mat-menu-item
+      [disabled]="!selected.length"
+      (click)="onEditMultipleComics()"
+    >
+      <mat-icon>edit_note</mat-icon>
+      <mat-label>
+        {{ "library.context-menu.edit-multiple-comics" | translate }}
+      </mat-label>
+    </button>
     <button mat-menu-item [matMenuTriggerFor]="markAsMenu">
       <mat-icon>rule</mat-icon>
       <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>

@@ -23,6 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
   CONVERT_COMICS_URL,
+  EDIT_MULTIPLE_COMICS_URL,
   LOAD_COMIC_URL,
   PURGE_LIBRARY_URL,
   RESCAN_COMICS_URL,
@@ -38,6 +39,8 @@ import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-r
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 
 @Injectable({
   providedIn: 'root'
@@ -108,5 +111,20 @@ export class LibraryService {
     return this.http.post(interpolate(PURGE_LIBRARY_URL), {
       ids: args.ids
     } as PurgeLibraryRequest);
+  }
+
+  editMultipleComics(args: {
+    comics: Comic[];
+    details: EditMultipleComics;
+  }): Observable<any> {
+    this.logger.trace('Editing multiple comics');
+    return this.http.post(interpolate(EDIT_MULTIPLE_COMICS_URL), {
+      ids: args.comics.map(comic => comic.id),
+      publisher: args.details.publisher,
+      series: args.details.series,
+      volume: args.details.volume,
+      issueNumber: args.details.issueNumber,
+      imprint: args.details.imprint
+    } as EditMultipleComicsRequest);
   }
 }

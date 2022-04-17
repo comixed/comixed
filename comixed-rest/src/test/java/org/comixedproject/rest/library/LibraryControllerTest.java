@@ -35,8 +35,10 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
+import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
@@ -62,6 +64,11 @@ public class LibraryControllerTest {
   private static final String TEST_DESTINATION_DIRECTORY = "/home/comixedreader/Documents/comics";
   private static final Boolean TEST_DELETE_MARKED_PAGES = RANDOM.nextBoolean();
   private static final long TEST_LAST_COMIC_ID = 717L;
+  private static final String TEST_PUBLISHER = "The Publisher";
+  private static final String TEST_SERIES = "The Series";
+  private static final String TEST_VOLUME = "1234";
+  private static final String TEST_ISSUE_NUMBER = "17b";
+  private static final String TEST_IMPRINT = "The Imprint";
 
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
@@ -72,6 +79,7 @@ public class LibraryControllerTest {
   @Mock private Comic lastComic;
   @Mock private JobLauncher jobLauncher;
   @Mock private JobExecution jobExecution;
+  @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
 
   @Mock
   @Qualifier("updateMetadataJob")
@@ -298,5 +306,49 @@ public class LibraryControllerTest {
 
     Mockito.verify(libraryService, Mockito.times(1)).prepareForPurging(idList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
+  }
+
+  @Test(expected = ComicException.class)
+  public void testEditMultipleComicsServiceThrowsException() throws ComicException {
+    Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
+    Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
+
+    Mockito.doThrow(ComicException.class)
+        .when(comicService)
+        .updateMultipleComics(
+            Mockito.anyList(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString());
+
+    try {
+      controller.editMultipleComics(editMultipleComicsRequest);
+    } finally {
+      Mockito.verify(comicService, Mockito.times(1))
+          .updateMultipleComics(
+              idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+    }
+  }
+
+  @Test
+  public void testEditMultipleComics() throws ComicException {
+    Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
+    Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
+
+    controller.editMultipleComics(editMultipleComicsRequest);
+
+    Mockito.verify(comicService, Mockito.times(1))
+        .updateMultipleComics(
+            idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
   }
 }

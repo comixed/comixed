@@ -33,8 +33,10 @@ import org.comixedproject.model.comicbooks.Comic;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
+import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
+import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
@@ -271,5 +273,27 @@ public class LibraryController {
         new JobParametersBuilder()
             .addLong(JOB_PURGE_LIBRARY_START, System.currentTimeMillis())
             .toJobParameters());
+  }
+
+  /**
+   * Updates a set of comics with the provided details.
+   *
+   * @param request the request body
+   * @throws ComicException if an error occurs
+   */
+  @PostMapping(value = "/api/library/comics/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableRestEndpoint(logResponse = true)
+  @PreAuthorize("hasRole('ADMIN')")
+  public void editMultipleComics(@RequestBody() final EditMultipleComicsRequest request)
+      throws ComicException {
+    final List<Long> ids = request.getIds();
+    log.info("Updating details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
+    this.comicService.updateMultipleComics(
+        ids,
+        request.getPublisher(),
+        request.getSeries(),
+        request.getVolume(),
+        request.getIssueNumber(),
+        request.getImprint());
   }
 }
