@@ -76,6 +76,7 @@
       "download": "Download...",
       "download-one-data": "This comic's data",
       "download-selected-data": "Selected comics' data",
+      "edit-multiple-comics": "Edit Selected Comics' Details",
       "mark-as": "Mark...",
       "mark-one-as-read": "This Comic As Read",
       "mark-one-as-unread": "This Comic As Unread",
@@ -100,6 +101,14 @@
       },
       "effect-failure": "Failed to start the conversion process.",
       "effect-success": "Starting converting {count, plural, =1{one comic} other{# comics}} to {archiveType}."
+    },
+    "edit-multiple-comics": {
+      "confirm-message": "Are you sure you want to edit the details for {count, plural, =1{one comic} other{# comics}}?",
+      "confirm-title": "Edit Details For {count, plural, =1{One Comic} other{# Comics}}?",
+      "effect-failure": "Failed to edit multiple comics.",
+      "effect-success": "Multiple comics edited.",
+      "header": "WARNING: The values entered here will be applied to {count, plural, =1{the selected comic} other{all # selected comics}}.",
+      "title": "Edit The Details For {count, plural, =1{One Comic} other{# Comics}}..."
     },
     "label": {
       "no-publisher": "Unknown Publisher",

@@ -41,6 +41,7 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import {
   deselectComics,
+  editMultipleComics,
   selectComics
 } from '@app/library/actions/library.actions';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -75,12 +76,21 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { FileDownloadService } from '@app/core/services/file-download.service';
+import { of } from 'rxjs';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
   const PAGE_INDEX = 23;
   const COMIC = COMIC_2;
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
+  const COMIC_DETAILS: EditMultipleComics = {
+    publisher: 'The Publisher',
+    series: 'The Series',
+    volume: '1234',
+    issueNumber: '777',
+    imprint: 'The Imprint'
+  };
   const READING_LIST = READING_LIST_1;
   const LAST_READ_DATES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
   const initialState = {
@@ -132,7 +142,6 @@ describe('ComicCoversComponent', () => {
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
       dialog = TestBed.inject(MatDialog);
-      spyOn(dialog, 'open');
       translateService = TestBed.inject(TranslateService);
       confirmationService = TestBed.inject(ConfirmationService);
       paginator = TestBed.createComponent(MatPaginator);
@@ -225,6 +234,7 @@ describe('ComicCoversComponent', () => {
 
   describe('showing the comic details dialog', () => {
     beforeEach(() => {
+      spyOn(dialog, 'open');
       component.onShowComicDetails(COMIC);
     });
 
@@ -570,6 +580,50 @@ describe('ComicCoversComponent', () => {
       expect(
         component.isDeleted({ ...COMIC, comicState: ComicBookState.CHANGED })
       ).toBeFalse();
+    });
+  });
+
+  describe('editing multiple comics', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      const dialogRef = jasmine.createSpyObj(['afterClosed']);
+      dialogRef.afterClosed.and.returnValue(of(COMIC_DETAILS));
+      spyOn(dialog, 'open').and.returnValue(dialogRef);
+      component.selected = COMICS;
+      component.onEditMultipleComics();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action to edit multiple comics', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        editMultipleComics({ comics: COMICS, details: COMIC_DETAILS })
+      );
+    });
+  });
+
+  describe('cancelling editing multiple comics', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      const dialogRef = jasmine.createSpyObj(['afterClosed']);
+      dialogRef.afterClosed.and.returnValue(of(null));
+      spyOn(dialog, 'open').and.returnValue(dialogRef);
+      component.selected = COMICS;
+      component.onEditMultipleComics();
+    });
+
+    it('does not confirm with the user', () => {
+      expect(confirmationService.confirm).not.toHaveBeenCalled();
+    });
+
+    it('does not fire an action', () => {
+      expect(store.dispatch).not.toHaveBeenCalled();
     });
   });
 });

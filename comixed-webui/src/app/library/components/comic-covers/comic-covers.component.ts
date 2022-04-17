@@ -34,6 +34,7 @@ import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   deselectComics,
+  editMultipleComics,
   selectComics
 } from '@app/library/actions/library.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -57,6 +58,8 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { FileDownloadService } from '@app/core/services/file-download.service';
+import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -368,6 +371,34 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
             renamePages: true
           })
         );
+      }
+    });
+  }
+
+  onEditMultipleComics(): void {
+    this.logger.trace('Editing details for multiple comics');
+    const dialog = this.dialog.open(EditMultipleComicsComponent, {
+      data: this.selected
+    });
+    dialog.afterClosed().subscribe((response: EditMultipleComics) => {
+      if (!!response) {
+        const count = this.selected.length;
+        this.confirmationService.confirm({
+          title: this.translateService.instant(
+            'library.edit-multiple-comics.confirm-title',
+            { count }
+          ),
+          message: this.translateService.instant(
+            'library.edit-multiple-comics.confirm-message',
+            { count }
+          ),
+          confirm: () => {
+            this.logger.trace('Editing multiple comics');
+            this.store.dispatch(
+              editMultipleComics({ comics: this.selected, details: response })
+            );
+          }
+        });
       }
     });
   }

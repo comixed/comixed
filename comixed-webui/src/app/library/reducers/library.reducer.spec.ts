@@ -24,8 +24,12 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import {
   deselectComics,
+  editMultipleComics,
+  editMultipleComicsFailed,
+  multipleComicsEdited,
   selectComics
 } from '@app/library/actions/library.actions';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 
 describe('Library Reducer', () => {
   const COMIC = COMIC_1;
@@ -45,6 +49,10 @@ describe('Library Reducer', () => {
 
     it('has no selected comic', () => {
       expect(state.selected).toEqual([]);
+    });
+
+    it('is not busy', () => {
+      expect(state.busy).toBeFalse();
     });
   });
 
@@ -101,6 +109,42 @@ describe('Library Reducer', () => {
       it('clears the selected comics', () => {
         expect(state.selected).toEqual([]);
       });
+    });
+  });
+
+  describe('editing multiple comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        editMultipleComics({
+          comics: COMICS,
+          details: {} as EditMultipleComics
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('successfully editing multiple comics', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: true }, multipleComicsEdited());
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+  });
+
+  describe('failure editing multiple comics', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: true }, editMultipleComicsFailed());
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
   });
 });

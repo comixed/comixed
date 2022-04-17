@@ -58,6 +58,7 @@ export const CONVERT_COMICS_URL = `${API_ROOT_URL}/library/convert`;
 export const RESCAN_COMICS_URL = `${API_ROOT_URL}/library/rescan`;
 export const UPDATE_METADATA_URL = `${API_ROOT_URL}/library/metadata`;
 export const PURGE_LIBRARY_URL = `${API_ROOT_URL}/library/purge`;
+export const EDIT_MULTIPLE_COMICS_URL = `${API_ROOT_URL}/library/comics/edit`;
 
 // import options
 export const IMPORT_ROOT_DIRECTORY_PREFERENCE =

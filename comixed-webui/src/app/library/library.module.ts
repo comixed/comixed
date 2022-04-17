@@ -98,6 +98,8 @@ import {
   reducer as purgeLibraryReducer
 } from '@app/library/reducers/purge-library.reducer';
 import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects';
+import { EditMultipleComicsComponent } from './components/edit-multiple-comics/edit-multiple-comics.component';
+import { LibraryEffects } from '@app/library/effects/library.effects';
 
 @NgModule({
   declarations: [
@@ -112,7 +114,8 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
     DuplicatePageListPageComponent,
     ComicsWithDuplicatePageComponent,
     DuplicatePageDetailPageComponent,
-    ComicListViewComponent
+    ComicListViewComponent,
+    EditMultipleComicsComponent
   ],
   providers: [],
   imports: [
@@ -131,6 +134,7 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
       DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
       duplicatePageDetailReducer
     ),
+    StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(RESCAN_COMICS_FEATURE_KEY, rescanComicsReducer),
     StoreModule.forFeature(UPDATE_METADATA_FEATURE_KEY, updateMetadataReducer),
     StoreModule.forFeature(
@@ -142,6 +146,7 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
     EffectsModule.forFeature([
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
+      LibraryEffects,
       RescanComicsEffects,
       UpdateMetadataEffects,
       ConsolidateLibraryEffects,

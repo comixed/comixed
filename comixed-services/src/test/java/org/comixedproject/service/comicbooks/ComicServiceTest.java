@@ -990,4 +990,120 @@ public class ComicServiceTest {
     Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
   }
+
+  @Test(expected = ComicException.class)
+  public void testUpdateMultipleComicsInvalidId() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(null);
+
+    try {
+      service.updateMultipleComics(
+          idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+    } finally {
+      Mockito.verify(comicRepository, Mockito.times(1)).getById(TEST_COMIC_ID);
+    }
+  }
+
+  @Test
+  public void testUpdateMultipleComics() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMultipleComics(
+        idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testUpdateMultipleComicsNoPublisher() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMultipleComics(
+        idList, null, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+
+    Mockito.verify(comic, Mockito.never()).setPublisher(Mockito.anyString());
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testUpdateMultipleComicsNoSeries() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMultipleComics(
+        idList, TEST_PUBLISHER, null, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comic, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testUpdateMultipleComicsNoVolume() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMultipleComics(
+        idList, TEST_PUBLISHER, TEST_SERIES, null, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testUpdateMultipleComicsNoIssueNumber() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMultipleComics(
+        idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, null, TEST_IMPRINT);
+
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.never()).setIssueNumber(Mockito.anyString());
+    Mockito.verify(comic, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testUpdateMultipleComicsNoImprint() throws ComicException {
+    idList.add(TEST_COMIC_ID);
+
+    Mockito.when(comicRepository.getById(Mockito.anyLong())).thenReturn(comic);
+
+    service.updateMultipleComics(
+        idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, null);
+
+    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comic, Mockito.never()).setImprint(Mockito.anyString());
+    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
 }

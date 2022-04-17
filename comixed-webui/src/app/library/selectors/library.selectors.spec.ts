@@ -31,7 +31,8 @@ describe('Library Selectors', () => {
 
   beforeEach(() => {
     state = {
-      selected: SELECTED_COMICS
+      selected: SELECTED_COMICS,
+      busy: Math.random() > 0.5
     };
   });
 

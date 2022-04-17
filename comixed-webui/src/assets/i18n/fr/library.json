@@ -76,6 +76,7 @@
       "download": "Téléchargement...",
       "download-one-data": "Les données de la bande dessinée",
       "download-selected-data": "Données des bandes dessinées sélectionnées",
+      "edit-multiple-comics": "Edit Selected Comics' Details",
       "mark-as": "Marquer...",
       "mark-one-as-read": "Cette Bande Dessinée comme Lue",
       "mark-one-as-unread": "Cette Bande Dessinée comme Non lue",
@@ -100,6 +101,14 @@
       },
       "effect-failure": "Échec du lancement du processus de conversion.",
       "effect-success": "Début de la conversion {count, plural, =1{d'une bande dessinée} other{# bande dessinées}} en {archiveType}."
+    },
+    "edit-multiple-comics": {
+      "confirm-message": "Are you sure you want to edit the details for {count, plural, =1{one comic} other{# comics}}?",
+      "confirm-title": "Edit Details For {count, plural, =1{One Comic} other{# Comics}}?",
+      "effect-failure": "Failed to edit multiple comics.",
+      "effect-success": "Multiple comics edited.",
+      "header": "WARNING: The values entered here will be applied to {count, plural, =1{the selected comic} other{all # selected comics}}.",
+      "title": "Edit The Details For {count, plural, =1{One Comic} other{# Comics}}..."
     },
     "label": {
       "no-publisher": "Éditeur inconnu",

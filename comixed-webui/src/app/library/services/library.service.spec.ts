@@ -32,6 +32,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
   CONVERT_COMICS_URL,
+  EDIT_MULTIPLE_COMICS_URL,
   LOAD_COMIC_URL,
   PURGE_LIBRARY_URL,
   RESCAN_COMICS_URL,
@@ -47,6 +48,8 @@ import { UpdateMetadataRequest } from '@app/library/models/net/update-metadata-r
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-request';
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_1;
@@ -56,6 +59,13 @@ describe('LibraryService', () => {
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
   const IDS = [203, 204, 205];
+  const COMIC_DETAILS: EditMultipleComics = {
+    publisher: 'The Publisher',
+    series: 'The Series',
+    volume: '2022',
+    issueNumber: '17b',
+    imprint: 'The Imprint'
+  };
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -169,6 +179,27 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(PURGE_LIBRARY_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({ ids: IDS } as PurgeLibraryRequest);
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can edit multiple comics', () => {
+    service
+      .editMultipleComics({
+        comics: COMICS,
+        details: COMIC_DETAILS
+      })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(EDIT_MULTIPLE_COMICS_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: COMICS.map(comic => comic.id),
+      publisher: COMIC_DETAILS.publisher,
+      series: COMIC_DETAILS.series,
+      volume: COMIC_DETAILS.volume,
+      issueNumber: COMIC_DETAILS.issueNumber,
+      imprint: COMIC_DETAILS.imprint
+    } as EditMultipleComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });

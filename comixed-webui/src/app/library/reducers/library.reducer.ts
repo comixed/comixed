@@ -17,17 +17,25 @@
  */
 
 import { createReducer, on } from '@ngrx/store';
-import { deselectComics, selectComics } from '../actions/library.actions';
+import {
+  deselectComics,
+  editMultipleComics,
+  editMultipleComicsFailed,
+  multipleComicsEdited,
+  selectComics
+} from '../actions/library.actions';
 import { Comic } from '@app/comic-books/models/comic';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
   selected: Comic[];
+  busy: boolean;
 }
 
 export const initialState: LibraryState = {
-  selected: []
+  selected: [],
+  busy: false
 };
 
 export const reducer = createReducer(
@@ -46,5 +54,8 @@ export const reducer = createReducer(
     );
 
     return { ...state, selected };
-  })
+  }),
+  on(editMultipleComics, state => ({ ...state, busy: true })),
+  on(multipleComicsEdited, state => ({ ...state, busy: false })),
+  on(editMultipleComicsFailed, state => ({ ...state, busy: false }))
 );
