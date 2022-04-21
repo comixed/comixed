@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Random;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.comixedproject.metadata.MetadataException;
@@ -42,7 +41,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {ComicVineGetVolumesAction.class})
 public class ComicVineGetVolumesActionTest {
-  private static final Random RANDOM = new Random();
   private static final String TEST_API_KEY = "OICU812";
   private static final String TEST_VOLUME_NAME = "Action Comics";
   private static final String TEST_BAD_RESPONSE_BODY = "This is not JSON";
@@ -55,8 +53,10 @@ public class ComicVineGetVolumesActionTest {
   private static final String TEST_PUBLISHER_NAME = "DC Comics";
   private static final Integer TEST_ALL_RECORDS = 10;
   private static final Integer TEST_MAX_RECORDS = 3;
-  public MockWebServer comicVineServer;
+
   @Autowired private ComicVineGetVolumesAction getVolumesAction;
+
+  public MockWebServer comicVineServer;
 
   @Before
   public void setUp() throws IOException, KeyStoreException, NoSuchAlgorithmException {
