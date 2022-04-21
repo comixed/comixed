@@ -93,14 +93,15 @@ public class ComicVineGetVolumesAction
           response.getVolumes().size(),
           response.getVolumes().size() == 1 ? "" : "s");
 
-      if (maxRecords == 0) maxRecords = response.getVolumes().size();
+      Integer totalRecords = maxRecords;
+      if (totalRecords == 0) totalRecords = response.getVolumes().size();
 
       response
           .getVolumes()
-          .subList(0, maxRecords)
+          .subList(0, totalRecords)
           .forEach(
               volume -> {
-                log.trace("Processing volume record: {}", volume.getId());
+                log.debug("Processing volume record: {} name={}", volume.getId(), volume.getName());
                 final VolumeMetadata entry = new VolumeMetadata();
                 entry.setId(volume.getId());
                 entry.setName(volume.getName());
