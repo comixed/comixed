@@ -176,7 +176,8 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
     CommonModule,
     CoreModule,
     ComicCoversComponent,
-    ComicListViewComponent
+    ComicListViewComponent,
+    ArchiveTypePipe
   ]
 })
 export class LibraryModule {}

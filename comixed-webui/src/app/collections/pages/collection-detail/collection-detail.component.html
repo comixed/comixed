@@ -5,13 +5,16 @@
   }}
 </h1>
 <cx-comic-covers
-  [comics]="comics"
+  [comics]="comics | archiveType: archiveTypeFilter"
   [selected]="selected"
   [readingLists]="readingLists"
   [showConsolidate]="isAdmin"
   [isAdmin]="isAdmin"
   [pageSize]="pageSize"
+  [sortField]="sortField"
+  [archiveType]="archiveTypeFilter"
   [pageIndex]="pageIndex"
+  (archiveTypeChanged)="onArchiveTypeChanged($event)"
   (pageIndexChanged)="onPageIndexChanged($event)"
   (selectAllComics)="onSelectAllComics($event)"
 ></cx-comic-covers>
