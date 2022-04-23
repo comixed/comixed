@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>1.0.1-1</version>
+    <version>1.0.2-1</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-batch</artifactId>
-  <version>1.0.1-1</version>
+  <version>1.0.2-1</version>
   <name>comixed-batch</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -26,22 +26,22 @@
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-model</artifactId>
-      <version>1.0.1-1</version>
+      <version>1.0.2-1</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-adaptors</artifactId>
-      <version>1.0.1-1</version>
+      <version>1.0.2-1</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
-      <version>1.0.1-1</version>
+      <version>1.0.2-1</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-messaging</artifactId>
-      <version>1.0.1-1</version>
+      <version>1.0.2-1</version>
     </dependency>
   </dependencies>
 </project>
