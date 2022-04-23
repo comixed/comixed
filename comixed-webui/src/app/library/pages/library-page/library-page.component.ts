@@ -33,7 +33,10 @@ import {
 } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
 import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import {
+  ArchiveType,
+  archiveTypeFromString
+} from '@app/comic-books/models/archive-type.enum';
 import {
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_ARCHIVE_TYPE,
@@ -123,19 +126,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         if (!!params[QUERY_PARAM_ARCHIVE_TYPE]) {
           const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE];
           this.logger.debug('Received archive type query param:', archiveType);
-          switch (archiveType) {
-            case ArchiveType.CBZ:
-              this.archiveTypeFilter = ArchiveType.CBZ;
-              break;
-            case ArchiveType.CBR:
-              this.archiveTypeFilter = ArchiveType.CBR;
-              break;
-            case ArchiveType.CB7:
-              this.archiveTypeFilter = ArchiveType.CB7;
-              break;
-            default:
-              this.archiveTypeFilter = null;
-          }
+          this.archiveTypeFilter = archiveTypeFromString(archiveType);
         } else {
           this.logger.debug('Resetting archive type filter');
           this.archiveTypeFilter = null;
@@ -189,12 +180,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   private _comics: Comic[] = [];
 
-  set comics(comics: Comic[]) {
-    this._comics = comics;
-  }
-
   get comics(): Comic[] {
     return this._comics;
+  }
+
+  set comics(comics: Comic[]) {
+    this._comics = comics;
   }
 
   ngOnInit(): void {

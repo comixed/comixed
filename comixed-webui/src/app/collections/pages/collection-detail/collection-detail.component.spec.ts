@@ -67,20 +67,27 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { TitleService } from '@app/core/services/title.service';
 import { MatSortModule } from '@angular/material/sort';
-import { QUERY_PARAM_PAGE_INDEX } from '@app/library/library.constants';
+import {
+  QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_PAGE_INDEX
+} from '@app/library/library.constants';
 import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
+import { USER_READER } from '@app/user/user.fixtures';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
   const PAGE_INDEX = 22;
+  const USER = USER_READER;
   const initialState = {
     [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
-    [USER_FEATURE_KEY]: initialUserState
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
   let component: CollectionDetailComponent;
@@ -97,7 +104,8 @@ describe('CollectionDetailComponent', () => {
         declarations: [
           CollectionDetailComponent,
           ComicCoversComponent,
-          LibraryToolbarComponent
+          LibraryToolbarComponent,
+          ArchiveTypePipe
         ],
         imports: [
           NoopAnimationsModule,
@@ -339,6 +347,103 @@ describe('CollectionDetailComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         deselectComics({ comics: COMICS })
       );
+    });
+  });
+
+  describe('filtering by archive type', () => {
+    describe('when it is CBZ', () => {
+      const ARCHIVE_TYPE = ArchiveType.CBZ;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('sets the archive type filter', () => {
+        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
+      });
+    });
+
+    describe('when it is CBR', () => {
+      const ARCHIVE_TYPE = ArchiveType.CBR;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('sets the archive type filter', () => {
+        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
+      });
+    });
+
+    describe('when it is CB7', () => {
+      const ARCHIVE_TYPE = ArchiveType.CB7;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('sets the archive type filter', () => {
+        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
+      });
+    });
+
+    describe('when it is not valid', () => {
+      const ARCHIVE_TYPE = 'CBH';
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
+        });
+      });
+
+      it('clears the archive type filter', () => {
+        expect(component.archiveTypeFilter).toBeNull();
+      });
+    });
+
+    describe('when it is not provided', () => {
+      const ARCHIVE_TYPE = null;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({});
+      });
+
+      it('clears the archive type filter', () => {
+        expect(component.archiveTypeFilter).toBeNull();
+      });
+    });
+  });
+
+  describe('when the archive type filter is changed', () => {
+    describe('when an value is selected', () => {
+      beforeEach(() => {
+        component.onArchiveTypeChanged(ArchiveType.CB7);
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
+    });
+
+    describe('when the value is cleared', () => {
+      beforeEach(() => {
+        component.onArchiveTypeChanged(null);
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
     });
   });
 });
