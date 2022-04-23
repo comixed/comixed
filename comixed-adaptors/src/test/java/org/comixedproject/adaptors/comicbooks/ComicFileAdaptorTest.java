@@ -72,6 +72,8 @@ public class ComicFileAdaptorTest {
   private static final String TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED = "__717_";
   private static final String TEST_RENAMING_RULE_WITH_UNSUPPORTED_CHARACTERS =
       "?*$PUBLISHER/<|?>$SERIES/\\:$VOLUME/$SERIES v$VOLUME #$ISSUE ($COVERDATE)";
+  private static final String TEST_ORIGINAL_FILENAME = "src/test/resources/available.cbz";
+  private static final String TEST_EXISTING_FILENAME = "src/test/resources/example.cbz";
 
   @InjectMocks private ComicFileAdaptor adaptor;
   @Mock private Comic comic;
@@ -292,15 +294,38 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testFindAvailableFilename() {
-    final String result = adaptor.findAvailableFilename("src/test/resources/notfound", 0, "cbz");
+    final String result =
+        adaptor.findAvailableFilename(
+            TEST_ORIGINAL_FILENAME, "src/test/resources/notfound", 0, "cbz");
 
     assertEquals("src/test/resources/notfound.cbz", result);
   }
 
   @Test
-  public void testFindAvailableFilenameUsed() {
-    final String result = adaptor.findAvailableFilename("src/test/resources/example", 0, "cbz");
+  public void testFindAvailableWithUsedFilename() {
+    // called with attempt 1 to simulate a second call when the original filename fails
+    final String result =
+        adaptor.findAvailableFilename(
+            TEST_EXISTING_FILENAME, "src/test/resources/example", 1, "cbz");
 
     assertEquals("src/test/resources/example-2.cbz", result);
+  }
+
+  @Test
+  public void testFindAvailableFilenameUsed() {
+    final String result =
+        adaptor.findAvailableFilename(
+            TEST_ORIGINAL_FILENAME, "src/test/resources/example", 0, "cbz");
+
+    assertEquals("src/test/resources/example-2.cbz", result);
+  }
+
+  @Test
+  public void testFindAvailableFilenameMatchesExistingName() {
+    final String result =
+        adaptor.findAvailableFilename(
+            TEST_EXISTING_FILENAME, "src/test/resources/example", 0, "cbz");
+
+    assertEquals("src/test/resources/example.cbz", result);
   }
 }
