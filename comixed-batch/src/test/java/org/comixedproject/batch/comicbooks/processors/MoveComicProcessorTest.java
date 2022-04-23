@@ -46,6 +46,7 @@ public class MoveComicProcessorTest {
   private static final String TEST_EXTENSION = "cbz";
   private static final String TEST_NEW_FILENAME_WITH_EXTENSION =
       TEST_NEW_FILENAME_WITH_PATH + "." + TEST_EXTENSION;
+  private static final String TEST_ORIGINAL_FILENAME = "The original filename";
 
   @InjectMocks private MoveComicProcessor processor;
   @Mock private StepExecution stepExecution;
@@ -75,12 +76,13 @@ public class MoveComicProcessorTest {
     Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
     Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
+    Mockito.when(comic.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(Mockito.any(Comic.class), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME);
     Mockito.when(
             comicFileAdaptor.findAvailableFilename(
-                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
     Mockito.when(comic.getFile()).thenReturn(comicFile);
     Mockito.doNothing()
@@ -103,7 +105,8 @@ public class MoveComicProcessorTest {
     Mockito.verify(comicFileAdaptor, Mockito.times(1))
         .createFilenameFromRule(comic, TEST_RENAMING_RULE);
     Mockito.verify(comicFileAdaptor, Mockito.times(1))
-        .findAvailableFilename(TEST_NEW_FILENAME_WITH_PATH, 0, TEST_EXTENSION);
+        .findAvailableFilename(
+            TEST_ORIGINAL_FILENAME, TEST_NEW_FILENAME_WITH_PATH, 0, TEST_EXTENSION);
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(sourceFileArgumentCaptor.getValue(), targetFileArgumentCaptor.getValue());
   }
@@ -113,12 +116,13 @@ public class MoveComicProcessorTest {
     Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
     Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
+    Mockito.when(comic.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(Mockito.any(Comic.class), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME);
     Mockito.when(
             comicFileAdaptor.findAvailableFilename(
-                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
     Mockito.when(comic.getFile()).thenReturn(comicFile);
     Mockito.doThrow(IOException.class)

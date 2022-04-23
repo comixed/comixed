@@ -107,7 +107,7 @@ public class ComicBookAdaptorTest {
         .thenReturn(TEST_ARCHIVE_ENTRY_CONTENT);
     Mockito.when(
             comicFileAdaptor.findAvailableFilename(
-                Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_FINAL_FILENAME);
 
     Mockito.when(comic.getFile()).thenReturn(comicFile);
