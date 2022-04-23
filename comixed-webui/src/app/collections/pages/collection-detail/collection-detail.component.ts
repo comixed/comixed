@@ -31,18 +31,29 @@ import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { getPageSize, isAdmin } from '@app/user/user.functions';
+import {
+  getPageSize,
+  getUserPreference,
+  isAdmin
+} from '@app/user/user.functions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import {
   PAGE_SIZE_DEFAULT,
-  QUERY_PARAM_PAGE_INDEX
+  QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_PAGE_INDEX,
+  SORT_FIELD_DEFAULT,
+  SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import {
+  ArchiveType,
+  archiveTypeFromString
+} from '@app/comic-books/models/archive-type.enum';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -66,6 +77,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   pageSize = PAGE_SIZE_DEFAULT;
   pageIndex = 0;
   langChangeSubscription: Subscription;
+  archiveTypeFilter = null;
+  sortField = SORT_FIELD_DEFAULT;
 
   constructor(
     private logger: LoggerService,
@@ -108,6 +121,14 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     });
     this.queryParamsSubscribe = this.activatedRoute.queryParams.subscribe(
       params => {
+        if (!!params[QUERY_PARAM_ARCHIVE_TYPE]) {
+          const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE];
+          this.logger.debug('Received archive type query param:', archiveType);
+          this.archiveTypeFilter = archiveTypeFromString(archiveType);
+        } else {
+          this.logger.debug('Resetting archive type filter');
+          this.archiveTypeFilter = null;
+        }
         if (!!params[QUERY_PARAM_PAGE_INDEX]) {
           this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
           this.logger.debug(`Page index: ${this.pageIndex}`);
@@ -119,6 +140,11 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       this.isAdmin = isAdmin(user);
       this.logger.trace('Loading user page size preference');
       this.pageSize = getPageSize(user);
+      this.sortField = getUserPreference(
+        user.preferences,
+        SORT_FIELD_PREFERENCE,
+        SORT_FIELD_DEFAULT
+      );
     });
     this.selectedSubscription = this.store
       .select(selectSelectedComics)
@@ -136,16 +162,17 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from parameter updates');
+    this.logger.trace('Unsubscribing from parameter events');
     this.paramsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from query parameter events');
     this.queryParamsSubscribe.unsubscribe();
-    if (!!this.comicSubscription) {
-      this.comicSubscription.unsubscribe();
-    }
+    this.logger.trace('Unsubscribing from comic updates');
+    this.comicSubscription?.unsubscribe();
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list updats');
+    this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from language change events');
     this.langChangeSubscription.unsubscribe();
   }
 
@@ -167,6 +194,16 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       this.logger.trace('Deselecting all comics');
       this.store.dispatch(deselectComics({ comics: this.selected }));
     }
+  }
+
+  onArchiveTypeChanged(archiveType: ArchiveType): void {
+    this.logger.debug('Archive type changed:', archiveType);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_ARCHIVE_TYPE,
+      !!archiveType ? `${archiveType}` : null
+    );
   }
 
   private loadTranslations(): void {

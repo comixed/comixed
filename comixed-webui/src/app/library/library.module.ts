@@ -181,7 +181,8 @@ import { LibraryEffects } from '@app/library/effects/library.effects';
     CommonModule,
     CoreModule,
     ComicCoversComponent,
-    ComicListViewComponent
+    ComicListViewComponent,
+    ArchiveTypePipe
   ]
 })
 export class LibraryModule {}
