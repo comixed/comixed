@@ -102,6 +102,7 @@
     },
     "tooltip": {
       "cancel-scraping": "Stop scraping comics.",
+      "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
       "reject-scraping-issue": "Reject this issue.",
       "select-scraping-issue": "Select this issue.",
       "show-comic-details": "Show Details",

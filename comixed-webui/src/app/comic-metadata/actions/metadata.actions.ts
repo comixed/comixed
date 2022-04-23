@@ -31,6 +31,11 @@ export const setChosenMetadataSource = createAction(
   props<{ metadataSource: MetadataSource }>()
 );
 
+export const setConfirmBeforeScraping = createAction(
+  '[Metadata] Sets the confirmation before scraping state',
+  props<{ confirmBeforeScraping: boolean }>()
+);
+
 export const loadVolumeMetadata = createAction(
   '[Metadata] Loads scraping volumes',
   props<{

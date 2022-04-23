@@ -102,6 +102,7 @@
     },
     "tooltip": {
       "cancel-scraping": "Para de recuperar dados de comics.",
+      "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
       "reject-scraping-issue": "Rejeitar este número.",
       "select-scraping-issue": "Selecionar este número.",
       "show-comic-details": "Mostrar Dados",

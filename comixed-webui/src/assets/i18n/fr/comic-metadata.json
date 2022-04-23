@@ -102,6 +102,7 @@
     },
     "tooltip": {
       "cancel-scraping": "Arrêt de la récupération des détails des Bandes Dessinées.",
+      "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
       "reject-scraping-issue": "Rejeter ce numéro.",
       "select-scraping-issue": "Sélectionner ce numéro.",
       "show-comic-details": "Afficher les détails",

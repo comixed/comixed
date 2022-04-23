@@ -35,6 +35,18 @@
   </button>
   <div class="cx-spacer"></div>
   <button
+    *ngIf="multimode"
+    id="confirm-before-scraping-button"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'scraping.tooltip.confirm-each-scrape' | translate"
+    (click)="onToggleConfirmBeforeScrape()"
+  >
+    <mat-icon *ngIf="confirmBeforeScraping">radio_button_checked</mat-icon>
+    <mat-icon *ngIf="!confirmBeforeScraping">radio_button_unchecked</mat-icon>
+  </button>
+  <button
     id="skip-cache-button"
     class="cx-toolbar-button cx-margin-left-5"
     mat-icon-button

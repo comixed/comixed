@@ -50,7 +50,8 @@ import {
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
 import {
   scrapeComic,
-  setChosenMetadataSource
+  setChosenMetadataSource,
+  setConfirmBeforeScraping
 } from '@app/comic-metadata/actions/metadata.actions';
 import {
   Confirmation,
@@ -63,6 +64,10 @@ import {
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import { Comic } from '@app/comic-books/models/comic';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import {
+  initialState as initialMetadataState,
+  METADATA_FEATURE_KEY
+} from '@app/comic-metadata/reducers/metadata.reducer';
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
@@ -77,7 +82,8 @@ describe('ComicEditComponent', () => {
   const initialState = {
     [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES },
     [SCRAPE_METADATA_FEATURE_KEY]: initialScrapeMetadataState,
-    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState
+    [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
+    [METADATA_FEATURE_KEY]: initialMetadataState
   };
 
   let component: ComicEditComponent;
@@ -398,6 +404,21 @@ describe('ComicEditComponent', () => {
           comic: SCRAPING_COMIC,
           skipCache: SKIP_CACHE
         })
+      );
+    });
+  });
+
+  describe('toggling confirmation before scraping', () => {
+    const confirm = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.confirmBeforeScraping = !confirm;
+      component.onToggleConfirmBeforeScrape();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setConfirmBeforeScraping({ confirmBeforeScraping: confirm })
       );
     });
   });

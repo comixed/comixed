@@ -78,14 +78,11 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   @Input() skipCache = false;
   @Input() pageSize: number;
   @Input() multimode = false;
-
   @Output() comicScraped = new EventEmitter<Comic>();
-
   issueSubscription: Subscription;
   issue: IssueMetadata;
   scrapingStateSubscription: Subscription;
   selectedVolume: VolumeMetadata;
-
   dataSource = new MatTableDataSource<SortableListItem<VolumeMetadata>>();
   displayedColumns = [
     MATCHABILITY,
@@ -95,6 +92,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
     'issue-count',
     'action'
   ];
+  confirmBeforeScraping = true;
 
   constructor(
     private logger: LoggerService,
@@ -187,35 +185,19 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
       `Scraping issue was ${decision ? 'accepted' : 'rejected'}`
     );
     if (decision) {
-      this.confirmationService.confirm({
-        title: this.translateService.instant(
-          'scraping.scrape-comic-confirmation-title'
-        ),
-        message: this.translateService.instant(
-          'scraping.scrape-comic-confirmation-message'
-        ),
-        confirm: () => {
-          this.logger.debug(
-            'User confirmed scraping the comic:',
-            this.multimode
-          );
-          if (this.multimode) {
-            this.logger.debug(
-              'Removing comic from scraping queue:',
-              this.comic
-            );
-            this.store.dispatch(deselectComics({ comics: [this.comic] }));
-          }
-          this.store.dispatch(
-            scrapeComic({
-              metadataSource: this.metadataSource,
-              issueId: this.issue.id,
-              comic: this.comic,
-              skipCache: this.skipCache
-            })
-          );
-        }
-      });
+      if (!this.confirmBeforeScraping) {
+        this.scrapeComic();
+      } else {
+        this.confirmationService.confirm({
+          title: this.translateService.instant(
+            'scraping.scrape-comic-confirmation-title'
+          ),
+          message: this.translateService.instant(
+            'scraping.scrape-comic-confirmation-message'
+          ),
+          confirm: () => this.scrapeComic()
+        });
+      }
     } else {
       this.issue = null;
     }
@@ -224,6 +206,22 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   onCancelScraping(): void {
     this.logger.trace('Canceling scraping');
     this.store.dispatch(resetMetadataState());
+  }
+
+  private scrapeComic(): void {
+    this.logger.debug('User confirmed scraping the comic:', this.multimode);
+    if (this.multimode) {
+      this.logger.debug('Removing comic from scraping queue:', this.comic);
+      this.store.dispatch(deselectComics({ comics: [this.comic] }));
+    }
+    this.store.dispatch(
+      scrapeComic({
+        metadataSource: this.metadataSource,
+        issueId: this.issue.id,
+        comic: this.comic,
+        skipCache: this.skipCache
+      })
+    );
   }
 
   private matchesFilter(value: string, filter: string): boolean {

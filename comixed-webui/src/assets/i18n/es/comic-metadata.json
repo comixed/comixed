@@ -102,6 +102,7 @@
     },
     "tooltip": {
       "cancel-scraping": "Deja de raspar cómics.",
+      "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
       "reject-scraping-issue": "Rechazar este problema.",
       "select-scraping-issue": "Seleccione este problema.",
       "show-comic-details": "Mostrar detalles",

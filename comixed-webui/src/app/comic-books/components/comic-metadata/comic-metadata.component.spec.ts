@@ -61,7 +61,7 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 
-describe('ComicScrapingComponent', () => {
+describe('ComicMetadataComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const SCRAPING_VOLUME = { ...SCRAPING_VOLUME_3 };
   const VOLUMES = [
@@ -256,6 +256,8 @@ describe('ComicScrapingComponent', () => {
   });
 
   describe('when a scraping issue decision is made', () => {
+    let confirmationSpy: jasmine.Spy;
+
     beforeEach(() => {
       component.issue = SCRAPING_ISSUE;
       component.comic = COMIC;
@@ -264,7 +266,7 @@ describe('ComicScrapingComponent', () => {
 
     describe('when selected', () => {
       beforeEach(() => {
-        spyOn(confirmationService, 'confirm').and.callFake(
+        confirmationSpy = spyOn(confirmationService, 'confirm').and.callFake(
           (confirm: Confirmation) => confirm.confirm()
         );
         component.onDecision(true);
@@ -284,7 +286,32 @@ describe('ComicScrapingComponent', () => {
       describe('when in multi-comic scraping mode', () => {
         beforeEach(() => {
           component.multimode = true;
+          component.confirmBeforeScraping = true;
+          confirmationSpy.calls.reset();
           component.onDecision(true);
+        });
+
+        it('confirms with the user', () => {
+          expect(confirmationService.confirm).toHaveBeenCalled();
+        });
+
+        it('fires an action to deselect the comic', () => {
+          expect(store.dispatch).toHaveBeenCalledWith(
+            deselectComics({ comics: [COMIC] })
+          );
+        });
+      });
+
+      describe('when in multi-comic scraping mode with confirmation', () => {
+        beforeEach(() => {
+          component.multimode = true;
+          component.confirmBeforeScraping = false;
+          confirmationSpy.calls.reset();
+          component.onDecision(true);
+        });
+
+        it('does not confirm with the user', () => {
+          expect(confirmationService.confirm).not.toHaveBeenCalled();
         });
 
         it('fires an action to deselect the comic', () => {
