@@ -66,7 +66,8 @@ public class MoveComicProcessor implements ItemProcessor<Comic, Comic>, StepExec
       log.trace("Finding available filename");
       targetFilename = String.format("%s/%s", targetDirectory, targetFilename);
       targetFilename =
-          this.comicFileAdaptor.findAvailableFilename(targetFilename, 0, comicExtension);
+          this.comicFileAdaptor.findAvailableFilename(
+              comic.getFilename(), targetFilename, 0, comicExtension);
       final File targetFile = new File(targetFilename);
       log.trace("Moving comic file");
       this.fileAdaptor.moveFile(comic.getFile(), targetFile);

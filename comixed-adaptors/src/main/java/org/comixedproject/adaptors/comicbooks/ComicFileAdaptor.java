@@ -59,13 +59,17 @@ public class ComicFileAdaptor {
   /**
    * Looks for the next available filename for a comic file.
    *
+   * @param originalFilename the original filename
    * @param filename the root filename
    * @param attempt the current attempt
    * @param extension the extension for the file
    * @return the filename to use
    */
   public String findAvailableFilename(
-      final String filename, final int attempt, final String extension) {
+      final String originalFilename,
+      final String filename,
+      final int attempt,
+      final String extension) {
     String candidate = null;
 
     if (attempt > 0) {
@@ -75,7 +79,13 @@ public class ComicFileAdaptor {
     }
 
     var file = new File(candidate);
-    return (!file.exists()) ? candidate : findAvailableFilename(filename, attempt + 1, extension);
+    if (file.exists() && StringUtils.pathEquals(originalFilename, candidate)) {
+      log.debug("Using original filename: {}", originalFilename);
+      return originalFilename;
+    }
+    return (!file.exists())
+        ? candidate
+        : findAvailableFilename(originalFilename, filename, attempt + 1, extension);
   }
 
   /**

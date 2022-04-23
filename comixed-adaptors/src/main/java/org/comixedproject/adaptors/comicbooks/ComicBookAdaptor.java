@@ -172,6 +172,7 @@ public class ComicBookAdaptor {
       final String directory = comic.getFile().getAbsoluteFile().getParent();
       final String destinationFilename =
           this.comicFileAdaptor.findAvailableFilename(
+              comic.getFilename(),
               directory + File.separator + FileNameUtils.getBaseName(comic.getFilename()),
               0,
               targetArchiveType.getExtension());
