@@ -19,6 +19,7 @@
 import { createReducer, on } from '@ngrx/store';
 import {
   comicScraped,
+  issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
@@ -26,9 +27,9 @@ import {
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
-  issueMetadataLoaded,
-  volumeMetadataLoaded,
-  setChosenMetadataSource
+  setChosenMetadataSource,
+  setConfirmBeforeScraping,
+  volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
@@ -41,19 +42,29 @@ export interface MetadataState {
   volumes: VolumeMetadata[];
   scrapingIssue: IssueMetadata;
   metadataSource: MetadataSource;
+  confirmBeforeScraping: boolean;
 }
 
 export const initialState: MetadataState = {
   loadingRecords: false,
   volumes: [],
   scrapingIssue: null,
-  metadataSource: null
+  metadataSource: null,
+  confirmBeforeScraping: true
 };
 
 export const reducer = createReducer(
   initialState,
 
-  on(resetMetadataState, state => ({ ...state, volumes: [] })),
+  on(resetMetadataState, state => ({
+    ...state,
+    volumes: [],
+    confirmBeforeScraping: true
+  })),
+  on(setConfirmBeforeScraping, (state, action) => ({
+    ...state,
+    confirmBeforeScraping: action.confirmBeforeScraping
+  })),
   on(loadVolumeMetadata, state => ({ ...state, loadingRecords: true })),
   on(volumeMetadataLoaded, (state, action) => ({
     ...state,

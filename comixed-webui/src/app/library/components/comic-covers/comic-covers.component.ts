@@ -85,7 +85,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() selectAllComics = new EventEmitter<boolean>();
 
   pagination = PAGE_SIZE_DEFAULT;
-  dataSource = new MatTableDataSource<Comic>();
+  dataSource = new MatTableDataSource<Comic>([]);
   comic: Comic = null;
   contextMenuX = '';
   contextMenuY = '';

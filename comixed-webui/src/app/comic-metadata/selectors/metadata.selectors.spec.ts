@@ -21,10 +21,10 @@ import {
   MetadataState
 } from '../reducers/metadata.reducer';
 import {
+  selectChosenMetadataSource,
   selectIssueMetadata,
   selectMetadataState,
-  selectVolumeMetadata,
-  selectChosenMetadataSource
+  selectVolumeMetadata
 } from './metadata.selectors';
 import {
   METADATA_SOURCE_1,
@@ -45,7 +45,8 @@ describe('Metadata Selectors', () => {
       loadingRecords: Math.random() > 0.5,
       volumes: VOLUMES,
       scrapingIssue: SCRAPING_ISSUE,
-      metadataSource: METADATA_SOURCE_1
+      metadataSource: METADATA_SOURCE_1,
+      confirmBeforeScraping: Math.random() > 0.5
     };
   });
 

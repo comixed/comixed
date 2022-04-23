@@ -16,9 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { initialState, reducer, MetadataState } from './metadata.reducer';
+import { initialState, MetadataState, reducer } from './metadata.reducer';
 import {
   comicScraped,
+  issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
@@ -26,9 +27,9 @@ import {
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
-  issueMetadataLoaded,
-  volumeMetadataLoaded,
-  setChosenMetadataSource
+  setChosenMetadataSource,
+  setConfirmBeforeScraping,
+  volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
 import {
@@ -76,15 +77,41 @@ describe('Scraping Reducer', () => {
     it('has no selected metadata source', () => {
       expect(state.metadataSource).toBeNull();
     });
+
+    it('sets the confirm before scraping flag', () => {
+      expect(state.confirmBeforeScraping).toBeTrue();
+    });
   });
 
   describe('resetting the scraping state', () => {
     beforeEach(() => {
-      state = reducer({ ...state, volumes: VOLUMES }, resetMetadataState());
+      state = reducer(
+        { ...state, volumes: VOLUMES, confirmBeforeScraping: false },
+        resetMetadataState()
+      );
     });
 
     it('has no volumes loaded', () => {
       expect(state.volumes).toEqual([]);
+    });
+
+    it('sets the confirm before scraping flag', () => {
+      expect(state.confirmBeforeScraping).toBeTrue();
+    });
+  });
+
+  describe('changing the confirm before scraping state', () => {
+    const confirm = Math.random() > 0.5;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, confirmBeforeScraping: !confirm },
+        setConfirmBeforeScraping({ confirmBeforeScraping: confirm })
+      );
+    });
+
+    it('sets the confirm before scraping flag', () => {
+      expect(state.confirmBeforeScraping).toEqual(confirm);
     });
   });
 

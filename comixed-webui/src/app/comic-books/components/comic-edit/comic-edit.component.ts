@@ -49,13 +49,15 @@ import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-met
 import { filter } from 'rxjs/operators';
 import {
   scrapeComic,
-  setChosenMetadataSource
+  setChosenMetadataSource,
+  setConfirmBeforeScraping
 } from '@app/comic-metadata/actions/metadata.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
+import { selectMetadataState } from '@app/comic-metadata/selectors/metadata.selectors';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -66,23 +68,26 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
   @Input() metadataSource: MetadataSource = null;
-
   @Input() multimode = false;
 
   @Output() scrape = new EventEmitter<MetadataEvent>();
+
   readonly maximumRecordsOptions = [
     { value: 0, label: 'scraping.label.all-records' },
     { value: 100, label: 'scraping.label.100-records' },
     { value: 1000, label: 'scraping.label.1000-records' }
   ];
+
   comicForm: FormGroup;
   scrapingMode = false;
   scrapedMetadataSubscription: Subscription;
   metadataSourceListSubscription: Subscription;
   metadataSourceList: ListItem<MetadataSource>[] = [];
+  metadataSubscription: Subscription;
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
+  confirmBeforeScraping = true;
 
   constructor(
     private logger: LoggerService,
@@ -121,6 +126,12 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         this.store.dispatch(
           setChosenMetadataSource({ metadataSource: sources[0] })
         );
+      });
+    this.metadataSubscription = this.store
+      .select(selectMetadataState)
+      .subscribe(state => {
+        this.logger.trace('Metadata state changed');
+        this.confirmBeforeScraping = state.confirmBeforeScraping;
       });
     this.imprintSubscription = this.store
       .select(selectImprints)
@@ -313,5 +324,14 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  onToggleConfirmBeforeScrape(): void {
+    this.logger.info('Firing event: toggling confirm before scrape');
+    this.store.dispatch(
+      setConfirmBeforeScraping({
+        confirmBeforeScraping: !this.confirmBeforeScraping
+      })
+    );
   }
 }
