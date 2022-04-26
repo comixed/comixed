@@ -81,6 +81,7 @@ import {
   FILENAME_SCRAPING_RULES_FEATURE_KEY,
   initialState as initialFilenameScrapingRulesState
 } from '@app/admin/reducers/filename-scraping-rule-list.reducer';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -140,6 +141,7 @@ describe('ConfigurationPageComponent', () => {
           MatExpansionModule,
           MatTableModule,
           MatTooltipModule,
+          MatCheckboxModule,
           DragDropModule
         ],
         providers: [

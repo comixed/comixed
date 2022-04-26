@@ -18,13 +18,17 @@
 
 package org.comixedproject.batch.comicbooks;
 
+import java.io.File;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.DeleteComicProcessor;
+import org.comixedproject.batch.comicbooks.processors.DeleteEmptyDirectoriesProcessor;
 import org.comixedproject.batch.comicbooks.processors.MoveComicProcessor;
 import org.comixedproject.batch.comicbooks.readers.DeleteComicReader;
+import org.comixedproject.batch.comicbooks.readers.DeleteEmptyDirectoriesReader;
 import org.comixedproject.batch.comicbooks.readers.MoveComicReader;
 import org.comixedproject.batch.comicbooks.writers.MoveComicWriter;
 import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicsWriter;
+import org.comixedproject.batch.writers.NoopWriter;
 import org.comixedproject.model.comicbooks.Comic;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -66,12 +70,14 @@ public class ConsolidationConfiguration {
   public Job consolidateLibraryJob(
       final JobBuilderFactory jobBuilderFactory,
       @Qualifier("deleteComicStep") final Step deleteComicStep,
-      @Qualifier("moveComicStep") final Step moveComicStep) {
+      @Qualifier("moveComicStep") final Step moveComicStep,
+      @Qualifier("deleteEmptyDirectoriesStep") final Step deleteEmptyDirectoriesStep) {
     return jobBuilderFactory
         .get("consolidateLibraryJob")
         .incrementer(new RunIdIncrementer())
         .start(deleteComicStep)
         .next(moveComicStep)
+        .next(deleteEmptyDirectoriesStep)
         .build();
   }
 
@@ -119,6 +125,31 @@ public class ConsolidationConfiguration {
     return stepBuilderFactory
         .get("moveComicStep")
         .<Comic, Comic>chunk(this.batchChunkSize)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
+        .build();
+  }
+
+  /**
+   * Deletes any empty directory under the library root.
+   *
+   * @param stepBuilderFactory the step builder factory
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @return the step
+   */
+  @Bean
+  @Qualifier("deleteEmptyDirectoriesStep")
+  public Step deleteEmptyDirectoriesStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final DeleteEmptyDirectoriesReader reader,
+      final DeleteEmptyDirectoriesProcessor processor,
+      final NoopWriter<Void> writer) {
+    return stepBuilderFactory
+        .get("deleteEmptyDirectoriesStep")
+        .<File, Void>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

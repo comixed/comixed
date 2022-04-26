@@ -26,6 +26,7 @@ import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
   LIBRARY_COMIC_RENAMING_RULE,
+  LIBRARY_DELETE_EMPTY_DIRECTORIES,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
@@ -82,6 +83,7 @@ export class LibraryConfigurationComponent {
     private translateService: TranslateService
   ) {
     this.libraryConfigurationForm = this.formBuilder.group({
+      deleteEmptyDirectories: ['', []],
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
       pageRenamingRule: ['', []]
@@ -98,6 +100,13 @@ export class LibraryConfigurationComponent {
     );
     this.libraryConfigurationForm.controls.pageRenamingRule.setValue(
       getConfigurationOption(options, LIBRARY_PAGE_RENAMING_RULE, '')
+    );
+    this.libraryConfigurationForm.controls.deleteEmptyDirectories.setValue(
+      getConfigurationOption(
+        options,
+        LIBRARY_DELETE_EMPTY_DIRECTORIES,
+        `${false}`
+      ) === `${true}`
     );
   }
 
@@ -121,6 +130,10 @@ export class LibraryConfigurationComponent {
 
   private encodeOptions(): ConfigurationOption[] {
     return [
+      {
+        name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
+        value: `${this.libraryConfigurationForm.controls.deleteEmptyDirectories.value}`
+      },
       {
         name: LIBRARY_ROOT_DIRECTORY,
         value: this.libraryConfigurationForm.controls.rootDirectory.value

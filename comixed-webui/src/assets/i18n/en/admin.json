@@ -5,6 +5,7 @@
       "comic-renaming-variables": "Comic Renaming Variables",
       "comic-variable-description": "Description",
       "comic-variable-name": "Variable",
+      "delete-empty-directories": "Delete empty directories after consolidation.",
       "page-renaming-rule": "Page Renaming Rule",
       "page-renaming-variables": "Page Renaming Variables",
       "root-directory": "Library Root Directory",

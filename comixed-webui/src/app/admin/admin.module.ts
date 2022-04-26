@@ -74,6 +74,7 @@ import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-so
 import { MatDividerModule } from '@angular/material/divider';
 import { MetadataAuditLogListComponent } from './components/metadata-audit-log-list/metadata-audit-log-list.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -129,7 +130,8 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
     TragicallySlickEditInPlaceModule,
     FlexModule,
     MatDividerModule,
-    ComicBooksModule
+    ComicBooksModule,
+    MatCheckboxModule
   ],
   exports: [CommonModule, CoreModule]
 })
