@@ -29,6 +29,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
   LIBRARY_COMIC_RENAMING_RULE,
+  LIBRARY_DELETE_EMPTY_DIRECTORIES,
   LIBRARY_PAGE_RENAMING_RULE,
   LIBRARY_ROOT_DIRECTORY
 } from '@app/admin/admin.constants';
@@ -37,23 +38,29 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('LibraryConfigurationComponent', () => {
+  const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
   const LIBRARY_ROOT = 'The library root';
   const COMIC_RENAMING_RULE = 'The comic renaming rule';
   const PAGE_RENAMING_RULE = 'The page renaming rule';
   const OPTIONS = [
     {
-      name: LIBRARY_ROOT_DIRECTORY,
-      value: LIBRARY_ROOT
-    },
-    {
       name: LIBRARY_COMIC_RENAMING_RULE,
       value: COMIC_RENAMING_RULE
     },
     {
+      name: LIBRARY_ROOT_DIRECTORY,
+      value: LIBRARY_ROOT
+    },
+    {
       name: LIBRARY_PAGE_RENAMING_RULE,
       value: PAGE_RENAMING_RULE
+    },
+    {
+      name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
+      value: `${DELETE_EMPTY_DIRECTORIES}`
     }
   ];
   const initialState = {};
@@ -76,7 +83,8 @@ describe('LibraryConfigurationComponent', () => {
           MatFormFieldModule,
           MatInputModule,
           MatExpansionModule,
-          MatDialogModule
+          MatDialogModule,
+          MatCheckboxModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
@@ -97,6 +105,12 @@ describe('LibraryConfigurationComponent', () => {
   describe('loading the options', () => {
     beforeEach(() => {
       component.options = OPTIONS;
+    });
+
+    it('sets the delete empty directories value', () => {
+      expect(
+        component.libraryConfigurationForm.controls.deleteEmptyDirectories.value
+      ).toEqual(DELETE_EMPTY_DIRECTORIES);
     });
 
     it('sets the library root value', () => {
@@ -135,6 +149,10 @@ describe('LibraryConfigurationComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveConfigurationOptions({
           options: [
+            {
+              name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
+              value: `${DELETE_EMPTY_DIRECTORIES}`
+            },
             { name: LIBRARY_ROOT_DIRECTORY, value: LIBRARY_ROOT },
             { name: LIBRARY_COMIC_RENAMING_RULE, value: COMIC_RENAMING_RULE },
             { name: LIBRARY_PAGE_RENAMING_RULE, value: PAGE_RENAMING_RULE }

@@ -5,6 +5,7 @@
       "comic-renaming-variables": "Variables de renommage des bandes dessinées",
       "comic-variable-description": "Description",
       "comic-variable-name": "Variable",
+      "delete-empty-directories": "Delete empty directories after consolidation.",
       "page-renaming-rule": "Règle de renommage des pages",
       "page-renaming-variables": "Variables de renomamge des pages",
       "root-directory": "Répertoire racine de la bibliothèque",

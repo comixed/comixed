@@ -54,6 +54,17 @@ public class FileAdaptor {
   }
 
   /**
+   * Deletes a directory.
+   *
+   * @param directory the directory
+   * @throws IOException if an error occurs
+   */
+  public void deleteDirectory(final File directory) throws IOException {
+    log.trace("Deleting directory contents: {}", directory);
+    FileUtils.deleteDirectory(directory);
+  }
+
+  /**
    * Creates the directory tree, including any needed parents, if necessary.
    *
    * @param directory the directory

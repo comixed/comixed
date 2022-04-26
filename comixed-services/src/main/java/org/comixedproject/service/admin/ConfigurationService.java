@@ -39,6 +39,8 @@ public class ConfigurationService {
   public static final String CFG_LIBRARY_ROOT_DIRECTORY = "library.root-directory";
   public static final String CFG_LIBRARY_COMIC_RENAMING_RULE = "library.comic-book.renaming-rule";
   public static final String CFG_LIBRARY_PAGE_RENAMING_RULE = "library.comic-page.renaming-rule";
+  public static final String CFG_LIBRARY_DELETE_EMPTY_DIRECTORIES =
+      "library.directories.delete-empty";
 
   @Autowired private ConfigurationRepository configurationRepository;
 

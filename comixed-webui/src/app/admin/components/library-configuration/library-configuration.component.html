@@ -12,6 +12,16 @@
 
 <form [formGroup]="libraryConfigurationForm">
   <mat-form-field class="cx-width-100" appearance="fill">
+    <mat-checkbox
+      id="delete-empty-directories-checkbox"
+      color="primary"
+      formControlName="deleteEmptyDirectories"
+    >
+      {{ "configuration.label.delete-empty-directories" | translate }}
+    </mat-checkbox>
+    <input hidden matInput />
+  </mat-form-field>
+  <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>
       {{ "configuration.label.root-directory" | translate }}
     </mat-label>
