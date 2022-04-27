@@ -1,15 +1,13 @@
-<h1>
-  {{
-    "collection-detail.title." + collectionType
-      | translate: { name: collectionName, count: comics?.length || 0 }
-  }}
-</h1>
 <cx-comic-covers
   [comics]="
     comics
       | archiveType: archiveTypeFilter
       | coverDateFilter
         : { year: coverDateFilter.year, month: coverDateFilter.month }
+  "
+  [title]="
+    'collection-detail.title.' + collectionType
+      | translate: { name: collectionName, count: comics?.length || 0 }
   "
   [selected]="selected"
   [readingLists]="readingLists"
