@@ -5,7 +5,12 @@
   }}
 </h1>
 <cx-comic-covers
-  [comics]="comics | archiveType: archiveTypeFilter"
+  [comics]="
+    comics
+      | archiveType: archiveTypeFilter
+      | coverDateFilter
+        : { year: coverDateFilter.year, month: coverDateFilter.month }
+  "
   [selected]="selected"
   [readingLists]="readingLists"
   [showConsolidate]="isAdmin"
@@ -15,6 +20,7 @@
   [archiveType]="archiveTypeFilter"
   [pageIndex]="pageIndex"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
+  [coverDateFilter]="coverDateFilter"
   (pageIndexChanged)="onPageIndexChanged($event)"
   (selectAllComics)="onSelectAllComics($event)"
 ></cx-comic-covers>

@@ -25,6 +25,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryModule } from '@app/library/library.module';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
   declarations: [CollectionListComponent, CollectionDetailComponent],
@@ -34,7 +35,8 @@ import { LibraryModule } from '@app/library/library.module';
     TranslateModule.forRoot(),
     MatTableModule,
     MatSortModule,
-    LibraryModule
+    LibraryModule,
+    ComicBooksModule
   ],
   exports: [CommonModule]
 })

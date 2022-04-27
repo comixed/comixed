@@ -25,6 +25,7 @@ import {
   selectComicListCollection,
   selectComicListCount,
   selectComicListDeletedCount,
+  selectComicListFilter,
   selectComicListState
 } from './comic-list.selectors';
 import {
@@ -34,6 +35,7 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 describe('Comic List Selectors', () => {
   const COMICS = [
@@ -45,6 +47,7 @@ describe('Comic List Selectors', () => {
     { ...COMIC_3, lastRead: null, comicState: ComicBookState.STABLE },
     { ...COMIC_5, lastRead: null, comicState: ComicBookState.DELETED }
   ];
+  const COVER_DATE_FILTER = { year: 2022, month: 4 } as CoverDateFilter;
   let state: ComicListState;
 
   beforeEach(() => {
@@ -56,7 +59,8 @@ describe('Comic List Selectors', () => {
       unprocessed: COMICS,
       unscraped: COMICS,
       changed: COMICS,
-      deleted: COMICS
+      deleted: COMICS,
+      coverDateFilter: COVER_DATE_FILTER
     };
   });
 
@@ -86,6 +90,12 @@ describe('Comic List Selectors', () => {
     ).toEqual(
       state.comics.filter(comic => comic.comicState === ComicBookState.DELETED)
         .length
+    );
+  });
+
+  it('should select the cover date filter', () => {
+    expect(selectComicListFilter({ [COMIC_LIST_FEATURE_KEY]: state })).toEqual(
+      COVER_DATE_FILTER
     );
   });
 

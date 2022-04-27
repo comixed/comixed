@@ -52,11 +52,13 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { setComicListFilter } from '@app/comic-books/actions/comic-list.actions';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3];
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
   const PAGE_INDEX = 2;
+  const NOW = new Date();
   const initialState = {};
 
   let component: LibraryToolbarComponent;
@@ -286,6 +288,38 @@ describe('LibraryToolbarComponent', () => {
 
     it('emits an event', () => {
       expect(component.selectAllComics.emit).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('updating the year filter', () => {
+    beforeEach(() => {
+      component.coverMonth = NOW.getMonth();
+      component.onCoverYearChange(NOW.getFullYear());
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setComicListFilter({
+          year: NOW.getFullYear(),
+          month: NOW.getMonth()
+        })
+      );
+    });
+  });
+
+  describe('updating the month filter', () => {
+    beforeEach(() => {
+      component.coverYear = NOW.getFullYear();
+      component.onCoverMonthChange(NOW.getMonth());
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setComicListFilter({
+          year: NOW.getFullYear(),
+          month: NOW.getMonth()
+        })
+      );
     });
   });
 });

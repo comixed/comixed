@@ -84,6 +84,7 @@ import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effect
 import { FlexModule } from '@angular/flex-layout';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ComicPageUrlPipe,
     ComicTitlePipe,
     IssueMetadataTitlePipe,
-    PageHashUrlPipe
+    PageHashUrlPipe,
+    CoverDateFilterPipe
   ],
   imports: [
     CommonModule,
@@ -153,7 +155,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ComicDetailCardComponent,
     ComicTitlePipe,
     ComicCoverUrlPipe,
-    PageHashUrlPipe
+    PageHashUrlPipe,
+    CoverDateFilterPipe
   ]
 })
 export class ComicBooksModule {
