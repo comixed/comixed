@@ -78,6 +78,7 @@ import {
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { USER_READER } from '@app/user/user.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 
 describe('CollectionDetailComponent', () => {
   const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
@@ -105,7 +106,8 @@ describe('CollectionDetailComponent', () => {
           CollectionDetailComponent,
           ComicCoversComponent,
           LibraryToolbarComponent,
-          ArchiveTypePipe
+          ArchiveTypePipe,
+          CoverDateFilterPipe
         ],
         imports: [
           NoopAnimationsModule,

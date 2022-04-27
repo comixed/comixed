@@ -14,6 +14,28 @@
     "
   ></mat-paginator>
   <div class="cx-spacer"></div>
+  <mat-form-field *ngIf="showCoverFilters" appearance="standard">
+    <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
+    <mat-select
+      (selectionChange)="onCoverYearChange($event.value)"
+      [value]="coverYear"
+    >
+      <mat-option *ngFor="let option of coverYears" [value]="option.value">
+        {{ option.label | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field *ngIf="showCoverFilters" appearance="standard">
+    <mat-label>{{ "filtering.label.month" | translate }}</mat-label>
+    <mat-select
+      (selectionChange)="onCoverMonthChange($event.value)"
+      [value]="coverMonth"
+    >
+      <mat-option *ngFor="let option of coverMonths" [value]="option.value">
+        {{ option.label | translate }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-form-field appearance="standard">
     <mat-label>{{ "sorting.label.sort-by" | translate }}</mat-label>
     <mat-select (selectionChange)="onSortBy($event.value)" [value]="sortField">

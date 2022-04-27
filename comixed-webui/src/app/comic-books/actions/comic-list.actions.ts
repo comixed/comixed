@@ -46,3 +46,8 @@ export const comicListRemovalReceived = createAction(
   '[Comic List] A comic removal was received',
   props<{ comic: Comic }>()
 );
+
+export const setComicListFilter = createAction(
+  '[Comic List] Set the comic list filter',
+  props<{ year: number; month: number }>()
+);

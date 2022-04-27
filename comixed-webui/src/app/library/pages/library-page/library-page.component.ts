@@ -32,7 +32,10 @@ import {
   isAdmin
 } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
+import {
+  selectComicListFilter,
+  selectComicListState
+} from '@app/comic-books/selectors/comic-list.selectors';
 import {
   ArchiveType,
   archiveTypeFromString
@@ -53,6 +56,7 @@ import {
   deselectComics,
   selectComics
 } from '@app/library/actions/library.actions';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 @Component({
   selector: 'cx-library-page',
@@ -85,6 +89,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
+  coverDateFilter: CoverDateFilter;
+  coverDateFilterSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
@@ -173,6 +179,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
+    this.coverDateFilterSubscription = this.store
+      .select(selectComicListFilter)
+      .subscribe(filter => (this.coverDateFilter = filter));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -199,6 +208,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
+    this.coverDateFilterSubscription.unsubscribe();
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {

@@ -88,6 +88,7 @@ import {
 } from '@app/library/actions/library.actions';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -117,7 +118,8 @@ describe('LibraryPageComponent', () => {
           LibraryToolbarComponent,
           ComicCoversComponent,
           ArchiveTypePipe,
-          UnreadComicsPipe
+          UnreadComicsPipe,
+          CoverDateFilterPipe
         ],
         imports: [
           NoopAnimationsModule,

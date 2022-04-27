@@ -48,6 +48,11 @@ export const selectComicListDeletedCount = createSelector(
       .length
 );
 
+export const selectComicListFilter = createSelector(
+  selectComicListState,
+  state => state.coverDateFilter
+);
+
 export const selectComicListCollection = createSelector(
   selectComicList,
   (state: Comic[], props: CollectionListProperties) => {

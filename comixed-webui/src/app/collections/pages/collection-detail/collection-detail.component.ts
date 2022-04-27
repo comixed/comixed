@@ -25,7 +25,10 @@ import {
   CollectionType,
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
+import {
+  selectComicList,
+  selectComicListFilter
+} from '@app/comic-books/selectors/comic-list.selectors';
 import { Comic } from '@app/comic-books/models/comic';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
@@ -54,6 +57,7 @@ import {
   ArchiveType,
   archiveTypeFromString
 } from '@app/comic-books/models/archive-type.enum';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -79,6 +83,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   archiveTypeFilter = null;
   sortField = SORT_FIELD_DEFAULT;
+  coverDateFilter: CoverDateFilter = { month: null, year: null };
+  coverDateFilterSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
@@ -152,6 +158,9 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
+    this.coverDateFilterSubscription = this.store
+      .select(selectComicListFilter)
+      .subscribe(filter => (this.coverDateFilter = filter));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -172,6 +181,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from cover date filter updates');
+    this.coverDateFilterSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from language change events');
     this.langChangeSubscription.unsubscribe();
   }

@@ -60,6 +60,7 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { FileDownloadService } from '@app/core/services/file-download.service';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 @Component({
   selector: 'cx-comic-covers',
@@ -82,6 +83,8 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showPurge = false;
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
+  @Input() showCoverFilters = true;
+  @Input() coverDateFilter: CoverDateFilter = { year: null, month: null };
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
   @Output() pageIndexChanged = new EventEmitter<number>();

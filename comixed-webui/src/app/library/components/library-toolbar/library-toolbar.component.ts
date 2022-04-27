@@ -22,6 +22,7 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -46,16 +47,18 @@ import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { setComicListFilter } from '@app/comic-books/actions/comic-list.actions';
+import { ListItem } from '@app/core/models/ui/list-item';
 
 @Component({
   selector: 'cx-library-toolbar',
   templateUrl: './library-toolbar.component.html',
   styleUrls: ['./library-toolbar.component.scss']
 })
-export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
+export class LibraryToolbarComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  @Input() comics: Comic[] = [];
   @Input() selected: Comic[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
@@ -66,6 +69,9 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   @Input() archiveType: ArchiveType;
   @Input() showActions = true;
   @Input() sortField: string;
+  @Input() coverMonth: number = null;
+  @Input() coverYear: number = null;
+  @Input() showCoverFilters = true;
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
   @Output() pageIndexChanged = new EventEmitter<number>();
@@ -84,6 +90,8 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   ];
 
   langChangSubscription: Subscription;
+  coverYears: ListItem<number>[] = [];
+  coverMonths: ListItem<number>[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -94,6 +102,41 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
   ) {
     this.langChangSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
+    );
+  }
+
+  private _comics: Comic[] = [];
+
+  get comics(): Comic[] {
+    return this._comics;
+  }
+
+  @Input() set comics(comics: Comic[]) {
+    this._comics = comics;
+    this.coverYears = [
+      { label: 'filtering.label.all-years', value: null } as ListItem<number>
+    ].concat(
+      comics
+        .filter(comic => !!comic.coverDate)
+        .map(comic => new Date(comic.coverDate).getFullYear())
+        .filter((year, index, self) => index === self.indexOf(year))
+        .sort((a, b) => a - b)
+        .map(year => {
+          return { value: year, label: `${year}` } as ListItem<number>;
+        })
+    );
+  }
+
+  ngOnInit(): void {
+    this.coverMonths = [
+      { label: 'filtering.label.all-months', value: null }
+    ].concat(
+      Array.from(Array(12).keys()).map(month => {
+        return {
+          value: month,
+          label: `filtering.label.month-${month}`
+        } as ListItem<number>;
+      })
     );
   }
 
@@ -228,6 +271,14 @@ export class LibraryToolbarComponent implements OnDestroy, AfterViewInit {
         );
       }
     });
+  }
+
+  onCoverYearChange(year: number): void {
+    this.store.dispatch(setComicListFilter({ year, month: this.coverMonth }));
+  }
+
+  onCoverMonthChange(month: number): void {
+    this.store.dispatch(setComicListFilter({ year: this.coverYear, month }));
   }
 
   private loadTranslations(): void {

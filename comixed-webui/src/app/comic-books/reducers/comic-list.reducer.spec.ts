@@ -23,7 +23,8 @@ import {
   comicsReceived,
   loadComics,
   loadComicsFailed,
-  resetComicList
+  resetComicList,
+  setComicListFilter
 } from '@app/comic-books/actions/comic-list.actions';
 import {
   COMIC_1,
@@ -79,6 +80,10 @@ describe('Comic List Reducer', () => {
     it('has no deleted comics', () => {
       expect(state.deleted).toEqual([]);
     });
+
+    it('has no cover date filter', () => {
+      expect(state.coverDateFilter).toEqual({ year: null, month: null });
+    });
   });
 
   describe('resetting the comic state', () => {
@@ -93,7 +98,8 @@ describe('Comic List Reducer', () => {
           unprocessed: [COMIC_1, COMIC_3, COMIC_5],
           unscraped: [COMIC_1, COMIC_3, COMIC_5],
           changed: [COMIC_1, COMIC_3, COMIC_5],
-          deleted: [COMIC_1, COMIC_3, COMIC_5]
+          deleted: [COMIC_1, COMIC_3, COMIC_5],
+          coverDateFilter: { year: 2022, month: 4 }
         },
         resetComicList()
       );
@@ -129,6 +135,10 @@ describe('Comic List Reducer', () => {
 
     it('has no deleted comics', () => {
       expect(state.deleted).toEqual([]);
+    });
+
+    it('resets the cover date filter', () => {
+      expect(state.coverDateFilter).toEqual({ year: null, month: null });
     });
   });
 
@@ -255,6 +265,22 @@ describe('Comic List Reducer', () => {
 
     it('removes the comic', () => {
       expect(state.comics).not.toContain(REMOVED);
+    });
+  });
+
+  describe('setting the cover date filter', () => {
+    const MONTH = 4;
+    const YEAR = 2022;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, coverDateFilter: { year: null, month: null } },
+        setComicListFilter({ month: MONTH, year: YEAR })
+      );
+    });
+
+    it('sets the cover date filter', () => {
+      expect(state.coverDateFilter).toEqual({ year: YEAR, month: MONTH });
     });
   });
 });
