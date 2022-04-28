@@ -21,10 +21,7 @@ package org.comixedproject.service.comicbooks;
 import static junit.framework.TestCase.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -102,6 +99,8 @@ public class ComicServiceTest {
   private Comic currentComic = new Comic();
   private Comic nextComic = new Comic();
   private List<Long> idList = new ArrayList<>();
+  private GregorianCalendar calendar = new GregorianCalendar();
+  private Date now = new Date();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -117,6 +116,7 @@ public class ComicServiceTest {
     comicsBySeries.add(nextComic);
     comicsBySeries.add(previousComic);
     comicsBySeries.add(currentComic);
+    calendar.setTime(now);
   }
 
   @Test
@@ -1105,5 +1105,70 @@ public class ComicServiceTest {
     Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
     Mockito.verify(comic, Mockito.never()).setImprint(Mockito.anyString());
     Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+  }
+
+  @Test
+  public void testGetYearsForComicsNoCoverDate() {
+    Mockito.when(comic.getStoreDate()).thenReturn(null);
+    comicList.add(comic);
+
+    Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+
+    final List<Integer> result = service.getYearsForComics();
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetYearsForComics() {
+    Mockito.when(comic.getStoreDate()).thenReturn(now);
+    comicList.add(comic);
+
+    Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+
+    final List<Integer> result = service.getYearsForComics();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(calendar.get(Calendar.YEAR), result.get(0).intValue());
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetWeeksForComics() {
+    Mockito.when(comic.getStoreDate()).thenReturn(now);
+    comicList.add(comic);
+
+    Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+
+    final List<Integer> result = service.getWeeksForYear(calendar.get(Calendar.YEAR));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(calendar.get(Calendar.WEEK_OF_YEAR), result.get(0).intValue());
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetComicsForYearAndWeek() {
+    Mockito.when(comic.getStoreDate()).thenReturn(now);
+    comicList.add(comic);
+
+    Mockito.when(comicRepository.findAll()).thenReturn(comicList);
+
+    final List<Comic> result =
+        service.getComicsForYearAndWeek(
+            calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR));
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertSame(comic, result.get(0));
+
+    Mockito.verify(comicRepository, Mockito.times(1)).findAll();
   }
 }

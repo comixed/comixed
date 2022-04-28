@@ -22,10 +22,8 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
@@ -756,5 +754,58 @@ public class ComicService implements InitializingBean, ComicStateChangeListener 
       log.trace("Firing event: comic details changed");
       this.comicStateHandler.fireEvent(comic, ComicEvent.detailsUpdated);
     }
+  }
+
+  /**
+   * Returns the set of years for comics in the library.
+   *
+   * @return the list of years
+   */
+  public List<Integer> getYearsForComics() {
+    final GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return this.comicRepository.findAll().stream()
+        .filter(comic -> comic.getStoreDate() != null)
+        .map(
+            comic -> {
+              calendar.setTime(comic.getStoreDate());
+              return calendar.get(Calendar.YEAR);
+            })
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * Returns the weeks for the given year for which the library contains comics.
+   *
+   * @param year the year
+   * @return the list of weeks
+   */
+  public List<Integer> getWeeksForYear(final Integer year) {
+    final GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return this.comicRepository.findAll().stream()
+        .filter(comic -> comic.getStoreDate() != null)
+        .map(
+            comic -> {
+              calendar.setTime(comic.getStoreDate());
+              return calendar.get(Calendar.WEEK_OF_YEAR);
+            })
+        .distinct()
+        .collect(Collectors.toList());
+  }
+
+  public List<Comic> getComicsForYearAndWeek(final Integer year, final Integer week) {
+    final GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return this.comicRepository.findAll().stream()
+        .filter(comic -> comic.getStoreDate() != null)
+        .filter(
+            comic -> {
+              calendar.setTime(comic.getStoreDate());
+              return calendar.get(Calendar.YEAR) == year
+                  && calendar.get(Calendar.WEEK_OF_YEAR) == week;
+            })
+        .collect(Collectors.toList());
   }
 }
