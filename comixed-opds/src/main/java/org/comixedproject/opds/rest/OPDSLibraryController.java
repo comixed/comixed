@@ -74,8 +74,13 @@ public class OPDSLibraryController {
     response.getEntries().add(entry);
     // add the reading lists link
     entry = new OPDSNavigationFeedEntry("Reading Lists", "2");
-    entry.setContent(new OPDSNavigationFeedContent("Your reading lists"));
+    entry.setContent(new OPDSNavigationFeedContent("Your personal reading lists"));
     entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/lists/"));
+    response.getEntries().add(entry);
+    // add the cover date
+    entry = new OPDSNavigationFeedEntry("Cover Date", "3");
+    entry.setContent(new OPDSNavigationFeedContent("Comics Week Year & Week"));
+    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/dates/years"));
     response.getEntries().add(entry);
     return response;
   }
