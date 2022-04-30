@@ -20,11 +20,13 @@
       "effect-success": "Submetido {count, plural, =1{um ficheiro} other{# ficheiro}} para serem importados."
     },
     "label": {
-      "maximum-all-files": "Todos os ficheiros",
       "maximum-10-files": "10 ficheiros",
       "maximum-50-files": "50 ficheiros",
       "maximum-100-files": "100 ficheiros",
-      "maximum-1000-files": "1000 ficheiros"
+      "maximum-1000-files": "1000 ficheiros",
+      "maximum-all-files": "Todos os ficheiros",
+      "maximum-files-to-fetch": "Máximo De Arquivos Para Buscar",
+      "root-directory": "Pasta raiz para procurar"
     },
     "load-comic-files": {
       "effect-success": "Encontrado{files, plural, =1{ um ficheiro} other{s # ficheiros}} {directories, plural, =1{numa pasta} other{em # pastas}}.",

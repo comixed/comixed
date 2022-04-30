@@ -20,11 +20,13 @@
       "effect-success": "{count, plural, =1{un fichier} other{# fichiers}} de Bandes Dessinées soumis pour import."
     },
     "label": {
-      "maximum-all-files": "Toutes les fichiers",
       "maximum-10-files": "10 fichiers",
       "maximum-50-files": "50 fichiers",
       "maximum-100-files": "100 fichiers",
-      "maximum-1000-files": "1000 fichiers"
+      "maximum-1000-files": "1000 fichiers",
+      "maximum-all-files": "Toutes les fichiers",
+      "maximum-files-to-fetch": "Nombre Maximum De Fichiers À Récupérer",
+      "root-directory": "Répertoire parent pour la Recherche"
     },
     "load-comic-files": {
       "effect-success": "{files, plural, =1{un fichier de bande dessinée trouvée} other{# fichiers de bande dessinée trouvées}} dans {directories, plural, =1{un dossier} other{# dossiers}}.",

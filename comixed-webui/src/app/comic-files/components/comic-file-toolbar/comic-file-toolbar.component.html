@@ -48,12 +48,15 @@
     [matTooltip]="'comic-files.tooltip.start-import' | translate"
     (click)="onStartImport()"
   >
-    <mat-icon>publish</mat-icon>
+    <mat-icon>cloud_upload</mat-icon>
   </button>
 </mat-toolbar>
-<div *ngIf="showLookupForm" class="cx-width-100 cx-primary-light-background">
+<div *ngIf="showLookupForm" class="cx-width-100 cx-accent-l-background">
   <form [formGroup]="loadFilesForm">
     <mat-form-field class="cx-width-25" appearance="fill">
+      <mat-label>
+        {{ "comic-files.label.maximum-files-to-fetch" | translate }}
+      </mat-label>
       <mat-select
         id="maximum-files-select"
         class="cx-width-100"
@@ -68,13 +71,11 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="cx-width-75" appearance="fill">
-      <input
-        id="root-directory-input"
-        matInput
-        formControlName="rootDirectory"
-        [placeholder]="'comic-files.placeholder.root-directory' | translate"
-      />
+      <mat-label>
+        {{ "comic-files.label.root-directory" | translate }}
+      </mat-label>
       <button
+        id="find-files-button"
         matSuffix
         mat-icon-button
         color="primary"
@@ -83,6 +84,13 @@
       >
         <mat-icon>search</mat-icon>
       </button>
+      <input
+        id="root-directory-input"
+        matInput
+        formControlName="rootDirectory"
+        [placeholder]="'comic-files.placeholder.root-directory' | translate"
+        required
+      />
     </mat-form-field>
   </form>
 </div>

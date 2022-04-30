@@ -20,11 +20,13 @@
       "effect-success": "{count, plural, =1{one comic file} other{# comic files}} enviado para importación."
     },
     "label": {
-      "maximum-all-files": "Todos los archivos",
       "maximum-10-files": "10 archivos",
       "maximum-50-files": "50 archivos",
       "maximum-100-files": "100 archivos",
-      "maximum-1000-files": "1000 archivos"
+      "maximum-1000-files": "1000 archivos",
+      "maximum-all-files": "Todos los archivos",
+      "maximum-files-to-fetch": "Máximo De Archivos Para Recuperar",
+      "root-directory": "Directorio raíz para buscar"
     },
     "load-comic-files": {
       "effect-success": "Found {files, plural, =1{one comic file} other{# comic files}} in {directories, plural, =1{one directory} other{# directories}}.",
