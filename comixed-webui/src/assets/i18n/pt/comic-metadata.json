@@ -101,6 +101,7 @@
       "no-match": "Não"
     },
     "tooltip": {
+      "auto-select-exact-match": "If enabled, a single exact match will be automatically selected.",
       "cancel-scraping": "Para de recuperar dados de comics.",
       "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
       "reject-scraping-issue": "Rejeitar este número.",

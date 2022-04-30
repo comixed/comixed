@@ -50,6 +50,7 @@ import {
 import { scrapeMetadataFromFilename } from '@app/comic-files/actions/scrape-metadata.actions';
 import {
   scrapeComic,
+  setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping
 } from '@app/comic-metadata/actions/metadata.actions';
@@ -419,6 +420,21 @@ describe('ComicEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         setConfirmBeforeScraping({ confirmBeforeScraping: confirm })
+      );
+    });
+  });
+
+  describe('toggling autoselecting exact matches', () => {
+    const confirm = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.autoSelectExactMatch = !confirm;
+      component.onToggleAutoSelectExactMatch();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        setAutoSelectExactMatch({ autoSelectExactMatch: confirm })
       );
     });
   });

@@ -27,6 +27,7 @@ import {
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
+  setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
   volumeMetadataLoaded
@@ -81,12 +82,21 @@ describe('Scraping Reducer', () => {
     it('sets the confirm before scraping flag', () => {
       expect(state.confirmBeforeScraping).toBeTrue();
     });
+
+    it('clears the auto-select exact match flag', () => {
+      expect(state.autoSelectExactMatch).toBeFalse();
+    });
   });
 
   describe('resetting the scraping state', () => {
     beforeEach(() => {
       state = reducer(
-        { ...state, volumes: VOLUMES, confirmBeforeScraping: false },
+        {
+          ...state,
+          volumes: VOLUMES,
+          confirmBeforeScraping: false,
+          autoSelectExactMatch: true
+        },
         resetMetadataState()
       );
     });
@@ -97,6 +107,10 @@ describe('Scraping Reducer', () => {
 
     it('sets the confirm before scraping flag', () => {
       expect(state.confirmBeforeScraping).toBeTrue();
+    });
+
+    it('clears the auto-select exact match flag', () => {
+      expect(state.autoSelectExactMatch).toBeFalse();
     });
   });
 
@@ -110,8 +124,23 @@ describe('Scraping Reducer', () => {
       );
     });
 
-    it('sets the confirm before scraping flag', () => {
+    it('sets the state', () => {
       expect(state.confirmBeforeScraping).toEqual(confirm);
+    });
+  });
+
+  describe('changing the auto-select exact match state', () => {
+    const confirm = Math.random() > 0.5;
+
+    beforeEach(() => {
+      state = reducer(
+        { ...state, autoSelectExactMatch: !confirm },
+        setAutoSelectExactMatch({ autoSelectExactMatch: confirm })
+      );
+    });
+
+    it('sets the state', () => {
+      expect(state.autoSelectExactMatch).toEqual(confirm);
     });
   });
 

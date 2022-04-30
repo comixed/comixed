@@ -79,6 +79,7 @@ describe('ComicMetadataComponent', () => {
   let fixture: ComponentFixture<ComicMetadataComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
+  let spyOnStoreDispatch: jasmine.Spy;
 
   beforeEach(
     waitForAsync(() => {
@@ -108,7 +109,7 @@ describe('ComicMetadataComponent', () => {
       component.comicIssueNumber = ISSUE_NUMBER;
       component.skipCache = SKIP_CACHE;
       store = TestBed.inject(MockStore);
-      spyOn(store, 'dispatch');
+      spyOnStoreDispatch = spyOn(store, 'dispatch');
       confirmationService = TestBed.inject(ConfirmationService);
       fixture.detectChanges();
     })
@@ -374,6 +375,64 @@ describe('ComicMetadataComponent', () => {
       expect(
         component.dataSource.filterPredicate(VOLUME, VOLUME.item.startYear)
       ).toBeTrue();
+    });
+  });
+
+  describe('when metadata for an issue is received', () => {
+    beforeEach(() => {
+      component.comic = COMIC;
+      component.multimode = true;
+      component.metadataSource = METADATA_SOURCE;
+      component.skipCache = SKIP_CACHE;
+    });
+
+    describe('one exact match and auto-selecting exact matches is disabled', () => {
+      beforeEach(() => {
+        component.comicVolume = SCRAPING_VOLUME.startYear;
+        component.volumes = VOLUMES;
+        component.autoSelectExactMatch = false;
+        spyOnStoreDispatch.calls.reset();
+        component.issue = SCRAPING_ISSUE;
+      });
+
+      it('does not fire an action', () => {
+        expect(store.dispatch).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('one exact match and auto-selecting exact matches is enabled', () => {
+      beforeEach(() => {
+        component.comicVolume = SCRAPING_VOLUME.startYear;
+        component.volumes = VOLUMES;
+        component.autoSelectExactMatch = true;
+        spyOnStoreDispatch.calls.reset();
+        component.issue = SCRAPING_ISSUE;
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          scrapeComic({
+            comic: COMIC,
+            metadataSource: METADATA_SOURCE,
+            issueId: SCRAPING_ISSUE.id,
+            skipCache: SKIP_CACHE
+          })
+        );
+      });
+    });
+
+    describe('no exact matches and auto-selecting exact matches is enabled', () => {
+      beforeEach(() => {
+        component.volumes = VOLUMES;
+        component.comicVolume = SCRAPING_VOLUME.startYear + '1';
+        component.autoSelectExactMatch = false;
+        spyOnStoreDispatch.calls.reset();
+        component.issue = SCRAPING_ISSUE;
+      });
+
+      it('does not fire an action', () => {
+        expect(store.dispatch).not.toHaveBeenCalled();
+      });
     });
   });
 });

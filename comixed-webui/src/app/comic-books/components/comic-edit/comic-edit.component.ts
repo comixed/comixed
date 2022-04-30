@@ -49,6 +49,7 @@ import { selectScrapeMetadataState } from '@app/comic-files/selectors/scrape-met
 import { filter } from 'rxjs/operators';
 import {
   scrapeComic,
+  setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping
 } from '@app/comic-metadata/actions/metadata.actions';
@@ -88,6 +89,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
   confirmBeforeScraping = true;
+  autoSelectExactMatch = false;
 
   constructor(
     private logger: LoggerService,
@@ -132,6 +134,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         this.logger.trace('Metadata state changed');
         this.confirmBeforeScraping = state.confirmBeforeScraping;
+        this.autoSelectExactMatch = state.autoSelectExactMatch;
       });
     this.imprintSubscription = this.store
       .select(selectImprints)
@@ -288,21 +291,6 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.store.dispatch(setChosenMetadataSource({ metadataSource }));
   }
 
-  private encodeForm(): Comic {
-    this.logger.trace('Encoding comic');
-    return {
-      ...this.comic,
-      publisher: this.comicForm.controls.publisher.value,
-      series: this.comicForm.controls.series.value,
-      volume: this.comicForm.controls.volume.value,
-      issueNumber: this.comicForm.controls.issueNumber.value,
-      imprint: this.comicForm.controls.imprint.value,
-      sortName: this.comicForm.controls.sortName.value,
-      title: this.comicForm.controls.title.value,
-      description: this.comicForm.controls.description.value
-    } as Comic;
-  }
-
   onScrapeWithReferenceId(): void {
     const referenceId = this.comicForm.controls.referenceId.value;
     this.logger.trace('Confirming scrape coming using reference id');
@@ -327,11 +315,35 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   }
 
   onToggleConfirmBeforeScrape(): void {
-    this.logger.info('Firing event: toggling confirm before scrape');
+    this.logger.debug('Firing event: toggling confirm before scrape');
     this.store.dispatch(
       setConfirmBeforeScraping({
         confirmBeforeScraping: !this.confirmBeforeScraping
       })
     );
+  }
+
+  onToggleAutoSelectExactMatch(): void {
+    this.logger.debug('Firing event: toggle auto select exact match');
+    this.store.dispatch(
+      setAutoSelectExactMatch({
+        autoSelectExactMatch: !this.autoSelectExactMatch
+      })
+    );
+  }
+
+  private encodeForm(): Comic {
+    this.logger.trace('Encoding comic');
+    return {
+      ...this.comic,
+      publisher: this.comicForm.controls.publisher.value,
+      series: this.comicForm.controls.series.value,
+      volume: this.comicForm.controls.volume.value,
+      issueNumber: this.comicForm.controls.issueNumber.value,
+      imprint: this.comicForm.controls.imprint.value,
+      sortName: this.comicForm.controls.sortName.value,
+      title: this.comicForm.controls.title.value,
+      description: this.comicForm.controls.description.value
+    } as Comic;
   }
 }
