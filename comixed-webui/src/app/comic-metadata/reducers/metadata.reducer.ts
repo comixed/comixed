@@ -27,6 +27,7 @@ import {
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
+  setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
   volumeMetadataLoaded
@@ -43,6 +44,7 @@ export interface MetadataState {
   scrapingIssue: IssueMetadata;
   metadataSource: MetadataSource;
   confirmBeforeScraping: boolean;
+  autoSelectExactMatch: boolean;
 }
 
 export const initialState: MetadataState = {
@@ -50,7 +52,8 @@ export const initialState: MetadataState = {
   volumes: [],
   scrapingIssue: null,
   metadataSource: null,
-  confirmBeforeScraping: true
+  confirmBeforeScraping: true,
+  autoSelectExactMatch: false
 };
 
 export const reducer = createReducer(
@@ -59,11 +62,16 @@ export const reducer = createReducer(
   on(resetMetadataState, state => ({
     ...state,
     volumes: [],
-    confirmBeforeScraping: true
+    confirmBeforeScraping: true,
+    autoSelectExactMatch: false
   })),
   on(setConfirmBeforeScraping, (state, action) => ({
     ...state,
     confirmBeforeScraping: action.confirmBeforeScraping
+  })),
+  on(setAutoSelectExactMatch, (state, action) => ({
+    ...state,
+    autoSelectExactMatch: action.autoSelectExactMatch
   })),
   on(loadVolumeMetadata, state => ({ ...state, loadingRecords: true })),
   on(volumeMetadataLoaded, (state, action) => ({

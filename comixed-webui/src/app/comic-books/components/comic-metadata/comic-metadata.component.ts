@@ -78,9 +78,10 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   @Input() skipCache = false;
   @Input() pageSize: number;
   @Input() multimode = false;
+
   @Output() comicScraped = new EventEmitter<Comic>();
+
   issueSubscription: Subscription;
-  issue: IssueMetadata;
   scrapingStateSubscription: Subscription;
   selectedVolume: VolumeMetadata;
   dataSource = new MatTableDataSource<SortableListItem<VolumeMetadata>>();
@@ -93,6 +94,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
     'action'
   ];
   confirmBeforeScraping = true;
+  autoSelectExactMatch = false;
 
   constructor(
     private logger: LoggerService,
@@ -105,9 +107,29 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
       .subscribe(issue => (this.issue = issue));
     this.scrapingStateSubscription = this.store
       .select(selectMetadataState)
-      .subscribe(state =>
-        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
-      );
+      .subscribe(state => {
+        this.store.dispatch(setBusyState({ enabled: state.loadingRecords }));
+        this.autoSelectExactMatch = state.autoSelectExactMatch;
+      });
+  }
+
+  private _issue: IssueMetadata;
+
+  get issue(): IssueMetadata {
+    return this._issue;
+  }
+
+  set issue(issue: IssueMetadata) {
+    this._issue = issue;
+    if (
+      !!issue &&
+      this.autoSelectExactMatch &&
+      this.dataSource.data.filter(entry => entry.sortOrder === EXACT_MATCH)
+        .length === 1
+    ) {
+      this.logger.debug('Auto-selecting exact match:', this.issue);
+      this.scrapeComic();
+    }
   }
 
   @Input() set volumes(volumes: VolumeMetadata[]) {
@@ -126,12 +148,12 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
       } as SortableListItem<VolumeMetadata>;
     });
     this.selectedVolume = null;
-    const preselect = this.dataSource.data.find(
+    const exactMatches = this.dataSource.data.filter(
       entry => entry.sortOrder === EXACT_MATCH
     );
-    if (!!preselect) {
-      this.logger.debug('Preselecting volume:', preselect);
-      this.onVolumeSelected(preselect.item);
+    if (exactMatches.length > 0) {
+      this.logger.debug('Preselecting volume:', exactMatches[0]);
+      this.onVolumeSelected(exactMatches[0].item);
     }
   }
 
@@ -208,7 +230,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
     this.store.dispatch(resetMetadataState());
   }
 
-  private scrapeComic(): void {
+  scrapeComic(): void {
     this.logger.debug('User confirmed scraping the comic:', this.multimode);
     if (this.multimode) {
       this.logger.debug('Removing comic from scraping queue:', this.comic);
@@ -224,7 +246,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
     );
   }
 
-  private matchesFilter(value: string, filter: string): boolean {
+  matchesFilter(value: string, filter: string): boolean {
     console.log('Looking for', filter, ' in', value);
     return (
       (value || '').toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !==

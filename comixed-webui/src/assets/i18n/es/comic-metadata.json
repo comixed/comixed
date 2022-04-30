@@ -101,6 +101,7 @@
       "no-match": "No"
     },
     "tooltip": {
+      "auto-select-exact-match": "If enabled, a single exact match will be automatically selected.",
       "cancel-scraping": "Deja de raspar cómics.",
       "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
       "reject-scraping-issue": "Rechazar este problema.",

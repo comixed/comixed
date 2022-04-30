@@ -46,7 +46,8 @@ describe('Metadata Selectors', () => {
       volumes: VOLUMES,
       scrapingIssue: SCRAPING_ISSUE,
       metadataSource: METADATA_SOURCE_1,
-      confirmBeforeScraping: Math.random() > 0.5
+      confirmBeforeScraping: Math.random() > 0.5,
+      autoSelectExactMatch: Math.random() > 0.5
     };
   });
 

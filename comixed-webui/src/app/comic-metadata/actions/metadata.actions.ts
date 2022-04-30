@@ -36,6 +36,11 @@ export const setConfirmBeforeScraping = createAction(
   props<{ confirmBeforeScraping: boolean }>()
 );
 
+export const setAutoSelectExactMatch = createAction(
+  '[Metadata] Sets the auto-select exact match state',
+  props<{ autoSelectExactMatch: boolean }>()
+);
+
 export const loadVolumeMetadata = createAction(
   '[Metadata] Loads scraping volumes',
   props<{
