@@ -193,7 +193,7 @@ public class LibraryController {
   @PreAuthorize("hasRole('READER')")
   @AuditableRestEndpoint(
       logRequest = false,
-      logResponse = true,
+      logResponse = false,
       responseView = View.ComicListView.class)
   @JsonView(View.ComicListView.class)
   public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
