@@ -109,9 +109,11 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
             this.comics = entries.filter(comic => {
               switch (this.collectionType) {
                 case CollectionType.PUBLISHERS:
-                  return comic.publisher === this.collectionName;
+                  return (
+                    (comic.publisher || '[UNKNOWN]') === this.collectionName
+                  );
                 case CollectionType.SERIES:
-                  return comic.series === this.collectionName;
+                  return (comic.series || '[UNKNOWN]') === this.collectionName;
                 case CollectionType.CHARACTERS:
                   return comic.characters.includes(this.collectionName);
                 case CollectionType.TEAMS:
