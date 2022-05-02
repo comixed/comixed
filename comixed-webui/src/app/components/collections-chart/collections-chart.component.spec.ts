@@ -20,6 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionsChartComponent } from './collections-chart.component';
 import {
   COMIC_1,
+  COMIC_2,
   COMIC_3,
   COMIC_5
 } from '@app/comic-books/comic-books.fixtures';
@@ -29,23 +30,42 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ElementRef } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { CollectionType } from '@app/collections/models/comic-collection.enum';
 
 describe('CollectionsChartComponent', () => {
   const COMICS = [
     { ...COMIC_1, publisher: null, series: null },
     COMIC_3,
-    COMIC_5
+    COMIC_5,
+    { ...COMIC_2, publisher: 'publisher1', series: null },
+    { ...COMIC_2, publisher: 'publisher2', series: null },
+    { ...COMIC_2, publisher: 'publisher3', series: null },
+    { ...COMIC_2, publisher: 'publisher4', series: null },
+    { ...COMIC_2, publisher: 'publisher5', series: null },
+    { ...COMIC_2, publisher: 'publisher6', series: null },
+    { ...COMIC_2, publisher: 'publisher7', series: null },
+    { ...COMIC_2, publisher: 'publisher8', series: null },
+    { ...COMIC_2, publisher: 'publisher9', series: null },
+    { ...COMIC_2, publisher: 'publisher10', series: null },
+    { ...COMIC_2, publisher: 'publisher11', series: null },
+    { ...COMIC_2, publisher: 'publisher12', series: null },
+    { ...COMIC_2, publisher: 'publisher13', series: null },
+    { ...COMIC_2, publisher: 'publisher14', series: null },
+    { ...COMIC_2, publisher: 'publisher15', series: null }
   ];
 
   let component: CollectionsChartComponent;
   let fixture: ComponentFixture<CollectionsChartComponent>;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [CollectionsChartComponent],
       imports: [
         NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         NgxChartsModule,
@@ -56,6 +76,8 @@ describe('CollectionsChartComponent', () => {
 
     fixture = TestBed.createComponent(CollectionsChartComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 
@@ -103,6 +125,48 @@ describe('CollectionsChartComponent', () => {
 
     it('sets the chart height', () => {
       expect(component.chartHeight$.value).not.toEqual(0);
+    });
+  });
+
+  describe('when a collection is selected', () => {
+    const COLLECTION_TYPE = CollectionType.PUBLISHERS;
+    const COLLECTION_NAME = 'the collection';
+
+    beforeEach(() => {
+      component.onCollectionSelected(
+        COLLECTION_TYPE.toString(),
+        COLLECTION_NAME
+      );
+    });
+
+    it('redirects the browser', () => {
+      expect(router.navigate).toHaveBeenCalledWith([
+        'library',
+        'collections',
+        COLLECTION_TYPE,
+        COLLECTION_NAME
+      ]);
+    });
+  });
+
+  describe('when an unknown collection is selected', () => {
+    const COLLECTION_TYPE = CollectionType.PUBLISHERS;
+    const COLLECTION_NAME = null;
+
+    beforeEach(() => {
+      component.onCollectionSelected(
+        COLLECTION_TYPE.toString(),
+        COLLECTION_NAME
+      );
+    });
+
+    it('redirects the browser', () => {
+      expect(router.navigate).toHaveBeenCalledWith([
+        'library',
+        'collections',
+        COLLECTION_TYPE,
+        '[UNKNOWN]'
+      ]);
     });
   });
 });

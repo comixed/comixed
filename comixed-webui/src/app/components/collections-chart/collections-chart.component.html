@@ -17,6 +17,7 @@
     [xScaleMax]="currentCollection.maxX"
     [xAxisLabel]="'home.legend.collections-top-entries-x-axis' | translate"
     [showXAxisLabel]="true"
+    (select)="onCollectionSelected($event.extra.collection, $event.extra.name)"
   ></ngx-charts-bar-horizontal>
   <mat-form-field class="cx-width-100" appearance="fill">
     <mat-label>{{ "home.label.select-collection-type" | translate }}</mat-label>

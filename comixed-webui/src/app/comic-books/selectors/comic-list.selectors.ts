@@ -60,10 +60,10 @@ export const selectComicListCollection = createSelector(
     state.forEach(comic => {
       switch (props.collectionType) {
         case CollectionType.PUBLISHERS:
-          entries.push(comic.publisher);
+          entries.push(comic.publisher || '[UNKNOWN]');
           break;
         case CollectionType.SERIES:
-          entries.push(comic.series);
+          entries.push(comic.series || '[UNKNOWN]');
           break;
         case CollectionType.CHARACTERS:
           entries = entries.concat(comic.characters);

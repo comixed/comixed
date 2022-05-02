@@ -29,6 +29,11 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ChartData } from '@app/models/ui/chart-data';
 import { ChartDataResultSet } from '@app/models/ui/chart-data-result-set';
 import { BehaviorSubject } from 'rxjs';
+import {
+  CollectionType,
+  collectionTypeFromString
+} from '@app/collections/models/comic-collection.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-collections-chart',
@@ -43,7 +48,7 @@ export class CollectionsChartComponent implements AfterViewInit {
   chartHeight$ = new BehaviorSubject<number>(0);
   chartWidth$ = new BehaviorSubject<number>(0);
 
-  constructor(private logger: LoggerService) {}
+  constructor(private logger: LoggerService, private router: Router) {}
 
   private _comics: Comic[];
 
@@ -78,6 +83,16 @@ export class CollectionsChartComponent implements AfterViewInit {
     this.currentCollection = collection;
   }
 
+  onCollectionSelected(collection: string, name: string): void {
+    this.logger.info('Forwarding to collection list:', collection);
+    this.router.navigate([
+      'library',
+      'collections',
+      collectionTypeFromString(collection),
+      name || '[UNKNOWN]'
+    ]);
+  }
+
   private loadComponentDimensions(): void {
     this.chartWidth$.next(this.container?.nativeElement?.offsetWidth);
     let height = this.container?.nativeElement?.offsetHeight - 125;
@@ -97,7 +112,8 @@ export class CollectionsChartComponent implements AfterViewInit {
         return {
           name: publisher || 'UNKNOWN',
           value: this.comics.filter(entry => entry.publisher === publisher)
-            .length
+            .length,
+          extra: { collection: CollectionType.PUBLISHERS, name: publisher }
         };
       })
     );
@@ -119,7 +135,8 @@ export class CollectionsChartComponent implements AfterViewInit {
       seriesNames.map(series => {
         return {
           name: series || 'UNKNOWN',
-          value: this.comics.filter(entry => entry.series === series).length
+          value: this.comics.filter(entry => entry.series === series).length,
+          extra: { collection: CollectionType.SERIES, name: series }
         };
       })
     );
@@ -147,7 +164,8 @@ export class CollectionsChartComponent implements AfterViewInit {
           name: character,
           value: this.comics.filter(entry =>
             entry.characters.includes(character)
-          ).length
+          ).length,
+          extra: { collection: CollectionType.CHARACTERS, name: character }
         };
       })
     );
@@ -173,7 +191,8 @@ export class CollectionsChartComponent implements AfterViewInit {
       teams.map(team => {
         return {
           name: team,
-          value: this.comics.filter(entry => entry.teams.includes(team)).length
+          value: this.comics.filter(entry => entry.teams.includes(team)).length,
+          extra: { collection: CollectionType.TEAMS, name: team }
         };
       })
     );
@@ -200,7 +219,8 @@ export class CollectionsChartComponent implements AfterViewInit {
         return {
           name: location,
           value: this.comics.filter(entry => entry.locations.includes(location))
-            .length
+            .length,
+          extra: { collection: CollectionType.LOCATIONS, name: location }
         };
       })
     );
@@ -227,7 +247,8 @@ export class CollectionsChartComponent implements AfterViewInit {
         return {
           name: story,
           value: this.comics.filter(entry => entry.stories.includes(story))
-            .length
+            .length,
+          extra: { collection: CollectionType.STORIES, name: story }
         };
       })
     );
