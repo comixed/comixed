@@ -17,11 +17,11 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export const markComicsDeleted = createAction(
   '[Mark Comics Deleted] Set the deleted state for comics',
-  props<{ comics: Comic[]; deleted: boolean }>()
+  props<{ comicBooks: ComicBook[]; deleted: boolean }>()
 );
 
 export const comicsMarkedDeleted = createAction(

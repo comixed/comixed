@@ -87,6 +87,6 @@
 </mat-card>
 <cx-comic-list-view
   *ngIf="!!readingList"
-  [comics]="readingList.comics"
+  [comicBooks]="readingList.comicBooks"
   (selectedEntries)="onSelectionChanged($event)"
 ></cx-comic-list-view>

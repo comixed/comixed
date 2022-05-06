@@ -21,7 +21,7 @@ package org.comixedproject.messaging.comicbooks;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.AbstractPublishAction;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.messaging.Constants;
 import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
@@ -34,15 +34,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PublishComicRemovalAction extends AbstractPublishAction<Comic> {
+public class PublishComicRemovalAction extends AbstractPublishAction<ComicBook> {
   @Override
-  public void publish(final Comic comic) throws PublishingException {
-    log.trace("Publishing comic list removal");
-    this.doPublish(Constants.COMIC_LIST_REMOVAL_TOPIC, comic, View.ComicListView.class);
-    log.trace("Publishing comic book removal");
+  public void publish(final ComicBook comicBook) throws PublishingException {
+    log.trace("Publishing comicBook list removal");
+    this.doPublish(Constants.COMIC_LIST_REMOVAL_TOPIC, comicBook, View.ComicListView.class);
+    log.trace("Publishing comicBook book removal");
     this.doPublish(
-        String.format(Constants.COMIC_BOOK_REMOVAL_TOPIC, comic.getId()),
-        comic,
+        String.format(Constants.COMIC_BOOK_REMOVAL_TOPIC, comicBook.getId()),
+        comicBook,
         View.ComicDetailsView.class);
   }
 }

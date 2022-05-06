@@ -28,11 +28,11 @@ import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.*;
 import org.comixedproject.opds.utils.OPDSUtils;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,7 +51,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OPDSCollectionController {
   public static final String UNNAMED = "UNNAMED";
 
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
 
   /**
    * Retrieves the root feed for a collection.
@@ -73,7 +73,7 @@ public class OPDSCollectionController {
             collectionType,
             new OPDSNavigationFeed("Publishers", String.valueOf(PUBLISHERS_ID)),
             PUBLISHERS_ID,
-            this.comicService.getAllPublishers().stream()
+            this.comicBookService.getAllPublishers().stream()
                 .map(
                     publisher ->
                         new CollectionFeedEntry(
@@ -84,7 +84,7 @@ public class OPDSCollectionController {
             collectionType,
             new OPDSNavigationFeed("Series", String.valueOf(SERIES_ID)),
             SERIES_ID,
-            this.comicService.getAllSeries().stream()
+            this.comicBookService.getAllSeries().stream()
                 .map(
                     series ->
                         new CollectionFeedEntry(
@@ -95,7 +95,7 @@ public class OPDSCollectionController {
             collectionType,
             new OPDSNavigationFeed("Characters", String.valueOf(CHARACTERS_ID)),
             CHARACTERS_ID,
-            this.comicService.getAllCharacters().stream()
+            this.comicBookService.getAllCharacters().stream()
                 .map(
                     character ->
                         new CollectionFeedEntry(
@@ -106,7 +106,7 @@ public class OPDSCollectionController {
             collectionType,
             new OPDSNavigationFeed("Teams", String.valueOf(TEAMS_ID)),
             TEAMS_ID,
-            this.comicService.getAllTeams().stream()
+            this.comicBookService.getAllTeams().stream()
                 .map(
                     team -> new CollectionFeedEntry(team, Long.valueOf(("TEAM" + team).hashCode())))
                 .collect(Collectors.toUnmodifiableList()));
@@ -115,7 +115,7 @@ public class OPDSCollectionController {
             collectionType,
             new OPDSNavigationFeed("Locations", String.valueOf(LOCATIONS_ID)),
             LOCATIONS_ID,
-            this.comicService.getAllLocations().stream()
+            this.comicBookService.getAllLocations().stream()
                 .map(
                     location ->
                         new CollectionFeedEntry(
@@ -126,7 +126,7 @@ public class OPDSCollectionController {
             collectionType,
             new OPDSNavigationFeed("Stories", String.valueOf(STORIES_ID)),
             STORIES_ID,
-            this.comicService.getAllStories().stream()
+            this.comicBookService.getAllStories().stream()
                 .map(
                     story ->
                         new CollectionFeedEntry(story, Long.valueOf(("STORY" + story).hashCode())))
@@ -193,37 +193,37 @@ public class OPDSCollectionController {
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Publisher: %s", nameValue), String.valueOf(PUBLISHERS_ID)),
-            this.comicService.getAllForPublisher(nameValue));
+            this.comicBookService.getAllForPublisher(nameValue));
       case series:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Series: %s", nameValue), String.valueOf(SERIES_ID)),
-            this.comicService.getAllForSeries(nameValue));
+            this.comicBookService.getAllForSeries(nameValue));
       case characters:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Character: %s", nameValue), String.valueOf(CHARACTERS_ID)),
-            this.comicService.getAllForCharacter(nameValue));
+            this.comicBookService.getAllForCharacter(nameValue));
       case teams:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(String.format("Team: %s", nameValue), String.valueOf(TEAMS_ID)),
-            this.comicService.getAllForTeam(nameValue));
+            this.comicBookService.getAllForTeam(nameValue));
       case locations:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Location: %s", nameValue), String.valueOf(LOCATIONS_ID)),
-            this.comicService.getAllForLocation(nameValue));
+            this.comicBookService.getAllForLocation(nameValue));
       case stories:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Story: %s", nameValue), String.valueOf(STORIES_ID)),
-            this.comicService.getAllForStory(nameValue));
+            this.comicBookService.getAllForStory(nameValue));
     }
     throw new OPDSException("Failed to process collection entries: " + collectionType);
   }
 
   private OPDSAcquisitionFeed createCollectionEntriesFeed(
-      final OPDSAcquisitionFeed feed, final List<Comic> entries) {
+      final OPDSAcquisitionFeed feed, final List<ComicBook> entries) {
     entries.forEach(
         comic -> {
           log.trace("Adding comic to collection entries: {}", comic.getId());

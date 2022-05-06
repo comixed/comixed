@@ -25,7 +25,7 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.comicvine.adaptors.ComicVineMetadataAdaptor;
 import org.comixedproject.metadata.comicvine.model.*;
 import org.comixedproject.metadata.model.IssueDetailsMetadata;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -34,8 +34,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * <code>ComicVineScrapeComicAction</code> scrapes the details for a issue {@link Comic} and returns
- * the unsaved, updated object.
+ * <code>ComicVineScrapeComicAction</code> scrapes the details for a issue {@link ComicBook} and
+ * returns the unsaved, updated object.
  *
  * @author Darryl L. Pierce
  */

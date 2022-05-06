@@ -24,7 +24,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -35,7 +35,7 @@ import {
   MAXIMUM_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
-import { updateComic } from '@app/comic-books/actions/comic.actions';
+import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { Subscription } from 'rxjs';
 import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
@@ -157,13 +157,13 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _comic: Comic;
+  private _comic: ComicBook;
 
-  get comic(): Comic {
+  get comic(): ComicBook {
     return this._comic;
   }
 
-  @Input() set comic(comic: Comic) {
+  @Input() set comic(comic: ComicBook) {
     this.logger.trace('Loading comic form:', comic);
     this._comic = comic;
     this.logger.trace('Loading form fields');
@@ -258,7 +258,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       confirm: () => {
         const comic = this.encodeForm();
         this.logger.debug('Saving changes to comic:', comic);
-        this.store.dispatch(updateComic({ comic }));
+        this.store.dispatch(updateComicBook({ comicBook: comic }));
       }
     });
   }
@@ -332,7 +332,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private encodeForm(): Comic {
+  private encodeForm(): ComicBook {
     this.logger.trace('Encoding comic');
     return {
       ...this.comic,
@@ -344,6 +344,6 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       sortName: this.comicForm.controls.sortName.value,
       title: this.comicForm.controls.title.value,
       description: this.comicForm.controls.description.value
-    } as Comic;
+    } as ComicBook;
   }
 }

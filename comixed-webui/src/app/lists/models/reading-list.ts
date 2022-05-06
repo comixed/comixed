@@ -17,7 +17,7 @@
  */
 
 import { User } from '../../user/models/user';
-import { Comic } from '../../comic-books/models/comic';
+import { ComicBook } from '../../comic-books/models/comic-book';
 
 export interface ReadingList {
   id: number;
@@ -26,5 +26,5 @@ export interface ReadingList {
   owner: User;
   createdOn: number;
   lastModifiedOn: number;
-  comics: Comic[];
+  comicBooks: ComicBook[];
 }

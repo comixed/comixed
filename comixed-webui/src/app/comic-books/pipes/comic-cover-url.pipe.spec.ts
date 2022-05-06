@@ -18,21 +18,24 @@
 
 import { ComicCoverUrlPipe } from './comic-cover-url.pipe';
 import { API_ROOT_URL } from '@app/core';
-import { COMIC_1, COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_4
+} from '@app/comic-books/comic-books.fixtures';
 import { MISSING_COMIC_IMAGE_URL } from '@app/library/library.constants';
 
 describe('ComicCoverUrlPipe', () => {
   const pipe = new ComicCoverUrlPipe();
 
   it('returns the missing page URL if the comic is missing', () => {
-    expect(pipe.transform({ ...COMIC_4, missing: true })).toEqual(
+    expect(pipe.transform({ ...COMIC_BOOK_4, missing: true })).toEqual(
       MISSING_COMIC_IMAGE_URL
     );
   });
 
   it('returns the URL for the comic cover image', () => {
-    expect(pipe.transform(COMIC_1)).toEqual(
-      `${API_ROOT_URL}/comics/${COMIC_1.id}/cover/content`
+    expect(pipe.transform(COMIC_BOOK_1)).toEqual(
+      `${API_ROOT_URL}/comics/${COMIC_BOOK_1.id}/cover/content`
     );
   });
 });

@@ -24,12 +24,12 @@ import {
   multipleComicsEdited,
   selectComics
 } from '../actions/library.actions';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
-  selected: Comic[];
+  selected: ComicBook[];
   busy: boolean;
 }
 
@@ -43,14 +43,14 @@ export const reducer = createReducer(
 
   on(selectComics, (state, action) => {
     const selected = state.selected.filter(
-      comic => action.comics.includes(comic) === false
+      comicBook => action.comicBooks.includes(comicBook) === false
     );
 
-    return { ...state, selected: selected.concat(action.comics) };
+    return { ...state, selected: selected.concat(action.comicBooks) };
   }),
   on(deselectComics, (state, action) => {
     const selected = state.selected.filter(
-      comic => action.comics.includes(comic) === false
+      comicBook => action.comicBooks.includes(comicBook) === false
     );
 
     return { ...state, selected };

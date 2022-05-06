@@ -29,15 +29,15 @@ import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.ClearImageCacheResponse;
 import org.comixedproject.model.net.ConsolidateLibraryRequest;
 import org.comixedproject.model.net.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.views.View;
@@ -54,7 +54,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <code>LibraryController</code> provides REST APIs for working with groups of {@link Comic}
+ * <code>LibraryController</code> provides REST APIs for working with groups of {@link ComicBook}
  * objects.
  *
  * @author Darryl L. Pierce
@@ -65,7 +65,7 @@ public class LibraryController {
   static final int MAXIMUM_RECORDS = 1000;
 
   @Autowired private LibraryService libraryService;
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private ConfigurationService configurationService;
 
   @Autowired
@@ -200,15 +200,17 @@ public class LibraryController {
     final Long lastId = request.getLastId();
     log.info("Loading library for {}: last id was {}", lastId);
 
-    List<Comic> comics = this.comicService.getComicsById(lastId, MAXIMUM_RECORDS + 1);
+    List<ComicBook> comicBooks = this.comicBookService.getComicsById(lastId, MAXIMUM_RECORDS + 1);
     boolean lastPayload = true;
-    if (comics.size() > MAXIMUM_RECORDS) {
-      comics = comics.subList(0, MAXIMUM_RECORDS);
+    if (comicBooks.size() > MAXIMUM_RECORDS) {
+      comicBooks = comicBooks.subList(0, MAXIMUM_RECORDS);
       lastPayload = false;
     }
 
     return new LoadLibraryResponse(
-        comics, comics.isEmpty() ? 0 : comics.get(comics.size() - 1).getId(), lastPayload);
+        comicBooks,
+        comicBooks.isEmpty() ? 0 : comicBooks.get(comicBooks.size() - 1).getId(),
+        lastPayload);
   }
 
   /**
@@ -223,7 +225,7 @@ public class LibraryController {
   public void rescanComics(@RequestBody() final RescanComicsRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.comicService.rescanComics(ids);
+    this.comicBookService.rescanComics(ids);
     log.trace("Initiating a rescan batch process");
     this.jobLauncher.run(
         processComicsJob,
@@ -288,7 +290,7 @@ public class LibraryController {
       throws ComicException {
     final List<Long> ids = request.getIds();
     log.info("Updating details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.comicService.updateMultipleComics(
+    this.comicBookService.updateMultipleComics(
         ids,
         request.getPublisher(),
         request.getSeries(),

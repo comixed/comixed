@@ -65,7 +65,7 @@
           alt="thumbnail"
           width="100%"
           height="auto"
-          (click)="onShowComicsWithPage(row)"
+          (click)="onShowComicBooksWithPage(row)"
         />
       </div>
     </mat-cell>
@@ -76,7 +76,7 @@
       {{ "duplicate-pages.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
-      <span class="cx-text-nowrap">{{ row.item.comics.length }}</span>
+      <span class="cx-text-nowrap">{{ row.item.comicBooks.length }}</span>
     </mat-cell>
   </ng-container>
 

@@ -3,7 +3,7 @@
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
         [checked]="allSelected"
-        [disabled]="!comics.length"
+        [disabled]="!comicBooks.length"
         (change)="onSetAllSelectedState($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>

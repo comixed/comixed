@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.statemachine.StateContext;
@@ -35,8 +35,8 @@ import org.springframework.stereotype.Component;
 public class BlockedPagesMarkedAction extends AbstractComicAction {
   @Override
   public void execute(final StateContext<ComicState, ComicEvent> context) {
-    final Comic comic = this.fetchComic(context);
+    final ComicBook comicBook = this.fetchComic(context);
     log.trace("Turning on blocked pages marked flag");
-    comic.setBlockedPagesMarked(true);
+    comicBook.setBlockedPagesMarked(true);
   }
 }

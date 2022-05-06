@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,17 +33,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class UpdateMetadataProcessor implements ItemProcessor<Comic, Comic> {
+public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   @Override
-  public Comic process(final Comic comic) {
+  public ComicBook process(final ComicBook comicBook) {
     try {
-      log.debug("Updating comic metadata: id={}", comic.getId());
-      this.comicBookAdaptor.save(comic, comic.getArchiveType(), false, "");
+      log.debug("Updating comicBook metadata: id={}", comicBook.getId());
+      this.comicBookAdaptor.save(comicBook, comicBook.getArchiveType(), false, "");
     } catch (AdaptorException error) {
-      log.error("Failed to update metadata for comic", error);
+      log.error("Failed to update metadata for comicBook", error);
     }
-    return comic;
+    return comicBook;
   }
 }

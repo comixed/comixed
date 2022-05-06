@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ import java.util.List;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
@@ -43,7 +43,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class MetadataControllerTest {
   private static final Long TEST_METADATA_SOURCE_ID = 73L;
-  private static final String TEST_SERIES_NAME = "Awesome Comic";
+  private static final String TEST_SERIES_NAME = "Awesome ComicBook";
   private static final Integer TEST_MAX_RECORDS = 37;
   private static final Integer TEST_VOLUME = 2018;
   private static final String TEST_ISSUE_NUMBER = "15";
@@ -55,7 +55,7 @@ public class MetadataControllerTest {
   @Mock private MetadataService metadataService;
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private List<MetadataAuditLogEntry> auditLogEntryList;
 
   @Test(expected = MetadataException.class)
@@ -176,16 +176,16 @@ public class MetadataControllerTest {
     Mockito.when(
             metadataService.scrapeComic(
                 Mockito.anyLong(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
-        .thenReturn(comic);
+        .thenReturn(comicBook);
 
-    Comic response =
+    ComicBook response =
         controller.scrapeComic(
             TEST_METADATA_SOURCE_ID,
             TEST_COMIC_ID,
             new ScrapeComicRequest(TEST_ISSUE_ID, TEST_SKIP_CACHE));
 
     assertNotNull(response);
-    assertSame(comic, response);
+    assertSame(comicBook, response);
 
     Mockito.verify(metadataService, Mockito.times(1))
         .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);

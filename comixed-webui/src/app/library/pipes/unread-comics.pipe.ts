@@ -17,7 +17,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
 
 @Pipe({
@@ -25,16 +25,16 @@ import { LastRead } from '@app/last-read/models/last-read';
 })
 export class UnreadComicsPipe implements PipeTransform {
   transform(
-    comics: Comic[],
+    comicBooks: ComicBook[],
     unreadOnly: boolean,
     lastReadDates: LastRead[]
-  ): Comic[] {
+  ): ComicBook[] {
     if (!unreadOnly) {
-      return comics;
+      return comicBooks;
     }
 
-    return comics.filter(comic => {
-      return !lastReadDates.find(date => date.comic.id === comic.id);
+    return comicBooks.filter(comicBook => {
+      return !lastReadDates.find(date => date.comic.id === comicBook.id);
     });
   }
 }

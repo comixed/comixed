@@ -136,7 +136,7 @@ export class ReadingListsPageComponent
         case 'list-name':
           return data.item.name;
         case 'comic-count':
-          return data.item.comics.length;
+          return data.item.comicBooks.length;
         case 'created-on':
           return data.item.createdOn;
       }

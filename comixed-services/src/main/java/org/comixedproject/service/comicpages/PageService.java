@@ -23,12 +23,12 @@ import static org.comixedproject.state.comicpages.PageStateHandler.HEADER_PAGE;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.state.comicpages.PageEvent;
@@ -51,7 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageService implements InitializingBean, PageStateChangeListener {
   @Autowired private PageRepository pageRepository;
   @Autowired private PageStateHandler pageStateHandler;
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private ComicStateHandler comicStateHandler;
 
   @Override
@@ -69,7 +69,7 @@ public class PageService implements InitializingBean, PageStateChangeListener {
     page.setPageState(state.getId());
     final Page updated = this.pageRepository.save(page);
     log.trace("Firing comic event");
-    this.comicStateHandler.fireEvent(updated.getComic(), ComicEvent.detailsUpdated);
+    this.comicStateHandler.fireEvent(updated.getComicBook(), ComicEvent.detailsUpdated);
   }
 
   /**
@@ -93,15 +93,16 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @throws ComicException if the comic does not exist
    */
   public Page getPageInComicByIndex(final long comicId, final int pageIndex) throws ComicException {
-    log.debug("Getting page content for comic: comic id={} page index={}", comicId, pageIndex);
+    log.debug(
+        "Getting page content for comicBook: comicBook id={} page index={}", comicId, pageIndex);
 
-    log.debug("Fetching comic: id={}", comicId);
-    final Comic comic = this.comicService.getComic(comicId);
+    log.debug("Fetching comicBook: id={}", comicId);
+    final ComicBook comicBook = this.comicBookService.getComic(comicId);
 
-    if (comic != null) {
-      if (pageIndex < comic.getPageCount()) {
+    if (comicBook != null) {
+      if (pageIndex < comicBook.getPageCount()) {
         log.debug("Returning page");
-        return comic.getPage(pageIndex);
+        return comicBook.getPage(pageIndex);
       } else {
         log.warn("Index out of range");
       }

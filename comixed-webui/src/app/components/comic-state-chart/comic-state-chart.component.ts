@@ -25,7 +25,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicStateData } from '@app/models/ui/comic-state-data';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -57,13 +57,13 @@ export class ComicStateChartComponent implements OnDestroy, AfterViewInit {
       );
   }
 
-  private _comics: Comic[];
+  private _comics: ComicBook[];
 
-  get comics(): Comic[] {
+  get comics(): ComicBook[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: Comic[]) {
+  @Input() set comics(comics: ComicBook[]) {
     this._comics = comics;
     this.loadStatistics();
   }

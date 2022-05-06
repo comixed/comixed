@@ -17,12 +17,12 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ReadingList } from '@app/lists/models/reading-list';
 
 export const addComicsToReadingList = createAction(
   '[Reading List Entries] Add comics to a reading list',
-  props<{ list: ReadingList; comics: Comic[] }>()
+  props<{ list: ReadingList; comics: ComicBook[] }>()
 );
 
 export const comicsAddedToReadingList = createAction(
@@ -35,7 +35,7 @@ export const addComicsToReadingListFailed = createAction(
 
 export const removeComicsFromReadingList = createAction(
   '[Reading List Entries] Remove comics from a reading list',
-  props<{ list: ReadingList; comics: Comic[] }>()
+  props<{ list: ReadingList; comics: ComicBook[] }>()
 );
 
 export const comicsRemovedFromReadingList = createAction(

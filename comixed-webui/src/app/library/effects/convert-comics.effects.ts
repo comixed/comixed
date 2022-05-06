@@ -39,7 +39,7 @@ export class ConvertComicsEffects {
       switchMap(action =>
         this.libraryService
           .convertComics({
-            comics: action.comics,
+            comicBooks: action.comicBooks,
             archiveType: action.archiveType,
             renamePages: action.renamePages,
             deletePages: action.deletePages
@@ -51,7 +51,7 @@ export class ConvertComicsEffects {
                 this.translateService.instant(
                   'library.convert-comics.effect-success',
                   {
-                    count: action.comics.length,
+                    count: action.comicBooks.length,
                     archiveType: action.archiveType
                   }
                 )

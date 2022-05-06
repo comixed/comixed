@@ -25,13 +25,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatTableModule } from '@angular/material/table';
@@ -39,9 +39,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 
 describe('CollectionListComponent', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const initialState = {
-    [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+    [COMIC_BOOK_LIST_FEATURE_KEY]: {
+      ...initialComicBookListState,
+      comicBooks: COMICS
+    }
   };
 
   let component: CollectionListComponent;

@@ -17,20 +17,24 @@
  */
 
 import { DuplicatePage } from './models/duplicate-page';
-import { COMIC_1, COMIC_2, COMIC_3 } from '../comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3
+} from '../comic-books/comic-books.fixtures';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
 
 export const DUPLICATE_PAGE_1: DuplicatePage = {
   hash: PAGE_1.hash,
-  comics: [COMIC_1]
+  comicBooks: [COMIC_BOOK_1]
 };
 
 export const DUPLICATE_PAGE_2: DuplicatePage = {
   hash: PAGE_2.hash,
-  comics: [COMIC_2]
+  comicBooks: [COMIC_BOOK_2]
 };
 
 export const DUPLICATE_PAGE_3: DuplicatePage = {
   hash: PAGE_3.hash,
-  comics: [COMIC_3]
+  comicBooks: [COMIC_BOOK_3]
 };

@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, ViewChild } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatAccordion } from '@angular/material/expansion';
 
 @Component({
@@ -28,5 +28,5 @@ import { MatAccordion } from '@angular/material/expansion';
 export class ComicStoryComponent {
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  @Input() comic: Comic;
+  @Input() comic: ComicBook;
 }

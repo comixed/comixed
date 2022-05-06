@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import java.io.FileInputStream;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +34,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class LoadFileDetailsProcessor implements ItemProcessor<Comic, Comic> {
+public class LoadFileDetailsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public Comic process(final Comic comic) throws Exception {
-    log.debug("Creating file details container: id={}", comic.getId());
-    final ComicFileDetails fileDetails = new ComicFileDetails(comic);
-    comic.setFileDetails(fileDetails);
-    log.trace("Getting comic file hash");
+  public ComicBook process(final ComicBook comicBook) throws Exception {
+    log.debug("Creating file details container: id={}", comicBook.getId());
+    final ComicFileDetails fileDetails = new ComicFileDetails(comicBook);
+    comicBook.setFileDetails(fileDetails);
+    log.trace("Getting comicBook file hash");
     fileDetails.setHash(
-        this.genericUtilitiesAdaptor.createHash(new FileInputStream(comic.getFilename())));
-    return comic;
+        this.genericUtilitiesAdaptor.createHash(new FileInputStream(comicBook.getFilename())));
+    return comicBook;
   }
 }

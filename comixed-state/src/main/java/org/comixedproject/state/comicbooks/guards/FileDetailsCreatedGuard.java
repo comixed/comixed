@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks.guards;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.statemachine.StateContext;
@@ -30,8 +30,8 @@ import org.springframework.stereotype.Component;
 public class FileDetailsCreatedGuard extends AbstractComicGuard {
   @Override
   public boolean evaluate(final StateContext<ComicState, ComicEvent> context) {
-    final Comic comic = this.fetchComic(context);
+    final ComicBook comicBook = this.fetchComic(context);
     log.trace("Ensuring file details created");
-    return comic.getFileDetails() != null;
+    return comicBook.getFileDetails() != null;
   }
 }

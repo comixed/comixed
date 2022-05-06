@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
@@ -28,29 +28,29 @@ import { ComicDetailsDialogComponent } from '@app/library/components/comic-detai
   styleUrls: ['./selected-comics.component.scss']
 })
 export class SelectedComicsComponent {
-  @Output() selectionChanged = new EventEmitter<Comic>();
+  @Output() selectionChanged = new EventEmitter<ComicBook>();
 
   constructor(private logger: LoggerService, public dialog: MatDialog) {}
 
-  private _comics: Comic[] = [];
+  private _comics: ComicBook[] = [];
 
-  get comics(): Comic[] {
+  get comics(): ComicBook[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: Comic[]) {
+  @Input() set comics(comics: ComicBook[]) {
     this._comics = comics;
     if (comics.length > 0) {
       this.selectionChanged.emit(this._comics[0]);
     }
   }
 
-  onSelectionChanged(comic: Comic): void {
+  onSelectionChanged(comic: ComicBook): void {
     this.logger.debug('Selected comic change:', comic);
     this.selectionChanged.emit(comic);
   }
 
-  onShowComicDetails(comic: Comic, $event: MouseEvent): void {
+  onShowComicDetails(comic: ComicBook, $event: MouseEvent): void {
     this.logger.debug('Showing details dialog:', comic);
     this.dialog.open(ComicDetailsDialogComponent, {
       data: comic

@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
@@ -36,19 +36,19 @@ public class BlockedPagesMarkedActionTest {
   @InjectMocks private BlockedPagesMarkedAction action;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
 
   @Before
   public void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comic);
+        .thenReturn(comicBook);
   }
 
   @Test
   public void testExecute() {
     action.execute(context);
 
-    Mockito.verify(comic, Mockito.times(1)).setBlockedPagesMarked(true);
+    Mockito.verify(comicBook, Mockito.times(1)).setBlockedPagesMarked(true);
   }
 }

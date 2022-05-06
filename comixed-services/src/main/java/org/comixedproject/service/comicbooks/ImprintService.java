@@ -20,7 +20,7 @@ package org.comixedproject.service.comicbooks;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.Imprint;
 import org.comixedproject.repositories.comicbooks.ImprintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,23 +36,23 @@ import org.springframework.stereotype.Component;
 public class ImprintService {
   @Autowired private ImprintRepository imprintRepository;
   /**
-   * Updates the given comic's publisher and imprint if necessary.
+   * Updates the given comicBook's publisher and imprint if necessary.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    */
-  public void update(final Comic comic) {
+  public void update(final ComicBook comicBook) {
     log.trace("Looking for imprint");
-    final Imprint imprint = this.imprintRepository.findByName(comic.getPublisher());
+    final Imprint imprint = this.imprintRepository.findByName(comicBook.getPublisher());
     if (imprint == null) {
       log.trace("Publisher is not an imprint");
-      comic.setImprint("");
+      comicBook.setImprint("");
       return;
     }
-    final String publisher = comic.getPublisher();
+    final String publisher = comicBook.getPublisher();
 
     log.trace("Updating publisher and imprint: {} => {}", publisher, imprint);
-    comic.setPublisher(imprint.getPublisher());
-    comic.setImprint(imprint.getName());
+    comicBook.setPublisher(imprint.getPublisher());
+    comicBook.setImprint(imprint.getName());
   }
 
   /**

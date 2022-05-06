@@ -44,7 +44,7 @@ import org.springframework.beans.factory.ObjectFactory;
 public class ComicVineMetadataAdaptorTest {
   private static final Random RANDOM = new Random();
   private static final String TEST_API_KEY = "TEST.API.KEY";
-  private static final String TEST_SERIES_NAME = "Super Awesome Comic";
+  private static final String TEST_SERIES_NAME = "Super Awesome ComicBook";
   private static final Integer TEST_MAX_RECORDS = RANDOM.nextInt();
   private static final String TEST_ENCODED_VALUE = "This is the encoded value";
   private static final Integer TEST_VOLUME_ID = RANDOM.nextInt();

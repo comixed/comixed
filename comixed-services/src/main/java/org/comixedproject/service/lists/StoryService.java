@@ -29,7 +29,7 @@ import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
 import org.comixedproject.model.lists.Story;
 import org.comixedproject.model.lists.StoryState;
 import org.comixedproject.repositories.lists.StoryRepository;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.state.lists.StoryEvent;
 import org.comixedproject.state.lists.StoryStateChangeListener;
 import org.comixedproject.state.lists.StoryStateHandler;
@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoryService implements InitializingBean, StoryStateChangeListener {
   @Autowired private StoryStateHandler storyStateHandler;
   @Autowired private StoryRepository storyRepository;
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private PublishStoryListUpdateAction publishStoryListUpdateAction;
 
   @Override
@@ -95,7 +95,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
               log.trace("Adding defined story: {}", story.getName());
               result.add(story.getName());
             });
-    this.comicService
+    this.comicBookService
         .getAllStories()
         .forEach(
             story -> {
@@ -120,7 +120,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
               log.trace("Adding story: id={}", story.getId());
               result.add(story);
             });
-    this.comicService
+    this.comicBookService
         .getAllPublishersForStory(name)
         .forEach(
             publisher -> {

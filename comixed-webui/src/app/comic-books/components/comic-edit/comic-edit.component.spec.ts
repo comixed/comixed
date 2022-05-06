@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  COMIC_2,
+  COMIC_BOOK_2,
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
@@ -38,7 +38,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MAXIMUM_RECORDS_PREFERENCE } from '@app/library/library.constants';
-import { updateComic } from '@app/comic-books/actions/comic.actions';
+import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import {
   IMPRINT_LIST_FEATURE_KEY,
   initialState as initialImprintState
@@ -63,7 +63,7 @@ import {
   initialState as initialMetadataSourceListState,
   METADATA_SOURCE_LIST_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   initialState as initialMetadataState,
@@ -72,7 +72,7 @@ import {
 
 describe('ComicEditComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
-  const COMIC = COMIC_2;
+  const COMIC = COMIC_BOOK_2;
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
   const ISSUE_NUMBER = '27';
@@ -254,7 +254,7 @@ describe('ComicEditComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateComic({ comic: COMIC })
+        updateComicBook({ comicBook: COMIC })
       );
     });
   });
@@ -369,7 +369,7 @@ describe('ComicEditComponent', () => {
     });
 
     it('requires a validate form', () => {
-      component.comic = {} as Comic;
+      component.comic = {} as ComicBook;
       expect(component.readyToScrape).toBeFalse();
     });
   });

@@ -39,7 +39,7 @@ export const READING_LIST_TEMPLATE: ReadingList = {
   owner: null,
   createdOn: new Date().getTime(),
   lastModifiedOn: 0,
-  comics: []
+  comicBooks: []
 };
 
 export const READING_LISTS_UPDATES_TOPIC = `${SECURED_PREFIX}/topic/reading-lists.update`;

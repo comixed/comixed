@@ -24,7 +24,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,10 +40,10 @@ public class ImageContentAdaptor extends AbstractContentAdaptor {
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public void loadContent(final Comic comic, final String filename, final byte[] content) {
-    log.trace("Loading image into comic");
-    // if the comic already has this offset then update the offset's content
-    if (comic.hasPageWithFilename(filename)) {
+  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content) {
+    log.trace("Loading image into comicBook");
+    // if the comicBook already has this offset then update the offset's content
+    if (comicBook.hasPageWithFilename(filename)) {
       log.trace("Ignore known file: {}", filename);
     } else {
       final String hash = genericUtilitiesAdaptor.createHash(content);
@@ -57,9 +57,9 @@ public class ImageContentAdaptor extends AbstractContentAdaptor {
         page.setHash(hash);
         page.setWidth(width);
         page.setHeight(height);
-        page.setComic(comic);
-        comic.getPages().add(page);
-        page.setPageNumber(comic.getPages().size());
+        page.setComicBook(comicBook);
+        comicBook.getPages().add(page);
+        page.setPageNumber(comicBook.getPages().size());
       } catch (IOException error) {
         log.error("Failed to load content: {}", filename, error);
       }

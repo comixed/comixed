@@ -17,13 +17,13 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 
 export const convertComics = createAction(
   '[Convert Comics] Convert comics',
   props<{
-    comics: Comic[];
+    comicBooks: ComicBook[];
     archiveType: ArchiveType;
     deletePages: boolean;
     renamePages: boolean;

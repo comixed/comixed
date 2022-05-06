@@ -39,7 +39,7 @@ export class LibraryEffects {
       switchMap(action =>
         this.libraryService
           .editMultipleComics({
-            comics: action.comics,
+            comicBooks: action.comicBooks,
             details: action.details
           })
           .pipe(

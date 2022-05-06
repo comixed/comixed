@@ -18,7 +18,7 @@
 
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
@@ -44,7 +44,7 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private formBuilder: FormBuilder,
     private store: Store<any>,
-    @Inject(MAT_DIALOG_DATA) comics: Comic[]
+    @Inject(MAT_DIALOG_DATA) comicBooks: ComicBook[]
   ) {
     this.detailsForm = this.formBuilder.group({
       publisher: ['', [Validators.required, Validators.maxLength(255)]],
@@ -75,16 +75,16 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
           })
         );
       });
-    this.comics = comics;
+    this.comics = comicBooks;
   }
 
-  private _comics: Comic[] = [];
+  private _comics: ComicBook[] = [];
 
-  get comics(): Comic[] {
+  get comics(): ComicBook[] {
     return this._comics;
   }
 
-  set comics(comics: Comic[]) {
+  set comics(comics: ComicBook[]) {
     this._comics = comics;
     this.detailsForm.controls.publisher.setValue(
       this.findOption(comics.map(comic => comic.publisher))

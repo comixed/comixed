@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ import org.comixedproject.adaptors.content.ContentAdaptorException;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBookAdaptorTest {
-  private static final String TEST_COMIC_FILENAME = "/Users/comixed/Documents/comics/comic.cbz";
+  private static final String TEST_COMIC_FILENAME = "/Users/comixed/Documents/comics/comicBook.cbz";
   private static final Object TEST_PAGE_EXTENSION = "jpg";
   private static final String TEST_ENTRY_FILENAME = "Entry filename." + TEST_PAGE_EXTENSION;
   private static final byte[] TEST_ARCHIVE_ENTRY_CONTENT = "Some data".getBytes();
@@ -64,7 +64,7 @@ public class ComicBookAdaptorTest {
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ArchiveAdaptor readableArchiveAdaptor;
   @Mock private ArchiveAdaptor writeableArchiveAdaptor;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private Page page;
   @Mock private ArchiveReadHandle readHandle;
   @Mock private ArchiveWriteHandle writeHandle;
@@ -86,7 +86,7 @@ public class ComicBookAdaptorTest {
   @Before
   public void setUp()
       throws ArchiveAdaptorException, AdaptorException, ContentAdaptorException, IOException {
-    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(readableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
         .thenReturn(readHandle);
     Mockito.when(writeableArchiveAdaptor.openArchiveForWrite(temporaryArchiveFile.capture()))
@@ -110,11 +110,11 @@ public class ComicBookAdaptorTest {
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_FINAL_FILENAME);
 
-    Mockito.when(comic.getFile()).thenReturn(comicFile);
-    Mockito.when(comic.getPages()).thenReturn(pageList);
+    Mockito.when(comicBook.getFile()).thenReturn(comicFile);
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(page.getFilename()).thenReturn(TEST_ENTRY_FILENAME);
     pageList.add(page);
-    Mockito.when(comicMetadataContentAdaptor.createContent(Mockito.any(Comic.class)))
+    Mockito.when(comicMetadataContentAdaptor.createContent(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_COMICINFO_XML_CONTENT);
     Mockito.doNothing()
         .when(writeableArchiveAdaptor)
@@ -146,7 +146,7 @@ public class ComicBookAdaptorTest {
         .thenReturn(readableArchiveAdaptor);
     Mockito.when(readableArchiveAdaptor.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
 
-    final Comic result = adaptor.createComic(TEST_COMIC_FILENAME);
+    final ComicBook result = adaptor.createComic(TEST_COMIC_FILENAME);
 
     assertNotNull(result);
     assertEquals(TEST_COMIC_FILENAME, result.getFilename());
@@ -162,7 +162,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(AdaptorException.class);
 
     try {
-      adaptor.load(comic);
+      adaptor.load(comicBook);
     } finally {
       Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
     }
@@ -175,7 +175,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ArchiveAdaptorException.class);
 
     try {
-      adaptor.load(comic);
+      adaptor.load(comicBook);
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
           .openArchiveForRead(TEST_COMIC_FILENAME);
@@ -189,7 +189,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ArchiveAdaptorException.class);
 
     try {
-      adaptor.load(comic);
+      adaptor.load(comicBook);
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
     }
@@ -206,7 +206,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ArchiveAdaptorException.class);
 
     try {
-      adaptor.load(comic);
+      adaptor.load(comicBook);
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
           .readEntry(readHandle, TEST_ENTRY_FILENAME);
@@ -220,7 +220,7 @@ public class ComicBookAdaptorTest {
 
     Mockito.when(fileTypeAdaptor.getContentAdaptorFor(Mockito.any(byte[].class))).thenReturn(null);
 
-    adaptor.load(comic);
+    adaptor.load(comicBook);
 
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
         .openArchiveForRead(TEST_COMIC_FILENAME);
@@ -238,13 +238,13 @@ public class ComicBookAdaptorTest {
 
     Mockito.doThrow(ContentAdaptorException.class)
         .when(contentAdaptor)
-        .loadContent(Mockito.any(Comic.class), Mockito.anyString(), Mockito.any(byte[].class));
+        .loadContent(Mockito.any(ComicBook.class), Mockito.anyString(), Mockito.any(byte[].class));
 
     try {
-      adaptor.load(comic);
+      adaptor.load(comicBook);
     } finally {
       Mockito.verify(contentAdaptor, Mockito.times(1))
-          .loadContent(comic, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
+          .loadContent(comicBook, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
     }
   }
 
@@ -252,7 +252,7 @@ public class ComicBookAdaptorTest {
   public void testLoad() throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
     archiveEntryList.add(archiveEntry);
 
-    adaptor.load(comic);
+    adaptor.load(comicBook);
 
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
         .openArchiveForRead(TEST_COMIC_FILENAME);
@@ -262,7 +262,7 @@ public class ComicBookAdaptorTest {
     Mockito.verify(fileTypeAdaptor, Mockito.times(1))
         .getContentAdaptorFor(TEST_ARCHIVE_ENTRY_CONTENT);
     Mockito.verify(contentAdaptor, Mockito.times(1))
-        .loadContent(comic, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
+        .loadContent(comicBook, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).closeArchiveForRead(readHandle);
   }
 
@@ -272,7 +272,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(AdaptorException.class);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
+      adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
     }
@@ -285,7 +285,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ArchiveAdaptorException.class);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
+      adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
           .openArchiveForRead(TEST_COMIC_FILENAME);
@@ -295,13 +295,13 @@ public class ComicBookAdaptorTest {
   @Test(expected = AdaptorException.class)
   public void testSaveExceptionOnWriteComicInfo()
       throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
-    Mockito.when(comicMetadataContentAdaptor.createContent(Mockito.any(Comic.class)))
+    Mockito.when(comicMetadataContentAdaptor.createContent(Mockito.any(ComicBook.class)))
         .thenThrow(ContentAdaptorException.class);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
+      adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, "");
     } finally {
-      Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comic);
+      Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comicBook);
     }
   }
 
@@ -312,7 +312,7 @@ public class ComicBookAdaptorTest {
         .readEntry(Mockito.any(ArchiveReadHandle.class), Mockito.anyString());
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
+      adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
           .readEntry(readHandle, TEST_ENTRY_FILENAME);
@@ -326,7 +326,7 @@ public class ComicBookAdaptorTest {
         .writeEntry(writeHandle, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
 
     try {
-      adaptor.save(comic, TEST_ARCHIVE_TYPE, false, "");
+      adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, "");
     } finally {
       Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
           .writeEntry(writeHandle, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
@@ -341,7 +341,7 @@ public class ComicBookAdaptorTest {
                 Mockito.any(Page.class), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
         .thenReturn(TEST_NEW_PAGE_FILENAME);
 
-    adaptor.save(comic, TEST_ARCHIVE_TYPE, false, TEST_PAGE_RENAMING_RULE);
+    adaptor.save(comicBook, TEST_ARCHIVE_TYPE, false, TEST_PAGE_RENAMING_RULE);
 
     final String temporaryArchiveFilename = temporaryArchiveFile.getValue();
     assertNotNull(temporaryArchiveFilename);
@@ -351,7 +351,7 @@ public class ComicBookAdaptorTest {
         .openArchiveForRead(TEST_COMIC_FILENAME);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .openArchiveForWrite(temporaryArchiveFilename);
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comic);
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comicBook);
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
         .readEntry(readHandle, TEST_ENTRY_FILENAME);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
@@ -367,7 +367,7 @@ public class ComicBookAdaptorTest {
   public void testSaveRemoveDeletedPages()
       throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException, IOException {
 
-    adaptor.save(comic, TEST_ARCHIVE_TYPE, true, "");
+    adaptor.save(comicBook, TEST_ARCHIVE_TYPE, true, "");
 
     final String temporaryArchiveFilename = temporaryArchiveFile.getValue();
     assertNotNull(temporaryArchiveFilename);
@@ -377,8 +377,8 @@ public class ComicBookAdaptorTest {
         .openArchiveForRead(TEST_COMIC_FILENAME);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
         .openArchiveForWrite(temporaryArchiveFilename);
-    Mockito.verify(comic, Mockito.times(1)).removeDeletedPages();
-    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comic);
+    Mockito.verify(comicBook, Mockito.times(1)).removeDeletedPages();
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comicBook);
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
         .readEntry(readHandle, TEST_ENTRY_FILENAME);
     Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
@@ -388,7 +388,7 @@ public class ComicBookAdaptorTest {
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(comicFile);
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(moveSourceFile.getValue(), moveDestinationFile.getValue());
-    Mockito.verify(comic, Mockito.times(1)).setFilename(TEST_FINAL_FILENAME);
+    Mockito.verify(comicBook, Mockito.times(1)).setFilename(TEST_FINAL_FILENAME);
   }
 
   @Test(expected = AdaptorException.class)
@@ -397,7 +397,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(AdaptorException.class);
 
     try {
-      adaptor.loadPageContent(comic, TEST_PAGE_INDEX);
+      adaptor.loadPageContent(comicBook, TEST_PAGE_INDEX);
     } finally {
       Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
     }
@@ -410,7 +410,7 @@ public class ComicBookAdaptorTest {
         .thenThrow(ArchiveAdaptorException.class);
 
     try {
-      adaptor.loadPageContent(comic, TEST_PAGE_INDEX);
+      adaptor.loadPageContent(comicBook, TEST_PAGE_INDEX);
     } finally {
       Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
     }
@@ -418,7 +418,7 @@ public class ComicBookAdaptorTest {
 
   @Test
   public void testLoadPage() throws AdaptorException, ArchiveAdaptorException {
-    final byte[] result = adaptor.loadPageContent(comic, TEST_PAGE_INDEX);
+    final byte[] result = adaptor.loadPageContent(comicBook, TEST_PAGE_INDEX);
 
     assertNotNull(result);
     assertSame(TEST_ARCHIVE_ENTRY_CONTENT, result);

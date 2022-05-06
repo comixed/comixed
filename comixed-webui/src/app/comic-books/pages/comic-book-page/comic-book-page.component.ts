@@ -18,7 +18,7 @@
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,20 +51,20 @@ import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { TranslateService } from '@ngx-translate/core';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
-  comicLoaded,
-  loadComic,
+  comicBookLoaded,
+  loadComicBook,
   savePageOrder
-} from '@app/comic-books/actions/comic.actions';
+} from '@app/comic-books/actions/comic-book.actions';
 import {
-  selectComic,
-  selectComicBusy
-} from '@app/comic-books/selectors/comic.selectors';
+  selectComicBook,
+  selectComicBookBusy
+} from '@app/comic-books/selectors/comic-book.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { LastRead } from '@app/last-read/models/last-read';
 import { TitleService } from '@app/core/services/title.service';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { COMIC_BOOK_UPDATE_TOPIC } from '@app/comic-books/comic-books.constants';
@@ -92,7 +92,7 @@ export class ComicBookPageComponent
   messagingSubscription: Subscription;
   comicId = -1;
   pageIndex = 0;
-  comic: Comic;
+  comic: ComicBook;
   pages: Page[];
   userSubscription: Subscription;
   isAdmin = false;
@@ -132,8 +132,8 @@ export class ComicBookPageComponent
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.comicId = +params.comicId;
       this.unsubscribeFromUpdates();
-      this.logger.trace('Comic id parameter:', params.comicId);
-      this.store.dispatch(loadComic({ id: this.comicId }));
+      this.logger.trace('ComicBook id parameter:', params.comicId);
+      this.store.dispatch(loadComicBook({ id: this.comicId }));
     });
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
       params => {
@@ -151,21 +151,23 @@ export class ComicBookPageComponent
       .subscribe(state =>
         this.store.dispatch(setBusyState({ enabled: state.loadingRecords }))
       );
-    this.comicSubscription = this.store.select(selectComic).subscribe(comic => {
-      this.comic = comic;
-      if (!!this.comic?.metadata) {
-        this.logger.trace('Preselecting previous metadata source');
-        this.store.dispatch(
-          setChosenMetadataSource({
-            metadataSource: this.comic.metadata.metadataSource
-          })
-        );
-      }
-      this.loadPageTitle();
-      this.subscribeToUpdates();
-    });
+    this.comicSubscription = this.store
+      .select(selectComicBook)
+      .subscribe(comic => {
+        this.comic = comic;
+        if (!!this.comic?.metadata) {
+          this.logger.trace('Preselecting previous metadata source');
+          this.store.dispatch(
+            setChosenMetadataSource({
+              metadataSource: this.comic.metadata.metadataSource
+            })
+          );
+        }
+        this.loadPageTitle();
+        this.subscribeToUpdates();
+      });
     this.comicBusySubscription = this.store
-      .select(selectComicBusy)
+      .select(selectComicBookBusy)
       .subscribe(busy => this.store.dispatch(setBusyState({ enabled: busy })));
     this.metadataSourceSubscription = this.store
       .select(selectChosenMetadataSource)
@@ -271,7 +273,7 @@ export class ComicBookPageComponent
 
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
-    this.store.dispatch(setComicsRead({ comics: [this.comic], read }));
+    this.store.dispatch(setComicBooksRead({ comicBooks: [this.comic], read }));
   }
 
   onUpdateMetadata(): void {
@@ -285,7 +287,7 @@ export class ComicBookPageComponent
       ),
       confirm: () => {
         this.logger.debug('Updating comic file:', this.comic);
-        this.store.dispatch(updateMetadata({ comics: [this.comic] }));
+        this.store.dispatch(updateMetadata({ comicBooks: [this.comic] }));
       }
     });
   }
@@ -304,7 +306,7 @@ export class ComicBookPageComponent
       confirm: () => {
         this.logger.trace('Marking comic for deletion');
         this.store.dispatch(
-          markComicsDeleted({ comics: [this.comic], deleted })
+          markComicsDeleted({ comicBooks: [this.comic], deleted })
         );
       }
     });
@@ -345,7 +347,7 @@ export class ComicBookPageComponent
         this.logger.trace('Firing event: save page order');
         this.store.dispatch(
           savePageOrder({
-            comic: this.comic,
+            comicBook: this.comic,
             entries: this.pages.map((page, index) => {
               return {
                 index,
@@ -376,11 +378,11 @@ export class ComicBookPageComponent
   private subscribeToUpdates(): void {
     if (!this.comicUpdateSubscription && this.messagingStarted) {
       this.logger.trace('Subscribing to comic book updates');
-      this.comicUpdateSubscription = this.webSocketService.subscribe<Comic>(
+      this.comicUpdateSubscription = this.webSocketService.subscribe<ComicBook>(
         interpolate(COMIC_BOOK_UPDATE_TOPIC, { id: this.comicId }),
         comic => {
-          this.logger.debug('Comic book update received:', comic);
-          this.store.dispatch(comicLoaded({ comic }));
+          this.logger.debug('ComicBook book update received:', comic);
+          this.store.dispatch(comicBookLoaded({ comicBook: comic }));
         }
       );
     }

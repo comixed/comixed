@@ -37,8 +37,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
 import { of } from 'rxjs';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
-import { Comic } from '@app/comic-books/models/comic';
-import { comicLoaded } from '@app/comic-books/actions/comic.actions';
+import { ComicBook } from '@app/comic-books/models/comic-book';
+import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 
 @Injectable()
 export class MetadataEffects {
@@ -141,9 +141,9 @@ export class MetadataEffects {
                 )
               )
             ),
-            mergeMap((response: Comic) => [
+            mergeMap((response: ComicBook) => [
               comicScraped(),
-              comicLoaded({ comic: response })
+              comicBookLoaded({ comicBook: response })
             ]),
             catchError(error => {
               this.logger.error('Service failure:', error);

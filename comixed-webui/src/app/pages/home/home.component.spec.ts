@@ -28,13 +28,13 @@ import {
 } from '@app/reducers/server-status.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -46,10 +46,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ComicStateChartComponent } from '@app/components/comic-state-chart/comic-state-chart.component';
 
 describe('HomeComponent', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const initialState = {
     [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState,
-    [COMIC_LIST_FEATURE_KEY]: initialComicListState
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState
   };
 
   let component: HomeComponent;
@@ -106,20 +106,20 @@ describe('HomeComponent', () => {
 
   describe('when comics are finished loading', () => {
     beforeEach(() => {
-      component.comics = [];
+      component.comicBooks = [];
       store.setState({
         ...initialState,
-        [COMIC_LIST_FEATURE_KEY]: {
-          ...initialComicListState,
+        [COMIC_BOOK_LIST_FEATURE_KEY]: {
+          ...initialComicBookListState,
           loading: false,
           lastPayload: true,
-          comics: COMICS
+          comicBooks: COMIC_BOOKS
         }
       });
     });
 
     it('sets the comics', () => {
-      expect(component.comics).toEqual(COMICS);
+      expect(component.comicBooks).toEqual(COMIC_BOOKS);
     });
   });
 });

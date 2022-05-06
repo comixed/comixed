@@ -19,7 +19,7 @@
 package org.comixedproject.repositories.lists;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.jpa.repository.Query;
@@ -61,8 +61,9 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
   ReadingList getReadingListForUserAndId(@Param("owner") ComiXedUser owner, @Param("id") long id);
 
   @Query(
-      "SELECT l FROM ReadingList l JOIN FETCH l.comics WHERE l.owner.email = :email AND :comic MEMBER OF l.comics")
-  List<ReadingList> findByOwnerAndComic(@Param("email") String email, @Param("comic") Comic comic);
+      "SELECT l FROM ReadingList l JOIN FETCH l.comicBooks WHERE l.owner.email = :email AND :comicBook MEMBER OF l.comicBooks")
+  List<ReadingList> findByOwnerAndComic(
+      @Param("email") String email, @Param("comicBook") ComicBook comicBook);
 
   /**
    * Returns the reading list with the given record id. Also included are any comics.
@@ -70,6 +71,6 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
    * @param id the record id
    * @return the reading list
    */
-  @Query("SELECT l FROM ReadingList l LEFT JOIN FETCH l.comics WHERE l.id = :id")
+  @Query("SELECT l FROM ReadingList l LEFT JOIN FETCH l.comicBooks WHERE l.id = :id")
   ReadingList getById(@Param("id") Long id);
 }

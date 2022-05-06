@@ -17,11 +17,11 @@
  */
 
 import { ComicTitlePipe } from './comic-title.pipe';
-import { COMIC_3 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_3 } from '@app/comic-books/comic-books.fixtures';
 import { UNKNOWN_VALUE_PLACEHOLDER } from '@app/library/library.constants';
 
 describe('ComicTitlePipe', () => {
-  const COMIC = COMIC_3;
+  const COMIC = COMIC_BOOK_3;
 
   let pipe: ComicTitlePipe;
 

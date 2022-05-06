@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.RecreateComicFileProcessor;
 import org.comixedproject.batch.comicbooks.readers.RecreateComicFileReader;
 import org.comixedproject.batch.comicbooks.writers.RecreateComicFileWriter;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -71,7 +71,7 @@ public class RecreateComicFilesConfiguration {
       final RecreateComicFileWriter writer) {
     return stepBuilderFactory
         .get("recreateComicFileStep")
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

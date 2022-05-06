@@ -37,6 +37,6 @@ public interface MetadataAuditLogRepository extends JpaRepository<MetadataAuditL
    *
    * @return the entry list
    */
-  @Query("SELECT e FROM MetadataAuditLogEntry e JOIN FETCH e.comic ORDER BY e.createdOn")
+  @Query("SELECT e FROM MetadataAuditLogEntry e JOIN FETCH e.comicBook ORDER BY e.createdOn")
   List<MetadataAuditLogEntry> loadAll();
 }

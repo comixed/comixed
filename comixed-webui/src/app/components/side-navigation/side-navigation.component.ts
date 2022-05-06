@@ -24,9 +24,9 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
+import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
 
 @Component({
@@ -39,39 +39,39 @@ export class SideNavigationComponent implements OnDestroy {
   comicsCollapsed = false;
   collectionCollapsed = false;
   readingListsCollapsed = false;
-  comicListStateSubscription: Subscription;
-  allComics: Comic[] = [];
+  comicBookListStateSubscription: Subscription;
+  allComicBooks: ComicBook[] = [];
   lastReadSubscription: Subscription;
   lastRead: LastRead[] = [];
-  totalComics$ = new BehaviorSubject<number>(0);
-  unprocessedComics$ = new BehaviorSubject<number>(0);
-  unreadComics$ = new BehaviorSubject<number>(0);
-  unscrapedComics$ = new BehaviorSubject<number>(0);
-  changedComics$ = new BehaviorSubject<number>(0);
-  deletedComics$ = new BehaviorSubject<number>(0);
-  duplicateComics = new BehaviorSubject<number>(0);
+  totalComicBooks$ = new BehaviorSubject<number>(0);
+  unprocessedComicBooks$ = new BehaviorSubject<number>(0);
+  unreadComicBooks$ = new BehaviorSubject<number>(0);
+  unscrapedComicBooks$ = new BehaviorSubject<number>(0);
+  changedComicBooks$ = new BehaviorSubject<number>(0);
+  deletedComicBooks$ = new BehaviorSubject<number>(0);
+  duplicateComicBooks = new BehaviorSubject<number>(0);
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
 
   constructor(private logger: LoggerService, private store: Store<any>) {
-    this.comicListStateSubscription = this.store
-      .select(selectComicListState)
+    this.comicBookListStateSubscription = this.store
+      .select(selectComicBookListState)
       .subscribe(state => {
-        this.allComics = state.comics;
-        this.totalComics$.next(state.comics.length);
-        this.unprocessedComics$.next(
-          state.comics.filter(comic => !comic.fileDetails).length
+        this.allComicBooks = state.comicBooks;
+        this.totalComicBooks$.next(state.comicBooks.length);
+        this.unprocessedComicBooks$.next(
+          state.comicBooks.filter(comicBook => !comicBook.fileDetails).length
         );
-        this.unreadComics$.next(this.getUnreadComicCount());
-        this.unscrapedComics$.next(state.unscraped.length);
-        this.changedComics$.next(state.changed.length);
-        this.deletedComics$.next(state.deleted.length);
+        this.unreadComicBooks$.next(this.getUnreadComicCount());
+        this.unscrapedComicBooks$.next(state.unscraped.length);
+        this.changedComicBooks$.next(state.changed.length);
+        this.deletedComicBooks$.next(state.deleted.length);
       });
     this.lastReadSubscription = this.store
       .select(selectLastReadEntries)
       .subscribe(entries => {
         this.lastRead = entries;
-        this.unreadComics$.next(this.getUnreadComicCount());
+        this.unreadComicBooks$.next(this.getUnreadComicCount());
       });
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
@@ -92,7 +92,7 @@ export class SideNavigationComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from comic list updates');
-    this.comicListStateSubscription.unsubscribe();
+    this.comicBookListStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from last read updates');
     this.lastReadSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
@@ -112,6 +112,6 @@ export class SideNavigationComponent implements OnDestroy {
   }
 
   private getUnreadComicCount(): number {
-    return this.allComics.length - this.lastRead.length;
+    return this.allComicBooks.length - this.lastRead.length;
   }
 }

@@ -32,7 +32,7 @@ import org.comixedproject.batch.comicbooks.writers.ContentsProcessedWriter;
 import org.comixedproject.batch.comicbooks.writers.LoadFileContentsWriter;
 import org.comixedproject.batch.comicbooks.writers.LoadFileDetailsWriter;
 import org.comixedproject.batch.comicbooks.writers.MarkBlockedPagesWriter;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -112,7 +112,7 @@ public class ProcessComicsConfiguration {
     return stepBuilderFactory
         .get("loadFileContentsStep")
         .listener(stepListener)
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -143,7 +143,7 @@ public class ProcessComicsConfiguration {
     return stepBuilderFactory
         .get("markBlockedPagesStep")
         .listener(stepListener)
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -174,7 +174,7 @@ public class ProcessComicsConfiguration {
     return stepBuilderFactory
         .get("loadFileDetailsStep")
         .listener(stepListener)
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -205,7 +205,7 @@ public class ProcessComicsConfiguration {
     return stepBuilderFactory
         .get("contentsProcessedStep")
         .listener(stepListener)
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

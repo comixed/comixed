@@ -33,11 +33,11 @@ import {
   stopMessaging
 } from '@app/messaging/actions/messaging.actions';
 import { Subscription } from 'rxjs';
-import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
+import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import {
-  loadComics,
-  resetComicList
-} from '@app/comic-books/actions/comic-list.actions';
+  loadComicBooks,
+  resetComicBookList
+} from '@app/comic-books/actions/comic-book-list.actions';
 import { User } from '@app/user/models/user';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 
@@ -127,9 +127,9 @@ export class AppComponent implements OnInit {
 
   private subscribeToComicListUpdates(): void {
     this.logger.trace('Resetting the comic list state');
-    this.store.dispatch(resetComicList());
+    this.store.dispatch(resetComicBookList());
     this.comicListStateSubscription = this.store
-      .select(selectComicListState)
+      .select(selectComicBookListState)
       .subscribe(state => {
         this.logger.debug('Comic list state update:', state);
         if (!state.loading && state.lastPayload && !this.comicsLoaded) {
@@ -138,7 +138,7 @@ export class AppComponent implements OnInit {
         }
         if (!state.loading && !this.comicsLoaded) {
           this.logger.trace('Loading a batch of comics');
-          this.store.dispatch(loadComics({ lastId: state.lastId }));
+          this.store.dispatch(loadComicBooks({ lastId: state.lastId }));
         }
       });
   }

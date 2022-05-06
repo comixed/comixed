@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2018, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
 import org.comixedproject.service.comicbooks.ComicException;
@@ -59,7 +59,7 @@ public class PageControllerTest {
   @Mock private PageService pageService;
   @Mock private PageCacheService pageCacheService;
   @Mock private Page page;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private List<Long> idList;
@@ -89,16 +89,17 @@ public class PageControllerTest {
       throws PageException, AdaptorException {
     Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenThrow(AdaptorException.class);
 
     try {
       controller.getPageForHash(TEST_PAGE_HASH);
     } finally {
       Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-      Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, TEST_PAGE_INDEX);
+      Mockito.verify(comicBookAdaptor, Mockito.times(1))
+          .loadPageContent(comicBook, TEST_PAGE_INDEX);
     }
   }
 
@@ -107,9 +108,9 @@ public class PageControllerTest {
       throws PageException, AdaptorException, IOException {
     Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(TEST_PAGE_CONTENT);
     Mockito.doThrow(IOException.class)
         .when(pageCacheService)
@@ -124,7 +125,7 @@ public class PageControllerTest {
     assertSame(TEST_PAGE_CONTENT, result.getBody());
 
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, TEST_PAGE_INDEX);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
     Mockito.verify(pageCacheService, Mockito.times(1))
         .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
@@ -135,9 +136,9 @@ public class PageControllerTest {
   public void testGetPageForHash() throws ComicException, PageException, AdaptorException {
     Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
     Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
@@ -150,7 +151,7 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1)).getOneForHash(TEST_PAGE_HASH);
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, TEST_PAGE_INDEX);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
   }
@@ -160,9 +161,9 @@ public class PageControllerTest {
       throws PageException, AdaptorException {
     Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenThrow(AdaptorException.class);
 
     try {
@@ -170,7 +171,8 @@ public class PageControllerTest {
     } finally {
       Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
       Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-      Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, TEST_PAGE_INDEX);
+      Mockito.verify(comicBookAdaptor, Mockito.times(1))
+          .loadPageContent(comicBook, TEST_PAGE_INDEX);
     }
   }
 
@@ -179,9 +181,9 @@ public class PageControllerTest {
       throws PageException, AdaptorException, IOException {
     Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(TEST_PAGE_CONTENT);
     Mockito.doThrow(IOException.class)
         .when(pageCacheService)
@@ -197,7 +199,7 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, TEST_PAGE_INDEX);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
     Mockito.verify(pageCacheService, Mockito.times(1))
         .saveByHash(TEST_PAGE_HASH, TEST_PAGE_CONTENT);
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
@@ -208,9 +210,9 @@ public class PageControllerTest {
   public void testGetPageContent() throws ComicException, PageException, AdaptorException {
     Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
-    Mockito.when(page.getComic()).thenReturn(comic);
+    Mockito.when(page.getComicBook()).thenReturn(comicBook);
     Mockito.when(page.getPageNumber()).thenReturn(TEST_PAGE_INDEX);
-    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(Comic.class), Mockito.anyInt()))
+    Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(fileTypeAdaptor.getType(inputStream.capture())).thenReturn(TEST_PAGE_CONTENT_TYPE);
     Mockito.when(fileTypeAdaptor.getSubtype(inputStream.capture()))
@@ -223,7 +225,7 @@ public class PageControllerTest {
 
     Mockito.verify(pageService, Mockito.times(1)).getForId(TEST_PAGE_ID);
     Mockito.verify(pageCacheService, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comic, TEST_PAGE_INDEX);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadPageContent(comicBook, TEST_PAGE_INDEX);
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getType(inputStream.getAllValues().get(0));
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getSubtype(inputStream.getAllValues().get(1));
   }

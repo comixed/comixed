@@ -52,16 +52,16 @@ import {
   METADATA_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata.reducer';
 import {
-  COMIC_LIST_FEATURE_KEY,
+  COMIC_BOOK_LIST_FEATURE_KEY,
   reducer as comicListReducer
-} from '@app/comic-books/reducers/comic-list.reducer';
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_FEATURE_KEY,
+  COMIC_BOOK_FEATURE_KEY,
   reducer as comicReducer
-} from '@app/comic-books/reducers/comic.reducer';
+} from '@app/comic-books/reducers/comic-book.reducer';
 import { MetadataEffects } from '@app/comic-metadata/effects/metadata.effects';
-import { ComicListEffects } from '@app/comic-books/effects/comic-list.effects';
-import { ComicEffects } from '@app/comic-books/effects/comic.effects';
+import { ComicBookListEffects } from '@app/comic-books/effects/comic-book-list.effects';
+import { ComicBookEffects } from '@app/comic-books/effects/comic-book.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -108,8 +108,8 @@ import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
     CommonModule,
     ComicBooksRouting,
     StoreModule.forFeature(METADATA_FEATURE_KEY, scrapingReducer),
-    StoreModule.forFeature(COMIC_LIST_FEATURE_KEY, comicListReducer),
-    StoreModule.forFeature(COMIC_FEATURE_KEY, comicReducer),
+    StoreModule.forFeature(COMIC_BOOK_LIST_FEATURE_KEY, comicListReducer),
+    StoreModule.forFeature(COMIC_BOOK_FEATURE_KEY, comicReducer),
     StoreModule.forFeature(IMPRINT_LIST_FEATURE_KEY, imprintListReducer),
     StoreModule.forFeature(
       MARK_COMICS_DELETED_FEATURE_KEY,
@@ -117,8 +117,8 @@ import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
     ),
     EffectsModule.forFeature([
       MetadataEffects,
-      ComicListEffects,
-      ComicEffects,
+      ComicBookListEffects,
+      ComicBookEffects,
       ImprintListEffects,
       MarkComicsDeletedEffects
     ]),

@@ -42,7 +42,7 @@ import {
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DownloadDocument } from '@app/core/models/download-document';
@@ -63,7 +63,7 @@ import { WebSocketService } from '@app/messaging';
 describe('ReadingListService', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
   const READING_LIST = READING_LISTS[0];
-  const COMIC = COMIC_1;
+  const COMIC = COMIC_BOOK_1;
   const DOWNLOAD_DOCUMENT = {
     filename: 'filename',
     content: 'content',

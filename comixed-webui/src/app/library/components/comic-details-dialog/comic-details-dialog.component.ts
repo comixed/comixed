@@ -18,7 +18,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 @Component({
   selector: 'cx-comic-details-dialog',
@@ -26,5 +26,5 @@ import { Comic } from '@app/comic-books/models/comic';
   styleUrls: ['./comic-details-dialog.component.scss']
 })
 export class ComicDetailsDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public comic: Comic) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public comicBook: ComicBook) {}
 }

@@ -32,7 +32,7 @@ import {
   setConfirmBeforeScraping,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
@@ -49,7 +49,7 @@ describe('Scraping Reducer', () => {
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
 
   let state: MetadataState;

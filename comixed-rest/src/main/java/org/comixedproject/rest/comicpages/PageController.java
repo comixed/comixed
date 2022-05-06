@@ -79,7 +79,7 @@ public class PageController {
     if (content == null) {
       try {
         log.debug("Fetching content for page");
-        content = this.comicBookAdaptor.loadPageContent(page.getComic(), page.getPageNumber());
+        content = this.comicBookAdaptor.loadPageContent(page.getComicBook(), page.getPageNumber());
         log.debug("Caching image for hash: {} bytes hash={}", content.length, page.getHash());
         this.pageCacheService.saveByHash(page.getHash(), content);
       } catch (IOException error) {

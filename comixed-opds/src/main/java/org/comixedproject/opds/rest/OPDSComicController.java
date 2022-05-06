@@ -27,10 +27,10 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.encoders.WebResponseEncoder;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class OPDSComicController {
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private WebResponseEncoder webResponseEncoder;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
@@ -69,14 +69,14 @@ public class OPDSComicController {
       @PathVariable("id") long id, @PathVariable("filename") final String filename)
       throws OPDSException {
     try {
-      log.info("Downloading comic: id={} filename={}", id, filename);
-      Comic comic = this.comicService.getComic(id);
-      log.trace("Returning encoded file: {}", comic.getFilename());
+      log.info("Downloading comicBook: id={} filename={}", id, filename);
+      ComicBook comicBook = this.comicBookService.getComic(id);
+      log.trace("Returning encoded file: {}", comicBook.getFilename());
       return this.webResponseEncoder.encode(
-          (int) comic.getFile().length(),
-          new InputStreamResource(new FileInputStream(comic.getFile())),
-          comic.getBaseFilename(),
-          MediaType.parseMediaType(comic.getArchiveType().getMimeType()));
+          (int) comicBook.getFile().length(),
+          new InputStreamResource(new FileInputStream(comicBook.getFile())),
+          comicBook.getBaseFilename(),
+          MediaType.parseMediaType(comicBook.getArchiveType().getMimeType()));
     } catch (ComicException | FileNotFoundException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);
     }
@@ -100,7 +100,7 @@ public class OPDSComicController {
       throws OPDSException {
     try {
       log.trace("Getting page content");
-      var comic = this.comicService.getComic(id);
+      var comic = this.comicBookService.getComic(id);
       if (index >= comic.getPages().size()) throw new OPDSException("Invalid page: index=" + index);
       var page = comic.getPages().get(index);
       byte[] content = this.comicBookAdaptor.loadPageContent(comic, index);

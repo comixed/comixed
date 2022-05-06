@@ -20,7 +20,7 @@ package org.comixedproject.plugins.interpreters;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.plugins.PluginException;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageService;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class PythonPluginInterpreter extends AbstractPluginInterpreter {
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private PageService pageService;
 
   private PythonInterpreter interpreter;
@@ -55,7 +55,7 @@ public class PythonPluginInterpreter extends AbstractPluginInterpreter {
 
   private void loadRuntimeObjects() {
     log.debug("Loading ComiXed Python runtime objects");
-    this.interpreter.set("comicService", this.comicService);
+    this.interpreter.set("comicService", this.comicBookService);
     this.interpreter.set("pageService", this.pageService);
     this.interpreter.set("logger", this.log);
   }

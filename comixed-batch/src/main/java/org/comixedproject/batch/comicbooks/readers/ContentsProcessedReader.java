@@ -20,8 +20,8 @@ package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,10 +34,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ContentsProcessedReader extends AbstractComicReader {
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
 
   @Override
-  protected List<Comic> doLoadComics() {
-    return this.comicService.findProcessedComics();
+  protected List<ComicBook> doLoadComics() {
+    return this.comicBookService.findProcessedComics();
   }
 }

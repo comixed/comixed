@@ -26,7 +26,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -53,7 +53,7 @@ import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.
 import { ReadingList } from '@app/lists/models/reading-list';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { convertComics } from '@app/library/actions/convert-comics.actions';
-import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
 import { LastRead } from '@app/last-read/models/last-read';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -74,7 +74,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() title = '';
   @Input() showToolbar = true;
-  @Input() selected: Comic[] = [];
+  @Input() selected: ComicBook[] = [];
   @Input() readingLists: ReadingList[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
@@ -91,11 +91,11 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() selectAllComics = new EventEmitter<boolean>();
 
   pagination = PAGE_SIZE_DEFAULT;
-  dataSource = new MatTableDataSource<Comic>([]);
-  comic: Comic = null;
+  dataSource = new MatTableDataSource<ComicBook>([]);
+  comic: ComicBook = null;
   contextMenuX = '';
   contextMenuY = '';
-  private _comicObservable = new BehaviorSubject<Comic[]>([]);
+  private _comicObservable = new BehaviorSubject<ComicBook[]>([]);
 
   constructor(
     private logger: LoggerService,
@@ -137,11 +137,11 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._readComicIds;
   }
 
-  get comics(): Comic[] {
+  get comics(): ComicBook[] {
     return this._comicObservable.getValue();
   }
 
-  @Input() set comics(comics: Comic[]) {
+  @Input() set comics(comics: ComicBook[]) {
     this.logger.trace('Setting comics:', comics);
     this.dataSource.data = comics;
     this.pageIndex = this._pageIndex;
@@ -160,21 +160,21 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.disconnect();
   }
 
-  isSelected(comic: Comic): boolean {
+  isSelected(comic: ComicBook): boolean {
     return this.selected.includes(comic);
   }
 
-  onSelectionChanged(comic: Comic, selected: boolean): void {
+  onSelectionChanged(comic: ComicBook, selected: boolean): void {
     if (selected) {
       this.logger.trace('Marking comic as selected:', comic);
-      this.store.dispatch(selectComics({ comics: [comic] }));
+      this.store.dispatch(selectComics({ comicBooks: [comic] }));
     } else {
       this.logger.trace('Unmarking comic as selected:', comic);
-      this.store.dispatch(deselectComics({ comics: [comic] }));
+      this.store.dispatch(deselectComics({ comicBooks: [comic] }));
     }
   }
 
-  onShowContextMenu(comic: Comic, x: string, y: string): void {
+  onShowContextMenu(comic: ComicBook, x: string, y: string): void {
     this.logger.trace('Popping up context menu for:', comic);
     this.comic = comic;
     this.contextMenuX = x;
@@ -182,19 +182,19 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contextMenu.openMenu();
   }
 
-  onShowComicDetails(comic: Comic): void {
+  onShowComicDetails(comic: ComicBook): void {
     this.logger.trace('Showing comic details:', comic);
     this.dialog.open(ComicDetailsDialogComponent, { data: comic });
   }
 
-  onMarkOneComicRead(comic: Comic, read: boolean): void {
+  onMarkOneComicRead(comic: ComicBook, read: boolean): void {
     this.logger.trace('Setting one comic read state:', comic, read);
-    this.store.dispatch(setComicsRead({ comics: [comic], read }));
+    this.store.dispatch(setComicBooksRead({ comicBooks: [comic], read }));
   }
 
   onMarkMultipleComicsRead(read: boolean): void {
     this.logger.trace('Setting selected comics read state:', read);
-    this.store.dispatch(setComicsRead({ comics: this.selected, read }));
+    this.store.dispatch(setComicBooksRead({ comicBooks: this.selected, read }));
   }
 
   ngAfterViewInit(): void {
@@ -204,11 +204,11 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  isChanged(comic: Comic): boolean {
+  isChanged(comic: ComicBook): boolean {
     return comic.comicState === ComicBookState.CHANGED;
   }
 
-  onUpdateMetadata(comic: Comic): void {
+  onUpdateMetadata(comic: ComicBook): void {
     this.logger.trace('Confirming updating ComicInfo.xml');
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -220,7 +220,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
       ),
       confirm: () => {
         this.logger.trace('Updating comic info:', comic);
-        this.store.dispatch(updateMetadata({ comics: [comic] }));
+        this.store.dispatch(updateMetadata({ comicBooks: [comic] }));
       }
     });
   }
@@ -230,7 +230,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.archiveTypeChanged.emit(archiveType);
   }
 
-  onMarkAsDeleted(comic: Comic, deleted: boolean): void {
+  onMarkAsDeleted(comic: ComicBook, deleted: boolean): void {
     this.logger.trace('Confirming deleted state with user:', comic, deleted);
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -245,7 +245,9 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
       ),
       confirm: () => {
         this.logger.trace('Firing deleted state change:', comic, deleted);
-        this.store.dispatch(markComicsDeleted({ comics: [comic], deleted }));
+        this.store.dispatch(
+          markComicsDeleted({ comicBooks: [comic], deleted })
+        );
       }
     });
   }
@@ -269,7 +271,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
       confirm: () => {
         this.logger.trace('Firing selected comics  state change:', deleted);
         this.store.dispatch(
-          markComicsDeleted({ comics: this.selected, deleted })
+          markComicsDeleted({ comicBooks: this.selected, deleted })
         );
       }
     });
@@ -294,7 +296,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onConvertOne(comic: Comic, format: string): void {
+  onConvertOne(comic: ComicBook, format: string): void {
     this.doConversion(
       this.translateService.instant(
         'library.convert-comics.convert-one.confirmation-title'
@@ -322,7 +324,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  isRead(comic: Comic): boolean {
+  isRead(comic: ComicBook): boolean {
     return this.readComicIds.includes(comic.id);
   }
 
@@ -330,7 +332,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageIndexChanged.emit(pageIndex);
   }
 
-  downloadComicData(comics: Comic[]): void {
+  downloadComicData(comics: ComicBook[]): void {
     this.logger.debug('Downloading comic metadata:', comics);
     this.fileDownloadService.saveFileContent({
       content: new Blob([JSON.stringify(comics)], { type: 'application/json' }),
@@ -338,7 +340,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  isDeleted(comic: Comic): boolean {
+  isDeleted(comic: ComicBook): boolean {
     return comic.comicState === ComicBookState.DELETED;
   }
 
@@ -357,7 +359,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     title: string,
     message: string,
     format: string,
-    comics: Comic[]
+    comics: ComicBook[]
   ): void {
     const archiveType = archiveTypeFromString(format);
     this.logger.trace('Confirming conversion with user');
@@ -368,7 +370,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
         this.logger.trace('Firing action to convert comics');
         this.store.dispatch(
           convertComics({
-            comics,
+            comicBooks: comics,
             archiveType,
             deletePages: true,
             renamePages: true
@@ -398,7 +400,10 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
           confirm: () => {
             this.logger.trace('Editing multiple comics');
             this.store.dispatch(
-              editMultipleComics({ comics: this.selected, details: response })
+              editMultipleComics({
+                comicBooks: this.selected,
+                details: response
+              })
             );
           }
         });

@@ -22,9 +22,9 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { LastReadService } from '@app/last-read/services/last-read.service';
 import {
-  comicsReadSet,
-  setComicsRead,
-  setComicsReadFailed
+  comicBooksReadSet,
+  setComicBooksRead,
+  setComicBooksReadFailed
 } from '@app/last-read/actions/set-comics-read.actions';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AlertService } from '@app/core/services/alert.service';
@@ -35,13 +35,13 @@ import { LastRead } from '@app/last-read/models/last-read';
 export class SetComicsReadEffects {
   setComicsRead$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setComicsRead),
+      ofType(setComicBooksRead),
       tap(action =>
         this.logger.debug('Effect: updating comic read status:', action)
       ),
       switchMap(action =>
         this.lastReadService
-          .setRead({ comics: action.comics, read: action.read })
+          .setRead({ comics: action.comicBooks, read: action.read })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap(() =>
@@ -52,7 +52,7 @@ export class SetComicsReadEffects {
                 )
               )
             ),
-            map((response: LastRead) => comicsReadSet()),
+            map((response: LastRead) => comicBooksReadSet()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(
@@ -61,7 +61,7 @@ export class SetComicsReadEffects {
                   { status: action.read }
                 )
               );
-              return of(setComicsReadFailed());
+              return of(setComicBooksReadFailed());
             })
           )
       ),
@@ -70,7 +70,7 @@ export class SetComicsReadEffects {
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );
-        return of(setComicsReadFailed());
+        return of(setComicBooksReadFailed());
       })
     );
   });

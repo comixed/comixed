@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
@@ -30,10 +30,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class NoopComicProcessor implements ItemProcessor<Comic, Comic> {
+public class NoopComicProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Override
-  public Comic process(final Comic comic) {
+  public ComicBook process(final ComicBook comicBook) {
     log.trace("Nothing to do");
-    return comic;
+    return comicBook;
   }
 }

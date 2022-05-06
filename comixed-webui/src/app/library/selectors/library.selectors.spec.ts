@@ -19,13 +19,13 @@
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 import { selectLibraryState, selectSelectedComics } from './library.selectors';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('Library Selectors', () => {
-  const SELECTED_COMICS = [COMIC_1, COMIC_2, COMIC_3];
+  const SELECTED_COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
 
   let state: LibraryState;
 

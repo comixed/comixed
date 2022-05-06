@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks.listeners;
 import static org.comixedproject.model.messaging.batch.ProcessComicStatus.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +36,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class LoadFileDetailsStepListener extends AbstractComicProcessingStepExecutionListener {
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
 
   @Override
   public void beforeStep(final StepExecution stepExecution) {
     final ExecutionContext context = stepExecution.getJobExecution().getExecutionContext();
     context.putString(STEP_NAME, LOAD_FILE_DETAILS_STEP_NAME);
     log.trace("Loading comic count");
-    context.putLong(TOTAL_COMICS, this.comicService.getUnprocessedComicsWithoutFileDetailsCount());
+    context.putLong(
+        TOTAL_COMICS, this.comicBookService.getUnprocessedComicsWithoutFileDetailsCount());
     this.doPublishState(context);
   }
 }

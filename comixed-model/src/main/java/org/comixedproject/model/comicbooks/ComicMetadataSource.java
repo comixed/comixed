@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,8 +27,8 @@ import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.views.View;
 
 /**
- * <code>ComicMetadataSource</code> connects a {@link Comic} to the record containing its metadata
- * at a {@link ComicMetadataSource}.
+ * <code>ComicMetadataSource</code> connects a {@link ComicBook} to the record containing its
+ * metadata at a {@link ComicMetadataSource}.
  *
  * @author Darryl L. Pierce
  */
@@ -43,10 +43,10 @@ public class ComicMetadataSource {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "ComicId", nullable = false, updatable = false)
+  @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
   @Getter
   @NonNull
-  private Comic comic;
+  private ComicBook comicBook;
 
   @ManyToOne
   @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
@@ -70,13 +70,13 @@ public class ComicMetadataSource {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicMetadataSource that = (ComicMetadataSource) o;
-    return comic.equals(that.comic)
+    return comicBook.equals(that.comicBook)
         && metadataSource.equals(that.metadataSource)
         && referenceId.equals(that.referenceId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comic, metadataSource, referenceId);
+    return Objects.hash(comicBook, metadataSource, referenceId);
   }
 }

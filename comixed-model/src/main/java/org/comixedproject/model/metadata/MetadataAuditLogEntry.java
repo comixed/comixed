@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.views.View;
 
 /**
@@ -48,12 +48,12 @@ public class MetadataAuditLogEntry {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicId", nullable = false, updatable = false)
-  @JsonProperty("comic")
+  @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
+  @JsonProperty("comicBook")
   @JsonView({View.MetadataSourceDetail.class, View.MetadataAuditLogEntryList.class})
   @Getter
   @NonNull
-  private Comic comic;
+  private ComicBook comicBook;
 
   @ManyToOne
   @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
@@ -82,7 +82,7 @@ public class MetadataAuditLogEntry {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final MetadataAuditLogEntry that = (MetadataAuditLogEntry) o;
-    return comic.equals(that.comic)
+    return comicBook.equals(that.comicBook)
         && metadataSource.equals(that.metadataSource)
         && referenceId.equals(that.referenceId)
         && createdOn.equals(that.createdOn);
@@ -90,6 +90,6 @@ public class MetadataAuditLogEntry {
 
   @Override
   public int hashCode() {
-    return Objects.hash(comic, metadataSource, referenceId, createdOn);
+    return Objects.hash(comicBook, metadataSource, referenceId, createdOn);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.service.comicpages.BlockedHashService;
@@ -41,14 +41,14 @@ public class MarkBlockedPagesProcessorTest {
 
   @InjectMocks private MarkBlockedPagesProcessor processor;
   @Mock private BlockedHashService blockedHashService;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private Page page;
 
   private List<Page> pageList = new ArrayList<>();
 
   @Before
   public void setUp() {
-    Mockito.when(comic.getPages()).thenReturn(pageList);
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(page.getHash()).thenReturn(TEST_HASH);
     pageList.add(page);
   }
@@ -57,10 +57,10 @@ public class MarkBlockedPagesProcessorTest {
   public void testProcessWithBlockedPage() {
     Mockito.when(blockedHashService.isHashBlocked(Mockito.anyString())).thenReturn(true);
 
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
     Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
     Mockito.verify(page, Mockito.times(1)).setPageState(PageState.DELETED);
@@ -70,10 +70,10 @@ public class MarkBlockedPagesProcessorTest {
   public void testProcessWithoutBlockedPage() {
     Mockito.when(blockedHashService.isHashBlocked(Mockito.anyString())).thenReturn(false);
 
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
     Mockito.verify(blockedHashService, Mockito.times(1)).isHashBlocked(TEST_HASH);
     Mockito.verify(page, Mockito.times(1)).setPageState(PageState.STABLE);

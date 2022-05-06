@@ -24,7 +24,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatSort } from '@angular/material/sort';
@@ -38,7 +38,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 export class ComicListViewComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
-  @Output() selectedEntries = new EventEmitter<Comic[]>();
+  @Output() selectedEntries = new EventEmitter<ComicBook[]>();
 
   readonly displayedColumns = [
     'selection',
@@ -51,26 +51,26 @@ export class ComicListViewComponent implements AfterViewInit {
     'page-count',
     'archive-type'
   ];
-  dataSource = new MatTableDataSource<SelectableListItem<Comic>>([]);
+  dataSource = new MatTableDataSource<SelectableListItem<ComicBook>>([]);
   allSelected = false;
 
   constructor(private logger: LoggerService) {}
 
-  private _comics: Comic[] = [];
+  private _comicBooks: ComicBook[] = [];
 
-  get comics(): Comic[] {
-    return this._comics;
+  get comicBooks(): ComicBook[] {
+    return this._comicBooks;
   }
 
-  @Input() set comics(comics: Comic[]) {
+  @Input() set comicBooks(comicBooks: ComicBook[]) {
     this.logger.trace('Comics assigned');
-    this._comics = comics;
+    this._comicBooks = comicBooks;
     this.logger.trace('Loading data source');
     const oldData = this.dataSource.data;
-    this.dataSource.data = comics.map(comic => {
-      const oldEntry = oldData.find(entry => entry.item.id === comic.id);
+    this.dataSource.data = comicBooks.map(comicBook => {
+      const oldEntry = oldData.find(entry => entry.item.id === comicBook.id);
       return {
-        item: comic,
+        item: comicBook,
         selected: oldEntry?.selected || false
       };
     });
@@ -110,7 +110,7 @@ export class ComicListViewComponent implements AfterViewInit {
   }
 
   onSetOneSelectedState(
-    entry: SelectableListItem<Comic>,
+    entry: SelectableListItem<ComicBook>,
     checked: boolean
   ): void {
     this.logger.trace('Setting one item selected state:', entry, checked);

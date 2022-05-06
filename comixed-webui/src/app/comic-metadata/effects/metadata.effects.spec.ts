@@ -21,7 +21,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { MetadataEffects } from './metadata.effects';
 import { MetadataService } from '@app/comic-metadata/services/metadata.service';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicScraped,
   loadIssueMetadata,
@@ -39,7 +39,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { comicLoaded } from '@app/comic-books/actions/comic.actions';
+import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 import {
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
@@ -56,7 +56,7 @@ describe('MetadataEffects', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
 
   let actions$: Observable<any>;
@@ -225,7 +225,7 @@ describe('MetadataEffects', () => {
         skipCache: SKIP_CACHE
       });
       const outcome1 = comicScraped();
-      const outcome2 = comicLoaded({ comic: COMIC });
+      const outcome2 = comicBookLoaded({ comicBook: COMIC });
 
       actions$ = hot('-a', { a: action });
       scrapingService.scrapeComic.and.returnValue(of(serviceResponse));

@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class OPDSLibraryControllerTest {
   @InjectMocks private OPDSLibraryController controller;
 
-  private List<Comic> comicList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Test
   public void testGetRoot() {

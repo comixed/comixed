@@ -26,17 +26,17 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 describe('ComicListViewComponent', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const initialState = {
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
@@ -71,7 +71,7 @@ describe('ComicListViewComponent', () => {
     beforeEach(() => {
       component.dataSource.data = [{ selected: true, item: COMICS[0] }];
       component.allSelected = true;
-      component.comics = COMICS;
+      component.comicBooks = COMICS;
     });
 
     it('updates the list of comics', () => {
@@ -91,7 +91,7 @@ describe('ComicListViewComponent', () => {
     const ENTRY = {
       selected: Math.random() > 0.5,
       item: COMICS[0]
-    } as SelectableListItem<Comic>;
+    } as SelectableListItem<ComicBook>;
 
     it('can sort by selection state', () => {
       expect(
@@ -150,7 +150,7 @@ describe('ComicListViewComponent', () => {
 
   describe('selecting entries', () => {
     beforeEach(() => {
-      component.comics = COMICS;
+      component.comicBooks = COMICS;
     });
 
     describe('selecting one comic', () => {

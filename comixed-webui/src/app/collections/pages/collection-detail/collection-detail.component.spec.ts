@@ -44,15 +44,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -79,13 +79,23 @@ import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { USER_READER } from '@app/user/user.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 
 describe('CollectionDetailComponent', () => {
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4, COMIC_5];
+  const COMIC_BOOKS = [
+    COMIC_BOOK_1,
+    COMIC_BOOK_2,
+    COMIC_BOOK_3,
+    COMIC_BOOK_4,
+    COMIC_BOOK_5
+  ];
   const PAGE_INDEX = 22;
   const USER = USER_READER;
   const initialState = {
-    [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS },
+    [COMIC_BOOK_LIST_FEATURE_KEY]: {
+      ...initialComicBookListState,
+      comicBooks: COMIC_BOOKS
+    },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
@@ -220,85 +230,85 @@ describe('CollectionDetailComponent', () => {
   describe('show collections', () => {
     describe('when the collection type is publisher', () => {
       beforeEach(() => {
-        component.comics = [];
+        component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'publishers',
-          collectionName: COMICS[0].publisher
+          collectionName: COMIC_BOOKS[0].publisher
         });
       });
 
       it('selects comics', () => {
-        expect(component.comics).not.toEqual([]);
+        expect(component.comicBooks).not.toEqual([]);
       });
     });
 
     describe('when the collection type is series', () => {
       beforeEach(() => {
-        component.comics = [];
+        component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'series',
-          collectionName: COMICS[0].series
+          collectionName: COMIC_BOOKS[0].series
         });
       });
 
       it('selects comics', () => {
-        expect(component.comics).not.toEqual([]);
+        expect(component.comicBooks).not.toEqual([]);
       });
     });
 
     describe('when the collection type is characters', () => {
       beforeEach(() => {
-        component.comics = [];
+        component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'characters',
-          collectionName: COMICS[0].characters[0]
+          collectionName: COMIC_BOOKS[0].characters[0]
         });
       });
 
       it('selects comics', () => {
-        expect(component.comics).not.toEqual([]);
+        expect(component.comicBooks).not.toEqual([]);
       });
     });
 
     describe('when the collection type is teams', () => {
       beforeEach(() => {
-        component.comics = [];
+        component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'teams',
-          collectionName: COMICS[0].teams[0]
+          collectionName: COMIC_BOOKS[0].teams[0]
         });
       });
 
       it('selects comics', () => {
-        expect(component.comics).not.toEqual([]);
+        expect(component.comicBooks).not.toEqual([]);
       });
     });
 
     describe('when the collection type is locations', () => {
       beforeEach(() => {
-        component.comics = [];
+        component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'locations',
-          collectionName: COMICS[0].locations[0]
+          collectionName: COMIC_BOOKS[0].locations[0]
         });
       });
 
       it('selects comics', () => {
-        expect(component.comics).not.toEqual([]);
+        expect(component.comicBooks).not.toEqual([]);
       });
     });
 
     describe('when the collection type is stories', () => {
       beforeEach(() => {
-        component.comics = [];
+        component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'stories',
-          collectionName: COMICS[0].stories[0]
+          collectionName: COMIC_BOOKS[0].stories[0]
         });
       });
 
       it('selects comics', () => {
-        expect(component.comics).not.toEqual([]);
+        expect(component.comicBooks).not.toEqual([]);
       });
     });
   });
@@ -328,26 +338,26 @@ describe('CollectionDetailComponent', () => {
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.comics = COMICS;
+      component.comicBooks = COMIC_BOOKS;
       component.onSelectAllComics(true);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        selectComics({ comics: COMICS })
+        selectComics({ comicBooks: COMIC_BOOKS })
       );
     });
   });
 
   describe('deselecting comics', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       component.onSelectAllComics(false);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deselectComics({ comics: COMICS })
+        deselectComics({ comicBooks: COMIC_BOOKS })
       );
     });
   });

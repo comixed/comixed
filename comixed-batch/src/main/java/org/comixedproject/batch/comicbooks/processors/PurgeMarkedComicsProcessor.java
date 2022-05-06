@@ -19,8 +19,8 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,13 +32,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class PurgeMarkedComicsProcessor implements ItemProcessor<Comic, Comic> {
-  @Autowired private ComicService comicService;
+public class PurgeMarkedComicsProcessor implements ItemProcessor<ComicBook, ComicBook> {
+  @Autowired private ComicBookService comicBookService;
 
   @Override
-  public Comic process(final Comic comic) throws Exception {
-    log.debug("Purging comic: id={}", comic.getId());
-    this.comicService.deleteComic(comic);
-    return comic;
+  public ComicBook process(final ComicBook comicBook) throws Exception {
+    log.debug("Purging comicBook: id={}", comicBook.getId());
+    this.comicBookService.deleteComic(comicBook);
+    return comicBook;
   }
 }

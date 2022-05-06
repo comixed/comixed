@@ -20,10 +20,10 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.metadata.FilenameMetadata;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.FilenameScrapingRuleService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,30 +37,30 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, Comic> {
-  @Autowired private ComicService comicService;
+public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, ComicBook> {
+  @Autowired private ComicBookService comicBookService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
 
   @Override
-  public Comic process(final ComicFileDescriptor descriptor) throws Exception {
-    if (this.comicService.findByFilename(descriptor.getFilename()) != null) {
-      log.debug("Comic already exists. Aborting: filename=", descriptor.getFilename());
+  public ComicBook process(final ComicFileDescriptor descriptor) throws Exception {
+    if (this.comicBookService.findByFilename(descriptor.getFilename()) != null) {
+      log.debug("ComicBook already exists. Aborting: filename=", descriptor.getFilename());
       return null;
     }
-    log.debug("Creating comic: filename={}", descriptor.getFilename());
-    final Comic comic = this.comicBookAdaptor.createComic(descriptor.getFilename());
-    log.trace("Scraping comic filename");
+    log.debug("Creating comicBook: filename={}", descriptor.getFilename());
+    final ComicBook comicBook = this.comicBookAdaptor.createComic(descriptor.getFilename());
+    log.trace("Scraping comicBook filename");
     final FilenameMetadata metadata =
-        this.filenameScrapingRuleService.loadFilenameMetadata(comic.getBaseFilename());
+        this.filenameScrapingRuleService.loadFilenameMetadata(comicBook.getBaseFilename());
     if (metadata.isFound()) {
       log.trace("Scraping rule applied");
-      comic.setSeries(metadata.getSeries());
-      comic.setVolume(metadata.getVolume());
-      comic.setIssueNumber(metadata.getIssueNumber());
-      comic.setCoverDate(metadata.getCoverDate());
+      comicBook.setSeries(metadata.getSeries());
+      comicBook.setVolume(metadata.getVolume());
+      comicBook.setIssueNumber(metadata.getIssueNumber());
+      comicBook.setCoverDate(metadata.getCoverDate());
     }
-    log.trace("Returning comic");
-    return comic;
+    log.trace("Returning comicBook");
+    return comicBook;
   }
 }

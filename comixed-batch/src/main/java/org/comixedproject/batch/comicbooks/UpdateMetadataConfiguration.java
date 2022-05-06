@@ -22,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.UpdateMetadataProcessor;
 import org.comixedproject.batch.comicbooks.readers.UpdateMetadataReader;
 import org.comixedproject.batch.comicbooks.writers.UpdateMetadataWriter;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -86,7 +86,7 @@ public class UpdateMetadataConfiguration {
       final UpdateMetadataWriter writer) {
     return stepBuilderFactory
         .get("updateMetadataStep")
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

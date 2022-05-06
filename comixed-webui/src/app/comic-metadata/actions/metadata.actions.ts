@@ -19,7 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { VolumeMetadata } from '../models/volume-metadata';
 import { IssueMetadata } from '../models/issue-metadata';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
 export const resetMetadataState = createAction(
@@ -84,7 +84,7 @@ export const scrapeComic = createAction(
   props<{
     metadataSource: MetadataSource;
     issueId: string;
-    comic: Comic;
+    comic: ComicBook;
     skipCache: boolean;
   }>()
 );

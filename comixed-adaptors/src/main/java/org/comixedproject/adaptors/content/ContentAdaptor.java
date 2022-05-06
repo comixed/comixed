@@ -18,22 +18,23 @@
 
 package org.comixedproject.adaptors.content;
 
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 
 /**
  * <code>ContentAdaptor</code> defines a type that processes entry content and sets it on a given
- * {@link Comic}.
+ * {@link ComicBook}.
  *
  * @author Darryl L. Pierce
  */
 public interface ContentAdaptor {
   /**
-   * Loads content into the specified comic.
+   * Loads content into the specified comicBook.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @param filename the content's filename
    * @param content the content
    * @throws ContentAdaptorException if an error occurs while loading the content
    */
-  void loadContent(Comic comic, String filename, byte[] content) throws ContentAdaptorException;
+  void loadContent(ComicBook comicBook, String filename, byte[] content)
+      throws ContentAdaptorException;
 }

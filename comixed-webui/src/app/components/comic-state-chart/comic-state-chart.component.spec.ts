@@ -23,14 +23,14 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 
 describe('ComicStateChartComponent', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
 
   let component: ComicStateChartComponent;
   let fixture: ComponentFixture<ComicStateChartComponent>;

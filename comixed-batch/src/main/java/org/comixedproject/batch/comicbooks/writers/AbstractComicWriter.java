@@ -22,7 +22,7 @@ import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.batch.item.ItemWriter;
@@ -38,13 +38,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public abstract class AbstractComicWriter implements ItemWriter<Comic> {
+public abstract class AbstractComicWriter implements ItemWriter<ComicBook> {
   @Autowired private ComicStateHandler comicStateHandler;
 
   @NonNull private ComicEvent comicEvent;
 
   @Override
-  public void write(final List<? extends Comic> comics) {
+  public void write(final List<? extends ComicBook> comics) {
     comics.forEach(
         comic -> {
           log.trace("Firing event: {}", this.comicEvent);

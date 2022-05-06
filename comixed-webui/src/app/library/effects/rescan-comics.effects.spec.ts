@@ -26,9 +26,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from '@app/core/services/alert.service';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicsRescanning,
@@ -39,7 +39,7 @@ import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 describe('RescanComicsEffects', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
 
   let actions$: Observable<any>;
   let effects: RescanComicsEffects;
@@ -81,12 +81,12 @@ describe('RescanComicsEffects', () => {
   describe('rescanning comics', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = rescanComics({ comics: COMICS });
+      const action = rescanComics({ comicBooks: COMIC_BOOKS });
       const outcome = comicsRescanning();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
-        .withArgs({ comics: COMICS })
+        .withArgs({ comicBooks: COMIC_BOOKS })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -96,12 +96,12 @@ describe('RescanComicsEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = rescanComics({ comics: COMICS });
+      const action = rescanComics({ comicBooks: COMIC_BOOKS });
       const outcome = rescanComicsFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
-        .withArgs({ comics: COMICS })
+        .withArgs({ comicBooks: COMIC_BOOKS })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -110,12 +110,12 @@ describe('RescanComicsEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = rescanComics({ comics: COMICS });
+      const action = rescanComics({ comicBooks: COMIC_BOOKS });
       const outcome = rescanComicsFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
-        .withArgs({ comics: COMICS })
+        .withArgs({ comicBooks: COMIC_BOOKS })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

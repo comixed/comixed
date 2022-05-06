@@ -27,9 +27,9 @@ import java.util.Map;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class LibraryService {
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private PageCacheService pageCacheService;
   @Autowired private ComicStateHandler comicStateHandler;
@@ -68,9 +68,9 @@ public class LibraryService {
     ids.forEach(
         id -> {
           try {
-            final Comic comic = this.comicService.getComic(id);
+            final ComicBook comicBook = this.comicBookService.getComic(id);
             log.trace("Firing action to update metadata: id={}", id);
-            this.comicStateHandler.fireEvent(comic, ComicEvent.updateMetadata);
+            this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
           } catch (ComicException error) {
             log.error("Failed to update comic", error);
           }
@@ -98,7 +98,7 @@ public class LibraryService {
     headers.put(HEADER_DELETE_REMOVED_COMIC_FILE, String.valueOf(deleteRemovedComicFiles));
     headers.put(HEADER_TARGET_DIRECTORY, targetDirectory);
     headers.put(HEADER_RENAMING_RULE, renamingRule);
-    this.comicService
+    this.comicBookService
         .findAll()
         .forEach(
             comic -> {
@@ -119,9 +119,9 @@ public class LibraryService {
     ids.forEach(
         id -> {
           try {
-            final Comic comic = this.comicService.getComic(id);
-            log.trace("Firing action to recreate comic: id={}", id);
-            this.comicStateHandler.fireEvent(comic, ComicEvent.recreateComicFile);
+            final ComicBook comicBook = this.comicBookService.getComic(id);
+            log.trace("Firing action to recreate comicBook: id={}", id);
+            this.comicStateHandler.fireEvent(comicBook, ComicEvent.recreateComicFile);
           } catch (ComicException error) {
             log.error("Failed to update comic", error);
           }
@@ -137,9 +137,9 @@ public class LibraryService {
     ids.forEach(
         id -> {
           try {
-            final Comic comic = this.comicService.getComic(id);
-            log.trace("Firing action: purge comic id={}", id);
-            this.comicStateHandler.fireEvent(comic, ComicEvent.prepareToPurge);
+            final ComicBook comicBook = this.comicBookService.getComic(id);
+            log.trace("Firing action: purge comicBook id={}", id);
+            this.comicStateHandler.fireEvent(comicBook, ComicEvent.prepareToPurge);
           } catch (ComicException error) {
             log.error("Failed to prepare comic for purge", error);
           }

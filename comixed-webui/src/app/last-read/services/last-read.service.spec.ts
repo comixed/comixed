@@ -38,7 +38,7 @@ import {
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { WebSocketService } from '@app/messaging';
 import {
@@ -61,7 +61,7 @@ describe('LastReadService', () => {
   const ENTRIES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
   const LAST_PAYLOAD = Math.random() > 0.5;
   const LAST_ID = 23;
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const initialState = {
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState

@@ -17,10 +17,10 @@
  */
 
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export interface MetadataAuditLogEntry {
-  comic: Comic;
+  comic: ComicBook;
   metadataSource: MetadataSource;
   referenceId: string;
   createdOn: number;

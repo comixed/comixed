@@ -21,17 +21,17 @@ import { SelectedComicsComponent } from './selected-comics.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SelectedComicsComponent', () => {
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
-  const COMIC = COMIC_3;
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
+  const COMIC = COMIC_BOOK_3;
 
   let component: SelectedComicsComponent;
   let fixture: ComponentFixture<SelectedComicsComponent>;

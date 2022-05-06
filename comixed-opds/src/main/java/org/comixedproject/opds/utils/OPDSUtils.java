@@ -26,7 +26,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedContent;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.opds.model.OPDSAuthor;
@@ -49,31 +49,33 @@ public class OPDSUtils {
   public static final String IMAGE_MIME_TYPE = "image/jpeg";
 
   /**
-   * Creates a link for the given comic.
+   * Creates a link for the given comicBook.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @return the link
    */
-  public static OPDSLink createComicLink(final Comic comic) {
+  public static OPDSLink createComicLink(final ComicBook comicBook) {
     return new OPDSLink(
-        comic.getArchiveType().getMimeType(),
+        comicBook.getArchiveType().getMimeType(),
         OPDS_ACQUISITION_RELATION,
         String.format(
-            COMIC_LINK_URL, comic.getId(), OPDSUtils.urlEncodeString(comic.getBaseFilename())));
+            COMIC_LINK_URL,
+            comicBook.getId(),
+            OPDSUtils.urlEncodeString(comicBook.getBaseFilename())));
   }
 
-  public static OPDSLink createComicCoverLink(final Comic comic) {
+  public static OPDSLink createComicCoverLink(final ComicBook comicBook) {
     return new OPDSLink(
         IMAGE_MIME_TYPE,
         OPDS_IMAGE_RELATION,
-        String.format(COMIC_COVER_URL, comic.getId(), 0, 160));
+        String.format(COMIC_COVER_URL, comicBook.getId(), 0, 160));
   }
 
-  public static OPDSLink createComicThumbnailLink(final Comic comic) {
+  public static OPDSLink createComicThumbnailLink(final ComicBook comicBook) {
     return new OPDSLink(
         IMAGE_MIME_TYPE,
         OPDS_IMAGE_THUMBNAIL,
-        String.format(COMIC_COVER_URL, comic.getId(), 0, 160));
+        String.format(COMIC_COVER_URL, comicBook.getId(), 0, 160));
   }
 
   /**
@@ -107,15 +109,16 @@ public class OPDSUtils {
   }
 
   /**
-   * Creates a well-formed entry for a comic book.
+   * Creates a well-formed entry for a comicBook book.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @return the entry
    */
-  public static OPDSAcquisitionFeedEntry createComicEntry(final Comic comic) {
+  public static OPDSAcquisitionFeedEntry createComicEntry(final ComicBook comicBook) {
     final OPDSAcquisitionFeedEntry result =
-        new OPDSAcquisitionFeedEntry(comic.getBaseFilename(), String.valueOf(comic.getId()));
-    comic
+        new OPDSAcquisitionFeedEntry(
+            comicBook.getBaseFilename(), String.valueOf(comicBook.getId()));
+    comicBook
         .getCredits()
         .forEach(
             credit -> {
@@ -126,15 +129,15 @@ public class OPDSUtils {
                     .add(new OPDSAuthor(credit.getName(), String.valueOf(credit.getId())));
               }
             });
-    if (StringUtils.isNotEmpty(comic.getDescription())) {
+    if (StringUtils.isNotEmpty(comicBook.getDescription())) {
       log.trace("Adding summary");
-      result.setSummary(comic.getDescription());
+      result.setSummary(comicBook.getDescription());
     }
-    log.trace("Setting comic link");
-    result.getLinks().add(OPDSUtils.createComicCoverLink(comic));
-    result.getLinks().add(OPDSUtils.createComicThumbnailLink(comic));
-    result.getLinks().add(OPDSUtils.createComicLink(comic));
-    result.setContent(new OPDSAcquisitionFeedContent(comic.getBaseFilename()));
+    log.trace("Setting comicBook link");
+    result.getLinks().add(OPDSUtils.createComicCoverLink(comicBook));
+    result.getLinks().add(OPDSUtils.createComicThumbnailLink(comicBook));
+    result.getLinks().add(OPDSUtils.createComicLink(comicBook));
+    result.setContent(new OPDSAcquisitionFeedContent(comicBook.getBaseFilename()));
     return result;
   }
 }

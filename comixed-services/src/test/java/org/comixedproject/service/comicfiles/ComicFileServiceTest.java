@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,11 +27,11 @@ import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -55,9 +55,9 @@ public class ComicFileServiceTest {
   @InjectMocks private ComicFileService service;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicFileAdaptor comicFileAdaptor;
-  @Mock private ComicService comicService;
+  @Mock private ComicBookService comicBookService;
   @Mock private ComicFileDescriptorRepository comicFileDescriptorRepository;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private ComicFileDescriptor savedComicFileDescriptor;
   @Mock private List<ComicFileDescriptor> comicFileDescriptors;
   @Mock private ComicFileDescriptor comicFileDescriptor;
@@ -103,14 +103,14 @@ public class ComicFileServiceTest {
   @Test
   public void testGetAllComicsAlreadyImported() throws IOException {
     Mockito.when(comicFileAdaptor.isComicFile(Mockito.any(File.class))).thenReturn(true);
-    Mockito.when(comicService.findByFilename(Mockito.anyString())).thenReturn(comic);
+    Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(comicBook);
 
     final List<ComicFileGroup> result = service.getAllComicsUnder(TEST_ROOT_DIRECTORY, TEST_LIMIT);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
 
-    Mockito.verify(comicService, Mockito.times(1))
+    Mockito.verify(comicBookService, Mockito.times(1))
         .findByFilename(new File(TEST_COMIC_ARCHIVE).getCanonicalPath());
   }
 
@@ -148,7 +148,7 @@ public class ComicFileServiceTest {
   public void testImportComicFiles() {
     final List<String> filenameList = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
-      filenameList.add(String.format("comic-file-%d.cbz", index));
+      filenameList.add(String.format("comicBook-file-%d.cbz", index));
     }
 
     Mockito.when(comicFileDescriptorRepository.save(Mockito.any(ComicFileDescriptor.class)))

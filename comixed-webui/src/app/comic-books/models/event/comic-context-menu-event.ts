@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 export interface ComicContextMenuEvent {
-  comic: Comic;
+  comic: ComicBook;
   x: string;
   y: string;
 }

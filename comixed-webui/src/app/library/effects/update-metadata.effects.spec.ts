@@ -26,9 +26,9 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   metadataUpdating,
@@ -40,7 +40,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LibraryService } from '@app/library/services/library.service';
 
 describe('UpdateMetadataEffects', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
 
   let actions$: Observable<any>;
   let effects: UpdateMetadataEffects;
@@ -82,13 +82,13 @@ describe('UpdateMetadataEffects', () => {
 
   describe('updating the comic info for a single book', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMICS;
-      const action = updateMetadata({ comics: COMICS });
+      const serviceResponse = COMIC_BOOKS;
+      const action = updateMetadata({ comicBooks: COMIC_BOOKS });
       const outcome = metadataUpdating();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata
-        .withArgs({ comics: COMICS })
+        .withArgs({ comicBooks: COMIC_BOOKS })
         .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -98,12 +98,12 @@ describe('UpdateMetadataEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = updateMetadata({ comics: COMICS });
+      const action = updateMetadata({ comicBooks: COMIC_BOOKS });
       const outcome = updateMetadataFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata
-        .withArgs({ comics: COMICS })
+        .withArgs({ comicBooks: COMIC_BOOKS })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -112,12 +112,12 @@ describe('UpdateMetadataEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = updateMetadata({ comics: COMICS });
+      const action = updateMetadata({ comicBooks: COMIC_BOOKS });
       const outcome = updateMetadataFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata
-        .withArgs({ comics: COMICS })
+        .withArgs({ comicBooks: COMIC_BOOKS })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

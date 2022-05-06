@@ -21,9 +21,9 @@ import { LibraryToolbarComponent } from './library-toolbar.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -52,10 +52,10 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { setComicListFilter } from '@app/comic-books/actions/comic-list.actions';
+import { setComicBookListFilter } from '@app/comic-books/actions/comic-book-list.actions';
 
 describe('LibraryToolbarComponent', () => {
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
   const PAGE_INDEX = 2;
   const NOW = new Date();
@@ -208,7 +208,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        rescanComics({ comics: COMICS })
+        rescanComics({ comicBooks: COMICS })
       );
     });
   });
@@ -228,7 +228,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ comics: COMICS })
+        updateMetadata({ comicBooks: COMICS })
       );
     });
   });
@@ -299,7 +299,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setComicListFilter({
+        setComicBookListFilter({
           year: NOW.getFullYear(),
           month: NOW.getMonth()
         })
@@ -315,7 +315,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        setComicListFilter({
+        setComicBookListFilter({
           year: NOW.getFullYear(),
           month: NOW.getMonth()
         })

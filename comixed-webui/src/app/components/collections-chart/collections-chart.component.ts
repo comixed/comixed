@@ -24,7 +24,7 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ChartData } from '@app/models/ui/chart-data';
 import { ChartDataResultSet } from '@app/models/ui/chart-data-result-set';
@@ -50,13 +50,13 @@ export class CollectionsChartComponent implements AfterViewInit {
 
   constructor(private logger: LoggerService, private router: Router) {}
 
-  private _comics: Comic[];
+  private _comics: ComicBook[];
 
-  get comics(): Comic[] {
+  get comics(): ComicBook[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: Comic[]) {
+  @Input() set comics(comics: ComicBook[]) {
     this._comics = comics;
     this.logger.trace('Loading library statistics by publisher');
     this.collectionData = [

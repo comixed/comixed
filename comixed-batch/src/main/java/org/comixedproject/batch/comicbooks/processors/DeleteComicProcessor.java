@@ -22,8 +22,8 @@ import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PAR
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -40,22 +40,23 @@ import org.springframework.boot.test.context.TestComponent;
  */
 @TestComponent
 @Log4j2
-public class DeleteComicProcessor implements ItemProcessor<Comic, Comic>, StepExecutionListener {
-  @Autowired private ComicService comicService;
+public class DeleteComicProcessor
+    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
+  @Autowired private ComicBookService comicBookService;
   @Autowired private FileAdaptor fileAdaptor;
 
   private ExecutionContext executionContext;
 
   @Override
-  public Comic process(final Comic comic) {
-    log.debug("Removing comic from database: id={}", comic.getId());
-    this.comicService.deleteComic(comic);
+  public ComicBook process(final ComicBook comicBook) {
+    log.debug("Removing comicBook from database: id={}", comicBook.getId());
+    this.comicBookService.deleteComic(comicBook);
     if (Boolean.parseBoolean(
         this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
-      log.trace("Deleting physical file: {}", comic.getFilename());
-      this.fileAdaptor.deleteFile(comic.getFile());
+      log.trace("Deleting physical file: {}", comicBook.getFilename());
+      this.fileAdaptor.deleteFile(comicBook.getFile());
     }
-    return comic;
+    return comicBook;
   }
 
   @Override

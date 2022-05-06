@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ import static junit.framework.TestCase.assertEquals;
 
 import java.io.IOException;
 import org.comixedproject.AdaptorTestContext;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,19 +38,19 @@ public class FilenameContentAdaptorTest extends BaseContentAdaptorTest {
 
   @Autowired private FilenameContentAdaptor adaptor;
 
-  private Comic comic;
+  private ComicBook comicBook;
 
   @Before
   public void setUp() {
-    comic = new Comic();
+    comicBook = new ComicBook();
   }
 
   @Test
   public void testLoadComicInfoFile() throws IOException, ContentAdaptorException {
-    adaptor.loadContent(comic, COMICINFO_XML, this.loadFile(TEST_COMICINFO_XML_FILE));
+    adaptor.loadContent(comicBook, COMICINFO_XML, this.loadFile(TEST_COMICINFO_XML_FILE));
 
-    assertEquals("Test Publisher", comic.getPublisher());
-    assertEquals("Test Series", comic.getSeries());
-    assertEquals("2011", comic.getVolume());
+    assertEquals("Test Publisher", comicBook.getPublisher());
+    assertEquals("Test Series", comicBook.getSeries());
+    assertEquals("2011", comicBook.getVolume());
   }
 }

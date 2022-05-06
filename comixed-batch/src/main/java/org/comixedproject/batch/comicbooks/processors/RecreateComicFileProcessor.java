@@ -25,7 +25,7 @@ import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
@@ -43,26 +43,26 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class RecreateComicFileProcessor
-    implements ItemProcessor<Comic, Comic>, StepExecutionListener {
+    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private ConfigurationService configurationService;
 
   private JobParameters jobParameters;
 
   @Override
-  public Comic process(final Comic comic) throws Exception {
-    log.debug("Getting target archive adaptor: id={}", comic.getId());
+  public ComicBook process(final ComicBook comicBook) throws Exception {
+    log.debug("Getting target archive adaptor: id={}", comicBook.getId());
     final ArchiveType archiveType =
         ArchiveType.forValue(this.jobParameters.getString(JOB_TARGET_ARCHIVE));
     final boolean removeDeletedPages =
         Boolean.parseBoolean(this.jobParameters.getString(JOB_DELETE_MARKED_PAGES));
-    log.trace("Recreating comic files");
+    log.trace("Recreating comicBook files");
     this.comicBookAdaptor.save(
-        comic,
+        comicBook,
         archiveType,
         removeDeletedPages,
         this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
-    return comic;
+    return comicBook;
   }
 
   @Override

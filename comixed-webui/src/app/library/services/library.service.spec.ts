@@ -19,10 +19,10 @@
 import { TestBed } from '@angular/core/testing';
 import { LibraryService } from './library.service';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
@@ -52,8 +52,8 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 
 describe('LibraryService', () => {
-  const COMIC = COMIC_1;
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
+  const COMIC = COMIC_BOOK_1;
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
@@ -98,7 +98,7 @@ describe('LibraryService', () => {
   it('can set the read state for comics', () => {
     const serviceResponse = new HttpResponse({ status: 200 });
     service
-      .setRead({ comics: COMICS, read: READ })
+      .setRead({ comicBooks: COMICS, read: READ })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(SET_READ_STATE_URL));
@@ -126,7 +126,7 @@ describe('LibraryService', () => {
 
   it('can start rescanning comics', () => {
     service
-      .rescanComics({ comics: COMICS })
+      .rescanComics({ comicBooks: COMICS })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(RESCAN_COMICS_URL));
@@ -139,7 +139,7 @@ describe('LibraryService', () => {
 
   it('can start updating metadata', () => {
     service
-      .updateMetadata({ comics: COMICS })
+      .updateMetadata({ comicBooks: COMICS })
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(UPDATE_METADATA_URL));
@@ -153,7 +153,7 @@ describe('LibraryService', () => {
   it('can convert comics', () => {
     service
       .convertComics({
-        comics: COMICS,
+        comicBooks: COMICS,
         archiveType: ARCHIVE_TYPE,
         renamePages: RENAME_PAGES,
         deletePages: DELETE_PAGES
@@ -185,7 +185,7 @@ describe('LibraryService', () => {
   it('can edit multiple comics', () => {
     service
       .editMultipleComics({
-        comics: COMICS,
+        comicBooks: COMICS,
         details: COMIC_DETAILS
       })
       .subscribe(response => expect(response.status).toEqual(200));

@@ -23,8 +23,8 @@ import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { selectServerStatusState } from '@app/selectors/server-status.selectors';
 import { Store } from '@ngrx/store';
-import { Comic } from '@app/comic-books/models/comic';
-import { selectComicListState } from '@app/comic-books/selectors/comic-list.selectors';
+import { ComicBook } from '@app/comic-books/models/comic-book';
+import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 
 @Component({
   selector: 'cx-home',
@@ -34,11 +34,11 @@ import { selectComicListState } from '@app/comic-books/selectors/comic-list.sele
 export class HomeComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   serverStateSubscription: Subscription;
-  comicStateSubscription: Subscription;
+  comicBookListStateSubscription: Subscription;
   loading = false;
 
   taskCount = 0;
-  comics: Comic[] = [];
+  comicBooks: ComicBook[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -54,13 +54,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         this.taskCount = state.taskCount;
       });
-    this.comicStateSubscription = this.store
-      .select(selectComicListState)
+    this.comicBookListStateSubscription = this.store
+      .select(selectComicBookListState)
       .subscribe(state => {
         this.loading = state.loading;
         // don't process comics till we've finished loading
         if (!state.loading && state.lastPayload) {
-          this.comics = state.comics;
+          this.comicBooks = state.comicBooks;
         }
       });
   }
@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.logger.trace('Unsubscribing from server state changes');
     this.serverStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic updates');
-    this.comicStateSubscription.unsubscribe();
+    this.comicBookListStateSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {

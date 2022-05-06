@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks.actions;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -38,26 +38,26 @@ public class ComicFileRecreatedActionTest {
   @InjectMocks private ComicFileRecreatedAction action;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private List<Page> pageList;
 
   @Before
   public void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comic);
+        .thenReturn(comicBook);
   }
 
   @Test
   public void testExecute() {
-    Mockito.when(comic.getPages()).thenReturn(pageList);
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
     action.execute(context);
 
-    Mockito.verify(comic, Mockito.times(1)).setRecreating(false);
-    Mockito.verify(comic, Mockito.times(1)).setFileDetails(null);
+    Mockito.verify(comicBook, Mockito.times(1)).setRecreating(false);
+    Mockito.verify(comicBook, Mockito.times(1)).setFileDetails(null);
     Mockito.verify(pageList, Mockito.times(1)).clear();
-    Mockito.verify(comic, Mockito.times(1)).setFileContentsLoaded(false);
-    Mockito.verify(comic, Mockito.times(1)).setBlockedPagesMarked(false);
+    Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(false);
+    Mockito.verify(comicBook, Mockito.times(1)).setBlockedPagesMarked(false);
   }
 }

@@ -19,7 +19,7 @@
 package org.comixedproject.state.lists.actions;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -38,9 +38,9 @@ public class AddComicToReadingListAction extends AbstractReadingListAction {
   public void execute(final StateContext<ReadingListState, ReadingListEvent> context) {
     log.trace("Fetching reading list");
     final ReadingList readingList = this.fetchReadingList(context);
-    log.trace("Fetching comic");
-    final Comic comic = this.fetchComic(context);
-    log.trace("Adding comic to reading list");
-    readingList.getComics().add(comic);
+    log.trace("Fetching comicBook");
+    final ComicBook comicBook = this.fetchComic(context);
+    log.trace("Adding comicBook to reading list");
+    readingList.getComicBooks().add(comicBook);
   }
 }

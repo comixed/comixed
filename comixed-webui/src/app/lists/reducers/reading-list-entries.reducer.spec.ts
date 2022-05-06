@@ -22,7 +22,7 @@ import {
   reducer
 } from './reading-list-entries.reducer';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import {
   addComicsToReadingList,
   addComicsToReadingListFailed,
@@ -34,7 +34,7 @@ import {
 
 describe('ReadingListEntries Reducer', () => {
   const READING_LIST = READING_LIST_3;
-  const COMIC = COMIC_1;
+  const COMIC = COMIC_BOOK_1;
 
   let state: ReadingListEntriesState;
 
