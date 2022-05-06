@@ -18,9 +18,9 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
-  comicsReadSet,
-  setComicsRead,
-  setComicsReadFailed
+  comicBooksReadSet,
+  setComicBooksRead,
+  setComicBooksReadFailed
 } from '../actions/set-comics-read.actions';
 
 export const SET_COMICS_READ_FEATURE_KEY = 'set_comics_read_state';
@@ -36,7 +36,7 @@ export const initialState: SetComicsReadState = {
 export const reducer = createReducer(
   initialState,
 
-  on(setComicsRead, state => ({ ...state, updating: true })),
-  on(comicsReadSet, state => ({ ...state, updating: false })),
-  on(setComicsReadFailed, state => ({ ...state, updating: false }))
+  on(setComicBooksRead, state => ({ ...state, updating: true })),
+  on(comicBooksReadSet, state => ({ ...state, updating: false })),
+  on(setComicBooksReadFailed, state => ({ ...state, updating: false }))
 );

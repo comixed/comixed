@@ -30,7 +30,7 @@ import {
 } from '@app/library/library.constants';
 import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-volume-metadata-request';
 import { LoadIssueMetadataRequest } from '@app/comic-metadata/models/net/load-issue-metadata-request';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 
@@ -107,7 +107,7 @@ export class MetadataService {
   scrapeComic(args: {
     metadataSource: MetadataSource;
     issueId: string;
-    comic: Comic;
+    comic: ComicBook;
     skipCache: boolean;
   }): Observable<any> {
     this.logger.trace('Scrape comic:', args);

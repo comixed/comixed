@@ -26,10 +26,10 @@ import {
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
 import {
-  selectComicList,
-  selectComicListFilter
-} from '@app/comic-books/selectors/comic-list.selectors';
-import { Comic } from '@app/comic-books/models/comic';
+  selectComicBookList,
+  selectComicBookListFilter
+} from '@app/comic-books/selectors/comic-book-list.selectors';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
@@ -71,9 +71,9 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   routableTypeName: string;
   collectionType: CollectionType;
   collectionName: string;
-  comics: Comic[] = [];
+  comicBooks: ComicBook[] = [];
   selectedSubscription: Subscription;
-  selected: Comic[] = [];
+  selected: ComicBook[] = [];
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
   userSubscription: Subscription;
@@ -104,24 +104,26 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       } else {
         this.loadTranslations();
         this.comicSubscription = this.store
-          .select(selectComicList)
+          .select(selectComicBookList)
           .subscribe(entries => {
-            this.comics = entries.filter(comic => {
+            this.comicBooks = entries.filter(comicBook => {
               switch (this.collectionType) {
                 case CollectionType.PUBLISHERS:
                   return (
-                    (comic.publisher || '[UNKNOWN]') === this.collectionName
+                    (comicBook.publisher || '[UNKNOWN]') === this.collectionName
                   );
                 case CollectionType.SERIES:
-                  return (comic.series || '[UNKNOWN]') === this.collectionName;
+                  return (
+                    (comicBook.series || '[UNKNOWN]') === this.collectionName
+                  );
                 case CollectionType.CHARACTERS:
-                  return comic.characters.includes(this.collectionName);
+                  return comicBook.characters.includes(this.collectionName);
                 case CollectionType.TEAMS:
-                  return comic.teams.includes(this.collectionName);
+                  return comicBook.teams.includes(this.collectionName);
                 case CollectionType.LOCATIONS:
-                  return comic.locations.includes(this.collectionName);
+                  return comicBook.locations.includes(this.collectionName);
                 case CollectionType.STORIES:
-                  return comic.stories.includes(this.collectionName);
+                  return comicBook.stories.includes(this.collectionName);
               }
             });
           });
@@ -161,7 +163,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
     this.coverDateFilterSubscription = this.store
-      .select(selectComicListFilter)
+      .select(selectComicBookListFilter)
       .subscribe(filter => (this.coverDateFilter = filter));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -202,10 +204,10 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   onSelectAllComics(selected: boolean): void {
     if (selected) {
       this.logger.trace('Selecting all comics');
-      this.store.dispatch(selectComics({ comics: this.comics }));
+      this.store.dispatch(selectComics({ comicBooks: this.comicBooks }));
     } else {
       this.logger.trace('Deselecting all comics');
-      this.store.dispatch(deselectComics({ comics: this.selected }));
+      this.store.dispatch(deselectComics({ comicBooks: this.selected }));
     }
   }
 

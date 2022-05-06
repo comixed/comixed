@@ -26,7 +26,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,7 +47,7 @@ import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { setComicListFilter } from '@app/comic-books/actions/comic-list.actions';
+import { setComicBookListFilter } from '@app/comic-books/actions/comic-book-list.actions';
 import { ListItem } from '@app/core/models/ui/list-item';
 
 @Component({
@@ -59,7 +59,7 @@ export class LibraryToolbarComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @Input() selected: Comic[] = [];
+  @Input() selected: ComicBook[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
   @Input() pageIndex = 0;
@@ -105,13 +105,13 @@ export class LibraryToolbarComponent
     );
   }
 
-  private _comics: Comic[] = [];
+  private _comics: ComicBook[] = [];
 
-  get comics(): Comic[] {
+  get comics(): ComicBook[] {
     return this._comics;
   }
 
-  @Input() set comics(comics: Comic[]) {
+  @Input() set comics(comics: ComicBook[]) {
     this._comics = comics;
     this.coverYears = [
       { label: 'filtering.label.all-years', value: null } as ListItem<number>
@@ -225,7 +225,7 @@ export class LibraryToolbarComponent
       ),
       confirm: () => {
         this.logger.trace('Firing action to rescan comics');
-        this.store.dispatch(rescanComics({ comics }));
+        this.store.dispatch(rescanComics({ comicBooks: comics }));
       }
     });
   }
@@ -243,7 +243,7 @@ export class LibraryToolbarComponent
       ),
       confirm: () => {
         this.logger.trace('Firing action: update metadata');
-        this.store.dispatch(updateMetadata({ comics }));
+        this.store.dispatch(updateMetadata({ comicBooks: comics }));
       }
     });
   }
@@ -274,11 +274,15 @@ export class LibraryToolbarComponent
   }
 
   onCoverYearChange(year: number): void {
-    this.store.dispatch(setComicListFilter({ year, month: this.coverMonth }));
+    this.store.dispatch(
+      setComicBookListFilter({ year, month: this.coverMonth })
+    );
   }
 
   onCoverMonthChange(month: number): void {
-    this.store.dispatch(setComicListFilter({ year: this.coverYear, month }));
+    this.store.dispatch(
+      setComicBookListFilter({ year: this.coverYear, month })
+    );
   }
 
   private loadTranslations(): void {

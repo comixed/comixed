@@ -17,11 +17,11 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '../../comic-books/models/comic';
+import { ComicBook } from '../../comic-books/models/comic-book';
 
 export const updateMetadata = createAction(
   '[Update Metadata] Start updating metadata in comics',
-  props<{ comics: Comic[] }>()
+  props<{ comicBooks: ComicBook[] }>()
 );
 
 export const metadataUpdating = createAction(

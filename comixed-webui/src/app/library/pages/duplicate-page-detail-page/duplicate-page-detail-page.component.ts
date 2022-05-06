@@ -30,7 +30,7 @@ import {
 } from '@app/library/selectors/duplicate-page-detail.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatTableDataSource } from '@angular/material/table';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
@@ -49,7 +49,7 @@ export class DuplicatePageDetailPageComponent
   duplicatePageSubscription: Subscription;
   langChangeSubscription: Subscription;
   hash = '';
-  dataSource = new MatTableDataSource<Comic>([]);
+  dataSource = new MatTableDataSource<ComicBook>([]);
 
   readonly displayedColumns = [
     'publisher',
@@ -108,7 +108,7 @@ export class DuplicatePageDetailPageComponent
     this.logger.trace('Setting duplicate page detail');
     this._detail = detail;
     this.logger.trace('Loading affected comics');
-    this.dataSource.data = this._detail.comics;
+    this.dataSource.data = this._detail.comicBooks;
   }
 
   ngAfterViewInit(): void {

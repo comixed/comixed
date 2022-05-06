@@ -29,9 +29,9 @@ import { Store } from '@ngrx/store';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { Page } from '@app/comic-books/models/page';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { TranslateService } from '@ngx-translate/core';
-import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
+import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import { MatTableDataSource } from '@angular/material/table';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as _ from 'lodash';
@@ -96,13 +96,13 @@ export class ComicPagesComponent implements AfterViewInit {
     this.dataSource.data = this.pages;
   }
 
-  private _comic: Comic = null;
+  private _comic: ComicBook = null;
 
-  get comic(): Comic {
+  get comic(): ComicBook {
     return this._comic;
   }
 
-  @Input() set comic(comic: Comic) {
+  @Input() set comic(comic: ComicBook) {
     this._comic = comic;
     this.pages = comic?.pages || [];
   }

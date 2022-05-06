@@ -27,7 +27,7 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialScrapingState,
   METADATA_FEATURE_KEY
@@ -71,7 +71,7 @@ describe('ComicMetadataComponent', () => {
   ];
   const SKIP_CACHE = Math.random() > 0.5;
   const ISSUE_NUMBER = '27';
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = { [METADATA_FEATURE_KEY]: { ...initialScrapingState } };
 
@@ -298,7 +298,7 @@ describe('ComicMetadataComponent', () => {
 
         it('fires an action to deselect the comic', () => {
           expect(store.dispatch).toHaveBeenCalledWith(
-            deselectComics({ comics: [COMIC] })
+            deselectComics({ comicBooks: [COMIC] })
           );
         });
       });
@@ -317,7 +317,7 @@ describe('ComicMetadataComponent', () => {
 
         it('fires an action to deselect the comic', () => {
           expect(store.dispatch).toHaveBeenCalledWith(
-            deselectComics({ comics: [COMIC] })
+            deselectComics({ comicBooks: [COMIC] })
           );
         });
       });

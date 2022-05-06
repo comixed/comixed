@@ -23,11 +23,11 @@ import static junit.framework.TestCase.*;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.RepositoryContext;
-import org.comixedproject.repositories.comicbooks.ComicRepository;
+import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.repositories.users.ComiXedUserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,19 +57,19 @@ public class LastReadRepositoryTest {
 
   @Autowired private LastReadRepository repository;
   @Autowired private ComiXedUserRepository userRepository;
-  @Autowired private ComicRepository comicRepository;
+  @Autowired private ComicBookRepository comicBookRepository;
 
   private ComiXedUser userWithoutEntries;
   private ComiXedUser user;
-  private Comic comicWithEntries;
-  private Comic comicWithNoEntries;
+  private ComicBook comicBookWithEntries;
+  private ComicBook comicBookWithNoEntries;
 
   @Before
   public void setUp() {
     userWithoutEntries = userRepository.getById(2000L);
     user = userRepository.getById(1000L);
-    comicWithEntries = comicRepository.getById(1000L);
-    comicWithNoEntries = comicRepository.getById(2000L);
+    comicBookWithEntries = comicBookRepository.getById(1000L);
+    comicBookWithNoEntries = comicBookRepository.getById(2000L);
   }
 
   @Test
@@ -107,24 +107,24 @@ public class LastReadRepositoryTest {
   @Test
   public void testFindEntryForUserAndComicForUserWithNoEntries() {
     final LastRead result =
-        this.repository.loadEntryForComicAndUser(comicWithEntries, userWithoutEntries);
+        this.repository.loadEntryForComicAndUser(comicBookWithEntries, userWithoutEntries);
 
     assertNull(result);
   }
 
   @Test
   public void testFindEntryForUserAndComicForUserWithEntriesButNoThisComic() {
-    final LastRead result = this.repository.loadEntryForComicAndUser(comicWithNoEntries, user);
+    final LastRead result = this.repository.loadEntryForComicAndUser(comicBookWithNoEntries, user);
 
     assertNull(result);
   }
 
   @Test
   public void testFindEntryForUserAndComic() {
-    final LastRead result = this.repository.loadEntryForComicAndUser(comicWithEntries, user);
+    final LastRead result = this.repository.loadEntryForComicAndUser(comicBookWithEntries, user);
 
     assertNotNull(result);
     assertEquals(user, result.getUser());
-    assertEquals(comicWithEntries, result.getComic());
+    assertEquals(comicBookWithEntries, result.getComicBook());
   }
 }

@@ -19,7 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.service.comicpages.BlockedHashService;
 import org.springframework.batch.item.ItemProcessor;
@@ -33,13 +33,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesProcessor implements ItemProcessor<Comic, Comic> {
+public class MarkBlockedPagesProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private BlockedHashService blockedHashService;
 
   @Override
-  public Comic process(final Comic comic) {
-    log.debug("Marking blocked pages for comic: id={}", comic.getId());
-    comic
+  public ComicBook process(final ComicBook comicBook) {
+    log.debug("Marking blocked pages for comicBook: id={}", comicBook.getId());
+    comicBook
         .getPages()
         .forEach(
             page -> {
@@ -49,6 +49,6 @@ public class MarkBlockedPagesProcessor implements ItemProcessor<Comic, Comic> {
               log.trace("Setting deleted state: {}", deleted);
               page.setPageState(deleted ? PageState.DELETED : PageState.STABLE);
             });
-    return comic;
+    return comicBook;
   }
 }

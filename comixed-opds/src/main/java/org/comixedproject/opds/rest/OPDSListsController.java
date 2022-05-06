@@ -78,7 +78,8 @@ public class OPDSListsController {
             final OPDSNavigationFeedEntry entry =
                 new OPDSNavigationFeedEntry(
                     String.format(
-                        "%s (%d comics)", readingList.getName(), readingList.getComics().size()),
+                        "%s (%d comics)",
+                        readingList.getName(), readingList.getComicBooks().size()),
                     String.valueOf(READING_LIST_FACTOR_ID + readingList.getId()));
             entry.setContent(new OPDSNavigationFeedContent(readingList.getSummary()));
             entry
@@ -117,12 +118,12 @@ public class OPDSListsController {
       list = this.readingListService.loadReadingListForUser(email, id);
       final OPDSAcquisitionFeed response =
           new OPDSAcquisitionFeed(
-              String.format("Reading List: %s (%d)", list.getName(), list.getComics().size()),
+              String.format("Reading List: %s (%d)", list.getName(), list.getComicBooks().size()),
               String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
       response
           .getLinks()
           .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d/", id)));
-      list.getComics()
+      list.getComicBooks()
           .forEach(
               comic -> {
                 log.trace("Adding comic to reading list entries: {}", comic.getId());

@@ -22,9 +22,9 @@ import {
   UpdateMetadataState
 } from './update-metadata.reducer';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   metadataUpdating,
@@ -33,7 +33,7 @@ import {
 } from '@app/library/actions/update-metadata.actions';
 
 describe('UpdateMetadata Reducer', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
 
   let state: UpdateMetadataState;
 
@@ -55,7 +55,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateMetadata({ comics: COMICS })
+        updateMetadata({ comicBooks: COMICS })
       );
     });
 

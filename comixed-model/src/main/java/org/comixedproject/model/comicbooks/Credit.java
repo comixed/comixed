@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import lombok.*;
 import org.comixedproject.views.View;
 
 /**
- * <code>Credit</code> associates a name with a creative role for a single comic.
+ * <code>Credit</code> associates a name with a creative role for a single comicBook.
  *
  * @author Darryl L. Pierce
  */
@@ -41,11 +41,11 @@ public class Credit {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicId", nullable = false, updatable = false)
+  @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
   @JsonIgnore
   @Getter
   @NonNull
-  private Comic comic;
+  private ComicBook comicBook;
 
   @Column(name = "Name", length = 255, nullable = false, updatable = false)
   @JsonProperty("name")

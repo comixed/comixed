@@ -19,7 +19,7 @@
 package org.comixedproject.state.comicbooks;
 
 import java.util.EnumSet;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.actions.*;
 import org.comixedproject.state.comicbooks.guards.*;
@@ -32,7 +32,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 /**
  * <code>ComicStateMachineConfiguration</code> provides a state machine configuration to manage the
- * state for instances of {@link Comic}.
+ * state for instances of {@link ComicBook}.
  *
  * @author Darryl L. Pierce
  */

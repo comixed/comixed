@@ -18,7 +18,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { MetadataService } from './metadata.service';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -52,7 +52,7 @@ describe('MetadataService', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const VOLUME_ID = SCRAPING_VOLUME_1.id;
   const ISSUE_NUMBER = '27';
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const ENTRIES = [METADATA_AUDIT_LOG_ENTRY_1];
 

@@ -155,7 +155,7 @@ export class DuplicatePageListPageComponent
         case 'hash':
           return data.item.hash;
         case 'comic-count':
-          return data.item.comics.length;
+          return data.item.comicBooks.length;
         case 'blocked':
           return `${this.isBlocked(data)}`;
       }
@@ -175,7 +175,7 @@ export class DuplicatePageListPageComponent
     }
   }
 
-  onShowComicsWithPage(row: SelectableListItem<DuplicatePage>): void {
+  onShowComicBooksWithPage(row: SelectableListItem<DuplicatePage>): void {
     this.logger.trace('Displaying dialog of affected comics');
     this.dialog.open(ComicsWithDuplicatePageComponent, { data: row.item });
   }

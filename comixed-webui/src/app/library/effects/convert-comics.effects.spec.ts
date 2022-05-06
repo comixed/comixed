@@ -26,9 +26,9 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -40,7 +40,7 @@ import {
 import { hot } from 'jasmine-marbles';
 
 describe('ConvertComicsEffects', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
@@ -87,7 +87,7 @@ describe('ConvertComicsEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = convertComics({
-        comics: COMICS,
+        comicBooks: COMIC_BOOKS,
         archiveType: ARCHIVE_TYPE,
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
@@ -97,7 +97,7 @@ describe('ConvertComicsEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.convertComics
         .withArgs({
-          comics: COMICS,
+          comicBooks: COMIC_BOOKS,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES
@@ -112,7 +112,7 @@ describe('ConvertComicsEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = convertComics({
-        comics: COMICS,
+        comicBooks: COMIC_BOOKS,
         archiveType: ARCHIVE_TYPE,
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
@@ -122,7 +122,7 @@ describe('ConvertComicsEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.convertComics
         .withArgs({
-          comics: COMICS,
+          comicBooks: COMIC_BOOKS,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES
@@ -136,7 +136,7 @@ describe('ConvertComicsEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = convertComics({
-        comics: COMICS,
+        comicBooks: COMIC_BOOKS,
         archiveType: ARCHIVE_TYPE,
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
@@ -146,7 +146,7 @@ describe('ConvertComicsEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.convertComics
         .withArgs({
-          comics: COMICS,
+          comicBooks: COMIC_BOOKS,
           archiveType: ARCHIVE_TYPE,
           deletePages: DELETE_PAGES,
           renamePages: RENAME_PAGES

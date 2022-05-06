@@ -23,14 +23,14 @@ import { Observable, of, throwError } from 'rxjs';
 import { SetComicsReadEffects } from './set-comics-read.effects';
 import { LastReadService } from '@app/last-read/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  comicsReadSet,
-  setComicsRead,
-  setComicsReadFailed
+  comicBooksReadSet,
+  setComicBooksRead,
+  setComicBooksReadFailed
 } from '@app/last-read/actions/set-comics-read.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -41,7 +41,7 @@ import {
 import { LAST_READ_2 } from '@app/last-read/last-read.fixtures';
 
 describe('UpdateReadStatusEffects', () => {
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const READ = Math.random() > 0.5;
   const ENTRY = LAST_READ_2;
 
@@ -86,8 +86,8 @@ describe('UpdateReadStatusEffects', () => {
   describe('updating the read state of comics', () => {
     it('fires an action on success', () => {
       const serviceResponse = ENTRY;
-      const action = setComicsRead({ comics: [COMIC], read: READ });
-      const outcome = comicsReadSet();
+      const action = setComicBooksRead({ comicBooks: [COMIC], read: READ });
+      const outcome = comicBooksReadSet();
 
       actions$ = hot('-a', { a: action });
       lastReadService.setRead.and.returnValue(of(serviceResponse));
@@ -99,8 +99,8 @@ describe('UpdateReadStatusEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = setComicsRead({ comics: [COMIC], read: READ });
-      const outcome = setComicsReadFailed();
+      const action = setComicBooksRead({ comicBooks: [COMIC], read: READ });
+      const outcome = setComicBooksReadFailed();
 
       actions$ = hot('-a', { a: action });
       lastReadService.setRead.and.returnValue(throwError(serviceResponse));
@@ -111,8 +111,8 @@ describe('UpdateReadStatusEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = setComicsRead({ comics: [COMIC], read: READ });
-      const outcome = setComicsReadFailed();
+      const action = setComicBooksRead({ comicBooks: [COMIC], read: READ });
+      const outcome = setComicBooksReadFailed();
 
       actions$ = hot('-a', { a: action });
       lastReadService.setRead.and.throwError('expected');

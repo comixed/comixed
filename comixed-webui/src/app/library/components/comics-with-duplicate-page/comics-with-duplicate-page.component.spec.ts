@@ -39,9 +39,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -54,7 +54,7 @@ import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatSortModule } from '@angular/material/sort';
 
 describe('ComicsWithDuplicatePageComponent', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const HASH = PAGE_1.hash;
   const initialState = {};
 
@@ -104,7 +104,7 @@ describe('ComicsWithDuplicatePageComponent', () => {
           },
           {
             provide: MAT_DIALOG_DATA,
-            useValue: { comics: COMICS, hash: HASH } as DuplicatePage
+            useValue: { comicBooks: COMIC_BOOKS, hash: HASH } as DuplicatePage
           }
         ]
       }).compileComponents();

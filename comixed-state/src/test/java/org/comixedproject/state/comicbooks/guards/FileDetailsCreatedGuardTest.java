@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ package org.comixedproject.state.comicbooks.guards;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -40,19 +40,19 @@ public class FileDetailsCreatedGuardTest {
   @InjectMocks private FileDetailsCreatedGuard guard;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private ComicFileDetails fileDetails;
 
   @Before
   public void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comic);
+        .thenReturn(comicBook);
   }
 
   @Test
   public void testEvaluateNoFileDetailsPresent() {
-    Mockito.when(comic.getFileDetails()).thenReturn(null);
+    Mockito.when(comicBook.getFileDetails()).thenReturn(null);
 
     final boolean result = guard.evaluate(context);
 
@@ -61,7 +61,7 @@ public class FileDetailsCreatedGuardTest {
 
   @Test
   public void testEvaluate() {
-    Mockito.when(comic.getFileDetails()).thenReturn(fileDetails);
+    Mockito.when(comicBook.getFileDetails()).thenReturn(fileDetails);
 
     final boolean result = guard.evaluate(context);
 

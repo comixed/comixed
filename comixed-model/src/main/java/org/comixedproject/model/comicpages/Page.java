@@ -22,12 +22,12 @@ import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 
 /**
- * <code>Page</code> represents a single offset from a comic.
+ * <code>Page</code> represents a single offset from a comicBook.
  *
  * @author Darryl L. Pierce
  */
@@ -46,12 +46,12 @@ public class Page {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicId")
-  @JsonProperty("comic")
+  @JoinColumn(name = "ComicBookId")
+  @JsonProperty("comicBook")
   @Getter
   @Setter
   @NonNull
-  private Comic comic;
+  private ComicBook comicBook;
 
   @Column(name = "PageState", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
@@ -105,7 +105,7 @@ public class Page {
   private boolean blocked;
 
   /**
-   * Returns the offset's index within the comic.
+   * Returns the offset's index within the comicBook.
    *
    * @return the offset index
    */
@@ -113,7 +113,7 @@ public class Page {
   @JsonProperty("index")
   @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
   public int getIndex() {
-    return this.comic.getIndexFor(this);
+    return this.comicBook.getIndexFor(this);
   }
 
   @Override
@@ -121,7 +121,7 @@ public class Page {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final Page page = (Page) o;
-    return comic.equals(page.comic)
+    return comicBook.equals(page.comicBook)
         && pageState == page.pageState
         && filename.equals(page.filename)
         && hash.equals(page.hash)
@@ -130,7 +130,7 @@ public class Page {
 
   @Override
   public int hashCode() {
-    return Objects.hash(comic, pageState, filename, hash, pageNumber);
+    return Objects.hash(comicBook, pageState, filename, hash, pageNumber);
   }
 
   @Transient

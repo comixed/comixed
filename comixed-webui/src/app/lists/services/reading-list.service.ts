@@ -35,7 +35,7 @@ import {
   UPLOAD_READING_LIST_URL
 } from '@app/lists/lists.constants';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { AddComicsToReadingListRequest } from '@app/lists/models/net/add-comics-to-reading-list-request';
 import { RemoveComicsFromReadingListRequest } from '@app/lists/models/net/remove-comics-from-reading-list-request';
 import { DeleteReadingListsRequest } from '@app/lists/models/net/delete-reading-lists-request';
@@ -121,7 +121,7 @@ export class ReadingListService {
     }
   }
 
-  addComics(args: { list: ReadingList; comics: Comic[] }): Observable<any> {
+  addComics(args: { list: ReadingList; comics: ComicBook[] }): Observable<any> {
     this.logger.trace('Adding comics to reading list:', args);
     return this.http.post(
       interpolate(ADD_COMICS_TO_READING_LIST_URL, { id: args.list.id }),
@@ -131,7 +131,10 @@ export class ReadingListService {
     );
   }
 
-  removeComics(args: { list: ReadingList; comics: Comic[] }): Observable<any> {
+  removeComics(args: {
+    list: ReadingList;
+    comics: ComicBook[];
+  }): Observable<any> {
     this.logger.trace('Removing comics from reading list:', args);
     return this.http.post(
       interpolate(REMOVE_COMICS_FROM_READING_LIST_URL, { id: args.list.id }),

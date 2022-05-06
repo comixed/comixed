@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
@@ -45,16 +45,16 @@ public class OPDSListsControllerTest {
   private static final long TEST_READING_LIST_ID = 108L;
   private static final String TEST_READING_LIST_SUMMARY = "The list summary";
   private static final long TEST_COMIC_ID = 279L;
-  private static final String TEST_COMIC_BASE_FILENAME = "comic file.cbz";
+  private static final String TEST_COMIC_BASE_FILENAME = "comicBook file.cbz";
 
   @InjectMocks private OPDSListsController controller;
   @Mock private ReadingListService readingListService;
   @Mock private Principal principal;
   @Mock private ReadingList readingList;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
 
   private List<ReadingList> readingLists = new ArrayList<>();
-  private List<Comic> comicList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -62,11 +62,11 @@ public class OPDSListsControllerTest {
     readingLists.add(readingList);
     Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(readingList.getSummary()).thenReturn(TEST_READING_LIST_SUMMARY);
-    Mockito.when(readingList.getComics()).thenReturn(comicList);
-    comicList.add(comic);
-    Mockito.when(comic.getId()).thenReturn(TEST_COMIC_ID);
-    Mockito.when(comic.getBaseFilename()).thenReturn(TEST_COMIC_BASE_FILENAME);
-    Mockito.when(comic.getArchiveType()).thenReturn(ArchiveType.CBZ);
+    Mockito.when(readingList.getComicBooks()).thenReturn(comicBookList);
+    comicBookList.add(comicBook);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_BASE_FILENAME);
+    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
   }
 
   @Test(expected = OPDSException.class)

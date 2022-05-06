@@ -32,7 +32,7 @@ import org.comixedproject.adaptors.csv.CsvAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.library.SmartListMatcher;
 import org.comixedproject.model.library.SmartReadingList;
 import org.comixedproject.model.lists.ReadingList;
@@ -41,8 +41,8 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.SmartReadingListRepository;
 import org.comixedproject.repositories.lists.ReadingListRepository;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -74,7 +74,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
   @Autowired private ReadingListRepository readingListRepository;
   @Autowired private SmartReadingListRepository smartReadingListRepository;
   @Autowired private UserService userService;
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private CsvAdaptor csvAdaptor;
   @Autowired private PublishReadingListUpdateAction publishReadingListUpdateAction;
   @Autowired private PublishReadingListDeletedAction publishReadingListDeletedAction;
@@ -215,11 +215,11 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     comicIds.forEach(
         comicId -> {
           try {
-            log.trace("Loading comic: id={}", comicId);
-            final Comic comic = this.comicService.getComic(comicId);
-            log.trace("Adding comic to reading list");
+            log.trace("Loading comicBook: id={}", comicId);
+            final ComicBook comicBook = this.comicBookService.getComic(comicId);
+            log.trace("Adding comicBook to reading list");
             Map<String, Object> headers = new HashMap<>();
-            headers.put(HEADER_COMIC, comic);
+            headers.put(HEADER_COMIC, comicBook);
             this.readingListStateHandler.fireEvent(
                 readingList, ReadingListEvent.comicAdded, headers);
           } catch (ComicException error) {
@@ -254,11 +254,11 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
     comicIds.forEach(
         comicId -> {
           try {
-            log.trace("Loading comic: id={}", comicId);
-            final Comic comic = this.comicService.getComic(comicId);
-            log.trace("Removing comic from reading list");
+            log.trace("Loading comicBook: id={}", comicId);
+            final ComicBook comicBook = this.comicBookService.getComic(comicId);
+            log.trace("Removing comicBook from reading list");
             Map<String, Object> headers = new HashMap<>();
-            headers.put(HEADER_COMIC, comic);
+            headers.put(HEADER_COMIC, comicBook);
             this.readingListStateHandler.fireEvent(
                 readingList, ReadingListEvent.comicRemoved, headers);
           } catch (ComicException error) {
@@ -376,7 +376,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       log.trace("Encoding reading list");
       final byte[] content =
           this.csvAdaptor.encodeRecords(
-              readingList.getComics(),
+              readingList.getComicBooks(),
               (index, model) -> {
                 if (index == 0) {
                   return new String[] {
@@ -426,14 +426,14 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
         },
         (index, row) -> {
           if (index > 0) {
-            log.trace("Looking for comic");
-            final Comic comic =
-                this.comicService.findComic(row.get(1), row.get(2), row.get(3), row.get(4));
-            if (comic != null) {
+            log.trace("Looking for comicBook");
+            final ComicBook comicBook =
+                this.comicBookService.findComic(row.get(1), row.get(2), row.get(3), row.get(4));
+            if (comicBook != null) {
               final ReadingList list = this.readingListRepository.getById(readingListId);
-              log.trace("Adding comic to reading list");
+              log.trace("Adding comicBook to reading list");
               Map<String, Object> headers = new HashMap<>();
-              headers.put(HEADER_COMIC, comic);
+              headers.put(HEADER_COMIC, comicBook);
               this.readingListStateHandler.fireEvent(list, ReadingListEvent.comicAdded, headers);
             }
           }

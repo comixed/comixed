@@ -21,24 +21,24 @@ import { ComicFile } from '@app/comic-files/models/comic-file';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
 
 export const loadComicFiles = createAction(
-  '[Comic File List] Load comics in a file system',
+  '[ComicBook File List] Load comics in a file system',
   props<{ directory: string; maximum: number }>()
 );
 
 export const comicFilesLoaded = createAction(
-  '[Comic File List] Loaded comics in a file system',
+  '[ComicBook File List] Loaded comics in a file system',
   props<{ groups: ComicFileGroup[] }>()
 );
 
 export const loadComicFilesFailed = createAction(
-  '[Comic File List] Failed to load comic files in a file system'
+  '[ComicBook File List] Failed to load comic files in a file system'
 );
 
 export const setComicFilesSelectedState = createAction(
-  '[Comic File List] Set the selected state on comic files',
+  '[ComicBook File List] Set the selected state on comic files',
   props<{ files: ComicFile[]; selected: boolean }>()
 );
 
 export const clearComicFileSelections = createAction(
-  '[Comic File List] Clear all selected comic files'
+  '[ComicBook File List] Clear all selected comic files'
 );

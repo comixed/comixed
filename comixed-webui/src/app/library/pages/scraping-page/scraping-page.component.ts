@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
 import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
@@ -54,8 +54,8 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   selectedComicsSubscription: Subscription;
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
-  comics: Comic[] = [];
-  currentComic: Comic = null;
+  comics: ComicBook[] = [];
+  currentComic: ComicBook = null;
   currentSeries = '';
   currentVolume = '';
   currentIssueNumber = '';
@@ -122,9 +122,9 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.scrapingVolumeSubscription.unsubscribe();
   }
 
-  onSelectionChanged(comic: Comic): void {
-    this.logger.trace('Selected comic changed:', comic);
-    this.currentComic = comic;
+  onSelectionChanged(comicBook: ComicBook): void {
+    this.logger.trace('Selected comic changed:', comicBook);
+    this.currentComic = comicBook;
   }
 
   onScrape(event: MetadataEvent): void {

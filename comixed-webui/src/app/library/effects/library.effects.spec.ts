@@ -25,7 +25,10 @@ import { AlertService } from '@app/core/services/alert.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LibraryService } from '@app/library/services/library.service';
 import { LibraryEffects } from '@app/library/effects/library.effects';
-import { COMIC_1, COMIC_3 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_3
+} from '@app/comic-books/comic-books.fixtures';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
@@ -36,7 +39,7 @@ import {
 import { hot } from 'jasmine-marbles';
 
 describe('LibraryEffects', () => {
-  const COMICS = [COMIC_1, COMIC_3];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3];
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -88,7 +91,7 @@ describe('LibraryEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = editMultipleComics({
-        comics: COMICS,
+        comicBooks: COMIC_BOOKS,
         details: COMIC_DETAILS
       });
       const outcome = multipleComicsEdited();
@@ -96,7 +99,7 @@ describe('LibraryEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.editMultipleComics
         .withArgs({
-          comics: COMICS,
+          comicBooks: COMIC_BOOKS,
           details: COMIC_DETAILS
         })
         .and.returnValue(of(outcome));
@@ -109,7 +112,7 @@ describe('LibraryEffects', () => {
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = editMultipleComics({
-        comics: COMICS,
+        comicBooks: COMIC_BOOKS,
         details: COMIC_DETAILS
       });
       const outcome = editMultipleComicsFailed();
@@ -117,7 +120,7 @@ describe('LibraryEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.editMultipleComics
         .withArgs({
-          comics: COMICS,
+          comicBooks: COMIC_BOOKS,
           details: COMIC_DETAILS
         })
         .and.returnValue(throwError(outcome));
@@ -129,7 +132,7 @@ describe('LibraryEffects', () => {
 
     it('fires an action on general failure', () => {
       const action = editMultipleComics({
-        comics: COMICS,
+        comicBooks: COMIC_BOOKS,
         details: COMIC_DETAILS
       });
       const outcome = editMultipleComicsFailed();
@@ -137,7 +140,7 @@ describe('LibraryEffects', () => {
       actions$ = hot('-a', { a: action });
       libraryService.editMultipleComics
         .withArgs({
-          comics: COMICS,
+          comicBooks: COMIC_BOOKS,
           details: COMIC_DETAILS
         })
         .and.throwError('expected');

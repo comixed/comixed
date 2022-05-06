@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ package org.comixedproject.state.comicbooks.guards;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -40,35 +40,35 @@ public class ComicFileAlreadyRecreatingGuardTest {
   @InjectMocks private ComicFileAlreadyRecreatingGuard guard;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private ComicFileDetails fileDetails;
 
   @Before
   public void setUp() {
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(Mockito.anyString(), Mockito.any(Class.class)))
-        .thenReturn(comic);
+        .thenReturn(comicBook);
   }
 
   @Test
   public void testEvaluateAlreadyRecreating() {
-    Mockito.when(comic.isRecreating()).thenReturn(true);
+    Mockito.when(comicBook.isRecreating()).thenReturn(true);
 
     final boolean result = guard.evaluate(context);
 
     assertFalse(result);
 
-    Mockito.verify(comic, Mockito.times(1)).isRecreating();
+    Mockito.verify(comicBook, Mockito.times(1)).isRecreating();
   }
 
   @Test
   public void testEvaluate() {
-    Mockito.when(comic.isRecreating()).thenReturn(false);
+    Mockito.when(comicBook.isRecreating()).thenReturn(false);
 
     final boolean result = guard.evaluate(context);
 
     assertTrue(result);
 
-    Mockito.verify(comic, Mockito.times(1)).isRecreating();
+    Mockito.verify(comicBook, Mockito.times(1)).isRecreating();
   }
 }

@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
@@ -30,7 +30,7 @@ import { ComicBookState } from '@app/comic-books/models/comic-book-state';
   styleUrls: ['./comic-detail-card.component.scss']
 })
 export class ComicDetailCardComponent {
-  @Input() comic: Comic;
+  @Input() comic: ComicBook;
   @Input() coverTooltip: string;
   @Input() title: string;
   @Input() subtitle: string = '';
@@ -58,7 +58,7 @@ export class ComicDetailCardComponent {
   onCoverClicked(): void {
     // only respond to the click if the details are for a comic
     if (!!this.comic) {
-      this.logger.trace('Comic cover clicked');
+      this.logger.trace('ComicBook cover clicked');
       this.selectionChanged.emit({
         comic: this.comic,
         selected: !this.selected
@@ -76,7 +76,7 @@ export class ComicDetailCardComponent {
     });
   }
 
-  onUpdateComicInfo(comic: Comic): void {
+  onUpdateComicInfo(comic: ComicBook): void {
     this.logger.trace('Firing update comic info event:', comic);
     this.updateComicInfo.emit({ comic });
   }

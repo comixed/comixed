@@ -18,16 +18,16 @@
 
 import { UnreadComicsPipe } from './unread-comics.pipe';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 import { LastRead } from '@app/last-read/models/last-read';
 
 describe('UnreadComicsPipe', () => {
-  const UNREAD_COMIC = COMIC_1;
-  const READ_COMIC = COMIC_2;
-  const OTHER_UNREAD_COMIC = COMIC_3;
+  const UNREAD_COMIC = COMIC_BOOK_1;
+  const READ_COMIC = COMIC_BOOK_2;
+  const OTHER_UNREAD_COMIC = COMIC_BOOK_3;
 
   const COMICS = [UNREAD_COMIC, READ_COMIC, OTHER_UNREAD_COMIC];
   const LAST_READ_DATES = [

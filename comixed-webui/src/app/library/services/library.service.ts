@@ -31,7 +31,7 @@ import {
   START_LIBRARY_CONSOLIDATION_URL,
   UPDATE_METADATA_URL
 } from '@app/library/library.constants';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
@@ -62,10 +62,10 @@ export class LibraryService {
    * @param args.comics the comics to be updated
    * @param args.read the read state
    */
-  setRead(args: { comics: Comic[]; read: boolean }): Observable<any> {
+  setRead(args: { comicBooks: ComicBook[]; read: boolean }): Observable<any> {
     this.logger.trace('Setting comic read state:', args);
     return this.http.put(interpolate(SET_READ_STATE_URL), {
-      ids: args.comics.map(comic => comic.id),
+      ids: args.comicBooks.map(comic => comic.id),
       read: args.read
     } as SetComicReadRequest);
   }
@@ -77,29 +77,29 @@ export class LibraryService {
     } as ConsolidateLibraryRequest);
   }
 
-  rescanComics(args: { comics: Comic[] }): Observable<any> {
+  rescanComics(args: { comicBooks: ComicBook[] }): Observable<any> {
     this.logger.trace('Rescan comics:', args);
     return this.http.post(interpolate(RESCAN_COMICS_URL), {
-      ids: args.comics.map(comic => comic.id)
+      ids: args.comicBooks.map(comic => comic.id)
     } as RescanComicsRequest);
   }
 
-  updateMetadata(args: { comics: Comic[] }): Observable<any> {
+  updateMetadata(args: { comicBooks: ComicBook[] }): Observable<any> {
     this.logger.trace('Update metadata:', args);
     return this.http.post(interpolate(UPDATE_METADATA_URL), {
-      ids: args.comics.map(comic => comic.id)
+      ids: args.comicBooks.map(comic => comic.id)
     } as UpdateMetadataRequest);
   }
 
   convertComics(args: {
-    comics: Comic[];
+    comicBooks: ComicBook[];
     archiveType: ArchiveType;
     renamePages: boolean;
     deletePages: boolean;
   }): Observable<any> {
     this.logger.trace('Converting comics:', args);
     return this.http.post(interpolate(CONVERT_COMICS_URL), {
-      ids: args.comics.map(comic => comic.id),
+      ids: args.comicBooks.map(comic => comic.id),
       archiveType: args.archiveType,
       renamePages: args.renamePages,
       deletePages: args.deletePages
@@ -114,12 +114,12 @@ export class LibraryService {
   }
 
   editMultipleComics(args: {
-    comics: Comic[];
+    comicBooks: ComicBook[];
     details: EditMultipleComics;
   }): Observable<any> {
     this.logger.trace('Editing multiple comics');
     return this.http.post(interpolate(EDIT_MULTIPLE_COMICS_URL), {
-      ids: args.comics.map(comic => comic.id),
+      ids: args.comicBooks.map(comic => comic.id),
       publisher: args.details.publisher,
       series: args.details.series,
       volume: args.details.volume,

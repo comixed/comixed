@@ -17,23 +17,24 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 @Pipe({
   name: 'coverDateFilter'
 })
 export class CoverDateFilterPipe implements PipeTransform {
-  transform(comics: Comic[], filter: CoverDateFilter): Comic[] {
-    return comics
+  transform(comicBooks: ComicBook[], filter: CoverDateFilter): ComicBook[] {
+    return comicBooks
       .filter(
-        comic =>
+        comicBook =>
           !filter.year ||
-          new Date(comic.coverDate).getFullYear() === filter.year
+          new Date(comicBook.coverDate).getFullYear() === filter.year
       )
       .filter(
-        comic =>
-          !filter.month || new Date(comic.coverDate).getMonth() === filter.month
+        comicBook =>
+          !filter.month ||
+          new Date(comicBook.coverDate).getMonth() === filter.month
       );
   }
 }

@@ -27,13 +27,13 @@ import {
   rescanComicsFailed
 } from '@app/library/actions/rescan-comics.actions';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('RescanComics Reducer', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
 
   let state: RescanComicsState;
 
@@ -55,7 +55,7 @@ describe('RescanComics Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        rescanComics({ comics: COMICS })
+        rescanComics({ comicBooks: COMICS })
       );
     });
 

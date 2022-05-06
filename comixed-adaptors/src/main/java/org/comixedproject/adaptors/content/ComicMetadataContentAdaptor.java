@@ -29,7 +29,7 @@ import javax.xml.stream.XMLStreamWriter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.Credit;
 import org.springframework.stereotype.Component;
 
@@ -104,16 +104,16 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
   public static final String TAG_ALTERNATE_SERIES = "AlternateSeries";
 
   @Override
-  public void loadContent(final Comic comic, final String filename, final byte[] content)
+  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content)
       throws ContentAdaptorException {
     try {
-      this.loadXmlData(new ByteArrayInputStream(content), comic);
+      this.loadXmlData(new ByteArrayInputStream(content), comicBook);
     } catch (final XMLStreamException error) {
       throw new ContentAdaptorException("Failed to load metadata", error);
     }
   }
 
-  protected void loadXmlData(InputStream istream, Comic comic) throws XMLStreamException {
+  protected void loadXmlData(InputStream istream, ComicBook comicBook) throws XMLStreamException {
     final var xmlInputReader = xmlInputFactory.createXMLStreamReader(istream);
     int publishedYear = -1;
     int publishedMonth = -1;
@@ -125,25 +125,25 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
         try {
           switch (tagName) {
             case TAG_PUBLISHER:
-              comic.setPublisher(xmlInputReader.getElementText());
+              comicBook.setPublisher(xmlInputReader.getElementText());
               break;
             case TAG_SERIES:
-              comic.setSeries(xmlInputReader.getElementText());
+              comicBook.setSeries(xmlInputReader.getElementText());
               break;
             case TAG_VOLUME:
-              comic.setVolume(xmlInputReader.getElementText());
+              comicBook.setVolume(xmlInputReader.getElementText());
               break;
             case TAG_TITLE:
-              comic.setTitle(xmlInputReader.getElementText());
+              comicBook.setTitle(xmlInputReader.getElementText());
               break;
             case TAG_ISSUE_NUMBER:
-              comic.setIssueNumber(xmlInputReader.getElementText());
+              comicBook.setIssueNumber(xmlInputReader.getElementText());
               break;
             case TAG_SUMMARY:
-              comic.setDescription(xmlInputReader.getElementText());
+              comicBook.setDescription(xmlInputReader.getElementText());
               break;
             case TAG_NOTES:
-              comic.setNotes(xmlInputReader.getElementText());
+              comicBook.setNotes(xmlInputReader.getElementText());
               break;
             case TAG_PUBLISHED_YEAR:
               publishedYear = Integer.valueOf(xmlInputReader.getElementText());
@@ -152,16 +152,16 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
               publishedMonth = Integer.valueOf(xmlInputReader.getElementText());
               break;
             case TAG_CHARACTERS:
-              this.addElementsToList(xmlInputReader.getElementText(), comic.getCharacters());
+              this.addElementsToList(xmlInputReader.getElementText(), comicBook.getCharacters());
               break;
             case TAG_TEAMS:
-              this.addElementsToList(xmlInputReader.getElementText(), comic.getTeams());
+              this.addElementsToList(xmlInputReader.getElementText(), comicBook.getTeams());
               break;
             case TAG_LOCATIONS:
-              this.addElementsToList(xmlInputReader.getElementText(), comic.getLocations());
+              this.addElementsToList(xmlInputReader.getElementText(), comicBook.getLocations());
               break;
             case TAG_ALTERNATE_SERIES:
-              this.addElementsToList(xmlInputReader.getElementText(), comic.getStories());
+              this.addElementsToList(xmlInputReader.getElementText(), comicBook.getStories());
               break;
             case TAG_WRITER:
             case TAG_EDITOR:
@@ -176,7 +176,7 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
                     .forEach(
                         name -> {
                           log.trace("Adding role: {}={}", role, name);
-                          comic.getCredits().add(new Credit(comic, name, role));
+                          comicBook.getCredits().add(new Credit(comicBook, name, role));
                         });
               }
               break;
@@ -197,7 +197,7 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
           (publishedMonth > -1)
               ? new GregorianCalendar(publishedYear, publishedMonth - 1, 1)
               : new GregorianCalendar(publishedYear, 0, 1);
-      comic.setCoverDate(gc.getTime());
+      comicBook.setCoverDate(gc.getTime());
     }
   }
 
@@ -217,14 +217,15 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
   }
 
   /**
-   * Writes the content of the provided comic as a ComicInfo.xml file to the provided output stream.
+   * Writes the content of the provided comicBook as a ComicInfo.xml file to the provided output
+   * stream.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @return the content of the file
    * @throws org.comixedproject.adaptors.content.ContentAdaptorException if an error occurs
    */
-  public byte[] createContent(Comic comic) throws ContentAdaptorException {
-    log.trace("Generating comic info data from comic");
+  public byte[] createContent(ComicBook comicBook) throws ContentAdaptorException {
+    log.trace("Generating comicBook info data from comicBook");
     var result = new ByteArrayOutputStream();
     try {
       final XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(result);
@@ -233,26 +234,28 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
           String.format(
               "ComicInfo.xml generated by ComiXed : %s",
               DateFormatUtils.format(new Date(), "MM/dd/yyyy @ HH:mm:ss")));
-      this.writeEntry(writer, TAG_PUBLISHER, comic.getPublisher(), false);
-      this.writeEntry(writer, TAG_SERIES, comic.getSeries(), false);
-      this.writeEntry(writer, TAG_VOLUME, comic.getVolume(), false);
-      this.writeEntry(writer, TAG_ISSUE_NUMBER, comic.getIssueNumber(), false);
-      this.writeEntry(writer, TAG_TITLE, comic.getTitle(), false);
-      this.writeEntry(writer, TAG_SUMMARY, comic.getDescription(), true);
-      this.writeEntry(writer, TAG_NOTES, comic.getNotes(), true);
+      this.writeEntry(writer, TAG_PUBLISHER, comicBook.getPublisher(), false);
+      this.writeEntry(writer, TAG_SERIES, comicBook.getSeries(), false);
+      this.writeEntry(writer, TAG_VOLUME, comicBook.getVolume(), false);
+      this.writeEntry(writer, TAG_ISSUE_NUMBER, comicBook.getIssueNumber(), false);
+      this.writeEntry(writer, TAG_TITLE, comicBook.getTitle(), false);
+      this.writeEntry(writer, TAG_SUMMARY, comicBook.getDescription(), true);
+      this.writeEntry(writer, TAG_NOTES, comicBook.getNotes(), true);
 
-      if (comic.getCoverDate() != null) {
+      if (comicBook.getCoverDate() != null) {
         var gc = Calendar.getInstance();
-        gc.setTime(comic.getCoverDate());
+        gc.setTime(comicBook.getCoverDate());
         this.writeEntry(writer, TAG_PUBLISHED_YEAR, String.valueOf(gc.get(Calendar.YEAR)), false);
         this.writeEntry(
             writer, TAG_PUBLISHER_MONTH, String.valueOf(gc.get(Calendar.MONTH) + 1), false);
       }
-      this.writeEntry(writer, "PageCount", String.valueOf(comic.getPageCount()), false);
-      this.writeEntry(writer, TAG_CHARACTERS, StringUtils.join(comic.getCharacters(), ","), false);
-      this.writeEntry(writer, TAG_TEAMS, StringUtils.join(comic.getTeams(), ","), false);
-      this.writeEntry(writer, TAG_LOCATIONS, StringUtils.join(comic.getLocations(), ","), false);
-      for (Credit credit : comic.getCredits()) {
+      this.writeEntry(writer, "PageCount", String.valueOf(comicBook.getPageCount()), false);
+      this.writeEntry(
+          writer, TAG_CHARACTERS, StringUtils.join(comicBook.getCharacters(), ","), false);
+      this.writeEntry(writer, TAG_TEAMS, StringUtils.join(comicBook.getTeams(), ","), false);
+      this.writeEntry(
+          writer, TAG_LOCATIONS, StringUtils.join(comicBook.getLocations(), ","), false);
+      for (Credit credit : comicBook.getCredits()) {
         this.writeCreditEntry(writer, credit.getRole(), credit.getName());
       }
       writer.writeEndElement();

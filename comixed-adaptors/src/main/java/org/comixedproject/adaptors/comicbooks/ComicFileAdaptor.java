@@ -29,7 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -100,18 +100,18 @@ public class ComicFileAdaptor {
   }
 
   /**
-   * Generates a filename for the given comic based on the supplied rule.
+   * Generates a filename for the given comicBook based on the supplied rule.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @param renamingRule the renaming rule
    * @return the generated filename
    */
-  public String createFilenameFromRule(final Comic comic, final String renamingRule) {
+  public String createFilenameFromRule(final ComicBook comicBook, final String renamingRule) {
     if (StringUtils.isEmpty(renamingRule)) {
       log.trace(
           "No renaming rules: using original filename: {}",
-          FilenameUtils.getBaseName(comic.getFilename()));
-      return FilenameUtils.getBaseName(comic.getFilename());
+          FilenameUtils.getBaseName(comicBook.getFilename()));
+      return FilenameUtils.getBaseName(comicBook.getFilename());
     }
 
     log.trace("Scrubbing renaming rule: {}", renamingRule);
@@ -119,21 +119,27 @@ public class ComicFileAdaptor {
 
     log.trace("Generating relative filename based on renaming rule: {}", rule);
     final String publisher =
-        StringUtils.isEmpty(comic.getPublisher()) ? UNKNOWN_VALUE : scrub(comic.getPublisher());
+        StringUtils.isEmpty(comicBook.getPublisher())
+            ? UNKNOWN_VALUE
+            : scrub(comicBook.getPublisher());
     final String series =
-        StringUtils.isEmpty(comic.getSeries()) ? UNKNOWN_VALUE : scrub(comic.getSeries());
+        StringUtils.isEmpty(comicBook.getSeries()) ? UNKNOWN_VALUE : scrub(comicBook.getSeries());
     final String volume =
-        StringUtils.isEmpty(comic.getVolume()) ? UNKNOWN_VALUE : comic.getVolume();
+        StringUtils.isEmpty(comicBook.getVolume()) ? UNKNOWN_VALUE : comicBook.getVolume();
     String issueNumber =
-        StringUtils.isEmpty(comic.getIssueNumber()) ? UNKNOWN_VALUE : scrub(comic.getIssueNumber());
+        !StringUtils.hasLength(comicBook.getIssueNumber())
+            ? UNKNOWN_VALUE
+            : scrub(comicBook.getIssueNumber());
     final String coverDate =
-        comic.getCoverDate() != null ? coverDateFormat.format(comic.getCoverDate()) : NO_COVER_DATE;
+        comicBook.getCoverDate() != null
+            ? coverDateFormat.format(comicBook.getCoverDate())
+            : NO_COVER_DATE;
     issueNumber = this.checkForPadding(rule, PLACEHOLDER_ISSUE_NUMBER, issueNumber);
     String publishedMonth = "";
     String publishedYear = "";
-    if (comic.getStoreDate() != null) {
+    if (comicBook.getStoreDate() != null) {
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(comic.getStoreDate());
+      calendar.setTime(comicBook.getStoreDate());
       log.trace("Getting store year");
       publishedYear = String.valueOf(calendar.get(Calendar.YEAR));
       log.trace("Getting store month");
@@ -153,7 +159,7 @@ public class ComicFileAdaptor {
             .replace(PLACEHOLDER_PUBLISHED_YEAR, publishedYear)
             .replace(PLACEHOLDER_PUBLISHED_MONTH, publishedMonth);
 
-    log.trace("Relative comic filename: {}", result);
+    log.trace("Relative comicBook filename: {}", result);
     return result;
   }
 

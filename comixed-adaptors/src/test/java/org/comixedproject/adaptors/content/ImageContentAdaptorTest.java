@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,11 +44,11 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   @InjectMocks private ImageContentAdaptor loader;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
-  private Comic comic;
+  private ComicBook comicBook;
 
   @Before
   public void setUp() {
-    comic = new Comic();
+    comicBook = new ComicBook();
     Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(byte[].class)))
         .thenReturn(TEST_HASH);
   }
@@ -57,19 +57,19 @@ public class ImageContentAdaptorTest extends BaseContentAdaptorTest {
   public void testLoadJPGImage() throws IOException {
     byte[] content = loadFile(TEST_JPEG_FILENAME);
 
-    loader.loadContent(comic, TEST_JPEG_FILENAME, content);
+    loader.loadContent(comicBook, TEST_JPEG_FILENAME, content);
 
-    assertEquals(1, comic.getPageCount());
-    assertNotNull(comic.getPage(0));
+    assertEquals(1, comicBook.getPageCount());
+    assertNotNull(comicBook.getPage(0));
   }
 
   @Test
   public void testLoadWebPImage() throws IOException {
     byte[] content = loadFile(TEST_WEBP_FILENAME);
 
-    loader.loadContent(comic, TEST_WEBP_FILENAME, content);
+    loader.loadContent(comicBook, TEST_WEBP_FILENAME, content);
 
-    assertEquals(1, comic.getPageCount());
-    assertNotNull(comic.getPage(0));
+    assertEquals(1, comicBook.getPageCount());
+    assertNotNull(comicBook.getPage(0));
   }
 }

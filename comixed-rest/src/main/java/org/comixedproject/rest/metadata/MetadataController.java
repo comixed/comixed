@@ -25,7 +25,7 @@ import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
@@ -108,12 +108,12 @@ public class MetadataController {
   }
 
   /**
-   * Scrapes a single {@link Comic} using the specified source issue.
+   * Scrapes a single {@link ComicBook} using the specified source issue.
    *
    * @param sourceId the metadata source id
    * @param comicId the comic id
    * @param request the request body
-   * @return the scraped and updated {@link Comic}
+   * @return the scraped and updated {@link ComicBook}
    * @throws MetadataException if an error occurs
    */
   @PostMapping(
@@ -126,7 +126,7 @@ public class MetadataController {
       logResponse = true,
       responseView = View.ComicDetailsView.class)
   @JsonView(View.ComicDetailsView.class)
-  public Comic scrapeComic(
+  public ComicBook scrapeComic(
       @PathVariable("sourceId") final Long sourceId,
       @PathVariable("comicId") final Long comicId,
       @RequestBody() final ScrapeComicRequest request)

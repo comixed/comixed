@@ -18,18 +18,18 @@
 
 import { CoverDateFilterPipe } from './cover-date-filter.pipe';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('CoverDateFilterPipe', () => {
   const NOW = new Date();
   const LAST_YEAR = new Date(NOW.getTime() - 365 * 24 * 60 * 60 * 1000);
   const LAST_MONTH = new Date(NOW.getTime() - 31 * 24 * 60 * 60 * 1000);
-  const COMIC_LAST_YEAR = { ...COMIC_1, coverDate: LAST_YEAR.getTime() };
-  const COMIC_LAST_MONTH = { ...COMIC_3, coverDate: LAST_MONTH.getTime() };
-  const COMIC_TODAY = { ...COMIC_5, coverDate: NOW.getTime() };
+  const COMIC_LAST_YEAR = { ...COMIC_BOOK_1, coverDate: LAST_YEAR.getTime() };
+  const COMIC_LAST_MONTH = { ...COMIC_BOOK_3, coverDate: LAST_MONTH.getTime() };
+  const COMIC_TODAY = { ...COMIC_BOOK_5, coverDate: NOW.getTime() };
   const COMICS = [COMIC_LAST_YEAR, COMIC_LAST_MONTH, COMIC_TODAY];
 
   let pipe: CoverDateFilterPipe;

@@ -19,7 +19,7 @@
 package org.comixedproject.state.lists.guards;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -39,8 +39,8 @@ public class ComicIsNotInReadingListGuard extends AbstractReadingListGuard {
   public boolean evaluate(final StateContext<ReadingListState, ReadingListEvent> context) {
     log.trace("Fetching reading list");
     final ReadingList readingList = this.fetchReadingList(context);
-    log.trace("Fetching comic");
-    final Comic comic = this.fetchComic(context);
-    return !comic.getReadingLists().contains(readingList);
+    log.trace("Fetching comicBook");
+    final ComicBook comicBook = this.fetchComic(context);
+    return !comicBook.getReadingLists().contains(readingList);
   }
 }

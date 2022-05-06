@@ -29,7 +29,7 @@ import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.*;
 import org.comixedproject.opds.utils.OPDSUtils;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +50,7 @@ public class OPDSDateController {
   private static final String STORE_DATE_YEARS_ID = "20";
   private static final int COMIC_STORE_DATE_FOR_YEAR_ID = 20;
 
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
 
   /**
    * Returns navigation links for the store date years in the library.
@@ -66,7 +66,7 @@ public class OPDSDateController {
     log.info("Loading comic years");
     final OPDSNavigationFeed response =
         new OPDSNavigationFeed("Store Date: Years", STORE_DATE_YEARS_ID);
-    this.comicService.getYearsForComics().stream()
+    this.comicBookService.getYearsForComics().stream()
         .sorted()
         .forEach(
             year -> {
@@ -104,7 +104,7 @@ public class OPDSDateController {
         new OPDSNavigationFeed(
             "Comics For Year: " + year, String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading days with comics for year");
-    this.comicService.getWeeksForYear(year).stream()
+    this.comicBookService.getWeeksForYear(year).stream()
         .sorted()
         .forEach(
             weekNumber -> {
@@ -151,7 +151,7 @@ public class OPDSDateController {
             String.format("Comics For Week %d of %d", week, year),
             String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading comics");
-    this.comicService.getComicsForYearAndWeek(year, week).stream()
+    this.comicBookService.getComicsForYearAndWeek(year, week).stream()
         .sorted()
         .forEach(
             comic -> {

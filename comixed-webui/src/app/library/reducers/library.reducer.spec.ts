@@ -18,9 +18,9 @@
 
 import { initialState, LibraryState, reducer } from './library.reducer';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 import {
   deselectComics,
@@ -32,8 +32,8 @@ import {
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 
 describe('Library Reducer', () => {
-  const COMIC = COMIC_1;
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3];
+  const COMIC = COMIC_BOOK_1;
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
   const READ = Math.random() > 0.5;
 
   let state: LibraryState;
@@ -60,7 +60,7 @@ describe('Library Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, selected: [] },
-        selectComics({ comics: COMICS })
+        selectComics({ comicBooks: COMICS })
       );
     });
 
@@ -72,7 +72,7 @@ describe('Library Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, selected: COMICS },
-          selectComics({ comics: COMICS })
+          selectComics({ comicBooks: COMICS })
         );
       });
 
@@ -86,7 +86,7 @@ describe('Library Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, selected: COMICS },
-        deselectComics({ comics: [COMIC] })
+        deselectComics({ comicBooks: [COMIC] })
       );
     });
 
@@ -102,7 +102,7 @@ describe('Library Reducer', () => {
       beforeEach(() => {
         state = reducer(
           { ...state, selected: COMICS },
-          deselectComics({ comics: COMICS })
+          deselectComics({ comicBooks: COMICS })
         );
       });
 
@@ -117,7 +117,7 @@ describe('Library Reducer', () => {
       state = reducer(
         { ...state, busy: false },
         editMultipleComics({
-          comics: COMICS,
+          comicBooks: COMICS,
           details: {} as EditMultipleComics
         })
       );

@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertSame;
 
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,30 +38,32 @@ public class UpdateMetadataProcessorTest {
 
   @InjectMocks private UpdateMetadataProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
 
   @Before
   public void setUp() {
-    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
   }
 
   @Test
   public void testProcessUpdateException() throws Exception {
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).save(comic, TEST_ARCHIVE_TYPE, false, "");
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comicBook, TEST_ARCHIVE_TYPE, false, "");
   }
 
   @Test
   public void testProcess() throws Exception {
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).save(comic, TEST_ARCHIVE_TYPE, false, "");
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comicBook, TEST_ARCHIVE_TYPE, false, "");
   }
 }

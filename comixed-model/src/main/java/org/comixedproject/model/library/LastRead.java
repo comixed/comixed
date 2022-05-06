@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2018, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,13 +23,13 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.springframework.data.annotation.CreatedDate;
 
 /**
- * <code>LastRead</code> holds the date and time for when a user last read a specific comic.
+ * <code>LastRead</code> holds the date and time for when a user last read a specific comicBook.
  *
  * @author Darryl L. Pierce
  */
@@ -46,13 +46,13 @@ public class LastRead {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicId", insertable = true, updatable = false, nullable = false)
-  @JsonProperty("comic")
+  @JoinColumn(name = "ComicBookId", insertable = true, updatable = false, nullable = false)
+  @JsonProperty("comicBook")
   @JsonView({View.LastReadList.class, View.AuditLogEntryDetail.class})
   @Getter
   @Setter
   @NonNull
-  private Comic comic;
+  private ComicBook comicBook;
 
   @ManyToOne
   @JoinColumn(name = "UserId", insertable = true, updatable = false, nullable = false)
@@ -80,13 +80,13 @@ public class LastRead {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final LastRead that = (LastRead) o;
-    return Objects.equals(comic, that.comic)
+    return Objects.equals(comicBook, that.comicBook)
         && Objects.equals(user, that.user)
         && Objects.equals(lastReadOn, that.lastReadOn);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comic, user, lastReadOn);
+    return Objects.hash(comicBook, user, lastReadOn);
   }
 }

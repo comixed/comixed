@@ -18,7 +18,7 @@
 
 import { FileDetails } from '@app/comic-books/models/file-details';
 import { ComicCredit } from '@app/comic-books/models/comic-credit';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
@@ -64,7 +64,7 @@ export const IMPRINT_3: Imprint = {
   publisher: 'Publisher 3'
 };
 
-export const COMIC_1: Comic = {
+export const COMIC_BOOK_1: ComicBook = {
   id: 1,
   filename: '/Users/comixedreader/Documents/library/comicfile4.cbz',
   baseFilename: 'comicfile1.cbz',
@@ -76,7 +76,7 @@ export const COMIC_1: Comic = {
   volume: '2017',
   issueNumber: '1',
   sortableIssueNumber: '00001',
-  title: 'First Comic Title',
+  title: 'First ComicBook Title',
   stories: ['story1', 'story2', 'story3'],
   description: 'The description of this comic',
   notes: '',
@@ -101,7 +101,7 @@ export const COMIC_1: Comic = {
   metadata: null
 };
 
-export const COMIC_2: Comic = {
+export const COMIC_BOOK_2: ComicBook = {
   id: 2,
   filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
   baseFilename: 'comicfile1.cbz',
@@ -113,7 +113,7 @@ export const COMIC_2: Comic = {
   volume: '2015',
   issueNumber: '2',
   sortableIssueNumber: '00001',
-  title: 'First Comic Title',
+  title: 'First ComicBook Title',
   stories: ['story1'],
   description: 'The description of this comic',
   notes: '',
@@ -138,7 +138,7 @@ export const COMIC_2: Comic = {
   metadata: null
 };
 
-export const COMIC_3: Comic = {
+export const COMIC_BOOK_3: ComicBook = {
   id: 3,
   filename: '/Users/comixedreader/Documents/library/comicfile2.cbz',
   baseFilename: 'comicfile1.cbz',
@@ -150,7 +150,7 @@ export const COMIC_3: Comic = {
   volume: '2015',
   issueNumber: '3',
   sortableIssueNumber: '00001',
-  title: 'First Comic Title',
+  title: 'First ComicBook Title',
   stories: ['story1'],
   description: 'The description of this comic',
   notes: '',
@@ -175,7 +175,7 @@ export const COMIC_3: Comic = {
   metadata: null
 };
 
-export const COMIC_4: Comic = {
+export const COMIC_BOOK_4: ComicBook = {
   id: 4,
   filename: '/Users/comixedreader/Documents/library/comicfile1.cbz',
   baseFilename: 'comicfile1.cbz',
@@ -187,7 +187,7 @@ export const COMIC_4: Comic = {
   volume: '1972',
   issueNumber: '1',
   sortableIssueNumber: '00001',
-  title: 'First Comic Title',
+  title: 'First ComicBook Title',
   stories: [],
   description: 'The description of this comic',
   notes: '',
@@ -212,7 +212,7 @@ export const COMIC_4: Comic = {
   metadata: null
 };
 
-export const COMIC_5: Comic = {
+export const COMIC_BOOK_5: ComicBook = {
   id: 5,
   filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
   baseFilename: 'comicfile1.cbz',
@@ -224,7 +224,7 @@ export const COMIC_5: Comic = {
   volume: '1965',
   issueNumber: '1',
   sortableIssueNumber: '00001',
-  title: 'First Comic Title',
+  title: 'First ComicBook Title',
   stories: [],
   description: 'The description of this comic',
   notes: '',

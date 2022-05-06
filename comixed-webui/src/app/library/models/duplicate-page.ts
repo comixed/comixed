@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Comic } from '../../comic-books/models/comic';
+import { ComicBook } from '../../comic-books/models/comic-book';
 
 export interface DuplicatePage {
   hash: string;
-  comics: Comic[];
+  comicBooks: ComicBook[];
 }

@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/1.1/001_1206_add_delete_empty_directories_option.xml"/>
+  <include file="/db/migrations/1.1/002_1158_rename_comic_to_comic_book.xml"/>
 
 </databaseChangeLog>

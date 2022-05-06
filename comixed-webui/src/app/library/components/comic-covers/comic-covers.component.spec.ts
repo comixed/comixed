@@ -34,10 +34,10 @@ import {
 } from '@app/library/reducers/library.reducer';
 import { MatBadgeModule } from '@angular/material/badge';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4
 } from '@app/comic-books/comic-books.fixtures';
 import {
   deselectComics,
@@ -63,13 +63,13 @@ import { MatDividerModule } from '@angular/material/divider';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { READING_LIST_1 } from '@app/lists/lists.fixtures';
 import { convertComics } from '@app/library/actions/convert-comics.actions';
-import { setComicsRead } from '@app/last-read/actions/set-comics-read.actions';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
 import {
   LAST_READ_1,
   LAST_READ_3,
   LAST_READ_5
 } from '@app/last-read/last-read.fixtures';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatSortModule } from '@angular/material/sort';
 import {
   Confirmation,
@@ -82,8 +82,8 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 describe('ComicCoversComponent', () => {
   const PAGINATION = 25;
   const PAGE_INDEX = 23;
-  const COMIC = COMIC_2;
-  const COMICS = [COMIC_1, COMIC_2, COMIC_3, COMIC_4];
+  const COMIC = COMIC_BOOK_2;
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -167,15 +167,15 @@ describe('ComicCoversComponent', () => {
 
   describe('checking if a comic is selected', () => {
     beforeEach(() => {
-      component.selected = [COMIC_1];
+      component.selected = [COMIC_BOOK_1];
     });
 
     it('returns true for selected comics', () => {
-      expect(component.isSelected(COMIC_1)).toBeTrue();
+      expect(component.isSelected(COMIC_BOOK_1)).toBeTrue();
     });
 
     it('returns false for unselected comics', () => {
-      expect(component.isSelected(COMIC_2)).toBeFalse();
+      expect(component.isSelected(COMIC_BOOK_2)).toBeFalse();
     });
   });
 
@@ -187,7 +187,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          selectComics({ comics: [COMIC] })
+          selectComics({ comicBooks: [COMIC] })
         );
       });
     });
@@ -199,7 +199,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComics({ comics: [COMIC] })
+          deselectComics({ comicBooks: [COMIC] })
         );
       });
     });
@@ -255,7 +255,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicsRead({ comics: [COMIC], read: READ })
+          setComicBooksRead({ comicBooks: [COMIC], read: READ })
         );
       });
     });
@@ -268,7 +268,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicsRead({ comics: COMICS, read: READ })
+          setComicBooksRead({ comicBooks: COMICS, read: READ })
         );
       });
     });
@@ -314,7 +314,7 @@ describe('ComicCoversComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ comics: [COMIC] })
+        updateMetadata({ comicBooks: [COMIC] })
       );
     });
   });
@@ -353,7 +353,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comics: [COMICS[0]], deleted: true })
+          markComicsDeleted({ comicBooks: [COMICS[0]], deleted: true })
         );
       });
     });
@@ -369,7 +369,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comics: COMICS, deleted: true })
+          markComicsDeleted({ comicBooks: COMICS, deleted: true })
         );
       });
     });
@@ -394,7 +394,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comics: [COMICS[0]], deleted: false })
+          markComicsDeleted({ comicBooks: [COMICS[0]], deleted: false })
         );
       });
     });
@@ -410,7 +410,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comics: COMICS, deleted: false })
+          markComicsDeleted({ comicBooks: COMICS, deleted: false })
         );
       });
     });
@@ -451,7 +451,7 @@ describe('ComicCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         convertComics({
-          comics: [COMIC],
+          comicBooks: [COMIC],
           archiveType: archiveTypeFromString('CBZ'),
           renamePages: true,
           deletePages: true
@@ -476,7 +476,7 @@ describe('ComicCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         convertComics({
-          comics: COMICS,
+          comicBooks: COMICS,
           archiveType: archiveTypeFromString('CB7'),
           renamePages: true,
           deletePages: true
@@ -497,7 +497,9 @@ describe('ComicCoversComponent', () => {
     });
 
     it('identifies read comics', () => {
-      expect(component.isRead(LAST_READ_DATES[0].comic as Comic)).toBeTrue();
+      expect(
+        component.isRead(LAST_READ_DATES[0].comic as ComicBook)
+      ).toBeTrue();
     });
   });
 
@@ -601,7 +603,7 @@ describe('ComicCoversComponent', () => {
 
     it('fires an action to edit multiple comics', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        editMultipleComics({ comics: COMICS, details: COMIC_DETAILS })
+        editMultipleComics({ comicBooks: COMICS, details: COMIC_DETAILS })
       );
     });
   });

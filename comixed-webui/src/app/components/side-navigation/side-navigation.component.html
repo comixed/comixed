@@ -11,7 +11,7 @@
 >
   <mat-icon>local_library</mat-icon>
   <span
-    [matBadge]="totalComics$ | async"
+    [matBadge]="totalComicBooks$ | async"
     matBadgePosition="after"
     matBadgeOverlap="false"
     matBadgeColor="accent"
@@ -30,7 +30,7 @@
 >
   <mat-icon>incomplete_circle</mat-icon>
   <span
-    [matBadge]="unprocessedComics$ | async"
+    [matBadge]="unprocessedComicBooks$ | async"
     matBadgePosition="after"
     matBadgeOverlap="false"
     matBadgeColor="accent"
@@ -48,7 +48,7 @@
 >
   <mat-icon>read_more</mat-icon>
   <span
-    [matBadge]="unreadComics$ | async"
+    [matBadge]="unreadComicBooks$ | async"
     matBadgePosition="after"
     matBadgeOverlap="false"
     matBadgeColor="accent"
@@ -66,7 +66,7 @@
 >
   <mat-icon>cloud_download</mat-icon>
   <span
-    [matBadge]="unscrapedComics$ | async"
+    [matBadge]="unscrapedComicBooks$ | async"
     matBadgePosition="after"
     matBadgeOverlap="false"
     matBadgeColor="accent"
@@ -84,7 +84,7 @@
 >
   <mat-icon>cloud_download</mat-icon>
   <span
-    [matBadge]="changedComics$ | async"
+    [matBadge]="changedComicBooks$ | async"
     matBadgePosition="after"
     matBadgeOverlap="false"
     matBadgeColor="accent"
@@ -102,7 +102,7 @@
 >
   <mat-icon>delete_sweep</mat-icon>
   <span
-    [matBadge]="deletedComics$ | async"
+    [matBadge]="deletedComicBooks$ | async"
     matBadgePosition="after"
     matBadgeOverlap="false"
     matBadgeColor="accent"

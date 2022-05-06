@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,8 @@ import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,48 +36,50 @@ public class LoadFileDetailsReaderTest {
   private static final int MAX_RECORDS = 25;
 
   @InjectMocks private LoadFileDetailsReader reader;
-  @Mock private ComicService comicService;
-  @Mock private Comic comic;
+  @Mock private ComicBookService comicBookService;
+  @Mock private ComicBook comicBook;
 
-  private List<Comic> comicList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Test
   public void testReadNoneLoadedManyFound() {
-    for (int index = 0; index < MAX_RECORDS; index++) comicList.add(comic);
+    for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicService.findUnprocessedComicsWithoutFileDetails()).thenReturn(comicList);
+    Mockito.when(comicBookService.findUnprocessedComicsWithoutFileDetails())
+        .thenReturn(comicBookList);
 
-    final Comic result = reader.read();
+    final ComicBook result = reader.read();
 
     assertNotNull(result);
-    assertSame(comic, result);
-    assertFalse(comicList.isEmpty());
-    assertEquals(MAX_RECORDS - 1, comicList.size());
+    assertSame(comicBook, result);
+    assertFalse(comicBookList.isEmpty());
+    assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicService, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+    Mockito.verify(comicBookService, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
   }
 
   @Test
   public void testReadNoneRemaining() {
-    reader.comicList = comicList;
+    reader.comicBookList = comicBookList;
 
-    final Comic result = reader.read();
+    final ComicBook result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicList);
+    assertNull(reader.comicBookList);
 
-    Mockito.verify(comicService, Mockito.never()).findUnprocessedComicsWithoutFileDetails();
+    Mockito.verify(comicBookService, Mockito.never()).findUnprocessedComicsWithoutFileDetails();
   }
 
   @Test
   public void testReadNoneLoadedNoneFound() {
-    Mockito.when(comicService.findUnprocessedComicsWithoutFileDetails()).thenReturn(comicList);
+    Mockito.when(comicBookService.findUnprocessedComicsWithoutFileDetails())
+        .thenReturn(comicBookList);
 
-    final Comic result = reader.read();
+    final ComicBook result = reader.read();
 
     assertNull(result);
-    assertNull(reader.comicList);
+    assertNull(reader.comicBookList);
 
-    Mockito.verify(comicService, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+    Mockito.verify(comicBookService, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
   }
 }

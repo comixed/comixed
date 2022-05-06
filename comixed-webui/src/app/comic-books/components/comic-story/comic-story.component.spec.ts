@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicStoryComponent } from './comic-story.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
@@ -29,7 +29,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 
 describe('ComicStoryComponent', () => {
-  const COMIC = COMIC_2;
+  const COMIC = COMIC_BOOK_2;
   const initialState = {};
 
   let component: ComicStoryComponent;

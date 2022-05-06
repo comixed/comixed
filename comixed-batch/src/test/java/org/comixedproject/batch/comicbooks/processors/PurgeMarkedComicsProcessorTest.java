@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,9 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,20 +36,20 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class PurgeMarkedComicsProcessorTest {
   @InjectMocks private PurgeMarkedComicsProcessor processor;
-  @Mock private ComicService comicService;
-  @Mock private Comic comic;
+  @Mock private ComicBookService comicBookService;
+  @Mock private ComicBook comicBook;
 
   private List<Page> pageList = new ArrayList<>();
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.doNothing().when(comicService).deleteComic(Mockito.any(Comic.class));
+    Mockito.doNothing().when(comicBookService).deleteComic(Mockito.any(ComicBook.class));
 
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
-    Mockito.verify(comicService, Mockito.times(1)).deleteComic(comic);
+    Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
   }
 }

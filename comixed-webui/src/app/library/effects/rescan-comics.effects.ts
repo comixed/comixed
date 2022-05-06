@@ -37,26 +37,28 @@ export class RescanComicsEffects {
       ofType(rescanComics),
       tap(action => this.logger.trace('Rescan comics:', action)),
       switchMap(action =>
-        this.libraryService.rescanComics({ comics: action.comics }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          tap(() =>
-            this.alertService.info(
-              this.translateService.instant(
-                'library.rescan-comics.effect-success'
+        this.libraryService
+          .rescanComics({ comicBooks: action.comicBooks })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'library.rescan-comics.effect-success'
+                )
               )
-            )
-          ),
-          map(() => comicsRescanning()),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            this.alertService.error(
-              this.translateService.instant(
-                'library.rescan-comics.effect-failure'
-              )
-            );
-            return of(rescanComicsFailed());
-          })
-        )
+            ),
+            map(() => comicsRescanning()),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'library.rescan-comics.effect-failure'
+                )
+              );
+              return of(rescanComicsFailed());
+            })
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);

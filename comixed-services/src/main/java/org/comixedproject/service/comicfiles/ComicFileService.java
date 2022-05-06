@@ -28,12 +28,12 @@ import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFile;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class ComicFileService {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
 
@@ -136,10 +136,10 @@ public class ComicFileService {
     boolean isComic = this.comicFileAdaptor.isComicFile(file);
 
     final String filePath = file.getCanonicalPath();
-    log.trace("Checking if comic file is already in the database");
-    final Comic comic = this.comicService.findByFilename(filePath);
+    log.trace("Checking if comicBook file is already in the database");
+    final ComicBook comicBook = this.comicBookService.findByFilename(filePath);
 
-    return isComic && (comic == null);
+    return isComic && (comicBook == null);
   }
 
   /**

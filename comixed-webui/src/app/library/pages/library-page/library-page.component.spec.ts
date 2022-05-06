@@ -51,15 +51,15 @@ import {
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_4,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
@@ -93,11 +93,11 @@ import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pi
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
   const PAGE_INDEX = 23;
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
-    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
@@ -284,7 +284,7 @@ describe('LibraryPageComponent', () => {
 
   describe('loading all pages', () => {
     const UNREAD = {
-      ...COMIC_1,
+      ...COMIC_BOOK_1,
       lastRead: null,
       comicState: ComicBookState.STABLE,
       metadataSource: {
@@ -292,7 +292,7 @@ describe('LibraryPageComponent', () => {
       } as ComicMetadataSource
     };
     const DELETED = {
-      ...COMIC_2,
+      ...COMIC_BOOK_2,
       lastRead: new Date().getTime(),
       comicState: ComicBookState.DELETED,
       metadataSource: {
@@ -300,17 +300,17 @@ describe('LibraryPageComponent', () => {
       } as ComicMetadataSource
     };
     const UNSCRAPED = {
-      ...COMIC_3,
+      ...COMIC_BOOK_3,
       lastRead: null,
       comicState: ComicBookState.STABLE,
       metadataSource: null
     };
     const UNPROCESSED = {
-      ...COMIC_4,
+      ...COMIC_BOOK_4,
       fileDetails: null
     };
     const CHANGED = {
-      ...COMIC_4,
+      ...COMIC_BOOK_4,
       comicState: ComicBookState.CHANGED
     };
 
@@ -320,8 +320,8 @@ describe('LibraryPageComponent', () => {
         component.deletedOnly = true;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: {
-            ...initialComicListState,
+          [COMIC_BOOK_LIST_FEATURE_KEY]: {
+            ...initialComicBookListState,
             unprocessed: [UNPROCESSED],
             unscraped: [UNSCRAPED],
             changed: [CHANGED],
@@ -331,7 +331,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unread comics', () => {
-        component.comics.every(comic =>
+        component.comicBooks.every(comic =>
           expect(comic.comicState).toEqual(ComicBookState.DELETED)
         );
       });
@@ -346,8 +346,8 @@ describe('LibraryPageComponent', () => {
         component.unprocessedOnly = false;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: {
-            ...initialComicListState,
+          [COMIC_BOOK_LIST_FEATURE_KEY]: {
+            ...initialComicBookListState,
             unprocessed: [UNPROCESSED],
             unscraped: [UNSCRAPED],
             changed: [CHANGED],
@@ -357,7 +357,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unscraped comics', () => {
-        component.comics.every(comic => expect(comic.metadata).toBeNull());
+        component.comicBooks.every(comic => expect(comic.metadata).toBeNull());
       });
     });
 
@@ -370,8 +370,8 @@ describe('LibraryPageComponent', () => {
         component.unprocessedOnly = false;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: {
-            ...initialComicListState,
+          [COMIC_BOOK_LIST_FEATURE_KEY]: {
+            ...initialComicBookListState,
             unprocessed: [UNPROCESSED],
             unscraped: [UNSCRAPED],
             changed: [CHANGED],
@@ -381,7 +381,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the changed comics', () => {
-        component.comics.every(comic =>
+        component.comicBooks.every(comic =>
           expect(comic.comicState).toEqual(ComicBookState.CHANGED)
         );
       });
@@ -396,8 +396,8 @@ describe('LibraryPageComponent', () => {
         component.unprocessedOnly = true;
         store.setState({
           ...initialState,
-          [COMIC_LIST_FEATURE_KEY]: {
-            ...initialComicListState,
+          [COMIC_BOOK_LIST_FEATURE_KEY]: {
+            ...initialComicBookListState,
             unprocessed: [UNPROCESSED],
             unscraped: [UNSCRAPED],
             changed: [CHANGED],
@@ -407,7 +407,9 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unprocessed comics', () => {
-        component.comics.every(comic => expect(comic.fileDetails).toBeNull());
+        component.comicBooks.every(comic =>
+          expect(comic.fileDetails).toBeNull()
+        );
       });
     });
   });
@@ -536,13 +538,13 @@ describe('LibraryPageComponent', () => {
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.comics = COMICS;
+      component.comicBooks = COMICS;
       component.onSelectAllComics(true);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        selectComics({ comics: COMICS })
+        selectComics({ comicBooks: COMICS })
       );
     });
   });
@@ -555,7 +557,7 @@ describe('LibraryPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deselectComics({ comics: COMICS })
+        deselectComics({ comicBooks: COMICS })
       );
     });
   });

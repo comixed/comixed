@@ -17,22 +17,22 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 
 export const selectComics = createAction(
   '[Library] Mark a set of comics as selected',
-  props<{ comics: Comic[] }>()
+  props<{ comicBooks: ComicBook[] }>()
 );
 
 export const deselectComics = createAction(
   '[Library] Unmark a set of comics as selected',
-  props<{ comics: Comic[] }>()
+  props<{ comicBooks: ComicBook[] }>()
 );
 
 export const editMultipleComics = createAction(
   '[Library] Edit multiple comics',
-  props<{ comics: Comic[]; details: EditMultipleComics }>()
+  props<{ comicBooks: ComicBook[]; details: EditMultipleComics }>()
 );
 
 export const multipleComicsEdited = createAction(

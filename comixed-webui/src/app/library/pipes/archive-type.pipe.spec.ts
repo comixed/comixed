@@ -18,22 +18,22 @@
 
 import { ArchiveTypePipe } from './archive-type.pipe';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 
 describe('ArchiveTypePipe', () => {
-  const CBZ1 = { ...COMIC_1, archiveType: ArchiveType.CBZ };
-  const CBZ2 = { ...COMIC_2, archiveType: ArchiveType.CBZ };
-  const CBZ3 = { ...COMIC_1, archiveType: ArchiveType.CBZ };
-  const CBR1 = { ...COMIC_2, archiveType: ArchiveType.CBR };
-  const CBR2 = { ...COMIC_3, archiveType: ArchiveType.CBR };
-  const CBR3 = { ...COMIC_1, archiveType: ArchiveType.CBR };
-  const CB71 = { ...COMIC_3, archiveType: ArchiveType.CB7 };
-  const CB72 = { ...COMIC_2, archiveType: ArchiveType.CB7 };
-  const CB73 = { ...COMIC_3, archiveType: ArchiveType.CB7 };
+  const CBZ1 = { ...COMIC_BOOK_1, archiveType: ArchiveType.CBZ };
+  const CBZ2 = { ...COMIC_BOOK_2, archiveType: ArchiveType.CBZ };
+  const CBZ3 = { ...COMIC_BOOK_1, archiveType: ArchiveType.CBZ };
+  const CBR1 = { ...COMIC_BOOK_2, archiveType: ArchiveType.CBR };
+  const CBR2 = { ...COMIC_BOOK_3, archiveType: ArchiveType.CBR };
+  const CBR3 = { ...COMIC_BOOK_1, archiveType: ArchiveType.CBR };
+  const CB71 = { ...COMIC_BOOK_3, archiveType: ArchiveType.CB7 };
+  const CB72 = { ...COMIC_BOOK_2, archiveType: ArchiveType.CB7 };
+  const CB73 = { ...COMIC_BOOK_3, archiveType: ArchiveType.CB7 };
   const COMICS = [CBZ1, CBZ2, CBZ3, CBR1, CBR2, CBR3, CB71, CB72, CB73];
 
   let pipe: ArchiveTypePipe;

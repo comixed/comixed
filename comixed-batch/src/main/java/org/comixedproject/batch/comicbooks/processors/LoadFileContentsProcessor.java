@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,16 +32,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class LoadFileContentsProcessor implements ItemProcessor<Comic, Comic> {
+public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   @Override
-  public Comic process(final Comic comic) throws Exception {
-    log.debug("Loading comic file contents: id={}", comic.getId());
-    this.comicBookAdaptor.load(comic);
-    log.trace("Sorting comic pages");
-    comic.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
-    log.trace("Returning updated comic");
-    return comic;
+  public ComicBook process(final ComicBook comicBook) throws Exception {
+    log.debug("Loading comicBook file contents: id={}", comicBook.getId());
+    this.comicBookAdaptor.load(comicBook);
+    log.trace("Sorting comicBook pages");
+    comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
+    log.trace("Returning updated comicBook");
+    return comicBook;
   }
 }

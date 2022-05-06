@@ -1,8 +1,8 @@
-<h1 *ngIf="!!comic" mat-dialog-title>{{ comic | comicTitle }}</h1>
-<mat-dialog-content *ngIf="!!comic">
+<h1 *ngIf="!!comicBook" mat-dialog-title>{{ comicBook | comicTitle }}</h1>
+<mat-dialog-content *ngIf="!!comicBook">
   <div class="cx-horizontal-container">
     <div>
-      <cx-comic-page [imageUrl]="comic | comicCoverUrl"></cx-comic-page>
+      <cx-comic-page [imageUrl]="comicBook | comicCoverUrl"></cx-comic-page>
     </div>
     <div class="cx-grow-1">
       <span>
@@ -17,7 +17,7 @@
         >
           {{ "comic-book.label.publisher" | translate }}
         </span>
-        {{ comic.publisher }}
+        {{ comicBook.publisher }}
       </span>
       <br />
       <span>
@@ -28,7 +28,7 @@
         >
           {{ "comic-book.label.series" | translate }}
         </span>
-        {{ comic.series }}
+        {{ comicBook.series }}
       </span>
       <br />
       <span>
@@ -39,7 +39,7 @@
         >
           {{ "comic-book.label.volume" | translate }}
         </span>
-        {{ comic.volume }}
+        {{ comicBook.volume }}
       </span>
       <br />
       <span>
@@ -50,7 +50,7 @@
         >
           {{ "comic-book.label.issue-number" | translate }}
         </span>
-        {{ comic.issueNumber }}
+        {{ comicBook.issueNumber }}
       </span>
       <br />
       <span>
@@ -61,7 +61,7 @@
         >
           {{ "comic-book.label.page-count" | translate }}
         </span>
-        {{ comic.pageCount }}
+        {{ comicBook.pageCount }}
       </span>
       <br />
       <span>
@@ -72,7 +72,7 @@
         >
           {{ "comic-book.label.cover-date" | translate }}
         </span>
-        {{ comic.coverDate | date: "mediumDate" }}
+        {{ comicBook.coverDate | date: "mediumDate" }}
       </span>
       <br />
       <span>
@@ -83,10 +83,10 @@
         >
           {{ "comic-book.label.added-date" | translate }}
         </span>
-        {{ comic.addedDate | date: "medium" }}
+        {{ comicBook.addedDate | date: "medium" }}
       </span>
       <br />
-      <span *ngIf="!!comic.lastRead">
+      <span *ngIf="!!comicBook.lastRead">
         <span
           class="
             cx-detail-label cx-float-left cx-align-text-right cx-padding-right-5
@@ -94,9 +94,9 @@
         >
           {{ "comic-book.label.last-read-date" | translate }}
         </span>
-        {{ comic.lastRead | date: "medium" }}
+        {{ comicBook.lastRead | date: "medium" }}
       </span>
-      <br *ngIf="!!comic.lastRead" />
+      <br *ngIf="!!comicBook.lastRead" />
       <span>
         <span
           class="
@@ -105,7 +105,7 @@
         >
           {{ "comic-book.label.archive-type" | translate }}
         </span>
-        {{ "text.archive-type" | translate: { type: comic.archiveType } }}
+        {{ "text.archive-type" | translate: { type: comicBook.archiveType } }}
       </span>
       <br />
       <span>

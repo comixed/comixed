@@ -249,7 +249,7 @@ describe('DuplicatePageListPageComponent', () => {
     it('sorts by comic count', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
-      ).toEqual(ENTRY.item.comics.length);
+      ).toEqual(ENTRY.item.comicBooks.length);
     });
 
     it('sorts by blocked state', () => {
@@ -266,7 +266,7 @@ describe('DuplicatePageListPageComponent', () => {
     } as SelectableListItem<DuplicatePage>;
 
     beforeEach(() => {
-      component.onShowComicsWithPage(ENTRY);
+      component.onShowComicBooksWithPage(ENTRY);
     });
 
     it('opens a dialog', () => {

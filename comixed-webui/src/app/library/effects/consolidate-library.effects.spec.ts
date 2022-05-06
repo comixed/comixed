@@ -26,9 +26,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   libraryConsolidationStarted,
@@ -39,7 +39,7 @@ import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ConsolidateLibraryEffects', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
 
   let actions$: Observable<any>;
   let effects: ConsolidateLibraryEffects;

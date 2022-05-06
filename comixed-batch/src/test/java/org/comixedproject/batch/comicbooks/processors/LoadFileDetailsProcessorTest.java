@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ import static junit.framework.TestCase.*;
 
 import java.io.InputStream;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicFileDetails;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,25 +36,25 @@ public class LoadFileDetailsProcessorTest {
 
   @InjectMocks private LoadFileDetailsProcessor processor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
 
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsArgumentCaptor;
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.when(comic.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(InputStream.class)))
         .thenReturn(TEST_HASH);
-    Mockito.doNothing().when(comic).setFileDetails(comicFileDetailsArgumentCaptor.capture());
+    Mockito.doNothing().when(comicBook).setFileDetails(comicFileDetailsArgumentCaptor.capture());
 
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
     final ComicFileDetails fileDetails = comicFileDetailsArgumentCaptor.getValue();
     assertNotNull(fileDetails);
-    assertSame(comic, fileDetails.getComic());
+    assertSame(comicBook, fileDetails.getComicBook());
     assertEquals(TEST_HASH, fileDetails.getHash());
   }
 }

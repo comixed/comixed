@@ -25,9 +25,9 @@ import {
 import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
@@ -40,7 +40,7 @@ import {
 describe('FooterComponent', () => {
   const initialState = {
     [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
-    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
   };

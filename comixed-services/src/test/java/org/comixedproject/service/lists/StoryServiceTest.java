@@ -30,7 +30,7 @@ import org.comixedproject.messaging.lists.PublishStoryListUpdateAction;
 import org.comixedproject.model.lists.Story;
 import org.comixedproject.model.lists.StoryState;
 import org.comixedproject.repositories.lists.StoryRepository;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.state.lists.StoryEvent;
 import org.comixedproject.state.lists.StoryStateHandler;
 import org.junit.Before;
@@ -51,7 +51,7 @@ public class StoryServiceTest {
 
   @InjectMocks private StoryService service;
   @Mock private StoryRepository storyRepository;
-  @Mock private ComicService comicService;
+  @Mock private ComicBookService comicBookService;
   @Mock private StoryStateHandler storyStateHandler;
   @Mock private State<StoryState, StoryEvent> state;
   @Mock private Message<StoryEvent> message;
@@ -118,7 +118,7 @@ public class StoryServiceTest {
     distinctStories.add(otherStory);
 
     Mockito.when(storyRepository.findAll()).thenReturn(stories);
-    Mockito.when(comicService.getAllStories()).thenReturn(distinctStories);
+    Mockito.when(comicBookService.getAllStories()).thenReturn(distinctStories);
 
     final Set<String> result = service.loadAll();
 
@@ -127,7 +127,7 @@ public class StoryServiceTest {
     assertTrue(result.contains(otherStory));
 
     Mockito.verify(storyRepository, Mockito.times(1)).findAll();
-    Mockito.verify(comicService, Mockito.times(1)).getAllStories();
+    Mockito.verify(comicBookService, Mockito.times(1)).getAllStories();
   }
 
   @Test
@@ -138,7 +138,8 @@ public class StoryServiceTest {
 
     final List<String> publishers = new ArrayList<>();
     publishers.add(TEST_PUBLISHER);
-    Mockito.when(comicService.getAllPublishersForStory(Mockito.anyString())).thenReturn(publishers);
+    Mockito.when(comicBookService.getAllPublishersForStory(Mockito.anyString()))
+        .thenReturn(publishers);
 
     final Set<Story> result = service.findByName(TEST_STORY_NAME);
 

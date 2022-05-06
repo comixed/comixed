@@ -26,7 +26,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -47,7 +47,7 @@ public class FilenameContentAdaptor extends AbstractContentAdaptor {
   @Getter private List<EntryLoaderEntry> entryNameLoaders = new ArrayList<>();
 
   @Override
-  public void loadContent(final Comic comic, final String filename, final byte[] content)
+  public void loadContent(final ComicBook comicBook, final String filename, final byte[] content)
       throws ContentAdaptorException {
     final String rootFilename = FilenameUtils.getName(filename);
     log.trace("Finding filename name: {}", rootFilename);
@@ -61,7 +61,7 @@ public class FilenameContentAdaptor extends AbstractContentAdaptor {
         definition.bean = this.getBean(definition.name);
       }
       log.trace("Invoking filename content adaptor: {}", definition.name);
-      definition.bean.loadContent(comic, filename, content);
+      definition.bean.loadContent(comicBook, filename, content);
       return;
     }
     log.error("No content adaptor found for filename={}", filename);

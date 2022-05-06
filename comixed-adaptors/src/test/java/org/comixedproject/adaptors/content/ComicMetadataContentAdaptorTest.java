@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2017, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
 
 import java.io.IOException;
 import java.util.*;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.Credit;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
 
   @InjectMocks ComicMetadataContentAdaptor adaptor;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   private List<String> characterList = new ArrayList<>();
   private List<String> teamList = new ArrayList<>();
   private List<String> locationList = new ArrayList<>();
@@ -56,30 +56,31 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
 
   @Before
   public void setup() {
-    Mockito.when(comic.getPublisher()).thenReturn(TEST_PUBLISHER_NAME);
-    Mockito.when(comic.getSeries()).thenReturn(TEST_SERIES_NAME);
-    Mockito.when(comic.getVolume()).thenReturn(TEST_VOLUME_NAME);
-    Mockito.when(comic.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(comic.getTitle()).thenReturn(TEST_TITLE);
-    Mockito.when(comic.getDescription()).thenReturn(TEST_DESCRIPTION);
-    Mockito.when(comic.getCoverDate()).thenReturn(new Date());
+    Mockito.when(comicBook.getPublisher()).thenReturn(TEST_PUBLISHER_NAME);
+    Mockito.when(comicBook.getSeries()).thenReturn(TEST_SERIES_NAME);
+    Mockito.when(comicBook.getVolume()).thenReturn(TEST_VOLUME_NAME);
+    Mockito.when(comicBook.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(comicBook.getTitle()).thenReturn(TEST_TITLE);
+    Mockito.when(comicBook.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(comicBook.getCoverDate()).thenReturn(new Date());
 
-    Mockito.when(comic.getCharacters()).thenReturn(characterList);
-    Mockito.when(comic.getTeams()).thenReturn(teamList);
-    Mockito.when(comic.getLocations()).thenReturn(locationList);
-    Mockito.when(comic.getStories()).thenReturn(storyList);
-    Mockito.when(comic.getCredits()).thenReturn(creditList);
+    Mockito.when(comicBook.getCharacters()).thenReturn(characterList);
+    Mockito.when(comicBook.getTeams()).thenReturn(teamList);
+    Mockito.when(comicBook.getLocations()).thenReturn(locationList);
+    Mockito.when(comicBook.getStories()).thenReturn(storyList);
+    Mockito.when(comicBook.getCredits()).thenReturn(creditList);
   }
 
   @Test(expected = ContentAdaptorException.class)
   public void testLoadComicInfoXmlNotXml() throws IOException, ContentAdaptorException {
-    adaptor.loadContent(comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_NOT_XML));
+    adaptor.loadContent(
+        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_NOT_XML));
   }
 
   @Test
   public void testLoadComicInfoXml() throws IOException, ContentAdaptorException {
     adaptor.loadContent(
-        comic, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
 
     assertFalse(characterList.isEmpty());
     assertFalse(teamList.isEmpty());
@@ -87,12 +88,12 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
     assertFalse(storyList.isEmpty());
     assertFalse(creditList.isEmpty());
 
-    Mockito.verify(comic, Mockito.times(1)).setPublisher(TEST_PUBLISHER_NAME);
-    Mockito.verify(comic, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
-    Mockito.verify(comic, Mockito.times(1)).setVolume(TEST_VOLUME_NAME);
-    Mockito.verify(comic, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comic, Mockito.times(1)).setTitle(TEST_TITLE);
-    Mockito.verify(comic, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER_NAME);
+    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME_NAME);
+    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comicBook, Mockito.times(1)).setTitle(TEST_TITLE);
+    Mockito.verify(comicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
   }
 
   @Test
@@ -103,17 +104,17 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
       teamList.add("TEAM" + index);
       locationList.add("LOC" + index);
       storyList.add("STORY" + index);
-      creditList.add(new Credit(comic, "NAME" + index, roles[index % roles.length].toString()));
+      creditList.add(new Credit(comicBook, "NAME" + index, roles[index % roles.length].toString()));
     }
-    byte[] result = adaptor.createContent(comic);
+    byte[] result = adaptor.createContent(comicBook);
 
     assertNotNull(result);
 
-    Mockito.verify(comic, Mockito.times(1)).getPublisher();
-    Mockito.verify(comic, Mockito.times(1)).getSeries();
-    Mockito.verify(comic, Mockito.times(1)).getVolume();
-    Mockito.verify(comic, Mockito.times(1)).getIssueNumber();
-    Mockito.verify(comic, Mockito.times(1)).getTitle();
-    Mockito.verify(comic, Mockito.times(1)).getDescription();
+    Mockito.verify(comicBook, Mockito.times(1)).getPublisher();
+    Mockito.verify(comicBook, Mockito.times(1)).getSeries();
+    Mockito.verify(comicBook, Mockito.times(1)).getVolume();
+    Mockito.verify(comicBook, Mockito.times(1)).getIssueNumber();
+    Mockito.verify(comicBook, Mockito.times(1)).getTitle();
+    Mockito.verify(comicBook, Mockito.times(1)).getDescription();
   }
 }

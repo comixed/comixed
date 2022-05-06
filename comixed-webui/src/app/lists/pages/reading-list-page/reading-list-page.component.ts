@@ -37,7 +37,7 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import {
@@ -67,7 +67,7 @@ export class ReadingListPageComponent implements OnDestroy {
   readingListRemovalSubscription: MessagingSubscription;
   readingListForm: FormGroup;
   readingListId = -1;
-  selectedEntries: Comic[] = [];
+  selectedEntries: ComicBook[] = [];
   langChangeSubscription: Subscription;
 
   constructor(
@@ -244,7 +244,7 @@ export class ReadingListPageComponent implements OnDestroy {
     });
   }
 
-  onSelectionChanged(selected: Comic[]): void {
+  onSelectionChanged(selected: ComicBook[]): void {
     this.logger.debug('Selected reading list comics changed:', selected);
     this.selectedEntries = selected;
   }

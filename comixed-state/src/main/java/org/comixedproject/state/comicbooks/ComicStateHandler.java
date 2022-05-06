@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * <code>ComicStateHandler</code> handles firing actions and notifying listeners for state changes
- * on {@link Comic} instances.
+ * on {@link ComicBook} instances.
  *
  * @author Darryl L. Pierce
  */
@@ -88,27 +88,27 @@ public class ComicStateHandler extends LifecycleObjectSupport {
   /**
    * Initiates a state event.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @param event the event
    */
-  public void fireEvent(final Comic comic, final ComicEvent event) {
-    this.fireEvent(comic, event, Collections.emptyMap());
+  public void fireEvent(final ComicBook comicBook, final ComicEvent event) {
+    this.fireEvent(comicBook, event, Collections.emptyMap());
   }
 
   /**
    * Initiates a state event.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @param event the event
    * @param headers the message headers
    */
   public void fireEvent(
-      final Comic comic, final ComicEvent event, final Map<String, Object> headers) {
-    log.debug("Firing comic event: {} => {}", comic.getId(), event);
+      final ComicBook comicBook, final ComicEvent event, final Map<String, Object> headers) {
+    log.debug("Firing comicBook event: {} => {}", comicBook.getId(), event);
     final Message<ComicEvent> message =
         MessageBuilder.withPayload(event)
             .copyHeaders(headers)
-            .setHeader(HEADER_COMIC, comic)
+            .setHeader(HEADER_COMIC, comicBook)
             .build();
     this.stateMachine.stop();
     this.stateMachine
@@ -116,7 +116,7 @@ public class ComicStateHandler extends LifecycleObjectSupport {
         .doWithAllRegions(
             access ->
                 access.resetStateMachine(
-                    new DefaultStateMachineContext<>(comic.getComicState(), null, null, null)));
+                    new DefaultStateMachineContext<>(comicBook.getComicState(), null, null, null)));
     this.stateMachine.start();
     this.stateMachine.sendEvent(message);
   }

@@ -24,7 +24,7 @@ import {
   markComicsDeletedFailed
 } from '../actions/mark-comics-deleted.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicService } from '@app/comic-books/services/comic.service';
+import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -39,7 +39,7 @@ export class MarkComicsDeletedEffects {
       switchMap(action =>
         this.comicService
           .markComicsDeleted({
-            comics: action.comics,
+            comicBooks: action.comicBooks,
             deleted: action.deleted
           })
           .pipe(
@@ -78,7 +78,7 @@ export class MarkComicsDeletedEffects {
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private comicService: ComicService,
+    private comicService: ComicBookService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

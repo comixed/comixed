@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,9 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -47,15 +47,15 @@ public class LibraryServiceTest {
   private static final boolean TEST_DELETE_REMOVED_COMIC_FILES = RandomUtils.nextBoolean();
 
   @InjectMocks private LibraryService service;
-  @Mock private ComicService comicService;
-  @Mock private Comic comic;
+  @Mock private ComicBookService comicBookService;
+  @Mock private ComicBook comicBook;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
 
   @Captor private ArgumentCaptor<Map<String, Object>> headersArgumentCaptor;
 
-  private List<Comic> comicList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
 
   @Test
@@ -88,31 +88,32 @@ public class LibraryServiceTest {
   public void testUpdateMetadata() throws ComicException {
     for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
 
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.updateMetadata(comicIdList);
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
-      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
     Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
-        .fireEvent(comic, ComicEvent.updateMetadata);
+        .fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
   @Test
   public void testUpdateMetadataInvalidComic() throws ComicException {
     for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
 
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     service.updateMetadata(comicIdList);
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
-      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.updateMetadata);
+    Mockito.verify(comicStateHandler, Mockito.never())
+        .fireEvent(comicBook, ComicEvent.updateMetadata);
   }
 
   @Test(expected = LibraryException.class)
@@ -122,13 +123,13 @@ public class LibraryServiceTest {
 
   @Test
   public void testPrepareForConsolidation() throws LibraryException {
-    for (int index = 0; index < 25; index++) comicList.add(comic);
+    for (int index = 0; index < 25; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicService.findAll()).thenReturn(comicList);
+    Mockito.when(comicBookService.findAll()).thenReturn(comicBookList);
     Mockito.doNothing()
         .when(comicStateHandler)
         .fireEvent(
-            Mockito.any(Comic.class),
+            Mockito.any(ComicBook.class),
             Mockito.any(ComicEvent.class),
             headersArgumentCaptor.capture());
 
@@ -142,70 +143,71 @@ public class LibraryServiceTest {
     assertEquals(TEST_TARGET_DIRECTORY, headers.get(HEADER_TARGET_DIRECTORY));
     assertEquals(TEST_RENAMING_RULE, headers.get(HEADER_RENAMING_RULE));
 
-    Mockito.verify(comicStateHandler, Mockito.times(comicList.size()))
-        .fireEvent(comic, ComicEvent.consolidateComic, headers);
+    Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
+        .fireEvent(comicBook, ComicEvent.consolidateComic, headers);
   }
 
   @Test
   public void testPrepareToRecreateComics() throws ComicException {
     for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
 
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.prepareToRecreateComics(comicIdList);
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
-      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
     Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
-        .fireEvent(comic, ComicEvent.recreateComicFile);
+        .fireEvent(comicBook, ComicEvent.recreateComicFile);
   }
 
   @Test
   public void testPrepareToRecreateComicsInvalid() throws ComicException {
     for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
 
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     service.prepareToRecreateComics(comicIdList);
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
-      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
     Mockito.verify(comicStateHandler, Mockito.never())
-        .fireEvent(comic, ComicEvent.recreateComicFile);
+        .fireEvent(comicBook, ComicEvent.recreateComicFile);
   }
 
   @Test
   public void testPrepareForPurge() throws ComicException {
     for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
 
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.prepareForPurging(comicIdList);
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
-      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
     Mockito.verify(comicStateHandler, Mockito.times(comicIdList.size()))
-        .fireEvent(comic, ComicEvent.prepareToPurge);
+        .fireEvent(comicBook, ComicEvent.prepareToPurge);
   }
 
   @Test
   public void testPrepareForPurgeInvalid() throws ComicException {
     for (long index = 0L; index < 25L; index++) comicIdList.add(index + 100L);
 
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     service.prepareForPurging(comicIdList);
 
     for (int index = 0; index < comicIdList.size(); index++) {
       final Long id = comicIdList.get(index);
-      Mockito.verify(comicService, Mockito.times(1)).getComic(id);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(id);
     }
-    Mockito.verify(comicStateHandler, Mockito.never()).fireEvent(comic, ComicEvent.prepareToPurge);
+    Mockito.verify(comicStateHandler, Mockito.never())
+        .fireEvent(comicBook, ComicEvent.prepareToPurge);
   }
 }

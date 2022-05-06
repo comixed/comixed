@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.ColumnTransformer;
@@ -33,7 +33,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 /**
- * <code>ReadingLists</code> represents a list of comics.
+ * <code>ReadingLists</code> represents a list of comicBooks.
  *
  * @author Darryl L. Pierce
  */
@@ -110,11 +110,11 @@ public class ReadingList {
   @JoinTable(
       name = "ReadingListEntries",
       joinColumns = {@JoinColumn(name = "ReadingListId")},
-      inverseJoinColumns = {@JoinColumn(name = "ComicId")})
-  @JsonProperty("comics")
+      inverseJoinColumns = {@JoinColumn(name = "ComicBookId")})
+  @JsonProperty("comicBooks")
   @JsonView({View.ReadingLists.class, View.AuditLogEntryDetail.class})
   @Getter
-  private List<Comic> comics = new ArrayList<>();
+  private List<ComicBook> comicBooks = new ArrayList<>();
 
   public void setName(final String name) {
     this.name = name;

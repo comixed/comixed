@@ -20,34 +20,34 @@ package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemReader;
 
 /**
  * <code>AbstractComicReader</code> provides a foundation for building new {@link ItemReader}
- * classes that work with instances of {@link Comic}.
+ * classes that work with instances of {@link ComicBook}.
  *
  * @author Darryl L. Pierce
  */
 @Log4j2
-public abstract class AbstractComicReader implements ItemReader<Comic> {
-  List<Comic> comicList = null;
+public abstract class AbstractComicReader implements ItemReader<ComicBook> {
+  List<ComicBook> comicBookList = null;
 
   @Override
-  public Comic read() {
-    if (this.comicList == null) {
+  public ComicBook read() {
+    if (this.comicBookList == null) {
       log.trace("Load more comics to process");
-      this.comicList = this.doLoadComics();
+      this.comicBookList = this.doLoadComics();
     }
 
-    if (this.comicList.isEmpty()) {
+    if (this.comicBookList.isEmpty()) {
       log.trace("No comics to process");
-      this.comicList = null;
+      this.comicBookList = null;
       return null;
     }
 
     log.trace("Returning next comic to process");
-    return this.comicList.remove(0);
+    return this.comicBookList.remove(0);
   }
 
   /**
@@ -55,5 +55,5 @@ public abstract class AbstractComicReader implements ItemReader<Comic> {
    *
    * @return the comics
    */
-  protected abstract List<Comic> doLoadComics();
+  protected abstract List<ComicBook> doLoadComics();
 }

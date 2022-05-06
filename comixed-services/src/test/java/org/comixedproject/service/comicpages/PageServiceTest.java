@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.state.comicpages.PageEvent;
@@ -59,13 +59,13 @@ public class PageServiceTest {
 
   @InjectMocks private PageService service;
   @Mock private PageRepository pageRepository;
-  @Mock private ComicService comicService;
+  @Mock private ComicBookService comicBookService;
   @Mock private PageStateHandler pageStateHandler;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private Page page;
   @Mock private Page savedPage;
   @Mock private Page pageRecord;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private State<PageState, PageEvent> state;
   @Mock private Message<PageEvent> message;
   @Mock private MessageHeaders messageHeaders;
@@ -90,13 +90,14 @@ public class PageServiceTest {
   @Test
   public void testOnPageStateChange() throws PublishingException {
     Mockito.when(pageRepository.save(Mockito.any(Page.class))).thenReturn(savedPage);
-    Mockito.when(savedPage.getComic()).thenReturn(comic);
+    Mockito.when(savedPage.getComicBook()).thenReturn(comicBook);
 
     service.onPageStateChange(state, message);
 
     Mockito.verify(page, Mockito.times(1)).setPageState(TEST_STATE);
     Mockito.verify(pageRepository, Mockito.times(1)).save(page);
-    Mockito.verify(comicStateHandler, Mockito.times(1)).fireEvent(comic, ComicEvent.detailsUpdated);
+    Mockito.verify(comicStateHandler, Mockito.times(1))
+        .fireEvent(comicBook, ComicEvent.detailsUpdated);
   }
 
   @Test
@@ -127,42 +128,42 @@ public class PageServiceTest {
 
   @Test(expected = ComicException.class)
   public void testGetPageInComicByIndexForMissingComic() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     try {
       service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
     } finally {
-      Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     }
   }
 
   @Test
   public void testGetPageInComicByIndexOutOfBounds() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(comic.getPageCount()).thenReturn(TEST_PAGE_INDEX - 1);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicBook.getPageCount()).thenReturn(TEST_PAGE_INDEX - 1);
 
     final Page result = service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
     assertNull(result);
 
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comic, Mockito.atLeast(1)).getPageCount();
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comicBook, Mockito.atLeast(1)).getPageCount();
   }
 
   @Test
   public void testGetImageInComicByIndex() throws ComicException {
-    Mockito.when(comicService.getComic(Mockito.anyLong())).thenReturn(comic);
-    Mockito.when(comic.getPageCount()).thenReturn(TEST_PAGE_INDEX + 1);
-    Mockito.when(comic.getPage(Mockito.anyInt())).thenReturn(page);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(comicBook.getPageCount()).thenReturn(TEST_PAGE_INDEX + 1);
+    Mockito.when(comicBook.getPage(Mockito.anyInt())).thenReturn(page);
 
     Page result = service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
 
     assertNotNull(result);
     assertSame(page, result);
 
-    Mockito.verify(comicService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    Mockito.verify(comic, Mockito.atLeast(1)).getPageCount();
-    Mockito.verify(comic, Mockito.times(1)).getPage(TEST_PAGE_INDEX);
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
+    Mockito.verify(comicBook, Mockito.atLeast(1)).getPageCount();
+    Mockito.verify(comicBook, Mockito.times(1)).getPage(TEST_PAGE_INDEX);
   }
 
   @Test(expected = PageException.class)

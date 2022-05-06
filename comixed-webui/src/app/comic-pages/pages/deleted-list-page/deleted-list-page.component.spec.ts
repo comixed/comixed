@@ -22,18 +22,20 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { Comic } from '@app/comic-books/models/comic';
-import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
+import { ComicBook } from '@app/comic-books/models/comic-book';
+import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
+import { MatTableModule } from '@angular/material/table';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 
 describe('DeletedListPageComponent', () => {
-  const COMICS: Comic[] = [
+  const COMIC_BOOKS: ComicBook[] = [
     {
-      ...COMIC_1,
+      ...COMIC_BOOK_1,
       pages: [
         { ...PAGE_1, deleted: false },
         { ...PAGE_2, deleted: true },
@@ -41,7 +43,9 @@ describe('DeletedListPageComponent', () => {
       ]
     }
   ];
-  const initialState = { [COMIC_LIST_FEATURE_KEY]: initialComicListState };
+  const initialState = {
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState
+  };
 
   let component: DeletedListPageComponent;
   let fixture: ComponentFixture<DeletedListPageComponent>;
@@ -52,8 +56,12 @@ describe('DeletedListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeletedListPageComponent],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
+      declarations: [DeletedListPageComponent, ComicTitlePipe],
+      imports: [
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatTableModule
+      ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
@@ -90,7 +98,10 @@ describe('DeletedListPageComponent', () => {
       component.dataSource.data = [];
       store.setState({
         ...initialState,
-        [COMIC_LIST_FEATURE_KEY]: { ...initialComicListState, comics: COMICS }
+        [COMIC_BOOK_LIST_FEATURE_KEY]: {
+          ...initialComicBookListState,
+          comicBooks: COMIC_BOOKS
+        }
       });
     });
 
@@ -107,7 +118,7 @@ describe('DeletedListPageComponent', () => {
 
   describe('sorting the pages', () => {
     const PAGE = PAGE_3;
-    const COMIC = COMIC_1;
+    const COMIC = COMIC_BOOK_1;
     const ENTRY = { page: PAGE, comic: COMIC };
 
     it('sorts by comic', () => {

@@ -19,10 +19,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionsChartComponent } from './collections-chart.component';
 import {
-  COMIC_1,
-  COMIC_2,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
@@ -36,24 +36,24 @@ import { CollectionType } from '@app/collections/models/comic-collection.enum';
 
 describe('CollectionsChartComponent', () => {
   const COMICS = [
-    { ...COMIC_1, publisher: null, series: null },
-    COMIC_3,
-    COMIC_5,
-    { ...COMIC_2, publisher: 'publisher1', series: null },
-    { ...COMIC_2, publisher: 'publisher2', series: null },
-    { ...COMIC_2, publisher: 'publisher3', series: null },
-    { ...COMIC_2, publisher: 'publisher4', series: null },
-    { ...COMIC_2, publisher: 'publisher5', series: null },
-    { ...COMIC_2, publisher: 'publisher6', series: null },
-    { ...COMIC_2, publisher: 'publisher7', series: null },
-    { ...COMIC_2, publisher: 'publisher8', series: null },
-    { ...COMIC_2, publisher: 'publisher9', series: null },
-    { ...COMIC_2, publisher: 'publisher10', series: null },
-    { ...COMIC_2, publisher: 'publisher11', series: null },
-    { ...COMIC_2, publisher: 'publisher12', series: null },
-    { ...COMIC_2, publisher: 'publisher13', series: null },
-    { ...COMIC_2, publisher: 'publisher14', series: null },
-    { ...COMIC_2, publisher: 'publisher15', series: null }
+    { ...COMIC_BOOK_1, publisher: null, series: null },
+    COMIC_BOOK_3,
+    COMIC_BOOK_5,
+    { ...COMIC_BOOK_2, publisher: 'publisher1', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher2', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher3', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher4', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher5', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher6', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher7', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher8', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher9', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher10', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher11', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher12', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher13', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher14', series: null },
+    { ...COMIC_BOOK_2, publisher: 'publisher15', series: null }
   ];
 
   let component: CollectionsChartComponent;

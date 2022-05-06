@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import static org.comixedproject.opds.utils.OPDSUtils.*;
 import static org.junit.Assert.assertNotNull;
 
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.model.OPDSLink;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,33 +37,34 @@ public class OPDSUtilsTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
   private static final String TEST_BASE_FILENAME = "Test Filename.cbz";
 
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
 
   @Before
   public void setUp() {
-    Mockito.when(comic.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
-    Mockito.when(comic.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
   }
 
   @Test
   public void testCreateComicLink() {
-    final OPDSLink result = OPDSUtils.createComicLink(comic);
+    final OPDSLink result = OPDSUtils.createComicLink(comicBook);
 
     assertNotNull(result);
     assertEquals(TEST_ARCHIVE_TYPE.getMimeType(), result.getMimeType());
     assertEquals(
-        String.format(COMIC_LINK_URL, comic.getId(), OPDSUtils.urlEncodeString(TEST_BASE_FILENAME)),
+        String.format(
+            COMIC_LINK_URL, comicBook.getId(), OPDSUtils.urlEncodeString(TEST_BASE_FILENAME)),
         result.getReference());
   }
 
   @Test
   public void testCreateComicCoverLink() {
-    final OPDSLink result = OPDSUtils.createComicCoverLink(comic);
+    final OPDSLink result = OPDSUtils.createComicCoverLink(comicBook);
 
     assertNotNull(result);
     assertEquals(IMAGE_MIME_TYPE, result.getMimeType());
     assertEquals(OPDS_IMAGE_RELATION, result.getRelation());
-    assertEquals(String.format(COMIC_COVER_URL, comic.getId(), 0, 160), result.getReference());
+    assertEquals(String.format(COMIC_COVER_URL, comicBook.getId(), 0, 160), result.getReference());
   }
 
   @Test

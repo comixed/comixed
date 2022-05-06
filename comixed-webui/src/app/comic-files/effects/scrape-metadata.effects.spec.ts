@@ -22,7 +22,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ScrapeMetadataEffects } from './scrape-metadata.effects';
 import { ComicImportService } from '@app/comic-files/services/comic-import.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_2 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -36,10 +36,10 @@ import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ScrapeMetadataEffects', () => {
-  const FILENAME = COMIC_2.baseFilename;
-  const SERIES = COMIC_2.series;
-  const VOLUME = COMIC_2.volume;
-  const ISSUE_NUMBER = COMIC_2.issueNumber;
+  const FILENAME = COMIC_BOOK_2.baseFilename;
+  const SERIES = COMIC_BOOK_2.series;
+  const VOLUME = COMIC_BOOK_2.volume;
+  const ISSUE_NUMBER = COMIC_BOOK_2.issueNumber;
 
   let actions$: Observable<any>;
   let effects: ScrapeMetadataEffects;

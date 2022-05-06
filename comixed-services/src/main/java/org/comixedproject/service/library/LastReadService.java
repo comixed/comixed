@@ -28,13 +28,13 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
 import org.comixedproject.messaging.library.PublishLastReadUpdatedAction;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.LastReadRepository;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
-import org.comixedproject.service.comicbooks.ComicService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -49,7 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * <code>LastReadService</code> provides rules for marking instances of {@link Comic} as read by
+ * <code>LastReadService</code> provides rules for marking instances of {@link ComicBook} as read by
  * {@link ComiXedUser}s.
  *
  * @author Darryl L. Pierce
@@ -59,7 +59,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LastReadService implements InitializingBean, ComicStateChangeListener {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private UserService userService;
-  @Autowired private ComicService comicService;
+  @Autowired private ComicBookService comicBookService;
   @Autowired private LastReadRepository lastReadRepository;
   @Autowired private PublishLastReadUpdatedAction publishLastReadUpdatedAction;
   @Autowired private PublishLastReadRemovedAction publishLastReadRemovedAction;
@@ -80,33 +80,33 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
   @Transactional
   public void onComicStateChange(
       final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
-    log.trace("Fetching comic");
-    final Comic comic = message.getHeaders().get(HEADER_COMIC, Comic.class);
+    log.trace("Fetching comicBook");
+    final ComicBook comicBook = message.getHeaders().get(HEADER_COMIC, ComicBook.class);
     log.trace("Fetching event type");
     final ComicEvent event = message.getPayload();
     if (event == ComicEvent.markAsRead) {
       log.trace("Fetching user");
       final ComiXedUser user = message.getHeaders().get(HEADER_USER, ComiXedUser.class);
-      log.trace("Marking comic as read");
-      this.markComicAsRead(comic, user);
+      log.trace("Marking comicBook as read");
+      this.markComicAsRead(comicBook, user);
     }
     if (event == ComicEvent.markAsUnread) {
       log.trace("Fetching user");
       final ComiXedUser user = message.getHeaders().get(HEADER_USER, ComiXedUser.class);
-      log.trace("Marking comic as read");
-      this.markComicAsUnread(comic, user);
+      log.trace("Marking comicBook as read");
+      this.markComicAsUnread(comicBook, user);
     }
   }
 
   /**
-   * Creates a record marking the specified comic as read by the given user.
+   * Creates a record marking the specified comicBook as read by the given user.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    * @param user the user
    */
-  public void markComicAsRead(final Comic comic, final ComiXedUser user) {
+  public void markComicAsRead(final ComicBook comicBook, final ComiXedUser user) {
     log.trace("Creating last read record");
-    final LastRead lastRead = this.lastReadRepository.save(new LastRead(comic, user));
+    final LastRead lastRead = this.lastReadRepository.save(new LastRead(comicBook, user));
     try {
       this.publishLastReadUpdatedAction.publish(lastRead);
     } catch (PublishingException error) {
@@ -114,9 +114,9 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     }
   }
 
-  public void markComicAsUnread(final Comic comic, final ComiXedUser user) {
+  public void markComicAsUnread(final ComicBook comicBook, final ComiXedUser user) {
     log.trace("Loading last read record");
-    final LastRead lastRead = this.lastReadRepository.loadEntryForComicAndUser(comic, user);
+    final LastRead lastRead = this.lastReadRepository.loadEntryForComicAndUser(comicBook, user);
     log.trace("Deleting last read record");
     this.lastReadRepository.delete(lastRead);
     try {
@@ -167,17 +167,17 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
     ids.forEach(
         id -> {
           try {
-            log.trace("Loading comic: id={}", id);
-            final Comic comic = this.comicService.getComic(id);
+            log.trace("Loading comicBook: id={}", id);
+            final ComicBook comicBook = this.comicBookService.getComic(id);
             log.trace("Creating additional headers");
             Map<String, Object> headers = new HashMap<>();
             headers.put(HEADER_USER, user);
             if (state) {
-              log.trace("Firing event: mark comic as read");
-              this.comicStateHandler.fireEvent(comic, ComicEvent.markAsRead, headers);
+              log.trace("Firing event: mark comicBook as read");
+              this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsRead, headers);
             } else {
-              log.trace("Firing event: mark comic as unread");
-              this.comicStateHandler.fireEvent(comic, ComicEvent.markAsUnread, headers);
+              log.trace("Firing event: mark comicBook as unread");
+              this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsUnread, headers);
             }
           } catch (ComicException error) {
             log.error("Failed to process comic last read state", error);

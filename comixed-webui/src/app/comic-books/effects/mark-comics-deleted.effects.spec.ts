@@ -19,15 +19,15 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
-import { ComicService } from '@app/comic-books/services/comic.service';
+import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  COMIC_1,
-  COMIC_3,
-  COMIC_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
@@ -39,12 +39,12 @@ import { hot } from 'jasmine-marbles';
 import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
 
 describe('MarkComicsDeletedEffects', () => {
-  const COMICS = [COMIC_1, COMIC_3, COMIC_5];
+  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const DELETED = Math.random() > 0.5;
 
   let actions$: Observable<any>;
   let effects: MarkComicsDeletedEffects;
-  let comicService: jasmine.SpyObj<ComicService>;
+  let comicService: jasmine.SpyObj<ComicBookService>;
   let alertService: AlertService;
 
   beforeEach(() => {
@@ -58,10 +58,10 @@ describe('MarkComicsDeletedEffects', () => {
         MarkComicsDeletedEffects,
         provideMockActions(() => actions$),
         {
-          provide: ComicService,
+          provide: ComicBookService,
           useValue: {
             markComicsDeleted: jasmine.createSpy(
-              'ComicService.markComicsDeleted()'
+              'ComicBookService.markComicsDeleted()'
             )
           }
         },
@@ -70,7 +70,9 @@ describe('MarkComicsDeletedEffects', () => {
     });
 
     effects = TestBed.inject(MarkComicsDeletedEffects);
-    comicService = TestBed.inject(ComicService) as jasmine.SpyObj<ComicService>;
+    comicService = TestBed.inject(
+      ComicBookService
+    ) as jasmine.SpyObj<ComicBookService>;
     alertService = TestBed.inject(AlertService);
     spyOn(alertService, 'info');
     spyOn(alertService, 'error');
@@ -83,7 +85,10 @@ describe('MarkComicsDeletedEffects', () => {
   describe('updating the deleted state for a comic', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
-      const action = markComicsDeleted({ comics: COMICS, deleted: DELETED });
+      const action = markComicsDeleted({
+        comicBooks: COMICS,
+        deleted: DELETED
+      });
       const outcome = comicsMarkedDeleted();
 
       actions$ = hot('-a', { a: action });
@@ -96,7 +101,10 @@ describe('MarkComicsDeletedEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = markComicsDeleted({ comics: COMICS, deleted: DELETED });
+      const action = markComicsDeleted({
+        comicBooks: COMICS,
+        deleted: DELETED
+      });
       const outcome = markComicsDeletedFailed();
 
       actions$ = hot('-a', { a: action });
@@ -110,7 +118,10 @@ describe('MarkComicsDeletedEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = markComicsDeleted({ comics: COMICS, deleted: DELETED });
+      const action = markComicsDeleted({
+        comicBooks: COMICS,
+        deleted: DELETED
+      });
       const outcome = markComicsDeletedFailed();
 
       actions$ = hot('-a', { a: action });

@@ -28,7 +28,7 @@ import org.comixedproject.batch.comicbooks.readers.ComicFileDescriptorReader;
 import org.comixedproject.batch.comicbooks.readers.RecordInsertedReader;
 import org.comixedproject.batch.comicbooks.writers.ComicInsertWriter;
 import org.comixedproject.batch.comicbooks.writers.ReaderInsertedWriter;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -102,7 +102,7 @@ public class AddComicsConfiguration {
     return stepBuilderFactory
         .get("createInsertStep")
         .listener(stepExecutionListener)
-        .<ComicFileDescriptor, Comic>chunk(this.batchChunkSize)
+        .<ComicFileDescriptor, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -129,7 +129,7 @@ public class AddComicsConfiguration {
       final ReaderInsertedWriter writer) {
     return stepBuilderFactory
         .get("recordInsertedStep")
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

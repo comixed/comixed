@@ -21,15 +21,15 @@ import {
   reducer,
   SetComicsReadState
 } from './set-comics-read-state.reducer';
-import { COMIC_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
-  comicsReadSet,
-  setComicsRead,
-  setComicsReadFailed
+  comicBooksReadSet,
+  setComicBooksRead,
+  setComicBooksReadFailed
 } from '@app/last-read/actions/set-comics-read.actions';
 
 describe('SetComicRead Reducer', () => {
-  const COMIC = COMIC_4;
+  const COMIC = COMIC_BOOK_4;
   const READ = Math.random() > 0.5;
 
   let state: SetComicsReadState;
@@ -52,7 +52,7 @@ describe('SetComicRead Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        setComicsRead({ comics: [COMIC], read: READ })
+        setComicBooksRead({ comicBooks: [COMIC], read: READ })
       );
     });
 
@@ -63,7 +63,7 @@ describe('SetComicRead Reducer', () => {
 
   describe('success updating the status', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, comicsReadSet());
+      state = reducer({ ...state, updating: true }, comicBooksReadSet());
     });
 
     it('clears the updating flag', () => {
@@ -73,7 +73,7 @@ describe('SetComicRead Reducer', () => {
 
   describe('failure updating the status', () => {
     beforeEach(() => {
-      state = reducer({ ...state, updating: true }, setComicsReadFailed());
+      state = reducer({ ...state, updating: true }, setComicBooksReadFailed());
     });
 
     it('clears the updating flag', () => {

@@ -18,7 +18,7 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,21 +26,21 @@ public class ComicDataAdaptor {
   /**
    * Clears all metadata scraped from a remove database.
    *
-   * @param comic the comic
+   * @param comicBook the comicBook
    */
-  public void clear(Comic comic) {
-    comic.setMetadata(null);
-    comic.setPublisher("");
-    comic.setSeries("");
-    comic.setVolume("");
-    comic.setIssueNumber("");
-    comic.setCoverDate(null);
-    comic.setTitle("");
-    comic.setDescription("");
-    comic.getStories().clear();
-    comic.getTeams().clear();
-    comic.getCharacters().clear();
-    comic.getLocations().clear();
-    comic.getCredits().clear();
+  public void clear(ComicBook comicBook) {
+    comicBook.setMetadata(null);
+    comicBook.setPublisher("");
+    comicBook.setSeries("");
+    comicBook.setVolume("");
+    comicBook.setIssueNumber("");
+    comicBook.setCoverDate(null);
+    comicBook.setTitle("");
+    comicBook.setDescription("");
+    comicBook.getStories().clear();
+    comicBook.getTeams().clear();
+    comicBook.getCharacters().clear();
+    comicBook.getLocations().clear();
+    comicBook.getCredits().clear();
   }
 }

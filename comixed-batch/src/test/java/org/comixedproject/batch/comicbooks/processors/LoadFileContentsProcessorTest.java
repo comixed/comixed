@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import java.util.List;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,16 +33,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class LoadFileContentsProcessorTest {
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
   @Mock private List<Page> pageList;
 
   @Test
   public void testProcess() throws Exception {
-    Mockito.when(comic.getPages()).thenReturn(pageList);
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
-    processor.process(comic);
+    processor.process(comicBook);
 
-    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comic);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook);
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
   }
 }

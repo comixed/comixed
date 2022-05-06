@@ -26,7 +26,7 @@ import java.util.Date;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishProcessComicsStatusAction;
 import org.comixedproject.model.messaging.batch.ProcessComicStatus;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +46,7 @@ public class MarkBlockedPagesStepListenerTest {
   @Mock private StepExecution stepExecution;
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
-  @Mock private ComicService comicService;
+  @Mock private ComicBookService comicBookService;
   @Mock private PublishProcessComicsStatusAction publishProcessComicsStatusAction;
 
   @Captor ArgumentCaptor<ProcessComicStatus> processComicStatusArgumentCaptor;
@@ -68,7 +68,7 @@ public class MarkBlockedPagesStepListenerTest {
 
   @Test
   public void testBeforeStep() throws PublishingException {
-    Mockito.when(comicService.getUnprocessedComicsForMarkedPageBlockingCount())
+    Mockito.when(comicBookService.getUnprocessedComicsForMarkedPageBlockingCount())
         .thenReturn(TEST_TOTAL_COMICS);
 
     listener.beforeStep(stepExecution);
@@ -79,7 +79,8 @@ public class MarkBlockedPagesStepListenerTest {
     assertEquals(TEST_TOTAL_COMICS, status.getTotal());
     assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
 
-    Mockito.verify(comicService, Mockito.times(1)).getUnprocessedComicsForMarkedPageBlockingCount();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getUnprocessedComicsForMarkedPageBlockingCount();
     Mockito.verify(executionContext, Mockito.times(1))
         .putString(STEP_NAME, MARK_BLOCKED_PAGES_STEP_NAME);
     Mockito.verify(executionContext, Mockito.times(1)).putLong(TOTAL_COMICS, TEST_TOTAL_COMICS);
@@ -88,7 +89,7 @@ public class MarkBlockedPagesStepListenerTest {
 
   @Test
   public void testBeforeStepPublisingException() throws PublishingException {
-    Mockito.when(comicService.getUnprocessedComicsForMarkedPageBlockingCount())
+    Mockito.when(comicBookService.getUnprocessedComicsForMarkedPageBlockingCount())
         .thenReturn(TEST_TOTAL_COMICS);
     Mockito.doThrow(PublishingException.class)
         .when(publishProcessComicsStatusAction)
@@ -96,7 +97,8 @@ public class MarkBlockedPagesStepListenerTest {
 
     listener.beforeStep(stepExecution);
 
-    Mockito.verify(comicService, Mockito.times(1)).getUnprocessedComicsForMarkedPageBlockingCount();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getUnprocessedComicsForMarkedPageBlockingCount();
     Mockito.verify(executionContext, Mockito.times(1))
         .putString(STEP_NAME, MARK_BLOCKED_PAGES_STEP_NAME);
     Mockito.verify(executionContext, Mockito.times(1)).putLong(TOTAL_COMICS, TEST_TOTAL_COMICS);

@@ -28,7 +28,7 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.net.AddComicsToReadingListRequest;
 import org.comixedproject.model.net.DownloadDocument;
@@ -112,7 +112,7 @@ public class ReadingListControllerTest {
 
   @Test
   public void testUpdateReadingList() throws ReadingListException, ComicException {
-    Set<Comic> entries = new HashSet<>();
+    Set<ComicBook> entries = new HashSet<>();
 
     Mockito.when(
             readingListService.updateReadingList(

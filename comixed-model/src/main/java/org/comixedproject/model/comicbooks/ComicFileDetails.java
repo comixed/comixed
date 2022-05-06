@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import lombok.*;
 import org.comixedproject.views.View;
 
 /**
- * <code>ComicFileDetails</code> holds the physical details of the comic file.
+ * <code>ComicFileDetails</code> holds the physical details of the comicBook file.
  *
  * @author Darryl L. Pierce
  */
@@ -42,11 +42,11 @@ public class ComicFileDetails {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "ComicId", nullable = false, updatable = false)
+  @JoinColumn(name = "ComicBookId", nullable = false, updatable = false)
   @Getter
   @Setter
   @NonNull
-  private Comic comic;
+  private ComicBook comicBook;
 
   @Column(name = "FileHash", length = 32, nullable = false, updatable = true)
   @JsonProperty("hash")

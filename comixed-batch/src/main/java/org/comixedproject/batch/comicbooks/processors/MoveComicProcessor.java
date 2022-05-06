@@ -26,7 +26,7 @@ import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
@@ -43,15 +43,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MoveComicProcessor implements ItemProcessor<Comic, Comic>, StepExecutionListener {
+public class MoveComicProcessor
+    implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
 
   private JobParameters jobParameters;
 
   @Override
-  public Comic process(final Comic comic) {
-    log.debug("Getting target directory: id={}", comic.getId());
+  public ComicBook process(final ComicBook comicBook) {
+    log.debug("Getting target directory: id={}", comicBook.getId());
     final File targetDirectory = new File(this.jobParameters.getString(PARAM_TARGET_DIRECTORY));
     log.trace("Getting renaming rule");
     final String renamingRule = this.jobParameters.getString(PARAM_RENAMING_RULE);
@@ -59,25 +60,25 @@ public class MoveComicProcessor implements ItemProcessor<Comic, Comic>, StepExec
     try {
       log.trace("Creating target directory (if needed)");
       this.fileAdaptor.createDirectory(targetDirectory);
-      log.trace("Getting comic extension");
-      final String comicExtension = comic.getArchiveType().getExtension();
-      log.trace("Generating new comic filename");
-      String targetFilename = this.comicFileAdaptor.createFilenameFromRule(comic, renamingRule);
+      log.trace("Getting comicBook extension");
+      final String comicExtension = comicBook.getArchiveType().getExtension();
+      log.trace("Generating new comicBook filename");
+      String targetFilename = this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule);
       log.trace("Finding available filename");
       targetFilename = String.format("%s/%s", targetDirectory, targetFilename);
       targetFilename =
           this.comicFileAdaptor.findAvailableFilename(
-              comic.getFilename(), targetFilename, 0, comicExtension);
+              comicBook.getFilename(), targetFilename, 0, comicExtension);
       final File targetFile = new File(targetFilename);
-      log.trace("Moving comic file");
-      this.fileAdaptor.moveFile(comic.getFile(), targetFile);
-      log.trace("Updating comic filename: {}", targetFile.getAbsoluteFile());
-      comic.setFilename(targetFile.getAbsolutePath());
+      log.trace("Moving comicBook file");
+      this.fileAdaptor.moveFile(comicBook.getFile(), targetFile);
+      log.trace("Updating comicBook filename: {}", targetFile.getAbsoluteFile());
+      comicBook.setFilename(targetFile.getAbsolutePath());
     } catch (IOException error) {
       log.error("Failed to move comics", error);
     }
 
-    return comic;
+    return comicBook;
   }
 
   @Override

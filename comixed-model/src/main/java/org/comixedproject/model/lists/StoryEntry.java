@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.views.View;
 
 /**
@@ -84,12 +84,12 @@ public class StoryEntry {
   private String issueNumber;
 
   @ManyToOne(cascade = CascadeType.DETACH)
-  @JoinColumn(name = "ComicId", nullable = true, updatable = false)
+  @JoinColumn(name = "ComicBookId", nullable = true, updatable = false)
   @JsonView(View.StoryList.class)
-  @JsonProperty("comic")
+  @JsonProperty("comicBook")
   @Getter
   @Setter
-  private Comic comic;
+  private ComicBook comicBook;
 
   @Column(name = "ComicVineId", nullable = true, updatable = true, unique = true)
   @JsonProperty("comicVineId")

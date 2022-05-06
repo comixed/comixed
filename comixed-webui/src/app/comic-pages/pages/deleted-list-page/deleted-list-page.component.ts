@@ -28,7 +28,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { Subscription } from 'rxjs';
-import { selectComicList } from '@app/comic-books/selectors/comic-list.selectors';
+import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { DeletedPageListEntry } from '@app/comic-pages/models/ui/deleted-page-list-entry';
 import { MatSort } from '@angular/material/sort';
@@ -61,7 +61,7 @@ export class DeletedListPageComponent
       );
     this.logger.trace('Subscribing to comic list changes');
     this.comicListSubscription = this.store
-      .select(selectComicList)
+      .select(selectComicBookList)
       .subscribe(comics => {
         let pages: DeletedPageListEntry[] = [];
         comics.forEach(comic =>

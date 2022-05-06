@@ -55,10 +55,10 @@ import { LOGGER_LEVEL_PREFERENCE } from '@app/app.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  COMIC_LIST_FEATURE_KEY,
-  initialState as initialComicListState
-} from '@app/comic-books/reducers/comic-list.reducer';
-import { loadComics } from '@app/comic-books/actions/comic-list.actions';
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
+import { loadComicBooks } from '@app/comic-books/actions/comic-book-list.actions';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from '@app/components/side-navigation/side-navigation.component';
 import { FooterComponent } from '@app/components/footer/footer.component';
@@ -88,7 +88,7 @@ describe('AppComponent', () => {
     [BUSY_FEATURE_KEY]: initialBusyState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
-    [COMIC_LIST_FEATURE_KEY]: initialComicListState,
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [LIBRARY_FEATURE_KEY]: initialLibraryState
@@ -265,8 +265,8 @@ describe('AppComponent', () => {
         store.setState({
           ...initialState,
           [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-          [COMIC_LIST_FEATURE_KEY]: {
-            ...initialComicListState,
+          [COMIC_BOOK_LIST_FEATURE_KEY]: {
+            ...initialComicBookListState,
             loading: false,
             lastPayload: false,
             lastId: LAST_ID
@@ -276,7 +276,7 @@ describe('AppComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComics({ lastId: LAST_ID })
+          loadComicBooks({ lastId: LAST_ID })
         );
       });
     });
@@ -288,8 +288,8 @@ describe('AppComponent', () => {
         store.setState({
           ...initialState,
           [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
-          [COMIC_LIST_FEATURE_KEY]: {
-            ...initialComicListState,
+          [COMIC_BOOK_LIST_FEATURE_KEY]: {
+            ...initialComicBookListState,
             loading: false,
             lastPayload: true,
             lastId: LAST_ID

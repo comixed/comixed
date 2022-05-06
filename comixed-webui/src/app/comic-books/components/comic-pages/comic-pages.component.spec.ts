@@ -18,7 +18,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ComicPagesComponent } from './comic-pages.component';
-import { COMIC_1 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -33,7 +33,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
-import { updatePageDeletion } from '@app/comic-books/actions/comic.actions';
+import { updatePageDeletion } from '@app/comic-books/actions/comic-book.actions';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -45,7 +45,7 @@ import {
 import { MatSortModule } from '@angular/material/sort';
 
 describe('ComicPagesComponent', () => {
-  const COMIC = COMIC_1;
+  const COMIC = COMIC_BOOK_1;
   const USER = USER_READER;
   const PAGE = PAGE_1;
   const DELETED = Math.random() > 0.5;

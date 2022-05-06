@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -33,9 +33,9 @@ import {
 } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  selectComicListFilter,
-  selectComicListState
-} from '@app/comic-books/selectors/comic-list.selectors';
+  selectComicBookListFilter,
+  selectComicBookListState
+} from '@app/comic-books/selectors/comic-book-list.selectors';
 import {
   ArchiveType,
   archiveTypeFromString
@@ -64,9 +64,9 @@ import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
   styleUrls: ['./library-page.component.scss']
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {
-  comicListStateSubscription: Subscription;
+  comicBookListStateSubscription: Subscription;
   selectedSubscription: Subscription;
-  selected: Comic[] = [];
+  selected: ComicBook[] = [];
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   isAdmin = false;
@@ -143,20 +143,20 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.comicListStateSubscription = this.store
-      .select(selectComicListState)
+    this.comicBookListStateSubscription = this.store
+      .select(selectComicBookListState)
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loading }));
         if (this.unscrapedOnly) {
-          this._comics = state.unscraped;
+          this._comicBooks = state.unscraped;
         } else if (this.changedOnly) {
-          this._comics = state.changed;
+          this._comicBooks = state.changed;
         } else if (this.deletedOnly) {
-          this._comics = state.deleted;
+          this._comicBooks = state.deleted;
         } else if (this.unprocessedOnly) {
-          this._comics = state.unprocessed;
+          this._comicBooks = state.unprocessed;
         } else {
-          this._comics = state.comics;
+          this._comicBooks = state.comicBooks;
         }
       });
     this.selectedSubscription = this.store
@@ -180,21 +180,21 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
     this.coverDateFilterSubscription = this.store
-      .select(selectComicListFilter)
+      .select(selectComicBookListFilter)
       .subscribe(filter => (this.coverDateFilter = filter));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
   }
 
-  private _comics: Comic[] = [];
+  private _comicBooks: ComicBook[] = [];
 
-  get comics(): Comic[] {
-    return this._comics;
+  get comicBooks(): ComicBook[] {
+    return this._comicBooks;
   }
 
-  set comics(comics: Comic[]) {
-    this._comics = comics;
+  set comicBooks(comics: ComicBook[]) {
+    this._comicBooks = comics;
   }
 
   ngOnInit(): void {
@@ -203,7 +203,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
-    this.comicListStateSubscription.unsubscribe();
+    this.comicBookListStateSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
@@ -234,10 +234,10 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   onSelectAllComics(selected: boolean): void {
     if (selected) {
       this.logger.trace('Selecting all comics');
-      this.store.dispatch(selectComics({ comics: this.comics }));
+      this.store.dispatch(selectComics({ comicBooks: this.comicBooks }));
     } else {
       this.logger.trace('Deselecting all comics');
-      this.store.dispatch(deselectComics({ comics: this.selected }));
+      this.store.dispatch(deselectComics({ comicBooks: this.selected }));
     }
   }
 

@@ -18,11 +18,11 @@
 
 package org.comixedproject.service.comicbooks;
 
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 
 /**
  * <code>ComicException</code> is raised if an error occurs while working with instances of {@link
- * Comic}.
+ * ComicBook}.
  *
  * @author Darryl L. Pierce
  */

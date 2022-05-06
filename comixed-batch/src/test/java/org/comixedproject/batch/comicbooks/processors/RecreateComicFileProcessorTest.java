@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2021, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class RecreateComicFileProcessorTest {
   @Mock private StepExecution stepExecution;
   @Mock private JobParameters jobParameters;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock private Comic comic;
+  @Mock private ComicBook comicBook;
 
   @Before
   public void setUp() throws AdaptorException {
@@ -68,25 +68,25 @@ public class RecreateComicFileProcessorTest {
     Mockito.when(jobParameters.getString(RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES))
         .thenReturn(String.valueOf(true));
 
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
-        .save(comic, TEST_TARGET_ARCHIVE, true, TEST_PAGE_RENAMING_RULE);
+        .save(comicBook, TEST_TARGET_ARCHIVE, true, TEST_PAGE_RENAMING_RULE);
   }
 
   @Test
   public void testProcess() throws Exception {
-    final Comic result = processor.process(comic);
+    final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
-    assertSame(comic, result);
+    assertSame(comicBook, result);
 
-    Mockito.verify(comic, Mockito.never()).removeDeletedPages();
+    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
-        .save(comic, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
+        .save(comicBook, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
   }
 
   @Test

@@ -29,7 +29,7 @@ import org.comixedproject.batch.comicbooks.readers.MoveComicReader;
 import org.comixedproject.batch.comicbooks.writers.MoveComicWriter;
 import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicsWriter;
 import org.comixedproject.batch.writers.NoopWriter;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -99,7 +99,7 @@ public class ConsolidationConfiguration {
       final PurgeMarkedComicsWriter writer) {
     return stepBuilderFactory
         .get("deleteComicStep")
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -124,7 +124,7 @@ public class ConsolidationConfiguration {
       final MoveComicWriter writer) {
     return stepBuilderFactory
         .get("moveComicStep")
-        .<Comic, Comic>chunk(this.batchChunkSize)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)
         .processor(processor)
         .writer(writer)

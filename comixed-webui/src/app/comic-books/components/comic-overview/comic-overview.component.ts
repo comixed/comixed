@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
@@ -27,7 +27,7 @@ import { ComicBookState } from '@app/comic-books/models/comic-book-state';
   styleUrls: ['./comic-overview.component.scss']
 })
 export class ComicOverviewComponent {
-  @Input() comic: Comic;
+  @Input() comic: ComicBook;
   @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 

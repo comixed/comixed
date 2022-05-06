@@ -26,7 +26,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
-import { Comic } from '@app/comic-books/models/comic';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatPaginator } from '@angular/material/paginator';
@@ -70,7 +70,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
-  @Input() comic: Comic;
+  @Input() comic: ComicBook;
   @Input() metadataSource: MetadataSource;
   @Input() comicSeriesName: string;
   @Input() comicVolume: string;
@@ -79,7 +79,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   @Input() pageSize: number;
   @Input() multimode = false;
 
-  @Output() comicScraped = new EventEmitter<Comic>();
+  @Output() comicScraped = new EventEmitter<ComicBook>();
 
   issueSubscription: Subscription;
   scrapingStateSubscription: Subscription;
@@ -234,7 +234,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
     this.logger.debug('User confirmed scraping the comic:', this.multimode);
     if (this.multimode) {
       this.logger.debug('Removing comic from scraping queue:', this.comic);
-      this.store.dispatch(deselectComics({ comics: [this.comic] }));
+      this.store.dispatch(deselectComics({ comicBooks: [this.comic] }));
     }
     this.store.dispatch(
       scrapeComic({

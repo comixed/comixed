@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comic book library management application.
+ * ComiXed - A digital comicBook book library management application.
  * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.Comic;
+import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
-import org.comixedproject.service.comicbooks.ComicService;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,27 +45,27 @@ public class OPDSDateControllerTest {
   private static final String TEST_COMIC_FILENAME = "Base Filename.CBZ";
 
   @InjectMocks private OPDSDateController controller;
-  @Mock private ComicService comicService;
-  @Mock private Comic comic;
+  @Mock private ComicBookService comicBookService;
+  @Mock private ComicBook comicBook;
 
   private List<Integer> yearList = new ArrayList<>();
   private List<Integer> weekList = new ArrayList<>();
-  private List<Comic> comicList = new ArrayList<>();
+  private List<ComicBook> comicBookList = new ArrayList<>();
 
   @Before
   public void setUp() {
     for (int year = 1965; year < 2022; year++) yearList.add(year);
     for (int week = 0; week < 52; week++) weekList.add(week);
 
-    Mockito.when(comic.getArchiveType()).thenReturn(ArchiveType.CBZ);
-    Mockito.when(comic.getId()).thenReturn(TEST_COMIC_ID);
-    Mockito.when(comic.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
-    comicList.add(comic);
+    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
+    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
+    comicBookList.add(comicBook);
   }
 
   @Test
   public void testLoadYears() throws OPDSException {
-    Mockito.when(comicService.getYearsForComics()).thenReturn(yearList);
+    Mockito.when(comicBookService.getYearsForComics()).thenReturn(yearList);
 
     final OPDSNavigationFeed result = controller.loadYears();
 
@@ -73,12 +73,12 @@ public class OPDSDateControllerTest {
     assertFalse(result.getEntries().isEmpty());
     assertEquals(yearList.size(), result.getEntries().size());
 
-    Mockito.verify(comicService, Mockito.times(1)).getYearsForComics();
+    Mockito.verify(comicBookService, Mockito.times(1)).getYearsForComics();
   }
 
   @Test
   public void testLoadWeeksForYear() throws OPDSException {
-    Mockito.when(comicService.getWeeksForYear(Mockito.anyInt())).thenReturn(weekList);
+    Mockito.when(comicBookService.getWeeksForYear(Mockito.anyInt())).thenReturn(weekList);
 
     final OPDSNavigationFeed result = controller.loadWeeksForYear(TEST_YEAR);
 
@@ -86,20 +86,21 @@ public class OPDSDateControllerTest {
     assertFalse(result.getEntries().isEmpty());
     assertEquals(weekList.size(), result.getEntries().size());
 
-    Mockito.verify(comicService, Mockito.times(1)).getWeeksForYear(TEST_YEAR);
+    Mockito.verify(comicBookService, Mockito.times(1)).getWeeksForYear(TEST_YEAR);
   }
 
   @Test
   public void testLoadComicsForYearAndWeek() throws OPDSException {
-    Mockito.when(comicService.getComicsForYearAndWeek(Mockito.anyInt(), Mockito.anyInt()))
-        .thenReturn(comicList);
+    Mockito.when(comicBookService.getComicsForYearAndWeek(Mockito.anyInt(), Mockito.anyInt()))
+        .thenReturn(comicBookList);
 
     final OPDSAcquisitionFeed result = controller.loadComicsForYearAndWeek(TEST_YEAR, TEST_WEEK);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
-    assertEquals(comicList.size(), result.getEntries().size());
+    assertEquals(comicBookList.size(), result.getEntries().size());
 
-    Mockito.verify(comicService, Mockito.times(1)).getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK);
   }
 }

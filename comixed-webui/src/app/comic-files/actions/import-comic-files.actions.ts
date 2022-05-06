@@ -20,16 +20,16 @@ import { createAction, props } from '@ngrx/store';
 import { ComicFile } from '@app/comic-files/models/comic-file';
 
 export const sendComicFiles = createAction(
-  '[Import Comic Files] Begin importing the selected comic files',
+  '[Import ComicBook Files] Begin importing the selected comic files',
   props<{
     files: ComicFile[];
   }>()
 );
 
 export const comicFilesSent = createAction(
-  '[Import Comic Files] Importing comic files has started'
+  '[Import ComicBook Files] Importing comic files has started'
 );
 
 export const sendComicFilesFailed = createAction(
-  '[Import Comic Files] Failed to begin importing comic files'
+  '[Import ComicBook Files] Failed to begin importing comic files'
 );

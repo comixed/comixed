@@ -22,9 +22,9 @@ import { Store } from '@ngrx/store';
 import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 import { User } from '@app/user/models/user';
 import {
-  selectComicListCount,
-  selectComicListDeletedCount
-} from '@app/comic-books/selectors/comic-list.selectors';
+  selectComicBookListCount,
+  selectComicBookListDeletedCount
+} from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 
@@ -47,7 +47,7 @@ export class FooterComponent {
       .select(selectProcessComicsState)
       .subscribe(state => (this.importCount = state.active ? state.total : 0));
     this.store
-      .select(selectComicListCount)
+      .select(selectComicBookListCount)
       .subscribe(count => (this.comicCount = count));
     this.store
       .select(selectLastReadEntries)
@@ -56,7 +56,7 @@ export class FooterComponent {
       .select(selectLibraryState)
       .subscribe(state => (this.selectedCount = state.selected.length));
     this.store
-      .select(selectComicListDeletedCount)
+      .select(selectComicBookListDeletedCount)
       .subscribe(count => (this.deletedCount = count));
   }
 }
