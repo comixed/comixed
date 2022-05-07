@@ -5,7 +5,7 @@ MAINTAINER Pidockmedia "pidockmedia@gmail.com"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v1.1-SNAPSHOT/comixed-release-1.1-SNAPSHOT-RELEASE.zip
+RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v1.1-SNAPSHOT/comixed-release-1.1-SNAPSHOT-GA.zip
 RUN (cd /app; unzip /ul/*.zip)
 RUN rm *.zip
 WORKDIR /app
