@@ -31,6 +31,7 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeedContent;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.opds.model.OPDSAuthor;
 import org.comixedproject.opds.model.OPDSLink;
+import org.jsoup.Jsoup;
 
 /**
  * <code>OPDSUtils</code> provides utility functions for the OPDS system.
@@ -131,7 +132,7 @@ public class OPDSUtils {
             });
     if (StringUtils.isNotEmpty(comicBook.getDescription())) {
       log.trace("Adding summary");
-      result.setSummary(comicBook.getDescription());
+      result.setSummary(Jsoup.parse(comicBook.getDescription()).wholeText());
     }
     log.trace("Setting comicBook link");
     result.getLinks().add(OPDSUtils.createComicCoverLink(comicBook));
