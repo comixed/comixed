@@ -30,7 +30,9 @@ import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
+import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -56,7 +58,6 @@ public class ComicBookServiceTest {
   private static final String TEST_SERIES = "Series Name";
   private static final String TEST_VOLUME = "Volume Name";
   private static final String TEST_ISSUE_NUMBER = "237";
-  private static final Integer TEST_COMIC_VINE_ID = 2345;
   private static final int TEST_MAXIMUM_COMICS = 100;
   private static final String TEST_PREVIOUS_ISSUE_NUMBER = "5";
   private static final String TEST_CURRENT_ISSUE_NUMBER = "7";
@@ -72,6 +73,8 @@ public class ComicBookServiceTest {
   private static final String TEST_TEAM = "The Boys";
   private static final String TEST_LOCATION = "The Location";
   private static final String TEST_STORY_NAME = "The Story Name";
+  private static final String TEST_EMAIL = "reader@comixedproject.org";
+  private static final Date TEST_STORE_DATE = new Date();
 
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -88,7 +91,9 @@ public class ComicBookServiceTest {
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
   @Mock private List<String> publisherList;
-  @Mock private Page page;
+  @Mock private ComicBook readComicBook;
+  @Mock private LastRead lastRead;
+  @Mock private ComiXedUser lastReadUser;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -101,6 +106,7 @@ public class ComicBookServiceTest {
   private List<Long> idList = new ArrayList<>();
   private GregorianCalendar calendar = new GregorianCalendar();
   private Date now = new Date();
+  private List<LastRead> lastReadList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -117,6 +123,13 @@ public class ComicBookServiceTest {
     comicsBySeries.add(previousComicBook);
     comicsBySeries.add(currentComicBook);
     calendar.setTime(now);
+
+    Mockito.when(lastRead.getUser()).thenReturn(lastReadUser);
+    Mockito.when(lastReadUser.getEmail()).thenReturn(TEST_EMAIL);
+    lastReadList.add(lastRead);
+    Mockito.when(readComicBook.getLastReads()).thenReturn(lastReadList);
+    Mockito.when(readComicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
+    Mockito.when(comicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
   }
 
   @Test
@@ -770,13 +783,34 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllForPublisher() {
+    comicBookList.add(comicBook);
+
     Mockito.when(comicBookRepository.findAllByPublisher(Mockito.anyString()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.getAllForPublisher(TEST_PUBLISHER);
+    final List<ComicBook> result = service.getAllForPublisher(TEST_PUBLISHER, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByPublisher(TEST_PUBLISHER);
+  }
+
+  @Test
+  public void testGetAllForPublisherUnread() {
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAllByPublisher(Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getAllForPublisher(TEST_PUBLISHER, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByPublisher(TEST_PUBLISHER);
   }
@@ -795,13 +829,34 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllForSeries() {
+    comicBookList.add(comicBook);
+
     Mockito.when(comicBookRepository.findAllBySeries(Mockito.anyString()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.getAllForSeries(TEST_SERIES);
+    final List<ComicBook> result = service.getAllForSeries(TEST_SERIES, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllBySeries(TEST_SERIES);
+  }
+
+  @Test
+  public void testGetAllForSeriesUnread() {
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAllBySeries(Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getAllForSeries(TEST_SERIES, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAllBySeries(TEST_SERIES);
   }
@@ -820,13 +875,34 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllForCharacter() {
+    comicBookList.add(comicBook);
+
     Mockito.when(comicBookRepository.findAllByCharacters(Mockito.anyString()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.getAllForCharacter(TEST_CHARACTER);
+    final List<ComicBook> result = service.getAllForCharacter(TEST_CHARACTER, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByCharacters(TEST_CHARACTER);
+  }
+
+  @Test
+  public void testGetAllForCharacterUnread() {
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAllByCharacters(Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getAllForCharacter(TEST_CHARACTER, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByCharacters(TEST_CHARACTER);
   }
@@ -845,12 +921,32 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllForTeam() {
+    comicBookList.add(comicBook);
+
     Mockito.when(comicBookRepository.findAllByTeams(Mockito.anyString())).thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.getAllForTeam(TEST_TEAM);
+    final List<ComicBook> result = service.getAllForTeam(TEST_TEAM, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByTeams(TEST_TEAM);
+  }
+
+  @Test
+  public void testGetAllForTeamUnread() {
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAllByTeams(Mockito.anyString())).thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getAllForTeam(TEST_TEAM, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByTeams(TEST_TEAM);
   }
@@ -869,13 +965,34 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllForLocation() {
+    comicBookList.add(comicBook);
+
     Mockito.when(comicBookRepository.findAllByLocations(Mockito.anyString()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.getAllForLocation(TEST_LOCATION);
+    final List<ComicBook> result = service.getAllForLocation(TEST_LOCATION, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByLocations(TEST_LOCATION);
+  }
+
+  @Test
+  public void testGetAllForLocationUnread() {
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAllByLocations(Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getAllForLocation(TEST_LOCATION, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByLocations(TEST_LOCATION);
   }
@@ -894,13 +1011,34 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetAllForStory() {
+    comicBookList.add(comicBook);
+
     Mockito.when(comicBookRepository.findAllByStories(Mockito.anyString()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.getAllForStory(TEST_STORY_NAME);
+    final List<ComicBook> result = service.getAllForStory(TEST_STORY_NAME, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicBookList, result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByStories(TEST_STORY_NAME);
+  }
+
+  @Test
+  public void testGetAllForStoryUnread() {
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAllByStories(Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getAllForStory(TEST_STORY_NAME, TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByStories(TEST_STORY_NAME);
   }
@@ -1192,11 +1330,31 @@ public class ComicBookServiceTest {
 
     final List<ComicBook> result =
         service.getComicsForYearAndWeek(
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR));
+            calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), TEST_EMAIL, false);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertSame(comicBook, result.get(0));
+    assertTrue(result.contains(comicBook));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+  }
+
+  @Test
+  public void testGetComicsForYearAndWeekUnread() {
+    Mockito.when(comicBook.getStoreDate()).thenReturn(now);
+    comicBookList.add(comicBook);
+    comicBookList.add(readComicBook);
+
+    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+
+    final List<ComicBook> result =
+        service.getComicsForYearAndWeek(
+            calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), TEST_EMAIL, true);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.contains(comicBook));
+    assertFalse(result.contains(readComicBook));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
   }

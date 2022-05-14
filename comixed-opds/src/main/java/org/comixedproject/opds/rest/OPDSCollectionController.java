@@ -22,6 +22,7 @@ import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED
 import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
 import static org.comixedproject.opds.rest.OPDSLibraryController.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -36,10 +37,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>OPDSCollectionController</code> provides OPDS endpoints for retrieving collection feeds.
@@ -65,7 +63,9 @@ public class OPDSCollectionController {
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
-      @NonNull @PathVariable("type") final CollectionType collectionType) throws OPDSException {
+      @NonNull @PathVariable("type") final CollectionType collectionType,
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
+      throws OPDSException {
     log.info("Fetching the feed root for a collection: {}", collectionType);
     switch (collectionType) {
       case publishers:
@@ -78,7 +78,8 @@ public class OPDSCollectionController {
                     publisher ->
                         new CollectionFeedEntry(
                             publisher, Long.valueOf(("PUBLISHER" + publisher).hashCode())))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+            unread);
       case series:
         return createCollectionFeed(
             collectionType,
@@ -89,7 +90,8 @@ public class OPDSCollectionController {
                     series ->
                         new CollectionFeedEntry(
                             series, Long.valueOf(("SERIES" + series).hashCode())))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+            unread);
       case characters:
         return createCollectionFeed(
             collectionType,
@@ -100,7 +102,8 @@ public class OPDSCollectionController {
                     character ->
                         new CollectionFeedEntry(
                             character, Long.valueOf(("CHARACTER" + character).hashCode())))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+            unread);
       case teams:
         return createCollectionFeed(
             collectionType,
@@ -109,7 +112,8 @@ public class OPDSCollectionController {
             this.comicBookService.getAllTeams().stream()
                 .map(
                     team -> new CollectionFeedEntry(team, Long.valueOf(("TEAM" + team).hashCode())))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+            unread);
       case locations:
         return createCollectionFeed(
             collectionType,
@@ -120,7 +124,8 @@ public class OPDSCollectionController {
                     location ->
                         new CollectionFeedEntry(
                             location, Long.valueOf(("LOCATION" + location).hashCode())))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+            unread);
       case stories:
         return createCollectionFeed(
             collectionType,
@@ -130,7 +135,8 @@ public class OPDSCollectionController {
                 .map(
                     story ->
                         new CollectionFeedEntry(story, Long.valueOf(("STORY" + story).hashCode())))
-                .collect(Collectors.toUnmodifiableList()));
+                .collect(Collectors.toUnmodifiableList()),
+            unread);
     }
     throw new OPDSException("Failed to process collection: " + collectionType);
   }
@@ -139,7 +145,8 @@ public class OPDSCollectionController {
       final CollectionType collectionType,
       final OPDSNavigationFeed feed,
       final long entryOffset,
-      final List<CollectionFeedEntry> entries) {
+      final List<CollectionFeedEntry> entries,
+      final boolean unread) {
     entries.forEach(
         entry -> {
           String name = entry.getName();
@@ -157,8 +164,10 @@ public class OPDSCollectionController {
                       ACQUISITION_FEED_LINK_TYPE,
                       SUBSECTION,
                       String.format(
-                          "/opds/collections/%s/%s/",
-                          collectionType, OPDSUtils.urlEncodeString(name))));
+                          "/opds/collections/%s/%s/?unread=%s",
+                          collectionType,
+                          OPDSUtils.urlEncodeString(name),
+                          String.valueOf(unread))));
           feed.getEntries().add(feedEntry);
         });
     feed.getLinks()
@@ -166,7 +175,8 @@ public class OPDSCollectionController {
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
-                String.format("/opds/collections/%s/", feed.getTitle())));
+                String.format(
+                    "/opds/collections/%s/?unread=%s", feed.getTitle(), String.valueOf(unread))));
     return feed;
   }
 
@@ -183,41 +193,44 @@ public class OPDSCollectionController {
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(
+      final Principal principal,
       @PathVariable("type") final CollectionType collectionType,
-      @PathVariable("name") final String name)
+      @PathVariable("name") final String name,
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
       throws OPDSException {
     final String nameValue = OPDSUtils.urlDecodeString(name);
     log.info("Fetching the feed root for publisher: {}", nameValue);
+    final String email = principal.getName();
     switch (collectionType) {
       case publishers:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Publisher: %s", nameValue), String.valueOf(PUBLISHERS_ID)),
-            this.comicBookService.getAllForPublisher(nameValue));
+            this.comicBookService.getAllForPublisher(nameValue, email, unread));
       case series:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Series: %s", nameValue), String.valueOf(SERIES_ID)),
-            this.comicBookService.getAllForSeries(nameValue));
+            this.comicBookService.getAllForSeries(nameValue, email, unread));
       case characters:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Character: %s", nameValue), String.valueOf(CHARACTERS_ID)),
-            this.comicBookService.getAllForCharacter(nameValue));
+            this.comicBookService.getAllForCharacter(nameValue, email, unread));
       case teams:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(String.format("Team: %s", nameValue), String.valueOf(TEAMS_ID)),
-            this.comicBookService.getAllForTeam(nameValue));
+            this.comicBookService.getAllForTeam(nameValue, email, unread));
       case locations:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Location: %s", nameValue), String.valueOf(LOCATIONS_ID)),
-            this.comicBookService.getAllForLocation(nameValue));
+            this.comicBookService.getAllForLocation(nameValue, email, unread));
       case stories:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
                 String.format("Story: %s", nameValue), String.valueOf(STORIES_ID)),
-            this.comicBookService.getAllForStory(nameValue));
+            this.comicBookService.getAllForStory(nameValue, email, unread));
     }
     throw new OPDSException("Failed to process collection entries: " + collectionType);
   }

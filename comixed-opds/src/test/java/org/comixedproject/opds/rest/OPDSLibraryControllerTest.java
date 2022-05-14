@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.junit.Test;
@@ -35,6 +36,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class OPDSLibraryControllerTest {
+  private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
+
   @InjectMocks private OPDSLibraryController controller;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
@@ -48,29 +51,36 @@ public class OPDSLibraryControllerTest {
     assertNotNull(result.getTitle());
     assertNotNull(result.getId());
     assertEquals("/opds/library/", result.getEntries().get(0).getLinks().get(0).getReference());
-    assertEquals("/opds/lists/", result.getEntries().get(1).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/library/?unread=true", result.getEntries().get(1).getLinks().get(0).getReference());
   }
 
   @Test
   public void testGetLibraryFeed() {
-    OPDSNavigationFeed result = controller.getLibraryFeed();
+    OPDSNavigationFeed result = controller.getLibraryFeed(TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
     assertEquals(
-        "/opds/collections/publishers/",
+        "/opds/dates/released/?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(0).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/series/", result.getEntries().get(1).getLinks().get(0).getReference());
+        "/opds/collections/publishers/?unread=" + String.valueOf(TEST_UNREAD),
+        result.getEntries().get(1).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/characters/",
+        "/opds/collections/series/?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(2).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/teams/", result.getEntries().get(3).getLinks().get(0).getReference());
+        "/opds/collections/characters/?unread=" + String.valueOf(TEST_UNREAD),
+        result.getEntries().get(3).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/locations/",
+        "/opds/collections/teams/?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(4).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/collections/stories/", result.getEntries().get(5).getLinks().get(0).getReference());
+        "/opds/collections/locations/?unread=" + String.valueOf(TEST_UNREAD),
+        result.getEntries().get(5).getLinks().get(0).getReference());
+    assertEquals(
+        "/opds/collections/stories/?unread=" + String.valueOf(TEST_UNREAD),
+        result.getEntries().get(6).getLinks().get(0).getReference());
   }
 }

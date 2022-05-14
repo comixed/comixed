@@ -20,8 +20,10 @@ package org.comixedproject.opds.rest;
 
 import static junit.framework.TestCase.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
@@ -41,10 +43,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class OPDSCollectionControllerTest {
   private static final String TEST_COLLECTION_ENTRY_NAME = "Collection Entry Name";
   private static final String TEST_BASE_FILENAME = "Filename.CBZ";
+  private static final String TEST_EMAIL = "reader@comixedproject.org";
+  private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
 
   @InjectMocks private OPDSCollectionController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
+  @Mock private Principal principal;
 
   private List<String> collectionList = new ArrayList<>();
   private List<ComicBook> comicBookList = new ArrayList<>();
@@ -56,13 +61,15 @@ public class OPDSCollectionControllerTest {
     Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
     Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
     comicBookList.add(comicBook);
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
   public void testGetCollectionFeedForPublisher() throws OPDSException {
     Mockito.when(comicBookService.getAllPublishers()).thenReturn(collectionList);
 
-    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.publishers);
+    final OPDSNavigationFeed result =
+        controller.getCollectionFeed(CollectionType.publishers, false);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -73,7 +80,7 @@ public class OPDSCollectionControllerTest {
   public void testGetCollectionFeedForSeries() throws OPDSException {
     Mockito.when(comicBookService.getAllSeries()).thenReturn(collectionList);
 
-    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.series);
+    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.series, false);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -84,7 +91,8 @@ public class OPDSCollectionControllerTest {
   public void testGetCollectionFeedForCharacters() throws OPDSException {
     Mockito.when(comicBookService.getAllCharacters()).thenReturn(collectionList);
 
-    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.characters);
+    final OPDSNavigationFeed result =
+        controller.getCollectionFeed(CollectionType.characters, false);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -95,7 +103,7 @@ public class OPDSCollectionControllerTest {
   public void testGetCollectionFeedForTeams() throws OPDSException {
     Mockito.when(comicBookService.getAllTeams()).thenReturn(collectionList);
 
-    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.teams);
+    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.teams, false);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -106,7 +114,7 @@ public class OPDSCollectionControllerTest {
   public void testGetCollectionFeedForLocations() throws OPDSException {
     Mockito.when(comicBookService.getAllLocations()).thenReturn(collectionList);
 
-    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.locations);
+    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.locations, false);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -117,7 +125,7 @@ public class OPDSCollectionControllerTest {
   public void testGetCollectionFeedForStories() throws OPDSException {
     Mockito.when(comicBookService.getAllStories()).thenReturn(collectionList);
 
-    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.stories);
+    final OPDSNavigationFeed result = controller.getCollectionFeed(CollectionType.stories, false);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -126,87 +134,109 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForPublisher() throws OPDSException {
-    Mockito.when(comicBookService.getAllForPublisher(Mockito.anyString()))
+    Mockito.when(
+            comicBookService.getAllForPublisher(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicBookList);
 
     final OPDSAcquisitionFeed result =
         controller.getEntriesForCollectionFeed(
-            CollectionType.publishers, TEST_COLLECTION_ENTRY_NAME);
+            principal, CollectionType.publishers, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .getAllForPublisher(TEST_COLLECTION_ENTRY_NAME);
+        .getAllForPublisher(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetEntriesForCollectionFeedForSeries() throws OPDSException {
-    Mockito.when(comicBookService.getAllForSeries(Mockito.anyString())).thenReturn(comicBookList);
-
-    final OPDSAcquisitionFeed result =
-        controller.getEntriesForCollectionFeed(CollectionType.series, TEST_COLLECTION_ENTRY_NAME);
-
-    assertNotNull(result);
-    assertFalse(result.getEntries().isEmpty());
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllForSeries(TEST_COLLECTION_ENTRY_NAME);
-  }
-
-  @Test
-  public void testGetEntriesForCollectionFeedForCharacter() throws OPDSException {
-    Mockito.when(comicBookService.getAllForCharacter(Mockito.anyString()))
+    Mockito.when(
+            comicBookService.getAllForSeries(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicBookList);
 
     final OPDSAcquisitionFeed result =
         controller.getEntriesForCollectionFeed(
-            CollectionType.characters, TEST_COLLECTION_ENTRY_NAME);
+            principal, CollectionType.series, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .getAllForCharacter(TEST_COLLECTION_ENTRY_NAME);
+        .getAllForSeries(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
+  }
+
+  @Test
+  public void testGetEntriesForCollectionFeedForCharacter() throws OPDSException {
+    Mockito.when(
+            comicBookService.getAllForCharacter(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicBookList);
+
+    final OPDSAcquisitionFeed result =
+        controller.getEntriesForCollectionFeed(
+            principal, CollectionType.characters, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
+
+    assertNotNull(result);
+    assertFalse(result.getEntries().isEmpty());
+
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getAllForCharacter(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetEntriesForCollectionFeedForTeam() throws OPDSException {
-    Mockito.when(comicBookService.getAllForTeam(Mockito.anyString())).thenReturn(comicBookList);
-
-    final OPDSAcquisitionFeed result =
-        controller.getEntriesForCollectionFeed(CollectionType.teams, TEST_COLLECTION_ENTRY_NAME);
-
-    assertNotNull(result);
-    assertFalse(result.getEntries().isEmpty());
-
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllForTeam(TEST_COLLECTION_ENTRY_NAME);
-  }
-
-  @Test
-  public void testGetEntriesForCollectionFeedForLocation() throws OPDSException {
-    Mockito.when(comicBookService.getAllForLocation(Mockito.anyString())).thenReturn(comicBookList);
+    Mockito.when(
+            comicBookService.getAllForTeam(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicBookList);
 
     final OPDSAcquisitionFeed result =
         controller.getEntriesForCollectionFeed(
-            CollectionType.locations, TEST_COLLECTION_ENTRY_NAME);
+            principal, CollectionType.teams, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .getAllForLocation(TEST_COLLECTION_ENTRY_NAME);
+        .getAllForTeam(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
-  public void testGetEntriesForCollectionFeedForStory() throws OPDSException {
-    Mockito.when(comicBookService.getAllForStory(Mockito.anyString())).thenReturn(comicBookList);
+  public void testGetEntriesForCollectionFeedForLocation() throws OPDSException {
+    Mockito.when(
+            comicBookService.getAllForLocation(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicBookList);
 
     final OPDSAcquisitionFeed result =
-        controller.getEntriesForCollectionFeed(CollectionType.stories, TEST_COLLECTION_ENTRY_NAME);
+        controller.getEntriesForCollectionFeed(
+            principal, CollectionType.locations, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllForStory(TEST_COLLECTION_ENTRY_NAME);
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getAllForLocation(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
+  }
+
+  @Test
+  public void testGetEntriesForCollectionFeedForStory() throws OPDSException {
+    Mockito.when(
+            comicBookService.getAllForStory(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(comicBookList);
+
+    final OPDSAcquisitionFeed result =
+        controller.getEntriesForCollectionFeed(
+            principal, CollectionType.stories, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
+
+    assertNotNull(result);
+    assertFalse(result.getEntries().isEmpty());
+
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getAllForStory(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 }

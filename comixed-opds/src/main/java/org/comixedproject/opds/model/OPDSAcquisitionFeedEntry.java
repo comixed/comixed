@@ -20,6 +20,7 @@ package org.comixedproject.opds.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -38,5 +39,19 @@ public class OPDSAcquisitionFeedEntry extends OPDSFeedEntry<OPDSAcquisitionFeedC
 
   public OPDSAcquisitionFeedEntry(@NonNull final String title, @NonNull final String id) {
     super(title, id);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    final OPDSAcquisitionFeedEntry that = (OPDSAcquisitionFeedEntry) o;
+    return Objects.equals(summary, that.summary);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), summary);
   }
 }
