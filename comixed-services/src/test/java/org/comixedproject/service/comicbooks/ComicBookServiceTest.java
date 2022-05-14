@@ -75,6 +75,8 @@ public class ComicBookServiceTest {
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final Date TEST_STORE_DATE = new Date();
+  private static final Date TEST_DATE_LAST_YEAR =
+      new Date(System.currentTimeMillis() - 365L * 24L * 60L * 60L * 1000L);
 
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -97,6 +99,7 @@ public class ComicBookServiceTest {
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
+  @Mock private ComicBook ignoredComicBook;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<ComicBook> comicsBySeries = new ArrayList<>();
@@ -130,6 +133,7 @@ public class ComicBookServiceTest {
     Mockito.when(readComicBook.getLastReads()).thenReturn(lastReadList);
     Mockito.when(readComicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(comicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
+    Mockito.when(ignoredComicBook.getStoreDate()).thenReturn(TEST_DATE_LAST_YEAR);
   }
 
   @Test
@@ -1293,6 +1297,7 @@ public class ComicBookServiceTest {
   public void testGetYearsForComics() {
     Mockito.when(comicBook.getStoreDate()).thenReturn(now);
     comicBookList.add(comicBook);
+    comicBookList.add(ignoredComicBook);
 
     Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
 
@@ -1309,6 +1314,7 @@ public class ComicBookServiceTest {
   public void testGetWeeksForComics() {
     Mockito.when(comicBook.getStoreDate()).thenReturn(now);
     comicBookList.add(comicBook);
+    comicBookList.add(ignoredComicBook);
 
     Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
 
@@ -1316,7 +1322,8 @@ public class ComicBookServiceTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(calendar.get(Calendar.WEEK_OF_YEAR), result.get(0).intValue());
+    assertEquals(1, result.size());
+    assertTrue(result.contains(calendar.get(Calendar.WEEK_OF_YEAR)));
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
   }
