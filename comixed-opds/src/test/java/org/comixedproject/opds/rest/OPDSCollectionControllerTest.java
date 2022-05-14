@@ -24,12 +24,12 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.CollectionType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
+import org.comixedproject.opds.utils.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +48,7 @@ public class OPDSCollectionControllerTest {
 
   @InjectMocks private OPDSCollectionController controller;
   @Mock private ComicBookService comicBookService;
+  @Mock private OPDSUtils opdsUtils;
   @Mock private ComicBook comicBook;
   @Mock private Principal principal;
 
@@ -58,8 +59,6 @@ public class OPDSCollectionControllerTest {
   public void setUp() {
     collectionList.add(TEST_COLLECTION_ENTRY_NAME);
     collectionList.add("");
-    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
-    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
     comicBookList.add(comicBook);
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
@@ -134,6 +133,8 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForPublisher() throws OPDSException {
+    Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
+        .thenReturn(TEST_COLLECTION_ENTRY_NAME);
     Mockito.when(
             comicBookService.getAllForPublisher(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -152,6 +153,8 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForSeries() throws OPDSException {
+    Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
+        .thenReturn(TEST_COLLECTION_ENTRY_NAME);
     Mockito.when(
             comicBookService.getAllForSeries(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -170,6 +173,8 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForCharacter() throws OPDSException {
+    Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
+        .thenReturn(TEST_COLLECTION_ENTRY_NAME);
     Mockito.when(
             comicBookService.getAllForCharacter(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -188,6 +193,8 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForTeam() throws OPDSException {
+    Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
+        .thenReturn(TEST_COLLECTION_ENTRY_NAME);
     Mockito.when(
             comicBookService.getAllForTeam(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -206,6 +213,8 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForLocation() throws OPDSException {
+    Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
+        .thenReturn(TEST_COLLECTION_ENTRY_NAME);
     Mockito.when(
             comicBookService.getAllForLocation(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
@@ -224,6 +233,8 @@ public class OPDSCollectionControllerTest {
 
   @Test
   public void testGetEntriesForCollectionFeedForStory() throws OPDSException {
+    Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
+        .thenReturn(TEST_COLLECTION_ENTRY_NAME);
     Mockito.when(
             comicBookService.getAllForStory(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))

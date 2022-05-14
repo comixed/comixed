@@ -18,11 +18,23 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
+import java.text.SimpleDateFormat;
+import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+/**
+ * <code>ComicBookMetadataAdaptor</code> provides methods that work with the metadata of a comic
+ * book.
+ *
+ * @author Darryl L. Pierce
+ */
 @Component
-public class ComicDataAdaptor {
+@Log4j2
+public class ComicBookMetadataAdaptor {
+  private final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
+
   /**
    * Clears all metadata scraped from a remove database.
    *
@@ -42,5 +54,28 @@ public class ComicDataAdaptor {
     comicBook.getCharacters().clear();
     comicBook.getLocations().clear();
     comicBook.getCredits().clear();
+  }
+
+  /**
+   * Returns a displayable title for a comic book.
+   *
+   * @param comicBook the comic book
+   * @return the title
+   */
+  public String getDisplayableTitle(final ComicBook comicBook) {
+    if (StringUtils.hasLength(comicBook.getSeries())
+        && StringUtils.hasLength(comicBook.getVolume())
+        && StringUtils.hasLength(comicBook.getIssueNumber())) {
+      String coverDate = "??/??";
+      if (comicBook.getCoverDate() != null) {
+        coverDate = this.coverDateFormat.format(comicBook.getCoverDate());
+      }
+      log.trace("Returning detailed displayable title");
+      return String.format(
+          "%s v%s #%s (%s)",
+          comicBook.getSeries(), comicBook.getVolume(), comicBook.getIssueNumber(), coverDate);
+    }
+    log.trace("Returning base filename as displayable title");
+    return comicBook.getBaseFilename();
   }
 }

@@ -23,7 +23,7 @@ import static junit.framework.TestCase.*;
 import java.io.File;
 import java.util.*;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
@@ -81,7 +81,7 @@ public class ComicBookServiceTest {
   @Mock private ComicBookRepository comicBookRepository;
   @Mock private PublishComicUpdateAction comicUpdatePublishAction;
   @Mock private PublishComicRemovalAction comicRemovalPublishAction;
-  @Mock private ComicDataAdaptor comicDataAdaptor;
+  @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private ComicBook incomingComicBook;
   @Mock private ComicBook comicBookRecord;
@@ -466,7 +466,7 @@ public class ComicBookServiceTest {
     assertSame(comicBookRecord, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_ID);
-    Mockito.verify(comicDataAdaptor, Mockito.times(1)).clear(comicBook);
+    Mockito.verify(comicBookMetadataAdaptor, Mockito.times(1)).clear(comicBook);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.metadataCleared);
   }

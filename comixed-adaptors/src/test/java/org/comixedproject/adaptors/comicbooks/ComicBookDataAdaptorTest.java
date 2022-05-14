@@ -31,7 +31,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ComicBookDataAdaptorTest {
-  @InjectMocks private ComicDataAdaptor adaptor;
+  @InjectMocks private ComicBookMetadataAdaptor adaptor;
   @Mock private ComicBook comicBook;
   @Mock private List<String> characterList;
   @Mock private List<String> teamList;

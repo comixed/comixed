@@ -22,9 +22,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
@@ -183,13 +181,20 @@ public class FileTypeAdaptor {
   public String getType(final InputStream input) {
     try {
       return this.getMimeType(input).getType();
-    } catch (IOException error) {
+    } catch (Exception error) {
       log.error("Failed to get mime type for stream", error);
     }
     return null;
   }
 
-  public ArchiveEntryType getEntryTypeFor(final String mimeType) {
+  /**
+   * Retrieves the loader for the given entry mime type.
+   *
+   * @param mimeType the mime type
+   * @return the loader
+   * @see #entryTypeLoaders
+   */
+  public ArchiveEntryType getArchiveEntryType(final String mimeType) {
     final Optional<EntryTypeDefinition> loader =
         this.entryTypeLoaders.stream()
             .filter(entryTypeDefinition -> entryTypeDefinition.type.equals(mimeType))
@@ -197,17 +202,30 @@ public class FileTypeAdaptor {
     return loader.isPresent() ? loader.get().archiveEntryType : null;
   }
 
-  public static class ArchiveAdaptorDefinition {
-    @Setter @NonNull private String format;
-    @Setter @NonNull private String name;
-    @Setter @NonNull private ArchiveType archiveType;
-    @Setter private ArchiveAdaptor bean = null;
+  public String getMimeTypeFor(final InputStream input) {
+    try {
+      return this.getMimeType(input).toString();
+    } catch (IOException error) {
+      log.error("Failed to get mime type for stream", error);
+    }
+    return null;
   }
 
-  private static class EntryTypeDefinition {
-    @Setter @NonNull private String type;
-    @Setter @NonNull private String name;
-    @Setter @NonNull private ArchiveEntryType archiveEntryType;
-    @Setter private ContentAdaptor bean = null;
+  @NoArgsConstructor
+  @RequiredArgsConstructor
+  public static class ArchiveAdaptorDefinition {
+    @Getter @Setter @NonNull private String format;
+    @Getter @Setter @NonNull private String name;
+    @Getter @Setter @NonNull private ArchiveType archiveType;
+    @Getter @Setter private ArchiveAdaptor bean = null;
+  }
+
+  @NoArgsConstructor
+  @RequiredArgsConstructor
+  static class EntryTypeDefinition {
+    @Getter @Setter @NonNull private String type;
+    @Getter @Setter @NonNull private String name;
+    @Getter @Setter @NonNull private ArchiveEntryType archiveEntryType;
+    @Getter @Setter private ContentAdaptor bean = null;
   }
 }

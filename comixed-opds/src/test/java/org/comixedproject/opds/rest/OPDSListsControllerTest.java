@@ -23,12 +23,13 @@ import static junit.framework.TestCase.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
+import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
+import org.comixedproject.opds.utils.OPDSUtils;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Before;
@@ -45,13 +46,14 @@ public class OPDSListsControllerTest {
   private static final long TEST_READING_LIST_ID = 108L;
   private static final String TEST_READING_LIST_SUMMARY = "The list summary";
   private static final long TEST_COMIC_ID = 279L;
-  private static final String TEST_COMIC_BASE_FILENAME = "comicBook file.cbz";
 
   @InjectMocks private OPDSListsController controller;
   @Mock private ReadingListService readingListService;
+  @Mock private OPDSUtils opdsUtils;
   @Mock private Principal principal;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
+  @Mock private OPDSAcquisitionFeedEntry comicEntry;
 
   private List<ReadingList> readingLists = new ArrayList<>();
   private List<ComicBook> comicBookList = new ArrayList<>();
@@ -65,8 +67,6 @@ public class OPDSListsControllerTest {
     Mockito.when(readingList.getComicBooks()).thenReturn(comicBookList);
     comicBookList.add(comicBook);
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
-    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_BASE_FILENAME);
-    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
   }
 
   @Test(expected = OPDSException.class)
@@ -115,14 +115,17 @@ public class OPDSListsControllerTest {
   public void testLoadReadingListEntries() throws ReadingListException, OPDSException {
     Mockito.when(readingListService.loadReadingListForUser(Mockito.anyString(), Mockito.anyLong()))
         .thenReturn(readingList);
+    Mockito.when(opdsUtils.createComicEntry(Mockito.any(ComicBook.class))).thenReturn(comicEntry);
 
     final OPDSAcquisitionFeed result =
         controller.loadReadingListEntries(principal, TEST_READING_LIST_ID);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
+    assertTrue(result.getEntries().contains(comicEntry));
 
     Mockito.verify(readingListService, Mockito.times(1))
         .loadReadingListForUser(TEST_EMAIL, TEST_READING_LIST_ID);
+    Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comicBook);
   }
 }

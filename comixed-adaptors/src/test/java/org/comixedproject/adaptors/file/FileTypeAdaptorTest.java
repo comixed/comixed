@@ -18,154 +18,200 @@
 
 package org.comixedproject.adaptors.file;
 
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.*;
 
-import java.io.*;
-import org.apache.commons.io.IOUtils;
-import org.comixedproject.AdaptorTestContext;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.tika.Tika;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.Cb7ArchiveAdaptor;
-import org.comixedproject.adaptors.archive.CbrArchiveAdaptor;
-import org.comixedproject.adaptors.archive.CbzArchiveAdaptor;
+import org.comixedproject.adaptors.archive.model.ArchiveEntryType;
 import org.comixedproject.adaptors.content.ContentAdaptor;
-import org.comixedproject.adaptors.content.ImageContentAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = AdaptorTestContext.class)
+@RunWith(MockitoJUnitRunner.class)
 public class FileTypeAdaptorTest {
-  private static final String TEST_CBZ_FILE = "src/test/resources/example.cbz";
-  private static final String TEST_CBR_FILE = "src/test/resources/example.cbr";
-  private static final String TEST_CB7_FILE = "src/test/resources/example.cb7";
-  private static final String TEST_NONARCHIVE_FILE = "src/test/resources/example.jpg";
-  private static final String TEST_JPG_FILE = "src/test/resources/example.jpg";
-  private static final String TEST_WEBP_FILE = "src/test/resources/example.webp";
-  private static final String TEST_UNSUPPORT_FILE =
-      "target/classes/org/comixedproject/adaptors/file/FileTypeAdaptor.class";
+  private static final String TEST_ARCHIVE_FILENAME = "src/test/resources/example.cbz";
+  private static final MediaType TEST_MEDIA_TYPE = MediaType.APPLICATION_ZIP;
+  private static final String TEST_BEAN_NAME = "The adaptor name";
+  private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CBZ;
+  private static final String TEST_MIME_TYPE = "image/jpeg";
+  private static final ArchiveEntryType TEST_ARCHIVE_ENTRY_TYPE = ArchiveEntryType.IMAGE;
+  private static final byte[] TEST_CONTENT = "Some file content".getBytes();
 
-  @Autowired private FileTypeAdaptor adaptor;
+  @InjectMocks private FileTypeAdaptor adaptor;
+  @Mock private ApplicationContext applicationContext;
+  @Mock private Tika tika;
+  @Mock private Metadata metadata;
+  @Mock private Detector detector;
+  @Mock private ArchiveAdaptor archiveAdaptor;
+  @Mock private ContentAdaptor contentLoader;
 
-  @Test(expected = AdaptorException.class)
-  public void testGetArchiveAdaptorForMissingFile() throws AdaptorException {
-    adaptor.getArchiveAdaptorFor(TEST_CBZ_FILE.substring(1));
-  }
+  @Captor private ArgumentCaptor<? extends InputStream> argumentCaptorInputStream;
 
-  @Test
-  public void testGetArchiveAdaptorForZip() throws AdaptorException {
-    final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_CBZ_FILE);
+  private FileTypeAdaptor.ArchiveAdaptorDefinition archiveAdaptorEntry =
+      new FileTypeAdaptor.ArchiveAdaptorDefinition(
+          TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_TYPE);
+  private FileTypeAdaptor.EntryTypeDefinition entryLoader =
+      new FileTypeAdaptor.EntryTypeDefinition(
+          TEST_MEDIA_TYPE.getSubtype(), TEST_BEAN_NAME, TEST_ARCHIVE_ENTRY_TYPE);
+  private ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_CONTENT);
 
-    assertNotNull(result);
-    assertSame(CbzArchiveAdaptor.class, result.getClass());
-  }
-
-  @Test
-  public void testGetArchiveAdaptorFor7Zip() throws AdaptorException {
-    final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_CB7_FILE);
-
-    assertNotNull(result);
-    assertSame(Cb7ArchiveAdaptor.class, result.getClass());
-  }
-
-  @Test
-  public void testGetArchiveAdaptorForRar() throws AdaptorException {
-    final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_CBR_FILE);
-
-    assertNotNull(result);
-    assertSame(CbrArchiveAdaptor.class, result.getClass());
+  @Before
+  public void setUp() {
+    Mockito.when(tika.getDetector()).thenReturn(detector);
+    adaptor.getArchiveAdaptors().add(archiveAdaptorEntry);
+    adaptor.getEntryTypeLoaders().add(entryLoader);
   }
 
   @Test(expected = AdaptorException.class)
-  public void testGetArchiveAdaptorForUnsupportedFile() throws AdaptorException {
-    adaptor.getArchiveAdaptorFor(TEST_NONARCHIVE_FILE);
+  public void testGetArchiveAdaptorForFilenameNoSuchFile() throws AdaptorException {
+    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME.substring(1));
+  }
+
+  @Test(expected = AdaptorException.class)
+  public void testGetArchiveAdaptorForFilenameSubtypeDetectFailed()
+      throws AdaptorException, IOException {
+    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+        .thenThrow(IOException.class);
+
+    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
+  }
+
+  @Test(expected = AdaptorException.class)
+  public void testGetArchiveAdaptorForFilenameNoAdaptorFound()
+      throws AdaptorException, IOException {
+    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+        .thenReturn(new MediaType("foo", "bar"));
+
+    adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
   }
 
   @Test
-  public void testGetContentAdaptorForJpeg() throws IOException, AdaptorException {
-    final ContentAdaptor result =
-        adaptor.getContentAdaptorFor(this.loadContentForFile(TEST_JPG_FILE));
+  public void testGetArchiveAdaptorForFilename() throws AdaptorException, IOException {
+    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+        .thenReturn(TEST_MEDIA_TYPE);
+    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
+        .thenReturn(archiveAdaptor);
+
+    final ArchiveAdaptor result = adaptor.getArchiveAdaptorFor(TEST_ARCHIVE_FILENAME);
 
     assertNotNull(result);
-    assertTrue(result instanceof ImageContentAdaptor);
+    assertSame(archiveAdaptor, result);
+  }
+
+  @Test(expected = AdaptorException.class)
+  public void testGetArchiveAdaptorForArchiveTypeNotFound() throws AdaptorException {
+    adaptor.getArchiveAdaptorFor(ArchiveType.CB7);
   }
 
   @Test
-  public void testGetContentAdaptorForWebp() throws IOException, AdaptorException {
-    final ContentAdaptor result =
-        adaptor.getContentAdaptorFor(this.loadContentForFile(TEST_WEBP_FILE));
+  public void testGetArchiveAdaptorForArchiveType() throws AdaptorException {
+    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ArchiveAdaptor.class))
+        .thenReturn(archiveAdaptor);
+
+    final ArchiveAdaptor result =
+        adaptor.getArchiveAdaptorFor(archiveAdaptorEntry.getArchiveType());
 
     assertNotNull(result);
-    assertTrue(result instanceof ImageContentAdaptor);
+    assertSame(archiveAdaptor, result);
   }
 
   @Test
-  public void testGetContentAdaptorForUnknownType() throws IOException, AdaptorException {
-    final ContentAdaptor result =
-        adaptor.getContentAdaptorFor(this.loadContentForFile(TEST_UNSUPPORT_FILE));
+  public void testGetArchiveEntryTypeSubtypeDetectFailed() throws IOException {
+    final ArchiveEntryType result =
+        adaptor.getArchiveEntryType(TEST_MEDIA_TYPE.getSubtype().substring(1));
 
     assertNull(result);
   }
 
-  private byte[] loadContentForFile(final String filename) throws IOException {
-    final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    IOUtils.copy(new FileInputStream(filename), output);
-    return output.toByteArray();
+  @Test
+  public void testGetArchiveEntryType() throws IOException {
+    final ArchiveEntryType result = adaptor.getArchiveEntryType(TEST_MEDIA_TYPE.getSubtype());
+
+    assertNotNull(result);
+    assertSame(TEST_ARCHIVE_ENTRY_TYPE, result);
   }
 
   @Test
-  public void testGetTypeForCbz() throws FileNotFoundException {
-    String result = adaptor.getType(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
+  public void testGetTypeForInvalidInput() throws IOException {
+    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenThrow(IOException.class);
 
-    assertNotNull(result);
-    assertEquals("application", result);
+    final String result = adaptor.getType(inputStream);
+
+    assertNull(result);
+
+    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
   }
 
   @Test
-  public void testGetTypeForCb7() throws FileNotFoundException {
-    String result = adaptor.getType(new BufferedInputStream(new FileInputStream(TEST_CB7_FILE)));
+  public void testGetType() throws IOException {
+    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenReturn(TEST_MEDIA_TYPE);
+
+    final String result = adaptor.getType(inputStream);
 
     assertNotNull(result);
-    assertEquals("application", result);
+    assertEquals(TEST_MEDIA_TYPE.getType(), result);
+
+    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
   }
 
   @Test
-  public void testGetTypeForCbr() throws FileNotFoundException {
-    String result = adaptor.getType(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
+  public void testGetMimeTypeForInvalidInput() throws IOException {
+    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenThrow(IOException.class);
 
-    assertNotNull(result);
-    assertEquals("application", result);
+    final String result = adaptor.getMimeTypeFor(inputStream);
+
+    assertNull(result);
+
+    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
   }
 
   @Test
-  public void testGetSubtypeForCbz() throws FileNotFoundException {
-    String result = adaptor.getSubtype(new BufferedInputStream(new FileInputStream(TEST_CBZ_FILE)));
+  public void testGetMimeType() throws IOException {
+    Mockito.when(detector.detect(Mockito.any(), Mockito.any())).thenReturn(TEST_MEDIA_TYPE);
+
+    final String result = adaptor.getMimeTypeFor(inputStream);
 
     assertNotNull(result);
-    assertEquals("zip", result);
+    assertEquals(TEST_MEDIA_TYPE.toString(), result);
+
+    Mockito.verify(detector, Mockito.times(1)).detect(inputStream, metadata);
   }
 
   @Test
-  public void testGetSubtypeForCb7() throws FileNotFoundException {
-    String result = adaptor.getSubtype(new BufferedInputStream(new FileInputStream(TEST_CB7_FILE)));
+  public void testGetContentAdaptorForUnknownMimeType() throws IOException, AdaptorException {
+    Mockito.when(detector.detect(Mockito.any(InputStream.class), Mockito.any(Metadata.class)))
+        .thenThrow(IOException.class);
 
-    assertNotNull(result);
-    assertEquals("x-7z-compressed", result);
+    final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_CONTENT);
+
+    assertNull(result);
   }
 
   @Test
-  public void testGetSubtypeForCbr() throws FileNotFoundException {
-    String result = adaptor.getSubtype(new BufferedInputStream(new FileInputStream(TEST_CBR_FILE)));
+  public void testGetContentAdaptorFor() throws IOException, AdaptorException {
+    Mockito.when(detector.detect(argumentCaptorInputStream.capture(), Mockito.any(Metadata.class)))
+        .thenReturn(TEST_MEDIA_TYPE);
+    Mockito.when(applicationContext.getBean(TEST_BEAN_NAME, ContentAdaptor.class))
+        .thenReturn(contentLoader);
+
+    final ContentAdaptor result = adaptor.getContentAdaptorFor(TEST_CONTENT);
 
     assertNotNull(result);
-    assertEquals("x-rar-compressed", result);
-  }
+    assertSame(contentLoader, result);
 
-  @Test(expected = AdaptorException.class)
-  public void testGetBeanNoSuchBean() throws AdaptorException {
-    adaptor.getBean("NOPE", this.getClass());
+    Mockito.verify(detector, Mockito.times(1))
+        .detect(argumentCaptorInputStream.getValue(), metadata);
   }
 }
