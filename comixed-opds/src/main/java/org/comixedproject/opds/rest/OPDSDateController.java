@@ -23,6 +23,7 @@ import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_L
 import static org.comixedproject.opds.rest.OPDSLibraryController.SELF;
 import static org.comixedproject.opds.rest.OPDSLibraryController.SUBSECTION;
 
+import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
@@ -33,10 +34,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>OPDSDateController</code> provides endpoints for listing comics by store date year and
@@ -56,13 +54,13 @@ public class OPDSDateController {
    * Returns navigation links for the store date years in the library.
    *
    * @return the years as navigation links
-   * @throws OPDSException if an error occurs
    */
-  @GetMapping(value = "/opds/dates/years", produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds/dates/released", produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
-  public OPDSNavigationFeed loadYears() throws OPDSException {
+  public OPDSNavigationFeed loadYears(
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     log.info("Loading comic years");
     final OPDSNavigationFeed response =
         new OPDSNavigationFeed("Store Date: Years", STORE_DATE_YEARS_ID);
@@ -80,7 +78,8 @@ public class OPDSDateController {
                       new OPDSLink(
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
-                          String.format("/opds/dates/years/%d/weeks", year)));
+                          String.format(
+                              "/opds/dates/released/years/%d/weeks?unread=%s", year, unread)));
               response.getEntries().add(entry);
             });
     return response;
@@ -93,11 +92,15 @@ public class OPDSDateController {
    * @return the weeks as navigation links
    * @throws OPDSException if an error occurs
    */
-  @GetMapping(value = "/opds/dates/years/{year}/weeks", produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(
+      value = "/opds/dates/released/years/{year}/weeks",
+      produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
-  public OPDSNavigationFeed loadWeeksForYear(@PathVariable("year") @NonNull final Integer year)
+  public OPDSNavigationFeed loadWeeksForYear(
+      @PathVariable("year") @NonNull final Integer year,
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
       throws OPDSException {
     log.info("Loading comics for year {}", year);
     final OPDSNavigationFeed response =
@@ -121,7 +124,9 @@ public class OPDSDateController {
                       new OPDSLink(
                           ACQUISITION_FEED_LINK_TYPE,
                           SUBSECTION,
-                          String.format("/opds/dates/years/%d/weeks/%d", year, weekNumber)));
+                          String.format(
+                              "/opds/dates/released/years/%d/weeks/%d?unread=%s",
+                              year, weekNumber, String.valueOf(unread))));
               response.getEntries().add(entry);
             });
     return response;
@@ -136,14 +141,16 @@ public class OPDSDateController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(
-      value = "/opds/dates/years/{year}/weeks/{week}",
+      value = "/opds/dates/released/years/{year}/weeks/{week}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed loadComicsForYearAndWeek(
+      final Principal principal,
       @PathVariable("year") @NonNull final Integer year,
-      @PathVariable("week") @NonNull final Integer week)
+      @PathVariable("week") @NonNull final Integer week,
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
       throws OPDSException {
     log.info("Loading comics for year {}", year);
     final OPDSAcquisitionFeed response =
@@ -151,12 +158,12 @@ public class OPDSDateController {
             String.format("Comics For Week %d of %d", week, year),
             String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading comics");
-    this.comicBookService.getComicsForYearAndWeek(year, week).stream()
-        .sorted()
+    this.comicBookService.getComicsForYearAndWeek(year, week, principal.getName(), unread).stream()
+        .sorted((comic1, comic2) -> comic1.getStoreDate().compareTo(comic2.getStoreDate()))
         .forEach(
-            comic -> {
-              log.trace("Adding comic to collection entries: {}", comic.getId());
-              response.getEntries().add(OPDSUtils.createComicEntry(comic));
+            comicBook -> {
+              log.trace("Adding comic to collection entries: {}", comicBook.getId());
+              response.getEntries().add(OPDSUtils.createComicEntry(comicBook));
             });
     response
         .getLinks()
@@ -164,7 +171,8 @@ public class OPDSDateController {
             new OPDSLink(
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
-                String.format("/opds/dates/years/%d/weeks/%d", year, week)));
+                String.format(
+                    "/opds/dates/released/years/%d/weeks/%d?unread=%s", year, week, unread)));
     return response;
   }
 }

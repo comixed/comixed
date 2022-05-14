@@ -30,6 +30,7 @@ import org.comixedproject.opds.model.OPDSNavigationFeedEntry;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,6 +52,7 @@ public class OPDSLibraryController {
   static final long TEAMS_ID = 14L;
   static final long LOCATIONS_ID = 15L;
   static final long STORIES_ID = 16L;
+  static final long COVER_DATE_ID = 17L;
 
   /**
    * Returns the root feed.
@@ -68,19 +70,21 @@ public class OPDSLibraryController {
     log.trace("Adding library root feed");
     OPDSNavigationFeedEntry entry;
     // add the library link
-    entry = new OPDSNavigationFeedEntry("Library", "1");
+    entry = new OPDSNavigationFeedEntry("All Comics", "1");
     entry.setContent(new OPDSNavigationFeedContent("The library root"));
     entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/library/"));
     response.getEntries().add(entry);
+    // add unread entries link
+    entry = new OPDSNavigationFeedEntry("Unread Comics", "2");
+    entry.setContent(new OPDSNavigationFeedContent("Unread comics only"));
+    entry
+        .getLinks()
+        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/library/?unread=true"));
+    response.getEntries().add(entry);
     // add the reading lists link
-    entry = new OPDSNavigationFeedEntry("Reading Lists", "2");
+    entry = new OPDSNavigationFeedEntry("Reading Lists", "3");
     entry.setContent(new OPDSNavigationFeedContent("Your personal reading lists"));
     entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/lists/"));
-    response.getEntries().add(entry);
-    // add the cover date
-    entry = new OPDSNavigationFeedEntry("Cover Date", "3");
-    entry.setContent(new OPDSNavigationFeedContent("Comics Week Year & Week"));
-    entry.getLinks().add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/dates/years"));
     response.getEntries().add(entry);
     return response;
   }
@@ -94,17 +98,41 @@ public class OPDSLibraryController {
   @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
-  public OPDSNavigationFeed getLibraryFeed() {
+  public OPDSNavigationFeed getLibraryFeed(
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     log.info("Fetching the library root feed");
     final OPDSNavigationFeed response = new OPDSNavigationFeed("Library", LIBRARY_ID);
-    response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/library/"));
+    String unreadStr = String.valueOf(unread);
+    response
+        .getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format("/opds/library/?unread=%s", unreadStr)));
     OPDSNavigationFeedEntry entry;
+    // add the cover date link
+    log.trace("Adding cover dates link");
+    entry = new OPDSNavigationFeedEntry("Cover Date", String.valueOf(COVER_DATE_ID));
+    entry.setContent(new OPDSNavigationFeedContent("Comics By Release Date"));
+    entry
+        .getLinks()
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/dates/released/?unread=%s", unreadStr)));
+    response.getEntries().add(entry);
     log.trace("Adding publishers link");
     entry = new OPDSNavigationFeedEntry("Publishers", String.valueOf(PUBLISHERS_ID));
     entry.setContent(new OPDSNavigationFeedContent("All Publishers"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/publishers/"));
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/collections/publishers/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding series link");
@@ -112,7 +140,11 @@ public class OPDSLibraryController {
     entry.setContent(new OPDSNavigationFeedContent("All Series"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/series/"));
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/collections/series/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding characters link");
@@ -120,7 +152,11 @@ public class OPDSLibraryController {
     entry.setContent(new OPDSNavigationFeedContent("All Characters"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/characters/"));
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/collections/characters/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding teams link");
@@ -128,7 +164,11 @@ public class OPDSLibraryController {
     entry.setContent(new OPDSNavigationFeedContent("All Teams"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/teams/"));
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/collections/teams/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding locations link");
@@ -136,7 +176,11 @@ public class OPDSLibraryController {
     entry.setContent(new OPDSNavigationFeedContent("All Locations"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/locations/"));
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/collections/locations/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding stories link");
@@ -144,7 +188,11 @@ public class OPDSLibraryController {
     entry.setContent(new OPDSNavigationFeedContent("All Stories"));
     entry
         .getLinks()
-        .add(new OPDSLink(ACQUISITION_FEED_LINK_TYPE, SUBSECTION, "/opds/collections/stories/"));
+        .add(
+            new OPDSLink(
+                ACQUISITION_FEED_LINK_TYPE,
+                SUBSECTION,
+                String.format("/opds/collections/stories/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
     return response;
   }

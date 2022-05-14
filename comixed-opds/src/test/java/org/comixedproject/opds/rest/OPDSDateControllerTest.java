@@ -20,6 +20,7 @@ package org.comixedproject.opds.rest;
 
 import static junit.framework.TestCase.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
@@ -43,10 +44,13 @@ public class OPDSDateControllerTest {
   private static final Integer TEST_WEEK = RandomUtils.nextInt(52);
   private static final Long TEST_COMIC_ID = 7623L;
   private static final String TEST_COMIC_FILENAME = "Base Filename.CBZ";
+  private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
+  private static final String TEST_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private OPDSDateController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
+  @Mock private Principal principal;
 
   private List<Integer> yearList = new ArrayList<>();
   private List<Integer> weekList = new ArrayList<>();
@@ -61,13 +65,15 @@ public class OPDSDateControllerTest {
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
     Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
     comicBookList.add(comicBook);
+
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test
   public void testLoadYears() throws OPDSException {
     Mockito.when(comicBookService.getYearsForComics()).thenReturn(yearList);
 
-    final OPDSNavigationFeed result = controller.loadYears();
+    final OPDSNavigationFeed result = controller.loadYears(TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -80,7 +86,7 @@ public class OPDSDateControllerTest {
   public void testLoadWeeksForYear() throws OPDSException {
     Mockito.when(comicBookService.getWeeksForYear(Mockito.anyInt())).thenReturn(weekList);
 
-    final OPDSNavigationFeed result = controller.loadWeeksForYear(TEST_YEAR);
+    final OPDSNavigationFeed result = controller.loadWeeksForYear(TEST_YEAR, TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
@@ -91,16 +97,19 @@ public class OPDSDateControllerTest {
 
   @Test
   public void testLoadComicsForYearAndWeek() throws OPDSException {
-    Mockito.when(comicBookService.getComicsForYearAndWeek(Mockito.anyInt(), Mockito.anyInt()))
+    Mockito.when(
+            comicBookService.getComicsForYearAndWeek(
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicBookList);
 
-    final OPDSAcquisitionFeed result = controller.loadComicsForYearAndWeek(TEST_YEAR, TEST_WEEK);
+    final OPDSAcquisitionFeed result =
+        controller.loadComicsForYearAndWeek(principal, TEST_YEAR, TEST_WEEK, TEST_UNREAD);
 
     assertNotNull(result);
     assertFalse(result.getEntries().isEmpty());
     assertEquals(comicBookList.size(), result.getEntries().size());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK);
+        .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK, TEST_EMAIL, TEST_UNREAD);
   }
 }
