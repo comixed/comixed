@@ -50,6 +50,7 @@ public class OPDSCollectionController {
   public static final String UNNAMED = "UNNAMED";
 
   @Autowired private ComicBookService comicBookService;
+  @Autowired private OPDSUtils opdsUtils;
 
   /**
    * Retrieves the root feed for a collection.
@@ -166,7 +167,7 @@ public class OPDSCollectionController {
                       String.format(
                           "/opds/collections/%s/%s/?unread=%s",
                           collectionType,
-                          OPDSUtils.urlEncodeString(name),
+                          this.opdsUtils.urlEncodeString(name),
                           String.valueOf(unread))));
           feed.getEntries().add(feedEntry);
         });
@@ -198,7 +199,7 @@ public class OPDSCollectionController {
       @PathVariable("name") final String name,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
       throws OPDSException {
-    final String nameValue = OPDSUtils.urlDecodeString(name);
+    final String nameValue = this.opdsUtils.urlDecodeString(name);
     log.info("Fetching the feed root for publisher: {}", nameValue);
     final String email = principal.getName();
     switch (collectionType) {
@@ -240,10 +241,10 @@ public class OPDSCollectionController {
     entries.forEach(
         comic -> {
           log.trace("Adding comic to collection entries: {}", comic.getId());
-          feed.getEntries().add(OPDSUtils.createComicEntry(comic));
+          feed.getEntries().add(this.opdsUtils.createComicEntry(comic));
         });
     String type = feed.getTitle().split(": ")[0];
-    String name = OPDSUtils.urlEncodeString(feed.getTitle().split(": ")[1]);
+    String name = this.opdsUtils.urlEncodeString(feed.getTitle().split(": ")[1]);
     feed.getLinks()
         .add(
             new OPDSLink(

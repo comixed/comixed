@@ -51,7 +51,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class OPDSListsController {
   private static final String READING_LISTS_ID = "20";
   public static final long READING_LIST_FACTOR_ID = 1000000L;
+
   @Autowired private ReadingListService readingListService;
+  @Autowired private OPDSUtils opdsUtils;
 
   /**
    * Returns navigation links for the user's reading lists.
@@ -127,7 +129,7 @@ public class OPDSListsController {
           .forEach(
               comic -> {
                 log.trace("Adding comic to reading list entries: {}", comic.getId());
-                response.getEntries().add(OPDSUtils.createComicEntry(comic));
+                response.getEntries().add(this.opdsUtils.createComicEntry(comic));
               });
 
       return response;

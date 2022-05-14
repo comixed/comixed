@@ -64,6 +64,7 @@ public class OPDSComicBookControllerTest {
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
+  @Mock private OPDSUtils opdsUtils;
   @Mock private WebResponseEncoder webResponseEncoder;
   @Mock private ComicBook comicBook;
   @Mock private ResponseEntity<InputStreamResource> encodedInputStreamResourceResponse;
@@ -97,7 +98,7 @@ public class OPDSComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     try {
-      controller.downloadComic(TEST_COMIC_ID, OPDSUtils.urlEncodeString(TEST_COMIC_FILENAME));
+      controller.downloadComic(TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
     } finally {
       Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     }
@@ -117,7 +118,7 @@ public class OPDSComicBookControllerTest {
         .thenReturn(encodedInputStreamResourceResponse);
 
     final ResponseEntity<InputStreamResource> result =
-        controller.downloadComic(TEST_COMIC_ID, OPDSUtils.urlEncodeString(TEST_COMIC_FILENAME));
+        controller.downloadComic(TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
 
     assertNotNull(result);
     assertSame(encodedInputStreamResourceResponse, result);

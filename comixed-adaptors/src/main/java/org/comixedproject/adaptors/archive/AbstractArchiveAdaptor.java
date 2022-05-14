@@ -103,7 +103,7 @@ public abstract class AbstractArchiveAdaptor<
       throws IOException {
     final byte[] content = IOUtils.toByteArray(input);
     final String mimeType = this.getFileTypeAdaptor().getSubtype(new ByteArrayInputStream(content));
-    final ArchiveEntryType entryType = this.getFileTypeAdaptor().getEntryTypeFor(mimeType);
+    final ArchiveEntryType entryType = this.getFileTypeAdaptor().getArchiveEntryType(mimeType);
     return new ComicArchiveEntry(index, name, size, mimeType, entryType);
   }
 

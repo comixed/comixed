@@ -26,7 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.comixedproject.adaptors.comicbooks.ComicDataAdaptor;
+import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
@@ -57,7 +57,7 @@ import org.springframework.util.StringUtils;
 public class ComicBookService implements InitializingBean, ComicStateChangeListener {
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookRepository comicBookRepository;
-  @Autowired private ComicDataAdaptor comicDataAdaptor;
+  @Autowired private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Autowired private PublishComicUpdateAction publishComicUpdateAction;
   @Autowired private PublishComicRemovalAction publishComicRemovalAction;
   @Autowired private ImprintService imprintService;
@@ -299,7 +299,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Loading comic: id={}", comicId);
     final var comic = this.doGetComic(comicId);
     log.trace("Clearing comic metadata");
-    this.comicDataAdaptor.clear(comic);
+    this.comicBookMetadataAdaptor.clear(comic);
     log.trace("Firing comic state event");
     this.comicStateHandler.fireEvent(comic, ComicEvent.metadataCleared);
     log.trace("Retrieving upated comic");

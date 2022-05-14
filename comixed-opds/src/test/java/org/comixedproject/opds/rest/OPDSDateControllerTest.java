@@ -24,11 +24,12 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
+import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
+import org.comixedproject.opds.utils.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,8 +50,10 @@ public class OPDSDateControllerTest {
 
   @InjectMocks private OPDSDateController controller;
   @Mock private ComicBookService comicBookService;
+  @Mock private OPDSUtils opdsUtils;
   @Mock private ComicBook comicBook;
   @Mock private Principal principal;
+  @Mock private OPDSAcquisitionFeedEntry comicEntry;
 
   private List<Integer> yearList = new ArrayList<>();
   private List<Integer> weekList = new ArrayList<>();
@@ -60,10 +63,6 @@ public class OPDSDateControllerTest {
   public void setUp() {
     for (int year = 1965; year < 2022; year++) yearList.add(year);
     for (int week = 0; week < 52; week++) weekList.add(week);
-
-    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
-    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
-    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
     comicBookList.add(comicBook);
 
     Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
@@ -101,6 +100,7 @@ public class OPDSDateControllerTest {
             comicBookService.getComicsForYearAndWeek(
                 Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicBookList);
+    Mockito.when(opdsUtils.createComicEntry(Mockito.any(ComicBook.class))).thenReturn(comicEntry);
 
     final OPDSAcquisitionFeed result =
         controller.loadComicsForYearAndWeek(principal, TEST_YEAR, TEST_WEEK, TEST_UNREAD);
@@ -111,5 +111,6 @@ public class OPDSDateControllerTest {
 
     Mockito.verify(comicBookService, Mockito.times(1))
         .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK, TEST_EMAIL, TEST_UNREAD);
+    Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comicBook);
   }
 }

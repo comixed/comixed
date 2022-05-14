@@ -49,6 +49,7 @@ public class OPDSDateController {
   private static final int COMIC_STORE_DATE_FOR_YEAR_ID = 20;
 
   @Autowired private ComicBookService comicBookService;
+  @Autowired private OPDSUtils opdsUtils;
 
   /**
    * Returns navigation links for the store date years in the library.
@@ -138,7 +139,6 @@ public class OPDSDateController {
    * @param year the year
    * @param week the week
    * @return the comics as acquisition links
-   * @throws OPDSException if an error occurs
    */
   @GetMapping(
       value = "/opds/dates/released/years/{year}/weeks/{week}",
@@ -150,8 +150,7 @@ public class OPDSDateController {
       final Principal principal,
       @PathVariable("year") @NonNull final Integer year,
       @PathVariable("week") @NonNull final Integer week,
-      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
-      throws OPDSException {
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     log.info("Loading comics for year {}", year);
     final OPDSAcquisitionFeed response =
         new OPDSAcquisitionFeed(
@@ -163,7 +162,7 @@ public class OPDSDateController {
         .forEach(
             comicBook -> {
               log.trace("Adding comic to collection entries: {}", comicBook.getId());
-              response.getEntries().add(OPDSUtils.createComicEntry(comicBook));
+              response.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
             });
     response
         .getLinks()
