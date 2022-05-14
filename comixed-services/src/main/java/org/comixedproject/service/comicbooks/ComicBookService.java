@@ -811,6 +811,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
     return this.comicBookRepository.findAll().stream()
         .filter(comic -> comic.getStoreDate() != null)
+        .filter(
+            comic -> {
+              calendar.setTime(comic.getStoreDate());
+              return calendar.get(Calendar.YEAR) == year;
+            })
         .map(
             comic -> {
               calendar.setTime(comic.getStoreDate());
