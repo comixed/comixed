@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Log4j2
-public class OPDSComicController {
+public class OPDSComicBookController {
   @Autowired private ComicBookService comicBookService;
   @Autowired private WebResponseEncoder webResponseEncoder;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
@@ -101,7 +101,7 @@ public class OPDSComicController {
     try {
       log.trace("Getting page content");
       var comic = this.comicBookService.getComic(id);
-      if (index >= comic.getPages().size()) throw new OPDSException("Invalid page: index=" + index);
+      if (index >= comic.getPages().size()) return null;
       var page = comic.getPages().get(index);
       byte[] content = this.comicBookAdaptor.loadPageContent(comic, index);
 

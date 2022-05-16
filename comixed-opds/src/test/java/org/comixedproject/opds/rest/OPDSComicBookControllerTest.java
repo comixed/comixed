@@ -18,8 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +59,7 @@ public class OPDSComicBookControllerTest {
   private static final String TEST_MIME_SUBTYPE = "png";
   private static final int TEST_PAGE_WIDTH = 1024;
 
-  @InjectMocks private OPDSComicController controller;
+  @InjectMocks private OPDSComicBookController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -148,17 +147,18 @@ public class OPDSComicBookControllerTest {
     }
   }
 
-  @Test(expected = OPDSException.class)
+  @Test
   public void testGetPageByComicAndIndexWithMaxWidthInvalidPageIndex()
       throws ComicException, OPDSException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
-    try {
-      controller.getPageByComicAndIndexWithMaxWidth(
-          TEST_COMIC_ID, pageList.size() + 1, TEST_PAGE_WIDTH);
-    } finally {
-      Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
-    }
+    final ResponseEntity<byte[]> result =
+        controller.getPageByComicAndIndexWithMaxWidth(
+            TEST_COMIC_ID, pageList.size() + 1, TEST_PAGE_WIDTH);
+
+    assertNull(result);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
   }
 
   @Test

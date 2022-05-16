@@ -158,7 +158,6 @@ public class OPDSDateController {
             String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading comics");
     this.comicBookService.getComicsForYearAndWeek(year, week, principal.getName(), unread).stream()
-        .sorted((comic1, comic2) -> comic1.getStoreDate().compareTo(comic2.getStoreDate()))
         .forEach(
             comicBook -> {
               log.trace("Adding comic to collection entries: {}", comicBook.getId());

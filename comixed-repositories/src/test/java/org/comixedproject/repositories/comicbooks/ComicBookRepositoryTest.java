@@ -455,4 +455,12 @@ public class ComicBookRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
   }
+
+  @Test
+  public void testLoadYearsWithComics() {
+    final List<Integer> result = repository.loadYearsWithComics();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
 }
