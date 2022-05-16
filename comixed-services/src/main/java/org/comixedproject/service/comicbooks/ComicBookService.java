@@ -789,15 +789,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<Integer> getYearsForComics() {
     final GregorianCalendar calendar = new GregorianCalendar();
     calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return this.comicBookRepository.findAll().stream()
-        .filter(comic -> comic.getStoreDate() != null)
-        .map(
-            comic -> {
-              calendar.setTime(comic.getStoreDate());
-              return calendar.get(Calendar.YEAR);
-            })
-        .distinct()
-        .collect(Collectors.toList());
+    return this.comicBookRepository.loadYearsWithComics();
   }
 
   /**
@@ -809,19 +801,12 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<Integer> getWeeksForYear(final Integer year) {
     final GregorianCalendar calendar = new GregorianCalendar();
     calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return this.comicBookRepository.findAll().stream()
-        .filter(comic -> comic.getStoreDate() != null)
-        .filter(
-            comic -> {
-              calendar.setTime(comic.getStoreDate());
-              return calendar.get(Calendar.YEAR) == year;
-            })
+    return this.comicBookRepository.loadWeeksForYear(year).stream()
         .map(
-            comic -> {
-              calendar.setTime(comic.getStoreDate());
+            coverDate -> {
+              calendar.setTime(coverDate);
               return calendar.get(Calendar.WEEK_OF_YEAR);
             })
-        .distinct()
         .collect(Collectors.toList());
   }
 
@@ -829,15 +814,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
       final Integer year, final Integer week, final String email, final boolean unread) {
     final GregorianCalendar calendar = new GregorianCalendar();
     calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+    calendar.set(Calendar.YEAR, year);
+    calendar.set(Calendar.WEEK_OF_YEAR, week);
+    log.trace("Getting first day of requested week");
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+    final Date startDate = calendar.getTime();
+    log.trace("Getting last day of requested week");
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+    final Date endDate = calendar.getTime();
     List<ComicBook> result =
-        this.comicBookRepository.findAll().stream()
-            .filter(comicBook -> comicBook.getStoreDate() != null)
-            .filter(
-                comic -> {
-                  calendar.setTime(comic.getStoreDate());
-                  return calendar.get(Calendar.YEAR) == year
-                      && calendar.get(Calendar.WEEK_OF_YEAR) == week;
-                })
+        this.comicBookRepository.findWithCoverDateRange(startDate, endDate).stream()
             .collect(Collectors.toList());
     result = filterReadComics(email, unread, result);
     return result;

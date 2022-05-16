@@ -326,4 +326,34 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT c FROM ComicBook c WHERE c.purgeComic = true")
   List<ComicBook> findComicsMarkedForPurging();
+
+  /**
+   * Returns the individual year values for comics in the library.
+   *
+   * @return the list of years
+   */
+  @Query("SELECT DISTINCT(YEAR(c.coverDate)) FROM ComicBook c WHERE c.coverDate IS NOT NULL")
+  List<Integer> loadYearsWithComics();
+
+  /**
+   * Returns the individual weeks for the given year in the library.
+   *
+   * @param year the year
+   * @return the week numbers
+   */
+  @Query(
+      "SELECT DISTINCT(c.coverDate) FROM ComicBook c WHERE c.coverDate IS NOT NULL AND YEAR(c.coverDate) = :year")
+  List<Date> loadWeeksForYear(@Param("year") Integer year);
+
+  /**
+   * Retrieves all comics with a cover date within the given range.
+   *
+   * @param startDate the start date
+   * @param endDate the end date
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.coverDate IS NOT NULL AND (c.coverDate >= :startDate AND c.coverDate <= :endDate)")
+  List<ComicBook> findWithCoverDateRange(
+      @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

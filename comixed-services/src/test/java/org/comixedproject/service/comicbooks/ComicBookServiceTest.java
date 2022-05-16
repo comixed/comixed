@@ -74,9 +74,6 @@ public class ComicBookServiceTest {
   private static final String TEST_LOCATION = "The Location";
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
-  private static final Date TEST_STORE_DATE = new Date();
-  private static final Date TEST_DATE_LAST_YEAR =
-      new Date(System.currentTimeMillis() - 365L * 24L * 60L * 60L * 1000L);
 
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -96,10 +93,12 @@ public class ComicBookServiceTest {
   @Mock private ComicBook readComicBook;
   @Mock private LastRead lastRead;
   @Mock private ComiXedUser lastReadUser;
+  @Mock private List<Integer> yearList;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
-  @Mock private ComicBook ignoredComicBook;
+  @Captor private ArgumentCaptor<Date> startDateArgumentCaptor;
+  @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<ComicBook> comicsBySeries = new ArrayList<>();
@@ -110,6 +109,7 @@ public class ComicBookServiceTest {
   private GregorianCalendar calendar = new GregorianCalendar();
   private Date now = new Date();
   private List<LastRead> lastReadList = new ArrayList<>();
+  private List<Date> weeksList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -131,9 +131,6 @@ public class ComicBookServiceTest {
     Mockito.when(lastReadUser.getEmail()).thenReturn(TEST_EMAIL);
     lastReadList.add(lastRead);
     Mockito.when(readComicBook.getLastReads()).thenReturn(lastReadList);
-    Mockito.when(readComicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
-    Mockito.when(comicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
-    Mockito.when(ignoredComicBook.getStoreDate()).thenReturn(TEST_DATE_LAST_YEAR);
   }
 
   @Test
@@ -1279,61 +1276,41 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetYearsForComicsNoCoverDate() {
-    Mockito.when(comicBook.getStoreDate()).thenReturn(null);
-    comicBookList.add(comicBook);
-
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
-
-    final List<Integer> result = service.getYearsForComics();
-
-    assertNotNull(result);
-    assertTrue(result.isEmpty());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
-  }
-
-  @Test
   public void testGetYearsForComics() {
-    Mockito.when(comicBook.getStoreDate()).thenReturn(now);
-    comicBookList.add(comicBook);
-    comicBookList.add(ignoredComicBook);
-
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.loadYearsWithComics()).thenReturn(yearList);
 
     final List<Integer> result = service.getYearsForComics();
 
     assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertEquals(calendar.get(Calendar.YEAR), result.get(0).intValue());
+    assertSame(yearList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+    Mockito.verify(comicBookRepository, Mockito.times(1)).loadYearsWithComics();
   }
 
   @Test
   public void testGetWeeksForComics() {
-    Mockito.when(comicBook.getStoreDate()).thenReturn(now);
-    comicBookList.add(comicBook);
-    comicBookList.add(ignoredComicBook);
+    weeksList.add(now);
 
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.loadWeeksForYear(Mockito.anyInt())).thenReturn(weeksList);
 
     final List<Integer> result = service.getWeeksForYear(calendar.get(Calendar.YEAR));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertEquals(1, result.size());
     assertTrue(result.contains(calendar.get(Calendar.WEEK_OF_YEAR)));
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .loadWeeksForYear(calendar.get(Calendar.YEAR));
   }
 
   @Test
   public void testGetComicsForYearAndWeek() {
-    Mockito.when(comicBook.getStoreDate()).thenReturn(now);
     comicBookList.add(comicBook);
 
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+    Mockito.when(
+            comicBookRepository.findWithCoverDateRange(
+                startDateArgumentCaptor.capture(), endDateArgumentCaptor.capture()))
+        .thenReturn(comicBookList);
 
     final List<ComicBook> result =
         service.getComicsForYearAndWeek(
@@ -1343,16 +1320,25 @@ public class ComicBookServiceTest {
     assertFalse(result.isEmpty());
     assertTrue(result.contains(comicBook));
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+    final Date startDate = startDateArgumentCaptor.getValue();
+    assertNotNull(startDate);
+    final Date endDate = endDateArgumentCaptor.getValue();
+    assertNotNull(endDate);
+    assertTrue(startDate.before(endDate));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findWithCoverDateRange(startDate, endDate);
   }
 
   @Test
   public void testGetComicsForYearAndWeekUnread() {
-    Mockito.when(comicBook.getStoreDate()).thenReturn(now);
     comicBookList.add(comicBook);
     comicBookList.add(readComicBook);
 
-    Mockito.when(comicBookRepository.findAll()).thenReturn(comicBookList);
+    Mockito.when(
+            comicBookRepository.findWithCoverDateRange(
+                startDateArgumentCaptor.capture(), endDateArgumentCaptor.capture()))
+        .thenReturn(comicBookList);
 
     final List<ComicBook> result =
         service.getComicsForYearAndWeek(
@@ -1363,6 +1349,13 @@ public class ComicBookServiceTest {
     assertTrue(result.contains(comicBook));
     assertFalse(result.contains(readComicBook));
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAll();
+    final Date startDate = startDateArgumentCaptor.getValue();
+    assertNotNull(startDate);
+    final Date endDate = endDateArgumentCaptor.getValue();
+    assertNotNull(endDate);
+    assertTrue(startDate.before(endDate));
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findWithCoverDateRange(startDate, endDate);
   }
 }
