@@ -30,6 +30,7 @@ import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
+import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class MetadataController {
   @Autowired private MetadataService metadataService;
+  @Autowired private MetadataCacheService metadataCacheService;
 
   /**
    * Retrieves a single {@link IssueMetadata} for the specified issue of the given volume and issue
@@ -156,5 +158,14 @@ public class MetadataController {
   public void clearAuditLog() {
     log.info("Clearing metadata audit log");
     this.metadataService.clearAuditLog();
+  }
+
+  /** Initiates clearing the metadata cache. */
+  @DeleteMapping(value = "/api/metadata/cache")
+  @PreAuthorize("hasRole('ADMIN')")
+  @AuditableRestEndpoint
+  public void clearCache() {
+    log.info("Clearing the metadata cache");
+    this.metadataCacheService.clearCache();
   }
 }

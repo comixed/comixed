@@ -49,6 +49,7 @@ import {
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import { clearMetadataCache } from '@app/comic-metadata/actions/metadata.actions';
 
 @Component({
   selector: 'cx-metadata-audit-log-list',
@@ -159,5 +160,21 @@ export class MetadataAuditLogListComponent
         value: `${pageEvent.pageSize}`
       })
     );
+  }
+
+  onClearMetadataCache(): void {
+    this.logger.trace('Confirming clearing the metadata cache');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'metadata-cache.clear-cache.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'metadata-cache.clear-cache.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action to clear metadata cache');
+        this.store.dispatch(clearMetadataCache());
+      }
+    });
   }
 }

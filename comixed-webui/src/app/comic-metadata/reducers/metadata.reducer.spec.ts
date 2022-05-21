@@ -18,12 +18,15 @@
 
 import { initialState, MetadataState, reducer } from './metadata.reducer';
 import {
+  clearMetadataCache,
+  clearMetadataCacheFailed,
   comicScraped,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
+  metadataCacheCleared,
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
@@ -65,6 +68,10 @@ describe('Scraping Reducer', () => {
 
     it('clears the loading records flag', () => {
       expect(state.loadingRecords).toBeFalse();
+    });
+
+    it('clears the clearing cache flag', () => {
+      expect(state.clearingCache).toBeFalse();
     });
 
     it('has no volumes loaded', () => {
@@ -304,6 +311,42 @@ describe('Scraping Reducer', () => {
 
     it('sets the metadata source', () => {
       expect(state.metadataSource).toEqual(METADATA_SOURCE);
+    });
+  });
+
+  describe('clearing the metadata cache', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, clearingCache: false }, clearMetadataCache());
+    });
+
+    it('sets the clearing cache flag', () => {
+      expect(state.clearingCache).toBeTrue();
+    });
+  });
+
+  describe('successfully cleared the metadata cache', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingCache: true },
+        metadataCacheCleared()
+      );
+    });
+
+    it('clears the clearing cache flag', () => {
+      expect(state.clearingCache).toBeFalse();
+    });
+  });
+
+  describe('failed to clear the metadata cache', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, clearingCache: true },
+        clearMetadataCacheFailed()
+      );
+    });
+
+    it('clears the clearing cache flag', () => {
+      expect(state.clearingCache).toBeFalse();
     });
   });
 });

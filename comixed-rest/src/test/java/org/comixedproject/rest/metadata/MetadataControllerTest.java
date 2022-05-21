@@ -30,6 +30,7 @@ import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
+import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,7 @@ public class MetadataControllerTest {
 
   @InjectMocks private MetadataController controller;
   @Mock private MetadataService metadataService;
+  @Mock private MetadataCacheService metadataCacheService;
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
   @Mock private ComicBook comicBook;
@@ -208,5 +210,12 @@ public class MetadataControllerTest {
     controller.clearAuditLog();
 
     Mockito.verify(metadataService, Mockito.times(1)).clearAuditLog();
+  }
+
+  @Test
+  public void testClearCache() {
+    controller.clearCache();
+
+    Mockito.verify(metadataCacheService, Mockito.times(1)).clearCache();
   }
 }

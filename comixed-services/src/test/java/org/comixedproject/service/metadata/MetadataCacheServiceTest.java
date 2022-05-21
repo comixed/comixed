@@ -41,7 +41,7 @@ public class MetadataCacheServiceTest {
       new Date(System.currentTimeMillis() - 6L * 24L * 60L * 60L * 1000L);
   private static final String TEST_SCRAPING_CACHE_ENTRY = "This is the scraping cache entry value";
 
-  @InjectMocks private MetadataCacheService metadataCacheService;
+  @InjectMocks private MetadataCacheService service;
   @Mock private MetadataCacheRepository metadataCacheRepository;
   @Captor private ArgumentCaptor<MetadataCache> scrapingCacheArgumentCaptor;
   @Mock private MetadataCache existingScapingCache;
@@ -61,7 +61,7 @@ public class MetadataCacheServiceTest {
     Mockito.when(metadataCacheRepository.save(scrapingCacheArgumentCaptor.capture()))
         .thenReturn(metadataCacheRecord);
 
-    metadataCacheService.saveToCache(TEST_SOURCE, TEST_KEY, valuesList);
+    service.saveToCache(TEST_SOURCE, TEST_KEY, valuesList);
 
     assertNotNull(scrapingCacheArgumentCaptor.getValue());
     final MetadataCache cacheEntry = scrapingCacheArgumentCaptor.getValue();
@@ -88,7 +88,7 @@ public class MetadataCacheServiceTest {
     Mockito.when(metadataCacheRepository.save(scrapingCacheArgumentCaptor.capture()))
         .thenReturn(metadataCacheRecord);
 
-    metadataCacheService.saveToCache(TEST_SOURCE, TEST_KEY, valuesList);
+    service.saveToCache(TEST_SOURCE, TEST_KEY, valuesList);
 
     assertNotNull(scrapingCacheArgumentCaptor.getValue());
     final MetadataCache cacheEntry = scrapingCacheArgumentCaptor.getValue();
@@ -111,7 +111,7 @@ public class MetadataCacheServiceTest {
     Mockito.when(metadataCacheRepository.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(null);
 
-    final List<String> result = this.metadataCacheService.getFromCache(TEST_SOURCE, TEST_KEY);
+    final List<String> result = this.service.getFromCache(TEST_SOURCE, TEST_KEY);
 
     assertNull(result);
 
@@ -124,7 +124,7 @@ public class MetadataCacheServiceTest {
         .thenReturn(existingScapingCache);
     Mockito.when(existingScapingCache.getCreatedOn()).thenReturn(TEST_EXPIRED_CREATED_ON_DATE);
 
-    final List<String> result = this.metadataCacheService.getFromCache(TEST_SOURCE, TEST_KEY);
+    final List<String> result = this.service.getFromCache(TEST_SOURCE, TEST_KEY);
 
     assertNull(result);
 
@@ -142,7 +142,7 @@ public class MetadataCacheServiceTest {
     Mockito.when(existingScapingCache.getEntries()).thenReturn(scrapingCacheEntries);
     Mockito.when(metadataCacheEntry.getEntryValue()).thenReturn(TEST_SCRAPING_CACHE_ENTRY);
 
-    final List<String> result = this.metadataCacheService.getFromCache(TEST_SOURCE, TEST_KEY);
+    final List<String> result = this.service.getFromCache(TEST_SOURCE, TEST_KEY);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -153,5 +153,12 @@ public class MetadataCacheServiceTest {
 
     Mockito.verify(metadataCacheRepository, Mockito.times(1)).getFromCache(TEST_SOURCE, TEST_KEY);
     Mockito.verify(metadataCacheRepository, Mockito.never()).delete(Mockito.any());
+  }
+
+  @Test
+  public void testClearCache() {
+    service.clearCache();
+
+    Mockito.verify(metadataCacheRepository, Mockito.times(1)).deleteAll();
   }
 }

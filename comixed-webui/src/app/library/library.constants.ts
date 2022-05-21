@@ -47,6 +47,7 @@ export const SCRAPE_COMIC_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/c
 
 export const LOAD_METADATA_AUDIT_LOG_URL = `${API_ROOT_URL}/metadata/log`;
 export const CLEAR_METADATA_AUDIT_LOG_URL = `${API_ROOT_URL}/metadata/log`;
+export const CLEAR_METADATA_CACHE_URL = `${API_ROOT_URL}/metadata/cache`;
 
 export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 

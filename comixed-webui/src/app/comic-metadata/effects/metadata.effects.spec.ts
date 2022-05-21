@@ -23,21 +23,24 @@ import { MetadataEffects } from './metadata.effects';
 import { MetadataService } from '@app/comic-metadata/services/metadata.service';
 import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
 import {
+  clearMetadataCache,
+  clearMetadataCacheFailed,
   comicScraped,
+  issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
+  metadataCacheCleared,
   scrapeComic,
   scrapeComicFailed,
-  issueMetadataLoaded,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { hot } from 'jasmine-marbles';
 import { AlertService } from '@app/core/services/alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
 import {
@@ -83,7 +86,8 @@ describe('MetadataEffects', () => {
             loadScrapingIssue: jasmine.createSpy(
               'MetadataService.loadScrapingIssue()'
             ),
-            scrapeComic: jasmine.createSpy('MetadataService.scrapeComic()')
+            scrapeComic: jasmine.createSpy('MetadataService.scrapeComic()'),
+            clearCache: jasmine.createSpy('MetadataService.clearCache()')
           }
         },
         AlertService
@@ -267,6 +271,46 @@ describe('MetadataEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.scrapeComic$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('clearing the metadata cache', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = clearMetadataCache();
+      const outcome = metadataCacheCleared();
+
+      actions$ = hot('-a', { a: action });
+      scrapingService.clearCache.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.clearCache$).toBeObservable(expected);
+      expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = clearMetadataCache();
+      const outcome = clearMetadataCacheFailed();
+
+      actions$ = hot('-a', { a: action });
+      scrapingService.clearCache.and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.clearCache$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = clearMetadataCache();
+      const outcome = clearMetadataCacheFailed();
+
+      actions$ = hot('-a', { a: action });
+      scrapingService.clearCache.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.clearCache$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

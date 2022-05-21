@@ -19,14 +19,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MetadataAuditLogListComponent } from './metadata-audit-log-list.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import {
-  USER_FEATURE_KEY,
-  initialState as initialUserState
+  initialState as initialUserState,
+  USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import {
-  METADATA_AUDIT_LOG_FEATURE_KEY,
-  initialState as initialMetadataAuditLogState
+  initialState as initialMetadataAuditLogState,
+  METADATA_AUDIT_LOG_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata-audit-log.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -49,6 +49,7 @@ import {
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { METADATA_AUDIT_LOG_ENTRY_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { clearMetadataCache } from '@app/comic-metadata/actions/metadata.actions';
 
 describe('MetadataAuditLogListComponent', () => {
   const ENTRY = METADATA_AUDIT_LOG_ENTRY_1;
@@ -153,6 +154,23 @@ describe('MetadataAuditLogListComponent', () => {
       expect(component.dataSource.sortingDataAccessor(ENTRY, 'comic')).toEqual(
         ENTRY.comic.series
       );
+    });
+  });
+
+  describe('clearing the metadata cache', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onClearMetadataCache();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(clearMetadataCache());
     });
   });
 });
