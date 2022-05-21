@@ -18,7 +18,8 @@
 
 package org.comixedproject.opds.rest;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -151,12 +152,22 @@ public class OPDSComicBookControllerTest {
   public void testGetPageByComicAndIndexWithMaxWidthInvalidPageIndex()
       throws ComicException, OPDSException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(fileTypeAdaptor.getMimeTypeFor(Mockito.any()))
+        .thenReturn(String.format("%s/%s", TEST_MIME_TYPE, TEST_MIME_SUBTYPE));
+    Mockito.when(
+            webResponseEncoder.encode(
+                Mockito.anyInt(),
+                Mockito.any(byte[].class),
+                Mockito.anyString(),
+                Mockito.any(MediaType.class)))
+        .thenReturn(encodedByteArrayResponse);
 
     final ResponseEntity<byte[]> result =
         controller.getPageByComicAndIndexWithMaxWidth(
             TEST_COMIC_ID, pageList.size() + 1, TEST_PAGE_WIDTH);
 
-    assertNull(result);
+    assertNotNull(result);
+    assertSame(encodedByteArrayResponse, result);
 
     Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
   }
@@ -167,10 +178,8 @@ public class OPDSComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookAdaptor.loadPageContent(Mockito.any(ComicBook.class), Mockito.anyInt()))
         .thenReturn(imageContent);
-    Mockito.when(fileTypeAdaptor.getType(Mockito.any(InputStream.class)))
-        .thenReturn(TEST_MIME_TYPE);
-    Mockito.when(fileTypeAdaptor.getSubtype(Mockito.any(InputStream.class)))
-        .thenReturn(TEST_MIME_SUBTYPE);
+    Mockito.when(fileTypeAdaptor.getMimeTypeFor(Mockito.any(InputStream.class)))
+        .thenReturn(String.format("%s/%s", TEST_MIME_TYPE, TEST_MIME_SUBTYPE));
     Mockito.when(
             webResponseEncoder.encode(
                 Mockito.anyInt(),
