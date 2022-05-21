@@ -1,4 +1,12 @@
 {
+  "metadata-cache": {
+    "clear-cache": {
+      "confirmation-message": "Are you sure you want to clear out the metadata cache?",
+      "confirmation-title": "Clear Metadata Cache",
+      "effect-failure": "Failed to clear the metadata cache.",
+      "effect-success": "Metadata cache cleared."
+    }
+  },
   "metadata-source": {
     "delete-source": {
       "confirm-message": "Tem a certeza que quer apagar a origem {name} dos metadados?",
@@ -61,6 +69,7 @@
     },
     "tooltip": {
       "clear-entries": "Limpar o relatório dos metadados.",
+      "clear-metadata-cache": "Clear the metadata cache.",
       "reload-entries": "Recarregar o relatório dos metadados."
     }
   },

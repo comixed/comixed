@@ -96,3 +96,15 @@ export const comicScraped = createAction(
 export const scrapeComicFailed = createAction(
   '[Metadata] Failed to scrape the details for a comic'
 );
+
+export const clearMetadataCache = createAction(
+  '[Metadata] Clears the metadata cache'
+);
+
+export const metadataCacheCleared = createAction(
+  '[Metadata] The metadata cache is cleared'
+);
+
+export const clearMetadataCacheFailed = createAction(
+  '[Metadata] Failed to clear the metadata cache'
+);

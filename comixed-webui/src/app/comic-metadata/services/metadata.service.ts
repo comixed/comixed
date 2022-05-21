@@ -23,6 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { interpolate } from '@app/core';
 import {
   CLEAR_METADATA_AUDIT_LOG_URL,
+  CLEAR_METADATA_CACHE_URL,
   LOAD_METADATA_AUDIT_LOG_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
@@ -137,5 +138,10 @@ export class MetadataService {
   clearAuditLog(): Observable<any> {
     this.logger.trace('Clear metadata audit log entries');
     return this.http.delete(interpolate(CLEAR_METADATA_AUDIT_LOG_URL));
+  }
+
+  clearCache(): Observable<any> {
+    this.logger.trace('Clearing metadata cache');
+    return this.http.delete(interpolate(CLEAR_METADATA_CACHE_URL));
   }
 }

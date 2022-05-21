@@ -43,6 +43,7 @@ describe('Metadata Selectors', () => {
   beforeEach(() => {
     state = {
       loadingRecords: Math.random() > 0.5,
+      clearingCache: Math.random() > 0.5,
       volumes: VOLUMES,
       scrapingIssue: SCRAPING_ISSUE,
       metadataSource: METADATA_SOURCE_1,

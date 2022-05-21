@@ -18,12 +18,15 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
+  clearMetadataCache,
+  clearMetadataCacheFailed,
   comicScraped,
   issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
+  metadataCacheCleared,
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
@@ -40,6 +43,7 @@ export const METADATA_FEATURE_KEY = 'metadata_state';
 
 export interface MetadataState {
   loadingRecords: boolean;
+  clearingCache: boolean;
   volumes: VolumeMetadata[];
   scrapingIssue: IssueMetadata;
   metadataSource: MetadataSource;
@@ -49,6 +53,7 @@ export interface MetadataState {
 
 export const initialState: MetadataState = {
   loadingRecords: false,
+  clearingCache: false,
   volumes: [],
   scrapingIssue: null,
   metadataSource: null,
@@ -101,5 +106,8 @@ export const reducer = createReducer(
   on(setChosenMetadataSource, (state, action) => ({
     ...state,
     metadataSource: action.metadataSource
-  }))
+  })),
+  on(clearMetadataCache, state => ({ ...state, clearingCache: true })),
+  on(metadataCacheCleared, state => ({ ...state, clearingCache: false })),
+  on(clearMetadataCacheFailed, state => ({ ...state, clearingCache: false }))
 );

@@ -19,14 +19,17 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
+  clearMetadataCache,
+  clearMetadataCacheFailed,
   comicScraped,
+  issueMetadataLoaded,
   loadIssueMetadata,
   loadIssueMetadataFailed,
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
+  metadataCacheCleared,
   scrapeComic,
   scrapeComicFailed,
-  issueMetadataLoaded,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -49,7 +52,7 @@ export class MetadataEffects {
         this.logger.debug('Effect: load scraping volumes:', action)
       ),
       switchMap(action =>
-        this.scrapingService
+        this.metadataService
           .loadScrapingVolumes({
             metadataSource: action.metadataSource,
             series: action.series,
@@ -87,7 +90,7 @@ export class MetadataEffects {
       ofType(loadIssueMetadata),
       tap(action => this.logger.debug('Effect: load scraping issue:', action)),
       switchMap(action =>
-        this.scrapingService
+        this.metadataService
           .loadScrapingIssue({
             metadataSource: action.metadataSource,
             volumeId: action.volumeId,
@@ -125,7 +128,7 @@ export class MetadataEffects {
       ofType(scrapeComic),
       tap(action => this.logger.debug('Effect: scrape comic:', action)),
       switchMap(action =>
-        this.scrapingService
+        this.metadataService
           .scrapeComic({
             metadataSource: action.metadataSource,
             issueId: action.issueId,
@@ -166,10 +169,46 @@ export class MetadataEffects {
     );
   });
 
+  clearCache$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(clearMetadataCache),
+      tap(action => this.logger.trace('Clearing metadata cache:', action)),
+      switchMap(() =>
+        this.metadataService.clearCache().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'metadata-cache.clear-cache.effect-success'
+              )
+            )
+          ),
+          map(() => metadataCacheCleared()),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'metadata-cache.clear-cache.effect-failure'
+              )
+            );
+            return of(clearMetadataCacheFailed());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(clearMetadataCacheFailed());
+      })
+    );
+  });
+
   constructor(
     private logger: LoggerService,
     private actions$: Actions,
-    private scrapingService: MetadataService,
+    private metadataService: MetadataService,
     private alertService: AlertService,
     private translateService: TranslateService
   ) {}

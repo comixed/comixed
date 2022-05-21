@@ -27,6 +27,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
   CLEAR_METADATA_AUDIT_LOG_URL,
+  CLEAR_METADATA_CACHE_URL,
   LOAD_METADATA_AUDIT_LOG_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
@@ -42,7 +43,7 @@ import {
   SCRAPING_VOLUME_2,
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 
 describe('MetadataService', () => {
   const SERIES = 'The Series';
@@ -151,6 +152,16 @@ describe('MetadataService', () => {
       .subscribe(response => expect(response.status).toEqual(200));
 
     const req = httpMock.expectOne(interpolate(CLEAR_METADATA_AUDIT_LOG_URL));
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can clear the metadata cache', () => {
+    service
+      .clearCache()
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(interpolate(CLEAR_METADATA_CACHE_URL));
     expect(req.request.method).toEqual('DELETE');
     req.flush(new HttpResponse({ status: 200 }));
   });

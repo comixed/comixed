@@ -27,6 +27,16 @@
   >
     <mat-icon>delete</mat-icon>
   </button>
+  <button
+    id="clear-metadata-cache-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'metadata-audit-log.tooltip.clear-metadata-cache' | translate"
+    (click)="onClearMetadataCache()"
+  >
+    <mat-icon>clear_all</mat-icon>
+  </button>
 </mat-toolbar>
 
 <mat-table [dataSource]="dataSource" matSort>

@@ -108,4 +108,11 @@ public class MetadataCacheService {
 
     return result;
   }
+
+  /** Clears all records the metadata cache table. */
+  @Transactional
+  public void clearCache() {
+    log.trace("Clearing metadata cache");
+    this.metadataCacheRepository.deleteAll();
+  }
 }
