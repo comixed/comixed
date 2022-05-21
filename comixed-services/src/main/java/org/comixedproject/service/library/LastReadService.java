@@ -162,26 +162,44 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
    */
   public void setLastReadState(final String email, final List<Long> ids, final boolean state)
       throws LastReadException {
-    log.debug("Loading the user: {}", email);
-    final ComiXedUser user = this.doFindUser(email);
-    ids.forEach(
-        id -> {
-          try {
-            log.trace("Loading comicBook: id={}", id);
-            final ComicBook comicBook = this.comicBookService.getComic(id);
-            log.trace("Creating additional headers");
-            Map<String, Object> headers = new HashMap<>();
-            headers.put(HEADER_USER, user);
-            if (state) {
-              log.trace("Firing event: mark comicBook as read");
-              this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsRead, headers);
-            } else {
-              log.trace("Firing event: mark comicBook as unread");
-              this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsUnread, headers);
-            }
-          } catch (ComicException error) {
-            log.error("Failed to process comic last read state", error);
-          }
-        });
+    for (int index = 0; index < ids.size(); index++) {
+      final Long id = ids.get(index);
+      this.doSetLastReadState(email, id, state);
+    }
+  }
+
+  /**
+   * Sets the read state for a single comic for a given user.
+   *
+   * @param email the user's email
+   * @param id the comic id
+   * @param state the read state
+   * @throws LastReadException if the user was not found
+   */
+  public void setLastReadState(final String email, final Long id, final boolean state)
+      throws LastReadException {
+    this.doSetLastReadState(email, id, state);
+  }
+
+  public void doSetLastReadState(final String email, final Long id, final boolean state)
+      throws LastReadException {
+    try {
+      log.debug("Loading the user: {}", email);
+      final ComiXedUser user = this.doFindUser(email);
+      log.trace("Loading comicBook: id={}", id);
+      final ComicBook comicBook = this.comicBookService.getComic(id);
+      log.trace("Creating additional headers");
+      Map<String, Object> headers = new HashMap<>();
+      headers.put(HEADER_USER, user);
+      if (state) {
+        log.trace("Firing event: mark comicBook as read");
+        this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsRead, headers);
+      } else {
+        log.trace("Firing event: mark comicBook as unread");
+        this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsUnread, headers);
+      }
+    } catch (ComicException error) {
+      log.error("Failed to process comic last read state", error);
+    }
   }
 }

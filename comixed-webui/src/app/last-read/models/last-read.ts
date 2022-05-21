@@ -18,6 +18,6 @@
 
 export interface LastRead {
   id: number;
-  comic: { id: number };
+  comicBook: { id: number };
   lastRead: number;
 }

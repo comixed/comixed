@@ -34,7 +34,7 @@ export class UnreadComicsPipe implements PipeTransform {
     }
 
     return comicBooks.filter(comicBook => {
-      return !lastReadDates.find(date => date.comic.id === comicBook.id);
+      return !lastReadDates.find(date => date.comicBook.id === comicBook.id);
     });
   }
 }

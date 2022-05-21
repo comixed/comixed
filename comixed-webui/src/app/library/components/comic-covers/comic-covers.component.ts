@@ -141,15 +141,15 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._comicObservable.getValue();
   }
 
-  @Input() set comics(comics: ComicBook[]) {
-    this.logger.trace('Setting comics:', comics);
-    this.dataSource.data = comics;
+  @Input() set comics(comicBooks: ComicBook[]) {
+    this.logger.trace('Setting comics:', comicBooks);
+    this.dataSource.data = comicBooks;
     this.pageIndex = this._pageIndex;
     this.sortData();
   }
 
   @Input() set lastRead(lastRead: LastRead[]) {
-    this._readComicIds = lastRead.map(entry => entry.comic.id);
+    this._readComicIds = lastRead.map(entry => entry.comicBook.id);
   }
 
   ngOnInit(): void {
