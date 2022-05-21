@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -39,6 +40,8 @@ import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.utils.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.library.LastReadException;
+import org.comixedproject.service.library.LastReadService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,9 +62,11 @@ public class OPDSComicBookControllerTest {
   private static final String TEST_MIME_TYPE = "image";
   private static final String TEST_MIME_SUBTYPE = "png";
   private static final int TEST_PAGE_WIDTH = 1024;
+  private static final String TEST_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private OPDSComicBookController controller;
   @Mock private ComicBookService comicBookService;
+  @Mock private LastReadService lastReadService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private OPDSUtils opdsUtils;
@@ -70,6 +75,7 @@ public class OPDSComicBookControllerTest {
   @Mock private ResponseEntity<InputStreamResource> encodedInputStreamResourceResponse;
   @Mock private Page page;
   @Mock private ResponseEntity<byte[]> encodedByteArrayResponse;
+  @Mock private Principal principal;
 
   @Captor private ArgumentCaptor<InputStreamResource> inputStreamResourceArgumentCaptor;
 
@@ -91,6 +97,8 @@ public class OPDSComicBookControllerTest {
     this.imageContent = IOUtils.readFully(new FileInputStream(imageFile), (int) imageFile.length());
 
     this.fileLength = comicFile.length();
+
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
   }
 
   @Test(expected = OPDSException.class)
@@ -98,14 +106,15 @@ public class OPDSComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
 
     try {
-      controller.downloadComic(TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+      controller.downloadComic(
+          principal, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
     } finally {
       Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     }
   }
 
   @Test
-  public void testDownloadComic() throws ComicException, OPDSException {
+  public void testDownloadComic() throws ComicException, OPDSException, LastReadException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
 
@@ -118,7 +127,8 @@ public class OPDSComicBookControllerTest {
         .thenReturn(encodedInputStreamResourceResponse);
 
     final ResponseEntity<InputStreamResource> result =
-        controller.downloadComic(TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
+        controller.downloadComic(
+            principal, TEST_COMIC_ID, opdsUtils.urlEncodeString(TEST_COMIC_FILENAME));
 
     assertNotNull(result);
     assertSame(encodedInputStreamResourceResponse, result);
@@ -133,6 +143,8 @@ public class OPDSComicBookControllerTest {
             inputStreamResource,
             TEST_COMIC_FILENAME,
             MediaType.parseMediaType(TEST_ARCHIVE_TYPE.getMimeType()));
+    Mockito.verify(lastReadService, Mockito.times(1))
+        .setLastReadState(TEST_EMAIL, TEST_COMIC_ID, true);
   }
 
   @Test(expected = OPDSException.class)

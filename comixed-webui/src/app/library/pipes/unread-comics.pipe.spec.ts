@@ -31,7 +31,7 @@ describe('UnreadComicsPipe', () => {
 
   const COMICS = [UNREAD_COMIC, READ_COMIC, OTHER_UNREAD_COMIC];
   const LAST_READ_DATES = [
-    { id: 1, comic: READ_COMIC, lastRead: new Date().getTime() } as LastRead
+    { id: 1, comicBook: READ_COMIC, lastRead: new Date().getTime() } as LastRead
   ];
 
   let pipe: UnreadComicsPipe;

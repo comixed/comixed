@@ -492,13 +492,13 @@ describe('ComicCoversComponent', () => {
 
     it('stores the read comic ids', () => {
       expect(component.readComicIds).toEqual(
-        LAST_READ_DATES.map(entry => entry.comic.id)
+        LAST_READ_DATES.map(entry => entry.comicBook.id)
       );
     });
 
     it('identifies read comics', () => {
       expect(
-        component.isRead(LAST_READ_DATES[0].comic as ComicBook)
+        component.isRead(LAST_READ_DATES[0].comicBook as ComicBook)
       ).toBeTrue();
     });
   });

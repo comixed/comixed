@@ -20,6 +20,7 @@ package org.comixedproject.opds.rest;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.security.Principal;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -32,6 +33,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.library.LastReadException;
+import org.comixedproject.service.library.LastReadService;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -51,6 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class OPDSComicBookController {
   @Autowired private ComicBookService comicBookService;
+  @Autowired private LastReadService lastReadService;
   @Autowired private WebResponseEncoder webResponseEncoder;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
@@ -58,6 +62,7 @@ public class OPDSComicBookController {
   /**
    * Retrieves a specific comic by record id.
    *
+   * @param principal the user principal
    * @param id the record id
    * @param filename the filename
    * @return the comic content
@@ -67,18 +72,22 @@ public class OPDSComicBookController {
   @AuditableRestEndpoint
   @ResponseBody
   public ResponseEntity<InputStreamResource> downloadComic(
-      @PathVariable("id") long id, @PathVariable("filename") final String filename)
+      final Principal principal,
+      @PathVariable("id") Long id,
+      @PathVariable("filename") final String filename)
       throws OPDSException {
     try {
       log.info("Downloading comicBook: id={} filename={}", id, filename);
       ComicBook comicBook = this.comicBookService.getComic(id);
+      log.trace("Marking comic as read by user");
+      this.lastReadService.setLastReadState(principal.getName(), id, true);
       log.trace("Returning encoded file: {}", comicBook.getFilename());
       return this.webResponseEncoder.encode(
           (int) comicBook.getFile().length(),
           new InputStreamResource(new FileInputStream(comicBook.getFile())),
           comicBook.getBaseFilename(),
           MediaType.parseMediaType(comicBook.getArchiveType().getMimeType()));
-    } catch (ComicException | FileNotFoundException error) {
+    } catch (ComicException | FileNotFoundException | LastReadException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);
     }
   }
