@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.IOUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.encoders.WebResponseEncoder;
@@ -101,30 +102,39 @@ public class OPDSComicBookController {
     try {
       log.trace("Getting page content");
       var comic = this.comicBookService.getComic(id);
-      if (index >= comic.getPages().size()) return null;
-      var page = comic.getPages().get(index);
-      byte[] content = this.comicBookAdaptor.loadPageContent(comic, index);
+      byte[] content = null;
+      String filename = null;
+      if (index >= comic.getPages().size()) {
+        log.trace("Returning page placeholder");
+        content =
+            IOUtils.toByteArray(this.getClass().getResourceAsStream("/images/pagemissing.png"));
+        filename = "missingpage.png";
+      } else {
+        log.trace("Loading comic book page content");
+        var page = comic.getPages().get(index);
+        content = this.comicBookAdaptor.loadPageContent(comic, index);
 
-      if (maxWidth > 0 && page.getWidth() > maxWidth) {
-        log.trace("Scaling page");
-        ByteArrayInputStream bais = new ByteArrayInputStream(content);
-        BufferedImage originalImage = ImageIO.read(bais);
-        BufferedImage resizedImage =
-            Scalr.resize(
-                originalImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, maxWidth);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(resizedImage, "jpg", baos);
-        baos.flush();
-        content = baos.toByteArray();
+        if (maxWidth > 0 && page.getWidth() > maxWidth) {
+          log.trace("Scaling page");
+          ByteArrayInputStream bais = new ByteArrayInputStream(content);
+          BufferedImage originalImage = ImageIO.read(bais);
+          BufferedImage resizedImage =
+              Scalr.resize(
+                  originalImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, maxWidth);
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          ImageIO.write(resizedImage, "jpg", baos);
+          baos.flush();
+          content = baos.toByteArray();
 
-        baos.close();
+          baos.close();
+        }
+        filename = page.getFilename();
       }
 
       final InputStream baos = new ByteArrayInputStream(content);
-      String type =
-          this.fileTypeAdaptor.getType(baos) + "/" + this.fileTypeAdaptor.getSubtype(baos);
+      String type = this.fileTypeAdaptor.getMimeTypeFor(baos);
       return this.webResponseEncoder.encode(
-          content.length, content, page.getFilename(), MediaType.valueOf(type));
+          content.length, content, filename, MediaType.valueOf(type));
     } catch (ComicException | IOException | AdaptorException error) {
       throw new OPDSException("Failed to get comic page: id=" + id + " index=" + index, error);
     }
