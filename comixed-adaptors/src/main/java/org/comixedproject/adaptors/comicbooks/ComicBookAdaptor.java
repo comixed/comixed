@@ -146,7 +146,7 @@ public class ComicBookAdaptor {
       final ArchiveWriteHandle writeHandle =
           destinationArchive.openArchiveForWrite(temporaryFilename);
 
-      log.trace("Writing comicBook metadata");
+      log.trace("Writing comic book metadata");
       destinationArchive.writeEntry(
           writeHandle, "ComicInfo.xml", this.comicMetadataContentAdaptor.createContent(comicBook));
 

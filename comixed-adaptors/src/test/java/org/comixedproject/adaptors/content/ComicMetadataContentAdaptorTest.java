@@ -18,22 +18,25 @@
 
 package org.comixedproject.adaptors.content;
 
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static junit.framework.TestCase.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.comicbooks.Credit;
+import org.comixedproject.model.metadata.ComicInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(
+    classes = {ComicMetadataContentAdaptor.class, MappingJackson2XmlHttpMessageConverter.class})
 public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_COMICINFO_FILE_COMPLETE =
       "src/test/resources/ComicInfo-complete.xml";
@@ -46,29 +49,13 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_TITLE = "Test Title";
   private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
 
-  @InjectMocks ComicMetadataContentAdaptor adaptor;
-  @Mock private ComicBook comicBook;
-  private List<String> characterList = new ArrayList<>();
-  private List<String> teamList = new ArrayList<>();
-  private List<String> locationList = new ArrayList<>();
-  private List<String> storyList = new ArrayList<>();
-  private Set<Credit> creditList = new HashSet<>();
+  @Autowired ComicMetadataContentAdaptor adaptor;
+
+  private ComicBook comicBook = new ComicBook();
 
   @Before
   public void setup() {
-    Mockito.when(comicBook.getPublisher()).thenReturn(TEST_PUBLISHER_NAME);
-    Mockito.when(comicBook.getSeries()).thenReturn(TEST_SERIES_NAME);
-    Mockito.when(comicBook.getVolume()).thenReturn(TEST_VOLUME_NAME);
-    Mockito.when(comicBook.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(comicBook.getTitle()).thenReturn(TEST_TITLE);
-    Mockito.when(comicBook.getDescription()).thenReturn(TEST_DESCRIPTION);
-    Mockito.when(comicBook.getCoverDate()).thenReturn(new Date());
-
-    Mockito.when(comicBook.getCharacters()).thenReturn(characterList);
-    Mockito.when(comicBook.getTeams()).thenReturn(teamList);
-    Mockito.when(comicBook.getLocations()).thenReturn(locationList);
-    Mockito.when(comicBook.getStories()).thenReturn(storyList);
-    Mockito.when(comicBook.getCredits()).thenReturn(creditList);
+    adaptor.xmlConverter.getObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   @Test(expected = ContentAdaptorException.class)
@@ -82,39 +69,38 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
     adaptor.loadContent(
         comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
 
-    assertFalse(characterList.isEmpty());
-    assertFalse(teamList.isEmpty());
-    assertFalse(locationList.isEmpty());
-    assertFalse(storyList.isEmpty());
-    assertFalse(creditList.isEmpty());
+    assertFalse(comicBook.getCharacters().isEmpty());
+    assertFalse(comicBook.getTeams().isEmpty());
+    assertFalse(comicBook.getLocations().isEmpty());
+    assertFalse(comicBook.getStories().isEmpty());
+    assertFalse(comicBook.getCredits().isEmpty());
 
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER_NAME);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME_NAME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.times(1)).setTitle(TEST_TITLE);
-    Mockito.verify(comicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    assertEquals(comicBook.getPublisher(), TEST_PUBLISHER_NAME);
+    assertEquals(comicBook.getSeries(), TEST_SERIES_NAME);
+    assertEquals(comicBook.getVolume(), TEST_VOLUME_NAME);
+    assertEquals(comicBook.getIssueNumber(), TEST_ISSUE_NUMBER);
+    assertEquals(comicBook.getTitle(), TEST_TITLE);
+    assertEquals(comicBook.getDescription(), TEST_DESCRIPTION);
   }
 
   @Test
   public void testCreateContent() throws ContentAdaptorException, IOException {
-    final Object[] roles = ComicMetadataContentAdaptor.CREDIT_TO_ROLE.keySet().toArray();
-    for (int index = 0; index < 25; index++) {
-      characterList.add("CHAR" + index);
-      teamList.add("TEAM" + index);
-      locationList.add("LOC" + index);
-      storyList.add("STORY" + index);
-      creditList.add(new Credit(comicBook, "NAME" + index, roles[index % roles.length].toString()));
-    }
-    byte[] result = adaptor.createContent(comicBook);
+    final ComicInfo expected =
+        adaptor
+            .xmlConverter
+            .getObjectMapper()
+            .readValue(new FileInputStream(TEST_COMICINFO_FILE_COMPLETE), ComicInfo.class);
 
-    assertNotNull(result);
+    adaptor.loadContent(
+        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
 
-    Mockito.verify(comicBook, Mockito.times(1)).getPublisher();
-    Mockito.verify(comicBook, Mockito.times(1)).getSeries();
-    Mockito.verify(comicBook, Mockito.times(1)).getVolume();
-    Mockito.verify(comicBook, Mockito.times(1)).getIssueNumber();
-    Mockito.verify(comicBook, Mockito.times(1)).getTitle();
-    Mockito.verify(comicBook, Mockito.times(1)).getDescription();
+    final byte[] result = adaptor.createContent(comicBook);
+
+    final ComicInfo outcome =
+        adaptor
+            .xmlConverter
+            .getObjectMapper()
+            .readValue(new ByteArrayInputStream(result), ComicInfo.class);
+    assertNotNull(outcome);
   }
 }
