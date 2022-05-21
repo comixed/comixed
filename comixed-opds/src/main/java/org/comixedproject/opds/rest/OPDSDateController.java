@@ -24,6 +24,10 @@ import static org.comixedproject.opds.rest.OPDSLibraryController.SELF;
 import static org.comixedproject.opds.rest.OPDSLibraryController.SUBSECTION;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
@@ -50,6 +54,8 @@ public class OPDSDateController {
 
   @Autowired private ComicBookService comicBookService;
   @Autowired private OPDSUtils opdsUtils;
+
+  private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd yyyy");
 
   /**
    * Returns navigation links for the store date years in the library.
@@ -113,12 +119,18 @@ public class OPDSDateController {
         .forEach(
             weekNumber -> {
               log.trace("Adding week {} of {}", weekNumber, year);
+              final Date weekStarts = this.getDateFor(year, weekNumber, Calendar.SUNDAY);
+              final Date weekEnds = this.getDateFor(year, weekNumber, Calendar.SATURDAY);
               OPDSNavigationFeedEntry entry =
                   new OPDSNavigationFeedEntry(
-                      String.format("Week %d", weekNumber), String.valueOf(year + weekNumber));
+                      String.format("Year %d Week %d", year, weekNumber),
+                      String.valueOf(year + weekNumber));
               entry.setContent(
                   new OPDSNavigationFeedContent(
-                      String.format("Year %d Week %d", year, weekNumber)));
+                      String.format(
+                          "%s thru %s",
+                          this.simpleDateFormat.format(weekStarts),
+                          this.simpleDateFormat.format(weekEnds))));
               entry
                   .getLinks()
                   .add(
@@ -152,9 +164,14 @@ public class OPDSDateController {
       @PathVariable("week") @NonNull final Integer week,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     log.info("Loading comics for year {}", year);
+    final Date weekStarts = this.getDateFor(year, week, Calendar.SUNDAY);
+    final Date weekEnds = this.getDateFor(year, week, Calendar.SATURDAY);
+
     final OPDSAcquisitionFeed response =
         new OPDSAcquisitionFeed(
-            String.format("Comics For Week %d of %d", week, year),
+            String.format(
+                "Comics For Week Of %s To %s",
+                simpleDateFormat.format(weekStarts), simpleDateFormat.format(weekEnds)),
             String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading comics");
     this.comicBookService.getComicsForYearAndWeek(year, week, principal.getName(), unread).stream()
@@ -172,5 +189,13 @@ public class OPDSDateController {
                 String.format(
                     "/opds/dates/released/years/%d/weeks/%d?unread=%s", year, week, unread)));
     return response;
+  }
+
+  private Date getDateFor(final Integer year, final Integer week, final int dayOfWeek) {
+    final GregorianCalendar calendar = new GregorianCalendar();
+    calendar.set(Calendar.YEAR, year);
+    calendar.set(Calendar.WEEK_OF_YEAR, week);
+    calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+    return calendar.getTime();
   }
 }
