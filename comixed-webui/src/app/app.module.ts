@@ -77,6 +77,7 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CollectionsChartComponent } from './components/collections-chart/collections-chart.component';
 import { ComicStateChartComponent } from './components/comic-state-chart/comic-state-chart.component';
+import { ComicsByYearChartComponent } from './components/comics-by-year-chart/comics-by-year-chart.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,8 @@ import { ComicStateChartComponent } from './components/comic-state-chart/comic-s
     FooterComponent,
     SideNavigationComponent,
     CollectionsChartComponent,
-    ComicStateChartComponent
+    ComicStateChartComponent,
+    ComicsByYearChartComponent
   ],
   imports: [
     AdminModule,

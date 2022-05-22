@@ -44,6 +44,7 @@ import { CollectionsChartComponent } from '@app/components/collections-chart/col
 import { MatGridListModule } from '@angular/material/grid-list';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ComicStateChartComponent } from '@app/components/comic-state-chart/comic-state-chart.component';
+import { ComicsByYearChartComponent } from '@app/components/comics-by-year-chart/comics-by-year-chart.component';
 
 describe('HomeComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -64,7 +65,8 @@ describe('HomeComponent', () => {
         declarations: [
           HomeComponent,
           CollectionsChartComponent,
-          ComicStateChartComponent
+          ComicStateChartComponent,
+          ComicsByYearChartComponent
         ],
         imports: [
           NoopAnimationsModule,

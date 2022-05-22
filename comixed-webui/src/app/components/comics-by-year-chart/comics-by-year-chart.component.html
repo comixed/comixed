@@ -1,0 +1,11 @@
+<div *ngIf="data.length > 0" #container class="cx-width-100 cx-height-100">
+  <h2>{{ "home.title.comics-by-year-and-publisher-chart" | translate }}</h2>
+  <ngx-charts-heat-map
+    [view]="[chartWidth$ | async, chartHeight$ | async]"
+    scheme="vivid"
+    [results]="data"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="true"
+  ></ngx-charts-heat-map>
+</div>
