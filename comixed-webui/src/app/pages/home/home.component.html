@@ -9,7 +9,7 @@
   <mat-grid-list *ngIf="!loading" [cols]="10" rowHeight="100px">
     <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="6">
       <cx-collections-chart
-        class="cx-width-100"
+        class="cx-width-100 cx-height-100"
         [comics]="comicBooks"
       ></cx-collections-chart>
     </mat-grid-tile>
@@ -19,6 +19,11 @@
         [comics]="comicBooks"
       ></cx-comic-state-chart>
     </mat-grid-tile>
+    <mat-grid-tile
+      class="cx-border-primary-1"
+      colspan="5"
+      rowspan="3"
+    ></mat-grid-tile>
     <mat-grid-tile class="cx-border-primary-1" colspan="10" rowspan="3">
       <cx-comics-by-year-chart
         class="cx-width-100 cx-height-100"

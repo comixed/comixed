@@ -1,36 +1,45 @@
 <div
   *ngIf="!!comics && collectionData.length > 0"
-  #container
-  class="cx-width-100 cx-height-100"
+  class="cx-width-100 cx-height-100 cx-vertical-container"
 >
-  <h2>
-    {{ "home.title.comic-collections-chart" | translate }}
-  </h2>
-  <ngx-charts-bar-horizontal
-    [results]="collectionData[currentCollection].results"
-    [view]="[chartWidth$ | async, chartHeight$ | async]"
-    [roundEdges]="true"
-    xAxis="true"
-    yAxis="true"
-    noBarWhenZero="false"
-    [xScaleMin]="0"
-    [xScaleMax]="currentCollection.maxX"
-    [xAxisLabel]="'home.legend.collections-top-entries-x-axis' | translate"
-    [showXAxisLabel]="true"
-    (select)="onCollectionSelected($event.extra.collection, $event.extra.name)"
-  ></ngx-charts-bar-horizontal>
-  <mat-form-field class="cx-width-100" appearance="fill">
-    <mat-label>{{ "home.label.select-collection-type" | translate }}</mat-label>
-    <mat-select
-      [value]="currentCollection"
-      (selectionChange)="onSwitchCollection($event.value)"
-    >
-      <mat-option
-        *ngFor="let option of collectionData; let i = index"
-        [value]="i"
+  <div class="cx-grow-0">
+    <h2>
+      {{ "home.title.comic-collections-chart" | translate }}
+    </h2>
+  </div>
+  <div #container class="cx-grow-1">
+    <ngx-charts-bar-horizontal
+      [results]="collectionData[currentCollection].results"
+      [view]="[chartWidth$ | async, chartHeight$ | async]"
+      [roundEdges]="true"
+      xAxis="true"
+      yAxis="true"
+      noBarWhenZero="false"
+      [xScaleMin]="0"
+      [xScaleMax]="currentCollection.maxX"
+      [xAxisLabel]="'home.legend.collections-top-entries-x-axis' | translate"
+      [showXAxisLabel]="true"
+      (select)="
+        onCollectionSelected($event.extra.collection, $event.extra.name)
+      "
+    ></ngx-charts-bar-horizontal>
+  </div>
+  <div class="cx-grow-0">
+    <mat-form-field class="cx-width-100" appearance="fill">
+      <mat-label>
+        {{ "home.label.select-collection-type" | translate }}
+      </mat-label>
+      <mat-select
+        [value]="currentCollection"
+        (selectionChange)="onSwitchCollection($event.value)"
       >
-        {{ "home.label." + option.title | translate }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-option
+          *ngFor="let option of collectionData; let i = index"
+          [value]="i"
+        >
+          {{ "home.label." + option.title | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>

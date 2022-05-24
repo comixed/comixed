@@ -95,7 +95,7 @@ export class CollectionsChartComponent implements AfterViewInit {
 
   private loadComponentDimensions(): void {
     this.chartWidth$.next(this.container?.nativeElement?.offsetWidth);
-    let height = this.container?.nativeElement?.offsetHeight - 125;
+    let height = this.container?.nativeElement?.offsetHeight;
     if (height < 0) {
       height = 0;
     }
