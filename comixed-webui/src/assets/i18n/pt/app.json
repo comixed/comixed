@@ -78,6 +78,7 @@
       "comic-state-chart": "Comics By State",
       "comic-statistics": "Estatísticas da Biblioteca de Comics",
       "comics-by-year-and-publisher-chart": "Comics By Publisher/Year",
+      "last-read-statistics": "Comics Read Per Publisher",
       "loading-comics": "Carregando Biblioteca..."
     }
   },

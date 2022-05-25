@@ -41,7 +41,7 @@ import org.springframework.data.annotation.CreatedDate;
 public class LastRead {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({View.UserDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.UserDetailsView.class, View.AuditLogEntryDetail.class, View.LastReadList.class})
   @Getter
   private Long id;
 

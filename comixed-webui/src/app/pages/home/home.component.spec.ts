@@ -45,12 +45,18 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ComicStateChartComponent } from '@app/components/comic-state-chart/comic-state-chart.component';
 import { ComicsByYearChartComponent } from '@app/components/comics-by-year-chart/comics-by-year-chart.component';
+import {
+  initialState as initialLastReadState,
+  LAST_READ_LIST_FEATURE_KEY
+} from '@app/last-read/reducers/last-read-list.reducer';
+import { ReadComicsChartComponent } from '@app/components/read-comics-chart/read-comics-chart.component';
 
 describe('HomeComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const initialState = {
     [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
   };
 
   let component: HomeComponent;
@@ -66,7 +72,8 @@ describe('HomeComponent', () => {
           HomeComponent,
           CollectionsChartComponent,
           ComicStateChartComponent,
-          ComicsByYearChartComponent
+          ComicsByYearChartComponent,
+          ReadComicsChartComponent
         ],
         imports: [
           NoopAnimationsModule,

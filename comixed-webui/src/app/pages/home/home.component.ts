@@ -25,6 +25,8 @@ import { selectServerStatusState } from '@app/selectors/server-status.selectors'
 import { Store } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
+import { LastRead } from '@app/last-read/models/last-read';
+import { selectLastReadListState } from '@app/last-read/selectors/last-read-list.selectors';
 
 @Component({
   selector: 'cx-home',
@@ -34,11 +36,14 @@ import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-
 export class HomeComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   serverStateSubscription: Subscription;
-  comicBookListStateSubscription: Subscription;
   loading = false;
-
   taskCount = 0;
+
+  comicBookListStateSubscription: Subscription;
   comicBooks: ComicBook[] = [];
+  lastReadStateSubscription: Subscription;
+  lastRead: LastRead[] = [];
+  lastReadLoaded = false;
 
   constructor(
     private logger: LoggerService,
@@ -63,6 +68,12 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.comicBooks = state.comicBooks;
         }
       });
+    this.lastReadStateSubscription = this.store
+      .select(selectLastReadListState)
+      .subscribe(state => {
+        this.lastRead = state.entries;
+        this.lastReadLoaded = state.lastPayload;
+      });
   }
 
   ngOnInit(): void {
@@ -76,6 +87,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.serverStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic updates');
     this.comicBookListStateSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from last read updates');
+    this.lastReadStateSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {
