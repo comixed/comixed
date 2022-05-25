@@ -62,7 +62,6 @@ export class UserPreferencesPageComponent implements OnDestroy, AfterViewInit {
     this.logger.trace('Assigning table sort');
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      console.log('*** sortHeaderId:', sortHeaderId);
       switch (sortHeaderId) {
         case 'name':
           return data.name;

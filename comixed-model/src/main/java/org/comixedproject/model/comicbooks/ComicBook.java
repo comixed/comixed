@@ -190,6 +190,7 @@ public class ComicBook {
   @JsonProperty("publisher")
   @JsonView({
     View.ComicListView.class,
+    View.LastReadList.class,
     View.DuplicatePageDetail.class,
     View.AuditLogEntryDetail.class,
     View.ReadingListDetail.class,

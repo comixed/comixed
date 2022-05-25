@@ -63,12 +63,14 @@ export class LastReadService {
             .select(selectLastReadListState)
             .subscribe(lastReadState => {
               if (!lastReadState.loading && !lastReadState.lastPayload) {
-                let lastId = 0;
-                lastReadState.entries.forEach(entry => {
-                  if (entry.id > lastId) {
-                    lastId = entry.id;
-                  }
-                });
+                const lastId =
+                  lastReadState.entries.length > 0
+                    ? lastReadState.entries
+                        .map(entry => entry.id)
+                        .reduce((prev, current) =>
+                          prev > current ? prev : current
+                        )
+                    : 0;
                 this.store.dispatch(loadLastReadDates({ lastId }));
               }
               if (!lastReadState.loading && lastReadState.lastPayload) {
