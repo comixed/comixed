@@ -23,7 +23,8 @@ import java.text.ParseException;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.app.BuildDetails;
-import org.comixedproject.service.app.DetailsService;
+import org.comixedproject.model.net.app.LatestReleaseDetails;
+import org.comixedproject.service.app.ReleaseService;
 import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,14 +32,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <code>BuildDetailsController</code> handles requests for build details.
+ * <code>ReleaseController</code> handles requests for build details.
  *
  * @author Darryl L. Pierce
  */
 @RestController
 @Log4j2
-public class BuildDetailsController {
-  @Autowired private DetailsService detailsService;
+public class ReleaseController {
+  @Autowired private ReleaseService releaseService;
 
   /**
    * Retrieves the build details.
@@ -46,11 +47,24 @@ public class BuildDetailsController {
    * @return the build details
    * @throws ParseException if an error occurs
    */
-  @GetMapping(value = "/api/build-details", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/api/app/release/current", produces = MediaType.APPLICATION_JSON_VALUE)
   @AuditableRestEndpoint
-  @JsonView(View.BuildDetails.class)
-  public BuildDetails getBuildDetails() throws ParseException {
-    log.info("Getting application build details");
-    return this.detailsService.getBuildDetails();
+  @JsonView(View.ReleaseDetails.class)
+  public BuildDetails getCurrentRelease() throws ParseException {
+    log.info("Getting current release details");
+    return this.releaseService.getCurrentReleaseDetails();
+  }
+
+  /**
+   * Retrieves the latest release details for ComiXed.
+   *
+   * @return the release details
+   */
+  @GetMapping(value = "/api/app/release/latest", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableRestEndpoint
+  @JsonView(View.ReleaseDetails.class)
+  public LatestReleaseDetails getLatestRelease() {
+    log.info("Getting latest release details");
+    return this.releaseService.getLatestReleaseDetails();
   }
 }

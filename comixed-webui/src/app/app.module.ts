@@ -49,7 +49,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { APP_REDUCERS } from '@app/app.reducers';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { BuildDetailsEffects } from '@app/effects/build-details.effects';
+import { ReleaseEffects } from '@app/effects/release.effects';
 import { BuildDetailsComponent } from './pages/build-details/build-details.component';
 import { MatCardModule } from '@angular/material/card';
 import { AdminModule } from '@app/admin/admin.module';
@@ -111,11 +111,7 @@ import { ReadComicsChartComponent } from './components/read-comics-chart/read-co
     MatToolbarModule,
     MatIconModule,
     StoreModule.forRoot(APP_REDUCERS, {}),
-    EffectsModule.forRoot([
-      AppEffects,
-      BuildDetailsEffects,
-      ImportCountEffects
-    ]),
+    EffectsModule.forRoot([AppEffects, ReleaseEffects, ImportCountEffects]),
     StoreRouterConnectingModule.forRoot(),
     LoggerModule.forRoot({ useLevelGroup: true }),
     TranslateModule.forRoot({

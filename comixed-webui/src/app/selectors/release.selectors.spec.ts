@@ -16,34 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createReducer, on } from '@ngrx/store';
+import { selectReleaseDetailsState } from './release.selectors';
 import {
-  buildDetailsLoaded,
-  loadBuildDetails,
-  loadBuildDetailsFailed
-} from '../actions/build-details.actions';
-import { BuildDetails } from '@app/models/build-details';
+  RELEASE_DETAILS_FEATURE_KEY,
+  ReleaseDetailsState
+} from '@app/reducers/release.reducer';
+import { CURRENT_RELEASE, LATEST_RELEASE } from '@app/app.fixtures';
 
-export const BUILD_DETAILS_FEATURE_KEY = 'build_details_state';
+describe('Release Selectors', () => {
+  let state: ReleaseDetailsState;
 
-export interface BuildDetailsState {
-  loading: boolean;
-  details: BuildDetails;
-}
+  beforeEach(() => {
+    state = {
+      currentLoading: Math.random() > 0.5,
+      current: CURRENT_RELEASE,
+      latestLoading: Math.random() > 0.5,
+      latest: LATEST_RELEASE
+    };
+  });
 
-export const initialState: BuildDetailsState = {
-  loading: false,
-  details: null
-};
-
-export const reducer = createReducer(
-  initialState,
-
-  on(loadBuildDetails, state => ({ ...state, loading: true })),
-  on(buildDetailsLoaded, (state, action) => ({
-    ...state,
-    loading: false,
-    details: action.details
-  })),
-  on(loadBuildDetailsFailed, state => ({ ...state, loading: false }))
-);
+  it('selects the feature state', () => {
+    expect(
+      selectReleaseDetailsState({
+        [RELEASE_DETAILS_FEATURE_KEY]: state
+      })
+    ).toEqual(state);
+  });
+});

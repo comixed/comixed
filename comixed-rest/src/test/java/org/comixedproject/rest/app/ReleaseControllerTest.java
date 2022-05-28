@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.rest.core;
+package org.comixedproject.rest.app;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.text.ParseException;
 import org.comixedproject.model.app.BuildDetails;
-import org.comixedproject.rest.app.BuildDetailsController;
-import org.comixedproject.service.app.DetailsService;
+import org.comixedproject.model.net.app.LatestReleaseDetails;
+import org.comixedproject.service.app.ReleaseService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,33 +35,44 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class BuildDetailsControllerTest {
-  private static final String TEST_STACKTRACE = "The error message";
-
-  @InjectMocks private BuildDetailsController buildDetailsController;
-  @Mock private DetailsService detailsService;
+public class ReleaseControllerTest {
+  @InjectMocks private ReleaseController controller;
+  @Mock private ReleaseService releaseService;
   @Mock private BuildDetails buildDetails;
+  @Mock private LatestReleaseDetails latestReleaseDetails;
 
   @Test(expected = ParseException.class)
-  public void testGetBuildDetailsParsingException() throws ParseException {
-    Mockito.when(detailsService.getBuildDetails()).thenThrow(ParseException.class);
+  public void testGetCurrentReleaseParsingException() throws ParseException {
+    Mockito.when(releaseService.getCurrentReleaseDetails()).thenThrow(ParseException.class);
 
     try {
-      buildDetailsController.getBuildDetails();
+      controller.getCurrentRelease();
     } finally {
-      Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
+      Mockito.verify(releaseService, Mockito.times(1)).getCurrentReleaseDetails();
     }
   }
 
   @Test
-  public void testGetBuildDetails() throws ParseException {
-    Mockito.when(detailsService.getBuildDetails()).thenReturn(buildDetails);
+  public void testGetCurrentRelease() throws ParseException {
+    Mockito.when(releaseService.getCurrentReleaseDetails()).thenReturn(buildDetails);
 
-    final BuildDetails result = buildDetailsController.getBuildDetails();
+    final BuildDetails result = controller.getCurrentRelease();
 
     assertNotNull(result);
     assertSame(buildDetails, result);
 
-    Mockito.verify(detailsService, Mockito.times(1)).getBuildDetails();
+    Mockito.verify(releaseService, Mockito.times(1)).getCurrentReleaseDetails();
+  }
+
+  @Test
+  public void testGetLatestRelease() {
+    Mockito.when(releaseService.getLatestReleaseDetails()).thenReturn(latestReleaseDetails);
+
+    final LatestReleaseDetails result = controller.getLatestRelease();
+
+    assertNotNull(result);
+    assertSame(latestReleaseDetails, result);
+
+    Mockito.verify(releaseService, Mockito.times(1)).getLatestReleaseDetails();
   }
 }

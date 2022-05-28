@@ -17,18 +17,21 @@
  */
 
 import { TestBed } from '@angular/core/testing';
-import { BuildDetailsService } from './build-details.service';
+import { ReleaseService } from './release.service';
 import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { BUILD_DETAILS } from '@app/app.fixtures';
-import { LOAD_BUILD_DETAILS_URL } from '@app/app.constants';
+import { CURRENT_RELEASE, LATEST_RELEASE } from '@app/app.fixtures';
+import {
+  LOAD_CURRENT_RELEASE_DETAILS_URL,
+  LOAD_LATEST_RELEASE_DETAILS_URL
+} from '@app/app.constants';
 import { interpolate } from '@app/core';
 
-describe('ServerStatusService', () => {
-  let service: BuildDetailsService;
+describe('ReleaseService', () => {
+  let service: ReleaseService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -36,7 +39,7 @@ describe('ServerStatusService', () => {
       imports: [HttpClientTestingModule, LoggerModule.forRoot()]
     });
 
-    service = TestBed.inject(BuildDetailsService);
+    service = TestBed.inject(ReleaseService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -44,13 +47,27 @@ describe('ServerStatusService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('loads build details', () => {
+  it('loads the current release details', () => {
     service
-      .loadDetails()
-      .subscribe(response => expect(response).toEqual(BUILD_DETAILS));
+      .loadCurrentReleaseDetails()
+      .subscribe(response => expect(response).toEqual(CURRENT_RELEASE));
 
-    const req = httpMock.expectOne(interpolate(LOAD_BUILD_DETAILS_URL));
+    const req = httpMock.expectOne(
+      interpolate(LOAD_CURRENT_RELEASE_DETAILS_URL)
+    );
     expect(req.request.method).toEqual('GET');
-    req.flush(BUILD_DETAILS);
+    req.flush(CURRENT_RELEASE);
+  });
+
+  it('loads the latest release details', () => {
+    service
+      .loadLatestReleaseDetails()
+      .subscribe(response => expect(response).toEqual(LATEST_RELEASE));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_LATEST_RELEASE_DETAILS_URL)
+    );
+    expect(req.request.method).toEqual('GET');
+    req.flush(LATEST_RELEASE);
   });
 });

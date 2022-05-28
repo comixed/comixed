@@ -18,10 +18,10 @@
 
 import { ActionReducerMap } from '@ngrx/store';
 import {
-  BUILD_DETAILS_FEATURE_KEY,
-  BuildDetailsState,
+  RELEASE_DETAILS_FEATURE_KEY,
+  ReleaseDetailsState,
   reducer as buildDetailsReducer
-} from '@app/reducers/build-details.reducer';
+} from '@app/reducers/release.reducer';
 import {
   reducer as serverStatusReducer,
   SERVER_STATUS_FEATURE_KEY,
@@ -34,7 +34,7 @@ import {
 } from '@app/reducers/process-comics.reducer';
 
 export interface AppState {
-  [BUILD_DETAILS_FEATURE_KEY]: BuildDetailsState;
+  [RELEASE_DETAILS_FEATURE_KEY]: ReleaseDetailsState;
   [SERVER_STATUS_FEATURE_KEY]: ServerStatusState;
   [PROCESS_COMICS_FEATURE_KEY]: ProcessComicsState;
 }
@@ -42,7 +42,7 @@ export interface AppState {
 export type State = AppState;
 
 export const APP_REDUCERS: ActionReducerMap<State> = {
-  [BUILD_DETAILS_FEATURE_KEY]: buildDetailsReducer,
+  [RELEASE_DETAILS_FEATURE_KEY]: buildDetailsReducer,
   [SERVER_STATUS_FEATURE_KEY]: serverStatusReducer,
   [PROCESS_COMICS_FEATURE_KEY]: importCountReducer
 };

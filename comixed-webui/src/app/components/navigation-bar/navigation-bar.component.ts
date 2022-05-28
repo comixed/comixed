@@ -28,6 +28,7 @@ import {
   ISSUE_PAGE_TARGET,
   ISSUE_PAGE_URL,
   LANGUAGE_PREFERENCE,
+  LATEST_RELEASE_TARGET,
   LOGGER_LEVEL_PREFERENCE,
   WIKI_PAGE_TARGET,
   WIKI_PAGE_URL
@@ -36,6 +37,11 @@ import { ComicViewMode } from '@app/library/models/comic-view-mode.enum';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { Subscription } from 'rxjs';
+import { LatestRelease } from '@app/models/latest-release';
+import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
+import { filter } from 'rxjs/operators';
+import { loadLatestReleaseDetails } from '@app/actions/release.actions';
 
 @Component({
   selector: 'cx-navigation-bar',
@@ -44,8 +50,10 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 })
 export class NavigationBarComponent {
   @Output() toggleSidebar = new EventEmitter<boolean>();
+
   isReader = false;
   isAdmin = false;
+
   readonly languages: ListItem<string>[] = [
     { label: 'English', value: 'en' },
     { label: 'Français', value: 'fr' },
@@ -68,6 +76,8 @@ export class NavigationBarComponent {
   ];
   stacked = false;
   readingLists: string[] = [];
+  releaseStateSubscription: Subscription;
+  latestRelease: LatestRelease;
 
   constructor(
     private logger: LoggerService,
@@ -80,6 +90,18 @@ export class NavigationBarComponent {
       this.logger.debug('Active language changed:', language.lang);
       this.currentLanguage = language.lang;
     });
+    this.releaseStateSubscription = this.store
+      .select(selectReleaseDetailsState)
+      .pipe(filter(state => !!state))
+      .subscribe(state => {
+        if (!state.latestLoading && !state.latest) {
+          this.logger.trace('Fetching latest release details');
+          this.store.dispatch(loadLatestReleaseDetails());
+        } else {
+          this.logger.trace('Release state updated');
+          this.latestRelease = state.latest;
+        }
+      });
   }
 
   private _sidebarOpened = false;
@@ -187,5 +209,10 @@ export class NavigationBarComponent {
   openBugReport(): void {
     this.logger.trace('Opening the app bug report page');
     window.open(ISSUE_PAGE_URL, ISSUE_PAGE_TARGET);
+  }
+
+  onViewLatestRelease(): void {
+    this.logger.trace('Opening latest release page');
+    window.open(this.latestRelease.url, LATEST_RELEASE_TARGET);
   }
 }

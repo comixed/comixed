@@ -18,7 +18,8 @@
       "jdbc-url": "L'url de la base de données utilisée est {url}",
       "remote-origin-url": "Cette branche suit la branche distante {url}"
     },
-    "load-effect-failure": "Échec de la récupération des détails du build...",
+    "load-current-effect-failure": "Failed to load the current release's details.",
+    "load-latest-effect-failure": "Failed to load the latest release's details.",
     "page-title": "Détails du Build",
     "tab-title": "Détails du Build"
   },
@@ -95,6 +96,7 @@
       "4": "information"
     },
     "tooltip": {
+      "new-release-available": "Release {version} was released on {released}!",
       "toggle-sidenav": "Afficher/Cacher le paneau de navigation latéral..."
     },
     "user-menu": {

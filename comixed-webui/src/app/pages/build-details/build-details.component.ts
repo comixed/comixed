@@ -20,10 +20,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
-import { BuildDetails } from '@app/models/build-details';
-import { selectBuildDetailsState } from '@app/selectors/build-details.selectors';
+import { CurrentRelease } from '@app/models/current-release';
+import { selectReleaseDetailsState } from '@app/selectors/release.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { loadBuildDetails } from '@app/actions/build-details.actions';
+import { loadCurrentReleaseDetails } from '@app/actions/release.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -34,7 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class BuildDetailsComponent implements OnInit, OnDestroy {
   detailsSubscription: Subscription;
-  details: BuildDetails;
+  details: CurrentRelease;
   langChangeSubscription: Subscription;
 
   constructor(
@@ -44,10 +44,10 @@ export class BuildDetailsComponent implements OnInit, OnDestroy {
     private titleService: TitleService
   ) {
     this.detailsSubscription = this.store
-      .select(selectBuildDetailsState)
+      .select(selectReleaseDetailsState)
       .subscribe(state => {
-        this.store.dispatch(setBusyState({ enabled: state.loading }));
-        this.details = state.details;
+        this.store.dispatch(setBusyState({ enabled: state.currentLoading }));
+        this.details = state.current;
       });
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -55,7 +55,7 @@ export class BuildDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(loadBuildDetails());
+    this.store.dispatch(loadCurrentReleaseDetails());
     this.loadTranslations();
   }
 

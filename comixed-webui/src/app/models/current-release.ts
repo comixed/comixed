@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createAction, props } from '@ngrx/store';
-import { BuildDetails } from '@app/models/build-details';
-
-export const loadBuildDetails = createAction(
-  '[Build Details] Load the build details'
-);
-
-export const buildDetailsLoaded = createAction(
-  '[Build Details] Build details loaded',
-  props<{ details: BuildDetails }>()
-);
-
-export const loadBuildDetailsFailed = createAction(
-  '[Build Details] Load build details failed'
-);
+export interface CurrentRelease {
+  branch: string;
+  buildTime: number;
+  buildHost: string;
+  buildVersion: string;
+  commitId: string;
+  commitTime: number;
+  commitMessage: string;
+  commitUser: string;
+  commitEmail: string;
+  dirty: boolean;
+  remoteOriginURL: string;
+  jdbcUrl: string;
+}

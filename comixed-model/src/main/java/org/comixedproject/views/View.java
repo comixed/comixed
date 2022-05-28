@@ -83,7 +83,7 @@ public interface View {
   public interface ComicFileList {}
 
   /** Used when viewing the build details for the server. */
-  public interface BuildDetails {}
+  public interface ReleaseDetails {}
 
   /** Used when viewing a list of blocked hashes. */
   public interface BlockedHashList {}

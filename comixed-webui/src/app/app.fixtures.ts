@@ -16,13 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { BuildDetails } from './models/build-details';
+import { CurrentRelease } from './models/current-release';
+import { LatestRelease } from '@app/models/latest-release';
 
-export const BUILD_DETAILS: BuildDetails = {
+export const CURRENT_RELEASE: CurrentRelease = {
   branch: 'branch-name',
   buildTime: new Date().getTime(),
   buildHost: 'build-host',
-  buildVersion: 'build-version',
+  buildVersion: 'v1.0.3-1',
   commitId: 'commit-id',
   commitTime: new Date().getTime(),
   commitMessage: 'commit-message',
@@ -31,4 +32,11 @@ export const BUILD_DETAILS: BuildDetails = {
   dirty: Math.random() > 0.5,
   remoteOriginURL: 'http://remote.origin.url',
   jdbcUrl: 'jdbc:h2:mem://localhost/comixed'
+};
+
+export const LATEST_RELEASE: LatestRelease = {
+  version: 'v1.0.3-2',
+  url: 'http://latest.release.link',
+  updated: new Date().getTime(),
+  newer: true
 };
