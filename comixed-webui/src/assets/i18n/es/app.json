@@ -18,7 +18,8 @@
       "jdbc-url": "La dirección URL de la base de datos que se utiliza es {url}",
       "remote-origin-url": "Esta rama está rastreando la rama remota {url}"
     },
-    "load-effect-failure": "No se pudieron cargar los detalles de la compilación.",
+    "load-current-effect-failure": "Failed to load the current release's details.",
+    "load-latest-effect-failure": "Failed to load the latest release's details.",
     "page-title": "Detalles de la compilación"
     "tab-title": "Detalles de la compilación"
   },
@@ -95,6 +96,7 @@
       "4": "Informativo"
     },
     "tooltip": {
+      "new-release-available": "Release {version} was released on {released}!",
       "toggle-sidenav": "Muestra/Oculta el panel de navegación lateral..."
     },
     "user-menu": {

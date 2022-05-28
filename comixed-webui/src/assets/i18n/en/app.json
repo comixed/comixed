@@ -18,7 +18,8 @@
       "jdbc-url": "The database URL being used is {url}",
       "remote-origin-url": "This branch is tracking the remote branch {url}"
     },
-    "load-effect-failure": "Failed to load the build details.",
+    "load-current-effect-failure": "Failed to load the current release's details.",
+    "load-latest-effect-failure": "Failed to load the latest release's details.",
     "page-title": "Build Details",
     "tab-title": "Build Details"
   },
@@ -95,6 +96,7 @@
       "4": "Informational"
     },
     "tooltip": {
+      "new-release-available": "Release {version} was released on {released}!",
       "toggle-sidenav": "Shows/Hides the side navigation panel..."
     },
     "user-menu": {

@@ -22,7 +22,8 @@ export const HTTP_AUTHORIZATION_HEADER = 'Authorization';
 export const HTTP_REQUESTED_WITH_HEADER = 'X-Requested-With';
 export const HTTP_XML_REQUEST = 'XMLHttpRequest';
 
-export const LOAD_BUILD_DETAILS_URL = `${API_ROOT_URL}/build-details`;
+export const LOAD_CURRENT_RELEASE_DETAILS_URL = `${API_ROOT_URL}/app/release/current`;
+export const LOAD_LATEST_RELEASE_DETAILS_URL = `${API_ROOT_URL}/app/release/latest`;
 
 export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
@@ -36,6 +37,7 @@ export const WIKI_PAGE_URL = 'https://github.com/comixed/comixed/wiki';
 export const WIKI_PAGE_TARGET = '_cx_wiki';
 export const ISSUE_PAGE_URL = 'https://github.com/comixed/comixed/issues';
 export const ISSUE_PAGE_TARGET = '_cx_issues';
+export const LATEST_RELEASE_TARGET = '_cx_latest_release';
 
 // messaging constants
 

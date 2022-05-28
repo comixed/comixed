@@ -26,79 +26,79 @@ import lombok.Setter;
 import org.comixedproject.views.View;
 
 /**
- * <code>BuildDetails</code> holds the know details for the currently running build.
+ * <code>ReleaseDetails</code> holds the know details for the currently running build.
  *
  * @author Darryl L. Pierce
  */
 public class BuildDetails {
   @JsonProperty("branch")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String branch;
 
   @JsonProperty("buildTime")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private Date buildTime;
 
   @JsonProperty("buildHost")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String buildHost;
 
   @JsonProperty("buildVersion")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String buildVersion;
 
   @JsonProperty("commitId")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String commitId;
 
   @JsonProperty("commitTime")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private Date commitTime;
 
   @JsonProperty("commitMessage")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String commitMessage;
 
   @JsonProperty("commitUser")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String commitUser;
 
   @JsonProperty("commitEmail")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String commitEmail;
 
   @JsonProperty("dirty")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private boolean dirty;
 
   @JsonProperty("remoteOriginURL")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String remoteOriginURL;
 
   @JsonProperty("jdbcUrl")
-  @JsonView(View.BuildDetails.class)
+  @JsonView(View.ReleaseDetails.class)
   @Getter
   @Setter
   private String jdbcUrl;

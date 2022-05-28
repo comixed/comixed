@@ -11,6 +11,23 @@
 
   <span id="cx-logo">ComiXed</span>
 
+  <button
+    id="view-latest-release-button"
+    *ngIf="isAdmin && !!latestRelease && latestRelease.newer"
+    mat-icon-button
+    [matTooltip]="
+      'menu.tooltip.new-release-available'
+        | translate
+          : {
+              version: latestRelease.version,
+              released: latestRelease.updated | date: 'mediumDate'
+            }
+    "
+    (click)="onViewLatestRelease()"
+  >
+    <mat-icon>new_releases</mat-icon>
+  </button>
+
   <div class="cx-spacer"></div>
 
   <a

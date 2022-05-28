@@ -39,6 +39,7 @@ import {
   ISSUE_PAGE_TARGET,
   ISSUE_PAGE_URL,
   LANGUAGE_PREFERENCE,
+  LATEST_RELEASE_TARGET,
   LOGGER_LEVEL_PREFERENCE,
   WIKI_PAGE_TARGET,
   WIKI_PAGE_URL
@@ -52,10 +53,16 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import {
+  initialState as initialReleaseState,
+  RELEASE_DETAILS_FEATURE_KEY
+} from '@app/reducers/release.reducer';
+import { loadLatestReleaseDetails } from '@app/actions/release.actions';
+import { LATEST_RELEASE } from '@app/app.fixtures';
 
 describe('NavigationBarComponent', () => {
   const USER = USER_ADMIN;
-  const initialState = {};
+  const initialState = { [RELEASE_DETAILS_FEATURE_KEY]: initialReleaseState };
 
   let component: NavigationBarComponent;
   let fixture: ComponentFixture<NavigationBarComponent>;
@@ -302,6 +309,56 @@ describe('NavigationBarComponent', () => {
       expect(window.open).toHaveBeenCalledWith(
         ISSUE_PAGE_URL,
         ISSUE_PAGE_TARGET
+      );
+    });
+  });
+
+  describe('when latest release details are not loaded', () => {
+    beforeEach(() => {
+      store.setState({
+        ...initialState,
+        [RELEASE_DETAILS_FEATURE_KEY]: {
+          ...initialReleaseState,
+          latest: null,
+          latestLoading: false
+        }
+      });
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(loadLatestReleaseDetails());
+    });
+  });
+
+  describe('when latest release details are loaded', () => {
+    beforeEach(() => {
+      component.latestRelease = null;
+      store.setState({
+        ...initialState,
+        [RELEASE_DETAILS_FEATURE_KEY]: {
+          ...initialReleaseState,
+          latest: LATEST_RELEASE,
+          latestLoading: false
+        }
+      });
+    });
+
+    it('sets the latest release', () => {
+      expect(component.latestRelease).toEqual(LATEST_RELEASE);
+    });
+  });
+
+  describe('opening the latest release page', () => {
+    beforeEach(() => {
+      spyOn(window, 'open');
+      component.latestRelease = LATEST_RELEASE;
+      component.onViewLatestRelease();
+    });
+
+    it('opens a new page', () => {
+      expect(window.open).toHaveBeenCalledWith(
+        LATEST_RELEASE.url,
+        LATEST_RELEASE_TARGET
       );
     });
   });
