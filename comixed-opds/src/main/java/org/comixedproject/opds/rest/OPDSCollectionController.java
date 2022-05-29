@@ -31,8 +31,8 @@ import org.apache.commons.lang.StringUtils;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
+import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.*;
-import org.comixedproject.opds.utils.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -78,7 +78,7 @@ public class OPDSCollectionController {
                 .map(
                     publisher ->
                         new CollectionFeedEntry(
-                            publisher, Long.valueOf(("PUBLISHER" + publisher).hashCode())))
+                            publisher, this.opdsUtils.createIdForEntry("PUBLISHER", publisher)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case series:
@@ -90,7 +90,7 @@ public class OPDSCollectionController {
                 .map(
                     series ->
                         new CollectionFeedEntry(
-                            series, Long.valueOf(("SERIES" + series).hashCode())))
+                            series, this.opdsUtils.createIdForEntry("SERIES", series)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case characters:
@@ -102,7 +102,7 @@ public class OPDSCollectionController {
                 .map(
                     character ->
                         new CollectionFeedEntry(
-                            character, Long.valueOf(("CHARACTER" + character).hashCode())))
+                            character, this.opdsUtils.createIdForEntry("CHARACTER", character)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case teams:
@@ -112,7 +112,9 @@ public class OPDSCollectionController {
             TEAMS_ID,
             this.comicBookService.getAllTeams().stream()
                 .map(
-                    team -> new CollectionFeedEntry(team, Long.valueOf(("TEAM" + team).hashCode())))
+                    team ->
+                        new CollectionFeedEntry(
+                            team, this.opdsUtils.createIdForEntry("TEAM", team)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case locations:
@@ -124,7 +126,7 @@ public class OPDSCollectionController {
                 .map(
                     location ->
                         new CollectionFeedEntry(
-                            location, Long.valueOf(("LOCATION" + location).hashCode())))
+                            location, this.opdsUtils.createIdForEntry("LOCATION", location)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case stories:
@@ -135,7 +137,8 @@ public class OPDSCollectionController {
             this.comicBookService.getAllStories().stream()
                 .map(
                     story ->
-                        new CollectionFeedEntry(story, Long.valueOf(("STORY" + story).hashCode())))
+                        new CollectionFeedEntry(
+                            story, this.opdsUtils.createIdForEntry("STORY", story)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
     }
@@ -203,11 +206,6 @@ public class OPDSCollectionController {
     log.info("Fetching the feed root for publisher: {}", nameValue);
     final String email = principal.getName();
     switch (collectionType) {
-      case publishers:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Publisher: %s", nameValue), String.valueOf(PUBLISHERS_ID)),
-            this.comicBookService.getAllForPublisher(nameValue, email, unread));
       case series:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="003_1306_add_indices_for_opds.xml"
+             author="mcpierce">
+
+    <createIndex tableName="ComicBooks"
+                 indexName="ComicBookPublisherIdx">
+      <column name="Publisher"/>
+    </createIndex>
+
+    <createIndex tableName="ComicBooks"
+                 indexName="ComicBookPublisherSeriesIdx">
+      <column name="Publisher"/>
+      <column name="Series"/>
+    </createIndex>
+
+    <createIndex tableName="ComicBooks"
+                 indexName="ComicBookPubisherSeriesVolumeIdx">
+      <column name="Publisher"/>
+      <column name="Series"/>
+      <column name="Volume"/>
+    </createIndex>
+
+    <createIndex tableName="ComicBooks"
+                 indexName="ComicBookSeriesIdx">
+      <column name="Series"/>
+    </createIndex>
+
+    <createIndex tableName="ComicBooks"
+                 indexName="ComicBookSeriesVolumeIdx">
+      <column name="Series"/>
+      <column name="Volume"/>
+    </createIndex>
+
+  </changeSet>
+</databaseChangeLog>

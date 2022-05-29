@@ -539,21 +539,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Returns all comics for a single publisher by name. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param name the publisher name
-   * @param email the users email
-   * @param unread the unread flag
-   * @return the comics
-   */
-  public List<ComicBook> getAllForPublisher(
-      final String name, final String email, final boolean unread) {
-    log.trace("Loading all comics for one publisher: unread={}", unread);
-    return this.filterReadComics(email, unread, this.comicBookRepository.findAllByPublisher(name));
-  }
-
-  /**
    * Returns the list of all series names.
    *
    * @return the list of names.
@@ -842,5 +827,37 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
               .collect(Collectors.toList());
     }
     return result;
+  }
+
+  /**
+   * Returns the list of series names for a given publisher.
+   *
+   * @param publisher the publisher name
+   * @return the series names
+   */
+  public Set<String> getAllSeriesForPublisher(final String publisher) {
+    log.debug("Loading series for publisher: publisher={}", publisher);
+    return this.comicBookRepository.getAllSeriesForPublisher(publisher);
+  }
+
+  public Set<String> getAllVolumesForPublisherAndSeries(
+      final String publisher, final String series) {
+    log.debug("Loading volumes for series: publisher={} series={}", publisher, series);
+    return this.comicBookRepository.getAllVolumeForPublisherAndSeries(publisher, series);
+  }
+
+  public List<ComicBook> getAllComicBooksForPublisherAndSeriesAndVolume(
+      final String publisher,
+      final String series,
+      final String volume,
+      final String email,
+      final boolean unread) {
+    log.debug(
+        "Loading comics for volume: publisher={} series={} volume={}", publisher, series, volume);
+    return this.filterReadComics(
+        email,
+        unread,
+        this.comicBookRepository.getAllComicBooksForForPublisherAndSeriesAndVolume(
+            publisher, series, volume));
   }
 }

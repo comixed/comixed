@@ -16,13 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.opds.utils;
+package org.comixedproject.opds;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.AdaptorException;
@@ -157,5 +158,16 @@ public class OPDSUtils {
     result.getLinks().add(this.createComicLink(comicBook));
     result.setContent(new OPDSAcquisitionFeedContent(comicBook.getBaseFilename()));
     return result;
+  }
+
+  /**
+   * Generates a unique identifier for the given type and name.
+   *
+   * @param type the type
+   * @param name the name
+   * @return the identifier
+   */
+  public Long createIdForEntry(@NonNull final String type, @NonNull final String name) {
+    return Long.valueOf((type + name).hashCode());
   }
 }

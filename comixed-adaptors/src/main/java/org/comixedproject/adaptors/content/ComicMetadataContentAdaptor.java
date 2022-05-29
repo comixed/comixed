@@ -32,6 +32,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * <code>ComicMetadataContentAdaptor</code> loads data from the ComicInfo.xml file within a comic.
@@ -102,6 +103,9 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
   }
 
   private List<String> commandSeparatedList(String text) {
+    if (!StringUtils.hasLength(text)) {
+      return Collections.emptyList();
+    }
     List<String> result = new ArrayList<>();
     var tokens = new StringTokenizer(text, ",");
 
