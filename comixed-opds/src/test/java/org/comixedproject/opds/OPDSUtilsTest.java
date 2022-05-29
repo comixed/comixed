@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.opds.utils;
+package org.comixedproject.opds;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
-import static org.comixedproject.opds.utils.OPDSUtils.*;
+import static org.comixedproject.opds.OPDSUtils.*;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
@@ -53,6 +54,7 @@ public class OPDSUtilsTest {
   private static final String TEST_CREDIT_NAME = "Joey Writer";
   private static final String TEST_CREDIT_ROLE = "writer";
   private static final String TEST_DESCRIPTION = "This is the description of the issue.";
+  private static final String TEST_SERIES = "The Series Name";
 
   @InjectMocks private OPDSUtils utils;
   @Mock private ComicBook comicBook;
@@ -174,5 +176,14 @@ public class OPDSUtilsTest {
     assertFalse(result.getLinks().isEmpty());
 
     Mockito.verify(comicBookMetadataAdaptor, Mockito.times(1)).getDisplayableTitle(comicBook);
+  }
+
+  @Test
+  public void testCreateIdForEntry() {
+    final Long result = utils.createIdForEntry("SERIES", TEST_SERIES);
+
+    assertNotNull(result);
+    assertEquals(result, utils.createIdForEntry("SERIES", TEST_SERIES));
+    assertNotEquals(result, utils.createIdForEntry("SERIES", TEST_SERIES.substring(1)));
   }
 }

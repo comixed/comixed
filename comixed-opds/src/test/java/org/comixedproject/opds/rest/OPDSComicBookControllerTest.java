@@ -37,7 +37,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.opds.OPDSException;
-import org.comixedproject.opds.utils.OPDSUtils;
+import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LastReadException;

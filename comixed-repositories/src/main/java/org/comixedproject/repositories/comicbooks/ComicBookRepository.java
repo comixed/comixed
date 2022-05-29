@@ -20,6 +20,7 @@ package org.comixedproject.repositories.comicbooks;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.springframework.data.domain.PageRequest;
@@ -356,4 +357,40 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       "SELECT c FROM ComicBook c WHERE c.coverDate IS NOT NULL AND (c.coverDate >= :startDate AND c.coverDate <= :endDate)")
   List<ComicBook> findWithCoverDateRange(
       @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+  /**
+   * Retrieves all series names for the given publisher.
+   *
+   * @param publisher the publisher name
+   * @return the series names
+   */
+  @Query("SELECT DISTINCT c.series FROM ComicBook c WHERE c.publisher = :publisher")
+  Set<String> getAllSeriesForPublisher(@Param("publisher") String publisher);
+
+  /**
+   * Retrieves all volumes for the given publisher and series.
+   *
+   * @param publisher the publisher name
+   * @param series the series name
+   * @return the volumes
+   */
+  @Query(
+      "SELECT DISTINCT c.volume FROM ComicBook c WHERE c.publisher = :publisher AND c.series = :series")
+  Set<String> getAllVolumeForPublisherAndSeries(
+      @Param("publisher") String publisher, @Param("series") String series);
+
+  /**
+   * Returns all comics for the given publisher, series, and volume.
+   *
+   * @param publisher the publisher name
+   * @param series the series name
+   * @param volume the volume
+   * @return the comics
+   */
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.publisher = :publisher AND c.series=:series AND c.volume = :volume")
+  List<ComicBook> getAllComicBooksForForPublisherAndSeriesAndVolume(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume);
 }
