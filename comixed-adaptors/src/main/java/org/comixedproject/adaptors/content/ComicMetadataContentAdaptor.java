@@ -19,6 +19,7 @@
 package org.comixedproject.adaptors.content;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -27,6 +28,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.Credit;
 import org.comixedproject.model.metadata.ComicInfo;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.stereotype.Component;
@@ -38,8 +40,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ComicMetadataContentAdaptor extends AbstractContentAdaptor {
+public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
+    implements InitializingBean {
   @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    this.xmlConverter
+        .getObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
 
   @Override
   public void loadContent(final ComicBook comicBook, final String filename, final byte[] content)
