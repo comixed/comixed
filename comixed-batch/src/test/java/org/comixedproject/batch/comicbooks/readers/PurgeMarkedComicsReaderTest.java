@@ -45,7 +45,8 @@ public class PurgeMarkedComicsReaderTest {
   public void testReadNoneLoadedManyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.findComicsMarkedForPurging()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.findComicsMarkedForPurging(Mockito.anyInt()))
+        .thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
@@ -54,11 +55,15 @@ public class PurgeMarkedComicsReaderTest {
     assertFalse(comicBookList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsMarkedForPurging();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComicsMarkedForPurging(reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneRemaining() {
+    Mockito.when(comicBookService.findComicsMarkedForPurging(Mockito.anyInt()))
+        .thenReturn(comicBookList);
+
     reader.comicBookList = comicBookList;
 
     final ComicBook result = reader.read();
@@ -66,18 +71,21 @@ public class PurgeMarkedComicsReaderTest {
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.never()).findComicsMarkedForPurging();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComicsMarkedForPurging(reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneLoadedNoneFound() {
-    Mockito.when(comicBookService.findComicsMarkedForPurging()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.findComicsMarkedForPurging(Mockito.anyInt()))
+        .thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findComicsMarkedForPurging();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findComicsMarkedForPurging(reader.getBatchChunkSize());
   }
 }

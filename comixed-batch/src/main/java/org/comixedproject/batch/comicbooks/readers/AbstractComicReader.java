@@ -19,9 +19,11 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * <code>AbstractComicReader</code> provides a foundation for building new {@link ItemReader}
@@ -31,11 +33,15 @@ import org.springframework.batch.item.ItemReader;
  */
 @Log4j2
 public abstract class AbstractComicReader implements ItemReader<ComicBook> {
+  @Value("${comixed.batch.chunk-size}")
+  @Getter
+  private int batchChunkSize = 10;
+
   List<ComicBook> comicBookList = null;
 
   @Override
   public ComicBook read() {
-    if (this.comicBookList == null) {
+    if (this.comicBookList == null || this.comicBookList.isEmpty()) {
       log.trace("Load more comics to process");
       this.comicBookList = this.doLoadComics();
     }

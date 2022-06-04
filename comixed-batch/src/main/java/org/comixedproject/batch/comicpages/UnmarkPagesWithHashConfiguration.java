@@ -47,7 +47,7 @@ public class UnmarkPagesWithHashConfiguration {
   public static final String PARAM_UNMARK_PAGES_TARGET_HASH =
       "job.undelete-pages-with-hash.target-hash";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**

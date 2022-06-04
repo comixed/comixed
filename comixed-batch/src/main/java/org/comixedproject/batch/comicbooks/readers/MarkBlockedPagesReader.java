@@ -38,6 +38,7 @@ public class MarkBlockedPagesReader extends AbstractComicReader {
 
   @Override
   protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findUnprocessedComicsForMarkedPageBlocking();
+    return this.comicBookService.findUnprocessedComicsForMarkedPageBlocking(
+        this.getBatchChunkSize());
   }
 }

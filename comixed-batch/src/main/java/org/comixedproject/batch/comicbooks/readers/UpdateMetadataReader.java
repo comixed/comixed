@@ -38,6 +38,6 @@ public class UpdateMetadataReader extends AbstractComicReader {
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Loading comics to have their metadata updated");
-    return this.comicBookService.findComicsWithMetadataToUpdate();
+    return this.comicBookService.findComicsWithMetadataToUpdate(this.getBatchChunkSize());
   }
 }

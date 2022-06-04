@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
@@ -34,11 +35,11 @@ import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
@@ -51,6 +52,7 @@ public class ComicFileServiceTest {
   private static final int TEST_LIMIT = 2;
   private static final int TEST_NO_LIMIT = -1;
   private static final long TEST_DESCRIPTOR_COUNT = 93L;
+  private static final int TEST_PAGE_SIZE = 10;
 
   @InjectMocks private ComicFileService service;
   @Mock private ComicBookAdaptor comicBookAdaptor;
@@ -59,8 +61,12 @@ public class ComicFileServiceTest {
   @Mock private ComicFileDescriptorRepository comicFileDescriptorRepository;
   @Mock private ComicBook comicBook;
   @Mock private ComicFileDescriptor savedComicFileDescriptor;
-  @Mock private List<ComicFileDescriptor> comicFileDescriptors;
+  @Mock private List<ComicFileDescriptor> comicFileDescriptorList;
   @Mock private ComicFileDescriptor comicFileDescriptor;
+  @Mock private Page<ComicFileDescriptor> comicFilePage;
+  @Mock private Stream<ComicFileDescriptor> comicFileStream;
+
+  @Captor private ArgumentCaptor<Pageable> pageableArgumentCaptor;
 
   @Test
   public void testGetImportFileCoverWithNoCover() throws AdaptorException {
@@ -175,14 +181,22 @@ public class ComicFileServiceTest {
 
   @Test
   public void testFindComicFileDescriptors() {
-    Mockito.when(comicFileDescriptorRepository.findAll()).thenReturn(comicFileDescriptors);
+    Mockito.when(comicFileDescriptorRepository.findAll(pageableArgumentCaptor.capture()))
+        .thenReturn(comicFilePage);
+    Mockito.when(comicFilePage.stream()).thenReturn(comicFileStream);
+    Mockito.when(comicFileStream.collect(Mockito.any())).thenReturn(comicFileDescriptorList);
 
-    final List<ComicFileDescriptor> result = service.findComicFileDescriptors();
+    final List<ComicFileDescriptor> result = service.findComicFileDescriptors(TEST_PAGE_SIZE);
 
     assertNotNull(result);
-    assertSame(comicFileDescriptors, result);
+    assertSame(comicFileDescriptorList, result);
 
-    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findAll();
+    final Pageable pageable = pageableArgumentCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_PAGE_SIZE, pageable.getPageSize());
+
+    Mockito.verify(comicFileDescriptorRepository, Mockito.times(1)).findAll(pageable);
   }
 
   @Test

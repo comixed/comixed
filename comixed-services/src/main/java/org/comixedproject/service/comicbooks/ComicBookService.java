@@ -309,11 +309,12 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   /**
    * Retrieves inserted comics that have not been processed.
    *
+   * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findInsertedComics() {
+  public List<ComicBook> findInsertedComics(final int count) {
     log.trace("Loading newly inserted comics");
-    return this.comicBookRepository.findForState(ComicState.ADDED);
+    return this.comicBookRepository.findForState(ComicState.ADDED, PageRequest.of(0, count));
   }
 
   /**
@@ -323,17 +324,18 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   public long getUnprocessedComicsWithoutContentCount() {
     log.trace("Getting the number of unprocessed comics without content");
-    return this.comicBookRepository.findUnprocessedComicsWithoutContent().size();
+    return this.comicBookRepository.findUnprocessedComicsWithoutContentCount();
   }
 
   /**
    * Retrieves unprocessed comics that are waiting to have their contents loaded.
    *
+   * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findUnprocessedComicsWithoutContent() {
+  public List<ComicBook> findUnprocessedComicsWithoutContent(int count) {
     log.trace("Loading unprocessed comics that need to have their contents loaded");
-    return this.comicBookRepository.findUnprocessedComicsWithoutContent();
+    return this.comicBookRepository.findUnprocessedComicsWithoutContent(PageRequest.of(0, count));
   }
 
   /**
@@ -343,17 +345,19 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   public long getUnprocessedComicsForMarkedPageBlockingCount() {
     log.trace("Getting unprocessed comics that need page blocking count");
-    return this.comicBookRepository.findUnprocessedComicsForMarkedPageBlocking().size();
+    return this.comicBookRepository.findUnprocessedComicsForMarkedPageBlockingCount();
   }
 
   /**
    * Retrieves unprocessed comics that are waiting to have the blocked pages marked.
    *
+   * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findUnprocessedComicsForMarkedPageBlocking() {
+  public List<ComicBook> findUnprocessedComicsForMarkedPageBlocking(final int count) {
     log.trace("Loading unprocessed comics that need page blocking");
-    return this.comicBookRepository.findUnprocessedComicsForMarkedPageBlocking();
+    return this.comicBookRepository.findUnprocessedComicsForMarkedPageBlocking(
+        PageRequest.of(0, count));
   }
 
   /**
@@ -363,17 +367,19 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   public long getUnprocessedComicsWithoutFileDetailsCount() {
     log.trace("Getting unprocessed comics without file details loaded count");
-    return this.comicBookRepository.findUnprocessedComicsWithoutFileDetails().size();
+    return this.comicBookRepository.findUnprocessedComicsWithoutFileDetailsCount();
   }
 
   /**
    * Retrieves unprocessed comics that don't have file details.
    *
+   * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findUnprocessedComicsWithoutFileDetails() {
+  public List<ComicBook> findUnprocessedComicsWithoutFileDetails(final int count) {
     log.trace("Loading unprocessed comics without file details loaded");
-    return this.comicBookRepository.findUnprocessedComicsWithoutFileDetails();
+    return this.comicBookRepository.findUnprocessedComicsWithoutFileDetails(
+        PageRequest.of(0, count));
   }
 
   /**
@@ -383,17 +389,18 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   public long getProcessedComicsCount() {
     log.trace("Getting count of unprocessed comics that are fully processed");
-    return this.comicBookRepository.findProcessedComics().size();
+    return this.comicBookRepository.findProcessedComicsCount();
   }
 
   /**
    * Retrieves unprocessed comics that have had their contents processed.
    *
+   * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findProcessedComics() {
+  public List<ComicBook> findProcessedComics(final int count) {
     log.trace("Loading unprocessed comics that are fully processed");
-    return this.comicBookRepository.findProcessedComics();
+    return this.comicBookRepository.findProcessedComics(PageRequest.of(0, count));
   }
 
   /**
@@ -423,37 +430,40 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   public int getCountForState(final ComicState state) {
     log.trace("Getting record count for state: {}", state);
-    return this.comicBookRepository.findForState(state).size();
+    return this.comicBookRepository.findForStateCount(state);
   }
 
   /**
    * Returns comics that are waiting to have their metadata updated.
    *
+   * @param count the number of comics to return
    * @return the list of comics
    */
-  public List<ComicBook> findComicsWithMetadataToUpdate() {
+  public List<ComicBook> findComicsWithMetadataToUpdate(final int count) {
     log.trace("Getting comics that are ready to have their metadata updated");
-    return this.comicBookRepository.findComicsWithMetadataToUpdate();
+    return this.comicBookRepository.findComicsWithMetadataToUpdate(PageRequest.of(0, count));
   }
 
   /**
    * Finds all comics marked for deletion.
    *
+   * @param count the number of comics to return
    * @return the list of comics
    */
-  public List<ComicBook> findComicsMarkedForDeletion() {
+  public List<ComicBook> findComicsMarkedForDeletion(final int count) {
     log.trace("Finding all comics marked for deletion");
-    return this.comicBookRepository.findComicsMarkedForDeletion();
+    return this.comicBookRepository.findComicsMarkedForDeletion(PageRequest.of(0, count));
   }
 
   /**
    * Finds all comics that are to be moved.
    *
+   * @param count the numer of comics to return
    * @return the list of comics
    */
-  public List<ComicBook> findComicsToBeMoved() {
+  public List<ComicBook> findComicsToBeMoved(final int count) {
     log.trace("Finding all comics to be moved");
-    return this.comicBookRepository.findComicsToBeMoved();
+    return this.comicBookRepository.findComicsToBeMoved(PageRequest.of(0, count));
   }
 
   /**
@@ -501,11 +511,12 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   /**
    * Finds all comics to be recreated.
    *
+   * @param count the number of comics to return
    * @return the list of comics
    */
-  public List<ComicBook> findComicsToRecreate() {
+  public List<ComicBook> findComicsToRecreate(final int count) {
     log.trace("Finding all comics to be recreated");
-    return this.comicBookRepository.findComicsToRecreate();
+    return this.comicBookRepository.findComicsToRecreate(PageRequest.of(0, count));
   }
 
   /**
@@ -671,11 +682,12 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   /**
    * Returns comics marked for purging.
    *
+   * @param count the number of comics to return
    * @return the comics
    */
-  public List<ComicBook> findComicsMarkedForPurging() {
+  public List<ComicBook> findComicsMarkedForPurging(final int count) {
     log.trace("Loading comics marked for purging");
-    return this.comicBookRepository.findComicsMarkedForPurging();
+    return this.comicBookRepository.findComicsMarkedForPurging(PageRequest.of(0, count));
   }
 
   /**

@@ -38,6 +38,6 @@ public class MoveComicReader extends AbstractComicReader {
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Loading comics to be moved");
-    return this.comicBookService.findComicsToBeMoved();
+    return this.comicBookService.findComicsToBeMoved(this.getBatchChunkSize());
   }
 }

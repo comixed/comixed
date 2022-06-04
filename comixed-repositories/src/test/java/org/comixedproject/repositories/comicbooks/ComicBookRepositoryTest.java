@@ -76,6 +76,7 @@ public class ComicBookRepositoryTest {
   private static final Date TEST_COVER_DATE_WITH_PREV = new Date(1488258000000L);
   private static final String TEST_HASH_WITH_NO_COMICS = "FEDCBA9876543210FEDCBA9876543210";
   private static final String TEST_HASH_WITH_COMICS = "0123456789ABCDEF0123456789ABCDEF";
+  private static final int TEST_BATCH_SIZE = 1;
 
   @Autowired private ComicBookRepository repository;
 
@@ -386,10 +387,12 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testFindAllMarkedForDeletion() {
-    List<ComicBook> result = repository.findComicsMarkedForDeletion();
+    List<ComicBook> result =
+        repository.findComicsMarkedForDeletion(PageRequest.of(0, TEST_BATCH_SIZE));
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
+    assertEquals(TEST_BATCH_SIZE, result.size());
     for (ComicBook comicBook : result) {
       assertEquals(ComicState.DELETED, comicBook.getComicState());
     }

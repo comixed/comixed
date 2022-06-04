@@ -46,7 +46,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class UpdateMetadataConfiguration {
   public static final String JOB_UPDATE_METADATA_STARTED = "job.update-metadata.started";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**

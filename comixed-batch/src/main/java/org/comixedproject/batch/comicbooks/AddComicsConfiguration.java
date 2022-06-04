@@ -50,7 +50,7 @@ import org.springframework.context.annotation.Configuration;
 public class AddComicsConfiguration {
   public static final String PARAM_ADD_COMICS_STARTED = "job.add-comics.started";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**

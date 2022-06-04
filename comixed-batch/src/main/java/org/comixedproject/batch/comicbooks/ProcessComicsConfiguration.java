@@ -55,7 +55,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ProcessComicsConfiguration {
   public static final String JOB_RESCAN_COMICS_START = "job.rescan-comics.started";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**
