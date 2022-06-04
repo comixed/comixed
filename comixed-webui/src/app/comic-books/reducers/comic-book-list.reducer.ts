@@ -73,8 +73,8 @@ export const reducer = createReducer(
   })),
   on(loadComicBooks, state => ({ ...state, loading: true })),
   on(comicBooksReceived, (state, action) => {
-    let comicBooks = state.comicBooks.filter(
-      comicBook => !action.comicBooks.some(entry => entry.id === comicBook.id)
+    let comicBooks = state.comicBooks.filter(comicBook =>
+      action.comicBooks.every(entry => entry.id !== comicBook.id)
     );
     comicBooks = comicBooks.concat(action.comicBooks);
     const lastId = action.lastId;

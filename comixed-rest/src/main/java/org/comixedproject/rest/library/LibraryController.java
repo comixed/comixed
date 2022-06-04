@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguratio
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
@@ -62,7 +63,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class LibraryController {
-  static final int MAXIMUM_RECORDS = 1000;
+  static final int MAXIMUM_RECORDS = 100;
 
   @Autowired private LibraryService libraryService;
   @Autowired private ComicBookService comicBookService;
@@ -209,7 +210,13 @@ public class LibraryController {
 
     return new LoadLibraryResponse(
         comicBooks,
-        comicBooks.isEmpty() ? 0 : comicBooks.get(comicBooks.size() - 1).getId(),
+        comicBooks.isEmpty()
+            ? 0
+            : comicBooks.stream()
+                .sorted((left, right) -> left.getId().compareTo(right.getId()))
+                .collect(Collectors.toList())
+                .get(comicBooks.size() - 1)
+                .getId(),
         lastPayload);
   }
 
