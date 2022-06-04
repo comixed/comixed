@@ -476,115 +476,152 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindInsertedComics() {
-    Mockito.when(comicBookRepository.findForState(Mockito.any(ComicState.class)))
+    Mockito.when(
+            comicBookRepository.findForState(
+                Mockito.any(ComicState.class), pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findInsertedComics();
+    final List<ComicBook> result = service.findInsertedComics(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findForState(ComicState.ADDED);
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findForState(ComicState.ADDED, pageable);
   }
 
   @Test
   public void testGetUnprocessedComicsWithoutContentCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContent())
-        .thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContentCount())
+        .thenReturn(TEST_MAXIMUM_COMICS);
 
     final long result = service.getUnprocessedComicsWithoutContentCount();
 
-    assertEquals(comicBookList.size(), result);
+    assertEquals(TEST_MAXIMUM_COMICS, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findUnprocessedComicsWithoutContent();
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findUnprocessedComicsWithoutContentCount();
   }
 
   @Test
   public void testFindUnprocessedComicsWithoutContent() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContent())
+    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContent(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findUnprocessedComicsWithoutContent();
+    final List<ComicBook> result = service.findUnprocessedComicsWithoutContent(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findUnprocessedComicsWithoutContent();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findUnprocessedComicsWithoutContent(pageable);
   }
 
   @Test
   public void testGetUnprocessedComicsForMarkedPageBlockingCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsForMarkedPageBlocking())
-        .thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findUnprocessedComicsForMarkedPageBlockingCount())
+        .thenReturn(TEST_MAXIMUM_COMICS);
 
     final long result = service.getUnprocessedComicsForMarkedPageBlockingCount();
 
-    assertEquals(comicBookList.size(), result);
+    assertEquals(TEST_MAXIMUM_COMICS, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsForMarkedPageBlocking();
+        .findUnprocessedComicsForMarkedPageBlockingCount();
   }
 
   @Test
   public void testFindUnprocessedComicsForMarkedPageBlocking() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsForMarkedPageBlocking())
+    Mockito.when(
+            comicBookRepository.findUnprocessedComicsForMarkedPageBlocking(
+                pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findUnprocessedComicsForMarkedPageBlocking();
+    final List<ComicBook> result =
+        service.findUnprocessedComicsForMarkedPageBlocking(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findUnprocessedComicsForMarkedPageBlocking();
+        .findUnprocessedComicsForMarkedPageBlocking(pageable);
   }
 
   @Test
   public void testGetUnprocessedComicsWithoutFileDetailsCount() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutFileDetails())
-        .thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutFileDetailsCount())
+        .thenReturn(TEST_MAXIMUM_COMICS);
 
     final long result = service.getUnprocessedComicsWithoutFileDetailsCount();
 
-    assertEquals(comicBookList.size(), result);
+    assertEquals(TEST_MAXIMUM_COMICS, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findUnprocessedComicsWithoutFileDetailsCount();
   }
 
   @Test
   public void testFindUnprocessedComicsWithoutFileDetails() {
-    Mockito.when(comicBookRepository.findUnprocessedComicsWithoutFileDetails())
+    Mockito.when(
+            comicBookRepository.findUnprocessedComicsWithoutFileDetails(pageableCaptor.capture()))
         .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findUnprocessedComicsWithoutFileDetails();
+    final List<ComicBook> result =
+        service.findUnprocessedComicsWithoutFileDetails(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findUnprocessedComicsWithoutFileDetails();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findUnprocessedComicsWithoutFileDetails(pageable);
   }
 
   @Test
   public void testGetProcessedComicsCount() {
-    Mockito.when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findProcessedComicsCount()).thenReturn(TEST_MAXIMUM_COMICS);
 
     final long result = service.getProcessedComicsCount();
 
-    assertEquals(comicBookList.size(), result);
+    assertEquals(TEST_MAXIMUM_COMICS, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComics();
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComicsCount();
   }
 
   @Test
   public void testFindProcessedComics() {
-    Mockito.when(comicBookRepository.findProcessedComics()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findProcessedComics(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findProcessedComics();
+    final List<ComicBook> result = service.findProcessedComics(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComics();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findProcessedComics(pageable);
   }
 
   @Test
@@ -618,50 +655,68 @@ public class ComicBookServiceTest {
   public void testGetCountForState() {
     for (int index = 0; index < 50; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookRepository.findForState(Mockito.any(ComicState.class)))
-        .thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findForStateCount(Mockito.any(ComicState.class)))
+        .thenReturn(TEST_MAXIMUM_COMICS);
 
     final int result = service.getCountForState(TEST_STATE);
 
-    assertEquals(comicBookList.size(), result);
+    assertEquals(TEST_MAXIMUM_COMICS, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findForState(TEST_STATE);
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findForStateCount(TEST_STATE);
   }
 
   @Test
   public void testFindComicsWithMetadataToUpdate() {
-    Mockito.when(comicBookRepository.findComicsWithMetadataToUpdate()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findComicsWithMetadataToUpdate(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsWithMetadataToUpdate();
+    final List<ComicBook> result = service.findComicsWithMetadataToUpdate(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithMetadataToUpdate();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithMetadataToUpdate(pageable);
   }
 
   @Test
   public void testFindAllComicsMarkedForDeletion() {
-    Mockito.when(comicBookRepository.findComicsMarkedForDeletion()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findComicsMarkedForDeletion(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsMarkedForDeletion();
+    final List<ComicBook> result = service.findComicsMarkedForDeletion(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsMarkedForDeletion();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsMarkedForDeletion(pageable);
   }
 
   @Test
   public void testFindComicsToBeMoved() {
-    Mockito.when(comicBookRepository.findComicsToBeMoved()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findComicsToBeMoved(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsToBeMoved();
+    final List<ComicBook> result = service.findComicsToBeMoved(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToBeMoved();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToBeMoved(pageable);
   }
 
   @Test
@@ -729,14 +784,20 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindAllComicsToRecreate() {
-    Mockito.when(comicBookRepository.findComicsToRecreate()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findComicsToRecreate(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsToRecreate();
+    final List<ComicBook> result = service.findComicsToRecreate(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToRecreate();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsToRecreate(pageable);
   }
 
   @Test
@@ -1028,14 +1089,20 @@ public class ComicBookServiceTest {
 
   @Test
   public void testFindComicsMarkedForPurging() {
-    Mockito.when(comicBookRepository.findComicsMarkedForPurging()).thenReturn(comicBookList);
+    Mockito.when(comicBookRepository.findComicsMarkedForPurging(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
 
-    final List<ComicBook> result = service.findComicsMarkedForPurging();
+    final List<ComicBook> result = service.findComicsMarkedForPurging(TEST_MAXIMUM_COMICS);
 
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsMarkedForPurging();
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsMarkedForPurging(pageable);
   }
 
   @Test(expected = ComicException.class)

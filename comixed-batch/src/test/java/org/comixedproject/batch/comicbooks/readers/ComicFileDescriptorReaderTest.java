@@ -43,25 +43,29 @@ public class ComicFileDescriptorReaderTest {
   public void read() {
     comicFileDescriptors.add(descriptor);
 
-    Mockito.when(comicFileService.findComicFileDescriptors()).thenReturn(comicFileDescriptors);
+    Mockito.when(comicFileService.findComicFileDescriptors(Mockito.anyInt()))
+        .thenReturn(comicFileDescriptors);
 
     final ComicFileDescriptor result = reader.read();
 
     assertNotNull(result);
     assertSame(descriptor, result);
 
-    Mockito.verify(comicFileService, Mockito.times(1)).findComicFileDescriptors();
+    Mockito.verify(comicFileService, Mockito.times(1))
+        .findComicFileDescriptors(reader.getBatchChunkSize());
     Mockito.verify(comicFileService, Mockito.times(1)).deleteComicFileDescriptor(descriptor);
   }
 
   @Test
   public void readNoRecordsFound() {
-    Mockito.when(comicFileService.findComicFileDescriptors()).thenReturn(comicFileDescriptors);
+    Mockito.when(comicFileService.findComicFileDescriptors(Mockito.anyInt()))
+        .thenReturn(comicFileDescriptors);
 
     final ComicFileDescriptor result = reader.read();
 
     assertNull(result);
 
-    Mockito.verify(comicFileService, Mockito.times(1)).findComicFileDescriptors();
+    Mockito.verify(comicFileService, Mockito.times(1))
+        .findComicFileDescriptors(reader.getBatchChunkSize());
   }
 }

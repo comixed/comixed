@@ -47,7 +47,7 @@ public class MarkPagesWithHashConfiguration {
   public static final String PARAM_MARK_PAGES_TARGET_HASH =
       "job.delete-pages-with-hash.target-hash";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**

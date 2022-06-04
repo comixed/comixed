@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Configuration;
 public class PurgeLibraryConfiguration {
   public static final String JOB_PURGE_LIBRARY_START = "job.purge-library.started";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**

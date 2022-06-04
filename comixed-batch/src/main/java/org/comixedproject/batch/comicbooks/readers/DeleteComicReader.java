@@ -38,6 +38,6 @@ public class DeleteComicReader extends AbstractComicReader {
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Loading comics in the DELETED state");
-    return this.comicBookService.findComicsMarkedForDeletion();
+    return this.comicBookService.findComicsMarkedForDeletion(this.getBatchChunkSize());
   }
 }

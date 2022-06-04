@@ -19,11 +19,13 @@
 package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,13 +38,18 @@ import org.springframework.stereotype.Component;
 public class ComicFileDescriptorReader implements ItemReader<ComicFileDescriptor> {
   @Autowired private ComicFileService comicFileService;
 
+  @Value("${comixed.batch.chunk-size}")
+  @Getter
+  private int batchChunkSize = 10;
+
   private List<ComicFileDescriptor> comicFileDescriptorList = null;
 
   @Override
   public ComicFileDescriptor read() {
-    if (this.comicFileDescriptorList == null) {
+    if (this.comicFileDescriptorList == null || this.comicFileDescriptorList.isEmpty()) {
       log.trace("Load more descriptors to process");
-      this.comicFileDescriptorList = this.comicFileService.findComicFileDescriptors();
+      this.comicFileDescriptorList =
+          this.comicFileService.findComicFileDescriptors(this.batchChunkSize);
     }
 
     if (this.comicFileDescriptorList.isEmpty()) {

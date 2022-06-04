@@ -54,7 +54,7 @@ public class ConsolidationConfiguration {
   public static final String PARAM_TARGET_DIRECTORY = "job.consolidation.target-directory";
   public static final String PARAM_RENAMING_RULE = "job.consolidation.renaming-rule";
 
-  @Value("${batch.chunk-size}")
+  @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
 
   /**

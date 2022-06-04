@@ -38,6 +38,6 @@ public class RecordInsertedReader extends AbstractComicReader {
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Loading newly inserted comics");
-    return this.comicBookService.findInsertedComics();
+    return this.comicBookService.findInsertedComics(this.getBatchChunkSize());
   }
 }

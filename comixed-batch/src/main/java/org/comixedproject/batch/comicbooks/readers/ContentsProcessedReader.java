@@ -38,6 +38,6 @@ public class ContentsProcessedReader extends AbstractComicReader {
 
   @Override
   protected List<ComicBook> doLoadComics() {
-    return this.comicBookService.findProcessedComics();
+    return this.comicBookService.findProcessedComics(this.getBatchChunkSize());
   }
 }

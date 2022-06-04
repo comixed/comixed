@@ -45,7 +45,7 @@ public class RecordInsertedReaderTest {
   public void testReadNoneLoadedManyFound() {
     for (int index = 0; index < MAX_RECORDS; index++) comicBookList.add(comicBook);
 
-    Mockito.when(comicBookService.findInsertedComics()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.findInsertedComics(Mockito.anyInt())).thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
@@ -54,11 +54,14 @@ public class RecordInsertedReaderTest {
     assertFalse(comicBookList.isEmpty());
     assertEquals(MAX_RECORDS - 1, comicBookList.size());
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findInsertedComics();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findInsertedComics(reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneRemaining() {
+    Mockito.when(comicBookService.findInsertedComics(Mockito.anyInt())).thenReturn(comicBookList);
+
     reader.comicBookList = comicBookList;
 
     final ComicBook result = reader.read();
@@ -66,18 +69,20 @@ public class RecordInsertedReaderTest {
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.never()).findInsertedComics();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findInsertedComics(reader.getBatchChunkSize());
   }
 
   @Test
   public void testReadNoneLoadedNoneFound() {
-    Mockito.when(comicBookService.findInsertedComics()).thenReturn(comicBookList);
+    Mockito.when(comicBookService.findInsertedComics(Mockito.anyInt())).thenReturn(comicBookList);
 
     final ComicBook result = reader.read();
 
     assertNull(result);
     assertNull(reader.comicBookList);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).findInsertedComics();
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .findInsertedComics(reader.getBatchChunkSize());
   }
 }

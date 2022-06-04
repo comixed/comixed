@@ -38,6 +38,6 @@ public class RecreateComicFileReader extends AbstractComicReader {
   @Override
   protected List<ComicBook> doLoadComics() {
     log.trace("Fetching comics to be recreated");
-    return this.comicBookService.findComicsToRecreate();
+    return this.comicBookService.findComicsToRecreate(this.getBatchChunkSize());
   }
 }

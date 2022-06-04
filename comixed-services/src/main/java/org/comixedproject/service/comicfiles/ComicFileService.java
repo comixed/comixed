@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.adaptors.AdaptorException;
@@ -35,6 +36,7 @@ import org.comixedproject.model.comicfiles.ComicFileGroup;
 import org.comixedproject.repositories.comicfiles.ComicFileDescriptorRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -169,11 +171,13 @@ public class ComicFileService {
   /**
    * Returns all comic file descriptor records.
    *
+   * @param pageSize the number of descriptors to return
    * @return the descriptors
    */
-  public List<ComicFileDescriptor> findComicFileDescriptors() {
+  public List<ComicFileDescriptor> findComicFileDescriptors(final int pageSize) {
     log.trace("Loading all comic file descriptors");
-    return this.comicFileDescriptorRepository.findAll();
+    return this.comicFileDescriptorRepository.findAll(PageRequest.of(0, pageSize)).stream()
+        .collect(Collectors.toList());
   }
 
   /**

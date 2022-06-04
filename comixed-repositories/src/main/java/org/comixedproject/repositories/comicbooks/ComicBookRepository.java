@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -79,7 +78,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       @Param("coverDate") Date coverDate);
 
   @Query("SELECT c FROM ComicBook c ORDER BY c.id")
-  List<ComicBook> findComicsToMove(PageRequest page);
+  List<ComicBook> findComicsToMove(Pageable pageable);
 
   /**
    * Returns a page of {@link ComicBook} objects with an id greater than the supplied threshold.
@@ -113,72 +112,125 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * Loads all comics with the given state, ordered by last modified date.
    *
    * @param state the state
+   * @param pageable the page request
    * @return the comics
    */
   @Query("SELECT c FROM ComicBook c WHERE c.comicState = :state ORDER BY c.lastModifiedOn")
-  List<ComicBook> findForState(@Param("state") ComicState state);
+  List<ComicBook> findForState(@Param("state") ComicState state, Pageable pageable);
+
+  /**
+   * Returns the number of comics with the given state value.
+   *
+   * @param state the state
+   * @return the count
+   */
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = :state ORDER BY c.lastModifiedOn")
+  int findForStateCount(@Param("state") ComicState state);
 
   /**
    * Returns unprocessed comics that have their file loaded flag turned off.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
       "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false ORDER BY c.lastModifiedOn")
-  List<ComicBook> findUnprocessedComicsWithoutContent();
+  List<ComicBook> findUnprocessedComicsWithoutContent(Pageable pageable);
+
+  /**
+   * Returns the number of unprocessed comics without file contents loaded.
+   *
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false ORDER BY c.lastModifiedOn")
+  int findUnprocessedComicsWithoutContentCount();
 
   /**
    * Returns unprocessed comics that have their blocked pages marked flag turned off.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
       "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false ORDER BY c.lastModifiedOn")
-  List<ComicBook> findUnprocessedComicsForMarkedPageBlocking();
+  List<ComicBook> findUnprocessedComicsForMarkedPageBlocking(Pageable pageable);
+
+  /**
+   * Returns the number of unprocessed comics for page blocking.
+   *
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false ORDER BY c.lastModifiedOn")
+  int findUnprocessedComicsForMarkedPageBlockingCount();
 
   /**
    * Returns unprocessed comics without file details.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
       "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
-  List<ComicBook> findUnprocessedComicsWithoutFileDetails();
+  List<ComicBook> findUnprocessedComicsWithoutFileDetails(Pageable pageable);
+
+  /**
+   * Returns the number of comics without match file detail records.
+   *
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
+  int findUnprocessedComicsWithoutFileDetailsCount();
 
   /**
    * Returns unprocessed comics that have been fully processed.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
       "SELECT c FROM ComicBook c LEFT JOIN FETCH c.fileDetails fd WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true ORDER BY c.lastModifiedOn")
-  List<ComicBook> findProcessedComics();
+  List<ComicBook> findProcessedComics(Pageable pageable);
+
+  /**
+   * Returns the numboer of unprocessed comics.
+   *
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true ORDER BY c.lastModifiedOn")
+  int findProcessedComicsCount();
 
   /**
    * Returns comics that are waiting to have their metadata update flag set.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
       "SELECT c FROM ComicBook c WHERE c.comicState = 'CHANGED' AND c.updateMetadata = true ORDER BY c.lastModifiedOn")
-  List<ComicBook> findComicsWithMetadataToUpdate();
+  List<ComicBook> findComicsWithMetadataToUpdate(Pageable pageable);
 
   /**
    * Returns comics that are in the deleted state.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query("SELECT c FROM ComicBook c WHERE c.comicState = 'DELETED' ORDER BY c.lastModifiedOn")
-  List<ComicBook> findComicsMarkedForDeletion();
+  List<ComicBook> findComicsMarkedForDeletion(Pageable pageable);
 
   /**
    * Returns all comics with the consolidating flag set.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query(
       "SELECT c FROM ComicBook c WHERE c.consolidating = true AND c.comicState != 'DELETED' ORDER BY c.lastModifiedOn")
-  List<ComicBook> findComicsToBeMoved();
+  List<ComicBook> findComicsToBeMoved(Pageable pageable);
 
   /**
    * Returns a single comic with all reading lists in which it is found.
@@ -192,10 +244,11 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   /**
    * Returns comics that are marked to be recreated.
    *
+   * @param pageable the page request
    * @return the list of comics
    */
   @Query("SELECT c FROM ComicBook c WHERE c.recreating = true ORDER BY c.lastModifiedOn")
-  List<ComicBook> findComicsToRecreate();
+  List<ComicBook> findComicsToRecreate(Pageable pageable);
 
   /**
    * Returns a single comic that matches the given criteria.
@@ -323,10 +376,11 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   /**
    * Returns all comics that are marked for purging.
    *
+   * @param pageable the page request
    * @return the comics
    */
   @Query("SELECT c FROM ComicBook c WHERE c.purgeComic = true")
-  List<ComicBook> findComicsMarkedForPurging();
+  List<ComicBook> findComicsMarkedForPurging(Pageable pageable);
 
   /**
    * Returns the individual year values for comics in the library.
