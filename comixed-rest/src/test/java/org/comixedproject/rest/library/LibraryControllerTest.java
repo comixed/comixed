@@ -199,6 +199,24 @@ public class LibraryControllerTest {
   }
 
   @Test
+  public void testLoadLibraryNoComics() throws ComiXedUserException {
+    final List<ComicBook> comicBooks = new ArrayList<>();
+
+    Mockito.when(comicBookService.getComicsById(Mockito.anyLong(), Mockito.anyInt()))
+        .thenReturn(comicBooks);
+
+    final LoadLibraryResponse result =
+        controller.loadLibrary(new LoadLibraryRequest(TEST_LAST_COMIC_ID));
+
+    assertNotNull(result);
+    assertTrue(result.getComicBooks().isEmpty());
+    assertTrue(result.isLastPayload());
+
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getComicsById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
+  }
+
+  @Test
   public void testLoadLibraryMoreComicsRemaining() throws ComiXedUserException {
     final List<ComicBook> comicBooks = new ArrayList<>();
     for (int index = 0; index < MAXIMUM_RECORDS - 1; index++) comicBooks.add(comicBook);
