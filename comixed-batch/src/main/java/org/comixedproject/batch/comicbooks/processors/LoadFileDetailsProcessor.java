@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -38,13 +39,19 @@ public class LoadFileDetailsProcessor implements ItemProcessor<ComicBook, ComicB
   @Autowired private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) throws Exception {
+  public ComicBook process(final ComicBook comicBook) {
     log.debug("Creating file details container: id={}", comicBook.getId());
     final ComicFileDetails fileDetails = new ComicFileDetails(comicBook);
     comicBook.setFileDetails(fileDetails);
     log.trace("Getting comicBook file hash");
-    fileDetails.setHash(
-        this.genericUtilitiesAdaptor.createHash(new FileInputStream(comicBook.getFilename())));
-    return comicBook;
+    try {
+      fileDetails.setHash(
+          this.genericUtilitiesAdaptor.createHash(new FileInputStream(comicBook.getFilename())));
+
+      return comicBook;
+    } catch (IOException error) {
+      log.error("Error loading comic file details", error);
+      return null;
+    }
   }
 }

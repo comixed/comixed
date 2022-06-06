@@ -18,7 +18,10 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import static junit.framework.TestCase.*;
+
 import java.util.List;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
@@ -40,9 +43,26 @@ public class LoadFileContentsProcessorTest {
   public void testProcess() throws Exception {
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
-    processor.process(comicBook);
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook);
     Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
+  }
+
+  @Test
+  public void testProcessAdaptorException() throws Exception {
+    Mockito.doThrow(AdaptorException.class)
+        .when(comicBookAdaptor)
+        .load(Mockito.any(ComicBook.class));
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook);
   }
 }
