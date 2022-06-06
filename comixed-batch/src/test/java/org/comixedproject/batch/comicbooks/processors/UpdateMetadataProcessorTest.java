@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -47,6 +48,14 @@ public class UpdateMetadataProcessorTest {
 
   @Test
   public void testProcessUpdateException() throws Exception {
+    Mockito.doThrow(AdaptorException.class)
+        .when(comicBookAdaptor)
+        .save(
+            Mockito.any(ComicBook.class),
+            Mockito.any(ArchiveType.class),
+            Mockito.anyBoolean(),
+            Mockito.anyString());
+
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);

@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
@@ -43,24 +44,29 @@ public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, 
   @Autowired private FilenameScrapingRuleService filenameScrapingRuleService;
 
   @Override
-  public ComicBook process(final ComicFileDescriptor descriptor) throws Exception {
+  public ComicBook process(final ComicFileDescriptor descriptor) {
     if (this.comicBookService.findByFilename(descriptor.getFilename()) != null) {
       log.debug("ComicBook already exists. Aborting: filename=", descriptor.getFilename());
       return null;
     }
-    log.debug("Creating comicBook: filename={}", descriptor.getFilename());
-    final ComicBook comicBook = this.comicBookAdaptor.createComic(descriptor.getFilename());
-    log.trace("Scraping comicBook filename");
-    final FilenameMetadata metadata =
-        this.filenameScrapingRuleService.loadFilenameMetadata(comicBook.getBaseFilename());
-    if (metadata.isFound()) {
-      log.trace("Scraping rule applied");
-      comicBook.setSeries(metadata.getSeries());
-      comicBook.setVolume(metadata.getVolume());
-      comicBook.setIssueNumber(metadata.getIssueNumber());
-      comicBook.setCoverDate(metadata.getCoverDate());
+    try {
+      log.debug("Creating comicBook: filename={}", descriptor.getFilename());
+      final ComicBook comicBook = this.comicBookAdaptor.createComic(descriptor.getFilename());
+      log.trace("Scraping comicBook filename");
+      final FilenameMetadata metadata =
+          this.filenameScrapingRuleService.loadFilenameMetadata(comicBook.getBaseFilename());
+      if (metadata.isFound()) {
+        log.trace("Scraping rule applied");
+        comicBook.setSeries(metadata.getSeries());
+        comicBook.setVolume(metadata.getVolume());
+        comicBook.setIssueNumber(metadata.getIssueNumber());
+        comicBook.setCoverDate(metadata.getCoverDate());
+      }
+      log.trace("Returning comicBook");
+      return comicBook;
+    } catch (AdaptorException error) {
+      log.error("Error inserting comic record", error);
+      return null;
     }
-    log.trace("Returning comicBook");
-    return comicBook;
   }
 }

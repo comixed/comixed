@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import static junit.framework.TestCase.*;
 
 import java.util.Date;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
@@ -70,6 +71,20 @@ public class ComicBookInsertProcessorTest {
     assertNull(result);
 
     Mockito.verify(comicBookService, Mockito.times(1)).findByFilename(TEST_FILENAME);
+  }
+
+  @Test
+  public void testProcessCreateComicException() throws Exception {
+    Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(null);
+    Mockito.when(comicBookAdaptor.createComic(Mockito.anyString()))
+        .thenThrow(AdaptorException.class);
+
+    final ComicBook result = processor.process(descriptor);
+
+    assertNull(result);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).findByFilename(TEST_FILENAME);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).createComic(TEST_FILENAME);
   }
 
   @Test

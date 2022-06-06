@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import org.comixedproject.adaptors.GenericUtilitiesAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -41,11 +42,28 @@ public class LoadFileDetailsProcessorTest {
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsArgumentCaptor;
 
   @Test
+  public void testProcessCreateHashException() throws Exception {
+    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.doNothing().when(comicBook).setFileDetails(comicFileDetailsArgumentCaptor.capture());
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(InputStream.class)))
+        .thenThrow(IOException.class);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNull(result);
+
+    final ComicFileDetails fileDetails = comicFileDetailsArgumentCaptor.getValue();
+    assertNotNull(fileDetails);
+    assertSame(comicBook, fileDetails.getComicBook());
+    assertNull(fileDetails.getHash());
+  }
+
+  @Test
   public void testProcess() throws Exception {
     Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.doNothing().when(comicBook).setFileDetails(comicFileDetailsArgumentCaptor.capture());
     Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(InputStream.class)))
         .thenReturn(TEST_HASH);
-    Mockito.doNothing().when(comicBook).setFileDetails(comicFileDetailsArgumentCaptor.capture());
 
     final ComicBook result = processor.process(comicBook);
 

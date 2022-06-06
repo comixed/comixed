@@ -19,6 +19,7 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
@@ -36,12 +37,17 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
   @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   @Override
-  public ComicBook process(final ComicBook comicBook) throws Exception {
+  public ComicBook process(final ComicBook comicBook) {
     log.debug("Loading comicBook file contents: id={}", comicBook.getId());
-    this.comicBookAdaptor.load(comicBook);
-    log.trace("Sorting comicBook pages");
-    comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
-    log.trace("Returning updated comicBook");
-    return comicBook;
+    try {
+      this.comicBookAdaptor.load(comicBook);
+      log.trace("Sorting comicBook pages");
+      comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
+      log.trace("Returning updated comicBook");
+      return comicBook;
+    } catch (AdaptorException error) {
+      log.error("Error loading comic file content", error);
+      return comicBook;
+    }
   }
 }
