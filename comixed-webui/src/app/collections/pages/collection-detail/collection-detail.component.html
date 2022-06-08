@@ -1,4 +1,4 @@
-<cx-comic-covers
+<cx-comic-book-covers
   [comics]="
     comicBooks
       | archiveType: archiveTypeFilter
@@ -17,8 +17,9 @@
   [sortField]="sortField"
   [archiveType]="archiveTypeFilter"
   [pageIndex]="pageIndex"
+  [showCovers]="showCovers"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
   [coverDateFilter]="coverDateFilter"
   (pageIndexChanged)="onPageIndexChanged($event)"
   (selectAllComics)="onSelectAllComics($event)"
-></cx-comic-covers>
+></cx-comic-book-covers>

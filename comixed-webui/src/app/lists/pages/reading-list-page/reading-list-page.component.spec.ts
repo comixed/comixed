@@ -40,7 +40,7 @@ import {
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { ComicListViewComponent } from '@app/library/components/comic-list-view/comic-list-view.component';
+import { ComicListViewComponent } from '@app/lists/components/comic-list-view/comic-list-view.component';
 import {
   COMIC_BOOK_1,
   COMIC_BOOK_3,

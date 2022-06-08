@@ -178,6 +178,7 @@
       "rescan-comics": "Rescanner les bandes dessinées sélectionnées.",
       "scrape-comics": "Commencer la récupération des détails",
       "select-all": "Sélectionner toutes les bandes dessinées.",
+      "toggle-show-covers": "Toggle between cover and list views.",
       "update-metadata": "Mettre à jour les métadonnées dans les bandes dessinées sélectionnées."
     },
     "update-metadata": {

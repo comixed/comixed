@@ -23,7 +23,17 @@
   {{ title | translate: { count: dataSource.data.length } }}
 </h2>
 
-<div id="cx-all-comics" class="cx-detail-card-container" matSort>
+<cx-comic-book-list
+  *ngIf="!showCovers"
+  [dataSource]="dataSource"
+></cx-comic-book-list>
+
+<div
+  *ngIf="showCovers"
+  id="cx-all-comics"
+  class="cx-detail-card-container"
+  matSort
+>
   <div
     *ngFor="let comic of comics"
     fxFlex.gt-lg="10%"

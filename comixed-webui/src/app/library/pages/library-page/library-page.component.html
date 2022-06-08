@@ -1,4 +1,4 @@
-<cx-comic-covers
+<cx-comic-book-covers
   class="cx-overflow-y-scroll"
   [title]="'library.page-title.' + pageContent"
   [comics]="
@@ -18,7 +18,8 @@
   [sortField]="sortField"
   [archiveType]="archiveTypeFilter"
   [pageIndex]="pageIndex"
+  [showCovers]="showCovers"
   (archiveTypeChanged)="onArchiveTypeChanged($event)"
   (pageIndexChanged)="onPageIndexChange($event)"
   (selectAllComics)="onSelectAllComics($event)"
-></cx-comic-covers>
+></cx-comic-book-covers>

@@ -178,6 +178,7 @@
       "rescan-comics": "Rescan selected comics.",
       "scrape-comics": "Empieza a raspar cómics",
       "select-all": "Seleccionar todos los cómics.",
+      "toggle-show-covers": "Toggle between cover and list views.",
       "update-metadata": "Update metadata in selected comics."
     },
     "update-metadata": {

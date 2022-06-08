@@ -44,6 +44,7 @@ import {
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_ARCHIVE_TYPE,
   QUERY_PARAM_PAGE_INDEX,
+  SHOW_COMIC_COVERS,
   SORT_FIELD_DEFAULT,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
@@ -91,6 +92,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   pageContent = 'comics';
   coverDateFilter: CoverDateFilter;
   coverDateFilterSubscription: Subscription;
+  showCovers = true;
 
   constructor(
     private logger: LoggerService,
@@ -172,6 +174,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         SORT_FIELD_PREFERENCE,
         SORT_FIELD_DEFAULT
       );
+      this.showCovers =
+        getUserPreference(user.preferences, SHOW_COMIC_COVERS, `${true}`) ===
+        `${true}`;
     });
     this.lastReadDatesSubscription = this.store
       .select(selectLastReadEntries)

@@ -1,12 +1,15 @@
 @import 'styles';
 
-.mat-column-selection {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+.mat-column-cover {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
   resize: none;
 }
 
 .mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
 }
 
 .mat-column-series {
@@ -30,19 +33,7 @@
   resize: none;
 }
 
-.mat-column-added-date {
-  width: $cx-column-medium;
-  max-width: $cx-column-medium;
-  resize: none;
-}
-
-.mat-column-page-count {
-  width: $cx-column-medium;
-  max-width: $cx-column-medium;
-  resize: none;
-}
-
-.mat-column-archive-type {
+.mat-column-store-date {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
   resize: none;

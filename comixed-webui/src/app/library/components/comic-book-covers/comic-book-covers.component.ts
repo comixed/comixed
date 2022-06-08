@@ -63,11 +63,13 @@ import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics'
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 
 @Component({
-  selector: 'cx-comic-covers',
-  templateUrl: './comic-covers.component.html',
-  styleUrls: ['./comic-covers.component.scss']
+  selector: 'cx-comic-book-covers',
+  templateUrl: './comic-book-covers.component.html',
+  styleUrls: ['./comic-book-covers.component.scss']
 })
-export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ComicBookCoversComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(LibraryToolbarComponent) toolbar: LibraryToolbarComponent;
   @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
   @ViewChild(MatSort) sort: MatSort;
@@ -85,6 +87,7 @@ export class ComicCoversComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showActions = true;
   @Input() showCoverFilters = true;
   @Input() coverDateFilter: CoverDateFilter = { year: null, month: null };
+  @Input() showCovers = true;
 
   @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
   @Output() pageIndexChanged = new EventEmitter<number>();

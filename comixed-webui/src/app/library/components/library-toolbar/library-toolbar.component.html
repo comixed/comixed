@@ -1,4 +1,14 @@
 <mat-toolbar class="cx-primary-light-background">
+  <button
+    id="toggle-cover-mode-button"
+    mat-icon-button
+    color="accent"
+    [matTooltip]="'library.tooltip.toggle-show-covers' | translate"
+    (click)="onToggleShowCoverMode()"
+  >
+    <mat-icon *ngIf="showCovers">grid_view</mat-icon>
+    <mat-icon *ngIf="!showCovers">list</mat-icon>
+  </button>
   <mat-paginator
     class="cx-primary-light-background cx-height-100"
     [pageSizeOptions]="pageSizeOptions"
