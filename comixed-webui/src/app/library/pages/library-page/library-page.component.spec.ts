@@ -32,7 +32,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TitleService } from '@app/core/services/title.service';
-import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
+import { ComicBookCoversComponent } from '@app/library/components/comic-book-covers/comic-book-covers.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
@@ -116,7 +116,7 @@ describe('LibraryPageComponent', () => {
         declarations: [
           LibraryPageComponent,
           LibraryToolbarComponent,
-          ComicCoversComponent,
+          ComicBookCoversComponent,
           ArchiveTypePipe,
           UnreadComicsPipe,
           CoverDateFilterPipe

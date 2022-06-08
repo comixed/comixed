@@ -23,7 +23,7 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
-import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
+import { ComicBookCoversComponent } from '@app/library/components/comic-book-covers/comic-book-covers.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -66,7 +66,7 @@ describe('ComicsWithDuplicatePageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           ComicsWithDuplicatePageComponent,
-          ComicCoversComponent,
+          ComicBookCoversComponent,
           LibraryToolbarComponent,
           ComicDetailCardComponent,
           ComicTitlePipe,

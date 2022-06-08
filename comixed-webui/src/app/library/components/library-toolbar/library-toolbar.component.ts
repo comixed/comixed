@@ -35,6 +35,7 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE,
+  SHOW_COMIC_COVERS,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';
@@ -49,6 +50,8 @@ import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { setComicBookListFilter } from '@app/comic-books/actions/comic-book-list.actions';
 import { ListItem } from '@app/core/models/ui/list-item';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getUserPreference } from '@app/user';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -77,6 +80,9 @@ export class LibraryToolbarComponent
   @Output() pageIndexChanged = new EventEmitter<number>();
   @Output() selectAllComics = new EventEmitter<boolean>();
 
+  userSubscription: Subscription;
+  showCovers = true;
+
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
     { label: 'archive-type.label.all', value: null },
@@ -103,6 +109,11 @@ export class LibraryToolbarComponent
     this.langChangSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.showCovers =
+        getUserPreference(user.preferences, SHOW_COMIC_COVERS, `${true}`) ===
+        `${true}`;
+    });
   }
 
   private _comics: ComicBook[] = [];
@@ -282,6 +293,16 @@ export class LibraryToolbarComponent
   onCoverMonthChange(month: number): void {
     this.store.dispatch(
       setComicBookListFilter({ year: this.coverYear, month })
+    );
+  }
+
+  onToggleShowCoverMode(): void {
+    this.logger.trace('Toggling show cover mode');
+    this.store.dispatch(
+      saveUserPreference({
+        name: SHOW_COMIC_COVERS,
+        value: `${!this.showCovers}`
+      })
     );
   }
 

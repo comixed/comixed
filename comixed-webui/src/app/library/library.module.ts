@@ -47,7 +47,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ComicCoversComponent } from './components/comic-covers/comic-covers.component';
+import { ComicBookCoversComponent } from './components/comic-book-covers/comic-book-covers.component';
 import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
 import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -72,7 +72,6 @@ import {
 } from '@app/library/reducers/duplicate-page-detail.reducer';
 import { DuplicatePageDetailEffects } from '@app/library/effects/duplicate-page-detail.effects';
 import { MatDividerModule } from '@angular/material/divider';
-import { ComicListViewComponent } from './components/comic-list-view/comic-list-view.component';
 import {
   reducer as rescanComicsReducer,
   RESCAN_COMICS_FEATURE_KEY
@@ -100,6 +99,7 @@ import {
 import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects';
 import { EditMultipleComicsComponent } from './components/edit-multiple-comics/edit-multiple-comics.component';
 import { LibraryEffects } from '@app/library/effects/library.effects';
+import { ComicBookListComponent } from './components/comic-book-list/comic-book-list.component';
 
 @NgModule({
   declarations: [
@@ -108,14 +108,14 @@ import { LibraryEffects } from '@app/library/effects/library.effects';
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
     ScrapingPageComponent,
-    ComicCoversComponent,
+    ComicBookCoversComponent,
     ArchiveTypePipe,
     UnreadComicsPipe,
     DuplicatePageListPageComponent,
     ComicsWithDuplicatePageComponent,
     DuplicatePageDetailPageComponent,
-    ComicListViewComponent,
-    EditMultipleComicsComponent
+    EditMultipleComicsComponent,
+    ComicBookListComponent
   ],
   providers: [],
   imports: [
@@ -177,12 +177,6 @@ import { LibraryEffects } from '@app/library/effects/library.effects';
     MatProgressBarModule,
     MatDividerModule
   ],
-  exports: [
-    CommonModule,
-    CoreModule,
-    ComicCoversComponent,
-    ComicListViewComponent,
-    ArchiveTypePipe
-  ]
+  exports: [CommonModule, CoreModule, ComicBookCoversComponent, ArchiveTypePipe]
 })
 export class LibraryModule {}

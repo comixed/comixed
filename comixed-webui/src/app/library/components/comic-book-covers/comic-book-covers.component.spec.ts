@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ComicCoversComponent } from './comic-covers.component';
+import { ComicBookCoversComponent } from './comic-book-covers.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -78,13 +78,19 @@ import {
 import { FileDownloadService } from '@app/core/services/file-download.service';
 import { of } from 'rxjs';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { ComicBookListComponent } from '@app/library/components/comic-book-list/comic-book-list.component';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
 
-describe('ComicCoversComponent', () => {
+describe('ComicBookCoversComponent', () => {
   const PAGINATION = 25;
   const PAGE_INDEX = 23;
-  const COMIC = COMIC_BOOK_2;
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
-  const COMIC_DETAILS: EditMultipleComics = {
+  const COMIC_BOOK = COMIC_BOOK_2;
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
+  const COMIC_BOOK_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
     volume: '1234',
@@ -94,11 +100,12 @@ describe('ComicCoversComponent', () => {
   const READING_LIST = READING_LIST_1;
   const LAST_READ_DATES = [LAST_READ_1, LAST_READ_3, LAST_READ_5];
   const initialState = {
-    [LIBRARY_FEATURE_KEY]: initialLibraryState
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_READER }
   };
 
-  let component: ComicCoversComponent;
-  let fixture: ComponentFixture<ComicCoversComponent>;
+  let component: ComicBookCoversComponent;
+  let fixture: ComponentFixture<ComicBookCoversComponent>;
   let store: MockStore<any>;
   let dialog: MatDialog;
   let translateService: TranslateService;
@@ -109,7 +116,11 @@ describe('ComicCoversComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComicCoversComponent, LibraryToolbarComponent],
+        declarations: [
+          ComicBookCoversComponent,
+          ComicBookListComponent,
+          LibraryToolbarComponent
+        ],
         imports: [
           NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -137,7 +148,7 @@ describe('ComicCoversComponent', () => {
         ]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicCoversComponent);
+      fixture = TestBed.createComponent(ComicBookCoversComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
@@ -157,11 +168,11 @@ describe('ComicCoversComponent', () => {
   describe('loading comics to display', () => {
     beforeEach(() => {
       component.dataSource.data = [];
-      component.comics = COMICS;
+      component.comics = COMIC_BOOKS;
     });
 
     it('loads the comics to display', () => {
-      expect(component.comics).toEqual(COMICS);
+      expect(component.comics).toEqual(COMIC_BOOKS);
     });
   });
 
@@ -182,24 +193,24 @@ describe('ComicCoversComponent', () => {
   describe('when a comic select event is received', () => {
     describe('selecting a comic', () => {
       beforeEach(() => {
-        component.onSelectionChanged(COMIC, true);
+        component.onSelectionChanged(COMIC_BOOK, true);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          selectComics({ comicBooks: [COMIC] })
+          selectComics({ comicBooks: [COMIC_BOOK] })
         );
       });
     });
 
     describe('deselecting a comic', () => {
       beforeEach(() => {
-        component.onSelectionChanged(COMIC, false);
+        component.onSelectionChanged(COMIC_BOOK, false);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComics({ comicBooks: [COMIC] })
+          deselectComics({ comicBooks: [COMIC_BOOK] })
         );
       });
     });
@@ -212,11 +223,11 @@ describe('ComicCoversComponent', () => {
     beforeEach(() => {
       component.comic = null;
       spyOn(component.contextMenu, 'openMenu');
-      component.onShowContextMenu(COMIC, XPOS, YPOS);
+      component.onShowContextMenu(COMIC_BOOK, XPOS, YPOS);
     });
 
     it('sets the current comic', () => {
-      expect(component.comic).toEqual(COMIC);
+      expect(component.comic).toEqual(COMIC_BOOK);
     });
 
     it('set the context menu x position', () => {
@@ -235,12 +246,12 @@ describe('ComicCoversComponent', () => {
   describe('showing the comic details dialog', () => {
     beforeEach(() => {
       spyOn(dialog, 'open');
-      component.onShowComicDetails(COMIC);
+      component.onShowComicDetails(COMIC_BOOK);
     });
 
     it('opens the comic details dialog', () => {
       expect(dialog.open).toHaveBeenCalledWith(ComicDetailsDialogComponent, {
-        data: COMIC
+        data: COMIC_BOOK
       });
     });
   });
@@ -250,25 +261,25 @@ describe('ComicCoversComponent', () => {
 
     describe('for one comic', () => {
       beforeEach(() => {
-        component.onMarkOneComicRead(COMIC, READ);
+        component.onMarkOneComicRead(COMIC_BOOK, READ);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC], read: READ })
+          setComicBooksRead({ comicBooks: [COMIC_BOOK], read: READ })
         );
       });
     });
 
     describe('for selected comic', () => {
       beforeEach(() => {
-        component.selected = COMICS;
+        component.selected = COMIC_BOOKS;
         component.onMarkMultipleComicsRead(READ);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: COMICS, read: READ })
+          setComicBooksRead({ comicBooks: COMIC_BOOKS, read: READ })
         );
       });
     });
@@ -277,25 +288,34 @@ describe('ComicCoversComponent', () => {
   describe('checking if a comic is changed', () => {
     it('returns false when ADDED', () => {
       expect(
-        component.isChanged({ ...COMIC, comicState: ComicBookState.ADDED })
+        component.isChanged({ ...COMIC_BOOK, comicState: ComicBookState.ADDED })
       ).toBeFalse();
     });
 
     it('returns true when CHANGED', () => {
       expect(
-        component.isChanged({ ...COMIC, comicState: ComicBookState.CHANGED })
+        component.isChanged({
+          ...COMIC_BOOK,
+          comicState: ComicBookState.CHANGED
+        })
       ).toBeTrue();
     });
 
     it('returns true when STABLE', () => {
       expect(
-        component.isChanged({ ...COMIC, comicState: ComicBookState.STABLE })
+        component.isChanged({
+          ...COMIC_BOOK,
+          comicState: ComicBookState.STABLE
+        })
       ).toBeFalse();
     });
 
     it('returns true when DELETED', () => {
       expect(
-        component.isChanged({ ...COMIC, comicState: ComicBookState.DELETED })
+        component.isChanged({
+          ...COMIC_BOOK,
+          comicState: ComicBookState.DELETED
+        })
       ).toBeFalse();
     });
   });
@@ -305,7 +325,7 @@ describe('ComicCoversComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onUpdateMetadata(COMIC);
+      component.onUpdateMetadata(COMIC_BOOK);
     });
 
     it('confirms with the user', () => {
@@ -314,7 +334,7 @@ describe('ComicCoversComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ comicBooks: [COMIC] })
+        updateMetadata({ comicBooks: [COMIC_BOOK] })
       );
     });
   });
@@ -336,7 +356,7 @@ describe('ComicCoversComponent', () => {
 
   describe('marking comics for deletion', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -344,7 +364,7 @@ describe('ComicCoversComponent', () => {
 
     describe('for a single comic', () => {
       beforeEach(() => {
-        component.onMarkAsDeleted(COMICS[0], true);
+        component.onMarkAsDeleted(COMIC_BOOKS[0], true);
       });
 
       it('confirms with the user', () => {
@@ -353,7 +373,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: [COMICS[0]], deleted: true })
+          markComicsDeleted({ comicBooks: [COMIC_BOOKS[0]], deleted: true })
         );
       });
     });
@@ -369,7 +389,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: COMICS, deleted: true })
+          markComicsDeleted({ comicBooks: COMIC_BOOKS, deleted: true })
         );
       });
     });
@@ -377,7 +397,7 @@ describe('ComicCoversComponent', () => {
 
   describe('unmarking comics for deletion', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -385,7 +405,7 @@ describe('ComicCoversComponent', () => {
 
     describe('for a single comic', () => {
       beforeEach(() => {
-        component.onMarkAsDeleted(COMICS[0], false);
+        component.onMarkAsDeleted(COMIC_BOOKS[0], false);
       });
 
       it('confirms with the user', () => {
@@ -394,7 +414,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: [COMICS[0]], deleted: false })
+          markComicsDeleted({ comicBooks: [COMIC_BOOKS[0]], deleted: false })
         );
       });
     });
@@ -410,7 +430,7 @@ describe('ComicCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: COMICS, deleted: false })
+          markComicsDeleted({ comicBooks: COMIC_BOOKS, deleted: false })
         );
       });
     });
@@ -418,7 +438,7 @@ describe('ComicCoversComponent', () => {
 
   describe('adding comics to a reading list', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -431,7 +451,7 @@ describe('ComicCoversComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        addComicsToReadingList({ list: READING_LIST, comics: COMICS })
+        addComicsToReadingList({ list: READING_LIST, comics: COMIC_BOOKS })
       );
     });
   });
@@ -441,7 +461,7 @@ describe('ComicCoversComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onConvertOne(COMIC, 'CBZ');
+      component.onConvertOne(COMIC_BOOK, 'CBZ');
     });
 
     it('confirms with the user', () => {
@@ -451,7 +471,7 @@ describe('ComicCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         convertComics({
-          comicBooks: [COMIC],
+          comicBooks: [COMIC_BOOK],
           archiveType: archiveTypeFromString('CBZ'),
           renamePages: true,
           deletePages: true
@@ -465,7 +485,7 @@ describe('ComicCoversComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       component.onConvertSelected('CB7');
     });
 
@@ -476,7 +496,7 @@ describe('ComicCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         convertComics({
-          comicBooks: COMICS,
+          comicBooks: COMIC_BOOKS,
           archiveType: archiveTypeFromString('CB7'),
           renamePages: true,
           deletePages: true
@@ -505,12 +525,12 @@ describe('ComicCoversComponent', () => {
 
   describe('sorting comics', () => {
     const LEFT = {
-      ...COMIC,
+      ...COMIC_BOOK,
       coverDate: new Date().getTime(),
       addedDate: new Date().getTime() - 24 * 60 * 60 * 1000
     };
     const RIGHT = {
-      ...COMIC,
+      ...COMIC_BOOK,
       coverDate: new Date().getTime() - 24 * 60 * 60 * 1000,
       addedDate: new Date().getTime()
     };
@@ -563,7 +583,7 @@ describe('ComicCoversComponent', () => {
   describe('downloading comic metadata', () => {
     beforeEach(() => {
       spyOn(fileDownloadService, 'saveFileContent');
-      component.downloadComicData(COMICS);
+      component.downloadComicData(COMIC_BOOKS);
     });
 
     it('downloads the file detail', () => {
@@ -574,13 +594,19 @@ describe('ComicCoversComponent', () => {
   describe('checking if a comic is deleted', () => {
     it('returns true when the comic is in the deleted state', () => {
       expect(
-        component.isDeleted({ ...COMIC, comicState: ComicBookState.DELETED })
+        component.isDeleted({
+          ...COMIC_BOOK,
+          comicState: ComicBookState.DELETED
+        })
       ).toBeTrue();
     });
 
     it('returns false when the comic is not in the deleted state', () => {
       expect(
-        component.isDeleted({ ...COMIC, comicState: ComicBookState.CHANGED })
+        component.isDeleted({
+          ...COMIC_BOOK,
+          comicState: ComicBookState.CHANGED
+        })
       ).toBeFalse();
     });
   });
@@ -591,9 +617,9 @@ describe('ComicCoversComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       const dialogRef = jasmine.createSpyObj(['afterClosed']);
-      dialogRef.afterClosed.and.returnValue(of(COMIC_DETAILS));
+      dialogRef.afterClosed.and.returnValue(of(COMIC_BOOK_DETAILS));
       spyOn(dialog, 'open').and.returnValue(dialogRef);
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       component.onEditMultipleComics();
     });
 
@@ -603,7 +629,10 @@ describe('ComicCoversComponent', () => {
 
     it('fires an action to edit multiple comics', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        editMultipleComics({ comicBooks: COMICS, details: COMIC_DETAILS })
+        editMultipleComics({
+          comicBooks: COMIC_BOOKS,
+          details: COMIC_BOOK_DETAILS
+        })
       );
     });
   });
@@ -616,7 +645,7 @@ describe('ComicCoversComponent', () => {
       const dialogRef = jasmine.createSpyObj(['afterClosed']);
       dialogRef.afterClosed.and.returnValue(of(null));
       spyOn(dialog, 'open').and.returnValue(dialogRef);
-      component.selected = COMICS;
+      component.selected = COMIC_BOOKS;
       component.onEditMultipleComics();
     });
 

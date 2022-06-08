@@ -27,7 +27,7 @@ import {
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComicCoversComponent } from '@app/library/components/comic-covers/comic-covers.component';
+import { ComicBookCoversComponent } from '@app/library/components/comic-book-covers/comic-book-covers.component';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
@@ -114,7 +114,7 @@ describe('CollectionDetailComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           CollectionDetailComponent,
-          ComicCoversComponent,
+          ComicBookCoversComponent,
           LibraryToolbarComponent,
           ArchiveTypePipe,
           CoverDateFilterPipe

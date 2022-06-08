@@ -69,13 +69,15 @@ import {
 import { StoryListEffects } from '@app/lists/effects/story-list.effects';
 import { StoryNameListPageComponent } from './pages/story-name-list-page/story-name-list-page.component';
 import { StoryListForNamePageComponent } from './pages/story-list-for-name-page/story-list-for-name-page.component';
+import { ComicListViewComponent } from '@app/lists/components/comic-list-view/comic-list-view.component';
 
 @NgModule({
   declarations: [
     ReadingListsPageComponent,
     ReadingListPageComponent,
     StoryNameListPageComponent,
-    StoryListForNamePageComponent
+    StoryListForNamePageComponent,
+    ComicListViewComponent
   ],
   imports: [
     CommonModule,

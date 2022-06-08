@@ -38,6 +38,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   PAGE_SIZE_PREFERENCE,
+  SHOW_COMIC_COVERS,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { MatSelectModule } from '@angular/material/select';
@@ -53,13 +54,20 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { setComicBookListFilter } from '@app/comic-books/actions/comic-book-list.actions';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
 
 describe('LibraryToolbarComponent', () => {
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
   const PAGE_INDEX = 2;
   const NOW = new Date();
-  const initialState = {};
+  const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_READER }
+  };
 
   let component: LibraryToolbarComponent;
   let fixture: ComponentFixture<LibraryToolbarComponent>;
@@ -319,6 +327,21 @@ describe('LibraryToolbarComponent', () => {
           year: NOW.getFullYear(),
           month: NOW.getMonth()
         })
+      );
+    });
+  });
+
+  describe('toggling show cover mode', () => {
+    const SHOW_COVERS = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.showCovers = !SHOW_COVERS;
+      component.onToggleShowCoverMode();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({ name: SHOW_COMIC_COVERS, value: `${SHOW_COVERS}` })
       );
     });
   });
