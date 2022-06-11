@@ -28,7 +28,6 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.encoders.WebResponseEncoder;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -69,7 +68,6 @@ public class OPDSComicBookController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/comics/{id}/content/{filename}")
-  @AuditableRestEndpoint
   @ResponseBody
   public ResponseEntity<InputStreamResource> downloadComic(
       final Principal principal,
@@ -102,7 +100,6 @@ public class OPDSComicBookController {
    * @throws OPDSException if an error occurs loading the page data
    */
   @GetMapping(value = "/opds/comics/{id}/pages/{index}/{maxWidth}")
-  @AuditableRestEndpoint
   public ResponseEntity<byte[]> getPageByComicAndIndexWithMaxWidth(
       @PathVariable("id") long id,
       @PathVariable("index") int index,

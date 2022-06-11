@@ -18,20 +18,14 @@
 
 package org.comixedproject.opds.rest;
 
-import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.rest.OPDSLibraryController.*;
-
 import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
-import org.comixedproject.opds.model.OPDSLink;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
-import org.comixedproject.opds.model.OPDSNavigationFeedEntry;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.opds.service.OPDSAcquisitionService;
+import org.comixedproject.opds.service.OPDSNavigationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,7 +40,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class OPDSPublisherController {
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private OPDSNavigationService opdsNavigationService;
+  @Autowired private OPDSAcquisitionService opdsAcquisitionService;
   @Autowired private OPDSUtils opdsUtils;
 
   /**
@@ -59,7 +54,6 @@ public class OPDSPublisherController {
   @GetMapping(
       value = "/opds/collections/publishers/{publisher}",
       produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   OPDSNavigationFeed getSeriesFeedForPublisher(
@@ -67,29 +61,7 @@ public class OPDSPublisherController {
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     final String publisherName = this.opdsUtils.urlDecodeString(publisher);
     log.info("Getting all series for publisher: {}", publisherName);
-    OPDSNavigationFeed result =
-        new OPDSNavigationFeed(
-            String.format("Publisher: %s", publisherName), String.valueOf(PUBLISHERS_ID));
-    this.comicBookService.getAllSeriesForPublisher(publisherName).stream()
-        .forEach(
-            series -> {
-              final OPDSNavigationFeedEntry feedEntry =
-                  new OPDSNavigationFeedEntry(
-                      series, String.valueOf(this.opdsUtils.createIdForEntry("SERIES", series)));
-              feedEntry
-                  .getLinks()
-                  .add(
-                      new OPDSLink(
-                          ACQUISITION_FEED_LINK_TYPE,
-                          SUBSECTION,
-                          String.format(
-                              "/opds/collections/publishers/%s/series/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(publisherName),
-                              this.opdsUtils.urlEncodeString(series),
-                              String.valueOf(unread))));
-              result.getEntries().add(feedEntry);
-            });
-    return result;
+    return this.opdsNavigationService.getSeriesFeedForPublisher(publisherName, unread);
   }
 
   /**
@@ -103,7 +75,6 @@ public class OPDSPublisherController {
   @GetMapping(
       value = "/opds/collections/publishers/{publisher}/series/{series}",
       produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
@@ -113,31 +84,8 @@ public class OPDSPublisherController {
     final String publisherName = this.opdsUtils.urlDecodeString(publisher);
     final String seriesName = this.opdsUtils.urlDecodeString(series);
     log.info("Getting all volumes for series: {} {}", publisherName, seriesName);
-    OPDSNavigationFeed result =
-        new OPDSNavigationFeed(String.format("Series: %s", seriesName), String.valueOf(SERIES_ID));
-    this.comicBookService.getAllVolumesForPublisherAndSeries(publisherName, seriesName).stream()
-        .forEach(
-            volume -> {
-              final OPDSNavigationFeedEntry feedEntry =
-                  new OPDSNavigationFeedEntry(
-                      String.format("v%s", volume),
-                      String.valueOf(
-                          this.opdsUtils.createIdForEntry("SERIES:VOLUME", series + ":" + volume)));
-              feedEntry
-                  .getLinks()
-                  .add(
-                      new OPDSLink(
-                          ACQUISITION_FEED_LINK_TYPE,
-                          SUBSECTION,
-                          String.format(
-                              "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(publisherName),
-                              this.opdsUtils.urlEncodeString(series),
-                              this.opdsUtils.urlEncodeString(volume),
-                              String.valueOf(unread))));
-              result.getEntries().add(feedEntry);
-            });
-    return result;
+    return this.opdsNavigationService.getVolumeFeedForPublisherAndSeries(
+        publisherName, seriesName, unread);
   }
 
   /**
@@ -153,7 +101,6 @@ public class OPDSPublisherController {
   @GetMapping(
       value = "/opds/collections/publishers/{publisher}/series/{series}/volumes/{volume}",
       produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   OPDSAcquisitionFeed getComicFeedsForPublisherAndSeriesAndVolume(
@@ -172,33 +119,7 @@ public class OPDSPublisherController {
         publisherName,
         seriesName,
         volumeName);
-    OPDSAcquisitionFeed result =
-        new OPDSAcquisitionFeed(
-            String.format("%s: %s v%s", publisherName, seriesName, volumeName),
-            String.valueOf(
-                this.opdsUtils.createIdForEntry(
-                    "PUBLISHER:SERIES:VOLUME",
-                    publisherName + ":" + seriesName + ":" + volumeName)));
-    this.comicBookService
-        .getAllComicBooksForPublisherAndSeriesAndVolume(
-            publisherName, seriesName, volumeName, email, unread)
-        .forEach(
-            comicBook -> {
-              log.trace("Adding comic book to feed");
-              result.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
-            });
-    result
-        .getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format(
-                    "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
-                    this.opdsUtils.urlEncodeString(publisherName),
-                    this.opdsUtils.urlEncodeString(seriesName),
-                    this.opdsUtils.urlEncodeString(volumeName),
-                    String.valueOf(unread))));
-    return result;
+    return this.opdsAcquisitionService.getComicFeedsForPublisherAndSeriesAndVolume(
+        publisherName, seriesName, volumeName, email, unread);
   }
 }
