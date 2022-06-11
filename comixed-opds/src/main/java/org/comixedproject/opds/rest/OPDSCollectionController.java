@@ -18,22 +18,15 @@
 
 package org.comixedproject.opds.rest;
 
-import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.rest.OPDSLibraryController.*;
+import static org.comixedproject.opds.service.OPDSNavigationService.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang.StringUtils;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.*;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.opds.service.OPDSAcquisitionService;
+import org.comixedproject.opds.service.OPDSNavigationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,141 +40,25 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log4j2
 public class OPDSCollectionController {
-  public static final String UNNAMED = "UNNAMED";
-
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private OPDSNavigationService opdsNavigationService;
+  @Autowired private OPDSAcquisitionService opdsAcquisitionService;
   @Autowired private OPDSUtils opdsUtils;
 
   /**
    * Retrieves the root feed for a collection.
    *
    * @param collectionType the collection type
+   * @param unread the unread flag
    * @return the feed
-   * @throws OPDSException if the collection type is unknown
    */
   @GetMapping(value = "/opds/collections/{type}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
       @NonNull @PathVariable("type") final CollectionType collectionType,
-      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
-      throws OPDSException {
-    log.info("Fetching the feed root for a collection: {}", collectionType);
-    switch (collectionType) {
-      case publishers:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Publishers", String.valueOf(PUBLISHERS_ID)),
-            PUBLISHERS_ID,
-            this.comicBookService.getAllPublishers().stream()
-                .map(
-                    publisher ->
-                        new CollectionFeedEntry(
-                            publisher, this.opdsUtils.createIdForEntry("PUBLISHER", publisher)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-      case series:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Series", String.valueOf(SERIES_ID)),
-            SERIES_ID,
-            this.comicBookService.getAllSeries().stream()
-                .map(
-                    series ->
-                        new CollectionFeedEntry(
-                            series, this.opdsUtils.createIdForEntry("SERIES", series)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-      case characters:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Characters", String.valueOf(CHARACTERS_ID)),
-            CHARACTERS_ID,
-            this.comicBookService.getAllCharacters().stream()
-                .map(
-                    character ->
-                        new CollectionFeedEntry(
-                            character, this.opdsUtils.createIdForEntry("CHARACTER", character)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-      case teams:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Teams", String.valueOf(TEAMS_ID)),
-            TEAMS_ID,
-            this.comicBookService.getAllTeams().stream()
-                .map(
-                    team ->
-                        new CollectionFeedEntry(
-                            team, this.opdsUtils.createIdForEntry("TEAM", team)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-      case locations:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Locations", String.valueOf(LOCATIONS_ID)),
-            LOCATIONS_ID,
-            this.comicBookService.getAllLocations().stream()
-                .map(
-                    location ->
-                        new CollectionFeedEntry(
-                            location, this.opdsUtils.createIdForEntry("LOCATION", location)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-      case stories:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Stories", String.valueOf(STORIES_ID)),
-            STORIES_ID,
-            this.comicBookService.getAllStories().stream()
-                .map(
-                    story ->
-                        new CollectionFeedEntry(
-                            story, this.opdsUtils.createIdForEntry("STORY", story)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-    }
-    throw new OPDSException("Failed to process collection: " + collectionType);
-  }
-
-  private OPDSNavigationFeed createCollectionFeed(
-      final CollectionType collectionType,
-      final OPDSNavigationFeed feed,
-      final long entryOffset,
-      final List<CollectionFeedEntry> entries,
-      final boolean unread) {
-    entries.forEach(
-        entry -> {
-          String name = entry.getName();
-          final Long id = entry.getId();
-          if (StringUtils.isEmpty(name)) {
-            name = UNNAMED;
-          }
-          log.trace("Adding {} link: id={} name={}", collectionType, id, name);
-          final OPDSNavigationFeedEntry feedEntry =
-              new OPDSNavigationFeedEntry(name, String.valueOf(entryOffset + id));
-          feedEntry
-              .getLinks()
-              .add(
-                  new OPDSLink(
-                      ACQUISITION_FEED_LINK_TYPE,
-                      SUBSECTION,
-                      String.format(
-                          "/opds/collections/%s/%s/?unread=%s",
-                          collectionType,
-                          this.opdsUtils.urlEncodeString(name),
-                          String.valueOf(unread))));
-          feed.getEntries().add(feedEntry);
-        });
-    feed.getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format(
-                    "/opds/collections/%s/?unread=%s", feed.getTitle(), String.valueOf(unread))));
-    return feed;
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
+    log.info("Loading OPDS navigation feed for collection: {} unread={}", collectionType, unread);
+    return this.opdsNavigationService.getCollectionFeed(collectionType, unread);
   }
 
   /**
@@ -189,66 +66,25 @@ public class OPDSCollectionController {
    *
    * @param collectionType the collection type
    * @param name the collection name
+   * @param unread the unread flag
    * @return the feed
-   * @throws OPDSException if the collection type is unknown
    */
   @GetMapping(value = "/opds/collections/{type}/{name}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
-  @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(
       final Principal principal,
       @PathVariable("type") final CollectionType collectionType,
       @PathVariable("name") final String name,
-      @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
-      throws OPDSException {
-    final String nameValue = this.opdsUtils.urlDecodeString(name);
-    log.info("Fetching the feed root for publisher: {}", nameValue);
+      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
+    final String collectionName = this.opdsUtils.urlDecodeString(name);
     final String email = principal.getName();
-    switch (collectionType) {
-      case series:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Series: %s", nameValue), String.valueOf(SERIES_ID)),
-            this.comicBookService.getAllForSeries(nameValue, email, unread));
-      case characters:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Character: %s", nameValue), String.valueOf(CHARACTERS_ID)),
-            this.comicBookService.getAllForCharacter(nameValue, email, unread));
-      case teams:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(String.format("Team: %s", nameValue), String.valueOf(TEAMS_ID)),
-            this.comicBookService.getAllForTeam(nameValue, email, unread));
-      case locations:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Location: %s", nameValue), String.valueOf(LOCATIONS_ID)),
-            this.comicBookService.getAllForLocation(nameValue, email, unread));
-      case stories:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Story: %s", nameValue), String.valueOf(STORIES_ID)),
-            this.comicBookService.getAllForStory(nameValue, email, unread));
-    }
-    throw new OPDSException("Failed to process collection entries: " + collectionType);
-  }
-
-  private OPDSAcquisitionFeed createCollectionEntriesFeed(
-      final OPDSAcquisitionFeed feed, final List<ComicBook> entries) {
-    entries.forEach(
-        comic -> {
-          log.trace("Adding comic to collection entries: {}", comic.getId());
-          feed.getEntries().add(this.opdsUtils.createComicEntry(comic));
-        });
-    String type = feed.getTitle().split(": ")[0];
-    String name = this.opdsUtils.urlEncodeString(feed.getTitle().split(": ")[1]);
-    feed.getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format("/opds/collections/%s/%s/", type, name)));
-    return feed;
+    log.info(
+        "Loading the OPDS collection entries for {}: {} name={} unread={}",
+        email,
+        collectionType,
+        collectionName,
+        unread);
+    return this.opdsAcquisitionService.getEntriesForCollectionFeed(
+        email, collectionType, collectionName, unread);
   }
 }

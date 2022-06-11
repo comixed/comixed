@@ -18,18 +18,17 @@
 
 package org.comixedproject.opds.rest;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
+import org.comixedproject.opds.service.OPDSNavigationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -39,48 +38,31 @@ public class OPDSLibraryControllerTest {
   private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
 
   @InjectMocks private OPDSLibraryController controller;
-
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  @Mock private OPDSNavigationService opdsNavigationService;
+  @Mock private OPDSNavigationFeed navigationFeed;
 
   @Test
   public void testGetRoot() {
-    OPDSNavigationFeed result = controller.getRootFeed();
+    Mockito.when(opdsNavigationService.getRootFeed()).thenReturn(navigationFeed);
 
-    assertNotNull(result);
-    assertNotNull(result.getAuthor());
-    assertNotNull(result.getTitle());
-    assertNotNull(result.getId());
-    assertEquals("/opds/library/", result.getEntries().get(0).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/library/?unread=true", result.getEntries().get(1).getLinks().get(0).getReference());
+    final OPDSNavigationFeed response = controller.getRootFeed();
+
+    assertNotNull(response);
+    assertSame(navigationFeed, response);
+
+    Mockito.verify(opdsNavigationService, Mockito.times(1)).getRootFeed();
   }
 
   @Test
   public void testGetLibraryFeed() {
-    OPDSNavigationFeed result = controller.getLibraryFeed(TEST_UNREAD);
+    Mockito.when(opdsNavigationService.getLibraryFeed(Mockito.anyBoolean()))
+        .thenReturn(navigationFeed);
 
-    assertNotNull(result);
-    assertFalse(result.getEntries().isEmpty());
-    assertEquals(
-        "/opds/dates/released/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(0).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/collections/publishers/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(1).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/collections/series/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(2).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/collections/characters/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(3).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/collections/teams/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(4).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/collections/locations/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(5).getLinks().get(0).getReference());
-    assertEquals(
-        "/opds/collections/stories/?unread=" + String.valueOf(TEST_UNREAD),
-        result.getEntries().get(6).getLinks().get(0).getReference());
+    final OPDSNavigationFeed response = controller.getLibraryFeed(TEST_UNREAD);
+
+    assertNotNull(response);
+    assertSame(navigationFeed, response);
+
+    Mockito.verify(opdsNavigationService, Mockito.times(1)).getLibraryFeed(TEST_UNREAD);
   }
 }

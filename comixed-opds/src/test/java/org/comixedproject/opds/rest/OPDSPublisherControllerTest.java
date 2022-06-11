@@ -30,7 +30,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.opds.service.OPDSAcquisitionService;
+import org.comixedproject.opds.service.OPDSNavigationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class OPDSPublisherControllerTest {
   private static final String TEST_PUBLISHER_ENCODED = "The+Publisher";
   private static final String TEST_PUBLISHER = "The Publisher";
-  private static final boolean TEST_READ = RandomUtils.nextBoolean();
+  private static final boolean TEST_UNREAD = RandomUtils.nextBoolean();
   private static final String TEST_SERIES_ENCODED = "The+Series+Name";
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME_ENCODED = "The+Volume";
@@ -51,7 +52,10 @@ public class OPDSPublisherControllerTest {
   private static final String TEST_EMAIL = "reader@comixedproject.org";
 
   @InjectMocks private OPDSPublisherController controller;
-  @Mock private ComicBookService comicBookService;
+  @Mock private OPDSNavigationService opdsNavigationService;
+  @Mock private OPDSAcquisitionService opdsAcquisitionService;
+  @Mock private OPDSNavigationFeed navigationFeed;
+  @Mock private OPDSAcquisitionFeed acquisitionFeed;
   @Mock private OPDSUtils opdsUtils;
   @Mock private ComicBook comicBook;
   @Mock private Principal principal;
@@ -75,55 +79,63 @@ public class OPDSPublisherControllerTest {
 
   @Test
   public void testGetSeriesFeedForPublisher() {
-    Mockito.when(comicBookService.getAllSeriesForPublisher(Mockito.anyString()))
-        .thenReturn(seriesList);
+    Mockito.when(
+            opdsNavigationService.getSeriesFeedForPublisher(
+                Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed result =
-        controller.getSeriesFeedForPublisher(TEST_PUBLISHER_ENCODED, TEST_READ);
+        controller.getSeriesFeedForPublisher(TEST_PUBLISHER_ENCODED, TEST_UNREAD);
 
     assertNotNull(result);
-    assertTrue(result.getEntries().get(0).getTitle().contains(TEST_SERIES));
+    assertSame(navigationFeed, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllSeriesForPublisher(TEST_PUBLISHER);
+    Mockito.verify(opdsNavigationService, Mockito.times(1))
+        .getSeriesFeedForPublisher(TEST_PUBLISHER, TEST_UNREAD);
   }
 
   @Test
   public void testGetVolumeFeedForPublisherAndSeries() {
     Mockito.when(
-            comicBookService.getAllVolumesForPublisherAndSeries(
-                Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(volumeList);
+            opdsNavigationService.getVolumeFeedForPublisherAndSeries(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+        .thenReturn(navigationFeed);
 
-    final OPDSNavigationFeed result =
+    final OPDSNavigationFeed response =
         controller.getVolumeFeedForPublisherAndSeries(
-            TEST_PUBLISHER_ENCODED, TEST_SERIES_ENCODED, TEST_READ);
+            TEST_PUBLISHER_ENCODED, TEST_SERIES_ENCODED, TEST_UNREAD);
 
-    assertNotNull(result);
-    assertTrue(result.getEntries().get(0).getTitle().contains(TEST_VOLUME));
+    assertNotNull(response);
+    assertSame(navigationFeed, response);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES);
+    Mockito.verify(opdsNavigationService, Mockito.times(1))
+        .getVolumeFeedForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_UNREAD);
   }
 
   @Test
   public void testGetComicFeedForPublisherAndSeriesAndVolume() {
     Mockito.when(
-            comicBookService.getAllComicBooksForPublisherAndSeriesAndVolume(
+            opdsAcquisitionService.getComicFeedsForPublisherAndSeriesAndVolume(
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyString(),
                 Mockito.anyBoolean()))
-        .thenReturn(comicBookList);
+        .thenReturn(acquisitionFeed);
 
     final OPDSAcquisitionFeed result =
         controller.getComicFeedsForPublisherAndSeriesAndVolume(
-            principal, TEST_READ, TEST_PUBLISHER_ENCODED, TEST_SERIES_ENCODED, TEST_VOLUME_ENCODED);
+            principal,
+            TEST_UNREAD,
+            TEST_PUBLISHER_ENCODED,
+            TEST_SERIES_ENCODED,
+            TEST_VOLUME_ENCODED);
 
     assertNotNull(result);
+    assertSame(acquisitionFeed, result);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getAllComicBooksForPublisherAndSeriesAndVolume(
-            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, TEST_READ);
+    Mockito.verify(opdsAcquisitionService, Mockito.times(1))
+        .getComicFeedsForPublisherAndSeriesAndVolume(
+            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
   }
 }

@@ -18,20 +18,15 @@
 
 package org.comixedproject.opds.rest;
 
-import static org.comixedproject.opds.model.OPDSAcquisitionFeed.ACQUISITION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.rest.OPDSLibraryController.SELF;
-import static org.comixedproject.opds.rest.OPDSLibraryController.SUBSECTION;
+import static org.comixedproject.opds.service.OPDSNavigationService.*;
 
 import java.security.Principal;
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
-import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.*;
-import org.comixedproject.service.lists.ReadingListException;
+import org.comixedproject.opds.service.OPDSAcquisitionService;
+import org.comixedproject.opds.service.OPDSNavigationService;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -49,9 +44,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class OPDSListsController {
-  private static final String READING_LISTS_ID = "20";
-  public static final long READING_LIST_FACTOR_ID = 1000000L;
-
+  @Autowired private OPDSNavigationService opdsNavigationService;
+  @Autowired private OPDSAcquisitionService opdsAcquisitionService;
   @Autowired private ReadingListService readingListService;
   @Autowired private OPDSUtils opdsUtils;
 
@@ -63,40 +57,12 @@ public class OPDSListsController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/lists", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSNavigationFeed loadReadingLists(final Principal principal) throws OPDSException {
     final String email = principal.getName();
     log.info("Getting reading lists for user: {}", email);
-    final List<ReadingList> lists;
-    try {
-      lists = this.readingListService.loadReadingListsForUser(email);
-      final OPDSNavigationFeed response = new OPDSNavigationFeed("Reading lists", READING_LISTS_ID);
-      response.getLinks().add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, "/opds/lists/"));
-      lists.forEach(
-          readingList -> {
-            log.trace("Adding reading list: {}", readingList.getName());
-            final OPDSNavigationFeedEntry entry =
-                new OPDSNavigationFeedEntry(
-                    String.format(
-                        "%s (%d comics)",
-                        readingList.getName(), readingList.getComicBooks().size()),
-                    String.valueOf(READING_LIST_FACTOR_ID + readingList.getId()));
-            entry.setContent(new OPDSNavigationFeedContent(readingList.getSummary()));
-            entry
-                .getLinks()
-                .add(
-                    new OPDSLink(
-                        ACQUISITION_FEED_LINK_TYPE,
-                        SUBSECTION,
-                        String.format("/opds/lists/%d/", readingList.getId())));
-            response.getEntries().add(entry);
-          });
-      return response;
-    } catch (ReadingListException error) {
-      throw new OPDSException("Failed to load reading lists for user", error);
-    }
+    return this.opdsNavigationService.getReadingListsFeed(email);
   }
 
   /**
@@ -108,33 +74,12 @@ public class OPDSListsController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/lists/{id}", produces = MediaType.APPLICATION_XML_VALUE)
-  @AuditableRestEndpoint(logResponse = true)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
   public OPDSAcquisitionFeed loadReadingListEntries(
       final Principal principal, @PathVariable("id") final Long id) throws OPDSException {
     final String email = principal.getName();
     log.info("Getting reading list for user: {} id={}", email, id);
-    final ReadingList list;
-    try {
-      list = this.readingListService.loadReadingListForUser(email, id);
-      final OPDSAcquisitionFeed response =
-          new OPDSAcquisitionFeed(
-              String.format("Reading List: %s (%d)", list.getName(), list.getComicBooks().size()),
-              String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
-      response
-          .getLinks()
-          .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d/", id)));
-      list.getComicBooks()
-          .forEach(
-              comic -> {
-                log.trace("Adding comic to reading list entries: {}", comic.getId());
-                response.getEntries().add(this.opdsUtils.createComicEntry(comic));
-              });
-
-      return response;
-    } catch (ReadingListException error) {
-      throw new OPDSException("Failed to load reading list entries", error);
-    }
+    return this.opdsAcquisitionService.getComicFeedForReadingList(email, id);
   }
 }
