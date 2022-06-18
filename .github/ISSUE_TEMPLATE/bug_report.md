@@ -16,7 +16,7 @@ of you to give us the details we need to try and fix bugs.
 3. Please fill in **all sections below** with as much detail as is needed to reproduce the bug. Any bug reports missing reproduction details will be closed.
 4. Bugs with questions that go unanswered by the reporter for more than 4 weeks will be automatically closed due to inactivity.
 
----[PLEASE DELETE THIS LINE AND EVERYTHING ABOVE IT]---
+**DELETE THIS SECTION IF YOU HAVE READ AND ACKNOWLEDGED IT**
 
 **Describe The Bug**
 A clear and concise description of what the bug is. Please include as much detail as possible.
