@@ -1,0 +1,22 @@
+# GOAL: Close issues where the reporter was asked for information and did not provide it.
+#       Runs hourly, and on issue events.
+
+name: Close Stale Issue
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  issue_comment:
+    types: [created, edited, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close issues that have gone unanswered for more than 4 weeks
+        uses: dwieeb/needs-reply@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-label: needs-reply
+          days-before-close: 28
+          close-message: "Issue closed due to inactivity. If the reported problem still occurs, please re-open this issue or file a new bug report."

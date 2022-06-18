@@ -14,6 +14,9 @@ of you to give us the details we need to try and fix bugs.
 1. Please **DO NOT** open a bug to ask a question. You'll be directed to the user mailing list and the issue will be closed unanswered. 
 2. If the issue was found in a **pre-release** of ComiXed and not a release, please **do not file a bug**. Instead, send an email to the mailing list. 
 3. Please fill in **all sections below** with as much detail as is needed to reproduce the bug. Any bug reports missing reproduction details will be closed.
+4. Bugs with questions that go unanswered by the reporter for more than 4 weeks will be automatically closed due to inactivity.
+
+---[PLEASE DELETE THIS LINE AND EVERYTHING ABOVE IT]---
 
 **Describe The Bug**
 A clear and concise description of what the bug is. Please include as much detail as possible.

@@ -1,0 +1,26 @@
+# GOAL: Removes the needs-reply label from an issue
+
+name: Remove Needs Reply Label
+
+on:
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.comment.author_association != 'OWNER' &&
+      github.event.comment.author_association != 'COLLABORATOR'
+    steps:
+      - name: Remove needs-reply label
+        uses: octokit/request-action@v2.x
+        continue-on-error: true
+        with:
+          route: DELETE /repos/:repository/issues/:issue/labels/:label
+          repository: ${{ github.repository }}
+          issue: ${{ github.issue.number }}
+          label: needs-reply
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
