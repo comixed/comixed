@@ -124,8 +124,18 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param state the state
    * @return the count
    */
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = :state ORDER BY c.lastModifiedOn")
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = :state")
   int findForStateCount(@Param("state") ComicState state);
+
+  /**
+   * Returns unprocessed comics that have their file loaded flag turned off.
+   *
+   * @param pageable the page request
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.createMetadataSource = true ORDER BY c.lastModifiedOn")
+  List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
 
   /**
    * Returns unprocessed comics that have their file loaded flag turned off.
@@ -143,8 +153,17 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false ORDER BY c.lastModifiedOn")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
   int findUnprocessedComicsWithoutContentCount();
+
+  /**
+   * Returns the number of comics with the create metadata source flag set.
+   *
+   * @return the count
+   */
+  @Query(
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.createMetadataSource = true")
+  int findComicsWithCreateMeatadataSourceFlag();
 
   /**
    * Returns unprocessed comics that have their blocked pages marked flag turned off.
@@ -162,7 +181,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false ORDER BY c.lastModifiedOn")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false")
   int findUnprocessedComicsForMarkedPageBlockingCount();
 
   /**
@@ -200,7 +219,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true ORDER BY c.lastModifiedOn")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
   int findProcessedComicsCount();
 
   /**

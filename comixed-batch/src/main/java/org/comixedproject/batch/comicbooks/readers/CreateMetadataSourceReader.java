@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.batch.comicbooks.readers;
 
+import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.batch.item.ItemWriter;
+import org.comixedproject.service.comicbooks.ComicBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * <code>LoadFileContentsWriter</code> provides an {@link ItemWriter} for instances of {@link
- * ComicBook} that have had their contents loaded.
- *
- * @author Darryl L. Pierce
- */
+/** <code>CreateMetadataSourceReader</code> loads comics that have the */
 @Component
-public class LoadFileContentsWriter extends AbstractComicWriter {
-  public LoadFileContentsWriter() {
-    super(ComicEvent.fileContentsLoaded);
+@Log4j2
+public class CreateMetadataSourceReader extends AbstractComicReader {
+  @Autowired private ComicBookService comicBookService;
+
+  @Override
+  protected List<ComicBook> doLoadComics() {
+    return this.comicBookService.findComicsWithCreateMetadataFlagSet(this.getBatchChunkSize());
   }
 }

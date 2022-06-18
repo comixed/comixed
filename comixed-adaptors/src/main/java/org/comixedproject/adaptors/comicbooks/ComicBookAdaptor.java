@@ -76,18 +76,18 @@ public class ComicBookAdaptor {
   /**
    * Loads the contents of the specified comicBook.
    *
-   * @param comicBook the comicBook
-   * @throws AdaptorException if an error occurs while loading the comicBook file
+   * @param comicBook the comic book
+   * @throws AdaptorException if an error occurs while loading the comic book file
    */
   public void load(final ComicBook comicBook) throws AdaptorException {
     try {
-      log.trace("Getting archive adaptor for comicBook file");
+      log.trace("Getting archive adaptor for comic book file");
       final ArchiveAdaptor archiveAdaptor =
           this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getFilename());
-      log.trace("Opening comicBook file");
+      log.trace("Opening comic book file");
       final ArchiveReadHandle readHandle =
           archiveAdaptor.openArchiveForRead(comicBook.getFilename());
-      log.trace("Loading comicBook file entries");
+      log.trace("Loading comic book file entries");
       final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
       for (int index = 0; index < entries.size(); index++) {
         final ComicArchiveEntry entry = entries.get(index);
@@ -100,18 +100,18 @@ public class ComicBookAdaptor {
           adaptor.loadContent(comicBook, entry.getFilename(), content);
         }
       }
-      log.trace("Closing comicBook file");
+      log.trace("Closing comic book file");
       archiveAdaptor.closeArchiveForRead(readHandle);
     } catch (AdaptorException | ArchiveAdaptorException | ContentAdaptorException error) {
-      throw new AdaptorException("Failed to load comicBook file", error);
+      throw new AdaptorException("Failed to load comic book file", error);
     }
   }
 
   /**
-   * Saves the comicBook using the supplied archive format. Removes deleted pages if the flag is
+   * Saves the comic book using the supplied archive format. Removes deleted pages if the flag is
    * set. Renames pages if the flag is set.
    *
-   * @param comicBook the comicBook
+   * @param comicBook the comic book
    * @param targetArchiveType the target format
    * @param removeDeletedPages remove deleted pages flag
    * @param pageRenamingRule the page renaming rule
@@ -130,11 +130,11 @@ public class ComicBookAdaptor {
           this.fileTypeAdaptor.getArchiveAdaptorFor(targetArchiveType);
 
       if (removeDeletedPages) {
-        log.trace("Removing deleted pages from comicBook");
+        log.trace("Removing deleted pages from comic book");
         comicBook.removeDeletedPages();
       }
 
-      log.trace("Preparing to save comicBook file");
+      log.trace("Preparing to save comic book file");
       final ArchiveReadHandle readHandle =
           sourceArchive.openArchiveForRead(comicBook.getFilename());
 
@@ -150,18 +150,18 @@ public class ComicBookAdaptor {
       destinationArchive.writeEntry(
           writeHandle, "ComicInfo.xml", this.comicMetadataContentAdaptor.createContent(comicBook));
 
-      log.trace("Writing comicBook pages");
+      log.trace("Writing comic book pages");
       final int length = String.valueOf(comicBook.getPages().size()).length();
       for (int index = 0; index < comicBook.getPages().size(); index++) {
         final Page page = comicBook.getPages().get(index);
-        log.trace("Reading comicBook page content: {}", page.getFilename());
+        log.trace("Reading comic book page content: {}", page.getFilename());
         final byte[] content = sourceArchive.readEntry(readHandle, page.getFilename());
         @NonNull String pageFilename = page.getFilename();
         if (StringUtils.isNotEmpty(pageRenamingRule)) {
           pageFilename =
               this.comicPageAdaptor.createFilenameFromRule(page, pageRenamingRule, index, length);
         }
-        log.trace("Writing comicBook page content: {}", pageFilename);
+        log.trace("Writing comic book page content: {}", pageFilename);
         destinationArchive.writeEntry(writeHandle, pageFilename, content);
       }
 
@@ -182,13 +182,13 @@ public class ComicBookAdaptor {
       this.fileAdaptor.moveFile(new File(temporaryFilename), new File(destinationFilename));
       log.trace("Updating filename: {}", destinationFilename);
       comicBook.setFilename(destinationFilename);
-      log.debug("Assigning archive type to comicBook: {}", targetArchiveType);
+      log.debug("Assigning archive type to comic book: {}", targetArchiveType);
       comicBook.setArchiveType(targetArchiveType);
     } catch (AdaptorException
         | ArchiveAdaptorException
         | IOException
         | ContentAdaptorException error) {
-      throw new AdaptorException("Failed to save comicBook file", error);
+      throw new AdaptorException("Failed to save comic book file", error);
     }
   }
 
@@ -203,7 +203,7 @@ public class ComicBookAdaptor {
   public byte[] loadPageContent(final ComicBook comicBook, final int pageNumber)
       throws AdaptorException {
     try {
-      log.trace("Getting archive adaptor for comicBook file");
+      log.trace("Getting archive adaptor for comic book file");
       final ArchiveAdaptor archiveAdaptor =
           this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getFilename());
       log.trace("Opening archive");
@@ -254,5 +254,41 @@ public class ComicBookAdaptor {
     } catch (AdaptorException | ArchiveAdaptorException error) {
       throw new AdaptorException("Failed to load page content", error);
     }
+  }
+
+  /**
+   * Loads the content of a given file, by name.
+   *
+   * @param comicBook the comic book
+   * @param filename the filename
+   * @return the content, or null if the file does not exist
+   * @throws AdaptorException if an error occurs
+   */
+  public byte[] loadFile(final ComicBook comicBook, final String filename) throws AdaptorException {
+    byte[] result = null;
+    try {
+      log.trace("Getting archive adaptor for comic book");
+      final ArchiveAdaptor archiveAdaptor =
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getArchiveType());
+      log.trace("Opening comic book file");
+      final ArchiveReadHandle readHandle =
+          archiveAdaptor.openArchiveForRead(comicBook.getFilename());
+      log.trace("Loading comic book file entries");
+      final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
+      for (int index = 0; index < entries.size(); index++) {
+        final ComicArchiveEntry entry = entries.get(index);
+        log.trace("Loading entry content: {}", entry.getFilename());
+        result = archiveAdaptor.readEntry(readHandle, entry.getFilename());
+        if (entry.getFilename().equals(filename)) {
+          log.trace("File content found");
+          break;
+        }
+      }
+      log.trace("Closing comic book file");
+      archiveAdaptor.closeArchiveForRead(readHandle);
+    } catch (AdaptorException | ArchiveAdaptorException error) {
+      throw new AdaptorException("Failed to load comic book file", error);
+    }
+    return result;
   }
 }

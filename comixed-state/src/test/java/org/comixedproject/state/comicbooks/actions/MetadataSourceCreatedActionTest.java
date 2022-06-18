@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@
 
 package org.comixedproject.state.comicbooks.actions;
 
-import java.util.List;
+import static org.junit.Assert.*;
+
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,12 +34,11 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateContext;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PrepareComicBookForProcessingActionTest {
-  @InjectMocks private PrepareComicForProcessingAction action;
+public class MetadataSourceCreatedActionTest {
+  @InjectMocks private MetadataSourceCreatedAction action;
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
-  @Mock private List<Page> pageList;
 
   @Before
   public void setUp() {
@@ -49,15 +48,9 @@ public class PrepareComicBookForProcessingActionTest {
   }
 
   @Test
-  public void testEvaluate() {
-    Mockito.when(comicBook.getPages()).thenReturn(pageList);
-
+  public void testExecute() {
     action.execute(context);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setFileDetails(null);
-    Mockito.verify(pageList, Mockito.times(1)).clear();
-    Mockito.verify(comicBook, Mockito.times(1)).setCreateMetadataSource(true);
-    Mockito.verify(comicBook, Mockito.times(1)).setFileContentsLoaded(false);
-    Mockito.verify(comicBook, Mockito.times(1)).setBlockedPagesMarked(false);
+    Mockito.verify(comicBook, Mockito.times(1)).setCreateMetadataSource(false);
   }
 }

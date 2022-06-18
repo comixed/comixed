@@ -38,6 +38,7 @@
     },
     "processing-comics": {
       "create-insert-step": "Création de registres de bande dessinée",
+      "create-metadata-source-step": "Loaing Comic Book Metadata",
       "file-contents-processed-step": "Achèvement du traitement",
       "load-file-contents-step": "Chargement du contenu des fichiers",
       "load-file-details-step": "Chargement des détails de fichiers de bande dessinée",

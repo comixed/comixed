@@ -103,6 +103,30 @@ public class MetadataSourceServiceTest {
     Mockito.verify(metadataSourceRepository, Mockito.times(1)).getById(TEST_SOURCE_ID);
   }
 
+  @Test
+  public void testGetByNameNotFound() {
+    Mockito.when(metadataSourceRepository.getByName(Mockito.anyString())).thenReturn(null);
+
+    final MetadataSource result = service.getByName(TEST_BEAN_NAME);
+
+    assertNull(result);
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_BEAN_NAME);
+  }
+
+  @Test
+  public void testGetByName() {
+    Mockito.when(metadataSourceRepository.getByName(Mockito.anyString()))
+        .thenReturn(existingSource);
+
+    final MetadataSource result = service.getByName(TEST_BEAN_NAME);
+
+    assertNotNull(result);
+    assertSame(existingSource, result);
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_BEAN_NAME);
+  }
+
   @Test(expected = MetadataSourceException.class)
   public void testCreateExceptionOnSave() throws MetadataSourceException {
     Mockito.when(metadataSourceRepository.save(metadataSourceArgumentCaptor.capture()))

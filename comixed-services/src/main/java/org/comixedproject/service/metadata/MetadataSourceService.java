@@ -62,6 +62,17 @@ public class MetadataSourceService {
     return this.doGetById(id);
   }
 
+  /**
+   * Loads a single metadata source by the bean name.
+   *
+   * @param name the bean name
+   * @return the source
+   */
+  public MetadataSource getByName(final String name) {
+    log.debug("Loading metadata source: name={}", name);
+    return this.metadataSourceRepository.getByName(name);
+  }
+
   private MetadataSource doGetById(final long id) throws MetadataSourceException {
     final MetadataSource result = this.metadataSourceRepository.getById(id);
     if (result == null) throw new MetadataSourceException("No such metadata source: id=" + id);

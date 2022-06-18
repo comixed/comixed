@@ -28,6 +28,8 @@ public enum ComicEvent {
   recordInserted,
   // the record is ready for processing
   readyForProcessing,
+  // metadata source created
+  metadataSourceCreated,
   // the file entries have been loaded
   fileContentsLoaded,
   // blocked pages have been marked

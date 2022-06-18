@@ -58,7 +58,8 @@ public class ComicBookAdaptorTest {
   private static final String TEST_REAL_COMIC_FILE = "target/test-classes/example.cbz";
   private static final String TEST_PAGE_RENAMING_RULE = "page renaming rule";
   private static final String TEST_NEW_PAGE_FILENAME = "new page filename";
-  private static final int TEST_PAGE_COUNT_LENGTH = 5;
+  private static final String TEST_MISSING_FILE = "farkle.png";
+  private static final String TEST_EXISTING_FILE = "ComicInfo.xml";
 
   @InjectMocks private ComicBookAdaptor adaptor;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -87,6 +88,7 @@ public class ComicBookAdaptorTest {
   public void setUp()
       throws ArchiveAdaptorException, AdaptorException, ContentAdaptorException, IOException {
     Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(readableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
         .thenReturn(readHandle);
     Mockito.when(writeableArchiveAdaptor.openArchiveForWrite(temporaryArchiveFile.capture()))
@@ -504,5 +506,63 @@ public class ComicBookAdaptorTest {
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
 
     Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).closeArchiveForRead(readHandle);
+  }
+
+  @Test(expected = AdaptorException.class)
+  public void testLoadFileArchiveAdaptorException()
+      throws AdaptorException, ArchiveAdaptorException {
+    Mockito.when(writeableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
+        .thenReturn(readHandle);
+    Mockito.when(writeableArchiveAdaptor.getEntries(Mockito.any(ArchiveReadHandle.class)))
+        .thenThrow(ArchiveAdaptorException.class);
+
+    try {
+      adaptor.loadFile(comicBook, TEST_MISSING_FILE);
+    } finally {
+      Mockito.verify(writeableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
+    }
+  }
+
+  @Test
+  public void testLoadFileNotExistent() throws AdaptorException, ArchiveAdaptorException {
+    archiveEntryList.add(archiveEntry);
+
+    Mockito.when(writeableArchiveAdaptor.getEntries(Mockito.any(ArchiveReadHandle.class)))
+        .thenReturn(archiveEntryList);
+    Mockito.when(writeableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
+        .thenReturn(readHandle);
+    Mockito.when(archiveEntry.getFilename()).thenReturn(TEST_EXISTING_FILE);
+
+    final byte[] result = adaptor.loadFile(comicBook, TEST_MISSING_FILE);
+
+    assertNull(result);
+
+    Mockito.verify(writeableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
+    Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
+        .readEntry(readHandle, TEST_EXISTING_FILE);
+  }
+
+  @Test
+  public void testLoadFile() throws AdaptorException, ArchiveAdaptorException {
+    archiveEntryList.add(archiveEntry);
+
+    Mockito.when(writeableArchiveAdaptor.getEntries(Mockito.any(ArchiveReadHandle.class)))
+        .thenReturn(archiveEntryList);
+    Mockito.when(writeableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
+        .thenReturn(readHandle);
+    Mockito.when(archiveEntry.getFilename()).thenReturn(TEST_EXISTING_FILE);
+    Mockito.when(
+            writeableArchiveAdaptor.readEntry(
+                Mockito.any(ArchiveReadHandle.class), Mockito.anyString()))
+        .thenReturn(TEST_COMICINFO_XML_CONTENT);
+
+    final byte[] result = adaptor.loadFile(comicBook, TEST_EXISTING_FILE);
+
+    assertNotNull(result);
+    assertSame(TEST_COMICINFO_XML_CONTENT, result);
+
+    Mockito.verify(writeableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
+    Mockito.verify(writeableArchiveAdaptor, Mockito.times(1))
+        .readEntry(readHandle, TEST_EXISTING_FILE);
   }
 }
