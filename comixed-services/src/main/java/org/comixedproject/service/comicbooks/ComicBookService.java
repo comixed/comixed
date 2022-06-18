@@ -328,6 +328,28 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
+   * Returns the number of comic books with the create metadata source flag set.
+   *
+   * @return the comic book count
+   */
+  public long getWithCreateMetadataSourceFlagCount() {
+    log.trace("Getting comics with the create metadata source flag set");
+    return this.comicBookRepository.findComicsWithCreateMeatadataSourceFlag();
+  }
+
+  /**
+   * Retrieves unprocessed comics that have the create metadata flag set.
+   *
+   * @param count the number of comics to return
+   * @return the comics
+   */
+  public List<ComicBook> findComicsWithCreateMetadataFlagSet(int count) {
+    log.trace("Loading unprocessed comics that need to have their contents loaded");
+    return this.comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
+        PageRequest.of(0, count));
+  }
+
+  /**
    * Retrieves unprocessed comics that are waiting to have their contents loaded.
    *
    * @param count the number of comics to return

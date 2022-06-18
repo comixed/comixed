@@ -41,6 +41,8 @@ public class PrepareComicForProcessingAction extends AbstractComicAction {
     comicBook.setFileDetails(null);
     log.trace("Clearing pages");
     comicBook.getPages().clear();
+    log.trace("Turn on creating metadata source flag");
+    comicBook.setCreateMetadataSource(true);
     log.trace("Turning off file contents loaded flag");
     comicBook.setFileContentsLoaded(false);
     log.trace("Turning off blocked pages marked flag");

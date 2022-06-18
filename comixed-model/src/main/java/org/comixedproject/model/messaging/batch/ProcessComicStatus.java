@@ -38,6 +38,7 @@ public class ProcessComicStatus {
   public static final String JOB_FINISHED = "add-comic-state.job-finished";
   public static final String STEP_NAME = "add-comic-state.step-name";
   public static final String CREATE_INSERT_STEP_NAME = "create-insert-step";
+  public static final String CREATE_METADATA_SOURCE_STEP_NAME = "create-metadata-source-step";
   public static final String LOAD_FILE_CONTENTS_STEP_NAME = "load-file-contents-step";
   public static final String MARK_BLOCKED_PAGES_STEP_NAME = "mark-blocked-pages-step";
   public static final String LOAD_FILE_DETAILS_STEP_NAME = "load-file-details-step";

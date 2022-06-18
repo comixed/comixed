@@ -508,6 +508,18 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testGetWithCreateMetadataSourceFlag() {
+    Mockito.when(comicBookRepository.findComicsWithCreateMeatadataSourceFlag())
+        .thenReturn(TEST_MAXIMUM_COMICS);
+
+    final long result = service.getWithCreateMetadataSourceFlagCount();
+
+    assertEquals(TEST_MAXIMUM_COMICS, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithCreateMeatadataSourceFlag();
+  }
+
+  @Test
   public void testFindUnprocessedComicsWithoutContent() {
     Mockito.when(comicBookRepository.findUnprocessedComicsWithoutContent(pageableCaptor.capture()))
         .thenReturn(comicBookList);

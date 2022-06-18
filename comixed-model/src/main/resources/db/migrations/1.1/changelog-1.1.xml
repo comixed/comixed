@@ -9,5 +9,6 @@
   <include file="/db/migrations/1.1/001_1206_add_delete_empty_directories_option.xml"/>
   <include file="/db/migrations/1.1/002_1158_rename_comic_to_comic_book.xml"/>
   <include file="/db/migrations/1.1/003_1306_add_indices_for_opds.xml"/>
+  <include file="/db/migrations/1.1/004_1315_add_create_metadata_source_flag.xml"/>
 
 </databaseChangeLog>

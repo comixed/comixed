@@ -49,4 +49,13 @@ public interface MetadataSourceRepository extends JpaRepository<MetadataSource, 
    */
   @Query("SELECT s FROM MetadataSource s WHERE s.id = :id")
   MetadataSource getById(@Param("id") final long id);
+
+  /**
+   * Returns a single record by bean name.
+   *
+   * @param name the bean name
+   * @return the record
+   */
+  @Query("SELECT s FROM MetadataSource s WHERE s.beanName = :name")
+  MetadataSource getByName(@Param("name") String name);
 }

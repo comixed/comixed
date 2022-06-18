@@ -42,6 +42,7 @@ public class ComicStateMachineConfiguration
     extends EnumStateMachineConfigurerAdapter<ComicState, ComicEvent> {
   @Autowired private PrepareComicForProcessingAction prepareComicForProcessingAction;
   @Autowired private FileContentsLoadedAction fileContentsLoadedAction;
+  @Autowired private MetadataSourceCreatedAction metadataSourceCreatedAction;
   @Autowired private BlockedPagesMarkedAction blockedPagesMarkedAction;
   @Autowired private FileDetailsCreatedGuard fileDetailsCreatedGuard;
   @Autowired private ComicContentsProcessedGuard comicContentsProcessedGuard;
@@ -101,6 +102,13 @@ public class ComicStateMachineConfiguration
         .target(ComicState.UNPROCESSED)
         .event(ComicEvent.rescanComic)
         .action(prepareComicForProcessingAction)
+        // the comic file contents have been loaded
+        .and()
+        .withExternal()
+        .source(ComicState.UNPROCESSED)
+        .target(ComicState.UNPROCESSED)
+        .event(ComicEvent.metadataSourceCreated)
+        .action(metadataSourceCreatedAction)
         // the comic file contents have been loaded
         .and()
         .withExternal()

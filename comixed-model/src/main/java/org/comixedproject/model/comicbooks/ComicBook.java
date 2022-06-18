@@ -104,6 +104,12 @@ public class ComicBook {
   @Setter
   private ComicState comicState = ComicState.ADDED;
 
+  @Column(name = "CreateMetadataSource", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean createMetadataSource = false;
+
   @Column(name = "FileContentsLoaded", nullable = false, updatable = true)
   @JsonIgnore
   @Getter

@@ -20,18 +20,9 @@ package org.comixedproject.batch.comicbooks;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.listeners.*;
-import org.comixedproject.batch.comicbooks.processors.LoadFileContentsProcessor;
-import org.comixedproject.batch.comicbooks.processors.LoadFileDetailsProcessor;
-import org.comixedproject.batch.comicbooks.processors.MarkBlockedPagesProcessor;
-import org.comixedproject.batch.comicbooks.processors.NoopComicProcessor;
-import org.comixedproject.batch.comicbooks.readers.ContentsProcessedReader;
-import org.comixedproject.batch.comicbooks.readers.LoadFileContentsReader;
-import org.comixedproject.batch.comicbooks.readers.LoadFileDetailsReader;
-import org.comixedproject.batch.comicbooks.readers.MarkBlockedPagesReader;
-import org.comixedproject.batch.comicbooks.writers.ContentsProcessedWriter;
-import org.comixedproject.batch.comicbooks.writers.LoadFileContentsWriter;
-import org.comixedproject.batch.comicbooks.writers.LoadFileDetailsWriter;
-import org.comixedproject.batch.comicbooks.writers.MarkBlockedPagesWriter;
+import org.comixedproject.batch.comicbooks.processors.*;
+import org.comixedproject.batch.comicbooks.readers.*;
+import org.comixedproject.batch.comicbooks.writers.*;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -65,6 +56,7 @@ public class ProcessComicsConfiguration {
    * @param jobListener the job listener
    * @param loadFileContentsStep the load file contents step
    * @param markBlockedPagesStep the mark blocked pages step
+   * @param createMetadataSourceStep the create metadata source step
    * @param loadFileDetailsStep the load file details step
    * @param contentsProcessedStep the mark contents processed step
    * @return the job
@@ -76,6 +68,7 @@ public class ProcessComicsConfiguration {
       final ProcessComicsJobListener jobListener,
       @Qualifier("loadFileContentsStep") final Step loadFileContentsStep,
       @Qualifier("markBlockedPagesStep") final Step markBlockedPagesStep,
+      @Qualifier("createMetadataSourceStep") final Step createMetadataSourceStep,
       @Qualifier("loadFileDetailsStep") final Step loadFileDetailsStep,
       @Qualifier("contentsProcessedStep") final Step contentsProcessedStep) {
     return jobBuilderFactory
@@ -84,6 +77,7 @@ public class ProcessComicsConfiguration {
         .listener(jobListener)
         .start(loadFileContentsStep)
         .next(markBlockedPagesStep)
+        .next(createMetadataSourceStep)
         .next(loadFileDetailsStep)
         .next(contentsProcessedStep)
         .build();
@@ -111,6 +105,37 @@ public class ProcessComicsConfiguration {
       final ProcessedComicChunkListener chunkListener) {
     return stepBuilderFactory
         .get("loadFileContentsStep")
+        .listener(stepListener)
+        .<ComicBook, ComicBook>chunk(this.batchChunkSize)
+        .reader(reader)
+        .processor(processor)
+        .writer(writer)
+        .listener(chunkListener)
+        .build();
+  }
+
+  /**
+   * Returns the create metadata source step.
+   *
+   * @param stepBuilderFactory the step factory
+   * @param stepListener the step listener
+   * @param reader the reader
+   * @param processor the processor
+   * @param writer the writer
+   * @param chunkListener the chunk listener
+   * @return the step
+   */
+  @Bean
+  @Qualifier("createMetadataSourceStep")
+  public Step createMetadataSourceStep(
+      final StepBuilderFactory stepBuilderFactory,
+      final CreateMetadataSourceStepListener stepListener,
+      final CreateMetadataSourceReader reader,
+      final CreateMetadataSourceProcessor processor,
+      final CreateMetadataSourceWriter writer,
+      final ProcessedComicChunkListener chunkListener) {
+    return stepBuilderFactory
+        .get("createMetadataSourceStep")
         .listener(stepListener)
         .<ComicBook, ComicBook>chunk(this.batchChunkSize)
         .reader(reader)

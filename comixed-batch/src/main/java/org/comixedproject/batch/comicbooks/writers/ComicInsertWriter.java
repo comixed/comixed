@@ -18,12 +18,8 @@
 
 package org.comixedproject.batch.comicbooks.writers;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.comixedproject.state.comicbooks.ComicEvent;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,19 +29,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ComicInsertWriter implements ItemWriter<ComicBook> {
-  @Autowired private ComicBookService comicBookService;
-
-  @Override
-  public void write(final List<? extends ComicBook> comics) throws Exception {
-    comics.forEach(
-        comic -> {
-          try {
-            log.trace("Saving comic: {}", comic.getFilename());
-            this.comicBookService.save(comic);
-          } catch (Exception error) {
-            log.error("Failed to insert new comic", error);
-          }
-        });
+public class ComicInsertWriter extends AbstractComicWriter {
+  public ComicInsertWriter() {
+    super(ComicEvent.readyForProcessing);
   }
 }

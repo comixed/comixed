@@ -131,6 +131,11 @@ public class ComicInfo {
   @Setter
   private String locations;
 
+  @JsonProperty("Web")
+  @Getter
+  @Setter
+  private String web;
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
@@ -155,7 +160,8 @@ public class ComicInfo {
         && Objects.equals(publisher, comicInfo.publisher)
         && Objects.equals(characters, comicInfo.characters)
         && Objects.equals(teams, comicInfo.teams)
-        && Objects.equals(locations, comicInfo.locations);
+        && Objects.equals(locations, comicInfo.locations)
+        && Objects.equals(web, comicInfo.web);
   }
 
   @Override
@@ -180,6 +186,7 @@ public class ComicInfo {
         publisher,
         characters,
         teams,
-        locations);
+        locations,
+        web);
   }
 }

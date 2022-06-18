@@ -63,6 +63,7 @@ public class ConsolidationConfiguration {
    * @param jobBuilderFactory the job builder factory
    * @param deleteComicStep the delete comics step
    * @param moveComicStep the move comics step
+   * @param deleteEmptyDirectoriesStep the delete empty directories step
    * @return the job
    */
   @Bean
