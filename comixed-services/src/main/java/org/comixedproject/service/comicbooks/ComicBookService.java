@@ -858,6 +858,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.comicBookRepository.getAllVolumeForPublisherAndSeries(publisher, series);
   }
 
+  /**
+   * Returns the lkist of all comics for a given publisher, series and volume.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param email the reader's email address
+   * @param unread the unread flag
+   * @return the list of comics
+   */
   public List<ComicBook> getAllComicBooksForPublisherAndSeriesAndVolume(
       final String publisher,
       final String series,
@@ -869,7 +879,34 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.filterReadComics(
         email,
         unread,
-        this.comicBookRepository.getAllComicBooksForForPublisherAndSeriesAndVolume(
+        this.comicBookRepository.getAllComicBooksForPublisherAndSeriesAndVolume(
             publisher, series, volume));
+  }
+
+  /**
+   * Returns the list of all volumes for a given series.
+   *
+   * @param series the series name
+   * @return the volumes
+   */
+  public Set<String> getAllVolumesForSeries(final String series) {
+    log.debug("Loading all volumes for series: {}", series);
+    return this.comicBookRepository.findDistinctVolumesForSeries(series);
+  }
+
+  /**
+   * Returns the list of all comics for the given series and volume.
+   *
+   * @param series the series name
+   * @param volume the volume
+   * @param email the reader's email address
+   * @param unread the unread flag
+   * @return the list of comics
+   */
+  public List<ComicBook> getAllComicBooksForSeriesAndVolume(
+      final String series, final String volume, final String email, final boolean unread) {
+    log.debug("Loading all comics for series and volume: {} v{}", series, volume);
+    return this.filterReadComics(
+        email, unread, this.comicBookRepository.getAllComicBooksForSeriesAndVolume(series, volume));
   }
 }

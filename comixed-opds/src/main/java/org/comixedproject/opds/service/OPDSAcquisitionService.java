@@ -70,11 +70,6 @@ public class OPDSAcquisitionService {
       final String collectionName,
       final boolean unread) {
     switch (collectionType) {
-      case series:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Series: %s", collectionName), String.valueOf(SERIES_ID)),
-            this.comicBookService.getAllForSeries(collectionName, email, unread));
       case characters:
         return this.createCollectionEntriesFeed(
             new OPDSAcquisitionFeed(
@@ -134,6 +129,13 @@ public class OPDSAcquisitionService {
       final String volume,
       final String email,
       final boolean unread) {
+    log.debug(
+        "Getting comic feed for publisher={} series={} volume={} for {} [unread={}]",
+        publisher,
+        series,
+        volume,
+        email,
+        unread);
     OPDSAcquisitionFeed result =
         new OPDSAcquisitionFeed(
             String.format("%s: %s v%s", publisher, series, volume),
@@ -154,8 +156,51 @@ public class OPDSAcquisitionService {
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
                 String.format(
-                    "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
+                    "/opds/library/publishers/%s/series/%s/volumes/%s?unread=%s",
                     this.opdsUtils.urlEncodeString(publisher),
+                    this.opdsUtils.urlEncodeString(series),
+                    this.opdsUtils.urlEncodeString(volume),
+                    String.valueOf(unread))));
+    return result;
+  }
+
+  /**
+   * Builds the acquisition feed for a series and volume.
+   *
+   * @param series the series name
+   * @param volume the volume
+   * @param email the reader's email address
+   * @param unread the unread flag
+   * @return the acquistion feed
+   */
+  public OPDSAcquisitionFeed getComicFeedForSeriesAndVolumes(
+      final String series, final String volume, final String email, final boolean unread) {
+    log.debug(
+        "Getting comic feed for series={} volume={} for {} [unread={}]",
+        series,
+        volume,
+        email,
+        unread);
+    OPDSAcquisitionFeed result =
+        new OPDSAcquisitionFeed(
+            String.format("%s v%s", series, volume),
+            String.valueOf(
+                this.opdsUtils.createIdForEntry("SERIES:VOLUME", series + ":" + volume)));
+    this.comicBookService
+        .getAllComicBooksForSeriesAndVolume(series, volume, email, unread)
+        .forEach(
+            comicBook -> {
+              log.trace("Adding comic book to feed");
+              result.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
+            });
+    result
+        .getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format(
+                    "/opds/library/series/%s/volumes/%s?unread=%s",
                     this.opdsUtils.urlEncodeString(series),
                     this.opdsUtils.urlEncodeString(volume),
                     String.valueOf(unread))));

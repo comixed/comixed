@@ -45,6 +45,21 @@ public class OPDSPublisherController {
   @Autowired private OPDSUtils opdsUtils;
 
   /**
+   * Returns the publisher root navigation feed.
+   *
+   * @param unread the unread flag
+   * @return the navigation feed
+   */
+  @GetMapping(value = "/opds/library/publishers", produces = MediaType.APPLICATION_XML_VALUE)
+  @PreAuthorize("hasRole('READER')")
+  @ResponseBody
+  public OPDSNavigationFeed getRootFeedForPublishers(
+      @RequestParam(name = "unread") final boolean unread) {
+    log.info("Getting publisher root feed");
+    return this.opdsNavigationService.getRootFeedForPublishers(unread);
+  }
+
+  /**
    * Retrieves a navigation feed containing all series for the specified publisher.
    *
    * @param publisher the publisher name
@@ -52,7 +67,7 @@ public class OPDSPublisherController {
    * @return the feed
    */
   @GetMapping(
-      value = "/opds/collections/publishers/{publisher}",
+      value = "/opds/library/publishers/{publisher}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
@@ -73,7 +88,7 @@ public class OPDSPublisherController {
    * @return the feed
    */
   @GetMapping(
-      value = "/opds/collections/publishers/{publisher}/series/{series}",
+      value = "/opds/library/publishers/{publisher}/series/{series}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
@@ -99,7 +114,7 @@ public class OPDSPublisherController {
    * @return the feed
    */
   @GetMapping(
-      value = "/opds/collections/publishers/{publisher}/series/{series}/volumes/{volume}",
+      value = "/opds/library/publishers/{publisher}/series/{series}/volumes/{volume}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @ResponseBody
