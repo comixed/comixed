@@ -1,7 +1,10 @@
-FROM alpine:latest
-RUN apk --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing add openjdk11 unzip wget bash
+FROM debian:buster-slim
 
-MAINTAINER Pidockmedia "pidockmedia@gmail.com"
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+       openjdk-11-jre unzip wget bash
+
+MAINTAINER The ComiXed Project "comixed-dev@freelists.org"
 
 RUN mkdir /app /ul
 WORKDIR /ul
