@@ -462,8 +462,28 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query(
       "SELECT c FROM ComicBook c WHERE c.publisher = :publisher AND c.series=:series AND c.volume = :volume")
-  List<ComicBook> getAllComicBooksForForPublisherAndSeriesAndVolume(
+  List<ComicBook> getAllComicBooksForPublisherAndSeriesAndVolume(
       @Param("publisher") String publisher,
       @Param("series") String series,
       @Param("volume") String volume);
+
+  /**
+   * Returns all volumes for the given series name.
+   *
+   * @param series the series name
+   * @return the volumes
+   */
+  @Query("SELECT DISTINCT c.volume FROM ComicBook c WHERE c.series = :series")
+  Set<String> findDistinctVolumesForSeries(@Param("series") String series);
+
+  /**
+   * Returns all comics for the given series and volume.
+   *
+   * @param series the series name
+   * @param volume the volume
+   * @return the comics
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.series = :series AND c.volume = :volume")
+  List<ComicBook> getAllComicBooksForSeriesAndVolume(
+      @Param("series") String series, @Param("volume") String volume);
 }

@@ -135,7 +135,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/publishers/?unread=%s", unreadStr)));
+                String.format("/opds/library/publishers/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding series link");
@@ -147,7 +147,7 @@ public class OPDSNavigationService {
             new OPDSLink(
                 ACQUISITION_FEED_LINK_TYPE,
                 SUBSECTION,
-                String.format("/opds/collections/series/?unread=%s", unreadStr)));
+                String.format("/opds/library/series/?unread=%s", unreadStr)));
     response.getEntries().add(entry);
 
     log.trace("Adding characters link");
@@ -201,6 +201,194 @@ public class OPDSNavigationService {
   }
 
   /**
+   * Retrieves the root navigation feed for publishers.
+   *
+   * @param unread the unread flag
+   * @return the navigation feed
+   */
+  public OPDSNavigationFeed getRootFeedForPublishers(final boolean unread) {
+    log.trace("Getting root feed for publishers");
+    final OPDSNavigationFeed feed =
+        new OPDSNavigationFeed("Publishers", String.valueOf(PUBLISHERS_ID));
+    this.comicBookService.getAllPublishers().stream()
+        .map(
+            publisher ->
+                new CollectionFeedEntry(
+                    publisher, this.opdsUtils.createIdForEntry("PUBLISHER", publisher)))
+        .collect(Collectors.toUnmodifiableList())
+        .forEach(
+            publisher -> {
+              final OPDSNavigationFeedEntry feedEntry =
+                  new OPDSNavigationFeedEntry(
+                      publisher.getName(),
+                      String.valueOf(
+                          this.opdsUtils.createIdForEntry("PUBLISHER", publisher.getName())));
+              feedEntry
+                  .getLinks()
+                  .add(
+                      new OPDSLink(
+                          ACQUISITION_FEED_LINK_TYPE,
+                          SUBSECTION,
+                          String.format(
+                              "/opds/library/publishers/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(publisher.getName()),
+                              String.valueOf(unread))));
+              feed.getEntries().add(feedEntry);
+            });
+    return feed;
+  }
+
+  /**
+   * Retrieves a navigation feed of series for the given publisher.
+   *
+   * @param publisher the publisher
+   * @param unread the unread flag
+   * @return the navigation feed
+   */
+  public OPDSNavigationFeed getSeriesFeedForPublisher(
+      final String publisher, final boolean unread) {
+    OPDSNavigationFeed result =
+        new OPDSNavigationFeed(
+            String.format("Publisher: %s", publisher), String.valueOf(PUBLISHERS_ID));
+    this.comicBookService.getAllSeriesForPublisher(publisher).stream()
+        .forEach(
+            series -> {
+              final OPDSNavigationFeedEntry feedEntry =
+                  new OPDSNavigationFeedEntry(
+                      series, String.valueOf(this.opdsUtils.createIdForEntry("SERIES", series)));
+              feedEntry
+                  .getLinks()
+                  .add(
+                      new OPDSLink(
+                          ACQUISITION_FEED_LINK_TYPE,
+                          SUBSECTION,
+                          String.format(
+                              "/opds/library/publishers/%s/series/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(publisher),
+                              this.opdsUtils.urlEncodeString(series),
+                              String.valueOf(unread))));
+              result.getEntries().add(feedEntry);
+            });
+    return result;
+  }
+
+  /**
+   * Retrieves the navigation feed for the given publisher and series.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param unread the unread flag
+   * @return the navigation feed
+   */
+  public OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
+      final String publisher, final String series, final boolean unread) {
+    OPDSNavigationFeed result =
+        new OPDSNavigationFeed(String.format("Series: %s", series), String.valueOf(SERIES_ID));
+    this.comicBookService.getAllVolumesForPublisherAndSeries(publisher, series).stream()
+        .forEach(
+            volume -> {
+              final OPDSNavigationFeedEntry feedEntry =
+                  new OPDSNavigationFeedEntry(
+                      String.format("v%s", volume),
+                      String.valueOf(
+                          this.opdsUtils.createIdForEntry("SERIES:VOLUME", series + ":" + volume)));
+              feedEntry
+                  .getLinks()
+                  .add(
+                      new OPDSLink(
+                          ACQUISITION_FEED_LINK_TYPE,
+                          SUBSECTION,
+                          String.format(
+                              "/opds/library/publishers/%s/series/%s/volumes/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(publisher),
+                              this.opdsUtils.urlEncodeString(series),
+                              this.opdsUtils.urlEncodeString(volume),
+                              String.valueOf(unread))));
+              result.getEntries().add(feedEntry);
+            });
+    return result;
+  }
+
+  /**
+   * Returns the root navigation feed for series.
+   *
+   * @param unread the unread flag
+   * @return the navigation feed
+   */
+  public OPDSNavigationFeed getRootFeedForSeries(final boolean unread) {
+    log.trace("Loading root feed for series");
+    final OPDSNavigationFeed feed = new OPDSNavigationFeed("Series", String.valueOf(SERIES_ID));
+    this.comicBookService.getAllSeries().stream()
+        .map(
+            series ->
+                new CollectionFeedEntry(series, this.opdsUtils.createIdForEntry("SERIES", series)))
+        .collect(Collectors.toUnmodifiableList())
+        .forEach(
+            entry -> {
+              String name = entry.getName();
+              final Long id = entry.getId();
+              if (StringUtils.isEmpty(name)) {
+                name = UNNAMED;
+              }
+              log.trace("Adding series link: id={} name={}", id, name);
+              final OPDSNavigationFeedEntry feedEntry =
+                  new OPDSNavigationFeedEntry(name, String.valueOf(SERIES_ID + id));
+              feedEntry
+                  .getLinks()
+                  .add(
+                      new OPDSLink(
+                          ACQUISITION_FEED_LINK_TYPE,
+                          SUBSECTION,
+                          String.format(
+                              "/opds/library/series/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(name), String.valueOf(unread))));
+              feed.getEntries().add(feedEntry);
+            });
+    feed.getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format("/opds/library/?unread=%s", String.valueOf(unread))));
+    return feed;
+  }
+
+  /**
+   * Builds the volumes navigation feed for a single series.
+   *
+   * @param name the series name
+   * @param unread the unread flag
+   * @return the navigation feed
+   */
+  public OPDSNavigationFeed getVolumesFeedForSeries(final String name, final boolean unread) {
+    log.trace("Loading volumes feed for series: {}", name);
+    OPDSNavigationFeed result =
+        new OPDSNavigationFeed(String.format("Series: %s", name), String.valueOf(SERIES_ID));
+    this.comicBookService.getAllVolumesForSeries(name).stream()
+        .forEach(
+            volume -> {
+              final OPDSNavigationFeedEntry feedEntry =
+                  new OPDSNavigationFeedEntry(
+                      String.format("%s v%s", name, volume),
+                      String.valueOf(
+                          this.opdsUtils.createIdForEntry("SERIES:VOLUME", name + ":" + volume)));
+              feedEntry
+                  .getLinks()
+                  .add(
+                      new OPDSLink(
+                          ACQUISITION_FEED_LINK_TYPE,
+                          SUBSECTION,
+                          String.format(
+                              "/opds/library/series/%s/volumes/%s?unread=%s",
+                              this.opdsUtils.urlEncodeString(name),
+                              this.opdsUtils.urlEncodeString(volume),
+                              String.valueOf(unread))));
+              result.getEntries().add(feedEntry);
+            });
+    return result;
+  }
+
+  /**
    * Retrieves the navigation feed for a given collection type.
    *
    * @param collectionType the collection type
@@ -211,30 +399,6 @@ public class OPDSNavigationService {
       @NonNull final CollectionType collectionType, final boolean unread) {
     log.info("Fetching the feed root for a collection: {}", collectionType);
     switch (collectionType) {
-      case publishers:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Publishers", String.valueOf(PUBLISHERS_ID)),
-            PUBLISHERS_ID,
-            this.comicBookService.getAllPublishers().stream()
-                .map(
-                    publisher ->
-                        new CollectionFeedEntry(
-                            publisher, this.opdsUtils.createIdForEntry("PUBLISHER", publisher)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
-      case series:
-        return createCollectionFeed(
-            collectionType,
-            new OPDSNavigationFeed("Series", String.valueOf(SERIES_ID)),
-            SERIES_ID,
-            this.comicBookService.getAllSeries().stream()
-                .map(
-                    series ->
-                        new CollectionFeedEntry(
-                            series, this.opdsUtils.createIdForEntry("SERIES", series)))
-                .collect(Collectors.toUnmodifiableList()),
-            unread);
       case characters:
         return createCollectionFeed(
             collectionType,
@@ -285,116 +449,6 @@ public class OPDSNavigationService {
             unread);
     }
     return null;
-  }
-
-  private OPDSNavigationFeed createCollectionFeed(
-      final CollectionType collectionType,
-      final OPDSNavigationFeed feed,
-      final long entryOffset,
-      final List<CollectionFeedEntry> entries,
-      final boolean unread) {
-    entries.forEach(
-        entry -> {
-          String name = entry.getName();
-          final Long id = entry.getId();
-          if (StringUtils.isEmpty(name)) {
-            name = UNNAMED;
-          }
-          log.trace("Adding {} link: id={} name={}", collectionType, id, name);
-          final OPDSNavigationFeedEntry feedEntry =
-              new OPDSNavigationFeedEntry(name, String.valueOf(entryOffset + id));
-          feedEntry
-              .getLinks()
-              .add(
-                  new OPDSLink(
-                      ACQUISITION_FEED_LINK_TYPE,
-                      SUBSECTION,
-                      String.format(
-                          "/opds/collections/%s/%s/?unread=%s",
-                          collectionType,
-                          this.opdsUtils.urlEncodeString(name),
-                          String.valueOf(unread))));
-          feed.getEntries().add(feedEntry);
-        });
-    feed.getLinks()
-        .add(
-            new OPDSLink(
-                NAVIGATION_FEED_LINK_TYPE,
-                SELF,
-                String.format(
-                    "/opds/collections/%s/?unread=%s", feed.getTitle(), String.valueOf(unread))));
-    return feed;
-  }
-
-  /**
-   * Retrieves a navigation feed of series for the given publisher.
-   *
-   * @param publisher the publisher
-   * @param unread the unread flag
-   * @return the navigation feed
-   */
-  public OPDSNavigationFeed getSeriesFeedForPublisher(
-      final String publisher, final boolean unread) {
-    OPDSNavigationFeed result =
-        new OPDSNavigationFeed(
-            String.format("Publisher: %s", publisher), String.valueOf(PUBLISHERS_ID));
-    this.comicBookService.getAllSeriesForPublisher(publisher).stream()
-        .forEach(
-            series -> {
-              final OPDSNavigationFeedEntry feedEntry =
-                  new OPDSNavigationFeedEntry(
-                      series, String.valueOf(this.opdsUtils.createIdForEntry("SERIES", series)));
-              feedEntry
-                  .getLinks()
-                  .add(
-                      new OPDSLink(
-                          ACQUISITION_FEED_LINK_TYPE,
-                          SUBSECTION,
-                          String.format(
-                              "/opds/collections/publishers/%s/series/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(publisher),
-                              this.opdsUtils.urlEncodeString(series),
-                              String.valueOf(unread))));
-              result.getEntries().add(feedEntry);
-            });
-    return result;
-  }
-
-  /**
-   * Retrieves the navigation feed for the given publisher and series.
-   *
-   * @param publisher the publisher
-   * @param series the series
-   * @param unread the unread flag
-   * @return the navigation feed
-   */
-  public OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
-      final String publisher, final String series, final boolean unread) {
-    OPDSNavigationFeed result =
-        new OPDSNavigationFeed(String.format("Series: %s", series), String.valueOf(SERIES_ID));
-    this.comicBookService.getAllVolumesForPublisherAndSeries(publisher, series).stream()
-        .forEach(
-            volume -> {
-              final OPDSNavigationFeedEntry feedEntry =
-                  new OPDSNavigationFeedEntry(
-                      String.format("v%s", volume),
-                      String.valueOf(
-                          this.opdsUtils.createIdForEntry("SERIES:VOLUME", series + ":" + volume)));
-              feedEntry
-                  .getLinks()
-                  .add(
-                      new OPDSLink(
-                          ACQUISITION_FEED_LINK_TYPE,
-                          SUBSECTION,
-                          String.format(
-                              "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
-                              this.opdsUtils.urlEncodeString(publisher),
-                              this.opdsUtils.urlEncodeString(series),
-                              this.opdsUtils.urlEncodeString(volume),
-                              String.valueOf(unread))));
-              result.getEntries().add(feedEntry);
-            });
-    return result;
   }
 
   /**
@@ -505,6 +559,45 @@ public class OPDSNavigationService {
               response.getEntries().add(entry);
             });
     return response;
+  }
+
+  private OPDSNavigationFeed createCollectionFeed(
+      final CollectionType collectionType,
+      final OPDSNavigationFeed feed,
+      final long entryOffset,
+      final List<CollectionFeedEntry> entries,
+      final boolean unread) {
+    entries.forEach(
+        entry -> {
+          String name = entry.getName();
+          final Long id = entry.getId();
+          if (StringUtils.isEmpty(name)) {
+            name = UNNAMED;
+          }
+          log.trace("Adding {} link: id={} name={}", collectionType, id, name);
+          final OPDSNavigationFeedEntry feedEntry =
+              new OPDSNavigationFeedEntry(name, String.valueOf(entryOffset + id));
+          feedEntry
+              .getLinks()
+              .add(
+                  new OPDSLink(
+                      ACQUISITION_FEED_LINK_TYPE,
+                      SUBSECTION,
+                      String.format(
+                          "/opds/collections/%s/%s?unread=%s",
+                          collectionType,
+                          this.opdsUtils.urlEncodeString(name),
+                          String.valueOf(unread))));
+          feed.getEntries().add(feedEntry);
+        });
+    feed.getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE,
+                SELF,
+                String.format(
+                    "/opds/collections/%s?unread=%s", feed.getTitle(), String.valueOf(unread))));
+    return feed;
   }
 
   private Date getDateFor(final Integer year, final Integer week, final int dayOfWeek) {

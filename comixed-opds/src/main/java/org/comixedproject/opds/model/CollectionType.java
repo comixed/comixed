@@ -6,8 +6,6 @@ package org.comixedproject.opds.model;
  * @author Darryl L. Pierce
  */
 public enum CollectionType {
-  publishers,
-  series,
   characters,
   teams,
   locations,

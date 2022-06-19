@@ -54,6 +54,8 @@ public class OPDSAcquisitionServiceTest {
   private static final String TEST_SUBSET_ENTRY_NAME = "The Subtype Name";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final String TEST_ENCODED_NAME = "The encoded name";
+  private static final String TEST_PUBLISHER_NAME = "The Series Name";
+  private static final String TEST_SERIES_NAME = "The Series Name";
   private static final String TEST_VOLUME = "2022";
   private static final long TEST_READING_LIST_ID = 108L;
   private static final long TEST_COMIC_ID = 279L;
@@ -79,24 +81,6 @@ public class OPDSAcquisitionServiceTest {
     Mockito.when(opdsUtils.urlEncodeString(Mockito.anyString())).thenReturn(TEST_ENCODED_NAME);
     comicBookList.add(comicBook);
     Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_ID);
-  }
-
-  @Test
-  public void testGetEntriesForCollectionFeedForSeries() {
-    Mockito.when(
-            comicBookService.getAllForSeries(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
-        .thenReturn(comicBookList);
-
-    final OPDSAcquisitionFeed result =
-        service.getEntriesForCollectionFeed(
-            TEST_EMAIL, CollectionType.series, TEST_COLLECTION_ENTRY_NAME, TEST_UNREAD);
-
-    TestCase.assertNotNull(result);
-    assertFalse(result.getEntries().isEmpty());
-
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getAllForSeries(TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
@@ -184,21 +168,33 @@ public class OPDSAcquisitionServiceTest {
 
     final OPDSAcquisitionFeed result =
         service.getComicFeedsForPublisherAndSeriesAndVolume(
-            TEST_COLLECTION_ENTRY_NAME,
-            TEST_SUBSET_ENTRY_NAME,
-            TEST_VOLUME,
-            TEST_EMAIL,
-            TEST_UNREAD);
+            TEST_PUBLISHER_NAME, TEST_SERIES_NAME, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
 
     Assertions.assertNotNull(result);
 
     Mockito.verify(comicBookService, Mockito.times(1))
         .getAllComicBooksForPublisherAndSeriesAndVolume(
-            TEST_COLLECTION_ENTRY_NAME,
-            TEST_SUBSET_ENTRY_NAME,
-            TEST_VOLUME,
-            TEST_EMAIL,
-            TEST_UNREAD);
+            TEST_PUBLISHER_NAME, TEST_SERIES_NAME, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
+  }
+
+  @Test
+  public void testGetComicFeedsForSeriesAndVolume() {
+    Mockito.when(
+            comicBookService.getAllComicBooksForSeriesAndVolume(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()))
+        .thenReturn(comicBookList);
+
+    final OPDSAcquisitionFeed result =
+        service.getComicFeedForSeriesAndVolumes(
+            TEST_SERIES_NAME, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
+
+    Assertions.assertNotNull(result);
+
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getAllComicBooksForSeriesAndVolume(TEST_SERIES_NAME, TEST_VOLUME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test(expected = OPDSException.class)

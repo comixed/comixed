@@ -78,6 +78,19 @@ public class OPDSPublisherControllerTest {
   }
 
   @Test
+  public void testGetRootFeedForPublishers() {
+    Mockito.when(opdsNavigationService.getRootFeedForPublishers(Mockito.anyBoolean()))
+        .thenReturn(navigationFeed);
+
+    final OPDSNavigationFeed result = controller.getRootFeedForPublishers(TEST_UNREAD);
+
+    assertNotNull(result);
+    assertSame(navigationFeed, result);
+
+    Mockito.verify(opdsNavigationService, Mockito.times(1)).getRootFeedForPublishers(TEST_UNREAD);
+  }
+
+  @Test
   public void testGetSeriesFeedForPublisher() {
     Mockito.when(
             opdsNavigationService.getSeriesFeedForPublisher(
