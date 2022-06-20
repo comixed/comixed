@@ -1,7 +1,7 @@
 # GOAL: Create pre-releases when changes are pushed to a release branch. On success it creates a tag for the build.
 #       Such a release can then be promoted to a full release.
 
-name: "Latest Release Build"
+name: "Publish Release"
 
 on:
   push:
@@ -9,7 +9,8 @@ on:
       - v*
 
 jobs:
-  build:
+  build-release-bundle:
+    name: Build global release bundle
     runs-on: ubuntu-latest
 
     steps:
@@ -35,3 +36,34 @@ jobs:
           title: Changes For 1.1-SNAPSHOT
           files: |
             comixed-release-1.1-SNAPSHOT-GA.zip
+
+  build-windows-installer:
+    name: Build Windows installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache Maven artifacts
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+      - name: Setup build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Create the release artifact
+        run: mvn package -DskipTests -D"assembly.name=GA" -Pci
+      - name: Create the Windows installer
+        uses: joncloud/makensis-action@v3.6
+        with:
+          script-file: comixed-release/src/main/windows/comixed.nsi
+          arguments: "/V3"
+      - name: Add installer to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          file: "ComiXed 1.1-SNAPSHOT Installer.exe"
+          prerelease: true
+          overwrite: true
