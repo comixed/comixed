@@ -28,6 +28,7 @@ SET ARG=%~2
 IF "%PARAM%" == "-h" GOTO show_help
 IF "%PARAM%" == "-d" SET DEBUG="ON"
 IF "%PARAM%" == "-D" SET FULLDEBUG="ON"
+IF "%PARAM%" == "-C" SET DB_CONSOLE="ON"
 IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
@@ -108,6 +109,10 @@ SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject=DEBUG
 IF "%FULLDEBUG%" == "" GOTO skip_full_debug
 SET OPTIONS=%OPTIONS% --logging.level.root=DEBUG
 :skip_full_debug
+
+IF "%DBCONSOLE%" == "" GOTO skip_db_console
+SET OPTIONS=%OPTIONS% --spring.h2.console.enabled=true
+:skip_db_console
 
 IF "%LOGFILE%" == "" GOTO :skip_logfile
 SET OPTIONS=%OPTIONS% --logging.file.name=%LOGFILE%

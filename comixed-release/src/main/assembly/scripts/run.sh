@@ -30,6 +30,7 @@ JVMOPTIONS=""
 COMIXED_JAR_FILE=$(echo "${BINDIR}"/comixed-app-*.jar)
 DEBUG=false
 FULL_DEBUG=false
+DB_CONSOLE=false
 VERBOSE=false
 JDBCURL="${JDBCURL}"
 DBUSER="${DBUSERNAME}"
@@ -52,12 +53,13 @@ usage() {
   echo "Other options:"
   echo " -d           - Debug mode (def. false)"
   echo " -D           - Turn on ALL debugging (def. false)"
+  echo " -C           - Turn on H2 database console"
   echo " -v           - Verbose mode (def. false)"
   echo " -L [LOGFILE] - Write logs to a file"
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:dDvL:" option; do
+while getopts "j:u:p:i:l:P:dDCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
@@ -67,6 +69,7 @@ while getopts "j:u:p:i:l:P:dDvL:" option; do
   P) PLUGINDIR="${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
+  C) DB_CONSOLE=true ;;
   v) VERBOSE=true ;;
   L) LOGFILE="${OPTARG}" ;;
   \?) usage ;;
@@ -90,6 +93,11 @@ fi
 if $FULL_DEBUG; then
   # enable all debugging for all dependencies
   JAROPTIONS="${JAROPTIONS} --logging.level.root=DEBUG"
+fi
+
+if $DB_CONSOLE; then
+  # enable H2 console
+  JAROPTIONS="${JAROPTIONS} --spring.h2.console.enabled=true"
 fi
 
 if [[ $LOGFILE ]]; then
