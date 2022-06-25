@@ -115,7 +115,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicState = :state ORDER BY c.lastModifiedOn")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicState = :state")
   List<ComicBook> findForState(@Param("state") ComicState state, Pageable pageable);
 
   /**
@@ -134,7 +134,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.createMetadataSource = true ORDER BY c.lastModifiedOn")
+      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.createMetadataSource = true")
   List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
 
   /**
@@ -144,7 +144,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false ORDER BY c.lastModifiedOn")
+      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
   List<ComicBook> findUnprocessedComicsWithoutContent(Pageable pageable);
 
   /**
@@ -172,7 +172,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false ORDER BY c.lastModifiedOn")
+      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false")
   List<ComicBook> findUnprocessedComicsForMarkedPageBlocking(Pageable pageable);
 
   /**
@@ -210,7 +210,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.fileDetails fd WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true ORDER BY c.lastModifiedOn")
+      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.fileDetails fd WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
   List<ComicBook> findProcessedComics(Pageable pageable);
 
   /**
@@ -228,8 +228,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'CHANGED' AND c.updateMetadata = true ORDER BY c.lastModifiedOn")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicState = 'CHANGED' AND c.updateMetadata = true")
   List<ComicBook> findComicsWithMetadataToUpdate(Pageable pageable);
 
   /**
@@ -238,7 +237,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicState = 'DELETED' ORDER BY c.lastModifiedOn")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicState = 'DELETED'")
   List<ComicBook> findComicsMarkedForDeletion(Pageable pageable);
 
   /**
@@ -247,8 +246,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query(
-      "SELECT c FROM ComicBook c WHERE c.consolidating = true AND c.comicState != 'DELETED' ORDER BY c.lastModifiedOn")
+  @Query("SELECT c FROM ComicBook c WHERE c.consolidating = true AND c.comicState != 'DELETED'")
   List<ComicBook> findComicsToBeMoved(Pageable pageable);
 
   /**
@@ -266,7 +264,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.recreating = true ORDER BY c.lastModifiedOn")
+  @Query("SELECT c FROM ComicBook c WHERE c.recreating = true")
   List<ComicBook> findComicsToRecreate(Pageable pageable);
 
   /**
