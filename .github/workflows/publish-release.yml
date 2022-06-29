@@ -33,9 +33,9 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: true
-          title: Changes For 1.1-SNAPSHOT
+          title: Changes For 1.2-SNAPSHOT
           files: |
-            comixed-release-1.1-SNAPSHOT-GA.zip
+            comixed-release-1.2-SNAPSHOT-GA.zip
 
   build-windows-installer:
     name: Build Windows installer
@@ -64,6 +64,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          file: "ComiXed 1.1-SNAPSHOT Installer.exe"
+          file: "ComiXed 1.2-SNAPSHOT Installer.exe"
           prerelease: true
           overwrite: true
