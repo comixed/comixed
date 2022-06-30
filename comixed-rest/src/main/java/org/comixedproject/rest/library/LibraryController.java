@@ -199,7 +199,7 @@ public class LibraryController {
   @JsonView(View.ComicListView.class)
   public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
     final Long lastId = request.getLastId();
-    log.info("Loading library for {}: last id was {}", lastId);
+    log.info("Loading library content: last id was {}", lastId);
 
     List<ComicBook> comicBooks = this.comicBookService.getComicsById(lastId, MAXIMUM_RECORDS + 1);
     boolean lastPayload = true;
