@@ -38,7 +38,7 @@
     },
     "processing-comics": {
       "create-insert-step": "Creating Comic Records",
-      "create-metadata-source-step": "Loaing Comic Book Metadata",
+      "create-metadata-source-step": "Loading Comic Book Metadata",
       "file-contents-processed-step": "Completing Processing",
       "load-file-contents-step": "Loading File Contents",
       "load-file-details-step": "Loading Comic File Details",
