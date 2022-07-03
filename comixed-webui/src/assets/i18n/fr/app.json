@@ -18,8 +18,8 @@
       "jdbc-url": "L'url de la base de données utilisée est {url}",
       "remote-origin-url": "Cette branche suit la branche distante {url}"
     },
-    "load-current-effect-failure": "Failed to load the current release's details.",
-    "load-latest-effect-failure": "Failed to load the latest release's details.",
+    "load-current-effect-failure": "Échec du chargement des détails de la version actuelle.",
+    "load-latest-effect-failure": "Échec du chargement des détails de la dernière version.",
     "page-title": "Détails du Build",
     "tab-title": "Détails du Build"
   },
@@ -29,7 +29,7 @@
     "deselect": "Déselectionner",
     "deselect-all": "Tout déselectionner",
     "download": "Télécharger",
-    "edit": "Edit",
+    "edit": "Modifier",
     "load": "Charger",
     "login": "Se connecter",
     "logout": "Se déconnecter",
@@ -57,29 +57,29 @@
   "home": {
     "label": {
       "character": "Personnage",
-      "comic-state-added": "Added",
-      "comic-state-changed": "Changed",
-      "comic-state-deleted": "Deleted",
+      "comic-state-added": "Ajouté",
+      "comic-state-changed": "Modifié",
+      "comic-state-deleted": "Supprimé",
       "comic-state-stable": "Stable",
-      "comic-state-unprocessed": "Unprocessed",
+      "comic-state-unprocessed": "Non traité",
       "location": "Lieu",
       "publisher": "Éditeur",
-      "select-collection-type": "Collection Type",
+      "select-collection-type": "Type de collection",
       "series": "Série",
       "story": "Histoire",
       "team": "Équipe"
     },
     "legend": {
-      "collections-top-entries-x-axis": "Number Of Comics",
-      "comic-state-x-axis": "Number Of Comics In Each State"
+      "collections-top-entries-x-axis": "Nombre de BD",
+      "comic-state-x-axis": "Nombre de BD dans chaque État"
     },
     "tab-title": "Accueil",
     "title": {
-      "comic-collections-chart": "Top Collection Entries",
-      "comic-state-chart": "Comics By State",
-      "comic-statistics": "Statistiques de la bande dessinée",
-      "comics-by-year-and-publisher-chart": "Comics By Publisher/Year",
-      "last-read-statistics": "Comics Read Per Publisher",
+      "comic-collections-chart": "Principales collections",
+      "comic-state-chart": "BD par État",
+      "comic-statistics": "Statistiques de la bibliothèque des bandes dessinées",
+      "comics-by-year-and-publisher-chart": "BD par éditeur/année",
+      "last-read-statistics": "BD lues par éditeur",
       "loading-comics": "Chargement de la bibliothèque..."
     }
   },
@@ -96,7 +96,7 @@
       "4": "information"
     },
     "tooltip": {
-      "new-release-available": "Release {version} was released on {released}!",
+      "new-release-available": "La version {version} est sortie le {released} !",
       "toggle-sidenav": "Afficher/Cacher le paneau de navigation latéral..."
     },
     "user-menu": {
