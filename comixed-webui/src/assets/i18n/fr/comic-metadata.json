@@ -1,10 +1,10 @@
 {
   "metadata-cache": {
     "clear-cache": {
-      "confirmation-message": "Are you sure you want to clear out the metadata cache?",
-      "confirmation-title": "Clear Metadata Cache",
-      "effect-failure": "Failed to clear the metadata cache.",
-      "effect-success": "Metadata cache cleared."
+      "confirmation-message": "Êtes-vous sûr de vouloir vider le cache des métadonnées ?",
+      "confirmation-title": "Effacer le cache des métadonnées",
+      "effect-failure": "Échec de l'effacement du cache des métadonnées.",
+      "effect-success": "Cache des métadonnées effacé."
     }
   },
   "metadata-source": {
@@ -65,12 +65,12 @@
       "effect-failure": "Échec du chargement du journal d'audit des métadonnées."
     },
     "text": {
-      "comic-is-missing": "Comic is no longer available."
+      "comic-is-missing": "La bande dessinée n'est plus disponible."
     },
     "tooltip": {
       "clear-entries": "Effacer le journal d'audit des métadonnées.",
-      "clear-metadata-cache": "Clear the metadata cache.",
-      "reload-entries": "Rechargez le journal d'audit des métadonnées."
+      "clear-metadata-cache": "Effacer le cache des métadonnées.",
+      "reload-entries": "Recharger le journal d'audit des métadonnées."
     }
   },
   "scraping": {
@@ -110,9 +110,9 @@
       "no-match": "Aucune"
     },
     "tooltip": {
-      "auto-select-exact-match": "If enabled, a single exact match will be automatically selected.",
+      "auto-select-exact-match": "Si cette option est activée, une seule correspondance exacte sera automatiquement sélectionnée.",
       "cancel-scraping": "Arrêt de la récupération des détails des Bandes Dessinées.",
-      "confirm-each-scrape": "If enabled, admins will confirm each issue selected.",
+      "confirm-each-scrape": "Si cette option est activée, les administrateurs confirmeront chaque numéro sélectionné.",
       "reject-scraping-issue": "Rejeter ce numéro.",
       "select-scraping-issue": "Sélectionner ce numéro.",
       "show-comic-details": "Afficher les détails",

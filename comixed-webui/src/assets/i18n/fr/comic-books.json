@@ -20,7 +20,7 @@
     "label": {
       "added-date": "Ajouté à la bibliothèque le",
       "archive-type": "Fichier de type :",
-      "api-key": "API Key",
+      "api-key": "Clé API",
       "characters": "Personnages dans ce numéro ({count})",
       "cover-date": "Date de la couverture",
       "comic-edit": "Éditer les détails",
@@ -42,7 +42,7 @@
       "locations": "Lieux dans ce numéro ({count})",
       "metadata-load-limit": "Maximum Records",
       "metadata-source": "Metadata Source",
-      "metadata-source-id": "Metadata Source ID",
+      "metadata-source-id": "ID de la source de métadonnées",
       "other-details": "Autres détails de cette Bande Dessinée",
       "page-count": "# de pages",
       "page-title": "Page {which} sur {count}",
