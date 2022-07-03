@@ -38,6 +38,7 @@ public class LoadFileDetailsProcessorTest {
   @InjectMocks private LoadFileDetailsProcessor processor;
   @Mock private GenericUtilitiesAdaptor genericUtilitiesAdaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicFileDetails fileDetails;
 
   @Captor private ArgumentCaptor<ComicFileDetails> comicFileDetailsArgumentCaptor;
 
@@ -74,5 +75,20 @@ public class LoadFileDetailsProcessorTest {
     assertNotNull(fileDetails);
     assertSame(comicBook, fileDetails.getComicBook());
     assertEquals(TEST_HASH, fileDetails.getHash());
+  }
+
+  @Test
+  public void testProcessHasFileDetails() throws Exception {
+    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicBook.getFileDetails()).thenReturn(fileDetails);
+    Mockito.when(genericUtilitiesAdaptor.createHash(Mockito.any(InputStream.class)))
+        .thenReturn(TEST_HASH);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBook, Mockito.never()).setFileDetails(Mockito.any());
   }
 }

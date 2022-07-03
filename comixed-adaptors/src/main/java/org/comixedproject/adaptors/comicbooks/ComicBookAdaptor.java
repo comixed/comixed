@@ -93,7 +93,7 @@ public class ComicBookAdaptor {
         final ComicArchiveEntry entry = entries.get(index);
         log.trace("Loading entry content: {}", entry.getFilename());
         final byte[] content = archiveAdaptor.readEntry(readHandle, entry.getFilename());
-        log.trace("Getting content adaptor");
+        log.debug("Getting content adaptor for entry: {}", entry.getFilename());
         final ContentAdaptor adaptor = this.fileTypeAdaptor.getContentAdaptorFor(content);
         if (adaptor != null) {
           log.trace("Invoking content adaptor");
@@ -283,6 +283,8 @@ public class ComicBookAdaptor {
           log.trace("File content found");
           break;
         }
+        // reset the result value
+        result = null;
       }
       log.trace("Closing comic book file");
       archiveAdaptor.closeArchiveForRead(readHandle);
