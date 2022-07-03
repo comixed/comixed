@@ -5,7 +5,7 @@
       "comic-renaming-variables": "Variables de renommage des bandes dessinées",
       "comic-variable-description": "Description",
       "comic-variable-name": "Variable",
-      "delete-empty-directories": "Delete empty directories after consolidation.",
+      "delete-empty-directories": "Supprimer les répertoires vides après la consolidation.",
       "page-renaming-rule": "Règle de renommage des pages",
       "page-renaming-variables": "Variables de renomamge des pages",
       "root-directory": "Répertoire racine de la bibliothèque",
@@ -17,8 +17,8 @@
     },
     "tab": {
       "library": "Bibliothèque",
-      "metadata-audit-log": "Metadata Audit Log",
-      "metadata-sources": "Metadata Sources",
+      "metadata-audit-log": "Journal d'audit des métadonnées",
+      "metadata-sources": "Sources de métadonnées",
       "server-runtime": "Temps d'exécution",
       "scraping-rules": "Règles d'extraction"
     },
@@ -124,7 +124,7 @@
     },
     "request-content-title": "Contenu de la requête",
     "response-content-title": "Contenu de la réponse",
-    "tab-title": "Web Audit Log",
+    "tab-title": "Journal d'audit Web",
     "text": {
       "runtime": "{time}ms"
     }
