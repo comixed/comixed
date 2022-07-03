@@ -40,9 +40,12 @@ public class LoadFileDetailsProcessor implements ItemProcessor<ComicBook, ComicB
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
-    log.debug("Creating file details container: id={}", comicBook.getId());
-    final ComicFileDetails fileDetails = new ComicFileDetails(comicBook);
-    comicBook.setFileDetails(fileDetails);
+    ComicFileDetails fileDetails = comicBook.getFileDetails();
+    if (fileDetails == null) {
+      log.debug("Creating file details container: id={}", comicBook.getId());
+      fileDetails = new ComicFileDetails(comicBook);
+      comicBook.setFileDetails(fileDetails);
+    }
     log.trace("Getting comicBook file hash");
     try {
       fileDetails.setHash(
