@@ -111,7 +111,10 @@ function comicListUpdate(
   return {
     ...state,
     comicBooks,
-    unprocessed: comicBooks.filter(comic => !comic.fileDetails),
+    unprocessed: comicBooks.filter(
+      comic =>
+        !comic.fileDetails || comic.comicState === ComicBookState.UNPROCESSED
+    ),
     unscraped: comicBooks.filter(comic => !comic.metadata),
     changed: comicBooks.filter(
       comic => comic.comicState == ComicBookState.CHANGED
