@@ -36,7 +36,7 @@ JDBCURL="${JDBCURL}"
 DBUSER="${DBUSERNAME}"
 DBPWRD="${DBPASSWORD}"
 IMGCACHEDIR=""
-LOGFILE=""
+LOGFILE="${COMIXEDLOG}"
 PLUGINDIR=""
 
 usage() {
@@ -56,6 +56,9 @@ usage() {
   echo " -C           - Turn on H2 database console"
   echo " -v           - Verbose mode (def. false)"
   echo " -L [LOGFILE] - Write logs to a file"
+  echo ""
+  echo "Environment variables:"
+  echo " COMIXEDLOG   - The log filename to use"
   exit 0
 }
 
