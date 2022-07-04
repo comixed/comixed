@@ -30,6 +30,10 @@ export const deselectComics = createAction(
   props<{ comicBooks: ComicBook[] }>()
 );
 
+export const clearSelectedComics = createAction(
+  '[Library] Clear all selected comics'
+);
+
 export const editMultipleComics = createAction(
   '[Library] Edit multiple comics',
   props<{ comicBooks: ComicBook[]; details: EditMultipleComics }>()

@@ -37,6 +37,7 @@ import {
 } from '@app/library/actions/rescan-comics.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { clearSelectedComics } from '@app/library/actions/library.actions';
 
 describe('RescanComicsEffects', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -82,14 +83,15 @@ describe('RescanComicsEffects', () => {
     it('fires an action on success', () => {
       const serviceResponse = new HttpResponse({ status: 200 });
       const action = rescanComics({ comicBooks: COMIC_BOOKS });
-      const outcome = comicsRescanning();
+      const outcome1 = comicsRescanning();
+      const outcome2 = clearSelectedComics();
 
       actions$ = hot('-a', { a: action });
       libraryService.rescanComics
         .withArgs({ comicBooks: COMIC_BOOKS })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.rescanComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

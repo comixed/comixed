@@ -23,6 +23,7 @@ import {
   COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 import {
+  clearSelectedComics,
   deselectComics,
   editMultipleComics,
   editMultipleComicsFailed,
@@ -97,18 +98,28 @@ describe('Library Reducer', () => {
     it('leaves the remaining comics selected', () => {
       expect(state.selected).not.toEqual([]);
     });
+  });
 
-    describe('deselecting all comics', () => {
-      beforeEach(() => {
-        state = reducer(
-          { ...state, selected: COMICS },
-          deselectComics({ comicBooks: COMICS })
-        );
-      });
+  describe('deselecting all comics', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, selected: COMICS },
+        deselectComics({ comicBooks: COMICS })
+      );
+    });
 
-      it('clears the selected comics', () => {
-        expect(state.selected).toEqual([]);
-      });
+    it('clears the selected comics', () => {
+      expect(state.selected).toEqual([]);
+    });
+  });
+
+  describe('clearing all selections', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, selected: COMICS }, clearSelectedComics());
+    });
+
+    it('clears the selected comics', () => {
+      expect(state.selected).toEqual([]);
     });
   });
 
