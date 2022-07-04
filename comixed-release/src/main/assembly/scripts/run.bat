@@ -20,6 +20,7 @@ SETLOCAL
 CD /d %~dp0
 
 FOR %%f IN (comixed-app*.jar) DO SET JARFILE=%%f
+SET LOGFILE="%COMIXEDLOG%"
 
 :process_command_line
 IF "%~1" == "" GOTO end_process_command_line
@@ -97,6 +98,9 @@ ECHO  -d            - Enable debugging (def. off)
 ECHO  -D            - Turn on ALL debugging (def. off)
 ECHO  -L [LOGFILE]  - Write logs to a logfile
 ECHO  -h            - Show help (this text)
+ECHO.
+ECHO ENVIRONMENT VARIABLES:
+ECHO  COMIXEDLOG    - The log filename to use
 GOTO exit_script
 
 :end_process_command_line
