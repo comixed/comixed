@@ -36,6 +36,7 @@ IF "%PARAM%" == "-i" GOTO set_image_cache_dir
 IF "%PARAM%" == "-l" GOTO set_lib_dir
 IF "%PARAM%" == "-L" GOTO set_logging_file
 IF "%PARAM%" == "-P" GOTO set_plugin_dir
+SHIFT
 GOTO process_command_line
 
 :set_jdbc_url
