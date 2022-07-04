@@ -18,6 +18,7 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
+  clearSelectedComics,
   deselectComics,
   editMultipleComics,
   editMultipleComicsFailed,
@@ -55,6 +56,7 @@ export const reducer = createReducer(
 
     return { ...state, selected };
   }),
+  on(clearSelectedComics, state => ({ ...state, selected: [] })),
   on(editMultipleComics, state => ({ ...state, busy: true })),
   on(multipleComicsEdited, state => ({ ...state, busy: false })),
   on(editMultipleComicsFailed, state => ({ ...state, busy: false }))
