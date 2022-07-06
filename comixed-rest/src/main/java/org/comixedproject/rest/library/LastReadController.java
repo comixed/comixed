@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
-import org.comixedproject.model.net.library.library.SetComicsReadRequest;
+import org.comixedproject.model.net.library.SetComicsReadRequest;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.comixedproject.views.View;

@@ -135,6 +135,9 @@
       "no-series": "Serie desconocida",
       "pagination-items-per-page": "Portadas por página"
     },
+    "load-library-state": {
+      "effect-failure": "Failed to load remote library state."
+    },
     "mark-selected-as-deleted": {
       "confirmation-message": "Are you sure you want to {deleted, select, true{mark} other{unmark}} the selected comics for deletion?",
       "confirmation-title": "{deleted, select, true{Mark} other{Unmark}} Comics For Deletion"

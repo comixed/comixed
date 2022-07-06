@@ -41,6 +41,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
+import org.comixedproject.service.library.LibraryStateService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -49,10 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <code>LibraryController</code> provides REST APIs for working with groups of {@link ComicBook}
@@ -66,6 +64,7 @@ public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
 
   @Autowired private LibraryService libraryService;
+  @Autowired private LibraryStateService libraryStateService;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ConfigurationService configurationService;
 
@@ -92,6 +91,19 @@ public class LibraryController {
   @Autowired
   @Qualifier("purgeLibraryJob")
   private Job purgeLibraryJob;
+
+  /**
+   * Retrieves the current state of the library.
+   *
+   * @return the library state
+   */
+  @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
+  @AuditableRestEndpoint(logResponse = false)
+  @JsonView(View.LibraryState.class)
+  public LibraryState getLibraryState() {
+    log.info("Loading the current library state");
+    return this.libraryStateService.getLibraryState();
+  }
 
   /**
    * Prepares comics to have their underlying file recreated.

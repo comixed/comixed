@@ -42,6 +42,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
+import org.comixedproject.service.library.LibraryStateService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,6 +73,7 @@ public class LibraryControllerTest {
 
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
+  @Mock private LibraryStateService libraryStateService;
   @Mock private ComicBookService comicBookService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
@@ -80,6 +82,7 @@ public class LibraryControllerTest {
   @Mock private JobLauncher jobLauncher;
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
+  @Mock private LibraryState libraryState;
 
   @Mock
   @Qualifier("updateMetadataJob")
@@ -106,6 +109,18 @@ public class LibraryControllerTest {
   @Before
   public void testSetUp() {
     Mockito.when(lastComicBook.getId()).thenReturn(TEST_LAST_COMIC_ID);
+  }
+
+  @Test
+  public void testGetLibraryState() {
+    Mockito.when(libraryStateService.getLibraryState()).thenReturn(libraryState);
+
+    final LibraryState result = controller.getLibraryState();
+
+    assertNotNull(result);
+    assertSame(libraryState, result);
+
+    Mockito.verify(libraryStateService, Mockito.times(1)).getLibraryState();
   }
 
   @Test

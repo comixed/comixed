@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.net.library.LibrarySegmentState;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -125,7 +126,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = :state")
-  int findForStateCount(@Param("state") ComicState state);
+  long findForStateCount(@Param("state") ComicState state);
 
   /**
    * Returns unprocessed comics that have their file loaded flag turned off.
@@ -485,4 +486,67 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT c FROM ComicBook c WHERE c.series = :series AND c.volume = :volume")
   List<ComicBook> getAllComicBooksForSeriesAndVolume(
       @Param("series") String series, @Param("volume") String volume);
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(c.publisher, COUNT(c)) FROM ComicBook c WHERE c.publisher IS NOT NULL GROUP BY c.publisher")
+  List<LibrarySegmentState> getPublishersState();
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(c.series, COUNT(c)) FROM ComicBook c WHERE c.series IS NOT NULL GROUP BY c.series")
+  List<LibrarySegmentState> getSeriesState();
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(cc, COUNT(c)) FROM ComicBook c JOIN c.characters cc GROUP BY cc")
+  List<LibrarySegmentState> getCharactersState();
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(ct, COUNT(c)) FROM ComicBook c JOIN c.teams ct GROUP BY ct")
+  List<LibrarySegmentState> getTeamsState();
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(cl, COUNT(c)) FROM ComicBook c JOIN c.locations cl GROUP BY cl")
+  List<LibrarySegmentState> getLocationsState();
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(cs, COUNT(c)) FROM ComicBook c JOIN c.stories cs GROUP BY cs")
+  List<LibrarySegmentState> getStoriesState();
+
+  /**
+   * Returns the publishers state for the library.
+   *
+   * @return the publishers state
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.net.library.LibrarySegmentState(CAST(c.comicState AS text), COUNT(c)) FROM ComicBook c GROUP BY c.comicState")
+  List<LibrarySegmentState> getComicBooksState();
 }

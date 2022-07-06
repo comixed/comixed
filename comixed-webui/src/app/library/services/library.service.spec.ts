@@ -34,6 +34,7 @@ import {
   CONVERT_COMICS_URL,
   EDIT_MULTIPLE_COMICS_URL,
   LOAD_COMIC_URL,
+  LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
@@ -50,6 +51,7 @@ import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-req
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
+import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_BOOK_1;
@@ -66,6 +68,7 @@ describe('LibraryService', () => {
     issueNumber: '17b',
     imprint: 'The Imprint'
   };
+  const LIBRARY_STATE = {} as RemoteLibraryState;
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
@@ -83,16 +86,14 @@ describe('LibraryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('can load a comic', () => {
+  it('can retrieve the remove library state', () => {
     service
-      .loadComic({ id: COMIC.id })
-      .subscribe(response => expect(response).toEqual(COMIC));
+      .loadLibraryState()
+      .subscribe(response => expect(response).toEqual(LIBRARY_STATE));
 
-    const req = httpMock.expectOne(
-      interpolate(LOAD_COMIC_URL, { id: COMIC.id })
-    );
+    const req = httpMock.expectOne(interpolate(LOAD_LIBRARY_STATE_URL));
     expect(req.request.method).toEqual('GET');
-    req.flush(COMIC);
+    req.flush(LIBRARY_STATE);
   });
 
   it('can set the read state for comics', () => {

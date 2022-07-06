@@ -23,6 +23,7 @@ import {
   COMIC_BOOK_2,
   COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 describe('Library Selectors', () => {
   const SELECTED_COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
@@ -32,7 +33,16 @@ describe('Library Selectors', () => {
   beforeEach(() => {
     state = {
       selected: SELECTED_COMICS,
-      busy: Math.random() > 0.5
+      busy: Math.random() > 0.5,
+      totalComics: Math.abs(Math.random() * 100),
+      deletedComics: Math.abs(Math.random() * 100),
+      publishers: [{ name: 'Publisher1', count: 1 }],
+      series: [{ name: 'Series1', count: 1 }],
+      characters: [{ name: 'Character1', count: 1 }],
+      teams: [{ name: 'Team1', count: 1 }],
+      locations: [{ name: 'Location1', count: 1 }],
+      stories: [{ name: 'Story1', count: 1 }],
+      states: [{ name: ComicBookState.CHANGED.toString(), count: 1 }]
     };
   });
 

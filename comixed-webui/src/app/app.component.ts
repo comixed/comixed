@@ -40,6 +40,9 @@ import {
 } from '@app/comic-books/actions/comic-book-list.actions';
 import { User } from '@app/user/models/user';
 import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
+import { loadLibraryState } from '@app/library/actions/library.actions';
+import { selectLibraryState } from '@app/library/selectors/library.selectors';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Component({
   selector: 'cx-root',
@@ -50,6 +53,8 @@ export class AppComponent implements OnInit {
   user: User = null;
   busy = false;
   sessionActive = false;
+  libraryStateSubscription: Subscription;
+  libraryState: LibraryState;
   comicListStateSubscription: Subscription;
   comicsLoaded = false;
 
@@ -70,6 +75,12 @@ export class AppComponent implements OnInit {
         this.logger.trace('Starting messaging subsystem');
         this.store.dispatch(startMessaging());
       }
+      if (!!this.user && !this.libraryStateSubscription) {
+        this.logger.trace('Subscribing to library state');
+        this.subscribeToLibraryState();
+        this.logger.trace('Loading remote library state');
+        this.store.dispatch(loadLibraryState());
+      }
       if (!!this.user && !this.comicListStateSubscription) {
         this.logger.trace('Subscribing to comic list updates');
         this.subscribeToComicListUpdates();
@@ -81,6 +92,11 @@ export class AppComponent implements OnInit {
         this.store.dispatch(stopMessaging());
         this.logger.trace('Marking the session as inactive');
         this.sessionActive = false;
+      }
+      if (!this.user && this.libraryStateSubscription) {
+        this.logger.trace('Unsubscribing from library state changes');
+        this.libraryStateSubscription.unsubscribe();
+        this.libraryStateSubscription = null;
       }
       if (!this.user && this.comicListStateSubscription) {
         this.logger.trace('Unsubscribing from comics list state changes');
@@ -123,6 +139,12 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.logger.debug('Loading current user');
     this.store.dispatch(loadCurrentUser());
+  }
+
+  private subscribeToLibraryState(): void {
+    this.libraryStateSubscription = this.store
+      .select(selectLibraryState)
+      .subscribe(state => (this.libraryState = state));
   }
 
   private subscribeToComicListUpdates(): void {

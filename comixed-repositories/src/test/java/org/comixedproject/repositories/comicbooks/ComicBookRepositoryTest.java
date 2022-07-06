@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.net.library.LibrarySegmentState;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -462,6 +463,62 @@ public class ComicBookRepositoryTest {
   @Test
   public void testLoadYearsWithComics() {
     final List<Integer> result = repository.loadYearsWithComics();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetPublishersState() {
+    final List<LibrarySegmentState> result = repository.getPublishersState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetSeriesState() {
+    final List<LibrarySegmentState> result = repository.getSeriesState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetCharactersState() {
+    final List<LibrarySegmentState> result = repository.getCharactersState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetTeamsState() {
+    final List<LibrarySegmentState> result = repository.getTeamsState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetLocationsState() {
+    final List<LibrarySegmentState> result = repository.getLocationsState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetStoriesState() {
+    final List<LibrarySegmentState> result = repository.getStoriesState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetComicBooksState() {
+    final List<LibrarySegmentState> result = repository.getComicBooksState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

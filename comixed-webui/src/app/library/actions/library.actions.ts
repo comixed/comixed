@@ -19,6 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { LibraryState } from '@app/library/models/net/library-state';
 
 export const selectComics = createAction(
   '[Library] Mark a set of comics as selected',
@@ -45,4 +46,17 @@ export const multipleComicsEdited = createAction(
 
 export const editMultipleComicsFailed = createAction(
   '[Library] Failed to edit multiple comics'
+);
+
+export const loadLibraryState = createAction(
+  '[Library] Load the current state of the library'
+);
+
+export const libraryStateLoaded = createAction(
+  '[Library] The current state of the library is loaded',
+  props<{ state: LibraryState }>()
+);
+
+export const loadLibraryStateFailed = createAction(
+  '[Library] Failed to load the current state of the library'
 );

@@ -26,7 +26,7 @@ import java.security.Principal;
 import java.util.List;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.library.GetLastReadDatesResponse;
-import org.comixedproject.model.net.library.library.SetComicsReadRequest;
+import org.comixedproject.model.net.library.SetComicsReadRequest;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.junit.Before;

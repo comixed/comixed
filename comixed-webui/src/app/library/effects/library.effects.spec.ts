@@ -34,12 +34,17 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
   editMultipleComics,
   editMultipleComicsFailed,
+  libraryStateLoaded,
+  loadLibraryState,
+  loadLibraryStateFailed,
   multipleComicsEdited
 } from '@app/library/actions/library.actions';
 import { hot } from 'jasmine-marbles';
+import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
 
 describe('LibraryEffects', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3];
+  const LIBRARY_STATE = {} as RemoteLibraryState;
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -66,6 +71,9 @@ describe('LibraryEffects', () => {
         {
           provide: LibraryService,
           useValue: {
+            loadLibraryState: jasmine.createSpy(
+              'LibraryService.loadLibrarState'
+            ),
             editMultipleComics: jasmine.createSpy(
               'LibraryService.editMultipleComics()'
             )
@@ -85,6 +93,47 @@ describe('LibraryEffects', () => {
 
   it('should be created', () => {
     expect(effects).toBeTruthy();
+  });
+
+  describe('loading the library state', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = LIBRARY_STATE;
+      const action = loadLibraryState();
+      const outcome = libraryStateLoaded({ state: LIBRARY_STATE });
+
+      actions$ = hot('-a', { a: action });
+      libraryService.loadLibraryState.and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadLibraryState$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = loadLibraryState();
+      const outcome = loadLibraryStateFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.loadLibraryState.and.returnValue(
+        throwError(serviceResponse)
+      );
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadLibraryState$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadLibraryState();
+      const outcome = loadLibraryStateFailed();
+
+      actions$ = hot('-a', { a: action });
+      libraryService.loadLibraryState.and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadLibraryState$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
   });
 
   describe('editing multiple comics', () => {
