@@ -32,6 +32,7 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
+import org.comixedproject.model.net.library.LibrarySegmentState;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -74,6 +75,7 @@ public class ComicBookServiceTest {
   private static final String TEST_LOCATION = "The Location";
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
+  private static final long TEST_COMIC_COUNT = 239L;
 
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -96,6 +98,7 @@ public class ComicBookServiceTest {
   @Mock private List<Integer> yearList;
   @Mock private Set<String> seriesList;
   @Mock private Set<String> volumeList;
+  @Mock private List<LibrarySegmentState> librarySegmentList;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -668,11 +671,11 @@ public class ComicBookServiceTest {
     for (int index = 0; index < 50; index++) comicBookList.add(comicBook);
 
     Mockito.when(comicBookRepository.findForStateCount(Mockito.any(ComicState.class)))
-        .thenReturn(TEST_MAXIMUM_COMICS);
+        .thenReturn(TEST_COMIC_COUNT);
 
-    final int result = service.getCountForState(TEST_STATE);
+    final long result = service.getCountForState(TEST_STATE);
 
-    assertEquals(TEST_MAXIMUM_COMICS, result);
+    assertEquals(TEST_COMIC_COUNT, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findForStateCount(TEST_STATE);
   }
@@ -1537,5 +1540,111 @@ public class ComicBookServiceTest {
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
         .getAllComicBooksForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
+  }
+
+  @Test
+  public void testGetComicBookCount() {
+    Mockito.when(comicBookRepository.count()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getComicBookCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).count();
+  }
+
+  @Test
+  public void testGetDeletedComicBookCount() {
+    Mockito.when(comicBookRepository.findForStateCount(Mockito.any())).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getDeletedComicCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findForStateCount(ComicState.DELETED);
+  }
+
+  @Test
+  public void testGetPublishersState() {
+    Mockito.when(comicBookRepository.getPublishersState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getPublishersState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getPublishersState();
+  }
+
+  @Test
+  public void testGetSeriesState() {
+    Mockito.when(comicBookRepository.getSeriesState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getSeriesState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getSeriesState();
+  }
+
+  @Test
+  public void testGetCharactersState() {
+    Mockito.when(comicBookRepository.getCharactersState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getCharactersState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getCharactersState();
+  }
+
+  @Test
+  public void testGetTeamsState() {
+    Mockito.when(comicBookRepository.getTeamsState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getTeamsState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getTeamsState();
+  }
+
+  @Test
+  public void testGetLocationsState() {
+    Mockito.when(comicBookRepository.getLocationsState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getLocationsState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getLocationsState();
+  }
+
+  @Test
+  public void testGetStoriesState() {
+    Mockito.when(comicBookRepository.getStoriesState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getStoriesState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getStoriesState();
+  }
+
+  @Test
+  public void testGetComicBooksState() {
+    Mockito.when(comicBookRepository.getComicBooksState()).thenReturn(librarySegmentList);
+
+    final List<LibrarySegmentState> result = service.getComicBooksState();
+
+    assertNotNull(result);
+    assertSame(librarySegmentList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getComicBooksState();
   }
 }

@@ -24,7 +24,7 @@ import { interpolate } from '@app/core';
 import {
   CONVERT_COMICS_URL,
   EDIT_MULTIPLE_COMICS_URL,
-  LOAD_COMIC_URL,
+  LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
@@ -48,13 +48,9 @@ import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple
 export class LibraryService {
   constructor(private logger: LoggerService, private http: HttpClient) {}
 
-  /**
-   * Loads a single comic.
-   * @param args.id the comic id
-   */
-  loadComic(args: { id: number }): Observable<any> {
-    this.logger.trace('Load a comic:', args);
-    return this.http.get(interpolate(LOAD_COMIC_URL, { id: args.id }));
+  loadLibraryState(): Observable<any> {
+    this.logger.trace('Loading library state');
+    return this.http.get(interpolate(LOAD_LIBRARY_STATE_URL));
   }
 
   /**

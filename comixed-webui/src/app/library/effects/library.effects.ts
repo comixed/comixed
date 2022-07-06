@@ -27,11 +27,46 @@ import { LibraryService } from '@app/library/services/library.service';
 import {
   editMultipleComics,
   editMultipleComicsFailed,
+  libraryStateLoaded,
+  loadLibraryState,
+  loadLibraryStateFailed,
   multipleComicsEdited
 } from '@app/library/actions/library.actions';
+import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
 
 @Injectable()
 export class LibraryEffects {
+  loadLibraryState$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadLibraryState),
+      tap(action => this.logger.trace('Loading library state:', action)),
+      switchMap(() =>
+        this.libraryService.loadLibraryState().pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map((response: RemoteLibraryState) =>
+            libraryStateLoaded({ state: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'library.load-library-state.effect-failure'
+              )
+            );
+            return of(loadLibraryStateFailed());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadLibraryStateFailed());
+      })
+    );
+  });
+
   editMultipleComics$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(editMultipleComics),

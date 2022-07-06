@@ -37,6 +37,7 @@ export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 
 export const LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
+export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
 
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;

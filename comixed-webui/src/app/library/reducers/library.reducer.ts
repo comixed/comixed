@@ -22,21 +22,43 @@ import {
   deselectComics,
   editMultipleComics,
   editMultipleComicsFailed,
+  libraryStateLoaded,
+  loadLibraryState,
+  loadLibraryStateFailed,
   multipleComicsEdited,
   selectComics
 } from '../actions/library.actions';
 import { ComicBook } from '@app/comic-books/models/comic-book';
+import { LibrarySegmentState } from '@app/library/models/net/library-segment-state';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
+  totalComics: number;
+  deletedComics: number;
+  publishers: LibrarySegmentState[];
+  series: LibrarySegmentState[];
+  characters: LibrarySegmentState[];
+  teams: LibrarySegmentState[];
+  locations: LibrarySegmentState[];
+  stories: LibrarySegmentState[];
+  states: LibrarySegmentState[];
   selected: ComicBook[];
   busy: boolean;
 }
 
 export const initialState: LibraryState = {
   selected: [],
-  busy: false
+  busy: false,
+  totalComics: 0,
+  deletedComics: 0,
+  publishers: [],
+  series: [],
+  characters: [],
+  teams: [],
+  locations: [],
+  stories: [],
+  states: []
 };
 
 export const reducer = createReducer(
@@ -59,5 +81,20 @@ export const reducer = createReducer(
   on(clearSelectedComics, state => ({ ...state, selected: [] })),
   on(editMultipleComics, state => ({ ...state, busy: true })),
   on(multipleComicsEdited, state => ({ ...state, busy: false })),
-  on(editMultipleComicsFailed, state => ({ ...state, busy: false }))
+  on(editMultipleComicsFailed, state => ({ ...state, busy: false })),
+  on(loadLibraryState, state => ({ ...state, busy: true })),
+  on(libraryStateLoaded, (state, action) => ({
+    ...state,
+    busy: false,
+    totalComics: action.state.totalComics,
+    deletedComics: action.state.deletedComics,
+    publishers: action.state.publishers,
+    series: action.state.series,
+    characters: action.state.characters,
+    teams: action.state.teams,
+    locations: action.state.locations,
+    stories: action.state.stories,
+    states: action.state.states
+  })),
+  on(loadLibraryStateFailed, state => ({ ...state, busy: false }))
 );

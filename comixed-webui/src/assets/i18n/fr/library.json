@@ -135,6 +135,9 @@
       "no-series": "Série inconnue",
       "pagination-items-per-page": "Couvertures par page"
     },
+    "load-library-state": {
+      "effect-failure": "Failed to load remote library state."
+    },
     "mark-selected-as-deleted": {
       "confirmation-message": "Êtes-vous sûr de vouloir {deleted, select, true{marquer} other{annuler le marquage}} des bandes dessinées sélectionnées pour suppression ?",
       "confirmation-title": "{deleted, select, true{Marquer} other{Annuler le marquage}} des bandes dessinées pour suppression"

@@ -27,15 +27,29 @@ import {
   deselectComics,
   editMultipleComics,
   editMultipleComicsFailed,
+  libraryStateLoaded,
+  loadLibraryState,
+  loadLibraryStateFailed,
   multipleComicsEdited,
   selectComics
 } from '@app/library/actions/library.actions';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
 
 describe('Library Reducer', () => {
   const COMIC = COMIC_BOOK_1;
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
   const READ = Math.random() > 0.5;
+  const TOTAL_COMICS = Math.abs(Math.random() * 100);
+  const DELETED_COMICS = Math.abs(Math.random() * 100);
+  const PUBLISHERS = [{ name: 'Publisher1', count: 1 }];
+  const SERIES = [{ name: 'Series1', count: 1 }];
+  const CHARACTERS = [{ name: 'Character1', count: 1 }];
+  const TEAMS = [{ name: 'Team1', count: 1 }];
+  const LOCATIONS = [{ name: 'Location1', count: 1 }];
+  const STORIES = [{ name: 'Story1', count: 1 }];
+  const STATES = [{ name: ComicBookState.CHANGED.toString(), count: 1 }];
 
   let state: LibraryState;
 
@@ -152,6 +166,99 @@ describe('Library Reducer', () => {
   describe('failure editing multiple comics', () => {
     beforeEach(() => {
       state = reducer({ ...state, busy: true }, editMultipleComicsFailed());
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+  });
+
+  describe('loading the current library state', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: false }, loadLibraryState());
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('receiving the current library state', () => {
+    beforeEach(() => {
+      state = reducer(
+        {
+          ...state,
+          busy: true,
+          totalComics: 0,
+          deletedComics: 0,
+          publishers: [],
+          series: [],
+          characters: [],
+          teams: [],
+          locations: [],
+          stories: [],
+          states: []
+        },
+        libraryStateLoaded({
+          state: {
+            totalComics: TOTAL_COMICS,
+            deletedComics: DELETED_COMICS,
+            publishers: PUBLISHERS,
+            series: SERIES,
+            characters: CHARACTERS,
+            teams: TEAMS,
+            locations: LOCATIONS,
+            stories: STORIES,
+            states: STATES
+          } as RemoteLibraryState
+        })
+      );
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+
+    it('sets the total comics', () => {
+      expect(state.totalComics).toEqual(TOTAL_COMICS);
+    });
+
+    it('sets the deleted comics', () => {
+      expect(state.deletedComics).toEqual(DELETED_COMICS);
+    });
+
+    it('sets the publishers', () => {
+      expect(state.publishers).toEqual(PUBLISHERS);
+    });
+
+    it('sets the series', () => {
+      expect(state.series).toEqual(SERIES);
+    });
+
+    it('sets the characters', () => {
+      expect(state.characters).toEqual(CHARACTERS);
+    });
+
+    it('sets the team', () => {
+      expect(state.teams).toEqual(TEAMS);
+    });
+
+    it('sets the locations', () => {
+      expect(state.locations).toEqual(LOCATIONS);
+    });
+
+    it('sets the stories', () => {
+      expect(state.stories).toEqual(STORIES);
+    });
+
+    it('sets the states', () => {
+      expect(state.states).toEqual(STATES);
+    });
+  });
+
+  describe('failure to load the current library state', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: true }, loadLibraryStateFailed());
     });
 
     it('clears the busy flag', () => {

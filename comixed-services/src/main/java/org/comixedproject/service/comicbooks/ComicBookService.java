@@ -34,6 +34,7 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
+import org.comixedproject.model.net.library.LibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
@@ -450,7 +451,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param state the target state
    * @return the number of records
    */
-  public int getCountForState(final ComicState state) {
+  public long getCountForState(final ComicState state) {
     log.trace("Getting record count for state: {}", state);
     return this.comicBookRepository.findForStateCount(state);
   }
@@ -930,5 +931,95 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Loading all comics for series and volume: {} v{}", series, volume);
     return this.filterReadComics(
         email, unread, this.comicBookRepository.getAllComicBooksForSeriesAndVolume(series, volume));
+  }
+
+  /**
+   * Returns the total number of comics in the library.
+   *
+   * @return the comic count
+   */
+  public long getComicBookCount() {
+    log.trace("Getting total comics");
+    return this.comicBookRepository.count();
+  }
+
+  /**
+   * Returns the total number of comics marked for deletion.
+   *
+   * @return the deleted comic count
+   */
+  public long getDeletedComicCount() {
+    log.trace("Getting the deleted comic count");
+    return this.getCountForState(ComicState.DELETED);
+  }
+
+  /**
+   * Returns the library state for publishers.
+   *
+   * @return the publishers state
+   */
+  public List<LibrarySegmentState> getPublishersState() {
+    log.trace("Getting the publishers state");
+    return this.comicBookRepository.getPublishersState();
+  }
+
+  /**
+   * Returns the library state for series.
+   *
+   * @return the series state
+   */
+  public List<LibrarySegmentState> getSeriesState() {
+    log.trace("Getting the series state");
+    return this.comicBookRepository.getSeriesState();
+  }
+
+  /**
+   * Returns the library state for characters.
+   *
+   * @return the characters state
+   */
+  public List<LibrarySegmentState> getCharactersState() {
+    log.trace("Getting the characters state");
+    return this.comicBookRepository.getCharactersState();
+  }
+
+  /**
+   * Returns the library state for teams.
+   *
+   * @return the teams state
+   */
+  public List<LibrarySegmentState> getTeamsState() {
+    log.trace("Getting the teams state");
+    return this.comicBookRepository.getTeamsState();
+  }
+
+  /**
+   * Returns the library state for locations.
+   *
+   * @return the locations state
+   */
+  public List<LibrarySegmentState> getLocationsState() {
+    log.trace("Getting the locations state");
+    return this.comicBookRepository.getLocationsState();
+  }
+
+  /**
+   * Returns the library state for stories.
+   *
+   * @return the stories state
+   */
+  public List<LibrarySegmentState> getStoriesState() {
+    log.trace("Getting the stories state");
+    return this.comicBookRepository.getStoriesState();
+  }
+
+  /**
+   * Returns the library state for comic book states.
+   *
+   * @return the comic book states
+   */
+  public List<LibrarySegmentState> getComicBooksState() {
+    log.trace("Getting the comics state");
+    return this.comicBookRepository.getComicBooksState();
   }
 }
