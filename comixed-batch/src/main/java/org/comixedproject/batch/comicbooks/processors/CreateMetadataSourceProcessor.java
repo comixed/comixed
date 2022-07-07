@@ -20,7 +20,6 @@ package org.comixedproject.batch.comicbooks.processors;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.extern.log4j.Log4j2;
@@ -90,7 +89,7 @@ public class CreateMetadataSourceProcessor
             }
           }
         }
-      } catch (IOException error) {
+      } catch (Exception error) {
         log.error("Failed to create metadata source", error);
       }
     } else {
