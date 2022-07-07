@@ -435,7 +435,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param publisher the publisher name
    * @return the series names
    */
-  @Query("SELECT DISTINCT c.series FROM ComicBook c WHERE c.publisher = :publisher")
+  @Query(
+      "SELECT DISTINCT c.series FROM ComicBook c WHERE c.publisher = :publisher AND c.series IS NOT NULL")
   Set<String> getAllSeriesForPublisher(@Param("publisher") String publisher);
 
   /**
@@ -446,8 +447,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the volumes
    */
   @Query(
-      "SELECT DISTINCT c.volume FROM ComicBook c WHERE c.publisher = :publisher AND c.series = :series")
-  Set<String> getAllVolumeForPublisherAndSeries(
+      "SELECT DISTINCT c.volume FROM ComicBook c WHERE c.publisher = :publisher AND c.series = :series AND c.volume IS NOT NULL")
+  Set<String> getAllVolumesForPublisherAndSeries(
       @Param("publisher") String publisher, @Param("series") String series);
 
   /**
