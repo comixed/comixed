@@ -877,7 +877,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public Set<String> getAllVolumesForPublisherAndSeries(
       final String publisher, final String series) {
     log.debug("Loading volumes for series: publisher={} series={}", publisher, series);
-    return this.comicBookRepository.getAllVolumeForPublisherAndSeries(publisher, series);
+    return this.comicBookRepository.getAllVolumesForPublisherAndSeries(publisher, series);
   }
 
   /**
