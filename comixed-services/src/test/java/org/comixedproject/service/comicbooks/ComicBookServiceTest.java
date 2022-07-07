@@ -1422,7 +1422,7 @@ public class ComicBookServiceTest {
   @Test
   public void testGetAllVolumesForPublisherAndSeries() {
     Mockito.when(
-            comicBookRepository.getAllVolumeForPublisherAndSeries(
+            comicBookRepository.getAllVolumesForPublisherAndSeries(
                 Mockito.anyString(), Mockito.anyString()))
         .thenReturn(volumeList);
 
@@ -1433,7 +1433,7 @@ public class ComicBookServiceTest {
     assertSame(volumeList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllVolumeForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES);
+        .getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES);
   }
 
   @Test
