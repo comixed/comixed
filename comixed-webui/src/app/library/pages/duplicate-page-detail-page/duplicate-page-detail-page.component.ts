@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
@@ -35,6 +35,8 @@ import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
+import { loadBlockedHashList } from '@app/comic-pages/actions/blocked-hash-list.actions';
 
 @Component({
   selector: 'cx-duplicate-page-detail-page',
@@ -42,11 +44,13 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
   styleUrls: ['./duplicate-page-detail-page.component.scss']
 })
 export class DuplicatePageDetailPageComponent
-  implements AfterViewInit, OnDestroy
+  implements OnInit, OnDestroy, AfterViewInit
 {
   paramSubscription: Subscription;
   duplicatePageStateSubscription: Subscription;
   duplicatePageSubscription: Subscription;
+  blockedHashesSubscription: Subscription;
+  blockedHashes: string[] = [];
   langChangeSubscription: Subscription;
   hash = '';
   dataSource = new MatTableDataSource<ComicBook>([]);
@@ -93,9 +97,20 @@ export class DuplicatePageDetailPageComponent
       .select(selectDuplicatePageDetail)
       .pipe(filter(detail => !!detail))
       .subscribe(detail => (this.detail = detail));
+    this.blockedHashesSubscription = this.store
+      .select(selectBlockedPageList)
+      .subscribe(
+        blockedHashes =>
+          (this.blockedHashes = blockedHashes.map(hash => hash.hash))
+      );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslation()
     );
+  }
+
+  ngOnInit() {
+    this.logger.trace('Loading blocked hash list');
+    this.store.dispatch(loadBlockedHashList());
   }
 
   private _detail: DuplicatePage;
@@ -117,6 +132,9 @@ export class DuplicatePageDetailPageComponent
 
   ngOnDestroy(): void {
     this.paramSubscription.unsubscribe();
+    this.duplicatePageStateSubscription.unsubscribe();
+    this.duplicatePageSubscription.unsubscribe();
+    this.blockedHashesSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
   }
 

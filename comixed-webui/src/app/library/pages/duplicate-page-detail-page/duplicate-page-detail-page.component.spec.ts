@@ -50,15 +50,22 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import {
+  BLOCKED_HASH_LIST_FEATURE_KEY,
+  initialState as initialBlockedHashesState
+} from '@app/comic-pages/reducers/blocked-hash-list.reducer';
+import { BLOCKED_HASH_1 } from '@app/comic-pages/comic-pages.fixtures';
 
 describe('DuplicatePageDetailPageComponent', () => {
   const DETAIL = DUPLICATE_PAGE_1;
+  const BLOCKED_HASH = BLOCKED_HASH_1;
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_DETAIL_FEATURE_KEY]: {
       ...initialDuplicatePageDetailState,
       detail: DETAIL
-    }
+    },
+    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedHashesState
   };
   let component: DuplicatePageDetailPageComponent;
   let fixture: ComponentFixture<DuplicatePageDetailPageComponent>;
@@ -222,6 +229,23 @@ describe('DuplicatePageDetailPageComponent', () => {
           setBlockedState({ hashes: [DETAIL.hash], blocked: false })
         );
       });
+    });
+  });
+
+  describe('loading blocked hashes', () => {
+    beforeEach(() => {
+      component.blockedHashes = [];
+      store.setState({
+        ...initialState,
+        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
+          ...initialBlockedHashesState,
+          entries: [BLOCKED_HASH]
+        }
+      });
+    });
+
+    it('updates the blocked hashes', () => {
+      expect(component.blockedHashes).toEqual([BLOCKED_HASH.hash]);
     });
   });
 });
