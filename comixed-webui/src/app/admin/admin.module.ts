@@ -20,13 +20,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminRouting } from './admin.routing';
 import { StoreModule } from '@ngrx/store';
-import {
-  reducer as webAuditLogReducer,
-  WEB_AUDIT_LOG_FEATURE_KEY
-} from '@app/admin/reducers/web-audit-log.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { WebAuditLogEffects } from '@app/admin/effects/web-audit-log.effects';
-import { WebAuditLogPageComponent } from './pages/web-audit-log-page/web-audit-log-page.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -78,7 +72,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
-    WebAuditLogPageComponent,
     ConfigurationPageComponent,
     LibraryConfigurationComponent,
     FilenameScrapingRulesConfigurationComponent,
@@ -101,7 +94,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
       SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY,
       saveConfigurationOptionsReducer
     ),
-    StoreModule.forFeature(WEB_AUDIT_LOG_FEATURE_KEY, webAuditLogReducer),
     StoreModule.forFeature(
       FILENAME_SCRAPING_RULES_FEATURE_KEY,
       filenameScrapingRulesReducer
@@ -110,7 +102,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
-      WebAuditLogEffects,
       FilenameScrapingRuleListEffects,
       ServerRuntimeEffects
     ]),

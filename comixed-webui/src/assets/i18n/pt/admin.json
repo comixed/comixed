@@ -98,35 +98,5 @@
     "confirmation-title": "Desligar ComiXed",
     "effect-failure": "Falhou ao desligar o servidor.",
     "effect-success": "Servidor a desligar."
-  },
-  "web-audit-log": {
-    "clear": {
-      "confirmation-message": "Tem a certeza que quer limpar ao registro? Isto não pode ser revertido.",
-      "confirmation-title": "Limpar Registro de Web",
-      "effect-failure": "Falhou ao limpar o registro de web.",
-      "effect-success": "Registro de web limpos."
-    },
-    "label": {
-      "actions": "Ações",
-      "bytes-sent": "Bytes Enviados",
-      "bytes-received": "Bytes Recebidos",
-      "method": "Método HTTP",
-      "pagination-items-per-page": "Entradas por Página",
-      "account": "Conta",
-      "remote-ip": "IP Remoto",
-      "runtime": "Duração",
-      "started": "Começou",
-      "success": "Com Sucesso?",
-      "url": "URL Acedido"
-    },
-    "load-entries": {
-      "effect-failure": "Falhou ao carregar as entradas dos registro web."
-    },
-    "request-content-title": "Conteúdo do Pedido",
-    "response-content-title": "Conteúdo da Resposta",
-    "tab-title": "Registro de Web",
-    "text": {
-      "runtime": "{time}ms"
-    }
   }
 }

@@ -21,7 +21,6 @@ package org.comixedproject.rest.metadata;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
@@ -65,7 +64,6 @@ public class MetadataController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint(logRequest = true, logResponse = true)
   public IssueMetadata loadScrapingIssue(
       @PathVariable("sourceId") final Long sourceId,
       @PathVariable("volumeId") final Integer volume,
@@ -90,7 +88,6 @@ public class MetadataController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint(logRequest = true, logResponse = true)
   public List<VolumeMetadata> loadScrapingVolumes(
       @PathVariable("sourceId") final Long sourceId,
       @RequestBody() final LoadVolumeMetadataRequest request)
@@ -123,10 +120,6 @@ public class MetadataController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint(
-      logRequest = true,
-      logResponse = true,
-      responseView = View.ComicDetailsView.class)
   @JsonView(View.ComicDetailsView.class)
   public ComicBook scrapeComic(
       @PathVariable("sourceId") final Long sourceId,
@@ -163,7 +156,6 @@ public class MetadataController {
   /** Initiates clearing the metadata cache. */
   @DeleteMapping(value = "/api/metadata/cache")
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint
   public void clearCache() {
     log.info("Clearing the metadata cache");
     this.metadataCacheService.clearCache();

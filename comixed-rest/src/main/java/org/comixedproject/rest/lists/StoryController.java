@@ -21,7 +21,6 @@ package org.comixedproject.rest.lists;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.lists.Story;
 import org.comixedproject.service.lists.StoryException;
 import org.comixedproject.service.lists.StoryService;
@@ -49,7 +48,6 @@ public class StoryController {
   @GetMapping(value = "/api/lists/stories/names", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryList.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableRestEndpoint(logResponse = true, responseView = View.StoryList.class)
   public Set<String> loadAllNames() {
     log.info("Getting all stories");
     return this.storyService.loadAll();
@@ -65,7 +63,6 @@ public class StoryController {
   @GetMapping(value = "/api/lists/stories", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryList.class)
   @PreAuthorize("hasRole('READER')")
-  @AuditableRestEndpoint(logResponse = true, responseView = View.StoryList.class)
   public Set<Story> loadAllWithName(@RequestParam(value = "name") final String name) {
     log.info("Loading all stories with name: {}", name);
     return this.storyService.findByName(name);
@@ -84,10 +81,6 @@ public class StoryController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint(
-      logRequest = true,
-      logResponse = true,
-      responseView = View.StoryDetail.class)
   public Story createStory(@RequestBody() final Story story) throws StoryException {
     log.info("Creating a new story: name={}", story.getName());
     return this.storyService.createStory(story);

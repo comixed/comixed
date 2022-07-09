@@ -98,35 +98,5 @@
     "confirmation-title": "Arrêter ComiXed",
     "effect-failure": "Échec de l'arrêt du serveur.",
     "effect-success": "Arrêt du serveur."
-  },
-  "web-audit-log": {
-    "clear": {
-      "confirmation-message": "Êtes-vous sûr de vouloir vider le journal d'audit ? Cette action est irreversible.",
-      "confirmation-title": "Vider le journal d'audit Web",
-      "effect-failure": "Échec lors de la suppression du journal d'audit Web.",
-      "effect-success": "Journal d'audit Web vidé."
-    },
-    "label": {
-      "actions": "Actions",
-      "bytes-sent": "Bytes envoyés",
-      "bytes-received": "Bytes Reçus",
-      "method": "Méthode HTTP",
-      "pagination-items-per-page": "Entrées par page",
-      "account": "Compte",
-      "remote-ip": "Adresse IP",
-      "runtime": "Durée",
-      "started": "Début",
-      "success": "Réussite ?",
-      "url": "URL consultée"
-    },
-    "load-entries": {
-      "effect-failure": "Échec du chargement des entrées du journal d'audit Web."
-    },
-    "request-content-title": "Contenu de la requête",
-    "response-content-title": "Contenu de la réponse",
-    "tab-title": "Journal d'audit Web",
-    "text": {
-      "runtime": "{time}ms"
-    }
   }
 }

@@ -19,7 +19,6 @@
 package org.comixedproject.rest.user;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.auth.AuthToken;
 import org.comixedproject.auth.JwtTokenUtil;
 import org.comixedproject.model.user.ComiXedUser;
@@ -57,7 +56,6 @@ public class ComiXedAuthenticationController {
    * @throws AuthenticationException if an error occurs
    */
   @PostMapping(value = "/api/token/generate", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableRestEndpoint
   public AuthToken generateToken(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {

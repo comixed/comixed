@@ -98,35 +98,5 @@
     "confirmation-title": "Shutdown ComiXed",
     "effect-failure": "Failed to shutdown server.",
     "effect-success": "Server shutting down."
-  },
-  "web-audit-log": {
-    "clear": {
-      "confirmation-message": "¿Está seguro de que desea borrar el registro de auditoría? Esta acción no se puede deshacer.",
-      "confirmation-title": "Borrar registro de auditoría web",
-      "effect-failure": "No se pudieron borrar los registros de auditoría web.",
-      "effect-success": "Registros de auditoría web borrados."
-    },
-    "label": {
-      "actions": "Acciónes",
-      "bytes-sent": "Bytes enviados",
-      "bytes-received": "Bytes recibidos",
-      "method": "Método HTTP",
-      "pagination-items-per-page": "Entradas por página",
-      "account": "Cuenta",
-      "remote-ip": "IP remota",
-      "runtime": "Duración",
-      "started": "Comencé",
-      "success": "Exitoso?",
-      "url": "Dirección URL a la que se accede"
-    },
-    "load-entries": {
-      "effect-failure": "No se pudieron cargar las entradas del registro de auditoría web."
-    },
-    "request-content-title": "Contenido de solicitud",
-    "response-content-title": "Contenido de respuesta",
-    "tab-title": "Web Audit Log",
-    "text": {
-      "runtime": "{time}ms"
-    }
   }
 }
