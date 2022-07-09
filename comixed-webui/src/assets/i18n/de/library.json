@@ -1,8 +1,8 @@
 {
   "duplicate-page-detail": {
     "block-page": {
-      "confirmation-message": "Are you sure you want to unblock all pages like this one?",
-      "confirmation-title": "Unblock Page Hash"
+      "confirmation-message": "Are you sure you want to block all pages like this one?",
+      "confirmation-title": "Block Page Hash"
     },
     "load-detail": {
       "effect-failure": "Failed to load details for hash: {hash}"
