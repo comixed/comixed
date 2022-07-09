@@ -26,7 +26,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.MarkComicsDeletedRequest;
@@ -36,7 +35,6 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
-import org.comixedproject.views.View;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -68,7 +66,6 @@ public class ComicBookController {
    */
   @GetMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  @AuditableRestEndpoint(logResponse = true, responseView = View.ComicDetailsView.class)
   public ComicBook getComic(@PathVariable("id") long id) throws ComicException {
     log.info("Getting comic: id={}", id);
     return this.comicBookService.getComic(id);
@@ -83,7 +80,6 @@ public class ComicBookController {
    */
   @DeleteMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
-  @AuditableRestEndpoint(logResponse = true, responseView = View.ComicDetailsView.class)
   public ComicBook deleteComic(@PathVariable("id") long id) throws ComicException {
     log.info("Marking comic for deletion: id={}", id);
     return this.comicBookService.deleteComic(id);
@@ -98,7 +94,6 @@ public class ComicBookController {
    */
   @DeleteMapping(value = "/api/comics/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  @AuditableRestEndpoint(logResponse = true, responseView = View.ComicDetailsView.class)
   public ComicBook deleteMetadata(@PathVariable("id") long id) throws ComicException {
     log.debug("Deleting comic metadata: id={}", id);
     return this.comicBookService.deleteMetadata(id);
@@ -110,7 +105,6 @@ public class ComicBookController {
    * @param request the request body
    */
   @PostMapping(value = "/api/comics/mark/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableRestEndpoint
   public void markComicsDeleted(@RequestBody() final MarkComicsDeletedRequest request) {
     final List<Long> ids = request.getIds();
     log.debug("Deleting multiple comics: ids={}", ids.toArray());
@@ -124,7 +118,6 @@ public class ComicBookController {
    * @throws Exception if an error occurs
    */
   @PostMapping(value = "/api/comics/mark/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableRestEndpoint
   public void markComicsUndeleted(@RequestBody() final MarkComicsUndeletedRequest request)
       throws Exception {
     final List<Long> ids = request.getIds();
@@ -133,7 +126,6 @@ public class ComicBookController {
   }
 
   @GetMapping(value = "/api/comics/{id}/download")
-  @AuditableRestEndpoint
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
       throws IOException, ComicException {
     log.info("Preparing to download comicBook: id={}", id);
@@ -170,11 +162,6 @@ public class ComicBookController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  @AuditableRestEndpoint(
-      logRequest = true,
-      requestView = View.ComicDetailsView.class,
-      logResponse = true,
-      responseView = View.ComicDetailsView.class)
   public ComicBook updateComic(@PathVariable("id") long id, @RequestBody() ComicBook comicBook)
       throws ComicException {
     log.info("Updating comicBook: id={}", id, comicBook);
@@ -192,7 +179,6 @@ public class ComicBookController {
    * @throws AdaptorException if an error occurs
    */
   @GetMapping(value = "/api/comics/{id}/cover/content")
-  @AuditableRestEndpoint
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
       throws ComicException, IOException, AdaptorException {
     log.info("Getting cover for comicBook: id={}", id);
@@ -242,7 +228,6 @@ public class ComicBookController {
    * @throws ComicException if an error occurs
    */
   @PostMapping(value = "/api/comics/{id}/pages/order", consumes = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableRestEndpoint(logRequest = true)
   @PreAuthorize("hasRole('ADMIN')")
   public void savePageOrder(
       @PathVariable("id") final long id, @RequestBody() final SavePageOrderRequest request)

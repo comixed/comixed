@@ -21,7 +21,6 @@ package org.comixedproject.rest.admin;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsRequest;
 import org.comixedproject.model.net.admin.SaveConfigurationOptionsResponse;
@@ -55,7 +54,6 @@ public class ConfigurationController {
   @GetMapping(value = "/api/admin/config", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ConfigurationList.class)
-  @AuditableRestEndpoint
   public List<ConfigurationOption> getAll() {
     log.info("Getting all configuration options");
     return this.configurationService.getAll();
@@ -74,7 +72,6 @@ public class ConfigurationController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @JsonView(View.ConfigurationList.class)
-  @AuditableRestEndpoint
   public SaveConfigurationOptionsResponse saveOptions(
       @RequestBody() final SaveConfigurationOptionsRequest request)
       throws ConfigurationOptionException {

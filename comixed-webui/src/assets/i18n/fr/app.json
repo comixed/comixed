@@ -149,8 +149,7 @@
       "unprocessed-comics": "Imports non traités",
       "unread-comics": "BD non lues",
       "unscraped-comics": "BD sans détails récupérés",
-      "user-preferences": "Préférences",
-      "web-audit-log": "journal d'Audit Web"
+      "user-preferences": "Préférences"
     },
     "tooltip": {
       "account": "Voir les détails du compte.",

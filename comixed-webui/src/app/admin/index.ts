@@ -18,11 +18,6 @@
 
 import { Params } from '@angular/router';
 import { routerReducer, RouterReducerState } from '@ngrx/router-store';
-import {
-  reducer as webAuditLogReducer,
-  WEB_AUDIT_LOG_FEATURE_KEY,
-  WebAuditLogState
-} from './reducers/web-audit-log.reducer';
 import { ActionReducerMap } from '@ngrx/store';
 import {
   CONFIGURATION_OPTION_LIST_FEATURE_KEY,
@@ -57,7 +52,6 @@ export interface AdminModuleState {
   router: RouterReducerState<RouterStateUrl>;
   [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: ConfigurationOptionListState;
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: SaveConfigurationOptionsState;
-  [WEB_AUDIT_LOG_FEATURE_KEY]: WebAuditLogState;
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: FilenameScrapingRulesState;
   [SERVER_RUNTIME_FEATURE_KEY]: ShutdownState;
 }
@@ -68,7 +62,6 @@ export const reducers: ActionReducerMap<AdminModuleState> = {
   router: routerReducer,
   [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: configurationOptionListReducer,
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: saveConfigurationOptionsReducer,
-  [WEB_AUDIT_LOG_FEATURE_KEY]: webAuditLogReducer,
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: filenameScrapingRulesReducer,
   [SERVER_RUNTIME_FEATURE_KEY]: serverRuntimeReducer
 };

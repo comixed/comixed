@@ -559,15 +559,6 @@
                         MetadataCacheId="1000"
                         EntryNumber="9"
                         EntryValue="cached-value-9"/>
-  <WebAuditLogEntries Id="1000"
-                      RemoteIp="192.168.1.125"
-                      URL="/api/comicBooks"
-                      Method="GET"
-                      EMail="reader@comixedproject.org"
-                      StartedAt="[now+1h]"
-                      EndedAt="[now+1h+1m]"
-                      Successful="true"
-                      ResponseContent="some data"/>
   <Stories Id="1"
            Name="Age Of Ultron"
            StoryState="STABLE"

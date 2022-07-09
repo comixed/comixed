@@ -21,7 +21,6 @@ package org.comixedproject.rest.app;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.text.ParseException;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.app.BuildDetails;
 import org.comixedproject.model.net.app.LatestReleaseDetails;
 import org.comixedproject.service.app.ReleaseService;
@@ -48,7 +47,6 @@ public class ReleaseController {
    * @throws ParseException if an error occurs
    */
   @GetMapping(value = "/api/app/release/current", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableRestEndpoint
   @JsonView(View.ReleaseDetails.class)
   public BuildDetails getCurrentRelease() throws ParseException {
     log.info("Getting current release details");
@@ -61,7 +59,6 @@ public class ReleaseController {
    * @return the release details
    */
   @GetMapping(value = "/api/app/release/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-  @AuditableRestEndpoint
   @JsonView(View.ReleaseDetails.class)
   public LatestReleaseDetails getLatestRelease() {
     log.info("Getting latest release details");

@@ -302,17 +302,6 @@
   <span>{{ "navigation.option.configuration" | translate }}</span>
 </button>
 
-<button
-  *ngIf="isAdmin"
-  mat-button
-  class="menu-button"
-  routerLink="/admin/audit/web"
-  routerLinkActive="active"
->
-  <mat-icon>list</mat-icon>
-  <span>{{ "navigation.option.web-audit-log" | translate }}</span>
-</button>
-
 <mat-divider *ngIf="!!user"></mat-divider>
 
 <h4 class="section-title">

@@ -53,11 +53,6 @@
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
-      <artifactId>comixed-auditlog</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.comixedproject</groupId>
       <artifactId>comixed-opds</artifactId>
       <version>1.2-SNAPSHOT</version>
     </dependency>

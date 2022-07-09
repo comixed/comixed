@@ -25,7 +25,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
-import org.comixedproject.auditlog.rest.AuditableRestEndpoint;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
 import org.comixedproject.service.comicpages.PageCacheService;
@@ -58,7 +57,6 @@ public class PageController {
    * @throws PageException if an error occurs
    */
   @GetMapping(value = "/api/pages/{pageId}/content")
-  @AuditableRestEndpoint
   public ResponseEntity<byte[]> getPageContent(@PathVariable("pageId") long pageId)
       throws PageException {
     log.info("Getting image content for page: pageId={}", pageId);
@@ -110,7 +108,6 @@ public class PageController {
    * @throws PageException if an error occurs
    */
   @GetMapping(value = "/api/pages/hashes/{hash}/content")
-  @AuditableRestEndpoint
   public ResponseEntity<byte[]> getPageForHash(@PathVariable("hash") final String hash)
       throws PageException {
     log.info("Getting image content for page hash: {}", hash);
@@ -126,7 +123,6 @@ public class PageController {
    */
   @PostMapping(value = "/api/pages/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint(logRequest = true)
   public void markPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Marking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
@@ -140,7 +136,6 @@ public class PageController {
    */
   @PostMapping(value = "/api/pages/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
-  @AuditableRestEndpoint(logRequest = true)
   public void unmarkPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Unmarking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
