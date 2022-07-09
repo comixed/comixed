@@ -51,6 +51,8 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatSortModule } from '@angular/material/sort';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
@@ -71,6 +73,7 @@ describe('BlockedHashListPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [BlockedHashListPageComponent],
         imports: [
+          NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
@@ -80,7 +83,8 @@ describe('BlockedHashListPageComponent', () => {
           MatCheckboxModule,
           MatDialogModule,
           MatIconModule,
-          MatTooltipModule
+          MatTooltipModule,
+          MatSortModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -348,6 +352,43 @@ describe('BlockedHashListPageComponent', () => {
           })
         );
       });
+    });
+  });
+
+  describe('sorting the list', () => {
+    const ITEM = {
+      item: ENTRY,
+      selected: Math.random() > 0.5
+    } as SelectableListItem<BlockedHash>;
+
+    it('can sort by selected state', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ITEM, 'selected')
+      ).toEqual(`${ITEM.selected}`);
+    });
+
+    it('can sort by label', () => {
+      expect(component.dataSource.sortingDataAccessor(ITEM, 'label')).toEqual(
+        `${ITEM.item.label}`
+      );
+    });
+
+    it('can sort by hash', () => {
+      expect(component.dataSource.sortingDataAccessor(ITEM, 'hash')).toEqual(
+        `${ITEM.item.hash}`
+      );
+    });
+
+    it('can sort by comic count', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ITEM, 'comic-count')
+      ).toEqual(ITEM.item.comicCount);
+    });
+
+    it('can sort by created', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ITEM, 'created-on')
+      ).toEqual(ITEM.item.createdOn);
     });
   });
 });

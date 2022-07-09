@@ -67,7 +67,7 @@
 
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="selected">
-    <mat-header-cell *matHeaderCellDef>
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
         [checked]="allSelected"
         (change)="onSelectAll($event.checked)"
