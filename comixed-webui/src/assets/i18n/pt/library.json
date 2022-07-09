@@ -1,8 +1,8 @@
 {
   "duplicate-page-detail": {
     "block-page": {
-      "confirmation-message": "Tem a certeza que quer desbloquear todas as páginas como esta?",
-      "confirmation-title": "Desbloquear Hash da Página"
+      "confirmation-message": "Tem a certeza que quer bloquear todas as páginas como esta?",
+      "confirmation-title": "Bloquear Hash da Página"
     },
     "load-detail": {
       "effect-failure": "Falhou ao carregar os detalhes para a hash: {hash}"
