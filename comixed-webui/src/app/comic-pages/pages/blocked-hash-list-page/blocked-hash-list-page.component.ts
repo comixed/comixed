@@ -46,6 +46,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -56,6 +57,7 @@ export class BlockedHashListPageComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @ViewChild('MatPagination') paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   hashStateSubscription: Subscription;
   pageSubscription: Subscription;
@@ -125,6 +127,21 @@ export class BlockedHashListPageComponent
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'selected':
+          return `${data.selected}`;
+        case 'label':
+          return data.item.label;
+        case 'hash':
+          return data.item.hash;
+        case 'comic-count':
+          return data.item.comicCount;
+        case 'created-on':
+          return data.item.createdOn;
+      }
+    };
   }
 
   onDownloadFile(): void {
