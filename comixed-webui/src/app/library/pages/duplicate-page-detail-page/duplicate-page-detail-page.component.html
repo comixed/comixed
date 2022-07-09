@@ -9,6 +9,7 @@
   </button>
   <div class="cx-spacer"></div>
   <button
+    *ngIf="!!detail && !blockedHashes.includes(detail.hash)"
     id="block-page-button"
     mat-icon-button
     color="warn"
@@ -18,6 +19,7 @@
     <mat-icon>block</mat-icon>
   </button>
   <button
+    *ngIf="!!detail && blockedHashes.includes(detail.hash)"
     id="unblock-page-button"
     mat-icon-button
     color="accent"
@@ -91,3 +93,5 @@
     </mat-table>
   </div>
 </div>
+
+<pre>{{ blockedHashes | json }}</pre>
