@@ -39,7 +39,8 @@ import org.springframework.batch.core.StepExecution;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MoveComicBookProcessorTest {
-  private static final String TEST_TARGET_DIRECTORY = "/Users/comixed/Documents/Comics";
+  private static final String TEST_TARGET_DIRECTORY =
+      new File("src/test/resources").getAbsolutePath();
   private static final String TEST_RENAMING_RULE = "The renaming rule";
   private static final String TEST_NEW_FILENAME = "comicBook";
   private static final String TEST_NEW_FILENAME_WITH_PATH =
@@ -96,7 +97,9 @@ public class MoveComicBookProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    assertEquals(TEST_TARGET_DIRECTORY, createDirectoryArgumentCaptor.getValue().getPath());
+    assertEquals(
+        new File(TEST_TARGET_DIRECTORY).getAbsolutePath(),
+        createDirectoryArgumentCaptor.getValue().getAbsolutePath());
     assertSame(comicFile, sourceFileArgumentCaptor.getValue());
     assertEquals(
         new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
@@ -137,7 +140,9 @@ public class MoveComicBookProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    assertEquals(TEST_TARGET_DIRECTORY, createDirectoryArgumentCaptor.getValue().getPath());
+    assertEquals(
+        new File(TEST_TARGET_DIRECTORY).getAbsolutePath(),
+        createDirectoryArgumentCaptor.getValue().getAbsolutePath());
     assertSame(comicFile, sourceFileArgumentCaptor.getValue());
     assertEquals(
         new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),

@@ -137,7 +137,7 @@ public class ComicFileService {
   private boolean canBeImported(final File file) throws IOException {
     boolean isComic = this.comicFileAdaptor.isComicFile(file);
 
-    final String filePath = file.getCanonicalPath();
+    final String filePath = file.getCanonicalPath().replace("\\", "/");
     log.trace("Checking if comicBook file is already in the database");
     final ComicBook comicBook = this.comicBookService.findByFilename(filePath);
 
