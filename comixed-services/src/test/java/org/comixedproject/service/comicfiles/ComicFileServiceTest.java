@@ -117,7 +117,7 @@ public class ComicFileServiceTest {
     assertTrue(result.isEmpty());
 
     Mockito.verify(comicBookService, Mockito.times(1))
-        .findByFilename(new File(TEST_COMIC_ARCHIVE).getCanonicalPath());
+        .findByFilename(new File(TEST_COMIC_ARCHIVE).getCanonicalPath().replace("\\", "/"));
   }
 
   @Test
