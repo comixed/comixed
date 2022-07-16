@@ -16,19 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibrarySegmentState } from '@app/library/models/net/library-segment-state';
+import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 import { ByPublisherAndYearSegment } from '@app/library/models/net/by-publisher-and-year-segment';
 
-export interface LibraryState {
+export interface RemoteLibraryState {
   totalComics: number;
   unscrapedComics: number;
   deletedComics: number;
-  publishers: LibrarySegmentState[];
-  series: LibrarySegmentState[];
-  characters: LibrarySegmentState[];
-  teams: LibrarySegmentState[];
-  locations: LibrarySegmentState[];
-  stories: LibrarySegmentState[];
-  states: LibrarySegmentState[];
+  publishers: RemoteLibrarySegmentState[];
+  series: RemoteLibrarySegmentState[];
+  characters: RemoteLibrarySegmentState[];
+  teams: RemoteLibrarySegmentState[];
+  locations: RemoteLibrarySegmentState[];
+  stories: RemoteLibrarySegmentState[];
+  states: RemoteLibrarySegmentState[];
   byPublisherAndYear: ByPublisherAndYearSegment[];
 }

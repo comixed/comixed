@@ -23,10 +23,10 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 interface LastReadEntry {
   name: string;
@@ -41,23 +41,20 @@ interface LastReadEntry {
 export class ReadComicsChartComponent implements AfterViewInit {
   @ViewChild('container') container: ElementRef;
 
-  @Input() ready = false;
-
   chartHeight$ = new BehaviorSubject<number>(0);
   chartWidth$ = new BehaviorSubject<number>(0);
   lastReadComicBooksData: LastReadEntry[] = [];
 
   constructor(private logger: LoggerService) {}
 
-  private _comicBooks: ComicBook[] = [];
+  private _libraryState: LibraryState;
 
-  get comicBooks(): ComicBook[] {
-    return this._comicBooks;
+  get libraryState(): LibraryState {
+    return this._libraryState;
   }
 
-  @Input() set comicBooks(comicBooks: ComicBook[]) {
-    this.logger.trace('Comic books updated:', comicBooks);
-    this._comicBooks = comicBooks || [];
+  @Input() set libraryState(libraryState: LibraryState) {
+    this._libraryState = libraryState;
     this.loadReadComicBooksData();
   }
 
@@ -77,13 +74,14 @@ export class ReadComicsChartComponent implements AfterViewInit {
     this.loadComponentDimensions();
   }
 
-  private loadReadComicBooksData() {
-    const data = this.comicBooks
-      .map(comicBook => comicBook.publisher)
-      .filter(
-        (publisher, index, self) =>
-          !!publisher && index === self.indexOf(publisher)
-      )
+  private loadReadComicBooksData(): void {
+    if (!this.libraryState) {
+      this.logger.debug('No library state loaded');
+      alert('No library state loaded');
+      return;
+    }
+    this.lastReadComicBooksData = this.libraryState.publishers
+      .map(publisher => publisher.name)
       .map(publisher => {
         return {
           name: publisher,
@@ -93,12 +91,14 @@ export class ReadComicsChartComponent implements AfterViewInit {
         };
       })
       .sort((left, right) => right.value - left.value);
-    this.lastReadComicBooksData = data;
   }
 
   private loadComponentDimensions(): void {
+    /* istanbul ignore next */
     this.chartWidth$.next(this.container?.nativeElement?.offsetWidth);
+    /* istanbul ignore next */
     let height = this.container?.nativeElement?.offsetHeight;
+    /* istanbul ignore if */
     if (height < 0) {
       height = 0;
     }

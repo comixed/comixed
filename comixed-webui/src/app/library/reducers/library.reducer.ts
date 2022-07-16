@@ -29,7 +29,8 @@ import {
   selectComics
 } from '../actions/library.actions';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { LibrarySegmentState } from '@app/library/models/net/library-segment-state';
+import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
+import { ByPublisherAndYearSegment } from '@app/library/models/net/by-publisher-and-year-segment';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
@@ -37,13 +38,14 @@ export interface LibraryState {
   totalComics: number;
   unscrapedComics: number;
   deletedComics: number;
-  publishers: LibrarySegmentState[];
-  series: LibrarySegmentState[];
-  characters: LibrarySegmentState[];
-  teams: LibrarySegmentState[];
-  locations: LibrarySegmentState[];
-  stories: LibrarySegmentState[];
-  states: LibrarySegmentState[];
+  publishers: RemoteLibrarySegmentState[];
+  series: RemoteLibrarySegmentState[];
+  characters: RemoteLibrarySegmentState[];
+  teams: RemoteLibrarySegmentState[];
+  locations: RemoteLibrarySegmentState[];
+  stories: RemoteLibrarySegmentState[];
+  states: RemoteLibrarySegmentState[];
+  byPublisherAndYear: ByPublisherAndYearSegment[];
   selected: ComicBook[];
   busy: boolean;
 }
@@ -60,6 +62,7 @@ export const initialState: LibraryState = {
   teams: [],
   locations: [],
   stories: [],
+  byPublisherAndYear: [],
   states: []
 };
 
@@ -89,6 +92,7 @@ export const reducer = createReducer(
     ...state,
     busy: false,
     totalComics: action.state.totalComics,
+    unscrapedComics: action.state.unscrapedComics,
     deletedComics: action.state.deletedComics,
     publishers: action.state.publishers,
     series: action.state.series,
@@ -96,6 +100,7 @@ export const reducer = createReducer(
     teams: action.state.teams,
     locations: action.state.locations,
     stories: action.state.stories,
+    byPublisherAndYear: action.state.byPublisherAndYear,
     states: action.state.states
   })),
   on(loadLibraryStateFailed, state => ({ ...state, busy: false }))

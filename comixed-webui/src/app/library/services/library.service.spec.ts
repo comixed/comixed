@@ -51,7 +51,7 @@ import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-req
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
-import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
+import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_BOOK_1;

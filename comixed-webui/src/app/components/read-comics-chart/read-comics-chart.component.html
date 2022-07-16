@@ -1,6 +1,6 @@
 <div #container class="cx-width-100 cx-height-100">
   <ngx-charts-advanced-pie-chart
-    *ngIf="ready"
+    *ngIf="!!libraryState"
     [title]="'home.title.last-read-statistics' | translate"
     [label]="'home.title.last-read-statistics' | translate"
     scheme="ocean"

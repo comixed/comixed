@@ -1,4 +1,4 @@
-<div *ngIf="data.length > 0" #container class="cx-width-100 cx-height-100">
+<div *ngIf="!!data" #container class="cx-width-100 cx-height-100">
   <h2>{{ "home.title.comics-by-year-and-publisher-chart" | translate }}</h2>
   <ngx-charts-heat-map
     [view]="[chartWidth$ | async, chartHeight$ | async]"

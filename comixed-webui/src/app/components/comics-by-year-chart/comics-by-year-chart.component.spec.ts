@@ -20,14 +20,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComicsByYearChartComponent } from './comics-by-year-chart.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
+import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ComicsByYearChartComponent', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const LIBRARY_STATE = {
+    ...initialLibraryState,
+    byPublisherAndYear: [
+      { publisher: 'Publisher 1', year: 2017, count: 23 },
+      { publisher: 'Publisher 1', year: 2018, count: 27 },
+      { publisher: 'Publisher 2', year: 2017, count: 11 }
+    ]
+  };
 
   let component: ComicsByYearChartComponent;
   let fixture: ComponentFixture<ComicsByYearChartComponent>;
@@ -35,7 +41,12 @@ describe('ComicsByYearChartComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ComicsByYearChartComponent],
-      imports: [LoggerModule.forRoot()]
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        NgxChartsModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicsByYearChartComponent);
@@ -50,7 +61,7 @@ describe('ComicsByYearChartComponent', () => {
   describe('loading comics', () => {
     beforeEach(() => {
       component.data = [];
-      component.comicBooks = COMIC_BOOKS;
+      component.libraryState = LIBRARY_STATE;
     });
 
     it('reloads the chart data', () => {

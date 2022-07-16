@@ -10,27 +10,26 @@
     <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="6">
       <cx-collections-chart
         class="cx-width-100 cx-height-100"
-        [comics]="comicBooks"
+        [libraryState]="libraryState"
       ></cx-collections-chart>
     </mat-grid-tile>
     <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="3">
       <cx-comic-state-chart
         class="cx-width-100 cx-height-100"
-        [comics]="comicBooks"
+        [libraryState]="libraryState"
       ></cx-comic-state-chart>
     </mat-grid-tile>
     <mat-grid-tile class="cx-border-primary-1" colspan="5" rowspan="3">
       <cx-read-comics-chart
         class="cx-width-100 cx-height-100"
-        [ready]="lastReadLoaded"
-        [comicBooks]="comicBooks"
+        [libraryState]="libraryState"
         [lastRead]="lastRead"
       ></cx-read-comics-chart>
     </mat-grid-tile>
     <mat-grid-tile class="cx-border-primary-1" colspan="10" rowspan="3">
       <cx-comics-by-year-chart
         class="cx-width-100 cx-height-100"
-        [comicBooks]="comicBooks"
+        [libraryState]="libraryState"
       ></cx-comics-by-year-chart>
     </mat-grid-tile>
   </mat-grid-list>

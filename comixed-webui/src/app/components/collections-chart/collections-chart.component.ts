@@ -24,16 +24,15 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ChartData } from '@app/models/ui/chart-data';
 import { ChartDataResultSet } from '@app/models/ui/chart-data-result-set';
 import { BehaviorSubject } from 'rxjs';
-import {
-  CollectionType,
-  collectionTypeFromString
-} from '@app/collections/models/comic-collection.enum';
+import { collectionTypeFromString } from '@app/collections/models/comic-collection.enum';
 import { Router } from '@angular/router';
+import { LibraryState } from '@app/library/reducers/library.reducer';
+import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'cx-collections-chart',
@@ -50,22 +49,22 @@ export class CollectionsChartComponent implements AfterViewInit {
 
   constructor(private logger: LoggerService, private router: Router) {}
 
-  private _comics: ComicBook[];
+  private _libraryState: LibraryState = null;
 
-  get comics(): ComicBook[] {
-    return this._comics;
+  get libraryState(): LibraryState {
+    return this._libraryState;
   }
 
-  @Input() set comics(comics: ComicBook[]) {
-    this._comics = comics;
-    this.logger.trace('Loading library statistics by publisher');
+  @Input()
+  set libraryState(libraryState: LibraryState) {
+    this._libraryState = libraryState;
     this.collectionData = [
-      this.comicsByPublisher(),
-      this.comicsBySeries(),
-      this.comicsByCharacter(),
-      this.comicsByTeam(),
-      this.comicsByLocation(),
-      this.comicsByStory()
+      this.createChartData('publisher', libraryState.publishers),
+      this.createChartData('series', libraryState.series),
+      this.createChartData('character', libraryState.characters),
+      this.createChartData('team', libraryState.teams),
+      this.createChartData('location', libraryState.locations),
+      this.createChartData('story', libraryState.stories)
     ];
   }
 
@@ -93,176 +92,40 @@ export class CollectionsChartComponent implements AfterViewInit {
     ]);
   }
 
+  private createChartData(
+    title: string,
+    segment: RemoteLibrarySegmentState[]
+  ): ChartData {
+    const sorted = _.cloneDeep(segment).sort(
+      (left, right) => right.count - left.count
+    );
+    const results = this.limitResults(
+      sorted.map(entry => {
+        return { name: entry.name, value: entry.count } as ChartDataResultSet;
+      })
+    );
+    return {
+      title,
+      results,
+      maxX: sorted.length > 0 ? sorted[0].count : 0
+    };
+  }
+
   private loadComponentDimensions(): void {
+    /* istanbul ignore next */
     this.chartWidth$.next(this.container?.nativeElement?.offsetWidth);
+    /* istanbul ignore next */
     let height = this.container?.nativeElement?.offsetHeight;
+    /* istanbul ignore if */
     if (height < 0) {
       height = 0;
     }
     this.chartHeight$.next(height);
   }
 
-  private comicsByPublisher(): ChartData {
-    const publishers = this.comics
-      .map(comic => comic.publisher)
-      .filter((publisher, index, self) => self.indexOf(publisher) === index);
-
-    const results = this.limitResults(
-      publishers.map(publisher => {
-        return {
-          name: publisher || 'UNKNOWN',
-          value: this.comics.filter(entry => entry.publisher === publisher)
-            .length,
-          extra: { collection: CollectionType.PUBLISHERS, name: publisher }
-        };
-      })
-    );
-    const sorted = results.map(result => result.value).reverse();
-    const maxX = sorted.length > 0 ? sorted[0] : 0;
-    return {
-      title: 'publisher',
-      results,
-      maxX
-    };
-  }
-
-  private comicsBySeries(): ChartData {
-    const seriesNames = this.comics
-      .map(comic => comic.series)
-      .filter((entry, index, self) => self.indexOf(entry) === index);
-
-    const results = this.limitResults(
-      seriesNames.map(series => {
-        return {
-          name: series || 'UNKNOWN',
-          value: this.comics.filter(entry => entry.series === series).length,
-          extra: { collection: CollectionType.SERIES, name: series }
-        };
-      })
-    );
-    const sorted = results.map(result => result.value).reverse();
-    const maxX = sorted.length > 0 ? sorted[0] : 0;
-    return {
-      title: 'series',
-      results,
-      maxX
-    };
-  }
-
-  private comicsByCharacter(): ChartData {
-    const characters = [];
-    this.comics.forEach(comic =>
-      comic.characters.forEach(character => {
-        if (!characters.includes(character)) {
-          characters.push(character);
-        }
-      })
-    );
-    const results = this.limitResults(
-      characters.map(character => {
-        return {
-          name: character,
-          value: this.comics.filter(entry =>
-            entry.characters.includes(character)
-          ).length,
-          extra: { collection: CollectionType.CHARACTERS, name: character }
-        };
-      })
-    );
-    const sorted = results.map(result => result.value).reverse();
-    const maxX = sorted.length > 0 ? sorted[0] : 0;
-    return {
-      title: 'character',
-      results,
-      maxX
-    };
-  }
-
-  private comicsByTeam(): ChartData {
-    const teams = [];
-    this.comics.forEach(comic =>
-      comic.teams.forEach(team => {
-        if (!teams.includes(team)) {
-          teams.push(team);
-        }
-      })
-    );
-    const results = this.limitResults(
-      teams.map(team => {
-        return {
-          name: team,
-          value: this.comics.filter(entry => entry.teams.includes(team)).length,
-          extra: { collection: CollectionType.TEAMS, name: team }
-        };
-      })
-    );
-    const sorted = results.map(result => result.value).reverse();
-    const maxX = sorted.length > 0 ? sorted[0] : 0;
-    return {
-      title: 'team',
-      results,
-      maxX
-    };
-  }
-
-  private comicsByLocation(): ChartData {
-    const locations = [];
-    this.comics.forEach(comic =>
-      comic.locations.forEach(location => {
-        if (!locations.includes(location)) {
-          locations.push(location);
-        }
-      })
-    );
-    const results = this.limitResults(
-      locations.map(location => {
-        return {
-          name: location,
-          value: this.comics.filter(entry => entry.locations.includes(location))
-            .length,
-          extra: { collection: CollectionType.LOCATIONS, name: location }
-        };
-      })
-    );
-    const sorted = results.map(result => result.value).reverse();
-    const maxX = sorted.length > 0 ? sorted[0] : 0;
-    return {
-      title: 'location',
-      results,
-      maxX
-    };
-  }
-
-  private comicsByStory(): ChartData {
-    const stories = [];
-    this.comics.forEach(comic =>
-      comic.stories.forEach(story => {
-        if (!stories.includes(story)) {
-          stories.push(story);
-        }
-      })
-    );
-    const results = this.limitResults(
-      stories.map(story => {
-        return {
-          name: story,
-          value: this.comics.filter(entry => entry.stories.includes(story))
-            .length,
-          extra: { collection: CollectionType.STORIES, name: story }
-        };
-      })
-    );
-    const sorted = results.map(result => result.value).reverse();
-    const maxX = sorted.length > 0 ? sorted[0] : 0;
-    return {
-      title: 'story',
-      results,
-      maxX
-    };
-  }
-
   private limitResults(results: ChartDataResultSet[]): ChartDataResultSet[] {
     const MAXIMUM_RESULTS = 10;
+    /* istanbul ignore next */
     const right =
       results.length > MAXIMUM_RESULTS ? MAXIMUM_RESULTS : results.length;
     return results.sort((a, b) => b.value - a.value).slice(0, right);

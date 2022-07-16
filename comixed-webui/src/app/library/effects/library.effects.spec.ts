@@ -40,7 +40,7 @@ import {
   multipleComicsEdited
 } from '@app/library/actions/library.actions';
 import { hot } from 'jasmine-marbles';
-import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
+import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 describe('LibraryEffects', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3];

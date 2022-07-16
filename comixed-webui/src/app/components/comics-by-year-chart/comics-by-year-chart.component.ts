@@ -23,10 +23,10 @@ import {
   Input,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicsByYearData } from '@app/models/ui/comics-by-year-data';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Component({
   selector: 'cx-comics-by-year-chart',
@@ -38,49 +38,29 @@ export class ComicsByYearChartComponent implements AfterViewInit {
   chartHeight$ = new BehaviorSubject<number>(0);
   chartWidth$ = new BehaviorSubject<number>(0);
 
-  data: ComicsByYearData[] = [];
+  data: ComicsByYearData[];
 
   constructor(private logger: LoggerService) {}
 
-  @Input() set comicBooks(comicBooks: ComicBook[]) {
-    const transformed: ComicsByYearData[] = [];
-    this.logger.trace('Reloading comics by publisher and year data');
-    comicBooks
-      .filter(comicBook => !!comicBook.coverDate)
-      .map(comicBook => {
-        const coverDate = new Date(comicBook.coverDate);
-        return {
-          publisher: comicBook.publisher,
-          year: `${coverDate.getFullYear()}`,
-          comicBook
+  @Input() set libraryState(libraryState: LibraryState) {
+    this.logger.trace('Library state updated');
+    const data = [];
+    libraryState.byPublisherAndYear.forEach(entry => {
+      let record = data.find(existing => existing.name === entry.year);
+      if (!record) {
+        this.logger.trace('Creating new record');
+        record = {
+          name: entry.year,
+          series: []
         };
-      })
-      .sort(
-        (left, right) => left.comicBook.coverDate - right.comicBook.coverDate
-      )
-      .forEach(entry => {
-        let publisher = transformed.find(record => record.name === entry.year);
-        if (!publisher) {
-          publisher = {
-            name: entry.year,
-            series: []
-          } as ComicsByYearData;
-          transformed.push(publisher);
-        }
-        let series = publisher.series.find(
-          record => record.name === entry.publisher
-        );
-        if (!!series) {
-          series.value += 1;
-        } else {
-          series = {
-            name: entry.publisher,
-            value: 1
-          };
-          publisher.series.push(series);
-        }
+        data.push(record);
+      }
+      record.series.push({
+        name: entry.publisher,
+        value: entry.count
       });
-    this.data = transformed;
+    });
+    this.data = data;
   }
 
   ngAfterViewInit(): void {
@@ -88,8 +68,11 @@ export class ComicsByYearChartComponent implements AfterViewInit {
   }
 
   private loadComponentDimensions(): void {
+    /* istanbul ignore next */
     this.chartWidth$.next(this.container?.nativeElement?.offsetWidth);
+    /* istanbul ignore next */
     let height = this.container?.nativeElement?.offsetHeight - 100;
+    /* istanbul ignore if */
     if (height < 0) {
       height = 0;
     }

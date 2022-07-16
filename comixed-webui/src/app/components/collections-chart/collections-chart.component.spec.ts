@@ -18,12 +18,6 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionsChartComponent } from './collections-chart.component';
-import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,28 +27,16 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
+import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
 
 describe('CollectionsChartComponent', () => {
-  const COMICS = [
-    { ...COMIC_BOOK_1, publisher: null, series: null },
-    COMIC_BOOK_3,
-    COMIC_BOOK_5,
-    { ...COMIC_BOOK_2, publisher: 'publisher1', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher2', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher3', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher4', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher5', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher6', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher7', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher8', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher9', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher10', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher11', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher12', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher13', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher14', series: null },
-    { ...COMIC_BOOK_2, publisher: 'publisher15', series: null }
-  ];
+  const LIBRARY_STATE = {
+    ...initialLibraryState,
+    publishers: [
+      { name: 'Publisher 1', count: 17 },
+      { name: 'Publisher 2', count: 3 }
+    ]
+  };
 
   let component: CollectionsChartComponent;
   let fixture: ComponentFixture<CollectionsChartComponent>;
@@ -85,10 +67,10 @@ describe('CollectionsChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when comics are loaded', () => {
+  describe('when the library state is loaded', () => {
     beforeEach(() => {
       component.collectionData = [];
-      component.comics = COMICS;
+      component.libraryState = LIBRARY_STATE;
     });
 
     it('loads the set of charts', () => {
