@@ -24,10 +24,11 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
+import { selectLibraryState } from '@app/library/selectors/library.selectors';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Component({
   selector: 'cx-side-navigation',
@@ -39,8 +40,8 @@ export class SideNavigationComponent implements OnDestroy {
   comicsCollapsed = false;
   collectionCollapsed = false;
   readingListsCollapsed = false;
-  comicBookListStateSubscription: Subscription;
-  allComicBooks: ComicBook[] = [];
+  libraryStateSubscription: Subscription;
+  libraryState: LibraryState;
   lastReadSubscription: Subscription;
   lastRead: LastRead[] = [];
   totalComicBooks$ = new BehaviorSubject<number>(0);
@@ -54,18 +55,20 @@ export class SideNavigationComponent implements OnDestroy {
   readingLists: ReadingList[] = [];
 
   constructor(private logger: LoggerService, private store: Store<any>) {
-    this.comicBookListStateSubscription = this.store
-      .select(selectComicBookListState)
+    this.libraryStateSubscription = this.store
+      .select(selectLibraryState)
       .subscribe(state => {
-        this.allComicBooks = state.comicBooks;
-        this.totalComicBooks$.next(state.comicBooks.length);
+        this.libraryState = state;
+        this.totalComicBooks$.next(state.totalComics);
         this.unprocessedComicBooks$.next(
-          state.comicBooks.filter(comicBook => !comicBook.fileDetails).length
+          this.getCountForState(state, ComicBookState.UNPROCESSED)
         );
         this.unreadComicBooks$.next(this.getUnreadComicCount());
-        this.unscrapedComicBooks$.next(state.unscraped.length);
-        this.changedComicBooks$.next(state.changed.length);
-        this.deletedComicBooks$.next(state.deleted.length);
+        this.unscrapedComicBooks$.next(state.unscrapedComics);
+        this.changedComicBooks$.next(
+          this.getCountForState(state, ComicBookState.CHANGED)
+        );
+        this.deletedComicBooks$.next(state.deletedComics);
       });
     this.lastReadSubscription = this.store
       .select(selectLastReadEntries)
@@ -92,7 +95,7 @@ export class SideNavigationComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from comic list updates');
-    this.comicBookListStateSubscription.unsubscribe();
+    this.libraryStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from last read updates');
     this.lastReadSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
@@ -112,6 +115,17 @@ export class SideNavigationComponent implements OnDestroy {
   }
 
   private getUnreadComicCount(): number {
-    return this.allComicBooks.length - this.lastRead.length;
+    /* istanbul ignore next */
+    return this.libraryState?.totalComics - this.lastRead.length;
+  }
+
+  private getCountForState(
+    libraryState: LibraryState,
+    state: ComicBookState
+  ): number {
+    /* istanbul ignore next */
+    const found = libraryState.states.find(entry => entry.name === state);
+    /* istanbul ignore next */
+    return !!found ? found.count : 0;
   }
 }
