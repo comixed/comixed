@@ -19,20 +19,20 @@
 package org.comixedproject.service.library;
 
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.net.library.LibraryState;
+import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * <code>LibraryStateService</code> provide business methods for working with the state of the
+ * <code>RemoteLibraryStateService</code> provide business methods for working with the state of the
  * library.
  *
  * @author Darryl L. Pierce
  */
 @Service
 @Log4j2
-public class LibraryStateService {
+public class RemoteLibraryStateService {
   @Autowired private ComicBookService comicBookService;
 
   /**
@@ -40,11 +40,12 @@ public class LibraryStateService {
    *
    * @return the state
    */
-  public LibraryState getLibraryState() {
+  public RemoteLibraryState getLibraryState() {
     log.debug("Retrieving the library state");
-    final LibraryState result =
-        new LibraryState(
+    final RemoteLibraryState result =
+        new RemoteLibraryState(
             this.comicBookService.getComicBookCount(),
+            this.comicBookService.getUnscrapedComicBookCount(),
             this.comicBookService.getDeletedComicCount());
     result.setPublishers(this.comicBookService.getPublishersState());
     result.setSeries(this.comicBookService.getSeriesState());
@@ -53,6 +54,7 @@ public class LibraryStateService {
     result.setLocations(this.comicBookService.getLocationsState());
     result.setStories(this.comicBookService.getStoriesState());
     result.setStates(this.comicBookService.getComicBooksState());
+    result.setByPublisherAndYear(this.comicBookService.getByPublisherAndYear());
     return result;
   }
 }

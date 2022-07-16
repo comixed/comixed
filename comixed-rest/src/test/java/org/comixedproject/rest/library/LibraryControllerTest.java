@@ -42,7 +42,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
-import org.comixedproject.service.library.LibraryStateService;
+import org.comixedproject.service.library.RemoteLibraryStateService;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +73,7 @@ public class LibraryControllerTest {
 
   @InjectMocks private LibraryController controller;
   @Mock private LibraryService libraryService;
-  @Mock private LibraryStateService libraryStateService;
+  @Mock private RemoteLibraryStateService remoteLibraryStateService;
   @Mock private ComicBookService comicBookService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
@@ -82,7 +82,7 @@ public class LibraryControllerTest {
   @Mock private JobLauncher jobLauncher;
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
-  @Mock private LibraryState libraryState;
+  @Mock private RemoteLibraryState remoteLibraryState;
 
   @Mock
   @Qualifier("updateMetadataJob")
@@ -113,14 +113,14 @@ public class LibraryControllerTest {
 
   @Test
   public void testGetLibraryState() {
-    Mockito.when(libraryStateService.getLibraryState()).thenReturn(libraryState);
+    Mockito.when(remoteLibraryStateService.getLibraryState()).thenReturn(remoteLibraryState);
 
-    final LibraryState result = controller.getLibraryState();
+    final RemoteLibraryState result = controller.getLibraryState();
 
     assertNotNull(result);
-    assertSame(libraryState, result);
+    assertSame(remoteLibraryState, result);
 
-    Mockito.verify(libraryStateService, Mockito.times(1)).getLibraryState();
+    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState();
   }
 
   @Test

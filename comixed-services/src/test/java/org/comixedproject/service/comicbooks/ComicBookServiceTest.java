@@ -32,7 +32,8 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
-import org.comixedproject.model.net.library.LibrarySegmentState;
+import org.comixedproject.model.net.library.PublisherAndYearSegment;
+import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.service.user.ComiXedUserException;
@@ -98,7 +99,8 @@ public class ComicBookServiceTest {
   @Mock private List<Integer> yearList;
   @Mock private Set<String> seriesList;
   @Mock private Set<String> volumeList;
-  @Mock private List<LibrarySegmentState> librarySegmentList;
+  @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
+  @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -520,6 +522,27 @@ public class ComicBookServiceTest {
     assertEquals(TEST_MAXIMUM_COMICS, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithCreateMeatadataSourceFlag();
+  }
+
+  @Test
+  public void testFindComicsWithCreateMetadataFlagSet() {
+    Mockito.when(
+            comicBookRepository.findUnprocessedComicsWithCreateMetadataFlagSet(
+                pageableCaptor.capture()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.findComicsWithCreateMetadataFlagSet(TEST_MAXIMUM_COMICS);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    final Pageable pageable = pageableCaptor.getValue();
+    assertNotNull(pageable);
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .findUnprocessedComicsWithCreateMetadataFlagSet(pageable);
   }
 
   @Test
@@ -1554,6 +1577,17 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testGetUnscrapedComicBookCount() {
+    Mockito.when(comicBookRepository.countByMetadataIsNull()).thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.getUnscrapedComicBookCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).countByMetadataIsNull();
+  }
+
+  @Test
   public void testGetDeletedComicBookCount() {
     Mockito.when(comicBookRepository.findForStateCount(Mockito.any())).thenReturn(TEST_COMIC_COUNT);
 
@@ -1568,7 +1602,7 @@ public class ComicBookServiceTest {
   public void testGetPublishersState() {
     Mockito.when(comicBookRepository.getPublishersState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getPublishersState();
+    final List<RemoteLibrarySegmentState> result = service.getPublishersState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
@@ -1580,7 +1614,7 @@ public class ComicBookServiceTest {
   public void testGetSeriesState() {
     Mockito.when(comicBookRepository.getSeriesState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getSeriesState();
+    final List<RemoteLibrarySegmentState> result = service.getSeriesState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
@@ -1592,7 +1626,7 @@ public class ComicBookServiceTest {
   public void testGetCharactersState() {
     Mockito.when(comicBookRepository.getCharactersState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getCharactersState();
+    final List<RemoteLibrarySegmentState> result = service.getCharactersState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
@@ -1604,7 +1638,7 @@ public class ComicBookServiceTest {
   public void testGetTeamsState() {
     Mockito.when(comicBookRepository.getTeamsState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getTeamsState();
+    final List<RemoteLibrarySegmentState> result = service.getTeamsState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
@@ -1616,7 +1650,7 @@ public class ComicBookServiceTest {
   public void testGetLocationsState() {
     Mockito.when(comicBookRepository.getLocationsState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getLocationsState();
+    final List<RemoteLibrarySegmentState> result = service.getLocationsState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
@@ -1628,7 +1662,7 @@ public class ComicBookServiceTest {
   public void testGetStoriesState() {
     Mockito.when(comicBookRepository.getStoriesState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getStoriesState();
+    final List<RemoteLibrarySegmentState> result = service.getStoriesState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
@@ -1640,11 +1674,23 @@ public class ComicBookServiceTest {
   public void testGetComicBooksState() {
     Mockito.when(comicBookRepository.getComicBooksState()).thenReturn(librarySegmentList);
 
-    final List<LibrarySegmentState> result = service.getComicBooksState();
+    final List<RemoteLibrarySegmentState> result = service.getComicBooksState();
 
     assertNotNull(result);
     assertSame(librarySegmentList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getComicBooksState();
+  }
+
+  @Test
+  public void testGetByPublisherAndYear() {
+    Mockito.when(comicBookRepository.getByPublisherAndYear()).thenReturn(byPublisherAndYearList);
+
+    final List<PublisherAndYearSegment> result = service.getByPublisherAndYear();
+
+    assertNotNull(result);
+    assertSame(byPublisherAndYearList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getByPublisherAndYear();
   }
 }

@@ -28,7 +28,8 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.net.library.LibrarySegmentState;
+import org.comixedproject.model.net.library.PublisherAndYearSegment;
+import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -470,7 +471,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetPublishersState() {
-    final List<LibrarySegmentState> result = repository.getPublishersState();
+    final List<RemoteLibrarySegmentState> result = repository.getPublishersState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -478,7 +479,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetSeriesState() {
-    final List<LibrarySegmentState> result = repository.getSeriesState();
+    final List<RemoteLibrarySegmentState> result = repository.getSeriesState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -486,7 +487,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetCharactersState() {
-    final List<LibrarySegmentState> result = repository.getCharactersState();
+    final List<RemoteLibrarySegmentState> result = repository.getCharactersState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -494,7 +495,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetTeamsState() {
-    final List<LibrarySegmentState> result = repository.getTeamsState();
+    final List<RemoteLibrarySegmentState> result = repository.getTeamsState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -502,7 +503,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetLocationsState() {
-    final List<LibrarySegmentState> result = repository.getLocationsState();
+    final List<RemoteLibrarySegmentState> result = repository.getLocationsState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -510,7 +511,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetStoriesState() {
-    final List<LibrarySegmentState> result = repository.getStoriesState();
+    final List<RemoteLibrarySegmentState> result = repository.getStoriesState();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -518,7 +519,22 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testGetComicBooksState() {
-    final List<LibrarySegmentState> result = repository.getComicBooksState();
+    final List<RemoteLibrarySegmentState> result = repository.getComicBooksState();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testCountByMetadataIsNull() {
+    final long result = repository.countByMetadataIsNull();
+
+    assertTrue(result > 0L);
+  }
+
+  @Test
+  public void testGetByPublisherAndYear() {
+    final List<PublisherAndYearSegment> result = repository.getByPublisherAndYear();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

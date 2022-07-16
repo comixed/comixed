@@ -35,6 +35,7 @@ describe('Library Selectors', () => {
       selected: SELECTED_COMICS,
       busy: Math.random() > 0.5,
       totalComics: Math.abs(Math.random() * 100),
+      unscrapedComics: Math.abs(Math.random() * 100),
       deletedComics: Math.abs(Math.random() * 100),
       publishers: [{ name: 'Publisher1', count: 1 }],
       series: [{ name: 'Series1', count: 1 }],
