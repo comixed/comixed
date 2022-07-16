@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,23 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.comicpages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * <code>ConsolidateLibraryRequest</code> represents the request body for initiating library
- * consolidation.
+ * <code>SetBlockedPageRequest</code> contains the request body for marking pagees as blocked.
  *
- * @author Darryl L. Piece
+ * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConsolidateLibraryRequest {
-  @JsonProperty("deletePhysicalFiles")
+public class SetBlockedPageRequest {
+  @JsonProperty("hashes")
   @Getter
-  private Boolean deletePhysicalFiles;
+  private List<String> hashes;
 }

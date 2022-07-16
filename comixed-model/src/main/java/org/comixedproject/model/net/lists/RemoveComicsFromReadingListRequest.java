@@ -16,21 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.lists;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class SetPageTypeRequest {
-  @JsonProperty("pageType")
-  private String typeName;
-
-  public SetPageTypeRequest() {}
-
-  public SetPageTypeRequest(String typeName) {
-    this.typeName = typeName;
-  }
-
-  public String getTypeName() {
-    return typeName;
-  }
+/**
+ * <code>RemoveComicsFromReadingListRequest</code> represents the request body when removing comics
+ * from a reading list.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class RemoveComicsFromReadingListRequest {
+  @JsonProperty("ids")
+  @Getter
+  private List<Long> ids;
 }

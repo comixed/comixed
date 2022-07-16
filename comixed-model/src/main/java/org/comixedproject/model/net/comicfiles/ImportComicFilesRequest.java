@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,44 +13,30 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http:/www.gnu.org/licenses>
+ * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.comixedproject.model.archives.ArchiveType;
 
 /**
- * <code>ConvertComicsRequest</code> provides the HTTP request contents when converting comics.
+ * <code>ImportComicFilesRequest</code> represents the payload for a request to import comics into
+ * the library.
  *
  * @author Darryl L. Pierce
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConvertComicsRequest {
+public class ImportComicFilesRequest {
+  @JsonProperty("filenames")
   @Getter
   @Setter
-  @JsonProperty("ids")
-  private List<Long> ids;
-
-  @Getter
-  @Setter
-  @JsonProperty("archiveType")
-  private ArchiveType archiveType;
-
-  @Getter
-  @Setter
-  @JsonProperty("renamePages")
-  private boolean renamePages;
-
-  @Getter
-  @Setter
-  @JsonProperty("deletePages")
-  private boolean deletePages;
+  private List<String> filenames = new ArrayList<>();
 }

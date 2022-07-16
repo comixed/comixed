@@ -16,27 +16,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
- * <code>ImportComicFilesRequest</code> represents the payload for a request to import comics into
- * the library.
+ * <code>GetAllComicsUnderRequest</code> represents the request body during comic file imports.
  *
  * @author Darryl L. Pierce
  */
-@NoArgsConstructor
-@AllArgsConstructor
-public class ImportComicFilesRequest {
-  @JsonProperty("filenames")
-  @Getter
-  @Setter
-  private List<String> filenames = new ArrayList<>();
+public class GetAllComicsUnderRequest {
+  @JsonProperty("directory")
+  private String directory;
+
+  @JsonProperty("maximum")
+  private Integer maximum;
+
+  public GetAllComicsUnderRequest() {}
+
+  public GetAllComicsUnderRequest(final String directory, final Integer maximum) {
+    this.directory = directory;
+    this.maximum = maximum;
+  }
+
+  /**
+   * The root directory to be searched.
+   *
+   * @return the directory
+   */
+  public String getDirectory() {
+    return directory;
+  }
+
+  /**
+   * The maximum number of comics to find. If the value is zero then then all comics found are
+   * returned.
+   *
+   * @return the maximum
+   */
+  public Integer getMaximum() {
+    return maximum;
+  }
 }

@@ -16,19 +16,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.library;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class ClearImageCacheResponse {
-  @JsonProperty("success")
-  private final boolean success;
-
-  public ClearImageCacheResponse(boolean success) {
-    this.success = success;
-  }
-
-  public boolean isSuccess() {
-    return success;
-  }
+/**
+ * <code>ConsolidateLibraryRequest</code> represents the request body for initiating library
+ * consolidation.
+ *
+ * @author Darryl L. Piece
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class ConsolidateLibraryRequest {
+  @JsonProperty("deletePhysicalFiles")
+  @Getter
+  private Boolean deletePhysicalFiles;
 }

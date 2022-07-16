@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2020, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net;
+package org.comixedproject.model.net.lists;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import org.comixedproject.views.View;
+import lombok.NoArgsConstructor;
 
 /**
- * <code>GenericResponse</code> is the generic response used when an API does not have a dedicated
- * response.
+ * <code>AddComicsToReadingListRequest</code> represents the request body when adding comics to a
+ * reading list.
  *
  * @author Darryl L. Pierce
  */
+@NoArgsConstructor
 @AllArgsConstructor
-public class GenericResponse {
-  @JsonProperty("success")
-  @JsonView(View.GenericObjectView.class)
-  @NonNull
+public class AddComicsToReadingListRequest {
+  @JsonProperty("ids")
   @Getter
-  private Boolean success;
+  private List<Long> ids = new ArrayList<>();
 }
