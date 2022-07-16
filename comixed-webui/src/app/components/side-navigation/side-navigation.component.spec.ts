@@ -30,17 +30,17 @@ import {
   READING_LISTS_FEATURE_KEY
 } from '@app/lists/reducers/reading-lists.reducer';
 import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
-import {
-  LAST_READ_LIST_FEATURE_KEY,
-  initialState as initialLastReadState
+  initialState as initialLastReadState,
+  LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
+import {
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
+} from '@app/library/reducers/library.reducer';
 
 describe('SideNavigationComponent', () => {
   const initialState = {
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
