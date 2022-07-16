@@ -34,7 +34,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
-import org.comixedproject.model.net.library.LibrarySegmentState;
+import org.comixedproject.model.net.library.PublisherAndYearSegment;
+import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.comicbooks.ComicBookRepository;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateChangeListener;
@@ -939,8 +940,13 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @return the comic count
    */
   public long getComicBookCount() {
-    log.trace("Getting total comics");
+    log.trace("Getting total comics count");
     return this.comicBookRepository.count();
+  }
+
+  public long getUnscrapedComicBookCount() {
+    log.trace("Getting unscraped comics count");
+    return this.comicBookRepository.countByMetadataIsNull();
   }
 
   /**
@@ -949,7 +955,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @return the deleted comic count
    */
   public long getDeletedComicCount() {
-    log.trace("Getting the deleted comic count");
+    log.trace("Getting the deleted comic count count");
     return this.getCountForState(ComicState.DELETED);
   }
 
@@ -958,7 +964,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the publishers state
    */
-  public List<LibrarySegmentState> getPublishersState() {
+  public List<RemoteLibrarySegmentState> getPublishersState() {
     log.trace("Getting the publishers state");
     return this.comicBookRepository.getPublishersState();
   }
@@ -968,7 +974,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the series state
    */
-  public List<LibrarySegmentState> getSeriesState() {
+  public List<RemoteLibrarySegmentState> getSeriesState() {
     log.trace("Getting the series state");
     return this.comicBookRepository.getSeriesState();
   }
@@ -978,7 +984,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the characters state
    */
-  public List<LibrarySegmentState> getCharactersState() {
+  public List<RemoteLibrarySegmentState> getCharactersState() {
     log.trace("Getting the characters state");
     return this.comicBookRepository.getCharactersState();
   }
@@ -988,7 +994,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the teams state
    */
-  public List<LibrarySegmentState> getTeamsState() {
+  public List<RemoteLibrarySegmentState> getTeamsState() {
     log.trace("Getting the teams state");
     return this.comicBookRepository.getTeamsState();
   }
@@ -998,7 +1004,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the locations state
    */
-  public List<LibrarySegmentState> getLocationsState() {
+  public List<RemoteLibrarySegmentState> getLocationsState() {
     log.trace("Getting the locations state");
     return this.comicBookRepository.getLocationsState();
   }
@@ -1008,7 +1014,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the stories state
    */
-  public List<LibrarySegmentState> getStoriesState() {
+  public List<RemoteLibrarySegmentState> getStoriesState() {
     log.trace("Getting the stories state");
     return this.comicBookRepository.getStoriesState();
   }
@@ -1018,8 +1024,18 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @return the comic book states
    */
-  public List<LibrarySegmentState> getComicBooksState() {
+  public List<RemoteLibrarySegmentState> getComicBooksState() {
     log.trace("Getting the comics state");
     return this.comicBookRepository.getComicBooksState();
+  }
+
+  /**
+   * Returns the number of comics per publisher and year.
+   *
+   * @return the statistics
+   */
+  public List<PublisherAndYearSegment> getByPublisherAndYear() {
+    log.trace("Getting counts by publisher and year");
+    return this.comicBookRepository.getByPublisherAndYear();
   }
 }

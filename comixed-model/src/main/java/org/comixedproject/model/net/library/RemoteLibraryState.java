@@ -27,16 +27,21 @@ import lombok.Setter;
 import org.comixedproject.views.View;
 
 /**
- * <code>LibraryState</code> contains a snapshot of the state of the library.
+ * <code>RemoteLibraryState</code> contains a snapshot of the state of the library.
  *
  * @author Darryl L. Pierce
  */
 @RequiredArgsConstructor
-public class LibraryState {
+public class RemoteLibraryState {
   @JsonProperty("totalComics")
   @JsonView(View.LibraryState.class)
   @Getter
   private final long totalComics;
+
+  @JsonProperty("unscrapedComics")
+  @JsonView(View.LibraryState.class)
+  @Getter
+  private final long unscrapedComics;
 
   @JsonProperty("deletedComics")
   @JsonView(View.LibraryState.class)
@@ -47,41 +52,47 @@ public class LibraryState {
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> publishers;
+  private List<RemoteLibrarySegmentState> publishers;
 
   @JsonProperty("series")
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> series;
+  private List<RemoteLibrarySegmentState> series;
 
   @JsonProperty("characters")
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> characters;
+  private List<RemoteLibrarySegmentState> characters;
 
   @JsonProperty("teams")
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> teams;
+  private List<RemoteLibrarySegmentState> teams;
 
   @JsonProperty("locations")
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> locations;
+  private List<RemoteLibrarySegmentState> locations;
 
   @JsonProperty("stories")
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> stories;
+  private List<RemoteLibrarySegmentState> stories;
 
   @JsonProperty("states")
   @JsonView(View.LibraryState.class)
   @Getter
   @Setter
-  private List<LibrarySegmentState> states;
+  private List<RemoteLibrarySegmentState> states;
+
+  @JsonProperty("byPublisherAndYear")
+  @JsonView(View.LibraryState.class)
+  @Getter
+  @Setter
+  private List<PublisherAndYearSegment> byPublisherAndYear;
 }

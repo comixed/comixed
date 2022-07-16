@@ -35,6 +35,7 @@ export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
   totalComics: number;
+  unscrapedComics: number;
   deletedComics: number;
   publishers: LibrarySegmentState[];
   series: LibrarySegmentState[];
@@ -51,6 +52,7 @@ export const initialState: LibraryState = {
   selected: [],
   busy: false,
   totalComics: 0,
+  unscrapedComics: 0,
   deletedComics: 0,
   publishers: [],
   series: [],

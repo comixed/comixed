@@ -42,6 +42,7 @@ describe('Library Reducer', () => {
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
   const READ = Math.random() > 0.5;
   const TOTAL_COMICS = Math.abs(Math.random() * 100);
+  const UNSCRAPED_COMICS = Math.abs(Math.random() * 100);
   const DELETED_COMICS = Math.abs(Math.random() * 100);
   const PUBLISHERS = [{ name: 'Publisher1', count: 1 }];
   const SERIES = [{ name: 'Series1', count: 1 }];
@@ -202,6 +203,7 @@ describe('Library Reducer', () => {
         libraryStateLoaded({
           state: {
             totalComics: TOTAL_COMICS,
+            unscrapedComics: UNSCRAPED_COMICS,
             deletedComics: DELETED_COMICS,
             publishers: PUBLISHERS,
             series: SERIES,

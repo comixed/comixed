@@ -50,7 +50,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class MetadataSourceRepositoryTest {
-  private static final long TEST_EXISTING_ID = 1000L;
+  private static final long TEST_EXISTING_ID = 1001L;
   private static final String TEST_NEW_NAME = "The New Name";
   private static final String TEST_NEW_BEAN_NAME = "The New Bean Name";
 

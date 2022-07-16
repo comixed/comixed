@@ -22,24 +22,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import org.comixedproject.views.View;
 
 /**
- * <code>LibrarySegmentState</code> contains the state for a single segment of the library.
+ * <code>PublisherAndYearSegment</code> contains the number of comics for a single year for a single
+ * publisher.
  *
  * @author Darryl L. Pierce
  */
 @AllArgsConstructor
-public class LibrarySegmentState {
-  @JsonProperty("name")
+public class PublisherAndYearSegment {
+  @JsonProperty("publisher")
   @JsonView(View.LibraryState.class)
   @Getter
-  @NonNull
-  private String name;
+  private String publisher;
+
+  @JsonProperty("year")
+  @JsonView(View.LibraryState.class)
+  @Getter
+  private Integer year;
 
   @JsonProperty("count")
   @JsonView(View.LibraryState.class)
   @Getter
-  private long count;
+  private Long count;
 }

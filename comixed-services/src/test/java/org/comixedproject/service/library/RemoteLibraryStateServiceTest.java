@@ -22,8 +22,9 @@ import static junit.framework.TestCase.*;
 
 import java.util.List;
 import org.apache.commons.lang.math.RandomUtils;
-import org.comixedproject.model.net.library.LibrarySegmentState;
-import org.comixedproject.model.net.library.LibraryState;
+import org.comixedproject.model.net.library.PublisherAndYearSegment;
+import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
+import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,19 +34,20 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LibraryStateServiceTest {
+public class RemoteLibraryStateServiceTest {
   private static final long TEST_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
   private static final long TEST_DELETED_COMIC_COUNT = Math.abs(RandomUtils.nextLong());
 
-  @InjectMocks private LibraryStateService service;
+  @InjectMocks private RemoteLibraryStateService service;
   @Mock private ComicBookService comicBookService;
-  @Mock private List<LibrarySegmentState> publisherState;
-  private List<LibrarySegmentState> seriesState;
-  private List<LibrarySegmentState> charactersState;
-  private List<LibrarySegmentState> teamsState;
-  private List<LibrarySegmentState> locationsState;
-  private List<LibrarySegmentState> storiesState;
-  private List<LibrarySegmentState> comicsState;
+  @Mock private List<RemoteLibrarySegmentState> publisherState;
+  @Mock private List<RemoteLibrarySegmentState> seriesState;
+  @Mock private List<RemoteLibrarySegmentState> charactersState;
+  @Mock private List<RemoteLibrarySegmentState> teamsState;
+  @Mock private List<RemoteLibrarySegmentState> locationsState;
+  @Mock private List<RemoteLibrarySegmentState> storiesState;
+  @Mock private List<RemoteLibrarySegmentState> comicsState;
+  @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
 
   @Test
   public void testGetLibraryState() {
@@ -58,8 +60,9 @@ public class LibraryStateServiceTest {
     Mockito.when(comicBookService.getLocationsState()).thenReturn(locationsState);
     Mockito.when(comicBookService.getStoriesState()).thenReturn(storiesState);
     Mockito.when(comicBookService.getComicBooksState()).thenReturn(comicsState);
+    Mockito.when(comicBookService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
 
-    final LibraryState result = service.getLibraryState();
+    final RemoteLibraryState result = service.getLibraryState();
 
     assertNotNull(result);
     assertEquals(TEST_COMIC_COUNT, result.getTotalComics());
@@ -71,6 +74,7 @@ public class LibraryStateServiceTest {
     assertSame(locationsState, result.getLocations());
     assertSame(storiesState, result.getStories());
     assertSame(comicsState, result.getStates());
+    assertSame(byPublisherAndYear, result.getByPublisherAndYear());
 
     Mockito.verify(comicBookService, Mockito.times(1)).getComicBookCount();
     Mockito.verify(comicBookService, Mockito.times(1)).getDeletedComicCount();
@@ -81,5 +85,6 @@ public class LibraryStateServiceTest {
     Mockito.verify(comicBookService, Mockito.times(1)).getLocationsState();
     Mockito.verify(comicBookService, Mockito.times(1)).getStoriesState();
     Mockito.verify(comicBookService, Mockito.times(1)).getComicBooksState();
+    Mockito.verify(comicBookService, Mockito.times(1)).getByPublisherAndYear();
   }
 }

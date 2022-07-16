@@ -16,19 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibrarySegmentState } from '@app/library/models/net/library-segment-state';
-import { ByPublisherAndYearSegment } from '@app/library/models/net/by-publisher-and-year-segment';
-
-export interface LibraryState {
-  totalComics: number;
-  unscrapedComics: number;
-  deletedComics: number;
-  publishers: LibrarySegmentState[];
-  series: LibrarySegmentState[];
-  characters: LibrarySegmentState[];
-  teams: LibrarySegmentState[];
-  locations: LibrarySegmentState[];
-  stories: LibrarySegmentState[];
-  states: LibrarySegmentState[];
-  byPublisherAndYear: ByPublisherAndYearSegment[];
+export interface ByPublisherAndYearSegment {
+  publisher: string;
+  year: number;
+  count: number;
 }

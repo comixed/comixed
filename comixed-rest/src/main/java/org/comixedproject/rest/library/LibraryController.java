@@ -40,7 +40,7 @@ import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
-import org.comixedproject.service.library.LibraryStateService;
+import org.comixedproject.service.library.RemoteLibraryStateService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -63,7 +63,7 @@ public class LibraryController {
   static final int MAXIMUM_RECORDS = 100;
 
   @Autowired private LibraryService libraryService;
-  @Autowired private LibraryStateService libraryStateService;
+  @Autowired private RemoteLibraryStateService remoteLibraryStateService;
   @Autowired private ComicBookService comicBookService;
   @Autowired private ConfigurationService configurationService;
 
@@ -98,9 +98,9 @@ public class LibraryController {
    */
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LibraryState.class)
-  public LibraryState getLibraryState() {
+  public RemoteLibraryState getLibraryState() {
     log.info("Loading the current library state");
-    return this.libraryStateService.getLibraryState();
+    return this.remoteLibraryStateService.getLibraryState();
   }
 
   /**

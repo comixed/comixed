@@ -16,19 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { LibrarySegmentState } from '@app/library/models/net/library-segment-state';
-import { ByPublisherAndYearSegment } from '@app/library/models/net/by-publisher-and-year-segment';
+package org.comixedproject.model.net.library;
 
-export interface LibraryState {
-  totalComics: number;
-  unscrapedComics: number;
-  deletedComics: number;
-  publishers: LibrarySegmentState[];
-  series: LibrarySegmentState[];
-  characters: LibrarySegmentState[];
-  teams: LibrarySegmentState[];
-  locations: LibrarySegmentState[];
-  stories: LibrarySegmentState[];
-  states: LibrarySegmentState[];
-  byPublisherAndYear: ByPublisherAndYearSegment[];
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import org.comixedproject.views.View;
+
+/**
+ * <code>RemoteLibrarySegmentState</code> contains the state for a single segment of the library.
+ *
+ * @author Darryl L. Pierce
+ */
+@AllArgsConstructor
+public class RemoteLibrarySegmentState {
+  @JsonProperty("name")
+  @JsonView(View.LibraryState.class)
+  @Getter
+  @NonNull
+  private String name;
+
+  @JsonProperty("count")
+  @JsonView(View.LibraryState.class)
+  @Getter
+  private long count;
 }
