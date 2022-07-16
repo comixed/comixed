@@ -19,7 +19,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
-import { LibraryState } from '@app/library/models/net/library-state';
+import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 export const selectComics = createAction(
   '[Library] Mark a set of comics as selected',
@@ -54,7 +54,7 @@ export const loadLibraryState = createAction(
 
 export const libraryStateLoaded = createAction(
   '[Library] The current state of the library is loaded',
-  props<{ state: LibraryState }>()
+  props<{ state: RemoteLibraryState }>()
 );
 
 export const loadLibraryStateFailed = createAction(

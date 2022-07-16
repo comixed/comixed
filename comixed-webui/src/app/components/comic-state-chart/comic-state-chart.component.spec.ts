@@ -22,19 +22,23 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
-import { TitleService } from '@app/core/services/title.service';
+import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
+import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 
 describe('ComicStateChartComponent', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const LIBRARY_STATE = {
+    ...initialLibraryState,
+    states: [
+      { name: ComicBookState.ADDED, count: 0 },
+      { name: ComicBookState.UNPROCESSED, count: 0 },
+      { name: ComicBookState.STABLE, count: 0 },
+      { name: ComicBookState.CHANGED, count: 0 },
+      { name: ComicBookState.DELETED, count: 0 }
+    ]
+  };
 
   let component: ComicStateChartComponent;
   let fixture: ComponentFixture<ComicStateChartComponent>;
-  let titleService: TitleService;
   let translateService: TranslateService;
 
   beforeEach(async () => {
@@ -45,14 +49,11 @@ describe('ComicStateChartComponent', () => {
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         NgxChartsModule
-      ],
-      providers: [TitleService]
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicStateChartComponent);
     component = fixture.componentInstance;
-    titleService = TestBed.inject(TitleService);
-    spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   });
@@ -64,7 +65,7 @@ describe('ComicStateChartComponent', () => {
   describe('when comics are loaded', () => {
     beforeEach(() => {
       component.comicStateData = [];
-      component.comics = COMICS;
+      component.libraryState = LIBRARY_STATE;
     });
 
     it('loads the chart data', () => {});
@@ -73,7 +74,7 @@ describe('ComicStateChartComponent', () => {
   describe('when the comics are set', () => {
     beforeEach(() => {
       component.comicStateData = [];
-      component.comics = COMICS;
+      component.libraryState = LIBRARY_STATE;
     });
 
     it('loads the statistics', () => {
@@ -83,7 +84,7 @@ describe('ComicStateChartComponent', () => {
 
   describe('when the language changes', () => {
     beforeEach(() => {
-      component.comics = COMICS;
+      component.libraryState = LIBRARY_STATE;
       component.comicStateData = [];
       translateService.use('fr');
     });
@@ -93,7 +94,7 @@ describe('ComicStateChartComponent', () => {
     });
   });
 
-  describe('when the conponent size changes', () => {
+  describe('when the component size changes', () => {
     beforeEach(() => {
       component.chartWidth$.next(undefined);
       component.chartHeight$.next(undefined);

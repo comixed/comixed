@@ -43,6 +43,7 @@ describe('Library Selectors', () => {
       teams: [{ name: 'Team1', count: 1 }],
       locations: [{ name: 'Location1', count: 1 }],
       stories: [{ name: 'Story1', count: 1 }],
+      byPublisherAndYear: [],
       states: [{ name: ComicBookState.CHANGED.toString(), count: 1 }]
     };
   });

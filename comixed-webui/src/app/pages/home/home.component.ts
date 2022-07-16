@@ -27,6 +27,8 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadListState } from '@app/last-read/selectors/last-read-list.selectors';
+import { selectLibraryState } from '@app/library/selectors/library.selectors';
+import { LibraryState } from '@app/library/reducers/library.reducer';
 
 @Component({
   selector: 'cx-home',
@@ -39,11 +41,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   loading = false;
   taskCount = 0;
 
+  libraryStateSubscription: Subscription;
+  libraryState: LibraryState = null;
   comicBookListStateSubscription: Subscription;
   comicBooks: ComicBook[] = [];
   lastReadStateSubscription: Subscription;
   lastRead: LastRead[] = [];
-  lastReadLoaded = false;
 
   constructor(
     private logger: LoggerService,
@@ -59,6 +62,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         this.taskCount = state.taskCount;
       });
+    this.libraryStateSubscription = this.store
+      .select(selectLibraryState)
+      .subscribe(state => {
+        this.logger.debug('Library state updated:', state);
+        this.libraryState = state;
+      });
     this.comicBookListStateSubscription = this.store
       .select(selectComicBookListState)
       .subscribe(state => {
@@ -72,7 +81,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       .select(selectLastReadListState)
       .subscribe(state => {
         this.lastRead = state.entries;
-        this.lastReadLoaded = state.lastPayload;
       });
   }
 

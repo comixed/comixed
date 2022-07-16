@@ -18,19 +18,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReadComicsChartComponent } from './read-comics-chart.component';
-import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
 import { LAST_READ_1, LAST_READ_3 } from '@app/last-read/last-read.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { initialState as initialLibraryState } from '@app/library/reducers/library.reducer';
 
 describe('ReadComicsChartComponent', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const LIBRARY_STATE = {
+    ...initialLibraryState,
+    publishers: [
+      { name: 'Publisher 1', count: 17 },
+      { name: 'Publisher 2', count: 3 }
+    ]
+  };
   const LAST_READS = [LAST_READ_1, LAST_READ_3];
 
   let component: ReadComicsChartComponent;
@@ -56,20 +58,42 @@ describe('ReadComicsChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when comic books are loaded', () => {
+  describe('updating the last read data', () => {
+    describe('when not yet loaded', () => {
+      beforeEach(() => {
+        component.lastRead = null;
+      });
+
+      it('sets an empty array', () => {
+        expect(component.lastRead).toEqual([]);
+      });
+    });
+
+    describe('when loaded', () => {
+      beforeEach(() => {
+        component.lastRead = LAST_READS;
+      });
+
+      it('sets an empty array', () => {
+        expect(component.lastRead).toEqual(LAST_READS);
+      });
+    });
+  });
+
+  describe('updating the chart data', () => {
     beforeEach(() => {
       component.lastReadComicBooksData = [];
-      component.comicBooks = COMIC_BOOKS;
+      component.libraryState = null;
+      component.lastRead = LAST_READS;
     });
 
-    it('loads the last read data', () => {
-      expect(component.lastReadComicBooksData).not.toEqual([]);
+    it('does not update the data', () => {
+      expect(component.lastReadComicBooksData).toEqual([]);
     });
 
-    describe('when last read entries are loaded', () => {
+    describe('when the library data is loaded', () => {
       beforeEach(() => {
-        component.lastReadComicBooksData = [];
-        component.lastRead = LAST_READS;
+        component.libraryState = LIBRARY_STATE;
       });
 
       it('loads the last read data', () => {

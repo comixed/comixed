@@ -35,7 +35,7 @@ import {
 } from '@app/library/actions/library.actions';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
+import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 describe('Library Reducer', () => {
   const COMIC = COMIC_BOOK_1;

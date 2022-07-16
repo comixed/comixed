@@ -25,12 +25,13 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicStateData } from '@app/models/ui/comic-state-data';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { LibraryState } from '@app/library/reducers/library.reducer';
+import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 
 @Component({
   selector: 'cx-comic-state-chart',
@@ -57,14 +58,14 @@ export class ComicStateChartComponent implements OnDestroy, AfterViewInit {
       );
   }
 
-  private _comics: ComicBook[];
+  private _libraryState: LibraryState = null;
 
-  get comics(): ComicBook[] {
-    return this._comics;
+  get libraryState(): LibraryState {
+    return this._libraryState;
   }
 
-  @Input() set comics(comics: ComicBook[]) {
-    this._comics = comics;
+  @Input() set libraryState(libraryState: LibraryState) {
+    this._libraryState = libraryState;
     this.loadStatistics();
   }
 
@@ -87,51 +88,68 @@ export class ComicStateChartComponent implements OnDestroy, AfterViewInit {
   }
 
   private loadStatistics(): void {
-    this.logger.trace('Loading library comic state distribution');
-    const comicStateData = [
+    this.comicStateData = [
       {
         name: this.translateService.instant('home.label.comic-state-added'),
-        value: this.comics.filter(
-          comic => comic.comicState === ComicBookState.ADDED
-        ).length
+        value: this.getCountForState(
+          this.libraryState.states,
+          ComicBookState.ADDED
+        )
       },
       {
         name: this.translateService.instant(
           'home.label.comic-state-unprocessed'
         ),
-        value: this.comics.filter(
-          comic => comic.comicState === ComicBookState.UNPROCESSED
-        ).length
+        value: this.getCountForState(
+          this.libraryState.states,
+          ComicBookState.UNPROCESSED
+        )
       },
       {
         name: this.translateService.instant('home.label.comic-state-stable'),
-        value: this.comics.filter(
-          comic => comic.comicState === ComicBookState.STABLE
-        ).length
+        value: this.getCountForState(
+          this.libraryState.states,
+          ComicBookState.STABLE
+        )
       },
       {
         name: this.translateService.instant('home.label.comic-state-changed'),
-        value: this.comics.filter(
-          comic => comic.comicState === ComicBookState.CHANGED
-        ).length
+        value: this.getCountForState(
+          this.libraryState.states,
+          ComicBookState.CHANGED
+        )
       },
       {
         name: this.translateService.instant('home.label.comic-state-deleted'),
-        value: this.comics.filter(
-          comic => comic.comicState === ComicBookState.DELETED
-        ).length
+        value: this.getCountForState(
+          this.libraryState.states,
+          ComicBookState.DELETED
+        )
       }
     ];
-    this.comicStateData = comicStateData;
-    this.comicStateMaxX = comicStateData.map(data => data.value).reverse()[0];
+    this.comicStateMaxX = this.comicStateData
+      .map(data => data.value)
+      .sort()
+      .reverse()[0];
   }
 
   private loadComponentDimensions(): void {
+    /* istanbul ignore next */
     this.chartWidth$.next(this.container?.nativeElement?.offsetWidth);
+    /* istanbul ignore next */
     let height = this.container?.nativeElement?.offsetHeight - 100;
+    /* istanbul ignore if */
     if (height < 0) {
       height = 0;
     }
     this.chartHeight$.next(height);
+  }
+
+  private getCountForState(
+    states: RemoteLibrarySegmentState[],
+    state: ComicBookState
+  ): number {
+    const entry = states.find(record => record.name === state);
+    return !!entry ? entry.count : 0;
   }
 }

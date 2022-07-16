@@ -32,7 +32,7 @@ import {
   loadLibraryStateFailed,
   multipleComicsEdited
 } from '@app/library/actions/library.actions';
-import { LibraryState as RemoteLibraryState } from '@app/library/models/net/library-state';
+import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
 @Injectable()
 export class LibraryEffects {
