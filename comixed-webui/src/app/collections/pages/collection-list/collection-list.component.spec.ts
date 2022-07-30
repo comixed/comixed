@@ -139,23 +139,49 @@ describe('CollectionListComponent', () => {
 
   describe('when a collection is selected', () => {
     const COLLECTION_NAME = 'The Collection';
-    const ROUTABLE_TYPE_NAME = 'series';
 
-    beforeEach(() => {
-      component.routableTypeName = ROUTABLE_TYPE_NAME;
-      component.onShowCollection({
-        name: COLLECTION_NAME,
-        comicCount: 23
-      } as CollectionListEntry);
+    describe('when it is  series', () => {
+      const VOLUME = '2022';
+
+      beforeEach(() => {
+        component.collectionType = CollectionType.SERIES;
+        component.routableTypeName = 'series';
+        component.onShowCollection({
+          name: `${COLLECTION_NAME} v${VOLUME}`,
+          comicCount: 23
+        } as CollectionListEntry);
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigate).toHaveBeenCalledWith([
+          '/library',
+          'collections',
+          'series',
+          COLLECTION_NAME,
+          'volumes',
+          VOLUME
+        ]);
+      });
     });
 
-    it('redirects the browser', () => {
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/library',
-        'collections',
-        ROUTABLE_TYPE_NAME,
-        COLLECTION_NAME
-      ]);
+    describe('when it is not a series', () => {
+      beforeEach(() => {
+        component.collectionType = CollectionType.PUBLISHERS;
+        component.routableTypeName = 'publishers';
+        component.onShowCollection({
+          name: COLLECTION_NAME,
+          comicCount: 23
+        } as CollectionListEntry);
+      });
+
+      it('redirects the browser', () => {
+        expect(router.navigate).toHaveBeenCalledWith([
+          '/library',
+          'collections',
+          'publishers',
+          COLLECTION_NAME
+        ]);
+      });
     });
   });
 

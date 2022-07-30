@@ -106,12 +106,25 @@ export class CollectionListComponent
 
   onShowCollection(entry: CollectionListEntry): void {
     this.logger.debug('Collection entry selected:', entry);
-    this.router.navigate([
-      '/library',
-      'collections',
-      this.routableTypeName,
-      entry.name
-    ]);
+    if (this.collectionType === CollectionType.SERIES) {
+      const seriesName = entry.name.substring(0, entry.name.length - 6);
+      const volume = entry.name.substring(entry.name.length - 4);
+      this.router.navigate([
+        '/library',
+        'collections',
+        'series',
+        seriesName,
+        'volumes',
+        volume
+      ]);
+    } else {
+      this.router.navigate([
+        '/library',
+        'collections',
+        this.routableTypeName,
+        entry.name
+      ]);
+    }
   }
 
   ngAfterViewInit(): void {

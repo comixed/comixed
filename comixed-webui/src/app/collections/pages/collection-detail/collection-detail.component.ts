@@ -59,6 +59,7 @@ import {
   archiveTypeFromString
 } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -72,6 +73,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   routableTypeName: string;
   collectionType: CollectionType;
   collectionName: string;
+  volume: string;
+  volumeDisplayed: string;
   comicBooks: ComicBook[] = [];
   selectedSubscription: Subscription;
   selected: ComicBook[] = [];
@@ -99,6 +102,12 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
       this.collectionName = params.collectionName;
+      this.volume = params.volume;
+      this.volumeDisplayed = this.volume;
+      if (this.volume === MISSING_VOLUME_PLACEHOLDER) {
+        this.logger.trace('No actual volume used');
+        this.volume = '';
+      }
       this.collectionType = collectionTypeFromString(this.routableTypeName);
       if (!this.collectionType) {
         this.logger.error('Invalid collection type:', params.collectionType);
@@ -116,7 +125,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
                   );
                 case CollectionType.SERIES:
                   return (
-                    (comicBook.series || '[UNKNOWN]') === this.collectionName
+                    (comicBook.series || '[UNKNOWN]') === this.collectionName &&
+                    (comicBook.volume || '') === this.volume
                   );
                 case CollectionType.CHARACTERS:
                   return comicBook.characters.includes(this.collectionName);
@@ -230,7 +240,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(
       this.translateService.instant('collection-detail.tab-title', {
         collection: this.collectionType,
-        name: this.collectionName
+        name: this.collectionName,
+        volume: this.volumeDisplayed
       })
     );
   }

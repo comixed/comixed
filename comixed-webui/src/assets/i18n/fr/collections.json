@@ -1,12 +1,12 @@
 {
   "collection-detail": {
-    "tab-title": "{collection, select, characters{Personnage} teams{Equipe} locations{Lieu} stories{Histoire} publishers{Éditeur} series{Série} other{Inconnu}}: {name}",
+    "tab-title": "{collection, select, characters{Personnage} teams{Equipe} locations{Lieu} stories{Histoire} publishers{Éditeur} series{Série} other{Inconnu}}: {name}{volume, select, null{} other{ v{volume}}}",
     "title": {
       "characters": "Personnage: {name} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})",
       "locations": "Lieu: {name} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})",
       "publishers": "Éditeur: {name} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})",
       "series": "Série: {name} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})",
-      "stories": "Histoire: {name} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})",
+      "stories": "Histoire: {name} v{volume} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})",
       "teams": "Equipe: {name} ({count, plural, =1{Une bande dessinée} other{# bandes dessinées}})"
     }
   },

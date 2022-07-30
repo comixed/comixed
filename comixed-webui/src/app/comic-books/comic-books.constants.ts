@@ -29,3 +29,5 @@ export const MARK_PAGES_DELETED_URL = `${API_ROOT_URL}/pages/deleted`;
 export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
 
 export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
+
+export const MISSING_VOLUME_PLACEHOLDER = '----';

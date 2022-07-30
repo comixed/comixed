@@ -26,6 +26,7 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { CollectionListProperties } from '@app/collections/models/collection-list-properties';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
 
 export const selectComicBookListState =
   createFeatureSelector<ComicBookListState>(COMIC_BOOK_LIST_FEATURE_KEY);
@@ -63,7 +64,11 @@ export const selectComicBookListCollection = createSelector(
           entries.push(comicBook.publisher || '[UNKNOWN]');
           break;
         case CollectionType.SERIES:
-          entries.push(comicBook.series || '[UNKNOWN]');
+          entries.push(
+            `${comicBook.series || '[UNKNOWN]'} v${
+              comicBook.volume || MISSING_VOLUME_PLACEHOLDER
+            }`
+          );
           break;
         case CollectionType.CHARACTERS:
           entries = entries.concat(comicBook.characters);

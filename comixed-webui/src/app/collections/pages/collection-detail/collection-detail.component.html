@@ -7,7 +7,12 @@
   "
   [title]="
     'collection-detail.title.' + collectionType
-      | translate: { name: collectionName, count: comicBooks?.length || 0 }
+      | translate
+        : {
+            name: collectionName,
+            count: comicBooks?.length || 0,
+            volume: volume || '----'
+          }
   "
   [selected]="selected"
   [readingLists]="readingLists"
