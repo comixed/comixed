@@ -29,6 +29,11 @@ const routes: Routes = [
     canActivate: [ReaderGuard]
   },
   {
+    path: 'library/collections/:collectionType/:collectionName/volumes/:volume',
+    component: CollectionDetailComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
     path: 'library/collections/:collectionType/:collectionName',
     component: CollectionDetailComponent,
     canActivate: [ReaderGuard]

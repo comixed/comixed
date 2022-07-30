@@ -80,11 +80,12 @@ import { USER_READER } from '@app/user/user.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
 
 describe('CollectionDetailComponent', () => {
   const COMIC_BOOKS = [
     COMIC_BOOK_1,
-    COMIC_BOOK_2,
+    { ...COMIC_BOOK_2, publisher: null, series: null, volume: null },
     COMIC_BOOK_3,
     COMIC_BOOK_4,
     COMIC_BOOK_5
@@ -198,11 +199,13 @@ describe('CollectionDetailComponent', () => {
   describe('when the collection details are received', () => {
     const COLLECTION_TYPE = 'stories';
     const COLLECTION_NAME = 'The Collection';
+    const COLLECTION_VOLUME = '1996';
 
     beforeEach(() => {
       (activatedRoute.params as BehaviorSubject<{}>).next({
         collectionType: COLLECTION_TYPE,
-        collectionName: COLLECTION_NAME
+        collectionName: COLLECTION_NAME,
+        volume: COLLECTION_VOLUME
       });
     });
 
@@ -218,12 +221,30 @@ describe('CollectionDetailComponent', () => {
       expect(component.collectionName).toEqual(COLLECTION_NAME);
     });
 
+    it('sets the volume', () => {
+      expect(component.volume).toEqual(COLLECTION_VOLUME);
+    });
+
     it('subscribes to comic updates', () => {
       expect(component.comicSubscription).not.toBeNull();
     });
 
     it('subscribes to selection updates', () => {
       expect(component.selectedSubscription).not.toBeNull();
+    });
+
+    describe('when the volume is the null placeholder', () => {
+      beforeEach(() => {
+        (activatedRoute.params as BehaviorSubject<{}>).next({
+          collectionType: COLLECTION_TYPE,
+          collectionName: COLLECTION_NAME,
+          volume: MISSING_VOLUME_PLACEHOLDER
+        });
+      });
+
+      it('uses the missing volume value', () => {
+        expect(component.volume).toEqual('');
+      });
     });
   });
 
@@ -247,7 +268,8 @@ describe('CollectionDetailComponent', () => {
         component.comicBooks = [];
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'series',
-          collectionName: COMIC_BOOKS[0].series
+          collectionName: COMIC_BOOKS[0].series,
+          volume: COMIC_BOOKS[0].volume
         });
       });
 
