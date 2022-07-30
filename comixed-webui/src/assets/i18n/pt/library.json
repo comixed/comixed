@@ -26,6 +26,7 @@
       "thumbnail": "Miniatura"
     },
     "list-page": {
+      "page-title": "Duplicate Pages ({count, plural, =1{One Page} other{# Pages}})",
       "tab-title": "Páginas duplicadas"
     },
     "load-comics": {
@@ -35,7 +36,8 @@
       "block-page": "Bloquear páginas como esta.",
       "block-selections": "Bloquear hash de páginas selecionadas",
       "unblock-page": "Desbloquear páginas como esta.",
-      "unblock-selections": "Desbloquear hash de páginas selecionadas"
+      "unblock-selections": "Desbloquear hash de páginas selecionadas",
+      "unblocked-only": "Only show pages not current blocked."
     },
     "unblock-selection": {
       "confirmation-message": "Tem a certeza que quer desbloquear {count} página{count, plural, =1{ selecionada} other{s selecionadas}}.",

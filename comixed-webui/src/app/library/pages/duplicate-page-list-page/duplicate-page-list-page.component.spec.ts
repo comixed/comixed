@@ -37,7 +37,10 @@ import {
   DUPLICATE_PAGE_2,
   DUPLICATE_PAGE_3
 } from '@app/library/library.fixtures';
-import { DUPLICATE_PAGE_LIST_TOPIC } from '@app/library/library.constants';
+import {
+  DUPLICATE_PAGE_LIST_TOPIC,
+  DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY
+} from '@app/library/library.constants';
 import { duplicatePagesLoaded } from '@app/library/actions/duplicate-page-list.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
@@ -62,6 +65,12 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_ADMIN } from '@app/user/user.fixtures';
+import { saveUserPreference } from '@app/user/actions/user.actions';
 
 describe('DuplicatePageListPageComponent', () => {
   const DUPLICATE_PAGES = [
@@ -70,6 +79,7 @@ describe('DuplicatePageListPageComponent', () => {
     DUPLICATE_PAGE_3
   ];
   const initialState = {
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
@@ -215,6 +225,21 @@ describe('DuplicatePageListPageComponent', () => {
 
     it('maintains existing selectsion', () => {
       expect(component.dataSource.data[0].selected).toBeTrue();
+    });
+
+    describe('filtering for unblocked only', () => {
+      beforeEach(() => {
+        component.blockedPages = [
+          { ...BLOCKED_HASH_1, hash: DUPLICATE_PAGES[0].hash }
+        ];
+        component.unblockedOnly = true;
+      });
+
+      it('does not show blocked pages', () => {
+        expect(
+          component.dataSource.data.map(entry => entry.item)
+        ).not.toContain(DUPLICATE_PAGES[0]);
+      });
     });
   });
 
@@ -499,6 +524,24 @@ describe('DuplicatePageListPageComponent', () => {
     it('processes duplicate page list updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         duplicatePagesLoaded({ pages: DUPLICATE_PAGES })
+      );
+    });
+  });
+
+  describe('toggling the unblocked only flag', () => {
+    const UNBLOCKED_ONLY = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.unblockedOnly = !UNBLOCKED_ONLY;
+      component.onToggleUnblockedOnly();
+    });
+
+    it('saves the user preference', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
+          value: `${UNBLOCKED_ONLY}`
+        })
       );
     });
   });

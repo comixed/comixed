@@ -26,6 +26,7 @@
       "thumbnail": "Thumbnail"
     },
     "list-page": {
+      "page-title": "Duplicate Pages ({count, plural, =1{One Page} other{# Pages}})",
       "tab-title": "Duplicate Pages"
     },
     "load-comics": {
@@ -35,7 +36,8 @@
       "block-page": "Block pages like this.",
       "block-selections": "Block selected page hashes",
       "unblock-page": "Unblock pages like this.",
-      "unblock-selections": "Unblock selected page hashes"
+      "unblock-selections": "Unblock selected page hashes",
+      "unblocked-only": "Only show pages not current blocked."
     },
     "unblock-selection": {
       "confirmation-message": "Are you sure you want to unblock the {count} selected {count, plural, =1{page} other{pages}}.",
