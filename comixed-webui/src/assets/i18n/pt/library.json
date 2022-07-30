@@ -37,7 +37,8 @@
       "block-selections": "Bloquear hash de páginas selecionadas",
       "unblock-page": "Desbloquear páginas como esta.",
       "unblock-selections": "Desbloquear hash de páginas selecionadas",
-      "unblocked-only": "Only show pages not current blocked."
+      "unblocked-only": "Only show pages not current blocked.",
+      "view-page-detail": "View page details."
     },
     "unblock-selection": {
       "confirmation-message": "Tem a certeza que quer desbloquear {count} página{count, plural, =1{ selecionada} other{s selecionadas}}.",
