@@ -6,6 +6,19 @@
   *ngIf="!!user"
   mat-button
   class="menu-button"
+  routerLink="/home"
+  routerLinkActive="active"
+>
+  <mat-icon>home</mat-icon>
+  {{ "navigation.option.home" | translate }}
+</button>
+
+<mat-divider *ngIf="!!user"></mat-divider>
+
+<button
+  *ngIf="!!user"
+  mat-button
+  class="menu-button"
   routerLink="/library/all"
   routerLinkActive="active"
 >
