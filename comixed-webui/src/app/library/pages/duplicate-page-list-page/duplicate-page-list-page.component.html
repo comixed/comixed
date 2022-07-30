@@ -112,6 +112,14 @@
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let row">
       <button
+        mat-icon-button
+        color="primary"
+        [matTooltip]="'duplicate-pages.tooltip.view-page-detail' | translate"
+        [routerLink]="['/library', 'pages', 'duplicates', row.item.hash]"
+      >
+        <mat-icon>info</mat-icon>
+      </button>
+      <button
         *ngIf="!isBlocked(row)"
         mat-icon-button
         color="warn"
@@ -133,8 +141,5 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
-  <mat-row
-    *matRowDef="let row; columns: displayColumns"
-    [routerLink]="['/library', 'pages', 'duplicates', row.item.hash]"
-  ></mat-row>
+  <mat-row *matRowDef="let row; columns: displayColumns"></mat-row>
 </mat-table>

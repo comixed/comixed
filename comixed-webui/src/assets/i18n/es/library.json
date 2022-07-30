@@ -37,7 +37,8 @@
       "block-selections": "Block selected page hashes",
       "unblock-page": "Unblock pages like this.",
       "unblock-selections": "Unblock selected page hashes",
-      "unblocked-only": "Only show pages not current blocked."
+      "unblocked-only": "Only show pages not current blocked.",
+      "view-page-detail": "View page details."
     },
     "unblock-selection": {
       "confirmation-message": "Are you sure you want to unblock the {count} selected {count, plural, =1{page} other{pages}}.",
