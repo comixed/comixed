@@ -26,6 +26,7 @@
       "thumbnail": "Vignette"
     },
     "list-page": {
+      "page-title": "Duplicate Pages ({count, plural, =1{One Page} other{# Pages}})",
       "tab-title": "Pages dupliquées"
     },
     "load-comics": {
@@ -35,7 +36,8 @@
       "block-page": "Bloquer des pages comme celle-ci.",
       "block-selections": "Bloquer les hashs de pages sélectionnées",
       "unblock-page": "Débloquer des pages comme celle-ci.",
-      "unblock-selections": "Débloquer les hashs de pages sélectionnés"
+      "unblock-selections": "Débloquer les hashs de pages sélectionnés",
+      "unblocked-only": "Only show pages not current blocked."
     },
     "unblock-selection": {
       "confirmation-message": "Êtes-vous sûr de vouloir débloquer {count, plural, =1{la page} other{les # pages}}.",

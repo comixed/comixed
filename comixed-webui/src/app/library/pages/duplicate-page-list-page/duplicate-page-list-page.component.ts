@@ -46,11 +46,17 @@ import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics
 import { MatSort } from '@angular/material/sort';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
-import { DUPLICATE_PAGE_LIST_TOPIC } from '@app/library/library.constants';
+import {
+  DUPLICATE_PAGE_LIST_TOPIC,
+  DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY
+} from '@app/library/library.constants';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { selectBlockedPageList } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getUserPreference } from '@app/user';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -74,6 +80,7 @@ export class DuplicatePageListPageComponent
   allSelected = false;
   anySelected = false;
 
+  userSubscription: Subscription;
   readonly displayColumns = [
     'selection',
     'thumbnail',
@@ -93,6 +100,14 @@ export class DuplicatePageListPageComponent
     private webSocketService: WebSocketService
   ) {
     this.logger.trace('Subscribing to duplicate page list changes');
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.unblockedOnly =
+        getUserPreference(
+          user.preferences,
+          DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
+          `${false}`
+        ) == `${true}`;
+    });
     this.duplicatePageSubscription = this.store
       .select(selectDuplicatePageList)
       .subscribe(pages => (this.duplicatePages = pages));
@@ -126,19 +141,26 @@ export class DuplicatePageListPageComponent
       });
   }
 
-  set duplicatePages(pages: DuplicatePage[]) {
-    this.logger.trace('Loading duplicate pages');
-    const oldData = this.dataSource.data;
-    this.dataSource.data = pages.map(page => {
-      const existingPage = oldData.find(
-        oldPage => oldPage.item.hash === page.hash
-      );
+  private _unblockedOnly = false;
 
-      return {
-        item: page,
-        selected: existingPage?.selected || false
-      };
-    });
+  get unblockedOnly(): boolean {
+    return this._unblockedOnly;
+  }
+
+  set unblockedOnly(unblockedOnly: boolean) {
+    this._unblockedOnly = unblockedOnly;
+    this.loadDataSource();
+  }
+
+  private _duplicatePages: DuplicatePage[] = [];
+
+  get duplicatePages(): DuplicatePage[] {
+    return this._duplicatePages;
+  }
+
+  set duplicatePages(pages: DuplicatePage[]) {
+    this._duplicatePages = pages;
+    this.loadDataSource();
   }
 
   ngOnInit(): void {
@@ -274,6 +296,33 @@ export class DuplicatePageListPageComponent
         );
       }
     });
+  }
+
+  onToggleUnblockedOnly(): void {
+    this.store.dispatch(
+      saveUserPreference({
+        name: DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY,
+        value: `${!this.unblockedOnly}`
+      })
+    );
+  }
+
+  private loadDataSource(): void {
+    this.logger.info('Loading duplicate pages:', this.unblockedOnly);
+    const oldData = this.dataSource.data;
+    const blockedHashes = this.blockedPages.map(page => page.hash);
+    this.dataSource.data = this.duplicatePages
+      .filter(page => !this.unblockedOnly || !blockedHashes.includes(page.hash))
+      .map(page => {
+        const existingPage = oldData.find(
+          oldPage => oldPage.item.hash === page.hash
+        );
+
+        return {
+          item: page,
+          selected: existingPage?.selected || false
+        };
+      });
   }
 
   private loadTranslations(): void {

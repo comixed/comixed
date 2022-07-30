@@ -6,6 +6,16 @@
   ></mat-paginator>
   <div class="cx-spacer"></div>
   <button
+    id="unblocked-only"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'duplicate-pages.tooltip.unblocked-only' | translate"
+    (click)="onToggleUnblockedOnly()"
+  >
+    <mat-icon *ngIf="unblockedOnly">check_box</mat-icon>
+    <mat-icon *ngIf="!unblockedOnly">check_box_outline_blank</mat-icon>
+  </button>
+  <button
     id="block-selections-button"
     mat-icon-button
     color="warn"
@@ -26,6 +36,13 @@
     <mat-icon>remove_circle_outline</mat-icon>
   </button>
 </mat-toolbar>
+
+<h2>
+  {{
+    "duplicate-pages.list-page.page-title"
+      | translate: { count: dataSource.data.length }
+  }}
+</h2>
 
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="selection">

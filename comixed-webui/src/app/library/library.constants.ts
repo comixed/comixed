@@ -79,6 +79,8 @@ export const PAGE_SIZE_DEFAULT = PAGE_SIZE_OPTIONS[0];
 export const SORT_FIELD_PREFERENCE = 'preference.sort-field';
 export const SORT_FIELD_DEFAULT = 'added-date';
 export const SHOW_COMIC_COVERS = 'show-comic-covers';
+export const DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY =
+  'preference.duplicate-pages.unblocked-only';
 
 // messaging
 export const COMIC_LIST_UPDATE_TOPIC = '/topic/comic-list.update';
