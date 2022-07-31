@@ -1,13 +1,13 @@
 <cx-comic-book-covers
   class="cx-overflow-y-scroll"
   [title]="'library.page-title.' + pageContent"
-  [comics]="
+  [comicBooks]="
     comicBooks
       | archiveType: archiveTypeFilter
       | unreadComics: unreadOnly:lastReadDates
       | coverDateFilter: coverDateFilter
   "
-  [selected]="selected"
+  [selectedIds]="selectedIds"
   [lastRead]="lastReadDates"
   [readingLists]="readingLists"
   [isAdmin]="isAdmin"

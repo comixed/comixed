@@ -21,20 +21,6 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 
-export const selectComics = createAction(
-  '[Library] Mark a set of comics as selected',
-  props<{ comicBooks: ComicBook[] }>()
-);
-
-export const deselectComics = createAction(
-  '[Library] Unmark a set of comics as selected',
-  props<{ comicBooks: ComicBook[] }>()
-);
-
-export const clearSelectedComics = createAction(
-  '[Library] Clear all selected comics'
-);
-
 export const editMultipleComics = createAction(
   '[Library] Edit multiple comics',
   props<{ comicBooks: ComicBook[]; details: EditMultipleComics }>()

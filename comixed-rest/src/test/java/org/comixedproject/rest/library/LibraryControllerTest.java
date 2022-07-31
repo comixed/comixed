@@ -24,19 +24,21 @@ import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
 import static org.comixedproject.rest.library.LibraryController.MAXIMUM_RECORDS;
+import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_ROOT_DIRECTORY;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import javax.servlet.http.HttpSession;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
-import org.comixedproject.model.net.library.ConsolidateLibraryRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ComicException;
@@ -83,6 +85,8 @@ public class LibraryControllerTest {
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
   @Mock private RemoteLibraryState remoteLibraryState;
+  @Mock private HttpSession httpState;
+  @Mock private Set<Long> selectedIds;
 
   @Mock
   @Qualifier("updateMetadataJob")
@@ -113,14 +117,17 @@ public class LibraryControllerTest {
 
   @Test
   public void testGetLibraryState() {
-    Mockito.when(remoteLibraryStateService.getLibraryState()).thenReturn(remoteLibraryState);
+    Mockito.when(httpState.getAttribute(Mockito.anyString())).thenReturn(selectedIds);
+    Mockito.when(remoteLibraryStateService.getLibraryState(Mockito.anySet()))
+        .thenReturn(remoteLibraryState);
 
-    final RemoteLibraryState result = controller.getLibraryState();
+    final RemoteLibraryState result = controller.getLibraryState(httpState);
 
     assertNotNull(result);
     assertSame(remoteLibraryState, result);
 
-    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState();
+    Mockito.verify(httpState, Mockito.times(1)).getAttribute(LIBRARY_SELECTIONS);
+    Mockito.verify(remoteLibraryStateService, Mockito.times(1)).getLibraryState(selectedIds);
   }
 
   @Test

@@ -27,9 +27,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryService } from '@app/library/services/library.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertService } from '@app/core/services/alert.service';
-import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { clearSelectedComics } from '@app/library/actions/library.actions';
 
 @Injectable()
 export class RescanComicsEffects {
@@ -49,7 +48,7 @@ export class RescanComicsEffects {
                 )
               )
             ),
-            mergeMap(() => [comicsRescanning(), clearSelectedComics()]),
+            map(() => comicsRescanning()),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

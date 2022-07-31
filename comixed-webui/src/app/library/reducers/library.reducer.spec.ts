@@ -23,15 +23,12 @@ import {
   COMIC_BOOK_3
 } from '@app/comic-books/comic-books.fixtures';
 import {
-  clearSelectedComics,
-  deselectComics,
   editMultipleComics,
   editMultipleComicsFailed,
   libraryStateLoaded,
   loadLibraryState,
   loadLibraryStateFailed,
-  multipleComicsEdited,
-  selectComics
+  multipleComicsEdited
 } from '@app/library/actions/library.actions';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
@@ -40,6 +37,7 @@ import { RemoteLibraryState } from '@app/library/models/net/remote-library-state
 describe('Library Reducer', () => {
   const COMIC = COMIC_BOOK_1;
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
+  const COMIC_IDS = COMICS.map(comic => comic.id);
   const READ = Math.random() > 0.5;
   const TOTAL_COMICS = Math.abs(Math.random() * 100);
   const UNSCRAPED_COMICS = Math.abs(Math.random() * 100);
@@ -63,78 +61,8 @@ describe('Library Reducer', () => {
       state = reducer({ ...state }, {} as any);
     });
 
-    it('has no selected comic', () => {
-      expect(state.selected).toEqual([]);
-    });
-
     it('is not busy', () => {
       expect(state.busy).toBeFalse();
-    });
-  });
-
-  describe('selecting comics', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, selected: [] },
-        selectComics({ comicBooks: COMICS })
-      );
-    });
-
-    it('sets the selected comics', () => {
-      expect(state.selected).toEqual(COMICS);
-    });
-
-    describe('reselecting the same comic', () => {
-      beforeEach(() => {
-        state = reducer(
-          { ...state, selected: COMICS },
-          selectComics({ comicBooks: COMICS })
-        );
-      });
-
-      it('does not reselect the same comics', () => {
-        expect(state.selected).toEqual(COMICS);
-      });
-    });
-  });
-
-  describe('deselecting comics', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, selected: COMICS },
-        deselectComics({ comicBooks: [COMIC] })
-      );
-    });
-
-    it('removes the deselected comics', () => {
-      expect(state.selected).not.toContain(COMIC);
-    });
-
-    it('leaves the remaining comics selected', () => {
-      expect(state.selected).not.toEqual([]);
-    });
-  });
-
-  describe('deselecting all comics', () => {
-    beforeEach(() => {
-      state = reducer(
-        { ...state, selected: COMICS },
-        deselectComics({ comicBooks: COMICS })
-      );
-    });
-
-    it('clears the selected comics', () => {
-      expect(state.selected).toEqual([]);
-    });
-  });
-
-  describe('clearing all selections', () => {
-    beforeEach(() => {
-      state = reducer({ ...state, selected: COMICS }, clearSelectedComics());
-    });
-
-    it('clears the selected comics', () => {
-      expect(state.selected).toEqual([]);
     });
   });
 

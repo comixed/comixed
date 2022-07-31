@@ -30,7 +30,6 @@ import {
   selectComicBookListFilter
 } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -51,15 +50,16 @@ import {
 } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
 import {
-  deselectComics,
-  selectComics
-} from '@app/library/actions/library.actions';
-import {
   ArchiveType,
   archiveTypeFromString
 } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
+import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -77,7 +77,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   volumeDisplayed: string;
   comicBooks: ComicBook[] = [];
   selectedSubscription: Subscription;
-  selected: ComicBook[] = [];
+  selectedIds: number[] = [];
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
   userSubscription: Subscription;
@@ -172,8 +172,8 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
         `${true}`;
     });
     this.selectedSubscription = this.store
-      .select(selectSelectedComics)
-      .subscribe(selected => (this.selected = selected));
+      .select(selectLibrarySelections)
+      .subscribe(selectedIds => (this.selectedIds = selectedIds));
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
@@ -219,10 +219,14 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   onSelectAllComics(selected: boolean): void {
     if (selected) {
       this.logger.trace('Selecting all comics');
-      this.store.dispatch(selectComics({ comicBooks: this.comicBooks }));
+      this.store.dispatch(
+        selectComicBooks({
+          ids: this.comicBooks.map(comicBook => comicBook.id)
+        })
+      );
     } else {
       this.logger.trace('Deselecting all comics');
-      this.store.dispatch(deselectComics({ comicBooks: this.selected }));
+      this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
     }
   }
 

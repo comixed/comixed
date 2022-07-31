@@ -44,12 +44,12 @@ import {
   selectMetadataState
 } from '@app/comic-metadata/selectors/metadata.selectors';
 import { TranslateService } from '@ngx-translate/core';
-import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { PAGE_SIZE_OPTIONS } from '@app/library/library.constants';
+import { deselectComicBooks } from '@app/library/actions/library-selections.actions';
 
 export const MATCHABILITY = 'matchability';
 export const EXACT_MATCH = 2;
@@ -70,7 +70,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
-  @Input() comic: ComicBook;
+  @Input() comicBook: ComicBook;
   @Input() metadataSource: MetadataSource;
   @Input() comicSeriesName: string;
   @Input() comicVolume: string;
@@ -233,14 +233,14 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   scrapeComic(): void {
     this.logger.debug('User confirmed scraping the comic:', this.multimode);
     if (this.multimode) {
-      this.logger.debug('Removing comic from scraping queue:', this.comic);
-      this.store.dispatch(deselectComics({ comicBooks: [this.comic] }));
+      this.logger.debug('Removing comic from scraping queue:', this.comicBook);
+      this.store.dispatch(deselectComicBooks({ ids: [this.comicBook.id] }));
     }
     this.store.dispatch(
       scrapeComic({
         metadataSource: this.metadataSource,
         issueId: this.issue.id,
-        comic: this.comic,
+        comic: this.comicBook,
         skipCache: this.skipCache
       })
     );

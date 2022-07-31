@@ -18,23 +18,20 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
-  clearSelectedComics,
-  deselectComics,
   editMultipleComics,
   editMultipleComicsFailed,
   libraryStateLoaded,
   loadLibraryState,
   loadLibraryStateFailed,
-  multipleComicsEdited,
-  selectComics
+  multipleComicsEdited
 } from '../actions/library.actions';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { RemoteLibrarySegmentState } from '@app/library/models/net/remote-library-segment-state';
 import { ByPublisherAndYearSegment } from '@app/library/models/net/by-publisher-and-year-segment';
 
 export const LIBRARY_FEATURE_KEY = 'library_state';
 
 export interface LibraryState {
+  busy: boolean;
   totalComics: number;
   unscrapedComics: number;
   deletedComics: number;
@@ -46,12 +43,9 @@ export interface LibraryState {
   stories: RemoteLibrarySegmentState[];
   states: RemoteLibrarySegmentState[];
   byPublisherAndYear: ByPublisherAndYearSegment[];
-  selected: ComicBook[];
-  busy: boolean;
 }
 
 export const initialState: LibraryState = {
-  selected: [],
   busy: false,
   totalComics: 0,
   unscrapedComics: 0,
@@ -69,21 +63,6 @@ export const initialState: LibraryState = {
 export const reducer = createReducer(
   initialState,
 
-  on(selectComics, (state, action) => {
-    const selected = state.selected.filter(
-      comicBook => action.comicBooks.includes(comicBook) === false
-    );
-
-    return { ...state, selected: selected.concat(action.comicBooks) };
-  }),
-  on(deselectComics, (state, action) => {
-    const selected = state.selected.filter(
-      comicBook => action.comicBooks.includes(comicBook) === false
-    );
-
-    return { ...state, selected };
-  }),
-  on(clearSelectedComics, state => ({ ...state, selected: [] })),
   on(editMultipleComics, state => ({ ...state, busy: true })),
   on(multipleComicsEdited, state => ({ ...state, busy: false })),
   on(editMultipleComicsFailed, state => ({ ...state, busy: false })),

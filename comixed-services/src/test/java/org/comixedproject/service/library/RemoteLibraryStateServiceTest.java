@@ -21,6 +21,7 @@ package org.comixedproject.service.library;
 import static junit.framework.TestCase.*;
 
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -48,6 +49,7 @@ public class RemoteLibraryStateServiceTest {
   @Mock private List<RemoteLibrarySegmentState> storiesState;
   @Mock private List<RemoteLibrarySegmentState> comicsState;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYear;
+  @Mock private Set<Long> selectedIds;
 
   @Test
   public void testGetLibraryState() {
@@ -62,11 +64,12 @@ public class RemoteLibraryStateServiceTest {
     Mockito.when(comicBookService.getComicBooksState()).thenReturn(comicsState);
     Mockito.when(comicBookService.getByPublisherAndYear()).thenReturn(byPublisherAndYear);
 
-    final RemoteLibraryState result = service.getLibraryState();
+    final RemoteLibraryState result = service.getLibraryState(selectedIds);
 
     assertNotNull(result);
     assertEquals(TEST_COMIC_COUNT, result.getTotalComics());
     assertEquals(TEST_DELETED_COMIC_COUNT, result.getDeletedComics());
+    assertSame(selectedIds, result.getSelectedIds());
     assertSame(publisherState, result.getPublishers());
     assertSame(seriesState, result.getSeries());
     assertSame(charactersState, result.getCharacters());

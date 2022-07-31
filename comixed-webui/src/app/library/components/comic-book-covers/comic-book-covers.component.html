@@ -1,6 +1,6 @@
 <cx-library-toolbar
   *ngIf="showToolbar"
-  [comics]="comics"
+  [comicBooks]="comicBooks"
   [showActions]="showActions"
   [isAdmin]="isAdmin"
   [pageSize]="pageSize"
@@ -8,7 +8,7 @@
   [showUpdateMetadata]="showUpdateMetadata"
   [showConsolidate]="showConsolidate"
   [showPurge]="showPurge"
-  [selected]="selected"
+  [selectedIds]="selectedIds"
   [archiveType]="archiveType"
   [sortField]="sortField"
   [showCoverFilters]="showCoverFilters"
@@ -35,7 +35,7 @@
   matSort
 >
   <div
-    *ngFor="let comic of comics"
+    *ngFor="let comic of comicBooks"
     fxFlex.gt-lg="10%"
     fxFlex.lg="20%"
     fxFlex.md="50%"
@@ -81,7 +81,7 @@
     <button
       *ngIf="isAdmin"
       mat-menu-item
-      [disabled]="!selected.length"
+      [disabled]="!selectedIds.length"
       (click)="onEditMultipleComics()"
     >
       <mat-icon>edit_note</mat-icon>
@@ -96,7 +96,7 @@
     <button
       mat-menu-item
       [matMenuTriggerFor]="readingListsMenu"
-      [disabled]="!selected.length || !readingLists.length"
+      [disabled]="!selectedIds.length || !readingLists.length"
     >
       <mat-icon>playlist_add_check</mat-icon>
       <mat-label>
@@ -161,10 +161,10 @@
       {{ "library.context-menu.undelete-one" | translate }}
     </mat-label>
   </button>
-  <mat-divider *ngIf="selected.length > 0"></mat-divider>
+  <mat-divider *ngIf="selectedIds.length > 0"></mat-divider>
   <button
     id="mark-selected-as-read-button"
-    *ngIf="selected.length > 0"
+    *ngIf="selectedIds.length > 0"
     mat-menu-item
     (click)="onMarkMultipleComicsRead(true)"
   >
@@ -175,7 +175,7 @@
   </button>
   <button
     id="mark-selected-as-unread-button"
-    *ngIf="selected.length > 0"
+    *ngIf="selectedIds.length > 0"
     mat-menu-item
     (click)="onMarkMultipleComicsRead(false)"
   >
@@ -186,7 +186,7 @@
   </button>
   <button
     id="delete-selected-button"
-    *ngIf="selected.length > 0"
+    *ngIf="selectedIds.length > 0"
     mat-menu-item
     (click)="onMarkSelectedDeleted(true)"
   >
@@ -197,7 +197,7 @@
   </button>
   <button
     id="undelete-selected-button"
-    *ngIf="selected.length > 0"
+    *ngIf="selectedIds.length > 0"
     mat-menu-item
     (click)="onMarkSelectedDeleted(false)"
   >
@@ -230,8 +230,8 @@
   <button
     *ngIf="isAdmin"
     mat-menu-item
-    [disabled]="!selected.length"
-    (click)="downloadComicData(selected)"
+    [disabled]="!selectedIds.length"
+    (click)="downloadComicData(selectedIds)"
   >
     <mat-icon>data_array</mat-icon>
     <mat-label>
@@ -262,7 +262,7 @@
     </mat-label>
   </button>
   <button
-    *ngIf="selected.length"
+    *ngIf="selectedIds.length"
     id="convert-all-to-cbz-button"
     mat-menu-item
     (click)="onConvertSelected('CBZ')"
@@ -273,7 +273,7 @@
     </mat-label>
   </button>
   <button
-    *ngIf="selected.length"
+    *ngIf="selectedIds.length"
     id="convert-all-to-cb7-button"
     mat-menu-item
     (click)="onConvertSelected('CB7')"

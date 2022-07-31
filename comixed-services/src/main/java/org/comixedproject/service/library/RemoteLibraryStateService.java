@@ -18,6 +18,7 @@
 
 package org.comixedproject.service.library;
 
+import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -40,13 +41,14 @@ public class RemoteLibraryStateService {
    *
    * @return the state
    */
-  public RemoteLibraryState getLibraryState() {
+  public RemoteLibraryState getLibraryState(final Set<Long> selectedIds) {
     log.debug("Retrieving the library state");
     final RemoteLibraryState result =
         new RemoteLibraryState(
             this.comicBookService.getComicBookCount(),
             this.comicBookService.getUnscrapedComicBookCount(),
-            this.comicBookService.getDeletedComicCount());
+            this.comicBookService.getDeletedComicCount(),
+            selectedIds);
     result.setPublishers(this.comicBookService.getPublishersState());
     result.setSeries(this.comicBookService.getSeriesState());
     result.setCharacters(this.comicBookService.getCharactersState());

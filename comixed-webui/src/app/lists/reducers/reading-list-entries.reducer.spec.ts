@@ -56,7 +56,7 @@ describe('ReadingListEntries Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        addComicsToReadingList({ list: READING_LIST, comics: [COMIC] })
+        addComicsToReadingList({ list: READING_LIST, comicBooks: [COMIC] })
       );
     });
 
@@ -92,7 +92,7 @@ describe('ReadingListEntries Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, working: false },
-        removeComicsFromReadingList({ list: READING_LIST, comics: [COMIC] })
+        removeComicsFromReadingList({ list: READING_LIST, comicBooks: [COMIC] })
       );
     });
 

@@ -88,7 +88,7 @@ describe('ReadingListEntriesEffects', () => {
       const serviceResponse = READING_LIST;
       const action = addComicsToReadingList({
         list: READING_LIST,
-        comics: [COMIC]
+        comicBooks: [COMIC]
       });
       const outcome1 = comicsAddedToReadingList();
       const outcome2 = readingListLoaded({ list: READING_LIST });
@@ -107,7 +107,7 @@ describe('ReadingListEntriesEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = addComicsToReadingList({
         list: READING_LIST,
-        comics: [COMIC]
+        comicBooks: [COMIC]
       });
       const outcome = addComicsToReadingListFailed();
 
@@ -124,7 +124,7 @@ describe('ReadingListEntriesEffects', () => {
     it('fires an action on general failure', () => {
       const action = addComicsToReadingList({
         list: READING_LIST,
-        comics: [COMIC]
+        comicBooks: [COMIC]
       });
       const outcome = addComicsToReadingListFailed();
 
@@ -144,7 +144,7 @@ describe('ReadingListEntriesEffects', () => {
       const serviceResponse = READING_LIST;
       const action = removeComicsFromReadingList({
         list: READING_LIST,
-        comics: [COMIC]
+        comicBooks: [COMIC]
       });
       const outcome1 = comicsRemovedFromReadingList();
       const outcome2 = readingListLoaded({ list: READING_LIST });
@@ -166,7 +166,7 @@ describe('ReadingListEntriesEffects', () => {
       const serviceResponse = new HttpErrorResponse({});
       const action = removeComicsFromReadingList({
         list: READING_LIST,
-        comics: [COMIC]
+        comicBooks: [COMIC]
       });
       const outcome = removeComicsFromReadingListFailed();
 
@@ -186,7 +186,7 @@ describe('ReadingListEntriesEffects', () => {
     it('fires an action on general failure', () => {
       const action = removeComicsFromReadingList({
         list: READING_LIST,
-        comics: [COMIC]
+        comicBooks: [COMIC]
       });
       const outcome = removeComicsFromReadingListFailed();
 
