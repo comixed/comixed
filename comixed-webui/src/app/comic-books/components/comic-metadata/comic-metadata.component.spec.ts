@@ -46,7 +46,6 @@ import {
   resetMetadataState,
   scrapeComic
 } from '@app/comic-metadata/actions/metadata.actions';
-import { deselectComics } from '@app/library/actions/library.actions';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IssueMetadataDetailComponent } from '@app/comic-books/components/issue-metadata-detail/issue-metadata-detail.component';
@@ -60,6 +59,7 @@ import {
   SCRAPING_ISSUE_1,
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { deselectComicBooks } from '@app/library/actions/library-selections.actions';
 
 describe('ComicMetadataComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -261,7 +261,7 @@ describe('ComicMetadataComponent', () => {
 
     beforeEach(() => {
       component.issue = SCRAPING_ISSUE;
-      component.comic = COMIC;
+      component.comicBook = COMIC;
       component.metadataSource = METADATA_SOURCE;
     });
 
@@ -298,7 +298,7 @@ describe('ComicMetadataComponent', () => {
 
         it('fires an action to deselect the comic', () => {
           expect(store.dispatch).toHaveBeenCalledWith(
-            deselectComics({ comicBooks: [COMIC] })
+            deselectComicBooks({ ids: [COMIC.id] })
           );
         });
       });
@@ -317,7 +317,7 @@ describe('ComicMetadataComponent', () => {
 
         it('fires an action to deselect the comic', () => {
           expect(store.dispatch).toHaveBeenCalledWith(
-            deselectComics({ comicBooks: [COMIC] })
+            deselectComicBooks({ ids: [COMIC.id] })
           );
         });
       });
@@ -380,7 +380,7 @@ describe('ComicMetadataComponent', () => {
 
   describe('when metadata for an issue is received', () => {
     beforeEach(() => {
-      component.comic = COMIC;
+      component.comicBook = COMIC;
       component.multimode = true;
       component.metadataSource = METADATA_SOURCE;
       component.skipCache = SKIP_CACHE;

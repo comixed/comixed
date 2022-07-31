@@ -32,11 +32,7 @@ import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  deselectComics,
-  editMultipleComics,
-  selectComics
-} from '@app/library/actions/library.actions';
+import { editMultipleComics } from '@app/library/actions/library.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
@@ -61,6 +57,10 @@ import { FileDownloadService } from '@app/core/services/file-download.service';
 import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
 
 @Component({
   selector: 'cx-comic-book-covers',
@@ -76,7 +76,7 @@ export class ComicBookCoversComponent
 
   @Input() title = '';
   @Input() showToolbar = true;
-  @Input() selected: ComicBook[] = [];
+  @Input() selectedIds: number[] = [];
   @Input() readingLists: ReadingList[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
@@ -98,7 +98,7 @@ export class ComicBookCoversComponent
   comic: ComicBook = null;
   contextMenuX = '';
   contextMenuY = '';
-  private _comicObservable = new BehaviorSubject<ComicBook[]>([]);
+  private _comicBooksObservable = new BehaviorSubject<ComicBook[]>([]);
 
   constructor(
     private logger: LoggerService,
@@ -140,11 +140,11 @@ export class ComicBookCoversComponent
     return this._readComicIds;
   }
 
-  get comics(): ComicBook[] {
-    return this._comicObservable.getValue();
+  get comicBooks(): ComicBook[] {
+    return this._comicBooksObservable.getValue();
   }
 
-  @Input() set comics(comicBooks: ComicBook[]) {
+  @Input() set comicBooks(comicBooks: ComicBook[]) {
     this.logger.trace('Setting comics:', comicBooks);
     this.dataSource.data = comicBooks;
     this.pageIndex = this._pageIndex;
@@ -155,25 +155,31 @@ export class ComicBookCoversComponent
     this._readComicIds = lastRead.map(entry => entry.comicBook.id);
   }
 
+  get selectedComicBooks(): ComicBook[] {
+    return this.comicBooks.filter(comicBook =>
+      this.selectedIds.includes(comicBook.id)
+    );
+  }
+
   ngOnInit(): void {
-    this._comicObservable = this.dataSource.connect();
+    this._comicBooksObservable = this.dataSource.connect();
   }
 
   ngOnDestroy(): void {
     this.dataSource.disconnect();
   }
 
-  isSelected(comic: ComicBook): boolean {
-    return this.selected.includes(comic);
+  isSelected(comicBook: ComicBook): boolean {
+    return this.selectedIds.includes(comicBook.id);
   }
 
-  onSelectionChanged(comic: ComicBook, selected: boolean): void {
+  onSelectionChanged(comicBook: ComicBook, selected: boolean): void {
     if (selected) {
-      this.logger.trace('Marking comic as selected:', comic);
-      this.store.dispatch(selectComics({ comicBooks: [comic] }));
+      this.logger.trace('Marking comic as selected:', comicBook);
+      this.store.dispatch(selectComicBooks({ ids: [comicBook.id] }));
     } else {
-      this.logger.trace('Unmarking comic as selected:', comic);
-      this.store.dispatch(deselectComics({ comicBooks: [comic] }));
+      this.logger.trace('Unmarking comic as selected:', comicBook);
+      this.store.dispatch(deselectComicBooks({ ids: [comicBook.id] }));
     }
   }
 
@@ -197,7 +203,9 @@ export class ComicBookCoversComponent
 
   onMarkMultipleComicsRead(read: boolean): void {
     this.logger.trace('Setting selected comics read state:', read);
-    this.store.dispatch(setComicBooksRead({ comicBooks: this.selected, read }));
+    this.store.dispatch(
+      setComicBooksRead({ comicBooks: this.selectedComicBooks, read })
+    );
   }
 
   ngAfterViewInit(): void {
@@ -274,7 +282,7 @@ export class ComicBookCoversComponent
       confirm: () => {
         this.logger.trace('Firing selected comics  state change:', deleted);
         this.store.dispatch(
-          markComicsDeleted({ comicBooks: this.selected, deleted })
+          markComicsDeleted({ comicBooks: this.selectedComicBooks, deleted })
         );
       }
     });
@@ -288,18 +296,18 @@ export class ComicBookCoversComponent
       ),
       message: this.translateService.instant(
         'library.add-to-reading-list.confirmation-message',
-        { count: this.selected.length, name: list.name }
+        { count: this.selectedIds.length, name: list.name }
       ),
       confirm: () => {
         this.logger.trace('Firing action: add comics to reading list');
         this.store.dispatch(
-          addComicsToReadingList({ list, comics: this.selected })
+          addComicsToReadingList({ list, comicBooks: this.selectedComicBooks })
         );
       }
     });
   }
 
-  onConvertOne(comic: ComicBook, format: string): void {
+  onConvertOne(comicBook: ComicBook, format: string): void {
     this.doConversion(
       this.translateService.instant(
         'library.convert-comics.convert-one.confirmation-title'
@@ -309,7 +317,7 @@ export class ComicBookCoversComponent
         { format }
       ),
       format,
-      [comic]
+      [comicBook]
     );
   }
 
@@ -320,10 +328,10 @@ export class ComicBookCoversComponent
       ),
       this.translateService.instant(
         'library.convert-comics.convert-selected.confirmation-message',
-        { format, count: this.selected.length }
+        { format, count: this.selectedIds.length }
       ),
       format,
-      this.selected
+      this.selectedComicBooks
     );
   }
 
@@ -386,11 +394,11 @@ export class ComicBookCoversComponent
   onEditMultipleComics(): void {
     this.logger.trace('Editing details for multiple comics');
     const dialog = this.dialog.open(EditMultipleComicsComponent, {
-      data: this.selected
+      data: this.selectedIds
     });
     dialog.afterClosed().subscribe((response: EditMultipleComics) => {
       if (!!response) {
-        const count = this.selected.length;
+        const count = this.selectedIds.length;
         this.confirmationService.confirm({
           title: this.translateService.instant(
             'library.edit-multiple-comics.confirm-title',
@@ -404,7 +412,7 @@ export class ComicBookCoversComponent
             this.logger.trace('Editing multiple comics');
             this.store.dispatch(
               editMultipleComics({
-                comicBooks: this.selected,
+                comicBooks: this.selectedComicBooks,
                 details: response
               })
             );

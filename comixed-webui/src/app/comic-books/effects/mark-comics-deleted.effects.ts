@@ -27,9 +27,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicBookService } from '@app/comic-books/services/comic-book.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { clearSelectedComics } from '@app/library/actions/library.actions';
 
 @Injectable()
 export class MarkComicsDeletedEffects {
@@ -53,7 +52,7 @@ export class MarkComicsDeletedEffects {
                 )
               )
             ),
-            mergeMap(() => [comicsMarkedDeleted(), clearSelectedComics()]),
+            map(() => comicsMarkedDeleted()),
             catchError(error => {
               this.logger.error('General failure:', error);
               this.alertService.error(

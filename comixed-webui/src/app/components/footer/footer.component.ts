@@ -26,7 +26,7 @@ import {
   selectComicBookListDeletedCount
 } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
-import { selectLibraryState } from '@app/library/selectors/library.selectors';
+import { selectLibrarySelectionsState } from '@app/library/selectors/library-selections.selectors';
 
 @Component({
   selector: 'cx-footer',
@@ -53,8 +53,8 @@ export class FooterComponent {
       .select(selectLastReadEntries)
       .subscribe(entries => (this.readCount = entries.length));
     this.store
-      .select(selectLibraryState)
-      .subscribe(state => (this.selectedCount = state.selected.length));
+      .select(selectLibrarySelectionsState)
+      .subscribe(state => (this.selectedCount = state.ids.length));
     this.store
       .select(selectComicBookListDeletedCount)
       .subscribe(count => (this.deletedCount = count));

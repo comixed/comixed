@@ -193,5 +193,13 @@
       "effect-failure": "Falhou o update dos metadados.",
       "effect-success": "Começou a atualização dos metadados."
     }
+  },
+  "library-selections": {
+    "clear-selected-comic-books": {
+      "effect-failure": "Failed to select comics books."
+    },
+    "select-comic-books": {
+      "effect-failure": "Failed to select comics books."
+    }
   }
 }

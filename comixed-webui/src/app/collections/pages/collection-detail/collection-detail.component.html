@@ -1,5 +1,5 @@
 <cx-comic-book-covers
-  [comics]="
+  [comicBooks]="
     comicBooks
       | archiveType: archiveTypeFilter
       | coverDateFilter
@@ -14,7 +14,7 @@
             volume: volume || '----'
           }
   "
-  [selected]="selected"
+  [selectedIds]="selectedIds"
   [readingLists]="readingLists"
   [showConsolidate]="isAdmin"
   [isAdmin]="isAdmin"

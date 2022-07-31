@@ -82,21 +82,27 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSortModule } from '@angular/material/sort';
 import { USER_READER } from '@app/user/user.fixtures';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import {
-  deselectComics,
-  selectComics
-} from '@app/library/actions/library.actions';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
+import {
+  initialState as initialLibrarySelectionState,
+  LIBRARY_SELECTIONS_FEATURE_KEY
+} from '@app/library/reducers/library-selections.reducer';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
   const PAGE_INDEX = 23;
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
@@ -538,26 +544,26 @@ describe('LibraryPageComponent', () => {
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.comicBooks = COMICS;
+      component.comicBooks = COMIC_BOOKS;
       component.onSelectAllComics(true);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        selectComics({ comicBooks: COMICS })
+        selectComicBooks({ ids: IDS })
       );
     });
   });
 
   describe('deselecting comics', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selectedIds = IDS;
       component.onSelectAllComics(false);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deselectComics({ comicBooks: COMICS })
+        deselectComicBooks({ ids: IDS })
       );
     });
   });

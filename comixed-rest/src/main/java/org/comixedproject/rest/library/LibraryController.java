@@ -21,10 +21,13 @@ package org.comixedproject.rest.library;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
+import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
@@ -98,9 +101,10 @@ public class LibraryController {
    */
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.LibraryState.class)
-  public RemoteLibraryState getLibraryState() {
+  public RemoteLibraryState getLibraryState(final HttpSession httpSession) {
     log.info("Loading the current library state");
-    return this.remoteLibraryStateService.getLibraryState();
+    return this.remoteLibraryStateService.getLibraryState(
+        (Set<Long>) httpSession.getAttribute(LIBRARY_SELECTIONS));
   }
 
   /**

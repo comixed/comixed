@@ -16,15 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector } from '@ngrx/store';
 import { LIBRARY_FEATURE_KEY, LibraryState } from '../reducers/library.reducer';
 
 /** Selects the feature state. */
 export const selectLibraryState =
   createFeatureSelector<LibraryState>(LIBRARY_FEATURE_KEY);
-
-/** Selects the selected comics. */
-export const selectSelectedComics = createSelector(
-  selectLibraryState,
-  state => state.selected
-);

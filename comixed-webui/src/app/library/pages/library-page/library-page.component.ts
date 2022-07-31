@@ -21,7 +21,6 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { setBusyState } from '@app/core/actions/busy.actions';
@@ -53,11 +52,12 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
-import {
-  deselectComics,
-  selectComics
-} from '@app/library/actions/library.actions';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
 
 @Component({
   selector: 'cx-library-page',
@@ -67,7 +67,7 @@ import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 export class LibraryPageComponent implements OnInit, OnDestroy {
   comicBookListStateSubscription: Subscription;
   selectedSubscription: Subscription;
-  selected: ComicBook[] = [];
+  selectedIds: number[] = [];
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   isAdmin = false;
@@ -162,8 +162,8 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         }
       });
     this.selectedSubscription = this.store
-      .select(selectSelectedComics)
-      .subscribe(selected => (this.selected = selected));
+      .select(selectLibrarySelections)
+      .subscribe(selectedIds => (this.selectedIds = selectedIds));
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.logger.trace('Setting admin flag');
       this.isAdmin = isAdmin(user);
@@ -239,10 +239,14 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   onSelectAllComics(selected: boolean): void {
     if (selected) {
       this.logger.trace('Selecting all comics');
-      this.store.dispatch(selectComics({ comicBooks: this.comicBooks }));
+      this.store.dispatch(
+        selectComicBooks({
+          ids: this.comicBooks.map(comicBook => comicBook.id)
+        })
+      );
     } else {
       this.logger.trace('Deselecting all comics');
-      this.store.dispatch(deselectComics({ comicBooks: this.selected }));
+      this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
     }
   }
 

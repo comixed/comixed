@@ -25,6 +25,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * <code>ComiXedConfiguration</code> provides the overall configuration for the application.
+ *
+ * @author Darryl L. Pierce
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableBatchProcessing

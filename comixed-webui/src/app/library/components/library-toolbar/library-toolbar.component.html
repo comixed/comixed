@@ -78,7 +78,7 @@
     mat-icon-button
     color="primary"
     class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!comics.length"
+    [disabled]="!comicBooks.length"
     [matTooltip]="'library.tooltip.select-all' | translate"
     (click)="onSelectAll()"
   >
@@ -90,7 +90,7 @@
     mat-icon-button
     color="warn"
     class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selected.length"
+    [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.deselect-all' | translate"
     (click)="onDeselectAll()"
   >
@@ -104,7 +104,7 @@
     color="warn"
     class="cx-toolbar-button cx-margin-right-5"
     [matTooltip]="'library.tooltip.update-metadata' | translate"
-    [disabled]="!selected.length"
+    [disabled]="!selectedIds.length"
     (click)="onUpdateMetadata()"
   >
     <mat-icon>sync_alt</mat-icon>
@@ -126,7 +126,7 @@
     mat-icon-button
     color="warn"
     class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selected.length"
+    [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.purge-library' | translate"
     (click)="onPurgeLibrary()"
   >
@@ -138,7 +138,7 @@
     mat-icon-button
     color="primary"
     class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selected.length"
+    [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.scrape-comics' | translate"
     (click)="onScrapeComics()"
   >
@@ -150,7 +150,7 @@
     mat-icon-button
     color="warn"
     class="cx-toolbar-button cx-margin-right-5"
-    [disabled]="!selected.length"
+    [disabled]="!selectedIds.length"
     [matTooltip]="'library.tooltip.rescan-comics' | translate"
     (click)="onRescanComics()"
   >
