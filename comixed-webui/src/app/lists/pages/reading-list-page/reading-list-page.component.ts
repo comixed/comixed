@@ -237,7 +237,7 @@ export class ReadingListPageComponent implements OnDestroy {
         this.store.dispatch(
           removeComicsFromReadingList({
             list: this.readingList,
-            comics: this.selectedEntries
+            comicBooks: this.selectedEntries
           })
         );
       }

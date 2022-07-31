@@ -21,7 +21,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LibraryService } from '@app/library/services/library.service';
 import {
@@ -33,6 +33,7 @@ import {
   multipleComicsEdited
 } from '@app/library/actions/library.actions';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { comicBookSelectionsUpdated } from '@app/library/actions/library-selections.actions';
 
 @Injectable()
 export class LibraryEffects {
@@ -43,9 +44,10 @@ export class LibraryEffects {
       switchMap(() =>
         this.libraryService.loadLibraryState().pipe(
           tap(response => this.logger.debug('Response received:', response)),
-          map((response: RemoteLibraryState) =>
-            libraryStateLoaded({ state: response })
-          ),
+          mergeMap((response: RemoteLibraryState) => [
+            libraryStateLoaded({ state: response }),
+            comicBookSelectionsUpdated({ ids: response.selectedIds })
+          ]),
           catchError(error => {
             this.logger.error('Service failure:', error);
             this.alertService.error(

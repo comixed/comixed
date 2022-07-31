@@ -72,9 +72,13 @@ import {
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
 import {
-  LIBRARY_FEATURE_KEY,
-  initialState as initialLibraryState
+  initialState as initialLibraryState,
+  LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
+import {
+  initialState as initialLibrarySelectionState,
+  LIBRARY_SELECTIONS_FEATURE_KEY
+} from '@app/library/reducers/library-selections.reducer';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
@@ -91,7 +95,8 @@ describe('AppComponent', () => {
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
-    [LIBRARY_FEATURE_KEY]: initialLibraryState
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState
   };
 
   let component: AppComponent;

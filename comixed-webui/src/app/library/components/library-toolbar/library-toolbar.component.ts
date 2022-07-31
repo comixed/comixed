@@ -62,7 +62,7 @@ export class LibraryToolbarComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @Input() selected: ComicBook[] = [];
+  @Input() selectedIds: number[] = [];
   @Input() isAdmin = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
   @Input() pageIndex = 0;
@@ -116,14 +116,14 @@ export class LibraryToolbarComponent
     });
   }
 
-  private _comics: ComicBook[] = [];
+  private _comicBooks: ComicBook[] = [];
 
-  get comics(): ComicBook[] {
-    return this._comics;
+  get comicBooks(): ComicBook[] {
+    return this._comicBooks;
   }
 
-  @Input() set comics(comics: ComicBook[]) {
-    this._comics = comics;
+  @Input() set comicBooks(comics: ComicBook[]) {
+    this._comicBooks = comics;
     this.coverYears = [
       { label: 'filtering.label.all-years', value: null } as ListItem<number>
     ].concat(
@@ -131,11 +131,15 @@ export class LibraryToolbarComponent
         .filter(comic => !!comic.coverDate)
         .map(comic => new Date(comic.coverDate).getFullYear())
         .filter((year, index, self) => index === self.indexOf(year))
-        .sort((a, b) => a - b)
+        .sort((left, right) => left - right)
         .map(year => {
           return { value: year, label: `${year}` } as ListItem<number>;
         })
     );
+  }
+
+  get selectedComicBooks(): ComicBook[] {
+    return this.comicBooks.filter(comic => this.selectedIds.includes(comic.id));
   }
 
   ngOnInit(): void {
@@ -171,11 +175,11 @@ export class LibraryToolbarComponent
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'scraping.start-scraping.confirmation-title',
-        { count: this.selected.length }
+        { count: this.selectedIds.length }
       ),
       message: this.translateService.instant(
         'scraping.start-scraping.confirmation-message',
-        { count: this.selected.length }
+        { count: this.selectedIds.length }
       ),
       confirm: () => {
         this.logger.debug('Start scraping comics');
@@ -225,36 +229,40 @@ export class LibraryToolbarComponent
 
   onRescanComics(): void {
     this.logger.trace('Confirming with the user to rescan the selected comics');
-    const comics = this.selected;
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.rescan-comics.confirmation-title'
       ),
       message: this.translateService.instant(
         'library.rescan-comics.confirmation-message',
-        { count: comics.length }
+        { count: this.selectedIds.length }
       ),
       confirm: () => {
         this.logger.trace('Firing action to rescan comics');
-        this.store.dispatch(rescanComics({ comicBooks: comics }));
+        this.store.dispatch(
+          rescanComics({ comicBooks: this.selectedComicBooks })
+        );
       }
     });
   }
 
   onUpdateMetadata(): void {
     this.logger.trace('Confirming with the user to update metadata');
-    const comics = this.selected;
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'library.update-metadata.confirmation-title'
       ),
       message: this.translateService.instant(
         'library.update-metadata.confirmation-message',
-        { count: comics.length }
+        { count: this.selectedIds.length }
       ),
       confirm: () => {
         this.logger.trace('Firing action: update metadata');
-        this.store.dispatch(updateMetadata({ comicBooks: comics }));
+        this.store.dispatch(
+          updateMetadata({
+            comicBooks: this.selectedComicBooks
+          })
+        );
       }
     });
   }
@@ -277,9 +285,7 @@ export class LibraryToolbarComponent
       ),
       confirm: () => {
         this.logger.trace('Firing action: purge library');
-        this.store.dispatch(
-          purgeLibrary({ ids: this.selected.map(comic => comic.id) })
-        );
+        this.store.dispatch(purgeLibrary({ ids: this.selectedIds }));
       }
     });
   }

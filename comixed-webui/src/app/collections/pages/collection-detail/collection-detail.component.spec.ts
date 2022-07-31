@@ -71,16 +71,19 @@ import {
   QUERY_PARAM_ARCHIVE_TYPE,
   QUERY_PARAM_PAGE_INDEX
 } from '@app/library/library.constants';
-import {
-  deselectComics,
-  selectComics
-} from '@app/library/actions/library.actions';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { USER_READER } from '@app/user/user.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
-import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
+import {
+  deselectComicBooks,
+  selectComicBooks
+} from '@app/library/actions/library-selections.actions';
+import {
+  initialState as initialLibrarySelectionState,
+  LIBRARY_SELECTIONS_FEATURE_KEY
+} from '@app/library/reducers/library-selections.reducer';
 
 describe('CollectionDetailComponent', () => {
   const COMIC_BOOKS = [
@@ -90,14 +93,16 @@ describe('CollectionDetailComponent', () => {
     COMIC_BOOK_4,
     COMIC_BOOK_5
   ];
+  const IDS = COMIC_BOOKS.map(comic => comic.id);
   const PAGE_INDEX = 22;
   const USER = USER_READER;
   const initialState = {
+    [LIBRARY_FEATURE_KEY]: initialLibraryState,
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: {
       ...initialComicBookListState,
       comicBooks: COMIC_BOOKS
     },
-    [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
@@ -366,20 +371,20 @@ describe('CollectionDetailComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        selectComics({ comicBooks: COMIC_BOOKS })
+        selectComicBooks({ ids: IDS })
       );
     });
   });
 
   describe('deselecting comics', () => {
     beforeEach(() => {
-      component.selected = COMIC_BOOKS;
+      component.selectedIds = IDS;
       component.onSelectAllComics(false);
     });
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deselectComics({ comicBooks: COMIC_BOOKS })
+        deselectComicBooks({ ids: IDS })
       );
     });
   });

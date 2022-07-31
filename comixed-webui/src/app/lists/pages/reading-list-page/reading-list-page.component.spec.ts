@@ -350,7 +350,7 @@ describe('ReadingListPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         removeComicsFromReadingList({
           list: READING_LIST,
-          comics: COMICS
+          comicBooks: COMICS
         })
       );
     });

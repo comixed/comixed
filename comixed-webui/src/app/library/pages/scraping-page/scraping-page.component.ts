@@ -21,7 +21,6 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
-import { selectSelectedComics } from '@app/library/selectors/library.selectors';
 import { TranslateService } from '@ngx-translate/core';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
@@ -42,6 +41,8 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
+import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -51,10 +52,10 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 export class ScrapingPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
+  allComicsSubscription: Subscription;
   selectedComicsSubscription: Subscription;
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
-  comics: ComicBook[] = [];
   currentComic: ComicBook = null;
   currentSeries = '';
   currentVolume = '';
@@ -65,6 +66,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   scrapingVolumeSubscription: Subscription;
   scrapingVolumes: VolumeMetadata[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
+  comics: ComicBook[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -95,9 +97,12 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
         10
       );
     });
+    this.allComicsSubscription = this.store
+      .select(selectComicBookList)
+      .subscribe(comicBooks => (this.allComics = comicBooks));
     this.selectedComicsSubscription = this.store
-      .select(selectSelectedComics)
-      .subscribe(selected => (this.comics = selected));
+      .select(selectLibrarySelections)
+      .subscribe(selectedIds => (this.selectedIds = selectedIds));
     this.metadataSourceSubscription = this.store
       .select(selectChosenMetadataSource)
       .subscribe(metadataSource => (this.metadataSource = metadataSource));
@@ -111,12 +116,35 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
       .subscribe(volumes => (this.scrapingVolumes = volumes));
   }
 
+  private _selectedIds: number[] = [];
+
+  get selectedIds(): number[] {
+    return this._selectedIds;
+  }
+
+  set selectedIds(ids: number[]) {
+    this._selectedIds = ids;
+    this.loadComics();
+  }
+
+  private _allComics: ComicBook[] = [];
+
+  get allComics(): ComicBook[] {
+    return this._allComics;
+  }
+
+  set allComics(comics: ComicBook[]) {
+    this._allComics = comics;
+    this.loadComics();
+  }
+
   ngOnInit(): void {
     this.loadTranslations();
   }
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+    this.allComicsSubscription.unsubscribe();
     this.selectedComicsSubscription.unsubscribe();
     this.metadataSourceSubscription.unsubscribe();
     this.scrapingVolumeSubscription.unsubscribe();
@@ -147,6 +175,12 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.logger.trace('Loading translations');
     this.titleService.setTitle(
       this.translateService.instant('scraping.page-title')
+    );
+  }
+
+  private loadComics(): void {
+    this.comics = this.allComics.filter(comic =>
+      this.selectedIds.includes(comic.id)
     );
   }
 }

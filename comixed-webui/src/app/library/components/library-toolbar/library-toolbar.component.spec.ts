@@ -61,7 +61,15 @@ import {
 import { USER_READER } from '@app/user/user.fixtures';
 
 describe('LibraryToolbarComponent', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3];
+  const COMIC_BOOKS = [
+    { ...COMIC_BOOK_1, yearPublished: 2022 },
+    { ...COMIC_BOOK_2, yearPublished: 2021 },
+    {
+      ...COMIC_BOOK_3,
+      yearPublished: 1997
+    }
+  ];
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
   const PAGE_INDEX = 2;
   const NOW = new Date();
@@ -119,7 +127,7 @@ describe('LibraryToolbarComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.selected = COMICS;
+      component.selectedIds = IDS;
       component.onScrapeComics();
     });
 
@@ -206,7 +214,8 @@ describe('LibraryToolbarComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.selected = COMICS;
+      component.comicBooks = COMIC_BOOKS;
+      component.selectedIds = IDS;
       component.onRescanComics();
     });
 
@@ -216,7 +225,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        rescanComics({ comicBooks: COMICS })
+        rescanComics({ comicBooks: COMIC_BOOKS })
       );
     });
   });
@@ -226,7 +235,8 @@ describe('LibraryToolbarComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.selected = COMICS;
+      component.comicBooks = COMIC_BOOKS;
+      component.selectedIds = IDS;
       component.onUpdateMetadata();
     });
 
@@ -236,7 +246,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ comicBooks: COMICS })
+        updateMetadata({ comicBooks: COMIC_BOOKS })
       );
     });
   });
@@ -257,7 +267,7 @@ describe('LibraryToolbarComponent', () => {
 
   describe('purging the library', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selectedIds = IDS;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -270,14 +280,14 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action to purge the library', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        purgeLibrary({ ids: COMICS.map(comic => comic.id) })
+        purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
       );
     });
   });
 
   describe('selecting all comics', () => {
     beforeEach(() => {
-      component.comics = COMICS;
+      component.comicBooks = COMIC_BOOKS;
       spyOn(component.selectAllComics, 'emit');
       component.onSelectAll();
     });
@@ -289,7 +299,7 @@ describe('LibraryToolbarComponent', () => {
 
   describe('deselecting all comics', () => {
     beforeEach(() => {
-      component.selected = COMICS;
+      component.selectedIds = IDS;
       spyOn(component.selectAllComics, 'emit');
       component.onDeselectAll();
     });

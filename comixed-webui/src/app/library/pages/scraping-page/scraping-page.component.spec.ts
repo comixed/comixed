@@ -42,20 +42,39 @@ import {
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
+} from '@app/comic-books/comic-books.fixtures';
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import {
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
+import {
+  initialState as initialLibrarySelectionState,
+  LIBRARY_SELECTIONS_FEATURE_KEY
+} from '@app/library/reducers/library-selections.reducer';
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
   const COMIC = COMIC_BOOK_2;
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = {
-    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: { ...initialLibraryState },
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: { ...initialLibrarySelectionState },
+    [COMIC_BOOK_LIST_FEATURE_KEY]: {
+      ...initialComicBookListState,
+      comicBooks: COMIC_BOOKS
+    },
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [METADATA_FEATURE_KEY]: { ...initialScrapingState }
   };
 

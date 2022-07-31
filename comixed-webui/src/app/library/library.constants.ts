@@ -39,6 +39,9 @@ export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 export const LOAD_COMICS_URL = `${API_ROOT_URL}/library`;
 export const LOAD_LIBRARY_STATE_URL = `${API_ROOT_URL}/library/state`;
 
+export const UPDATE_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/library/selections`;
+export const CLEAR_COMIC_BOOK_SELECTIONS_URL = `${API_ROOT_URL}/library/selections`;
+
 export const LOAD_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const UPDATE_COMIC_URL = `${API_ROOT_URL}/comics/\${id}`;
 export const LOAD_SCRAPING_VOLUMES_URL = `${API_ROOT_URL}/metadata/sources/\${sourceId}/volumes`;

@@ -21,6 +21,7 @@ package org.comixedproject.model.net.library;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -47,6 +48,11 @@ public class RemoteLibraryState {
   @JsonView(View.LibraryState.class)
   @Getter
   private final long deletedComics;
+
+  @JsonProperty("selectedIds")
+  @JsonView(View.LibraryState.class)
+  @Getter
+  private final Set<Long> selectedIds;
 
   @JsonProperty("publishers")
   @JsonView(View.LibraryState.class)

@@ -57,7 +57,7 @@ public class ComiXedRuntimeSecurityConfiguration extends WebSecurityConfigurerAd
         .authenticationEntryPoint(unauthorizedHandler)
         .and()
         .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 }

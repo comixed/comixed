@@ -45,7 +45,7 @@ export class ReadingListEntriesEffects {
       ),
       switchMap(action =>
         this.readingListService
-          .addComics({ list: action.list, comics: action.comics })
+          .addComics({ list: action.list, comics: action.comicBooks })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap((response: ReadingList) =>
@@ -89,7 +89,7 @@ export class ReadingListEntriesEffects {
       ),
       switchMap(action =>
         this.readingListService
-          .removeComics({ list: action.list, comics: action.comics })
+          .removeComics({ list: action.list, comics: action.comicBooks })
           .pipe(
             tap(response => this.logger.debug('Response received:', response)),
             tap((response: ReadingList) =>

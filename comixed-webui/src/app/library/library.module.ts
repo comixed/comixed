@@ -100,6 +100,11 @@ import { PurgeLibraryEffects } from '@app/library/effects/purge-library.effects'
 import { EditMultipleComicsComponent } from './components/edit-multiple-comics/edit-multiple-comics.component';
 import { LibraryEffects } from '@app/library/effects/library.effects';
 import { ComicBookListComponent } from './components/comic-book-list/comic-book-list.component';
+import {
+  LIBRARY_SELECTIONS_FEATURE_KEY,
+  reducer as librarySelectionsReducer
+} from '@app/library/reducers/library-selections.reducer';
+import { LibrarySelectionsEffects } from '@app/library/effects/library-selections.effects';
 
 @NgModule({
   declarations: [
@@ -127,6 +132,10 @@ import { ComicBookListComponent } from './components/comic-book-list/comic-book-
     TranslateModule.forRoot(),
     StoreModule.forFeature(LIBRARY_FEATURE_KEY, libraryReducer),
     StoreModule.forFeature(
+      LIBRARY_SELECTIONS_FEATURE_KEY,
+      librarySelectionsReducer
+    ),
+    StoreModule.forFeature(
       DUPLICATE_PAGE_LIST_FEATURE_KEY,
       comicsWithDuplicatePagesReducer
     ),
@@ -144,9 +153,10 @@ import { ComicBookListComponent } from './components/comic-book-list/comic-book-
     StoreModule.forFeature(CONVERT_COMICS_FEATURE_KEY, convertComicsReducer),
     StoreModule.forFeature(PURGE_LIBRARY_FEATURE_KEY, purgeLibraryReducer),
     EffectsModule.forFeature([
+      LibraryEffects,
+      LibrarySelectionsEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
-      LibraryEffects,
       RescanComicsEffects,
       UpdateMetadataEffects,
       ConsolidateLibraryEffects,
