@@ -35,69 +35,69 @@ import org.comixedproject.views.View;
 @RequiredArgsConstructor
 public class RemoteLibraryState {
   @JsonProperty("totalComics")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private final long totalComics;
 
   @JsonProperty("unscrapedComics")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private final long unscrapedComics;
 
   @JsonProperty("deletedComics")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private final long deletedComics;
 
   @JsonProperty("selectedIds")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private final Set<Long> selectedIds;
 
   @JsonProperty("publishers")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> publishers;
 
   @JsonProperty("series")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> series;
 
   @JsonProperty("characters")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> characters;
 
   @JsonProperty("teams")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> teams;
 
   @JsonProperty("locations")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> locations;
 
   @JsonProperty("stories")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> stories;
 
   @JsonProperty("states")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<RemoteLibrarySegmentState> states;
 
   @JsonProperty("byPublisherAndYear")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @Setter
   private List<PublisherAndYearSegment> byPublisherAndYear;

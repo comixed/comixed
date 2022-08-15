@@ -68,4 +68,7 @@ public interface Constants {
 
   /** Topic which receives story updates. */
   String STORY_UPDATE_TOPIC = "/topic/story-list.%d.update";
+
+  /** Topic which receives remote library state updates. */
+  String REMOTE_LIBRARY_UPDATE_TOPIC = "/topic/remote-library.update";
 }

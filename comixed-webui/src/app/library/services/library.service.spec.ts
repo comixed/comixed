@@ -36,6 +36,7 @@ import {
   LOAD_COMIC_URL,
   LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
+  REMOTE_LIBRARY_STATE_TOPIC,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
@@ -52,6 +53,16 @@ import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-reque
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { Subscription } from 'webstomp-client';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { USER_SELF_TOPIC } from '@app/user/user.constants';
+import { currentUserLoaded } from '@app/user/actions/user.actions';
+import { WebSocketService } from '@app/messaging';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { libraryStateLoaded } from '@app/library/actions/library.actions';
 
 describe('LibraryService', () => {
   const COMIC = COMIC_BOOK_1;
@@ -69,17 +80,35 @@ describe('LibraryService', () => {
     imprint: 'The Imprint'
   };
   const LIBRARY_STATE = {} as RemoteLibraryState;
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: LibraryService;
   let httpMock: HttpTestingController;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
+  let store: MockStore<any>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            send: jasmine.createSpy('WebSocketService.send()'),
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(LibraryService);
     httpMock = TestBed.inject(HttpTestingController);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
   });
 
   it('should be created', () => {
@@ -202,5 +231,59 @@ describe('LibraryService', () => {
       imprint: COMIC_DETAILS.imprint
     } as EditMultipleComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  describe('when messaging starts', () => {
+    let topic: string;
+    let subscription: any;
+
+    beforeEach(() => {
+      service.subscription = null;
+      webSocketService.subscribe.and.callFake((topicUsed, callback) => {
+        topic = topicUsed;
+        subscription = callback;
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to user updates', () => {
+      expect(topic).toEqual(REMOTE_LIBRARY_STATE_TOPIC);
+    });
+
+    describe('when updates are received', () => {
+      beforeEach(() => {
+        subscription(LIBRARY_STATE);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          libraryStateLoaded({ state: LIBRARY_STATE })
+        );
+      });
+    });
+  });
+
+  describe('when messaging is stopped', () => {
+    const subscription = jasmine.createSpyObj(['unsubscribe']);
+
+    beforeEach(() => {
+      service.subscription = subscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from updates', () => {
+      expect(subscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the subscription reference', () => {
+      expect(service.subscription).toBeNull();
+    });
   });
 });

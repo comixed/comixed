@@ -35,7 +35,7 @@ public interface View {
   public interface ScanTypeList {}
 
   /** Used when retrieving the state of the library. */
-  public interface LibraryState {}
+  public interface RemoteLibraryState {}
 
   /** Used when viewing a list of comics. */
   public interface ComicListView {}

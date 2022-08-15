@@ -20,9 +20,18 @@ package org.comixedproject.service.library;
 
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.messaging.library.PublishRemoteLibraryUpdateAction;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.state.comicbooks.ComicStateChangeListener;
+import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,8 +42,27 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Log4j2
-public class RemoteLibraryStateService {
+public class RemoteLibraryStateService implements InitializingBean, ComicStateChangeListener {
+  @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private PublishRemoteLibraryUpdateAction publishRemoteLibraryUpdateAction;
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    log.debug("Subscribing to comic book state changes");
+    this.comicStateHandler.addListener(this);
+  }
+
+  @Override
+  public void onComicStateChange(
+      final State<ComicState, ComicEvent> state, final Message<ComicEvent> message) {
+    log.debug("Publishing library state update");
+    try {
+      this.publishRemoteLibraryUpdateAction.publish(this.getLibraryState(null));
+    } catch (PublishingException error) {
+      log.error("Failed to publish library state update", error);
+    }
+  }
 
   /**
    * Returns the current state of the library.
