@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project.
+ * Copyright (C) 2022, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.comixedproject.messaging.PublishingException;
-import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.messaging.Constants;
-import org.comixedproject.model.user.ComiXedUser;
+import org.comixedproject.model.net.library.RemoteLibraryState;
 import org.comixedproject.views.View;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,23 +35,20 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PublishLastReadUpdatedActionTest {
-  private static final String TEST_LAST_READ_AS_JSON = "Object as JSON";
-  private static final String TEST_EMAIL = "read@comixedproject.org";
+public class PublishRemoteLibraryUpdateActionTest {
+  private static final String TEST_LIBRARY_STATE_AS_JSON = "The library state as JSON";
 
-  @InjectMocks private PublishLastReadUpdatedAction action;
-  @Mock private ObjectMapper objectMapper;
+  @InjectMocks private PublishRemoteLibraryUpdateAction action;
   @Mock private SimpMessagingTemplate messagingTemplate;
+  @Mock private ObjectMapper objectMapper;
   @Mock private ObjectWriter objectWriter;
-  @Mock private LastRead lastRead;
-  @Mock private ComiXedUser user;
+  @Mock private RemoteLibraryState libraryState;
 
   @Before
   public void setUp() throws JsonProcessingException {
     Mockito.when(objectMapper.writerWithView(Mockito.any())).thenReturn(objectWriter);
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_LAST_READ_AS_JSON);
-    Mockito.when(lastRead.getUser()).thenReturn(user);
-    Mockito.when(user.getEmail()).thenReturn(TEST_EMAIL);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenReturn(TEST_LIBRARY_STATE_AS_JSON);
   }
 
   @Test(expected = PublishingException.class)
@@ -62,22 +58,22 @@ public class PublishLastReadUpdatedActionTest {
         .thenThrow(JsonProcessingException.class);
 
     try {
-      action.publish(lastRead);
+      action.publish(libraryState);
     } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
+      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.RemoteLibraryState.class);
     }
   }
 
   @Test
   public void testPublish() throws PublishingException, JsonProcessingException {
-    Mockito.when(objectWriter.writeValueAsString(Mockito.any())).thenReturn(TEST_LAST_READ_AS_JSON);
+    Mockito.when(objectWriter.writeValueAsString(Mockito.any()))
+        .thenReturn(TEST_LIBRARY_STATE_AS_JSON);
 
-    action.publish(lastRead);
+    action.publish(libraryState);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.LastReadList.class);
-    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(lastRead);
+    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.RemoteLibraryState.class);
+    Mockito.verify(objectWriter, Mockito.times(1)).writeValueAsString(libraryState);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSendToUser(
-            TEST_EMAIL, Constants.LAST_READ_UPDATED_TOPIC, TEST_LAST_READ_AS_JSON);
+        .convertAndSend(Constants.REMOTE_LIBRARY_UPDATE_TOPIC, TEST_LIBRARY_STATE_AS_JSON);
   }
 }

@@ -100,7 +100,7 @@ public class LibraryController {
    * @return the library state
    */
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   public RemoteLibraryState getLibraryState(final HttpSession httpSession) {
     log.info("Loading the current library state");
     return this.remoteLibraryStateService.getLibraryState(

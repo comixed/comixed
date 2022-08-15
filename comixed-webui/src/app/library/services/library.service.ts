@@ -26,6 +26,7 @@ import {
   EDIT_MULTIPLE_COMICS_URL,
   LOAD_LIBRARY_STATE_URL,
   PURGE_LIBRARY_URL,
+  REMOTE_LIBRARY_STATE_TOPIC,
   RESCAN_COMICS_URL,
   SET_READ_STATE_URL,
   START_LIBRARY_CONSOLIDATION_URL,
@@ -41,12 +42,43 @@ import { ConvertComicsRequest } from '@app/library/models/net/convert-comics-req
 import { PurgeLibraryRequest } from '@app/library/models/net/purge-library-request';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { EditMultipleComicsRequest } from '@app/library/models/net/edit-multiple-comics-request';
+import { Store } from '@ngrx/store';
+import { WebSocketService } from '@app/messaging';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { User } from '@app/user/models/user';
+import { libraryStateLoaded } from '@app/library/actions/library.actions';
+import { Subscription } from 'webstomp-client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LibraryService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  subscription: Subscription;
+
+  constructor(
+    private logger: LoggerService,
+    private http: HttpClient,
+    private store: Store<any>,
+    private webSocketService: WebSocketService
+  ) {
+    this.store.select(selectMessagingState).subscribe(state => {
+      if (state.started && !this.subscription) {
+        this.logger.trace('Subscribing to remote library state updates');
+        this.subscription = this.webSocketService.subscribe<User>(
+          REMOTE_LIBRARY_STATE_TOPIC,
+          state => {
+            this.logger.debug('Received library state update:', state);
+            this.store.dispatch(libraryStateLoaded({ state }));
+          }
+        );
+      }
+      if (!state.started && !!this.subscription) {
+        this.logger.debug('Stopping library state update subscription');
+        this.subscription.unsubscribe();
+        this.subscription = null;
+      }
+    });
+  }
 
   loadLibraryState(): Observable<any> {
     this.logger.trace('Loading library state');

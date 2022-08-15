@@ -33,13 +33,13 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class RemoteLibrarySegmentState {
   @JsonProperty("name")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   @NonNull
   private String name;
 
   @JsonProperty("count")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private long count;
 }

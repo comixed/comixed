@@ -33,17 +33,17 @@ import org.comixedproject.views.View;
 @AllArgsConstructor
 public class PublisherAndYearSegment {
   @JsonProperty("publisher")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private String publisher;
 
   @JsonProperty("year")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private Integer year;
 
   @JsonProperty("count")
-  @JsonView(View.LibraryState.class)
+  @JsonView(View.RemoteLibraryState.class)
   @Getter
   private Long count;
 }
