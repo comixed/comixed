@@ -79,7 +79,6 @@ export class DuplicatePageListPageComponent
   pageUpdatesSubscription: MessagingSubscription;
   allSelected = false;
   anySelected = false;
-
   userSubscription: Subscription;
   readonly displayColumns = [
     'selection',
@@ -139,6 +138,10 @@ export class DuplicatePageListPageComponent
           );
         }
       });
+  }
+
+  get selectedCount(): number {
+    return this.dataSource.data.filter(entry => entry.selected).length;
   }
 
   private _unblockedOnly = false;

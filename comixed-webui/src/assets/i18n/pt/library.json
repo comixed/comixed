@@ -26,7 +26,7 @@
       "thumbnail": "Miniatura"
     },
     "list-page": {
-      "page-title": "Duplicate Pages ({count, plural, =1{One Page} other{# Pages}})",
+      "page-title": "Duplicate Pages ({selected} of {count} Selected)",
       "tab-title": "Páginas duplicadas"
     },
     "load-comics": {
