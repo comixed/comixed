@@ -545,4 +545,22 @@ describe('DuplicatePageListPageComponent', () => {
       );
     });
   });
+
+  describe('getting the selected count', () => {
+    beforeEach(() => {
+      component.dataSource.data = [
+        { selected: true, item: DUPLICATE_PAGES[0] },
+        { selected: true, item: DUPLICATE_PAGES[0] },
+        { selected: true, item: DUPLICATE_PAGES[0] },
+        { selected: true, item: DUPLICATE_PAGES[0] },
+        { selected: false, item: DUPLICATE_PAGES[0] }
+      ];
+    });
+
+    it('returns the selected count', () => {
+      expect(component.selectedCount).toEqual(
+        component.dataSource.data.length - 1
+      );
+    });
+  });
 });
