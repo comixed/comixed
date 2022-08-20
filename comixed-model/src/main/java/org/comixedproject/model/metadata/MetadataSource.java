@@ -84,6 +84,18 @@ public class MetadataSource {
   @NonNull
   private String name;
 
+  @Column(name = "Preferred", insertable = true, updatable = true, nullable = false)
+  @JsonProperty("preferred")
+  @JsonView({
+    View.MetadataSourceList.class,
+    View.ComicDetailsView.class,
+    View.MetadataAuditLogEntryList.class
+  })
+  @Getter
+  @Setter
+  @NonNull
+  private Boolean preferred = false;
+
   @OneToMany(
       mappedBy = "source",
       cascade = CascadeType.ALL,
@@ -105,15 +117,15 @@ public class MetadataSource {
   private Set<MetadataAuditLogEntry> auditLogEntries = new HashSet<>();
 
   @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final MetadataSource that = (MetadataSource) o;
     return name.equals(that.name);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name);
   }
 }

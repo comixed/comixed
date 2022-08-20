@@ -80,6 +80,30 @@ public class MetadataSourceControllerTest {
   }
 
   @Test(expected = MetadataSourceException.class)
+  public void testGetOneServiceException() throws MetadataSourceException {
+    Mockito.when(metadataSourceService.getById(Mockito.anyLong()))
+        .thenThrow(MetadataSourceException.class);
+
+    try {
+      controller.getOne(TEST_SOURCE_ID);
+    } finally {
+      Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_SOURCE_ID);
+    }
+  }
+
+  @Test
+  public void testGetOne() throws MetadataSourceException {
+    Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(savedSource);
+
+    final MetadataSource result = controller.getOne(TEST_SOURCE_ID);
+
+    assertNotNull(result);
+    assertSame(savedSource, result);
+
+    Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_SOURCE_ID);
+  }
+
+  @Test(expected = MetadataSourceException.class)
   public void testUpdateAndServiceThrowsException() throws MetadataSourceException {
     Mockito.when(metadataSourceService.update(Mockito.anyLong(), Mockito.any(MetadataSource.class)))
         .thenThrow(MetadataSourceException.class);
@@ -125,5 +149,30 @@ public class MetadataSourceControllerTest {
     controller.delete(TEST_SOURCE_ID);
 
     Mockito.verify(metadataSourceService, Mockito.times(1)).delete(TEST_SOURCE_ID);
+  }
+
+  @Test(expected = MetadataSourceException.class)
+  public void testMarkPreferredServiceException() throws MetadataSourceException {
+    Mockito.when(metadataSourceService.markAsPreferred(Mockito.anyLong()))
+        .thenThrow(MetadataSourceException.class);
+
+    try {
+      controller.markAsPreferred(TEST_SOURCE_ID);
+    } finally {
+      Mockito.verify(metadataSourceService, Mockito.times(1)).markAsPreferred(TEST_SOURCE_ID);
+    }
+  }
+
+  @Test
+  public void testMarkPreferred() throws MetadataSourceException {
+    Mockito.when(metadataSourceService.markAsPreferred(Mockito.anyLong()))
+        .thenReturn(metadataSourceList);
+
+    final List<MetadataSource> result = controller.markAsPreferred(TEST_SOURCE_ID);
+
+    assertNotNull(result);
+    assertSame(metadataSourceList, result);
+
+    Mockito.verify(metadataSourceService, Mockito.times(1)).markAsPreferred(TEST_SOURCE_ID);
   }
 }

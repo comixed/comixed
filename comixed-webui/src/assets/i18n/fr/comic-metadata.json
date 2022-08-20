@@ -46,7 +46,17 @@
       "actions": "Actions",
       "bean-name": "Nom du Bean",
       "name": "Nom de la source.",
+      "preferred": "Preferred",
       "property-count": "Nombre de propriétés"
+    },
+    "mark-preferred": {
+      "confirmation-message": "Are you sure you want to make this your preferred metadata source?",
+      "confirmation-title": "Mark Metadata Source As Preferred",
+      "effect-failure": "Failed to mark metadata source as preferred.",
+      "effect-success": "Metadata source marked as preferred."
+    },
+    "tooltip": {
+      "mark-preferred": "Mark this metadata source as preferred."
     }
   },
   "metadata-audit-log": {

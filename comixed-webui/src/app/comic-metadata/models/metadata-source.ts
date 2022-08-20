@@ -22,5 +22,6 @@ export interface MetadataSource {
   id: number;
   beanName: string;
   name: string;
+  preferred: boolean;
   properties: MetadataSourceProperty[];
 }

@@ -85,6 +85,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   metadataSourceListSubscription: Subscription;
   metadataSourceList: ListItem<MetadataSource>[] = [];
   metadataSubscription: Subscription;
+  preferredMetadataSource: MetadataSource;
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
@@ -122,6 +123,9 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.metadataSourceListSubscription = this.store
       .select(selectMetadataSourceList)
       .subscribe(sources => {
+        const preferred = sources.filter(source => source.preferred);
+        this.preferredMetadataSource =
+          preferred.length > 0 ? preferred[0] : null;
         this.metadataSourceList = sources.map(source => {
           return { label: source.name, value: source };
         });

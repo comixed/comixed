@@ -21,6 +21,7 @@ package org.comixedproject.repositories.metadata;
 import java.util.List;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -67,4 +68,9 @@ public interface MetadataSourceRepository extends JpaRepository<MetadataSource, 
    */
   @Query("SELECT s FROM MetadataSource s WHERE s.name = :name")
   MetadataSource getByName(@Param("name") String name);
+
+  /** Clears any existing metadata source marked as preferred. */
+  @Modifying
+  @Query("UPDATE MetadataSource s SET s.preferred = false")
+  void clearPreferredSource();
 }

@@ -9,6 +9,12 @@
   resize: none;
 }
 
+.mat-column-preferred {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
 .mat-column-property-count {
   width: $cx-column-medium;
   max-width: $cx-column-medium;

@@ -30,6 +30,7 @@ import {
   DELETE_METADATA_SOURCE_URL,
   LOAD_METADATA_SOURCE_LIST_URL,
   LOAD_METADATA_SOURCE_URL,
+  MARK_METADATA_SOURCE_AS_PREFERRED_URL,
   UPDATE_METADATA_SOURCE_URL
 } from '@app/comic-metadata/comic-metadata.constants';
 import { HttpResponse } from '@angular/common/http';
@@ -119,5 +120,20 @@ describe('MetadataSourceService', () => {
     );
     expect(req.request.method).toEqual('DELETE');
     req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can mark a metadata source as preferred', () => {
+    service
+      .markAsPreferred({ id: METADATA_SOURCE.id })
+      .subscribe(response => expect(response).toEqual(METADATA_SOURCES));
+
+    const req = httpMock.expectOne(
+      interpolate(MARK_METADATA_SOURCE_AS_PREFERRED_URL, {
+        id: METADATA_SOURCE.id
+      })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
+    req.flush(METADATA_SOURCES);
   });
 });
