@@ -1,4 +1,15 @@
 <mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="preferred">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "metadata-source-list.label.preferred" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        <mat-icon *ngIf="entry.preferred">stars</mat-icon>
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "metadata-source-list.label.name" | translate }}
@@ -36,12 +47,28 @@
     <mat-header-cell *matHeaderCellDef>
       {{ "metadata-source-list.label.actions" | translate }}
     </mat-header-cell>
-    <mat-cell *matCellDef="let entry"></mat-cell>
+    <mat-cell *matCellDef="let entry">
+      <button
+        [id]="'view-' + entry.id + '-detail'"
+        mat-icon-button
+        color="accent"
+        (click)="onSelectSource(entry)"
+      >
+        <mat-icon>info_outline</mat-icon>
+      </button>
+      <button
+        [id]="'mark-' + entry.id + '-preferred-button'"
+        *ngIf="!entry.preferred"
+        mat-icon-button
+        color="primary"
+        (click)="onMarkPreferred(entry.id)"
+        [matTooltip]="'metadata-source-list.tooltip.mark-preferred' | translate"
+      >
+        <mat-icon>check_circle</mat-icon>
+      </button>
+    </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row
-    *matRowDef="let row; columns: displayedColumns"
-    (click)="onSelectSource(row)"
-  ></mat-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 </mat-table>

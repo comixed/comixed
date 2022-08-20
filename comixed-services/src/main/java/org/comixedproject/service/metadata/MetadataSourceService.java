@@ -46,7 +46,7 @@ public class MetadataSourceService {
    * @return the sources
    */
   public List<MetadataSource> loadMetadataSources() {
-    log.trace("Loading all metadata sources");
+    log.debug("Loading all metadata sources");
     return this.metadataSourceRepository.loadMetadataSources();
   }
 
@@ -60,6 +60,12 @@ public class MetadataSourceService {
   public MetadataSource getById(final long id) throws MetadataSourceException {
     log.debug("Loading metadata source: id={}", id);
     return this.doGetById(id);
+  }
+
+  private MetadataSource doGetById(final long id) throws MetadataSourceException {
+    final MetadataSource result = this.metadataSourceRepository.getById(id);
+    if (result == null) throw new MetadataSourceException("No such metadata source: id=" + id);
+    return result;
   }
 
   /**
@@ -84,12 +90,6 @@ public class MetadataSourceService {
     return this.metadataSourceRepository.getByName(name);
   }
 
-  private MetadataSource doGetById(final long id) throws MetadataSourceException {
-    final MetadataSource result = this.metadataSourceRepository.getById(id);
-    if (result == null) throw new MetadataSourceException("No such metadata source: id=" + id);
-    return result;
-  }
-
   /**
    * Creates a new source record.
    *
@@ -108,6 +108,53 @@ public class MetadataSourceService {
     }
   }
 
+  private MetadataSource doCopyMetadataSource(
+      final MetadataSource source, final MetadataSource destination) {
+    MetadataSource result = destination;
+    if (result == null) {
+      log.debug("Creating new metadata source object");
+      result = new MetadataSource(source.getBeanName(), source.getName());
+    } else {
+      log.debug("Copying metadata source bean name");
+      result.setBeanName(source.getBeanName());
+      log.debug("Copying metadata source name");
+      result.setName(source.getName());
+    }
+    log.debug("Filtering out removed properties");
+    final Object[] existingProperties = result.getProperties().stream().toArray();
+    for (int index = 0; index < existingProperties.length; index++) {
+      final MetadataSourceProperty property = (MetadataSourceProperty) existingProperties[index];
+      final Optional<MetadataSourceProperty> incomingProperty =
+          source.getProperties().stream()
+              .filter(entry -> entry.getName().equals(property.getName()))
+              .findFirst();
+      if (!incomingProperty.isPresent()) {
+        log.debug("Removing property: {}", property.getName());
+        result.getProperties().remove(property);
+      }
+    }
+    log.debug("Updating metadata source properties");
+    for (Iterator<MetadataSourceProperty> iter = source.getProperties().iterator();
+        iter.hasNext(); ) {
+      final MetadataSourceProperty property = iter.next();
+      final Optional<MetadataSourceProperty> incomingProperty =
+          result.getProperties().stream()
+              .filter(entry -> entry.getName().equals(property.getName()))
+              .findFirst();
+      if (incomingProperty.isPresent()) {
+        log.debug("Updated property: {}={}", property.getName(), property.getValue());
+        final MetadataSourceProperty existingProperty = incomingProperty.get();
+        existingProperty.setValue(property.getValue());
+      } else {
+        log.debug("Adding property: {}={}", property.getName(), property.getValue());
+        result
+            .getProperties()
+            .add(new MetadataSourceProperty(result, property.getName(), property.getValue()));
+      }
+    }
+    return result;
+  }
+
   /**
    * Updates an existing source record.
    *
@@ -119,7 +166,7 @@ public class MetadataSourceService {
   @Transactional
   public MetadataSource update(final long id, final MetadataSource source)
       throws MetadataSourceException {
-    log.trace(
+    log.debug(
         "Updating existing metadata source: id={} name={} bean name={}",
         id,
         source.getName(),
@@ -132,53 +179,6 @@ public class MetadataSourceService {
     }
   }
 
-  private MetadataSource doCopyMetadataSource(
-      final MetadataSource source, final MetadataSource destination) {
-    MetadataSource result = destination;
-    if (result == null) {
-      log.trace("Creating new metadata source object");
-      result = new MetadataSource(source.getBeanName(), source.getName());
-    } else {
-      log.trace("Copying metadata source bean name");
-      result.setBeanName(source.getBeanName());
-      log.trace("Copying metadata source name");
-      result.setName(source.getName());
-    }
-    log.trace("Filtering out removed properties");
-    final Object[] existingProperties = result.getProperties().stream().toArray();
-    for (int index = 0; index < existingProperties.length; index++) {
-      final MetadataSourceProperty property = (MetadataSourceProperty) existingProperties[index];
-      final Optional<MetadataSourceProperty> incomingProperty =
-          source.getProperties().stream()
-              .filter(entry -> entry.getName().equals(property.getName()))
-              .findFirst();
-      if (!incomingProperty.isPresent()) {
-        log.trace("Removing property: {}", property.getName());
-        result.getProperties().remove(property);
-      }
-    }
-    log.trace("Updating metadata source properties");
-    for (Iterator<MetadataSourceProperty> iter = source.getProperties().iterator();
-        iter.hasNext(); ) {
-      final MetadataSourceProperty property = iter.next();
-      final Optional<MetadataSourceProperty> incomingProperty =
-          result.getProperties().stream()
-              .filter(entry -> entry.getName().equals(property.getName()))
-              .findFirst();
-      if (incomingProperty.isPresent()) {
-        log.trace("Updated property: {}={}", property.getName(), property.getValue());
-        final MetadataSourceProperty existingProperty = incomingProperty.get();
-        existingProperty.setValue(property.getValue());
-      } else {
-        log.trace("Adding property: {}={}", property.getName(), property.getValue());
-        result
-            .getProperties()
-            .add(new MetadataSourceProperty(result, property.getName(), property.getValue()));
-      }
-    }
-    return result;
-  }
-
   /**
    * Deletes the source with the given record id.
    *
@@ -189,10 +189,31 @@ public class MetadataSourceService {
   public void delete(final long id) throws MetadataSourceException {
     final MetadataSource source = this.doGetById(id);
     try {
-      log.trace("Deleting metadata source: name={}", source.getName());
+      log.debug("Deleting metadata source: name={}", source.getName());
       this.metadataSourceRepository.delete(source);
     } catch (Exception error) {
       throw new MetadataSourceException("Failed to delete metadata source", error);
     }
+  }
+
+  /**
+   * Marks a source as preferred. Any existing preferred service is unmarked as preferred.
+   *
+   * @param preferredId the preferred service id
+   * @return the list of all services
+   * @throws MetadataSourceException if the id is invalid
+   */
+  @Transactional
+  public List<MetadataSource> markAsPreferred(final long preferredId)
+      throws MetadataSourceException {
+    log.debug("Loading newly preferred metadata source: id={}", preferredId);
+    final MetadataSource preferred = this.doGetById(preferredId);
+    log.debug("Clearing existing preferred sources");
+    this.metadataSourceRepository.clearPreferredSource();
+    log.debug("Saving newly preferred metadata source");
+    preferred.setPreferred(true);
+    this.metadataSourceRepository.save(preferred);
+    log.debug("Returning all metadata sources");
+    return this.metadataSourceRepository.findAll();
   }
 }

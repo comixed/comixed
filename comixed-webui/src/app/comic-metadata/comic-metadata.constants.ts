@@ -27,10 +27,12 @@ export const LOAD_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${id}
 export const CREATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources`;
 export const UPDATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${id}`;
 export const DELETE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${id}`;
+export const MARK_METADATA_SOURCE_AS_PREFERRED_URL = `${API_ROOT_URL}/metadata/sources/\${id}/preferred`;
 
 export const METADATA_SOURCE_TEMPLATE: MetadataSource = {
   id: null,
   name: '',
+  preferred: false,
   beanName: '',
   properties: []
 };

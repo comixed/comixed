@@ -25,6 +25,7 @@ import {
   DELETE_METADATA_SOURCE_URL,
   LOAD_METADATA_SOURCE_LIST_URL,
   LOAD_METADATA_SOURCE_URL,
+  MARK_METADATA_SOURCE_AS_PREFERRED_URL,
   UPDATE_METADATA_SOURCE_URL
 } from '@app/comic-metadata/comic-metadata.constants';
 import { interpolate } from '@app/core';
@@ -68,6 +69,14 @@ export class MetadataSourceService {
     this.logger.trace('Deleting metadata source:', args);
     return this.http.delete(
       interpolate(DELETE_METADATA_SOURCE_URL, { id: args.source.id })
+    );
+  }
+
+  markAsPreferred(args: { id: number }): Observable<any> {
+    this.logger.trace('Marking metadata source as preferred:', args);
+    return this.http.post(
+      interpolate(MARK_METADATA_SOURCE_AS_PREFERRED_URL, { id: args.id }),
+      {}
     );
   }
 }

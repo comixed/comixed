@@ -27,11 +27,16 @@ import { Subscription } from 'rxjs';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
+import {
+  loadMetadataSources,
+  preferMetadataSource
+} from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { loadMetadataSource } from '@app/comic-metadata/actions/metadata-source.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'cx-metadata-source-list',
@@ -46,13 +51,19 @@ export class MetadataSourceListComponent
   sourcesSubscription: Subscription;
   dataSource = new MatTableDataSource<MetadataSource>([]);
   readonly displayedColumns = [
+    'preferred',
     'name',
     'bean-name',
     'property-count',
     'actions'
   ];
 
-  constructor(private logger: LoggerService, private store: Store<any>) {
+  constructor(
+    private logger: LoggerService,
+    private store: Store<any>,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService
+  ) {
     this.sourcesSubscription = this.store
       .select(selectMetadataSourceList)
       .subscribe(sources => (this.dataSource.data = sources));
@@ -73,6 +84,8 @@ export class MetadataSourceListComponent
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
+        case 'preferred':
+          return data.preferred ? 1 : 0;
         case 'name':
           return data.name;
         case 'bean-name':
@@ -84,5 +97,20 @@ export class MetadataSourceListComponent
   onSelectSource(source: MetadataSource): void {
     this.logger.trace('Loading metadata source');
     this.store.dispatch(loadMetadataSource({ id: source.id }));
+  }
+
+  onMarkPreferred(id: number): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'metadata-source-list.mark-preferred.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'metadata-source-list.mark-preferred.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Marking metadata source as preferred:', id);
+        this.store.dispatch(preferMetadataSource({ id }));
+      }
+    });
   }
 }

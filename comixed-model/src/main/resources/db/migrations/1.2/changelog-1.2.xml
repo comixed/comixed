@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/1.2/001_1346_removed_web_audit_log.xml"/>
+  <include file="/db/migrations/1.2/002_1149_add_preferred_metadata_source.xml"/>
 
 </databaseChangeLog>
