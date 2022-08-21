@@ -23,6 +23,10 @@
   <Characters>Chareacter1, Character2</Characters>
   <Teams>Test Team 1, Test Team 2</Teams>
   <Locations>Test Location 1, Test Location 2</Locations>
+  <MetadataSource>
+    <Name>ComicVine</Name>
+    <ReferenceId>12971</ReferenceId>
+  </MetadataSource>
   <Pages>
     <Page Image="0" ImageSize="762694" ImageWidth="1440"
       ImageHeight="2214" Type="FrontCover" />

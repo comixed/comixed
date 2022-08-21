@@ -50,6 +50,26 @@ import org.springframework.data.annotation.CreatedDate;
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ComicBook {
+  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "PageNumber")
+  @JsonProperty("pages")
+  @JsonView({
+    View.ComicListView.class,
+    View.AuditLogEntryDetail.class,
+    View.ReadingListDetail.class
+  })
+  @Getter
+  List<Page> pages = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "StoryTags", joinColumns = @JoinColumn(name = "ComicBookId"))
+  @Column(name = "Name")
+  @JsonProperty("stories")
+  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @Getter
+  List<String> stories = new ArrayList<>();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
@@ -139,17 +159,6 @@ public class ComicBook {
   @Getter
   @Setter
   private boolean recreating = false;
-
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "PageNumber")
-  @JsonProperty("pages")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  List<Page> pages = new ArrayList<>();
 
   @Formula(
       value =
@@ -290,15 +299,6 @@ public class ComicBook {
   @Getter
   private List<String> locations = new ArrayList<>();
 
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "StoryTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("stories")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  List<String> stories = new ArrayList<>();
-
   @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("credits")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
@@ -381,6 +381,9 @@ public class ComicBook {
   @Setter
   private ComicMetadataSource metadata;
 
+  @Transient @Getter @Setter private String metadataSourceName;
+  @Transient @Getter @Setter private String metadataReferenceId;
+
   @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
@@ -441,6 +444,11 @@ public class ComicBook {
   @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
   public boolean isMissing() {
     return !this.getFile().exists();
+  }
+
+  @Transient
+  public File getFile() {
+    return new File(this.filename);
   }
 
   public int getIndexFor(Page page) {
@@ -545,11 +553,6 @@ public class ComicBook {
     }
   }
 
-  @Transient
-  public File getFile() {
-    return new File(this.filename);
-  }
-
   public Integer getDuplicateCount() {
     return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
   }
@@ -567,15 +570,15 @@ public class ComicBook {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(filename);
+  }
+
+  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicBook comicBook = (ComicBook) o;
     return filename.equals(comicBook.filename);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(filename);
   }
 }

@@ -136,6 +136,11 @@ public class ComicInfo {
   @Setter
   private String web;
 
+  @JsonProperty("MetadataSource")
+  @Getter
+  @Setter
+  private ComicInfoMetadataSource metadata;
+
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;

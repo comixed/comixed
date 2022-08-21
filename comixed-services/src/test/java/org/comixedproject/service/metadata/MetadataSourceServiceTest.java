@@ -104,14 +104,38 @@ public class MetadataSourceServiceTest {
   }
 
   @Test
-  public void testGetByNameNotFound() {
-    Mockito.when(metadataSourceRepository.getByName(Mockito.anyString())).thenReturn(null);
+  public void testGetByBeanNameNotFound() {
+    Mockito.when(metadataSourceRepository.getByBeanName(Mockito.anyString())).thenReturn(null);
 
-    final MetadataSource result = service.getByName(TEST_BEAN_NAME);
+    final MetadataSource result = service.getByBeanName(TEST_BEAN_NAME);
 
     assertNull(result);
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_BEAN_NAME);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByBeanName(TEST_BEAN_NAME);
+  }
+
+  @Test
+  public void testGetByBeanName() {
+    Mockito.when(metadataSourceRepository.getByBeanName(Mockito.anyString()))
+        .thenReturn(existingSource);
+
+    final MetadataSource result = service.getByBeanName(TEST_BEAN_NAME);
+
+    assertNotNull(result);
+    assertSame(existingSource, result);
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByBeanName(TEST_BEAN_NAME);
+  }
+
+  @Test
+  public void testGetByNameNotFound() {
+    Mockito.when(metadataSourceRepository.getByName(Mockito.anyString())).thenReturn(null);
+
+    final MetadataSource result = service.getByName(TEST_SOURCE_NAME);
+
+    assertNull(result);
+
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_SOURCE_NAME);
   }
 
   @Test
@@ -119,12 +143,12 @@ public class MetadataSourceServiceTest {
     Mockito.when(metadataSourceRepository.getByName(Mockito.anyString()))
         .thenReturn(existingSource);
 
-    final MetadataSource result = service.getByName(TEST_BEAN_NAME);
+    final MetadataSource result = service.getByName(TEST_SOURCE_NAME);
 
     assertNotNull(result);
     assertSame(existingSource, result);
 
-    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_BEAN_NAME);
+    Mockito.verify(metadataSourceRepository, Mockito.times(1)).getByName(TEST_SOURCE_NAME);
   }
 
   @Test(expected = MetadataSourceException.class)

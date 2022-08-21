@@ -68,6 +68,17 @@ public class MetadataSourceService {
    * @param name the bean name
    * @return the source
    */
+  public MetadataSource getByBeanName(final String name) {
+    log.debug("Loading metadata source: bean name={}", name);
+    return this.metadataSourceRepository.getByBeanName(name);
+  }
+
+  /**
+   * Loads a single metadata source by the source name.
+   *
+   * @param name the source name
+   * @return the source
+   */
   public MetadataSource getByName(final String name) {
     log.debug("Loading metadata source: name={}", name);
     return this.metadataSourceRepository.getByName(name);
