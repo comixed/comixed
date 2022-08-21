@@ -26,8 +26,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicbooks.Credit;
 import org.comixedproject.model.metadata.ComicInfo;
+import org.comixedproject.model.metadata.ComicInfoMetadataSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
@@ -75,6 +77,12 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
       comicBook.setTitle(comicInfo.getTitle());
       comicBook.setDescription(comicInfo.getSummary());
       comicBook.setNotes(comicInfo.getNotes());
+      if (StringUtils.hasLength(comicInfo.getMetadata().getName())
+          && StringUtils.hasLength(comicInfo.getMetadata().getReferenceId())) {
+        log.debug("Loading comic metadata source details");
+        comicBook.setMetadataSourceName(comicInfo.getMetadata().getName());
+        comicBook.setMetadataReferenceId(comicInfo.getMetadata().getReferenceId());
+      }
       this.addElementsToList(comicInfo.getCharacters(), comicBook.getCharacters());
       this.addElementsToList(comicInfo.getTeams(), comicBook.getTeams());
       this.addElementsToList(comicInfo.getLocations(), comicBook.getLocations());
@@ -193,6 +201,15 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
                 .collect(Collectors.toList())));
     comicInfo.setNotes(comicBook.getNotes());
     comicInfo.setSummary(comicBook.getDescription());
+    final ComicMetadataSource metadata = comicBook.getMetadata();
+    if (metadata != null
+        && StringUtils.hasLength(metadata.getMetadataSource().getName())
+        && StringUtils.hasLength(metadata.getReferenceId())) {
+      log.debug("Adding metadata source details");
+      comicInfo.setMetadata(
+          new ComicInfoMetadataSource(
+              metadata.getMetadataSource().getName(), metadata.getReferenceId()));
+    }
     try {
       log.trace("Generating ComicInfo.xml data");
       return this.xmlConverter.getObjectMapper().writeValueAsBytes(comicInfo);

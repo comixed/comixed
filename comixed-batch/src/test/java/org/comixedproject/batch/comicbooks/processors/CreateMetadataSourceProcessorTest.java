@@ -32,6 +32,7 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.ComicInfo;
+import org.comixedproject.model.metadata.ComicInfoMetadataSource;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.metadata.MetadataSourceService;
 import org.junit.Before;
@@ -48,15 +49,18 @@ public class CreateMetadataSourceProcessorTest {
   private static final String TEST_WEB_ADDRESS_NO_MATCH = "http://this.is.not.comicvine";
   private static final String TEST_WEB_ADDRESS =
       String.format("https://comicvine.gamespot.com/spider-man-1/4000-%s/", TEST_COMIC_VINE_ID);
+  private static final String TEST_METADATA_SOURCE_NAME = "Metadata Source Name";
+  private static final String TEST_METADATA_REFERENCE_ID = "R3F3R3NC31D";
 
+  @Mock MappingJackson2XmlHttpMessageConverter xmlConverter;
   @InjectMocks private CreateMetadataSourceProcessor processor;
   @Mock private MetadataSourceService metadataSourceService;
   @Mock private ComicBookAdaptor comicBookAdaptor;
-  @Mock MappingJackson2XmlHttpMessageConverter xmlConverter;
   @Mock private ComicBook comicBook;
   @Mock private ObjectMapper objectMapper;
   @Mock private MetadataSource metadataSource;
   @Mock private ComicInfo comicInfo;
+  @Mock private ComicInfoMetadataSource metadata;
 
   @Captor private ArgumentCaptor<ByteArrayInputStream> byteArrayInputStreamArgumentCaptor;
   @Captor private ArgumentCaptor<ComicMetadataSource> comicMetadataSourceArgumentCaptor;
@@ -65,12 +69,17 @@ public class CreateMetadataSourceProcessorTest {
   public void setUp() throws AdaptorException, IOException {
     Mockito.when(xmlConverter.getObjectMapper()).thenReturn(objectMapper);
     Mockito.when(metadataSourceService.getByName(Mockito.anyString())).thenReturn(metadataSource);
+    Mockito.when(metadataSourceService.getByBeanName(Mockito.anyString()))
+        .thenReturn(metadataSource);
     Mockito.when(comicBookAdaptor.loadFile(Mockito.any(ComicBook.class), Mockito.anyString()))
         .thenReturn(TEST_METADATA_CONTENT);
     Mockito.when(
             objectMapper.readValue(
                 byteArrayInputStreamArgumentCaptor.capture(), Mockito.any(Class.class)))
         .thenReturn(comicInfo);
+
+    Mockito.when(metadata.getName()).thenReturn(TEST_METADATA_SOURCE_NAME);
+    Mockito.when(metadata.getReferenceId()).thenReturn(TEST_METADATA_REFERENCE_ID);
     Mockito.doNothing().when(comicBook).setMetadata(comicMetadataSourceArgumentCaptor.capture());
   }
 
@@ -83,18 +92,6 @@ public class CreateMetadataSourceProcessorTest {
   }
 
   @Test
-  public void testProcessNoSuchMetadataSource() throws Exception {
-    Mockito.when(metadataSourceService.getByName(Mockito.anyString())).thenReturn(null);
-
-    final ComicBook result = processor.process(comicBook);
-
-    assertNotNull(result);
-    assertSame(comicBook, result);
-
-    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(COMIC_VINE_METADATA_ADAPTOR);
-  }
-
-  @Test
   public void testProcessNoContent() throws Exception {
     Mockito.when(comicBookAdaptor.loadFile(Mockito.any(ComicBook.class), Mockito.anyString()))
         .thenReturn(null);
@@ -104,7 +101,6 @@ public class CreateMetadataSourceProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicBook, Mockito.never()).setMetadata(Mockito.any());
   }
@@ -125,9 +121,41 @@ public class CreateMetadataSourceProcessorTest {
     assertNotNull(inputStream);
     assertArrayEquals(TEST_METADATA_CONTENT, inputStream.readAllBytes());
 
-    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicBook, Mockito.never()).setMetadata(Mockito.any());
+  }
+
+  @Test
+  public void testProcessMetadataSourceNotFound() throws Exception {
+    Mockito.when(comicInfo.getMetadata()).thenReturn(metadata);
+    Mockito.when(metadataSourceService.getByName(Mockito.anyString())).thenReturn(null);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+    assertNull(comicBook.getMetadata());
+
+    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(TEST_METADATA_SOURCE_NAME);
+  }
+
+  @Test
+  public void testProcessMetadataSourceFound() throws Exception {
+    Mockito.when(comicInfo.getMetadata()).thenReturn(metadata);
+    Mockito.when(metadataSourceService.getByName(Mockito.anyString())).thenReturn(metadataSource);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    final ComicMetadataSource comicMetadata = comicMetadataSourceArgumentCaptor.getValue();
+    assertNotNull(comicMetadata);
+    assertSame(metadataSource, comicMetadata.getMetadataSource());
+    assertEquals(TEST_METADATA_REFERENCE_ID, comicMetadata.getReferenceId());
+
+    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(TEST_METADATA_SOURCE_NAME);
+    Mockito.verify(comicBook, Mockito.times(1)).setMetadata(comicMetadata);
   }
 
   @Test
@@ -143,7 +171,6 @@ public class CreateMetadataSourceProcessorTest {
     assertNotNull(inputStream);
     assertArrayEquals(TEST_METADATA_CONTENT, inputStream.readAllBytes());
 
-    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
     Mockito.verify(comicBook, Mockito.never()).setMetadata(Mockito.any());
@@ -164,7 +191,27 @@ public class CreateMetadataSourceProcessorTest {
     assertNotNull(inputStream);
     assertArrayEquals(TEST_METADATA_CONTENT, inputStream.readAllBytes());
 
-    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(COMIC_VINE_METADATA_ADAPTOR);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
+    Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
+    Mockito.verify(comicBook, Mockito.never()).setMetadata(Mockito.any());
+  }
+
+  @Test
+  public void testProcessNoComicVineBean() throws Exception {
+    Mockito.when(comicInfo.getWeb()).thenReturn(TEST_WEB_ADDRESS);
+    Mockito.when(metadataSourceService.getByBeanName(Mockito.anyString())).thenReturn(null);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    final ByteArrayInputStream inputStream = byteArrayInputStreamArgumentCaptor.getValue();
+    assertNotNull(inputStream);
+    assertArrayEquals(TEST_METADATA_CONTENT, inputStream.readAllBytes());
+
+    Mockito.verify(metadataSourceService, Mockito.times(1))
+        .getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
     Mockito.verify(comicBook, Mockito.never()).setMetadata(Mockito.any());
@@ -189,7 +236,8 @@ public class CreateMetadataSourceProcessorTest {
     assertSame(metadataSource, metadata.getMetadataSource());
     assertEquals(TEST_COMIC_VINE_ID, metadata.getReferenceId());
 
-    Mockito.verify(metadataSourceService, Mockito.times(1)).getByName(COMIC_VINE_METADATA_ADAPTOR);
+    Mockito.verify(metadataSourceService, Mockito.times(1))
+        .getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).loadFile(comicBook, COMIC_INFO_XML);
     Mockito.verify(comicInfo, Mockito.times(1)).getWeb();
     Mockito.verify(comicBook, Mockito.times(1)).setMetadata(metadata);

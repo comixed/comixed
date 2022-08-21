@@ -27,6 +27,7 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.ComicInfo;
+import org.comixedproject.model.metadata.ComicInfoMetadataSource;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.metadata.MetadataSourceService;
 import org.springframework.batch.item.ItemProcessor;
@@ -48,11 +49,9 @@ public class CreateMetadataSourceProcessor
     implements ItemProcessor<ComicBook, ComicBook>, InitializingBean {
   public static final String COMIC_INFO_XML = "ComicInfo.xml";
   public static final String COMIC_VINE_METADATA_ADAPTOR = "comicVineMetadataAdaptor";
-
+  @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
   @Autowired private MetadataSourceService metadataSourceService;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
-  @Autowired MappingJackson2XmlHttpMessageConverter xmlConverter;
-
   private Pattern pattern =
       Pattern.compile("^http.*comicvine\\.gamespot\\.com.*4000-([\\d]{3,6})\\/");
 
@@ -65,35 +64,51 @@ public class CreateMetadataSourceProcessor
 
   @Override
   public ComicBook process(final ComicBook comicBook) throws Exception {
-    log.trace("Loading ComicVine metadata source");
-    final MetadataSource source = this.metadataSourceService.getByName(COMIC_VINE_METADATA_ADAPTOR);
-    if (source != null) {
-      try {
-        log.trace("Loading ComicInfo.xml content");
-        final byte[] content = this.comicBookAdaptor.loadFile(comicBook, COMIC_INFO_XML);
-        if (content != null) {
-          log.trace("Extracting comic metadata");
-          final ComicInfo comicInfo =
-              this.xmlConverter
-                  .getObjectMapper()
-                  .readValue(new ByteArrayInputStream(content), ComicInfo.class);
+    try {
+      log.trace("Loading ComicInfo.xml content");
+      final byte[] content = this.comicBookAdaptor.loadFile(comicBook, COMIC_INFO_XML);
+      if (content != null) {
+        log.trace("Extracting comic metadata");
+        final ComicInfo comicInfo =
+            this.xmlConverter
+                .getObjectMapper()
+                .readValue(new ByteArrayInputStream(content), ComicInfo.class);
+        if (comicInfo.getMetadata() != null) {
+          final ComicInfoMetadataSource metadata = comicInfo.getMetadata();
+          final String name = metadata.getName();
+          final String referenceId = metadata.getReferenceId();
+          log.debug("Looking up metadata source: {}", name);
+          final MetadataSource source = this.metadataSourceService.getByName(name);
+          if (source != null) {
+            log.debug("Creating {} metadata source reference", name);
+            comicBook.setMetadata(new ComicMetadataSource(comicBook, source, referenceId));
+          } else {
+            log.debug("No such metadata source");
+          }
+        } else {
           final String web = comicInfo.getWeb();
           if (StringUtils.hasLength(web)) {
-            log.trace("Checking if web address is for ComicVine: {}", web);
-            final Matcher matcher = this.pattern.matcher(web);
-            if (matcher.matches()) {
-              log.trace("Web address matches: extracting ComicVine ID");
-              final String comicVineId = matcher.group(1);
-              log.trace("Creating metadata source for comic");
-              comicBook.setMetadata(new ComicMetadataSource(comicBook, source, comicVineId));
+            log.trace("Loading ComicVine metadata source");
+            final MetadataSource source =
+                this.metadataSourceService.getByBeanName(COMIC_VINE_METADATA_ADAPTOR);
+            if (source != null) {
+
+              log.trace("Checking if web address is for ComicVine: {}", web);
+              final Matcher matcher = this.pattern.matcher(web);
+              if (matcher.matches()) {
+                log.trace("Web address matches: extracting ComicVine ID");
+                final String comicVineId = matcher.group(1);
+                log.trace("Creating ComicVine metadata source reference");
+                comicBook.setMetadata(new ComicMetadataSource(comicBook, source, comicVineId));
+              }
+            } else {
+              log.debug("ComicVine metadata source not found");
             }
           }
         }
-      } catch (Exception error) {
-        log.error("Failed to create metadata source", error);
       }
-    } else {
-      log.trace("No ComicVine metadata source found");
+    } catch (Exception error) {
+      log.error("Failed to create metadata source", error);
     }
     return comicBook;
   }

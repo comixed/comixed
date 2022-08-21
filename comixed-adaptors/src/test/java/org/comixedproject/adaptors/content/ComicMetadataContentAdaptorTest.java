@@ -25,7 +25,9 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.ComicInfo;
+import org.comixedproject.model.metadata.MetadataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +50,8 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   private static final String TEST_ISSUE_NUMBER = "24";
   private static final String TEST_TITLE = "Test Title";
   private static final String TEST_DESCRIPTION = "Test summary <em>inner tag</em>";
+  private static final String TEST_METADATA_SOURCE_NAME = "ComicVine";
+  private static final String TEST_METADATA_REFERENCE_ID = "12971";
 
   @Autowired ComicMetadataContentAdaptor adaptor;
 
@@ -81,6 +85,9 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
     assertEquals(comicBook.getIssueNumber(), TEST_ISSUE_NUMBER);
     assertEquals(comicBook.getTitle(), TEST_TITLE);
     assertEquals(comicBook.getDescription(), TEST_DESCRIPTION);
+
+    assertEquals(TEST_METADATA_SOURCE_NAME, comicBook.getMetadataSourceName());
+    assertEquals(TEST_METADATA_REFERENCE_ID, comicBook.getMetadataReferenceId());
   }
 
   @Test
@@ -93,6 +100,7 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
 
     adaptor.loadContent(
         comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+    comicBook.setMetadata(null);
 
     final byte[] result = adaptor.createContent(comicBook);
 
@@ -101,6 +109,31 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
             .xmlConverter
             .getObjectMapper()
             .readValue(new ByteArrayInputStream(result), ComicInfo.class);
+
+    assertNotNull(outcome);
+  }
+
+  @Test
+  public void testCreateContentWithMetadataContent() throws ContentAdaptorException, IOException {
+    adaptor.loadContent(
+        comicBook, TEST_COMICINFO_FILE_COMPLETE, loadFile(TEST_COMICINFO_FILE_COMPLETE));
+
+    comicBook.setMetadata(
+        new ComicMetadataSource(
+            comicBook,
+            new MetadataSource(TEST_METADATA_SOURCE_NAME, "farkleBan"),
+            TEST_METADATA_REFERENCE_ID));
+    comicBook.getMetadata().getMetadataSource().setName(comicBook.getMetadataSourceName());
+    comicBook.getMetadata().setReferenceId(comicBook.getMetadataReferenceId());
+
+    final byte[] result = adaptor.createContent(comicBook);
+
+    final ComicInfo outcome =
+        adaptor
+            .xmlConverter
+            .getObjectMapper()
+            .readValue(new ByteArrayInputStream(result), ComicInfo.class);
+
     assertNotNull(outcome);
   }
 }
