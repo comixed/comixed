@@ -23,8 +23,8 @@ import static junit.framework.TestCase.*;
 import java.util.HashSet;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +51,7 @@ public class LibrarySelectionServiceTest {
   }
 
   @Test
-  public void testSelectComicsNullExisting() throws LibrarySelectionException, ComicException {
+  public void testSelectComicsNullExisting() throws LibrarySelectionException, ComicBookException {
     incomingIds.add(TEST_INCOMING_COMIC_ID);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
@@ -66,10 +66,10 @@ public class LibrarySelectionServiceTest {
 
   @Test(expected = LibrarySelectionException.class)
   public void testSelectComicsAddingSelectionInvalidComicBook()
-      throws LibrarySelectionException, ComicException {
+      throws LibrarySelectionException, ComicBookException {
     incomingIds.add(TEST_INCOMING_COMIC_ID);
 
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
       service.selectComics(existingIds, incomingIds, true);
@@ -79,7 +79,8 @@ public class LibrarySelectionServiceTest {
   }
 
   @Test
-  public void testSelectComicsAddingSelection() throws LibrarySelectionException, ComicException {
+  public void testSelectComicsAddingSelection()
+      throws LibrarySelectionException, ComicBookException {
     existingIds.add(TEST_EXISTING_COMIC_ID);
     incomingIds.add(TEST_INCOMING_COMIC_ID);
 
@@ -96,7 +97,8 @@ public class LibrarySelectionServiceTest {
   }
 
   @Test
-  public void testSelectComicsRemovingSelection() throws LibrarySelectionException, ComicException {
+  public void testSelectComicsRemovingSelection()
+      throws LibrarySelectionException, ComicBookException {
     existingIds.add(TEST_EXISTING_COMIC_ID);
     existingIds.add(TEST_INCOMING_COMIC_ID);
     incomingIds.add(TEST_INCOMING_COMIC_ID);
@@ -113,7 +115,7 @@ public class LibrarySelectionServiceTest {
 
   @Test
   public void testSelectComicsRemovingSelectionWithNullExistingSelections()
-      throws LibrarySelectionException, ComicException {
+      throws LibrarySelectionException, ComicBookException {
     incomingIds.add(TEST_INCOMING_COMIC_ID);
 
     final Set<Long> result = service.selectComics(null, incomingIds, false);
@@ -125,7 +127,7 @@ public class LibrarySelectionServiceTest {
 
   @Test
   public void testSelectComicsRemovingSelectionWithNoExistingSelections()
-      throws LibrarySelectionException, ComicException {
+      throws LibrarySelectionException, ComicBookException {
     existingIds.clear();
     incomingIds.add(TEST_INCOMING_COMIC_ID);
 

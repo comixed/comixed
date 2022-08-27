@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class ReaderInsertedWriter extends AbstractComicWriter {
+public class ReaderInsertedWriter extends AbstractComicBookWriter {
   public ReaderInsertedWriter() {
     super(ComicEvent.recordInserted);
   }

@@ -20,6 +20,7 @@ package org.comixedproject.batch.comicbooks.readers;
 
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemReader;
@@ -37,7 +38,7 @@ public abstract class AbstractComicReader implements ItemReader<ComicBook> {
   @Getter
   private int batchChunkSize = 10;
 
-  List<ComicBook> comicBookList = null;
+  @Getter @Setter List<ComicBook> comicBookList = null;
 
   @Override
   public ComicBook read() {

@@ -8,5 +8,6 @@
 
   <include file="/db/migrations/1.2/001_1346_removed_web_audit_log.xml"/>
   <include file="/db/migrations/1.2/002_1149_add_preferred_metadata_source.xml"/>
+  <include file="/db/migrations/1.2/003_1004_add_batch_metadata_flag.xml"/>
 
 </databaseChangeLog>

@@ -33,8 +33,8 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.LastReadRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -213,8 +213,8 @@ public class LastReadServiceTest {
 
   @Test
   public void testSetLastReadStateNoSuchComic()
-      throws ComiXedUserException, LastReadException, ComicException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+      throws ComiXedUserException, LastReadException, ComicBookException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
       service.setLastReadState(TEST_EMAIL, comicIdList, true);
@@ -226,7 +226,7 @@ public class LastReadServiceTest {
 
   @Test
   public void testSetLastReadStateSetMultipleIdsRead()
-      throws ComiXedUserException, LastReadException, ComicException {
+      throws ComiXedUserException, LastReadException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.setLastReadState(TEST_EMAIL, comicIdList, true);
@@ -243,7 +243,7 @@ public class LastReadServiceTest {
 
   @Test
   public void testSetLastReadStateMultipleIdsSetUnread()
-      throws ComiXedUserException, LastReadException, ComicException {
+      throws ComiXedUserException, LastReadException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.setLastReadState(TEST_EMAIL, comicIdList, false);
@@ -260,7 +260,7 @@ public class LastReadServiceTest {
 
   @Test
   public void testSetLastReadStateRead()
-      throws ComiXedUserException, LastReadException, ComicException {
+      throws ComiXedUserException, LastReadException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.setLastReadState(TEST_EMAIL, TEST_COMIC_ID, true);
@@ -277,7 +277,7 @@ public class LastReadServiceTest {
 
   @Test
   public void testSetLastReadStateUnread()
-      throws ComiXedUserException, LastReadException, ComicException {
+      throws ComiXedUserException, LastReadException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     service.setLastReadState(TEST_EMAIL, TEST_COMIC_ID, false);

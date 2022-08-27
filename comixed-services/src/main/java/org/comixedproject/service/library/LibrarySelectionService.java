@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +66,7 @@ public class LibrarySelectionService {
           final ComicBook comicBook = this.comicBookService.getComic(id);
           log.trace("Adding comic book to selections");
           result.add(comicBook.getId());
-        } catch (ComicException error) {
+        } catch (ComicBookException error) {
           throw new LibrarySelectionException("Failed to load comic: id=" + id, error);
         }
       }

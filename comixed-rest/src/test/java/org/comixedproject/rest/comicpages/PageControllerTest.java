@@ -32,7 +32,7 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicpages.UpdatePageDeletionRequest;
-import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.service.comicpages.PageException;
 import org.comixedproject.service.comicpages.PageService;
@@ -133,7 +133,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageForHash() throws ComicException, PageException, AdaptorException {
+  public void testGetPageForHash() throws ComicBookException, PageException, AdaptorException {
     Mockito.when(pageService.getOneForHash(Mockito.anyString())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
@@ -207,7 +207,7 @@ public class PageControllerTest {
   }
 
   @Test
-  public void testGetPageContent() throws ComicException, PageException, AdaptorException {
+  public void testGetPageContent() throws ComicBookException, PageException, AdaptorException {
     Mockito.when(pageService.getForId(Mockito.anyLong())).thenReturn(page);
     Mockito.when(pageCacheService.findByHash(Mockito.anyString())).thenReturn(null);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);

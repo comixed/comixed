@@ -36,7 +36,7 @@ import org.comixedproject.model.net.lists.DeleteReadingListsRequest;
 import org.comixedproject.model.net.lists.RemoveComicsFromReadingListRequest;
 import org.comixedproject.model.net.lists.SaveReadingListRequest;
 import org.comixedproject.model.net.lists.UpdateReadingListRequest;
-import org.comixedproject.service.comicbooks.ComicException;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.junit.Before;
@@ -111,7 +111,7 @@ public class ReadingListControllerTest {
   }
 
   @Test
-  public void testUpdateReadingList() throws ReadingListException, ComicException {
+  public void testUpdateReadingList() throws ReadingListException, ComicBookException {
     Set<ComicBook> entries = new HashSet<>();
 
     Mockito.when(

@@ -33,8 +33,8 @@ import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.LastReadRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.state.comicbooks.ComicEvent;
@@ -198,7 +198,7 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
         log.trace("Firing event: mark comicBook as unread");
         this.comicStateHandler.fireEvent(comicBook, ComicEvent.markAsUnread, headers);
       }
-    } catch (ComicException error) {
+    } catch (ComicBookException error) {
       log.error("Failed to process comic last read state", error);
     }
   }

@@ -27,12 +27,15 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
+  metadataUpdateProcessStarted,
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
+  startMetadataUpdateProcess,
+  startMetadataUpdateProcessFailed,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
@@ -54,6 +57,7 @@ describe('Scraping Reducer', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const IDS = [7, 17, 65, 1, 29, 71];
 
   let state: MetadataState;
 
@@ -64,6 +68,10 @@ describe('Scraping Reducer', () => {
   describe('the initial state', () => {
     beforeEach(() => {
       state = reducer({ ...state }, {} as any);
+    });
+
+    it('clears the busy', () => {
+      expect(state.busy).toBeFalse();
     });
 
     it('clears the loading records flag', () => {
@@ -347,6 +355,42 @@ describe('Scraping Reducer', () => {
 
     it('clears the clearing cache flag', () => {
       expect(state.clearingCache).toBeFalse();
+    });
+  });
+
+  describe('starting the batch metadata update process', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false },
+        startMetadataUpdateProcess({ ids: IDS, skipCache: SKIP_CACHE })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+  });
+
+  describe('success starting the batch process', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: true }, metadataUpdateProcessStarted());
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+  });
+
+  describe('failure starting the batch process', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: true },
+        startMetadataUpdateProcessFailed()
+      );
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
     });
   });
 });

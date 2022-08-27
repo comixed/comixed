@@ -35,7 +35,7 @@ public class ScrapeComicRequest {
   @JsonProperty("issueId")
   @Getter
   @Setter
-  private Integer issueId;
+  private String issueId;
 
   @JsonProperty("skipCache")
   @Getter

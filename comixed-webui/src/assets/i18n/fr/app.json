@@ -112,24 +112,6 @@
       "reading-lists": "Listes de lecture",
       "system-status": "Système"
     },
-    "label": {
-      "all-comics": "Toutes les bandes dessinées",
-      "build-details": "Détails du build",
-      "changed-comics": "Bandes dessinées modifiées",
-      "character-collection": "Personnages",
-      "comics-section": "Bandes Dessinées",
-      "deleted-comics": "Bandes Dessinées supprimées",
-      "deleted-pages": "Pages supprimées",
-      "location-collection": "Lieux",
-      "publisher-collection": "Éditeurs",
-      "reading-lists-section": "Listes de lecture",
-      "series-collection": "Séries",
-      "story-collection": "Collections",
-      "story-names": "Histoires",
-      "system-status-section": "Système",
-      "team-collection": "Équipes",
-      "unread-comics": "Bandes Dessinées non lues"
-    },
     "option": {
       "all-comics": "Toutes les BD",
       "blocked-hashes": "Pages bloquées",
@@ -142,6 +124,7 @@
       "home": "Home Page",
       "import-comics": "BD importées",
       "location-collection": "Lieux",
+      "metadata-batch-process": "Update Metadata Process",
       "publisher-collection": "Éditeurs",
       "reading-lists": "Listes de lecture",
       "series-collection": "Séries",

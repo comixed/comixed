@@ -139,6 +139,17 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
+  routerLink="/metadata/process"
+  routerLinkActive="active"
+>
+  <mat-icon>batch_prediction</mat-icon>
+  <span>{{ "navigation.option.metadata-batch-process" | translate }}</span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
   routerLink="/library/pages/duplicates"
   routerLinkActive="active"
 >

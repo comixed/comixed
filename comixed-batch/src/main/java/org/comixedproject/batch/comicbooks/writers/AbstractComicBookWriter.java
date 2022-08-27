@@ -30,15 +30,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>AbstractComicWriter</code> provides a foundation for creating {@link ItemWriter} types that
- * use the comic state machine.
+ * <code>AbstractComicBookWriter</code> provides a foundation for creating {@link ItemWriter} types
+ * that use the comic state machine.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public abstract class AbstractComicWriter implements ItemWriter<ComicBook> {
+public abstract class AbstractComicBookWriter implements ItemWriter<ComicBook> {
   @Autowired private ComicStateHandler comicStateHandler;
 
   @NonNull private ComicEvent comicEvent;

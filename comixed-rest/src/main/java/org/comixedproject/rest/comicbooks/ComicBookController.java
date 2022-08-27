@@ -31,8 +31,8 @@ import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.MarkComicsDeletedRequest;
 import org.comixedproject.model.net.comicbooks.MarkComicsUndeletedRequest;
 import org.comixedproject.model.net.comicbooks.SavePageOrderRequest;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.views.View.ComicDetailsView;
@@ -62,11 +62,11 @@ public class ComicBookController {
    *
    * @param id the comic id
    * @return the comic
-   * @throws ComicException if an error occurs
+   * @throws ComicBookException if an error occurs
    */
   @GetMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  public ComicBook getComic(@PathVariable("id") long id) throws ComicException {
+  public ComicBook getComic(@PathVariable("id") long id) throws ComicBookException {
     log.info("Getting comic: id={}", id);
     return this.comicBookService.getComic(id);
   }
@@ -76,11 +76,11 @@ public class ComicBookController {
    *
    * @param id the comic id
    * @return the updated comic
-   * @throws ComicException if the id is invalid
+   * @throws ComicBookException if the id is invalid
    */
   @DeleteMapping(value = "/api/comics/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView({ComicDetailsView.class})
-  public ComicBook deleteComic(@PathVariable("id") long id) throws ComicException {
+  public ComicBook deleteComic(@PathVariable("id") long id) throws ComicBookException {
     log.info("Marking comic for deletion: id={}", id);
     return this.comicBookService.deleteComic(id);
   }
@@ -90,11 +90,11 @@ public class ComicBookController {
    *
    * @param id the comic id
    * @return the upddtaed comic
-   * @throws ComicException if the id is invalid
+   * @throws ComicBookException if the id is invalid
    */
   @DeleteMapping(value = "/api/comics/{id}/metadata", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
-  public ComicBook deleteMetadata(@PathVariable("id") long id) throws ComicException {
+  public ComicBook deleteMetadata(@PathVariable("id") long id) throws ComicBookException {
     log.debug("Deleting comic metadata: id={}", id);
     return this.comicBookService.deleteMetadata(id);
   }
@@ -127,7 +127,7 @@ public class ComicBookController {
 
   @GetMapping(value = "/api/comics/{id}/download")
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
-      throws IOException, ComicException {
+      throws IOException, ComicBookException {
     log.info("Preparing to download comicBook: id={}", id);
 
     final ComicBook comicBook = this.comicBookService.getComic(id);
@@ -155,7 +155,7 @@ public class ComicBookController {
    * @param id the comicBook id
    * @param comicBook the source comicBook
    * @return the updated comicBook
-   * @throws ComicException if the id is invalid
+   * @throws ComicBookException if the id is invalid
    */
   @PutMapping(
       value = "/api/comics/{id}",
@@ -163,7 +163,7 @@ public class ComicBookController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(ComicDetailsView.class)
   public ComicBook updateComic(@PathVariable("id") long id, @RequestBody() ComicBook comicBook)
-      throws ComicException {
+      throws ComicBookException {
     log.info("Updating comicBook: id={}", id, comicBook);
 
     return this.comicBookService.updateComic(id, comicBook);
@@ -174,18 +174,18 @@ public class ComicBookController {
    *
    * @param id the comic id
    * @return the page content
-   * @throws ComicException if an error occurs
+   * @throws ComicBookException if an error occurs
    * @throws IOException if an error occurs
    * @throws AdaptorException if an error occurs
    */
   @GetMapping(value = "/api/comics/{id}/cover/content")
   public ResponseEntity<byte[]> getCoverImage(@PathVariable("id") final long id)
-      throws ComicException, IOException, AdaptorException {
+      throws ComicBookException, IOException, AdaptorException {
     log.info("Getting cover for comicBook: id={}", id);
     final ComicBook comicBook = this.comicBookService.getComic(id);
 
     if (comicBook == null || comicBook.isMissing()) {
-      throw new ComicException("comicBook file is missing");
+      throw new ComicBookException("comicBook file is missing");
     }
 
     if (comicBook.getPageCount() > 0) {
@@ -225,13 +225,13 @@ public class ComicBookController {
    *
    * @param id the comic id
    * @param request the request body
-   * @throws ComicException if an error occurs
+   * @throws ComicBookException if an error occurs
    */
   @PostMapping(value = "/api/comics/{id}/pages/order", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   public void savePageOrder(
       @PathVariable("id") final long id, @RequestBody() final SavePageOrderRequest request)
-      throws ComicException {
+      throws ComicBookException {
     log.info("Updating page order: comic id={}", id);
     this.comicBookService.savePageOrder(id, request.getEntries());
   }

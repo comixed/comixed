@@ -49,7 +49,7 @@ public class ComicVineMetadataAdaptorTest {
   private static final String TEST_ENCODED_VALUE = "This is the encoded value";
   private static final Integer TEST_VOLUME_ID = RANDOM.nextInt();
   private static final String TEST_ISSUE_NUMBER = "17";
-  private static final Integer TEST_ISSUE_ID = 327;
+  private static final String TEST_ISSUE_ID = "327";
 
   @InjectMocks private ComicVineMetadataAdaptor scrapingAdaptor;
   @Mock private ObjectFactory<ComicVineGetVolumesAction> getVolumesActionObjectFactory;

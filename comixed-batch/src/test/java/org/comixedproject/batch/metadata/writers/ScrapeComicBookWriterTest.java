@@ -1,6 +1,6 @@
 /*
- * ComiXed - A digital comicBook book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.batch.metadata.writers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PurgeMarkedComicsWriterTest {
-  @InjectMocks private PurgeMarkedComicsWriter writer;
+public class ScrapeComicBookWriterTest {
+  @InjectMocks private ScrapeComicBookWriter writer;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook comicBook;
 
@@ -45,6 +45,6 @@ public class PurgeMarkedComicsWriterTest {
     writer.write(comicBookList);
 
     Mockito.verify(comicStateHandler, Mockito.times(comicBookList.size()))
-        .fireEvent(comicBook, ComicEvent.comicPurged);
+        .fireEvent(comicBook, ComicEvent.metadataUpdated);
   }
 }

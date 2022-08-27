@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class MarkBlockedPagesWriter extends AbstractComicWriter {
+public class MarkBlockedPagesWriter extends AbstractComicBookWriter {
   public MarkBlockedPagesWriter() {
     super(ComicEvent.blockedPagesMarked);
   }

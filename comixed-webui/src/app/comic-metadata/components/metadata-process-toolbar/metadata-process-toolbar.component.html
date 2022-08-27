@@ -1,0 +1,13 @@
+<mat-toolbar class="cx-primary-light-background">
+  <div class="cx-spacer"></div>
+  <button
+    id="start-metadata-batch-process-button"
+    mat-icon-button
+    color="primary"
+    [disabled]="selectedIds.length === 0"
+    [matTooltip]="'metadata-update.tooltip.start-process' | translate"
+    (click)="onStartBatchProcess()"
+  >
+    <mat-icon>start</mat-icon>
+  </button>
+</mat-toolbar>

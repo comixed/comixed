@@ -27,8 +27,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.state.comicpages.PageEvent;
@@ -90,9 +90,10 @@ public class PageService implements InitializingBean, PageStateChangeListener {
    * @param comicId the comic record id
    * @param pageIndex the page index
    * @return the content
-   * @throws ComicException if the comic does not exist
+   * @throws ComicBookException if the comic does not exist
    */
-  public Page getPageInComicByIndex(final long comicId, final int pageIndex) throws ComicException {
+  public Page getPageInComicByIndex(final long comicId, final int pageIndex)
+      throws ComicBookException {
     log.debug(
         "Getting page content for comicBook: comicBook id={} page index={}", comicId, pageIndex);
 

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2019, The ComiXed Project.
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.comicbooks;
+package org.comixedproject.batch.metadata.writers;
 
-import org.comixedproject.model.comicbooks.ComicBook;
+import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.comicbooks.writers.AbstractComicBookWriter;
+import org.comixedproject.state.comicbooks.ComicEvent;
+import org.springframework.stereotype.Component;
 
 /**
- * <code>ComicException</code> is raised if an error occurs while working with instances of {@link
- * ComicBook}.
+ * <code>ScrapeComicBookWriter</code> writes comics after they have had their metadata updated.
  *
  * @author Darryl L. Pierce
  */
-public class ComicException extends Exception {
-  public ComicException(final String message) {
-    super(message);
+@Component
+@Log4j2
+public class ScrapeComicBookWriter extends AbstractComicBookWriter {
+  public ScrapeComicBookWriter() {
+    super(ComicEvent.metadataUpdated);
   }
-
-  public ComicException(final String message, final Exception error) {}
 }

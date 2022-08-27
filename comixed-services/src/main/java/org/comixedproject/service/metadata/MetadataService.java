@@ -38,8 +38,8 @@ import org.comixedproject.model.comicbooks.Credit;
 import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.repositories.metadata.MetadataAuditLogRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -225,7 +225,7 @@ public class MetadataService {
   public ComicBook scrapeComic(
       final Long metadataSourceId,
       final Long comicId,
-      final Integer issueId,
+      final String issueId,
       final boolean skipCache)
       throws MetadataException {
     log.debug("Scraping comic: id={} issueId={} skipCache={}", comicId, issueId, skipCache);
@@ -237,7 +237,7 @@ public class MetadataService {
 
     try {
       result = this.comicBookService.getComic(comicId);
-    } catch (ComicException error) {
+    } catch (ComicBookException error) {
       throw new MetadataException("failed to load comic", error);
     }
 
@@ -311,7 +311,7 @@ public class MetadataService {
     }
     try {
       return this.comicBookService.getComic(comicId);
-    } catch (ComicException error) {
+    } catch (ComicBookException error) {
       throw new MetadataException("failed to load comic", error);
     }
   }

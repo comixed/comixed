@@ -30,14 +30,23 @@ import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
+import org.comixedproject.model.net.metadata.StartMetadataUpdateProcessRequest;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,16 +58,23 @@ public class MetadataControllerTest {
   private static final Integer TEST_VOLUME = 2018;
   private static final String TEST_ISSUE_NUMBER = "15";
   private static final long TEST_COMIC_ID = 213L;
-  private static final Integer TEST_ISSUE_ID = 48132;
+  private static final String TEST_ISSUE_ID = "48132";
   private static final boolean TEST_SKIP_CACHE = true;
 
   @InjectMocks private MetadataController controller;
   @Mock private MetadataService metadataService;
   @Mock private MetadataCacheService metadataCacheService;
+  @Mock private ComicBookService comicBookService;
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
   @Mock private ComicBook comicBook;
   @Mock private List<MetadataAuditLogEntry> auditLogEntryList;
+  @Mock private List<Long> idList;
+  @Mock private JobLauncher jobLauncher;
+  @Mock private Job updateComicBookMetadata;
+  @Mock private JobExecution jobExecution;
+
+  @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
   @Test(expected = MetadataException.class)
   public void testLoadScrapingVolumesAdaptorRaisesException() throws MetadataException {
@@ -159,7 +175,7 @@ public class MetadataControllerTest {
   public void testScrapeComicScrapingAdaptorRaisesException() throws MetadataException {
     Mockito.when(
             metadataService.scrapeComic(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
+                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(MetadataException.class);
 
     try {
@@ -177,7 +193,7 @@ public class MetadataControllerTest {
   public void testScrapeComic() throws MetadataException {
     Mockito.when(
             metadataService.scrapeComic(
-                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyBoolean()))
+                Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicBook);
 
     ComicBook response =
@@ -191,6 +207,40 @@ public class MetadataControllerTest {
 
     Mockito.verify(metadataService, Mockito.times(1))
         .scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, TEST_SKIP_CACHE);
+  }
+
+  @Test(expected = ComicBookException.class)
+  public void testStartBatchMetadataUpdateComicBookServiceException()
+      throws ComicBookException, JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    Mockito.doThrow(ComicBookException.class)
+        .when(comicBookService)
+        .markComicBooksForBatchMetadataUpdate(Mockito.anyList());
+    try {
+      controller.startBatchMetadataUpdate(
+          new StartMetadataUpdateProcessRequest(idList, TEST_SKIP_CACHE));
+    } finally {
+      Mockito.verify(comicBookService, Mockito.times(1))
+          .markComicBooksForBatchMetadataUpdate(idList);
+    }
+  }
+
+  @Test
+  public void testStartBatchMetadataUpdate()
+      throws ComicBookException, JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
+
+    controller.startBatchMetadataUpdate(
+        new StartMetadataUpdateProcessRequest(idList, TEST_SKIP_CACHE));
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).markComicBooksForBatchMetadataUpdate(idList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBookMetadata, jobParameters);
   }
 
   @Test

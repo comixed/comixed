@@ -34,8 +34,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.repositories.metadata.MetadataAuditLogRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicbooks.ImprintService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -58,7 +58,7 @@ public class MetadataServiceTest {
   private static final String TEST_ISSUE_NUMBER = "23.1";
   private static final String TEST_ISSUE_KEY = "IssueKey";
   private static final Long TEST_COMIC_ID = 127L;
-  private static final Integer TEST_ISSUE_ID = 239;
+  private static final String TEST_ISSUE_ID = "239";
   private static final String TEST_PUBLISHER = "Publisher Name";
   private static final String TEST_VOLUME = "2020";
   private static final Date TEST_COVER_DATE = new Date();
@@ -100,7 +100,7 @@ public class MetadataServiceTest {
     Mockito.when(metadataAdaptor.getVolumeKey(Mockito.anyString())).thenReturn(TEST_VOLUME_KEY);
     Mockito.when(metadataAdaptor.getIssueKey(Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_ISSUE_KEY);
-    Mockito.when(metadataAdaptor.getIssueDetailsKey(Mockito.anyInt()))
+    Mockito.when(metadataAdaptor.getIssueDetailsKey(Mockito.anyString()))
         .thenReturn(TEST_ISSUE_DETAILS_KEY);
 
     Mockito.when(issueDetailsMetadata.getPublisher()).thenReturn(TEST_PUBLISHER);
@@ -550,8 +550,8 @@ public class MetadataServiceTest {
   }
 
   @Test(expected = MetadataException.class)
-  public void testScrapeComicNoSuchComic() throws MetadataException, ComicException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+  public void testScrapeComicNoSuchComic() throws MetadataException, ComicBookException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
       metadataService.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, true);
@@ -561,11 +561,11 @@ public class MetadataServiceTest {
   }
 
   @Test
-  public void testScrapeComicSkipCacheNoResult() throws MetadataException, ComicException {
+  public void testScrapeComicSkipCacheNoResult() throws MetadataException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(
-            metadataAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
+            metadataAdaptor.getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(null);
 
     metadataService.scrapeComic(TEST_METADATA_SOURCE_ID, TEST_COMIC_ID, TEST_ISSUE_ID, true);
@@ -583,11 +583,11 @@ public class MetadataServiceTest {
 
   @Test
   public void testScrapeComicSkipCache()
-      throws MetadataException, ComicException, JsonProcessingException {
+      throws MetadataException, ComicBookException, JsonProcessingException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(
-            metadataAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
+            metadataAdaptor.getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueDetailsMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueDetailsMetadata.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -619,13 +619,13 @@ public class MetadataServiceTest {
 
   @Test
   public void testScrapeComicNothingCached()
-      throws ComicException, MetadataException, JsonProcessingException {
+      throws ComicBookException, MetadataException, JsonProcessingException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
     Mockito.when(
-            metadataAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
+            metadataAdaptor.getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueDetailsMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueDetailsMetadata.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -657,13 +657,13 @@ public class MetadataServiceTest {
 
   @Test
   public void testScrapeComicCachingError()
-      throws ComicException, MetadataException, JsonProcessingException {
+      throws ComicBookException, MetadataException, JsonProcessingException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
         .thenReturn(loadedComicBook, savedComicBook);
     Mockito.when(metadataCacheService.getFromCache(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(cachedEntryList);
     Mockito.when(
-            metadataAdaptor.getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class)))
+            metadataAdaptor.getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueDetailsMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueDetailsMetadata.class)))
         .thenThrow(JsonProcessingException.class);
@@ -689,7 +689,7 @@ public class MetadataServiceTest {
 
   @Test
   public void testScrapeComicCachedDate()
-      throws ComicException, JsonProcessingException, MetadataException {
+      throws ComicBookException, JsonProcessingException, MetadataException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
@@ -709,7 +709,7 @@ public class MetadataServiceTest {
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .getFromCache(TEST_CACHE_SOURCE, TEST_ISSUE_DETAILS_KEY);
     Mockito.verify(metadataAdaptor, Mockito.never())
-        .getIssueDetails(Mockito.anyInt(), Mockito.any(MetadataSource.class));
+        .getIssueDetails(Mockito.anyString(), Mockito.any(MetadataSource.class));
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(loadedComicBook, ComicEvent.scraped);
     Mockito.verify(metadataCacheService, Mockito.never())
@@ -720,7 +720,7 @@ public class MetadataServiceTest {
 
   @Test
   public void testScrapeComicNoCoverDate()
-      throws ComicException, JsonProcessingException, MetadataException {
+      throws ComicBookException, JsonProcessingException, MetadataException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))
@@ -742,7 +742,7 @@ public class MetadataServiceTest {
 
   @Test
   public void testScrapeComicNoStoreDate()
-      throws ComicException, JsonProcessingException, MetadataException {
+      throws ComicBookException, JsonProcessingException, MetadataException {
     cachedEntryList.add(TEST_ENCODED_VALUE);
 
     Mockito.when(comicBookService.getComic(Mockito.anyLong()))

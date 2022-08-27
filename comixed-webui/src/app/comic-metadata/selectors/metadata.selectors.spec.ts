@@ -42,6 +42,7 @@ describe('Metadata Selectors', () => {
 
   beforeEach(() => {
     state = {
+      busy: Math.random() > 0.5,
       loadingRecords: Math.random() > 0.5,
       clearingCache: Math.random() > 0.5,
       volumes: VOLUMES,

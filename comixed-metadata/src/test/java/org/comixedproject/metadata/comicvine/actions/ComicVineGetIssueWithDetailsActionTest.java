@@ -44,7 +44,7 @@ import org.springframework.http.MediaType;
 @RunWith(MockitoJUnitRunner.class)
 public class ComicVineGetIssueWithDetailsActionTest {
   private static final String TEST_API_KEY = "this is the api key";
-  private static final Integer TEST_ISSUE_ID = 282586;
+  private static final String TEST_ISSUE_ID = "282586";
 
   private static final String TEST_ISSUE_NUMBER = "4";
   private static final Object TEST_TITLE = "Flashpoint: Chapter Four of Five";

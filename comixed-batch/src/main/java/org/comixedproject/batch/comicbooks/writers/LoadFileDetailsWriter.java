@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class LoadFileDetailsWriter extends AbstractComicWriter {
+public class LoadFileDetailsWriter extends AbstractComicBookWriter {
   public LoadFileDetailsWriter() {
     super(ComicEvent.fileDetailsLoadedAction);
   }

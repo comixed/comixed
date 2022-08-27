@@ -36,11 +36,19 @@ import {
   METADATA_AUDIT_LOG_FEATURE_KEY,
   reducer as metadataAuditLogReducer
 } from '@app/comic-metadata/reducers/metadata-audit-log.reducer';
+import { MetadataProcessPageComponent } from './pages/metadata-process-page/metadata-process-page.component';
+import { ComicMetadataRouting } from '@app/comic-metadata/comic-metadata.routing';
+import { MetadataProcessToolbarComponent } from './components/metadata-process-toolbar/metadata-process-toolbar.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [],
+  declarations: [MetadataProcessPageComponent, MetadataProcessToolbarComponent],
   imports: [
     CommonModule,
+    ComicMetadataRouting,
     TranslateModule.forRoot(),
     StoreModule.forFeature(
       METADATA_SOURCE_LIST_FEATURE_KEY,
@@ -55,7 +63,11 @@ import {
       MetadataSourceListEffects,
       MetadataSourceEffects,
       MetadataAuditLogEffects
-    ])
+    ]),
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   exports: [CommonModule]
 })

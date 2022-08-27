@@ -135,5 +135,18 @@
       "publisher-header": "Éditeur",
       "start-year-header": "Année de début"
     }
+  },
+  "metadata-update": {
+    "page-title": "Metadata Processing: ({count, plural, =1{One Comic} other{# Comics}} Selected)",
+    "start-process": {
+      "confirm-message": "Are you sure you want to start a batch process to update the metadata in {count, plural, =1{one comic} other{# comics}}?",
+      "confirm-title": "Start Metadata Update Process",
+      "effect-failure": "Failed to start metadata update process.",
+      "effect-success": "Metadata update process started."
+    },
+    "tooltip": {
+      "start-process": "Start batch updating the selected comics."
+    },
+    "tab-title": "Update Metadata Process"
   }
 }

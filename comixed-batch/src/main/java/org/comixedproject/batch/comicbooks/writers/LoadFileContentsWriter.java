@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * @author Darryl L. Pierce
  */
 @Component
-public class LoadFileContentsWriter extends AbstractComicWriter {
+public class LoadFileContentsWriter extends AbstractComicBookWriter {
   public LoadFileContentsWriter() {
     super(ComicEvent.fileContentsLoaded);
   }

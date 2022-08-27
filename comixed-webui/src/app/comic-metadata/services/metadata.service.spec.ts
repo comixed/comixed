@@ -31,7 +31,8 @@ import {
   LOAD_METADATA_AUDIT_LOG_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
-  SCRAPE_COMIC_URL
+  SCRAPE_COMIC_URL,
+  START_METADATA_UPDATE_PROCESS_URL
 } from '@app/library/library.constants';
 import { LoadIssueMetadataRequest } from '@app/comic-metadata/models/net/load-issue-metadata-request';
 import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
@@ -44,6 +45,7 @@ import {
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { HttpResponse } from '@angular/common/http';
+import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
 
 describe('MetadataService', () => {
   const SERIES = 'The Series';
@@ -56,6 +58,7 @@ describe('MetadataService', () => {
   const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const ENTRIES = [METADATA_AUDIT_LOG_ENTRY_1];
+  const IDS = [7, 17, 65, 1, 29, 71];
 
   let service: MetadataService;
   let httpMock: HttpTestingController;
@@ -163,6 +166,22 @@ describe('MetadataService', () => {
 
     const req = httpMock.expectOne(interpolate(CLEAR_METADATA_CACHE_URL));
     expect(req.request.method).toEqual('DELETE');
+    req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  it('can start the batch metadata update process', () => {
+    service
+      .startMetadataUpdateProcess({ ids: IDS, skipCache: SKIP_CACHE })
+      .subscribe(response => expect(response.status).toEqual(200));
+
+    const req = httpMock.expectOne(
+      interpolate(START_METADATA_UPDATE_PROCESS_URL)
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      ids: IDS,
+      skipCache: SKIP_CACHE
+    } as StartMetadataUpdateProcessRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
 });

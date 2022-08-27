@@ -30,8 +30,8 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.comicpages.PageRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.comixedproject.state.comicpages.PageEvent;
@@ -126,9 +126,9 @@ public class PageServiceTest {
     Mockito.verify(pageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }
 
-  @Test(expected = ComicException.class)
-  public void testGetPageInComicByIndexForMissingComic() throws ComicException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+  @Test(expected = ComicBookException.class)
+  public void testGetPageInComicByIndexForMissingComic() throws ComicBookException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
       service.getPageInComicByIndex(TEST_COMIC_ID, TEST_PAGE_INDEX);
@@ -138,7 +138,7 @@ public class PageServiceTest {
   }
 
   @Test
-  public void testGetPageInComicByIndexOutOfBounds() throws ComicException {
+  public void testGetPageInComicByIndexOutOfBounds() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.getPageCount()).thenReturn(TEST_PAGE_INDEX - 1);
 
@@ -151,7 +151,7 @@ public class PageServiceTest {
   }
 
   @Test
-  public void testGetImageInComicByIndex() throws ComicException {
+  public void testGetImageInComicByIndex() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.getPageCount()).thenReturn(TEST_PAGE_INDEX + 1);
     Mockito.when(comicBook.getPage(Mockito.anyInt())).thenReturn(page);

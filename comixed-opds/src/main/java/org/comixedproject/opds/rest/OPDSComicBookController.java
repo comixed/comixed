@@ -30,8 +30,8 @@ import org.comixedproject.adaptors.encoders.WebResponseEncoder;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.opds.OPDSException;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LastReadException;
 import org.comixedproject.service.library.LastReadService;
 import org.imgscalr.Scalr;
@@ -85,7 +85,7 @@ public class OPDSComicBookController {
           new InputStreamResource(new FileInputStream(comicBook.getFile())),
           comicBook.getBaseFilename(),
           MediaType.parseMediaType(comicBook.getArchiveType().getMimeType()));
-    } catch (ComicException | FileNotFoundException | LastReadException error) {
+    } catch (ComicBookException | FileNotFoundException | LastReadException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);
     }
   }
@@ -141,7 +141,7 @@ public class OPDSComicBookController {
       String type = this.fileTypeAdaptor.getMimeTypeFor(baos);
       return this.webResponseEncoder.encode(
           content.length, content, filename, MediaType.valueOf(type));
-    } catch (ComicException | IOException | AdaptorException error) {
+    } catch (ComicBookException | IOException | AdaptorException error) {
       throw new OPDSException("Failed to get comic page: id=" + id + " index=" + index, error);
     }
   }

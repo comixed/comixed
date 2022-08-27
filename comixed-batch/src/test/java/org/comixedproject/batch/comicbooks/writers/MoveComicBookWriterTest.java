@@ -32,7 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MoveComicBookWriterTest {
-  @InjectMocks private MoveComicWriter writer;
+  @InjectMocks private MoveComicBookWriter writer;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook comicBook;
 
