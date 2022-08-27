@@ -39,8 +39,8 @@ import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.net.library.ConsolidateLibraryRequest;
 import org.comixedproject.service.admin.ConfigurationService;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -292,12 +292,12 @@ public class LibraryController {
    * Updates a set of comics with the provided details.
    *
    * @param request the request body
-   * @throws ComicException if an error occurs
+   * @throws ComicBookException if an error occurs
    */
   @PostMapping(value = "/api/library/comics/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   public void editMultipleComics(@RequestBody() final EditMultipleComicsRequest request)
-      throws ComicException {
+      throws ComicBookException {
     final List<Long> ids = request.getIds();
     log.info("Updating details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
     this.comicBookService.updateMultipleComics(

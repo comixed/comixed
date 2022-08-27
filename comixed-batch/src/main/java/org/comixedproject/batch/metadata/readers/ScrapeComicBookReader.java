@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.batch.metadata.readers;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicbooks.ComicEvent;
+import org.comixedproject.batch.comicbooks.readers.AbstractComicReader;
+import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>MoveComicWriter</code> publishes comics that have been consolidated.
+ * <code>ScrapeComicBookReader</code> loads comics to have their metadata scraped.
  *
- * @author Darryl L. pierce
+ * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class MoveComicWriter extends AbstractComicWriter {
-  public MoveComicWriter() {
-    super(ComicEvent.comicConsolidated);
+public class ScrapeComicBookReader extends AbstractComicReader {
+  @Autowired private ComicBookService comicBookService;
+
+  @Override
+  protected List<ComicBook> doLoadComics() {
+
+    log.trace("Loading comics to have their metadata batch updated");
+    return this.comicBookService.findComicsForBatchMetadataUpdate(this.getBatchChunkSize());
   }
 }

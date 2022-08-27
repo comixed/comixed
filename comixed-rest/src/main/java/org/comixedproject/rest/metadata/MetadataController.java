@@ -20,7 +20,9 @@ package org.comixedproject.rest.metadata;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.metadata.MetadataUpdateConfiguration;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
@@ -29,10 +31,21 @@ import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
+import org.comixedproject.model.net.metadata.StartMetadataUpdateProcessRequest;
+import org.comixedproject.service.comicbooks.ComicBookException;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.comixedproject.views.View;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +60,15 @@ import org.springframework.web.bind.annotation.*;
 public class MetadataController {
   @Autowired private MetadataService metadataService;
   @Autowired private MetadataCacheService metadataCacheService;
+  @Autowired private ComicBookService comicBookService;
+
+  @Autowired
+  @Qualifier("batchJobLauncher")
+  private JobLauncher jobLauncher;
+
+  @Autowired
+  @Qualifier("updateComicBookMetadata")
+  private Job updateComicBookMetadata;
 
   /**
    * Retrieves a single {@link IssueMetadata} for the specified issue of the given volume and issue
@@ -127,9 +149,40 @@ public class MetadataController {
       @RequestBody() final ScrapeComicRequest request)
       throws MetadataException {
     boolean skipCache = request.getSkipCache();
-    Integer issueId = request.getIssueId();
+    String issueId = request.getIssueId();
     log.info("Scraping comic");
     return this.metadataService.scrapeComic(sourceId, comicId, issueId, skipCache);
+  }
+
+  /**
+   * Initiates a metadata update batch process of the provided comic book IDs.
+   *
+   * @param request the request body
+   * @throws ComicBookException if an id is invalid
+   */
+  @PostMapping(value = "/api/metadata/batch", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  public void startBatchMetadataUpdate(
+      @RequestBody() final StartMetadataUpdateProcessRequest request)
+      throws ComicBookException, JobInstanceAlreadyCompleteException,
+          JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    log.info("Starting batch metadata update process");
+    @NonNull final List<Long> ids = request.getIds();
+    @NonNull final Boolean skipCache = request.getSkipCache();
+    log.trace(
+        "Marking {} comic book{} for batch metadadata update",
+        ids.size(),
+        ids.size() == 1 ? "" : "s");
+    this.comicBookService.markComicBooksForBatchMetadataUpdate(ids);
+    log.trace("Launching add comics process");
+    this.jobLauncher.run(
+        updateComicBookMetadata,
+        new JobParametersBuilder()
+            .addLong(
+                MetadataUpdateConfiguration.PARAM_METADATA_UPDATE_STARTED,
+                System.currentTimeMillis())
+            .addString(MetadataUpdateConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
+            .toJobParameters());
   }
 
   /**

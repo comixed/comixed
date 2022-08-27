@@ -234,6 +234,15 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findComicsWithMetadataToUpdate(Pageable pageable);
 
   /**
+   * Returns comics that are marked to have their metadata batch processed.
+   *
+   * @param pageable the page request
+   * @return the list of comics
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.batchMetadataUpdate = true")
+  List<ComicBook> findComicsForBatchMetadataUpdate(Pageable pageable);
+
+  /**
    * Returns comics that are in the deleted state.
    *
    * @param pageable the page request

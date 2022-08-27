@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Log4j2
-public class CreateMetadataSourceWriter extends AbstractComicWriter {
+public class CreateMetadataSourceWriter extends AbstractComicBookWriter {
   public CreateMetadataSourceWriter() {
     super(ComicEvent.metadataSourceCreated);
   }

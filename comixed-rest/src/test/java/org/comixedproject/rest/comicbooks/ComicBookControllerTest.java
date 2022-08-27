@@ -31,8 +31,8 @@ import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.junit.Test;
@@ -70,7 +70,7 @@ public class ComicBookControllerTest {
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
 
   @Test
-  public void testGetComicForNonexistentComic() throws ComicException {
+  public void testGetComicForNonexistentComic() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(null);
 
     ComicBook result = controller.getComic(TEST_COMIC_ID);
@@ -81,7 +81,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testGetComic() throws ComicException {
+  public void testGetComic() throws ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
 
     ComicBook result = controller.getComic(TEST_COMIC_ID);
@@ -93,7 +93,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testUpdateComic() throws ComicException {
+  public void testUpdateComic() throws ComicBookException {
     Mockito.when(comicBookService.updateComic(Mockito.anyLong(), Mockito.any(ComicBook.class)))
         .thenReturn(comicBook);
 
@@ -106,7 +106,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDeleteComic() throws ComicException {
+  public void testDeleteComic() throws ComicBookException {
     Mockito.when(comicBookService.deleteComic(Mockito.anyLong())).thenReturn(comicBook);
 
     final ComicBook result = controller.deleteComic(TEST_COMIC_ID);
@@ -117,9 +117,10 @@ public class ComicBookControllerTest {
     Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(TEST_COMIC_ID);
   }
 
-  @Test(expected = ComicException.class)
-  public void testDeleteComicFails() throws ComicException {
-    Mockito.when(comicBookService.deleteComic(Mockito.anyLong())).thenThrow(ComicException.class);
+  @Test(expected = ComicBookException.class)
+  public void testDeleteComicFails() throws ComicBookException {
+    Mockito.when(comicBookService.deleteComic(Mockito.anyLong()))
+        .thenThrow(ComicBookException.class);
 
     try {
       controller.deleteComic(TEST_COMIC_ID);
@@ -147,7 +148,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComicForNonexistentComic() throws IOException, ComicException {
+  public void testDownloadComicForNonexistentComic() throws IOException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(null);
 
     assertNull(controller.downloadComic(TEST_COMIC_ID));
@@ -156,7 +157,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComicFileDoesNotExist() throws IOException, ComicException {
+  public void testDownloadComicFileDoesNotExist() throws IOException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class))).thenReturn(null);
 
@@ -167,7 +168,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComic() throws IOException, ComicException {
+  public void testDownloadComic() throws IOException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_COMIC_CONTENT);
@@ -188,7 +189,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComicNonexistent() throws IOException, ComicException {
+  public void testDownloadComicNonexistent() throws IOException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(null);
 
     ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
@@ -199,7 +200,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDownloadComicFileNotFound() throws IOException, ComicException {
+  public void testDownloadComicFileNotFound() throws IOException, ComicBookException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class))).thenReturn(null);
 
@@ -211,10 +212,10 @@ public class ComicBookControllerTest {
     Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(comicBook);
   }
 
-  @Test(expected = ComicException.class)
+  @Test(expected = ComicBookException.class)
   public void testGetCoverImageForInvalidComic()
-      throws ComicException, IOException, AdaptorException {
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+      throws ComicBookException, IOException, AdaptorException {
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     try {
       controller.getCoverImage(TEST_COMIC_ID);
@@ -223,9 +224,9 @@ public class ComicBookControllerTest {
     }
   }
 
-  @Test(expected = ComicException.class)
+  @Test(expected = ComicBookException.class)
   public void testGetCoverImageForMissingComic()
-      throws ComicException, IOException, AdaptorException {
+      throws ComicBookException, IOException, AdaptorException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.isMissing()).thenReturn(true);
 
@@ -239,7 +240,7 @@ public class ComicBookControllerTest {
 
   @Test
   public void testGetCachedCoverImageForUnprocessedComic()
-      throws ComicException, IOException, AdaptorException {
+      throws ComicBookException, IOException, AdaptorException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getPageCount()).thenReturn(0);
@@ -265,7 +266,7 @@ public class ComicBookControllerTest {
 
   @Test
   public void testGetCoverImageForProcessedComic()
-      throws ComicException, ArchiveAdaptorException, IOException, AdaptorException {
+      throws ComicBookException, ArchiveAdaptorException, IOException, AdaptorException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getPageCount()).thenReturn(5);
@@ -301,7 +302,7 @@ public class ComicBookControllerTest {
 
   @Test
   public void testGetCachedCoverImageForProcessedComic()
-      throws ComicException, IOException, AdaptorException {
+      throws ComicBookException, IOException, AdaptorException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getPageCount()).thenReturn(5);
@@ -328,7 +329,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testDeleteMetadata() throws ComicException {
+  public void testDeleteMetadata() throws ComicBookException {
     Mockito.when(comicBookService.deleteMetadata(Mockito.anyLong())).thenReturn(comicBook);
 
     final ComicBook result = controller.deleteMetadata(TEST_COMIC_ID);
@@ -339,9 +340,9 @@ public class ComicBookControllerTest {
     Mockito.verify(comicBookService, Mockito.times(1)).deleteMetadata(TEST_COMIC_ID);
   }
 
-  @Test(expected = ComicException.class)
-  public void testSavePageOrderServiceException() throws ComicException {
-    Mockito.doThrow(ComicException.class)
+  @Test(expected = ComicBookException.class)
+  public void testSavePageOrderServiceException() throws ComicBookException {
+    Mockito.doThrow(ComicBookException.class)
         .when(comicBookService)
         .savePageOrder(Mockito.anyLong(), Mockito.anyList());
 
@@ -354,7 +355,7 @@ public class ComicBookControllerTest {
   }
 
   @Test
-  public void testSavePageOrder() throws ComicException {
+  public void testSavePageOrder() throws ComicBookException {
     controller.savePageOrder(TEST_COMIC_ID, new SavePageOrderRequest(pageOrderEntrylist));
 
     Mockito.verify(comicBookService, Mockito.times(1))

@@ -41,8 +41,8 @@ import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.library.SmartReadingListRepository;
 import org.comixedproject.repositories.lists.ReadingListRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -222,7 +222,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
             headers.put(HEADER_COMIC, comicBook);
             this.readingListStateHandler.fireEvent(
                 readingList, ReadingListEvent.comicAdded, headers);
-          } catch (ComicException error) {
+          } catch (ComicBookException error) {
             log.error("Failed to add comic to reading list", error);
           }
         });
@@ -261,7 +261,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
             headers.put(HEADER_COMIC, comicBook);
             this.readingListStateHandler.fireEvent(
                 readingList, ReadingListEvent.comicRemoved, headers);
-          } catch (ComicException error) {
+          } catch (ComicBookException error) {
             log.error("Failed to remove comic from reading list", error);
           }
         });

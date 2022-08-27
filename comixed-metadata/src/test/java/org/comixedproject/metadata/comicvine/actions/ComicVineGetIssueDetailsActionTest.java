@@ -42,7 +42,7 @@ import org.springframework.beans.factory.ObjectFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class ComicVineGetIssueDetailsActionTest {
   private static final String TEST_API_KEY = "This.Is.A.Test.Key";
-  private static final Integer TEST_ISSUE_ID = 337;
+  private static final String TEST_ISSUE_ID = "337";
   private static final String TEST_VOLUME_NAME = "Volume Name";
   private static final String TEST_PUBLISHER_NAME = "Publisher Name";
   private static final String TEST_VOLUME_DETAILS_URL = "http://comicvine.gamespot.com/volume.url";

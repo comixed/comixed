@@ -28,8 +28,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
@@ -71,7 +71,7 @@ public class LibraryService {
             final ComicBook comicBook = this.comicBookService.getComic(id);
             log.trace("Firing action to update metadata: id={}", id);
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateMetadata);
-          } catch (ComicException error) {
+          } catch (ComicBookException error) {
             log.error("Failed to update comic", error);
           }
         });
@@ -122,7 +122,7 @@ public class LibraryService {
             final ComicBook comicBook = this.comicBookService.getComic(id);
             log.trace("Firing action to recreate comicBook: id={}", id);
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.recreateComicFile);
-          } catch (ComicException error) {
+          } catch (ComicBookException error) {
             log.error("Failed to update comic", error);
           }
         });
@@ -140,7 +140,7 @@ public class LibraryService {
             final ComicBook comicBook = this.comicBookService.getComic(id);
             log.trace("Firing action: purge comicBook id={}", id);
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.prepareToPurge);
-          } catch (ComicException error) {
+          } catch (ComicBookException error) {
             log.error("Failed to prepare comic for purge", error);
           }
         });

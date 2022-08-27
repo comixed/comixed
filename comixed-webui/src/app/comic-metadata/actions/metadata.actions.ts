@@ -108,3 +108,16 @@ export const metadataCacheCleared = createAction(
 export const clearMetadataCacheFailed = createAction(
   '[Metadata] Failed to clear the metadata cache'
 );
+
+export const startMetadataUpdateProcess = createAction(
+  '[Metadata] Start update process',
+  props<{ ids: number[]; skipCache: boolean }>()
+);
+
+export const metadataUpdateProcessStarted = createAction(
+  '[Metadata] Update process started'
+);
+
+export const startMetadataUpdateProcessFailed = createAction(
+  '[Metadata] Failed to start update process'
+);

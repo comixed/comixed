@@ -67,7 +67,7 @@ public interface MetadataAdaptor {
    * @param issueId the issue number
    * @return the key value
    */
-  String getIssueDetailsKey(Integer issueId);
+  String getIssueDetailsKey(String issueId);
 
   /**
    * Returns a single issue.
@@ -89,7 +89,7 @@ public interface MetadataAdaptor {
    * @return the issue details
    * @throws MetadataException if an error occurs
    */
-  IssueDetailsMetadata getIssueDetails(Integer issueId, MetadataSource metadataSource)
+  IssueDetailsMetadata getIssueDetails(String issueId, MetadataSource metadataSource)
       throws MetadataException;
 
   /**

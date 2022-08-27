@@ -27,12 +27,15 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
+  metadataUpdateProcessStarted,
   resetMetadataState,
   scrapeComic,
   scrapeComicFailed,
   setAutoSelectExactMatch,
   setChosenMetadataSource,
   setConfirmBeforeScraping,
+  startMetadataUpdateProcess,
+  startMetadataUpdateProcessFailed,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
@@ -42,6 +45,7 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 export const METADATA_FEATURE_KEY = 'metadata_state';
 
 export interface MetadataState {
+  busy: boolean;
   loadingRecords: boolean;
   clearingCache: boolean;
   volumes: VolumeMetadata[];
@@ -52,6 +56,7 @@ export interface MetadataState {
 }
 
 export const initialState: MetadataState = {
+  busy: false,
   loadingRecords: false,
   clearingCache: false,
   volumes: [],
@@ -109,5 +114,11 @@ export const reducer = createReducer(
   })),
   on(clearMetadataCache, state => ({ ...state, clearingCache: true })),
   on(metadataCacheCleared, state => ({ ...state, clearingCache: false })),
-  on(clearMetadataCacheFailed, state => ({ ...state, clearingCache: false }))
+  on(clearMetadataCacheFailed, state => ({ ...state, clearingCache: false })),
+  on(startMetadataUpdateProcess, state => ({ ...state, busy: true })),
+  on(metadataUpdateProcessStarted, state => ({ ...state, busy: false })),
+  on(startMetadataUpdateProcessFailed, state => ({
+    ...state,
+    busy: false
+  }))
 );

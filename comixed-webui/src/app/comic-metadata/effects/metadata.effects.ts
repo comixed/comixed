@@ -28,8 +28,11 @@ import {
   loadVolumeMetadata,
   loadVolumeMetadataFailed,
   metadataCacheCleared,
+  metadataUpdateProcessStarted,
   scrapeComic,
   scrapeComicFailed,
+  startMetadataUpdateProcess,
+  startMetadataUpdateProcessFailed,
   volumeMetadataLoaded
 } from '@app/comic-metadata/actions/metadata.actions';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -42,6 +45,7 @@ import { of } from 'rxjs';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
+import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 @Injectable()
 export class MetadataEffects {
@@ -165,6 +169,52 @@ export class MetadataEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(scrapeComicFailed());
+      })
+    );
+  });
+
+  startMetadataUpdateProcess$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(startMetadataUpdateProcess),
+      tap(action =>
+        this.logger.trace('Starting metadata update process:', action)
+      ),
+      switchMap(action =>
+        this.metadataService
+          .startMetadataUpdateProcess({
+            ids: action.ids,
+            skipCache: action.skipCache
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            tap(() =>
+              this.alertService.info(
+                this.translateService.instant(
+                  'metadata-update.start-process.effect-success'
+                )
+              )
+            ),
+            mergeMap(() => [
+              metadataUpdateProcessStarted(),
+              clearSelectedComicBooks()
+            ]),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'metadata-update.start-process.effect-failure'
+                )
+              );
+              return of(startMetadataUpdateProcessFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(startMetadataUpdateProcessFailed());
       })
     );
   });

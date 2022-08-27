@@ -96,7 +96,7 @@ public class ComicVineMetadataAdaptor extends AbstractMetadataAdaptor {
 
   @Override
   public IssueDetailsMetadata getIssueDetails(
-      final Integer issueId, final MetadataSource metadataSource) throws MetadataException {
+      final String issueId, final MetadataSource metadataSource) throws MetadataException {
     log.debug("Fetching issue details: issueId={}", issueId);
 
     final ComicVineGetIssueDetailsAction action =

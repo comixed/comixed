@@ -46,7 +46,7 @@ public class ComicVineGetIssueDetailsAction
     extends AbstractComicVineScrapingAction<IssueDetailsMetadata> {
 
   @Getter @Setter protected String apiKey;
-  @Getter @Setter protected Integer issueId;
+  @Getter @Setter protected String issueId;
 
   @Autowired
   private ObjectFactory<ComicVineGetIssueWithDetailsAction> issueDetailsActionObjectFactory;

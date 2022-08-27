@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2019, The ComiXed Project.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.comicbooks.writers;
+package org.comixedproject.service.comicbooks;
 
-import lombok.extern.log4j.Log4j2;
-import org.comixedproject.state.comicbooks.ComicEvent;
-import org.springframework.stereotype.Component;
+import org.comixedproject.model.comicbooks.ComicBook;
 
 /**
- * <code>PurgeMarkedComicsWriter</code> fires an event after a comic has been purged.
+ * <code>ComicBookException</code> is raised if an error occurs while working with instances of
+ * {@link ComicBook}.
  *
  * @author Darryl L. Pierce
  */
-@Component
-@Log4j2
-public class PurgeMarkedComicsWriter extends AbstractComicWriter {
-  public PurgeMarkedComicsWriter() {
-    super(ComicEvent.comicPurged);
+public class ComicBookException extends Exception {
+  public ComicBookException(final String message) {
+    super(message);
   }
+
+  public ComicBookException(final String message, final Exception error) {}
 }

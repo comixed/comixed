@@ -41,8 +41,8 @@ import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.model.net.DownloadDocument;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.lists.ReadingListRepository;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.user.ComiXedUserException;
 import org.comixedproject.service.user.UserService;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -303,12 +303,12 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testAddComicsToListComicNotFound() throws ComicException, ReadingListException {
+  public void testAddComicsToListComicNotFound() throws ComicBookException, ReadingListException {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
         .thenReturn(readingList, loadedReadingList);
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     final ReadingList result =
         service.addComicsToList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
@@ -321,7 +321,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testAddComicsToList() throws ComicException, ReadingListException {
+  public void testAddComicsToList() throws ComicBookException, ReadingListException {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
@@ -369,12 +369,13 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testRemoveComicsFromListComicNotFound() throws ComicException, ReadingListException {
+  public void testRemoveComicsFromListComicNotFound()
+      throws ComicBookException, ReadingListException {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
         .thenReturn(readingList, loadedReadingList);
-    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicException.class);
+    Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenThrow(ComicBookException.class);
 
     final ReadingList result =
         service.removeComicsFromList(TEST_OWNER_EMAIL, TEST_READING_LIST_ID, idList);
@@ -389,7 +390,7 @@ public class ReadingListServiceTest {
   }
 
   @Test
-  public void testRemoveComicsFromList() throws ComicException, ReadingListException {
+  public void testRemoveComicsFromList() throws ComicBookException, ReadingListException {
     idList.add(TEST_COMIC_ID);
 
     Mockito.when(readingListRepository.getById(Mockito.anyLong()))
@@ -564,7 +565,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void testDecodeAndCreateReadingListComicNotFound()
-      throws ComiXedUserException, ComicException, ReadingListException, IOException {
+      throws ComiXedUserException, ComicBookException, ReadingListException, IOException {
     final List<String> decodingRow = new ArrayList<>();
     decodingRow.add(TEST_POSITION);
     decodingRow.add(TEST_PUBLISHER);
@@ -606,7 +607,7 @@ public class ReadingListServiceTest {
 
   @Test
   public void testDecodeAndCreateReadingList()
-      throws ComiXedUserException, ComicException, ReadingListException, IOException {
+      throws ComiXedUserException, ComicBookException, ReadingListException, IOException {
     final List<String> decodingRow = new ArrayList<>();
     decodingRow.add(TEST_POSITION);
     decodingRow.add(TEST_PUBLISHER);

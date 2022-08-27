@@ -27,13 +27,15 @@ import {
   LOAD_METADATA_AUDIT_LOG_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
-  SCRAPE_COMIC_URL
+  SCRAPE_COMIC_URL,
+  START_METADATA_UPDATE_PROCESS_URL
 } from '@app/library/library.constants';
 import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-volume-metadata-request';
 import { LoadIssueMetadataRequest } from '@app/comic-metadata/models/net/load-issue-metadata-request';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
 
 /**
  * Interacts with the REST APIs during scraping.
@@ -122,6 +124,17 @@ export class MetadataService {
         skipCache: args.skipCache
       } as ScrapeComicRequest
     );
+  }
+
+  startMetadataUpdateProcess(args: {
+    ids: number[];
+    skipCache: boolean;
+  }): Observable<any> {
+    this.logger.trace('Starting metadata update process');
+    return this.http.post(interpolate(START_METADATA_UPDATE_PROCESS_URL), {
+      ids: args.ids,
+      skipCache: args.skipCache
+    } as StartMetadataUpdateProcessRequest);
   }
 
   /**

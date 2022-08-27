@@ -69,9 +69,9 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param id the comic id
    * @return the comic
-   * @throws ComicException if the comic does not exist
+   * @throws ComicBookException if the comic does not exist
    */
-  public ComicBook getComic(final long id) throws ComicException {
+  public ComicBook getComic(final long id) throws ComicBookException {
     log.debug("Getting comic: id={}", id);
 
     final var result = this.doGetComic(id);
@@ -105,14 +105,15 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return result;
   }
 
-  private ComicBook doGetComic(final long id, final boolean throwIfMissing) throws ComicException {
-    final ComicBook result = this.comicBookRepository.getById(id);
-    if (result == null && throwIfMissing) throw new ComicException("No such comic: id=" + id);
-    return result;
+  private ComicBook doGetComic(final long id) throws ComicBookException {
+    return this.doGetComic(id, true);
   }
 
-  private ComicBook doGetComic(final long id) throws ComicException {
-    return this.doGetComic(id, true);
+  private ComicBook doGetComic(final long id, final boolean throwIfMissing)
+      throws ComicBookException {
+    final ComicBook result = this.comicBookRepository.getById(id);
+    if (result == null && throwIfMissing) throw new ComicBookException("No such comic: id=" + id);
+    return result;
   }
 
   /**
@@ -120,10 +121,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param id the comic id
    * @return the updated comic
-   * @throws ComicException if the comic id is invalid
+   * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  public ComicBook deleteComic(final long id) throws ComicException {
+  public ComicBook deleteComic(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
     final var comic = this.comicBookRepository.getByIdWithReadingLists(id);
     this.comicStateHandler.fireEvent(comic, ComicEvent.deleteComic);
@@ -136,10 +137,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param id the comic id
    * @param update the updated comic data
    * @return the updated comic
-   * @throws ComicException if the id is invalid
+   * @throws ComicBookException if the id is invalid
    */
   @Transactional
-  public ComicBook updateComic(final long id, final ComicBook update) throws ComicException {
+  public ComicBook updateComic(final long id, final ComicBook update) throws ComicBookException {
     log.debug("Updating comic: id={}", id);
     final var comic = this.doGetComic(id);
 
@@ -202,10 +203,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param id the comic id
    * @return the updated comic
-   * @throws ComicException if the comic id is invalid
+   * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  public ComicBook undeleteComic(final long id) throws ComicException {
+  public ComicBook undeleteComic(final long id) throws ComicBookException {
     log.debug("Restoring comic: id={}", id);
     final var comic = this.doGetComic(id);
     this.comicStateHandler.fireEvent(comic, ComicEvent.undeleteComic);
@@ -294,10 +295,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param comicId the comic id
    * @return the updated comic
-   * @throws ComicException if the comic id is invalid
+   * @throws ComicBookException if the comic id is invalid
    */
   @Transactional
-  public ComicBook deleteMetadata(final long comicId) throws ComicException {
+  public ComicBook deleteMetadata(final long comicId) throws ComicBookException {
     log.debug("Loading comic: id={}", comicId);
     final var comic = this.doGetComic(comicId);
     log.trace("Clearing comic metadata");
@@ -440,21 +441,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
             final ComicBook comicBook = this.doGetComic(id);
             log.trace("Firing event: rescan comicBook");
             this.comicStateHandler.fireEvent(comicBook, ComicEvent.rescanComic);
-          } catch (ComicException error) {
+          } catch (ComicBookException error) {
             log.error("Error preparing comic for rescan", error);
           }
         });
-  }
-
-  /**
-   * Returns the number of records with the specified state.
-   *
-   * @param state the target state
-   * @return the number of records
-   */
-  public long getCountForState(final ComicState state) {
-    log.trace("Getting record count for state: {}", state);
-    return this.comicBookRepository.findForStateCount(state);
   }
 
   /**
@@ -466,6 +456,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<ComicBook> findComicsWithMetadataToUpdate(final int count) {
     log.trace("Getting comics that are ready to have their metadata updated");
     return this.comicBookRepository.findComicsWithMetadataToUpdate(PageRequest.of(0, count));
+  }
+
+  public List<ComicBook> findComicsForBatchMetadataUpdate(final int count) {
+    log.trace("Getting comics that are flagged for batch metadata update");
+    return this.comicBookRepository.findComicsForBatchMetadataUpdate(PageRequest.of(0, count));
   }
 
   /**
@@ -598,6 +593,21 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.filterReadComics(email, unread, this.comicBookRepository.findAllBySeries(name));
   }
 
+  private List<ComicBook> filterReadComics(
+      final String email, final boolean unread, List<ComicBook> result) {
+    if (unread) {
+      log.trace("Filtering out read comics: name={}", email);
+      result =
+          result.stream()
+              .filter(
+                  comicBook ->
+                      comicBook.getLastReads().stream()
+                          .noneMatch(lastRead -> lastRead.getUser().getEmail().equals(email)))
+              .collect(Collectors.toList());
+    }
+    return result;
+  }
+
   /**
    * Returns the list of all character names.
    *
@@ -720,10 +730,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    *
    * @param comicId the comic id
    * @param entryList the page order entries
-   * @throws ComicException if the id is invalid, or there is a problem with the entry list
+   * @throws ComicBookException if the id is invalid, or there is a problem with the entry list
    */
   public void savePageOrder(final long comicId, final List<PageOrderEntry> entryList)
-      throws ComicException {
+      throws ComicBookException {
     log.trace("Loading comicBook");
     final ComicBook comicBook = this.doGetComic(comicId);
     log.trace("Sorting new page list");
@@ -732,7 +742,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     for (int index = 0; index < entryList.size(); index++) {
       final PageOrderEntry entry = entryList.get(index);
       if (entry.getPosition() != index)
-        throw new ComicException(
+        throw new ComicBookException(
             "Invalid page order list: " + index + " != " + entry.getPosition());
     }
 
@@ -744,7 +754,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
               .filter(pageOrderEntry -> pageOrderEntry.getFilename().equals(page.getFilename()))
               .findFirst();
       if (position.isEmpty())
-        throw new ComicException("No such order entry: filename=" + page.getFilename());
+        throw new ComicBookException("No such order entry: filename=" + page.getFilename());
       log.trace("Applying position");
       page.setPageNumber(position.get().getPosition());
     }
@@ -761,7 +771,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param series the series
    * @param issueNumber the issue number
    * @param imprint the imprint
-   * @throws ComicException if comic id is invalid
+   * @throws ComicBookException if comic id is invalid
    */
   public void updateMultipleComics(
       final List<Long> comicIds,
@@ -770,7 +780,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
       final String volume,
       final String issueNumber,
       final String imprint)
-      throws ComicException {
+      throws ComicBookException {
     for (long id : comicIds) {
       log.trace(
           "Updating multiple comics: publisher={} series={} volume={} issue number={} imprint={}",
@@ -847,21 +857,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
         this.comicBookRepository.findWithCoverDateRange(startDate, endDate).stream()
             .collect(Collectors.toList());
     result = filterReadComics(email, unread, result);
-    return result;
-  }
-
-  private List<ComicBook> filterReadComics(
-      final String email, final boolean unread, List<ComicBook> result) {
-    if (unread) {
-      log.trace("Filtering out read comics: name={}", email);
-      result =
-          result.stream()
-              .filter(
-                  comicBook ->
-                      comicBook.getLastReads().stream()
-                          .noneMatch(lastRead -> lastRead.getUser().getEmail().equals(email)))
-              .collect(Collectors.toList());
-    }
     return result;
   }
 
@@ -960,6 +955,17 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
+   * Returns the number of records with the specified state.
+   *
+   * @param state the target state
+   * @return the number of records
+   */
+  public long getCountForState(final ComicState state) {
+    log.trace("Getting record count for state: {}", state);
+    return this.comicBookRepository.findForStateCount(state);
+  }
+
+  /**
    * Returns the library state for publishers.
    *
    * @return the publishers state
@@ -1037,5 +1043,22 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<PublisherAndYearSegment> getByPublisherAndYear() {
     log.trace("Getting counts by publisher and year");
     return this.comicBookRepository.getByPublisherAndYear();
+  }
+
+  /**
+   * Marks comics for batch metadata update processing.
+   *
+   * @param ids the comic book ids
+   * @throws ComicBookException if an id is invalid
+   */
+  @Transactional
+  public void markComicBooksForBatchMetadataUpdate(final List<Long> ids) throws ComicBookException {
+    for (final Long id : ids) {
+      log.trace("Loading comic book: id={}", id);
+      final ComicBook comicBook = this.doGetComic(id);
+      log.trace("Setting batch metadata update flag");
+      comicBook.setBatchMetadataUpdate(true);
+      this.comicBookRepository.save(comicBook);
+    }
   }
 }

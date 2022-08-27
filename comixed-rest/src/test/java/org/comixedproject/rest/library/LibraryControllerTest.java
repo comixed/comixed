@@ -40,8 +40,8 @@ import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
 import org.comixedproject.model.net.library.*;
 import org.comixedproject.service.admin.ConfigurationService;
+import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.comicbooks.ComicException;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -348,8 +348,8 @@ public class LibraryControllerTest {
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
 
-  @Test(expected = ComicException.class)
-  public void testEditMultipleComicsServiceThrowsException() throws ComicException {
+  @Test(expected = ComicBookException.class)
+  public void testEditMultipleComicsServiceThrowsException() throws ComicBookException {
     Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
     Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
@@ -357,7 +357,7 @@ public class LibraryControllerTest {
     Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
 
-    Mockito.doThrow(ComicException.class)
+    Mockito.doThrow(ComicBookException.class)
         .when(comicBookService)
         .updateMultipleComics(
             Mockito.anyList(),
@@ -377,7 +377,7 @@ public class LibraryControllerTest {
   }
 
   @Test
-  public void testEditMultipleComics() throws ComicException {
+  public void testEditMultipleComics() throws ComicBookException {
     Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
     Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);

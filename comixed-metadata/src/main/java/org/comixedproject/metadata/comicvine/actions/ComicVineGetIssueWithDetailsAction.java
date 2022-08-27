@@ -44,7 +44,7 @@ public class ComicVineGetIssueWithDetailsAction
     extends AbstractComicVineScrapingAction<ComicVineIssue> {
   static final String ENDPOINT = "issue/4000-%s";
 
-  @Getter @Setter private Integer issueId;
+  @Getter @Setter private String issueId;
 
   @Override
   public ComicVineIssue execute() throws MetadataException {

@@ -21,7 +21,7 @@ package org.comixedproject.batch.comicbooks;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.batch.comicbooks.processors.PurgeMarkedComicsProcessor;
 import org.comixedproject.batch.comicbooks.readers.PurgeMarkedComicsReader;
-import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicsWriter;
+import org.comixedproject.batch.comicbooks.writers.PurgeMarkedComicBooksWriter;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -81,7 +81,7 @@ public class PurgeLibraryConfiguration {
       final StepBuilderFactory stepBuilderFactory,
       final PurgeMarkedComicsReader reader,
       final PurgeMarkedComicsProcessor processor,
-      final PurgeMarkedComicsWriter writer) {
+      final PurgeMarkedComicBooksWriter writer) {
     return stepBuilderFactory
         .get("purgeMarkedComicsStep")
         .<ComicBook, ComicBook>chunk(this.batchChunkSize)

@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
   private static final String VOLUMES_KEY = "volumes[%s]";
   private static final String ISSUE_KEY = "issues[%d-%s]";
-  private static final String ISSUE_DETAILS_KEY = "issue[%d]";
+  private static final String ISSUE_DETAILS_KEY = "issue[%s]";
 
   @Autowired protected ObjectMapper objectMapper;
 
@@ -68,7 +68,7 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
   }
 
   @Override
-  public String getIssueDetailsKey(final Integer issueId) {
+  public String getIssueDetailsKey(final String issueId) {
     return String.format(ISSUE_DETAILS_KEY, issueId);
   }
 
