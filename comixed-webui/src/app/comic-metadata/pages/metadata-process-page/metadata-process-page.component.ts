@@ -23,6 +23,8 @@ import { Store } from '@ngrx/store';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
+import { selectMetadataUpdateProcessState } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
+import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -32,6 +34,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
   langChangeSubscription: Subscription;
   selectIdSubscription: Subscription;
+  processStateSubscription: Subscription;
+  processState: MetadataUpdateProcessState;
   selectedIds: number[] = [];
 
   constructor(
@@ -48,6 +52,10 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
     this.selectIdSubscription = this.store
       .select(selectLibrarySelections)
       .subscribe(ids => (this.selectedIds = ids));
+    this.logger.trace('Subscribing to process updates');
+    this.processStateSubscription = this.store
+      .select(selectMetadataUpdateProcessState)
+      .subscribe(state => (this.processState = state));
   }
 
   ngAfterViewInit(): void {
@@ -57,13 +65,15 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language updates');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from selcction updates');
+    this.logger.trace('Unsubscribing from selection updates');
     this.selectIdSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from process state updates');
+    this.processStateSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {
     this.titleService.setTitle(
-      this.translateService.instant('metadata-update.tab-title')
+      this.translateService.instant('metadata-process.tab-title')
     );
   }
 }

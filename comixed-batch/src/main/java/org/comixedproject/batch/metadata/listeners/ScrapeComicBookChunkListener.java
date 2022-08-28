@@ -16,29 +16,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.metadata.readers;
+package org.comixedproject.batch.metadata.listeners;
 
-import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.readers.AbstractComicReader;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ScrapeComicBookReader</code> loads comics to have their metadata scraped.
+ * <code>ScrapeComicBookChunkListener</code> is notified as each comic is processed during metadata
+ * update.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ScrapeComicBookReader extends AbstractComicReader {
-  @Autowired private ComicBookService comicBookService;
+public class ScrapeComicBookChunkListener extends AbstractMetadataUpdateProcessingListener
+    implements ChunkListener {
+  @Override
+  public void beforeChunk(final ChunkContext chunkContext) {
+    // nothing to do
+  }
 
   @Override
-  protected List<ComicBook> doLoadComics() {
-    log.trace("Loading comics to have their metadata batch updated");
-    return this.comicBookService.findComicsForBatchMetadataUpdate(this.getBatchChunkSize());
+  public void afterChunk(final ChunkContext chunkContext) {
+    final ExecutionContext executionContext =
+        chunkContext.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
+    this.doPublishState(executionContext);
+  }
+
+  @Override
+  public void afterChunkError(final ChunkContext chunkContext) {
+    // nothing to do
   }
 }

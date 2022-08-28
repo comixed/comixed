@@ -19,6 +19,8 @@
 package org.comixedproject.batch.metadata;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.batch.metadata.listeners.ScrapeComicBookChunkListener;
+import org.comixedproject.batch.metadata.listeners.UpdateComicBookMetadataJobListener;
 import org.comixedproject.batch.metadata.processors.ScrapeComicBookProcessor;
 import org.comixedproject.batch.metadata.readers.ScrapeComicBookReader;
 import org.comixedproject.batch.metadata.writers.ScrapeComicBookWriter;
@@ -33,15 +35,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * <code>MetadataUpdateConfiguration</code> provides a batch configuration for scraping comics.
+ * <code>MetadataProcessConfiguration</code> provides a batch configuration for scraping comics.
  *
  * @author Darryl L. Pierce
  */
 @Configuration
 @Log4j2
-public class MetadataUpdateConfiguration {
-  public static final String PARAM_METADATA_UPDATE_STARTED = "job.metadata-update.started";
-  public static final String PARAM_SKIP_CACHE = "job.metadata-update.skip-cache";
+public class MetadataProcessConfiguration {
+  public static final String PARAM_METADATA_UPDATE_STARTED = "job.metadata-process.started";
+  public static final String PARAM_METADATA_UPDATE_FINISHED = "job.metadata-process.finished";
+  public static final String PARAM_SKIP_CACHE = "job.metadata-process.skip-cache";
+  public static final String PARAM_METADATA_UPDATE_TOTAL_COMICS =
+      "job.metadata-process.total-comics";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
@@ -57,8 +62,13 @@ public class MetadataUpdateConfiguration {
   @Qualifier("updateComicBookMetadata")
   public Job updateComicBookMetadata(
       final JobBuilderFactory jobBuilderFactory,
+      final UpdateComicBookMetadataJobListener jobListener,
       @Qualifier("scrapeComicBook") final Step scrapeComicBook) {
-    return jobBuilderFactory.get("updateComicBookMetadata").start(scrapeComicBook).build();
+    return jobBuilderFactory
+        .get("updateComicBookMetadata")
+        .listener(jobListener)
+        .start(scrapeComicBook)
+        .build();
   }
 
   /**
@@ -74,6 +84,7 @@ public class MetadataUpdateConfiguration {
   @Qualifier("scrapeComicBook")
   public Step scrapeComicBook(
       final StepBuilderFactory stepBuilderFactory,
+      final ScrapeComicBookChunkListener listener,
       final ScrapeComicBookReader reader,
       final ScrapeComicBookProcessor processor,
       final ScrapeComicBookWriter writer) {
@@ -83,6 +94,7 @@ public class MetadataUpdateConfiguration {
         .reader(reader)
         .processor(processor)
         .writer(writer)
+        .listener(listener)
         .build();
   }
 }

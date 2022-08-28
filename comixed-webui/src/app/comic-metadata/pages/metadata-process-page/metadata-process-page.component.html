@@ -2,6 +2,12 @@
   [selectedIds]="selectedIds"
 ></cx-metadata-process-toolbar>
 
-<h2>
-  {{ "metadata-update.page-title" | translate: { count: selectedIds.length } }}
+<h2 *ngIf="!processState || !processState.active">
+  {{ "metadata-process.page-title" | translate: { count: selectedIds.length } }}
 </h2>
+
+<cx-metadata-process-status
+  *ngIf="processState?.active"
+  class="cx-width-100 cx-height-100"
+  [processState]="processState"
+></cx-metadata-process-status>

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.metadata.MetadataUpdateConfiguration;
+import org.comixedproject.batch.metadata.MetadataProcessConfiguration;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
@@ -179,9 +179,9 @@ public class MetadataController {
         updateComicBookMetadata,
         new JobParametersBuilder()
             .addLong(
-                MetadataUpdateConfiguration.PARAM_METADATA_UPDATE_STARTED,
+                MetadataProcessConfiguration.PARAM_METADATA_UPDATE_STARTED,
                 System.currentTimeMillis())
-            .addString(MetadataUpdateConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
+            .addString(MetadataProcessConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
             .toJobParameters());
   }
 

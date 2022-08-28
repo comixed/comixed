@@ -1,0 +1,13 @@
+<div class="cx-width-100 cx-height-100">
+  <h2>
+    {{
+    "metadata-process.process-status"
+      | translate: {current, total}
+    }}
+  </h2>
+  <mat-progress-bar
+    mode="determinate"
+    [value]="current"
+    [bufferValue]="total"
+  ></mat-progress-bar>
+</div>

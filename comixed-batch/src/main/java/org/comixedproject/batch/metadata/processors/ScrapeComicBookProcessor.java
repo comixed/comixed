@@ -18,7 +18,7 @@
 
 package org.comixedproject.batch.metadata.processors;
 
-import static org.comixedproject.batch.metadata.MetadataUpdateConfiguration.PARAM_SKIP_CACHE;
+import static org.comixedproject.batch.metadata.MetadataProcessConfiguration.PARAM_SKIP_CACHE;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;

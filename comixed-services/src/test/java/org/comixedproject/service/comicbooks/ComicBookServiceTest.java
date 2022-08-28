@@ -743,6 +743,18 @@ public class ComicBookServiceTest {
   }
 
   @Test
+  public void testFindComicsForBatchMetadataUpdateCount() {
+    Mockito.when(comicBookRepository.findComicsForBatchMetadataUpdateCount())
+        .thenReturn(TEST_COMIC_COUNT);
+
+    final long result = service.findComicsForBatchMetadataUpdateCount();
+
+    assertEquals(TEST_COMIC_COUNT, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsForBatchMetadataUpdateCount();
+  }
+
+  @Test
   public void testFindAllComicsMarkedForDeletion() {
     Mockito.when(comicBookRepository.findComicsMarkedForDeletion(pageableCaptor.capture()))
         .thenReturn(comicBookList);

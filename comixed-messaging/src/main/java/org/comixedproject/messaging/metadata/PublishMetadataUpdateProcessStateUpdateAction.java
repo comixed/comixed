@@ -16,29 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.batch.metadata.readers;
+package org.comixedproject.messaging.metadata;
 
-import java.util.List;
+import static org.comixedproject.model.messaging.Constants.METADATA_UPDATE_PROCESS_UPDATE_TOPIC;
+
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.batch.comicbooks.readers.AbstractComicReader;
-import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.service.comicbooks.ComicBookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.comixedproject.messaging.AbstractPublishAction;
+import org.comixedproject.messaging.PublishingException;
+import org.comixedproject.model.net.metadata.MetadataUpdateProcessUpdate;
+import org.comixedproject.views.View;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>ScrapeComicBookReader</code> loads comics to have their metadata scraped.
+ * <code>PublishMetadataUpdateProcessStateUpdateAction</code> publishes updates for the metadata
+ * update process.
  *
  * @author Darryl L. Pierce
  */
 @Component
 @Log4j2
-public class ScrapeComicBookReader extends AbstractComicReader {
-  @Autowired private ComicBookService comicBookService;
-
+public class PublishMetadataUpdateProcessStateUpdateAction
+    extends AbstractPublishAction<MetadataUpdateProcessUpdate> {
   @Override
-  protected List<ComicBook> doLoadComics() {
-    log.trace("Loading comics to have their metadata batch updated");
-    return this.comicBookService.findComicsForBatchMetadataUpdate(this.getBatchChunkSize());
+  public void publish(final MetadataUpdateProcessUpdate payload) throws PublishingException {
+    log.debug("Publishing scrape comic book step update");
+    this.doPublish(
+        METADATA_UPDATE_PROCESS_UPDATE_TOPIC, payload, View.MetadataUpdateProcessState.class);
   }
 }

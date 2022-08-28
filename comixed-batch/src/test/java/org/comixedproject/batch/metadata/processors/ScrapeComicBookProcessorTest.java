@@ -19,7 +19,7 @@
 package org.comixedproject.batch.metadata.processors;
 
 import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.metadata.MetadataUpdateConfiguration.PARAM_SKIP_CACHE;
+import static org.comixedproject.batch.metadata.MetadataProcessConfiguration.PARAM_SKIP_CACHE;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
