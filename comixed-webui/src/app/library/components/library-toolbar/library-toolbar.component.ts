@@ -260,7 +260,7 @@ export class LibraryToolbarComponent
         this.logger.trace('Firing action: update metadata');
         this.store.dispatch(
           updateMetadata({
-            comicBooks: this.selectedComicBooks
+            ids: this.selectedIds
           })
         );
       }

@@ -92,7 +92,7 @@ export class ComicBookPageComponent
   messagingSubscription: Subscription;
   comicId = -1;
   pageIndex = 0;
-  comic: ComicBook;
+  comicBook: ComicBook;
   pages: Page[];
   userSubscription: Subscription;
   isAdmin = false;
@@ -154,12 +154,12 @@ export class ComicBookPageComponent
     this.comicSubscription = this.store
       .select(selectComicBook)
       .subscribe(comic => {
-        this.comic = comic;
-        if (!!this.comic?.metadata) {
+        this.comicBook = comic;
+        if (!!this.comicBook?.metadata) {
           this.logger.trace('Preselecting previous metadata source');
           this.store.dispatch(
             setChosenMetadataSource({
-              metadataSource: this.comic.metadata.metadataSource
+              metadataSource: this.comicBook.metadata.metadataSource
             })
           );
         }
@@ -213,7 +213,7 @@ export class ComicBookPageComponent
   }
 
   get isDeleted(): boolean {
-    return this.comic.comicState === ComicBookState.DELETED;
+    return this.comicBook.comicState === ComicBookState.DELETED;
   }
 
   ngOnInit(): void {
@@ -273,7 +273,9 @@ export class ComicBookPageComponent
 
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
-    this.store.dispatch(setComicBooksRead({ comicBooks: [this.comic], read }));
+    this.store.dispatch(
+      setComicBooksRead({ comicBooks: [this.comicBook], read })
+    );
   }
 
   onUpdateMetadata(): void {
@@ -286,8 +288,8 @@ export class ComicBookPageComponent
         { count: 1 }
       ),
       confirm: () => {
-        this.logger.debug('Updating comic file:', this.comic);
-        this.store.dispatch(updateMetadata({ comicBooks: [this.comic] }));
+        this.logger.debug('Updating comic file:', this.comicBook);
+        this.store.dispatch(updateMetadata({ ids: [this.comicBook.id] }));
       }
     });
   }
@@ -306,7 +308,7 @@ export class ComicBookPageComponent
       confirm: () => {
         this.logger.trace('Marking comic for deletion');
         this.store.dispatch(
-          markComicsDeleted({ comicBooks: [this.comic], deleted })
+          markComicsDeleted({ comicBooks: [this.comicBook], deleted })
         );
       }
     });
@@ -347,7 +349,7 @@ export class ComicBookPageComponent
         this.logger.trace('Firing event: save page order');
         this.store.dispatch(
           savePageOrder({
-            comicBook: this.comic,
+            comicBook: this.comicBook,
             entries: this.pages.map((page, index) => {
               return {
                 index,
@@ -369,9 +371,9 @@ export class ComicBookPageComponent
   }
 
   private loadPageTitle(): void {
-    if (!!this.comic) {
+    if (!!this.comicBook) {
       this.logger.trace('Updating page title');
-      this.titleService.setTitle(this.comicTitlePipe.transform(this.comic));
+      this.titleService.setTitle(this.comicTitlePipe.transform(this.comicBook));
     }
   }
 

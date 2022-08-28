@@ -26,9 +26,10 @@ import {
   updateMetadata,
   updateMetadataFailed
 } from '@app/library/actions/update-metadata.actions';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { LibraryService } from '@app/library/services/library.service';
+import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 @Injectable()
 export class UpdateMetadataEffects {
@@ -37,28 +38,26 @@ export class UpdateMetadataEffects {
       ofType(updateMetadata),
       tap(action => this.logger.debug('Effect: updating comic info:', action)),
       switchMap(action =>
-        this.libraryService
-          .updateMetadata({ comicBooks: action.comicBooks })
-          .pipe(
-            tap(response => this.logger.debug('Response received:', response)),
-            tap(() =>
-              this.alertService.info(
-                this.translateService.instant(
-                  'library.update-metadata.effect-success'
-                )
+        this.libraryService.updateMetadata({ ids: action.ids }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          tap(() =>
+            this.alertService.info(
+              this.translateService.instant(
+                'library.update-metadata.effect-success'
               )
-            ),
-            map(() => metadataUpdating()),
-            catchError(error => {
-              this.logger.error('Service failure:', error);
-              this.alertService.error(
-                this.translateService.instant(
-                  'library.update-metadata.effect-failure'
-                )
-              );
-              return of(updateMetadataFailed());
-            })
-          )
+            )
+          ),
+          mergeMap(() => [metadataUpdating(), clearSelectedComicBooks()]),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'library.update-metadata.effect-failure'
+              )
+            );
+            return of(updateMetadataFailed());
+          })
+        )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);
