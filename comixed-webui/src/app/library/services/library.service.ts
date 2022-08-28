@@ -112,10 +112,10 @@ export class LibraryService {
     } as RescanComicsRequest);
   }
 
-  updateMetadata(args: { comicBooks: ComicBook[] }): Observable<any> {
+  updateMetadata(args: { ids: number[] }): Observable<any> {
     this.logger.trace('Update metadata:', args);
     return this.http.post(interpolate(UPDATE_METADATA_URL), {
-      ids: args.comicBooks.map(comic => comic.id)
+      ids: args.ids
     } as UpdateMetadataRequest);
   }
 

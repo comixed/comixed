@@ -231,7 +231,7 @@ export class ComicBookCoversComponent
       ),
       confirm: () => {
         this.logger.trace('Updating comic info:', comic);
-        this.store.dispatch(updateMetadata({ comicBooks: [comic] }));
+        this.store.dispatch(updateMetadata({ ids: [comic.id] }));
       }
     });
   }

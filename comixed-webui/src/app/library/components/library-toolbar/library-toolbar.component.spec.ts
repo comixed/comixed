@@ -245,9 +245,7 @@ describe('LibraryToolbarComponent', () => {
     });
 
     it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ comicBooks: COMIC_BOOKS })
-      );
+      expect(store.dispatch).toHaveBeenCalledWith(updateMetadata({ ids: IDS }));
     });
   });
 

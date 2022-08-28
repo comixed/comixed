@@ -26,21 +26,17 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
-} from '@app/comic-books/comic-books.fixtures';
-import {
   metadataUpdating,
   updateMetadata,
   updateMetadataFailed
 } from '@app/library/actions/update-metadata.actions';
 import { hot } from 'jasmine-marbles';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LibraryService } from '@app/library/services/library.service';
+import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 describe('UpdateMetadataEffects', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const IDS = [4, 17, 6];
 
   let actions$: Observable<any>;
   let effects: UpdateMetadataEffects;
@@ -82,28 +78,29 @@ describe('UpdateMetadataEffects', () => {
 
   describe('updating the comic info for a single book', () => {
     it('fires an action on success', () => {
-      const serviceResponse = COMIC_BOOKS;
-      const action = updateMetadata({ comicBooks: COMIC_BOOKS });
-      const outcome = metadataUpdating();
+      const serviceResponse = new HttpResponse({ status: 200 });
+      const action = updateMetadata({ ids: IDS });
+      const outcome1 = metadataUpdating();
+      const outcome2 = clearSelectedComicBooks();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata
-        .withArgs({ comicBooks: COMIC_BOOKS })
+        .withArgs({ ids: IDS })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.updateMetadata$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = updateMetadata({ comicBooks: COMIC_BOOKS });
+      const action = updateMetadata({ ids: IDS });
       const outcome = updateMetadataFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata
-        .withArgs({ comicBooks: COMIC_BOOKS })
+        .withArgs({ ids: IDS })
         .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
@@ -112,12 +109,12 @@ describe('UpdateMetadataEffects', () => {
     });
 
     it('fires an action on general failure', () => {
-      const action = updateMetadata({ comicBooks: COMIC_BOOKS });
+      const action = updateMetadata({ ids: IDS });
       const outcome = updateMetadataFailed();
 
       actions$ = hot('-a', { a: action });
       libraryService.updateMetadata
-        .withArgs({ comicBooks: COMIC_BOOKS })
+        .withArgs({ ids: IDS })
         .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });

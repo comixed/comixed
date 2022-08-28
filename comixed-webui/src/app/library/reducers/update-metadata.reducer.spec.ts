@@ -33,7 +33,7 @@ import {
 } from '@app/library/actions/update-metadata.actions';
 
 describe('UpdateMetadata Reducer', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const IDS = [4, 17, 6];
 
   let state: UpdateMetadataState;
 
@@ -55,7 +55,7 @@ describe('UpdateMetadata Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, updating: false },
-        updateMetadata({ comicBooks: COMICS })
+        updateMetadata({ ids: IDS })
       );
     });
 

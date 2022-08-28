@@ -90,7 +90,7 @@ describe('ComicBookCoversComponent', () => {
   const PAGE_INDEX = 23;
   const COMIC_BOOK = COMIC_BOOK_2;
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const IDS = [COMIC_BOOK_1.id, COMIC_BOOK_3.id];
   const COMIC_BOOK_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -281,7 +281,12 @@ describe('ComicBookCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: COMIC_BOOKS, read: READ })
+          setComicBooksRead({
+            comicBooks: COMIC_BOOKS.filter(comicBook =>
+              IDS.includes(comicBook.id)
+            ),
+            read: READ
+          })
         );
       });
     });
@@ -336,7 +341,7 @@ describe('ComicBookCoversComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateMetadata({ comicBooks: [COMIC_BOOK] })
+        updateMetadata({ ids: [COMIC_BOOK.id] })
       );
     });
   });
@@ -392,7 +397,12 @@ describe('ComicBookCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: COMIC_BOOKS, deleted: true })
+          markComicsDeleted({
+            comicBooks: COMIC_BOOKS.filter(comicBook =>
+              IDS.includes(comicBook.id)
+            ),
+            deleted: true
+          })
         );
       });
     });
@@ -434,7 +444,12 @@ describe('ComicBookCoversComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          markComicsDeleted({ comicBooks: COMIC_BOOKS, deleted: false })
+          markComicsDeleted({
+            comicBooks: COMIC_BOOKS.filter(comicBook =>
+              IDS.includes(comicBook.id)
+            ),
+            deleted: false
+          })
         );
       });
     });
@@ -456,7 +471,12 @@ describe('ComicBookCoversComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        addComicsToReadingList({ list: READING_LIST, comicBooks: COMIC_BOOKS })
+        addComicsToReadingList({
+          list: READING_LIST,
+          comicBooks: COMIC_BOOKS.filter(comicBook =>
+            IDS.includes(comicBook.id)
+          )
+        })
       );
     });
   });
@@ -502,7 +522,9 @@ describe('ComicBookCoversComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         convertComics({
-          comicBooks: COMIC_BOOKS,
+          comicBooks: COMIC_BOOKS.filter(comicBook =>
+            IDS.includes(comicBook.id)
+          ),
           archiveType: archiveTypeFromString('CB7'),
           renamePages: true,
           deletePages: true
@@ -637,7 +659,9 @@ describe('ComicBookCoversComponent', () => {
     it('fires an action to edit multiple comics', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         editMultipleComics({
-          comicBooks: COMIC_BOOKS,
+          comicBooks: COMIC_BOOKS.filter(comicBook =>
+            IDS.includes(comicBook.id)
+          ),
           details: COMIC_BOOK_DETAILS
         })
       );
