@@ -36,6 +36,13 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
+import { Store } from '@ngrx/store';
+import { WebSocketService } from '@app/messaging';
+import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
+import { METADATA_UPDATE_PROCESS_UPDATE_TOPIC } from '@app/comic-metadata/comic-metadata.constants';
+import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
+import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
+import { Subscription } from 'webstomp-client';
 
 /**
  * Interacts with the REST APIs during scraping.
@@ -44,7 +51,44 @@ import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/ne
   providedIn: 'root'
 })
 export class MetadataService {
-  constructor(private logger: LoggerService, private http: HttpClient) {}
+  subscription: Subscription;
+
+  constructor(
+    private logger: LoggerService,
+    private http: HttpClient,
+    private store: Store<any>,
+    private webSocketService: WebSocketService
+  ) {
+    this.store.select(selectMessagingState).subscribe(state => {
+      if (state.started && !this.subscription) {
+        this.logger.trace('Subscribing to remote library state updates');
+        this.subscription =
+          this.webSocketService.subscribe<MetadataUpdateProcessUpdate>(
+            METADATA_UPDATE_PROCESS_UPDATE_TOPIC,
+            update => {
+              this.logger.debug(
+                'Received metadata update process update:',
+                update
+              );
+              this.store.dispatch(
+                metadataUpdateProcessStatusUpdated({
+                  active: update.active,
+                  totalComics: update.totalComics,
+                  completedComics: update.completedComics
+                })
+              );
+            }
+          );
+      }
+      if (!state.started && !!this.subscription) {
+        this.logger.debug(
+          'Stopping metadata update process update subscription'
+        );
+        this.subscription.unsubscribe();
+        this.subscription = null;
+      }
+    });
+  }
 
   /**
    * Retrieves volumes that match the series name being scraped.

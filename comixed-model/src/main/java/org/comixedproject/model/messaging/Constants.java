@@ -71,4 +71,7 @@ public interface Constants {
 
   /** Topic which receives remote library state updates. */
   String REMOTE_LIBRARY_UPDATE_TOPIC = "/topic/remote-library.update";
+
+  /** Topic which receives metadata update process updates. */
+  String METADATA_UPDATE_PROCESS_UPDATE_TOPIC = "/topic/metadata.update-process.update";
 }

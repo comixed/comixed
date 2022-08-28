@@ -41,10 +41,10 @@ export class MetadataProcessToolbarComponent {
   onStartBatchProcess(): void {
     this.confirmationService.confirm({
       title: this.translateService.instant(
-        'metadata-update.start-process.confirm-title'
+        'metadata-process.start-process.confirm-title'
       ),
       message: this.translateService.instant(
-        'metadata-update.start-process.confirm-message',
+        'metadata-process.start-process.confirm-message',
         { count: this.selectedIds.length }
       ),
       confirm: () => {

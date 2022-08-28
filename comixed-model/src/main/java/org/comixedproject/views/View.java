@@ -120,4 +120,7 @@ public interface View {
 
   /** Used when viewing the metadata audit log entry list. */
   public interface MetadataAuditLogEntryList {}
+
+  /** Used when viewing metadata update process events. */
+  public interface MetadataUpdateProcessState {}
 }

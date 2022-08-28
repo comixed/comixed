@@ -575,4 +575,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT new org.comixedproject.model.net.library.PublisherAndYearSegment(c.publisher, YEAR(c.coverDate), COUNT(c)) FROM ComicBook c WHERE c.publisher IS NOT NULL AND c.coverDate IS NOT NULL GROUP BY c.publisher, YEAR(c.coverDate)")
   List<PublisherAndYearSegment> getByPublisherAndYear();
+
+  /**
+   * Returns the number of comics enqueued for metadata batch update
+   *
+   * @return the comic count
+   */
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.batchMetadataUpdate = true")
+  long findComicsForBatchMetadataUpdateCount();
 }

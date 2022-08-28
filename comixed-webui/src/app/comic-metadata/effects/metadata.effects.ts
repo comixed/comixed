@@ -194,7 +194,7 @@ export class MetadataEffects {
             tap(() =>
               this.alertService.info(
                 this.translateService.instant(
-                  'metadata-update.start-process.effect-success'
+                  'metadata-process.start-process.effect-success'
                 )
               )
             ),
@@ -206,7 +206,7 @@ export class MetadataEffects {
               this.logger.error('Service failure:', error);
               this.alertService.error(
                 this.translateService.instant(
-                  'metadata-update.start-process.effect-failure'
+                  'metadata-process.start-process.effect-failure'
                 )
               );
               return of(startMetadataUpdateProcessFailed());

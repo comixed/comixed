@@ -43,9 +43,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MetadataProcessStatusComponent } from './components/metadata-process-status/metadata-process-status.component';
+import {
+  METADATA_UPDATE_PROCESS_FEATURE_KEY,
+  reducer as metadataUpdateProcessReducer
+} from '@app/comic-metadata/reducers/metadata-update-process.reducer';
+import { MetadataUpdateProcessEffects } from '@app/comic-metadata/effects/metadata-update-process.effects';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
-  declarations: [MetadataProcessPageComponent, MetadataProcessToolbarComponent],
+  declarations: [
+    MetadataProcessPageComponent,
+    MetadataProcessToolbarComponent,
+    MetadataProcessStatusComponent
+  ],
   imports: [
     CommonModule,
     ComicMetadataRouting,
@@ -59,15 +70,21 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       METADATA_AUDIT_LOG_FEATURE_KEY,
       metadataAuditLogReducer
     ),
+    StoreModule.forFeature(
+      METADATA_UPDATE_PROCESS_FEATURE_KEY,
+      metadataUpdateProcessReducer
+    ),
     EffectsModule.forFeature([
       MetadataSourceListEffects,
       MetadataSourceEffects,
-      MetadataAuditLogEffects
+      MetadataAuditLogEffects,
+      MetadataUpdateProcessEffects
     ]),
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   exports: [CommonModule]
 })

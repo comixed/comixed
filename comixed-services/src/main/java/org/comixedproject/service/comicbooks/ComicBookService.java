@@ -464,6 +464,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
+   * Returns the number of comics enqueued for batch metadata update.
+   *
+   * @return the comic count
+   */
+  public long findComicsForBatchMetadataUpdateCount() {
+    log.trace("Getting number of comics that are flagged for batch metadata update");
+    return this.comicBookRepository.findComicsForBatchMetadataUpdateCount();
+  }
+
+  /**
    * Finds all comics marked for deletion.
    *
    * @param count the number of comics to return

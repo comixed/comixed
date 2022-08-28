@@ -27,6 +27,7 @@ import {
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
 import { TitleService } from '@app/core/services/title.service';
+import { MetadataProcessStatusComponent } from '@app/comic-metadata/components/metadata-process-status/metadata-process-status.component';
 
 describe('MetadataProcessPageComponent', () => {
   const IDS = [4, 17, 6];
@@ -42,7 +43,10 @@ describe('MetadataProcessPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MetadataProcessPageComponent],
+      declarations: [
+        MetadataProcessPageComponent,
+        MetadataProcessStatusComponent
+      ],
       imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

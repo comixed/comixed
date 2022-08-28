@@ -46,6 +46,16 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { HttpResponse } from '@angular/common/http';
 import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/net/start-metadata-update-process-request';
+import { WebSocketService } from '@app/messaging';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {
+  initialState as initialMessagingState,
+  MESSAGING_FEATURE_KEY
+} from '@app/messaging/reducers/messaging.reducer';
+import { Subscription } from 'webstomp-client';
+import { METADATA_UPDATE_PROCESS_UPDATE_TOPIC } from '@app/comic-metadata/comic-metadata.constants';
+import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
+import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
 
 describe('MetadataService', () => {
   const SERIES = 'The Series';
@@ -59,17 +69,40 @@ describe('MetadataService', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const ENTRIES = [METADATA_AUDIT_LOG_ENTRY_1];
   const IDS = [7, 17, 65, 1, 29, 71];
+  const PROCESS_STATE = {
+    active: Math.random() > 0.5,
+    totalComics: 7171,
+    completedComics: 233
+  } as MetadataUpdateProcessUpdate;
+  const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
 
   let service: MetadataService;
   let httpMock: HttpTestingController;
+  let webSocketService: jasmine.SpyObj<WebSocketService>;
+  let store: MockStore<any>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, LoggerModule.forRoot()]
+      imports: [HttpClientTestingModule, LoggerModule.forRoot()],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: WebSocketService,
+          useValue: {
+            send: jasmine.createSpy('WebSocketService.send()'),
+            subscribe: jasmine.createSpy('WebSocketService.subscribe()')
+          }
+        }
+      ]
     });
 
     service = TestBed.inject(MetadataService);
     httpMock = TestBed.inject(HttpTestingController);
+    webSocketService = TestBed.inject(
+      WebSocketService
+    ) as jasmine.SpyObj<WebSocketService>;
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
   });
 
   it('should be created', () => {
@@ -183,5 +216,63 @@ describe('MetadataService', () => {
       skipCache: SKIP_CACHE
     } as StartMetadataUpdateProcessRequest);
     req.flush(new HttpResponse({ status: 200 }));
+  });
+
+  describe('when messaging starts', () => {
+    let topic: string;
+    let subscription: any;
+
+    beforeEach(() => {
+      service.subscription = null;
+      webSocketService.subscribe.and.callFake((topicUsed, callback) => {
+        topic = topicUsed;
+        subscription = callback;
+        return {} as Subscription;
+      });
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: true }
+      });
+    });
+
+    it('subscribes to user updates', () => {
+      expect(topic).toEqual(METADATA_UPDATE_PROCESS_UPDATE_TOPIC);
+    });
+
+    describe('when updates are received', () => {
+      beforeEach(() => {
+        subscription(PROCESS_STATE);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          metadataUpdateProcessStatusUpdated({
+            active: PROCESS_STATE.active,
+            completedComics: PROCESS_STATE.completedComics,
+            totalComics: PROCESS_STATE.totalComics
+          })
+        );
+      });
+    });
+  });
+
+  describe('when messaging is stopped', () => {
+    const subscription = jasmine.createSpyObj(['unsubscribe']);
+
+    beforeEach(() => {
+      service.subscription = subscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from updates', () => {
+      expect(subscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('clears the subscription reference', () => {
+      expect(service.subscription).toBeNull();
+    });
   });
 });
