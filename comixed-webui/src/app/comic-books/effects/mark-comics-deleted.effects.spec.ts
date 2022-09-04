@@ -37,6 +37,7 @@ import {
 } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { hot } from 'jasmine-marbles';
 import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-deleted.effects';
+import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 describe('MarkComicsDeletedEffects', () => {
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -89,12 +90,13 @@ describe('MarkComicsDeletedEffects', () => {
         comicBooks: COMICS,
         deleted: DELETED
       });
-      const outcome = comicsMarkedDeleted();
+      const outcome1 = comicsMarkedDeleted();
+      const outcome2 = clearSelectedComicBooks();
 
       actions$ = hot('-a', { a: action });
       comicService.markComicsDeleted.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.markComicsDeleted$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
