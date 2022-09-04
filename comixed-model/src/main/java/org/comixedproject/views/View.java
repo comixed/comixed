@@ -118,9 +118,6 @@ public interface View {
   /** Used when retrieving a single metadata source. */
   public interface MetadataSourceDetail extends MetadataSourceList {}
 
-  /** Used when viewing the metadata audit log entry list. */
-  public interface MetadataAuditLogEntryList {}
-
-  /** Used when viewing metadata update process events. */
+  /** USed when marshalling a metadata process update. */
   public interface MetadataUpdateProcessState {}
 }

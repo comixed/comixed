@@ -40,11 +40,7 @@ public class MetadataSource {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({
-    View.MetadataSourceList.class,
-    View.ComicDetailsView.class,
-    View.MetadataAuditLogEntryList.class
-  })
+  @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
   @Getter
   private Long id;
 
@@ -74,11 +70,7 @@ public class MetadataSource {
       updatable = true,
       nullable = false)
   @JsonProperty("name")
-  @JsonView({
-    View.MetadataSourceList.class,
-    View.ComicDetailsView.class,
-    View.MetadataAuditLogEntryList.class
-  })
+  @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
   @Getter
   @Setter
   @NonNull
@@ -86,11 +78,7 @@ public class MetadataSource {
 
   @Column(name = "Preferred", insertable = true, updatable = true, nullable = false)
   @JsonProperty("preferred")
-  @JsonView({
-    View.MetadataSourceList.class,
-    View.ComicDetailsView.class,
-    View.MetadataAuditLogEntryList.class
-  })
+  @JsonView({View.MetadataSourceList.class, View.ComicDetailsView.class})
   @Getter
   @Setter
   @NonNull
@@ -105,16 +93,6 @@ public class MetadataSource {
   @JsonView(View.MetadataSourceList.class)
   @Getter
   private Set<MetadataSourceProperty> properties = new HashSet<>();
-
-  @OneToMany(
-      mappedBy = "metadataSource",
-      cascade = CascadeType.ALL,
-      orphanRemoval = true,
-      fetch = FetchType.LAZY)
-  @JsonProperty("auditLogEntries")
-  @JsonView(View.MetadataSourceDetail.class)
-  @Getter
-  private Set<MetadataAuditLogEntry> auditLogEntries = new HashSet<>();
 
   @Override
   public int hashCode() {

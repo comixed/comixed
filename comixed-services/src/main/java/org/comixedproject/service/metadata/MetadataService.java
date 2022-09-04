@@ -35,9 +35,7 @@ import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicbooks.Credit;
-import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.metadata.MetadataSource;
-import org.comixedproject.repositories.metadata.MetadataAuditLogRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
@@ -47,7 +45,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <code>MetadataService</code> handles interacting with the selected {@link MetadataAdaptor} and
@@ -65,7 +62,6 @@ public class MetadataService {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ImprintService imprintService;
-  @Autowired private MetadataAuditLogRepository metadataAuditLogRepository;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -303,9 +299,6 @@ public class MetadataService {
               "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");
       this.imprintService.update(comicBook);
-      log.info("Creating metadata audit log entry");
-      this.metadataAuditLogRepository.save(
-          new MetadataAuditLogEntry(result, metadataSource, issueDetails.getSourceId()));
       log.trace("Updating comicBook state: scraped");
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.scraped);
     }
@@ -335,22 +328,5 @@ public class MetadataService {
     }
     log.trace("No cached entries found");
     return null;
-  }
-
-  /**
-   * Returns all audit log entries.
-   *
-   * @return the entry list
-   */
-  public List<MetadataAuditLogEntry> loadAuditLogEntries() {
-    log.trace("Loading all metadata audit log entries");
-    return this.metadataAuditLogRepository.loadAll();
-  }
-
-  /** Deletes all metadata audit log entries. */
-  @Transactional
-  public void clearAuditLog() {
-    log.trace("Deleting all metadata audit log entries");
-    this.metadataAuditLogRepository.deleteAll();
   }
 }

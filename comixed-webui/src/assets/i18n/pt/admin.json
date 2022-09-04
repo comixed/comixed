@@ -17,7 +17,6 @@
     },
     "tab": {
       "library": "Biblioteca",
-      "metadata-audit-log": "Registro de metadados",
       "metadata-sources": "Origens dos metadados",
       "server-runtime": "Tempo em execução",
       "scraping-rules": "Regras de recuperação de dados"

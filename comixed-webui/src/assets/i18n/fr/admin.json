@@ -17,7 +17,6 @@
     },
     "tab": {
       "library": "Bibliothèque",
-      "metadata-audit-log": "Journal d'audit des métadonnées",
       "metadata-sources": "Sources de métadonnées",
       "server-runtime": "Temps d'exécution",
       "scraping-rules": "Règles d'extraction"

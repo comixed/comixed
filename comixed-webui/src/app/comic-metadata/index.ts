@@ -35,11 +35,6 @@ import {
   reducer as metadataSourceReducer
 } from '@app/comic-metadata/reducers/metadata-source.reducer';
 import {
-  METADATA_AUDIT_LOG_FEATURE_KEY,
-  MetadataAuditLogState,
-  reducer as metadataAuditLogReducer
-} from '@app/comic-metadata/reducers/metadata-audit-log.reducer';
-import {
   METADATA_UPDATE_PROCESS_FEATURE_KEY,
   MetadataUpdateProcessState,
   reducer as metadataUpdateProcessReducer
@@ -56,7 +51,6 @@ export interface ComicMetadataModuleState {
   [METADATA_FEATURE_KEY]: MetadataState;
   [METADATA_SOURCE_LIST_FEATURE_KEY]: MetadataSourceListState;
   [METADATA_SOURCE_FEATURE_KEY]: MetadataSourceState;
-  [METADATA_AUDIT_LOG_FEATURE_KEY]: MetadataAuditLogState;
   [METADATA_UPDATE_PROCESS_FEATURE_KEY]: MetadataUpdateProcessState;
 }
 
@@ -67,6 +61,5 @@ export const reducers: ActionReducerMap<ComicMetadataModuleState> = {
   [METADATA_FEATURE_KEY]: scrapingReducer,
   [METADATA_SOURCE_LIST_FEATURE_KEY]: metadataSourceListReducer,
   [METADATA_SOURCE_FEATURE_KEY]: metadataSourceReducer,
-  [METADATA_AUDIT_LOG_FEATURE_KEY]: metadataAuditLogReducer,
   [METADATA_UPDATE_PROCESS_FEATURE_KEY]: metadataUpdateProcessReducer
 };

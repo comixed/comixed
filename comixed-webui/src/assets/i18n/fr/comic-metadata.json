@@ -59,30 +59,6 @@
       "mark-preferred": "Mark this metadata source as preferred."
     }
   },
-  "metadata-audit-log": {
-    "clear-entries": {
-      "confirm-message": "Êtes-vous sûr de vouloir supprimer toutes les entrées du journal d'audit des métadonnées ? Cette action ne peut pas être annulée.",
-      "confirm-title": "Effacer le journal d'audit des métadonnées",
-      "effect-failure": "Échec de l'effacement du journal d'audit des métadonnées.",
-      "effect-success": "Le journal d'audit des métadonnées a été effacé."
-    },
-    "label": {
-      "comic": "Bande dessinée",
-      "created-on": "Créé le",
-      "metadata-source": "Source des métadonnées"
-    },
-    "load-entries": {
-      "effect-failure": "Échec du chargement du journal d'audit des métadonnées."
-    },
-    "text": {
-      "comic-is-missing": "La bande dessinée n'est plus disponible."
-    },
-    "tooltip": {
-      "clear-entries": "Effacer le journal d'audit des métadonnées.",
-      "clear-metadata-cache": "Effacer le cache des métadonnées.",
-      "reload-entries": "Recharger le journal d'audit des métadonnées."
-    }
-  },
   "metadata-process": {
     "label": {
       "completed": "Comics Completed",

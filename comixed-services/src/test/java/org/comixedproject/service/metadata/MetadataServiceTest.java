@@ -31,9 +31,7 @@ import org.comixedproject.metadata.model.IssueDetailsMetadata;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.metadata.MetadataSource;
-import org.comixedproject.repositories.metadata.MetadataAuditLogRepository;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
@@ -85,11 +83,6 @@ public class MetadataServiceTest {
   @Mock private IssueDetailsMetadata issueDetailsMetadata;
   @Mock private ImprintService imprintService;
   @Mock private MetadataSource metadataSource;
-  @Mock private MetadataAuditLogRepository metadataAuditLogRepository;
-  @Mock private MetadataAuditLogEntry savedAuditLogEntry;
-  @Mock private List<MetadataAuditLogEntry> metadataAuditLogEntryList;
-
-  @Captor private ArgumentCaptor<MetadataAuditLogEntry> metadataAuditLogEntryArgumentCaptor;
 
   private List<String> cachedEntryList = new ArrayList<>();
   private List<VolumeMetadata> fetchedVolumeList = new ArrayList<>();
@@ -117,9 +110,6 @@ public class MetadataServiceTest {
     Mockito.when(metadataSource.getBeanName()).thenReturn(TEST_METADATA_SOURCE_BEAN_NAME);
     Mockito.when(applicationContext.getBean(TEST_METADATA_SOURCE_BEAN_NAME, MetadataAdaptor.class))
         .thenReturn(metadataAdaptor);
-
-    Mockito.when(metadataAuditLogRepository.save(metadataAuditLogEntryArgumentCaptor.capture()))
-        .thenReturn(savedAuditLogEntry);
   }
 
   @Test(expected = MetadataException.class)
@@ -772,13 +762,6 @@ public class MetadataServiceTest {
   }
 
   private void verifyComicScraping(final ComicBook comicBook) {
-    final MetadataAuditLogEntry auditLogEntry = metadataAuditLogEntryArgumentCaptor.getValue();
-
-    assertNotNull(auditLogEntry);
-    assertSame(loadedComicBook, auditLogEntry.getComicBook());
-    assertSame(metadataSource, auditLogEntry.getMetadataSource());
-    assertEquals(TEST_SOURCE_ID, auditLogEntry.getReferenceId());
-
     // TODO verify metadata source reference
     Mockito.verify(this.loadedComicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(this.loadedComicBook, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
@@ -790,25 +773,5 @@ public class MetadataServiceTest {
     Mockito.verify(this.loadedComicBook, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(this.loadedComicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(this.imprintService, Mockito.times(1)).update(comicBook);
-    Mockito.verify(metadataAuditLogRepository, Mockito.times(1)).save(auditLogEntry);
-  }
-
-  @Test
-  public void testLoadAuditLogEntries() {
-    Mockito.when(metadataAuditLogRepository.loadAll()).thenReturn(metadataAuditLogEntryList);
-
-    final List<MetadataAuditLogEntry> result = metadataService.loadAuditLogEntries();
-
-    assertNotNull(result);
-    assertSame(metadataAuditLogEntryList, result);
-
-    Mockito.verify(metadataAuditLogRepository, Mockito.times(1)).loadAll();
-  }
-
-  @Test
-  public void testClearAuditLog() {
-    metadataService.clearAuditLog();
-
-    Mockito.verify(metadataAuditLogRepository, Mockito.times(1)).deleteAll();
   }
 }

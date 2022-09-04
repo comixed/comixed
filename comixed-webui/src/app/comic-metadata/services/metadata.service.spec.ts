@@ -26,9 +26,7 @@ import {
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
 import {
-  CLEAR_METADATA_AUDIT_LOG_URL,
   CLEAR_METADATA_CACHE_URL,
-  LOAD_METADATA_AUDIT_LOG_URL,
   LOAD_SCRAPING_ISSUE_URL,
   LOAD_SCRAPING_VOLUMES_URL,
   SCRAPE_COMIC_URL,
@@ -37,7 +35,6 @@ import {
 import { LoadIssueMetadataRequest } from '@app/comic-metadata/models/net/load-issue-metadata-request';
 import { ScrapeComicRequest } from '@app/comic-metadata/models/net/scrape-comic-request';
 import {
-  METADATA_AUDIT_LOG_ENTRY_1,
   METADATA_SOURCE_1,
   SCRAPING_ISSUE_1,
   SCRAPING_VOLUME_1,
@@ -67,7 +64,6 @@ describe('MetadataService', () => {
   const ISSUE_NUMBER = '27';
   const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
-  const ENTRIES = [METADATA_AUDIT_LOG_ENTRY_1];
   const IDS = [7, 17, 65, 1, 29, 71];
   const PROCESS_STATE = {
     active: Math.random() > 0.5,
@@ -170,26 +166,6 @@ describe('MetadataService', () => {
       skipCache: SKIP_CACHE
     } as ScrapeComicRequest);
     req.flush(COMIC);
-  });
-
-  it('can load the audit log', () => {
-    service
-      .loadAuditLog()
-      .subscribe(response => expect(response).toEqual(ENTRIES));
-
-    const req = httpMock.expectOne(interpolate(LOAD_METADATA_AUDIT_LOG_URL));
-    expect(req.request.method).toEqual('GET');
-    req.flush(ENTRIES);
-  });
-
-  it('can clear the audit log', () => {
-    service
-      .clearAuditLog()
-      .subscribe(response => expect(response.status).toEqual(200));
-
-    const req = httpMock.expectOne(interpolate(CLEAR_METADATA_AUDIT_LOG_URL));
-    expect(req.request.method).toEqual('DELETE');
-    req.flush(new HttpResponse({ status: 200 }));
   });
 
   it('can clear the metadata cache', () => {

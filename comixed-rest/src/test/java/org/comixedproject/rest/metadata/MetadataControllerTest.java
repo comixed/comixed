@@ -26,7 +26,6 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
@@ -68,7 +67,6 @@ public class MetadataControllerTest {
   @Mock private List<VolumeMetadata> comicVolumeList;
   @Mock private IssueMetadata comicIssue;
   @Mock private ComicBook comicBook;
-  @Mock private List<MetadataAuditLogEntry> auditLogEntryList;
   @Mock private List<Long> idList;
   @Mock private JobLauncher jobLauncher;
   @Mock private Job updateComicBookMetadata;
@@ -241,25 +239,6 @@ public class MetadataControllerTest {
 
     Mockito.verify(comicBookService, Mockito.times(1)).markComicBooksForBatchMetadataUpdate(idList);
     Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBookMetadata, jobParameters);
-  }
-
-  @Test
-  public void testLoadAuditLog() {
-    Mockito.when(metadataService.loadAuditLogEntries()).thenReturn(auditLogEntryList);
-
-    final List<MetadataAuditLogEntry> response = controller.loadAuditLog();
-
-    assertNotNull(response);
-    assertSame(auditLogEntryList, response);
-
-    Mockito.verify(metadataService, Mockito.times(1)).loadAuditLogEntries();
-  }
-
-  @Test
-  public void testClearAuditLog() {
-    controller.clearAuditLog();
-
-    Mockito.verify(metadataService, Mockito.times(1)).clearAuditLog();
   }
 
   @Test

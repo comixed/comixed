@@ -19,8 +19,6 @@
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { MetadataAuditLogEntry } from '@app/comic-metadata/models/metadata-audit-log-entry';
-import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 
 export const METADATA_SOURCE_1: MetadataSource = {
   id: 1,
@@ -68,11 +66,4 @@ export const SCRAPING_ISSUE_1: IssueMetadata = {
   name: 'Scraping Series 1',
   issueNumber: '27',
   description: 'This is my scraping issue.'
-};
-
-export const METADATA_AUDIT_LOG_ENTRY_1: MetadataAuditLogEntry = {
-  metadataSource: METADATA_SOURCE_1,
-  comic: COMIC_BOOK_1,
-  referenceId: '13245',
-  createdOn: new Date().getTime()
 };

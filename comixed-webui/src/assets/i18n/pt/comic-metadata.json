@@ -59,30 +59,6 @@
       "mark-preferred": "Mark this metadata source as preferred."
     }
   },
-  "metadata-audit-log": {
-    "clear-entries": {
-      "confirm-message": "Tem a certeza que quer apagar todas as entradas metadados no relatório? Esta ação não pode ser desfeita.",
-      "confirm-title": "Limpar Relatório de Metadados",
-      "effect-failure": "Falhou ao apagar relatório de metadados.",
-      "effect-success": "Relatório de metadados limpo."
-    },
-    "label": {
-      "comic": "Comic",
-      "created-on": "Criado em",
-      "metadata-source": "Origem dos Metadados"
-    },
-    "load-entries": {
-      "effect-failure": "Falhou ao carregar o relatório dos metadados."
-    },
-    "text": {
-      "comic-is-missing": "Comic já não está disponível."
-    },
-    "tooltip": {
-      "clear-entries": "Limpar o relatório dos metadados.",
-      "clear-metadata-cache": "Clear the metadata cache.",
-      "reload-entries": "Recarregar o relatório dos metadados."
-    }
-  },
   "metadata-process": {
     "label": {
       "completed": "Comics Completed",
