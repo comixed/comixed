@@ -31,11 +31,6 @@ import {
   reducer as metadataSourceReducer
 } from '@app/comic-metadata/reducers/metadata-source.reducer';
 import { MetadataSourceEffects } from '@app/comic-metadata/effects/metadata-source.effects';
-import { MetadataAuditLogEffects } from '@app/comic-metadata/effects/metadata-audit-log.effects';
-import {
-  METADATA_AUDIT_LOG_FEATURE_KEY,
-  reducer as metadataAuditLogReducer
-} from '@app/comic-metadata/reducers/metadata-audit-log.reducer';
 import { MetadataProcessPageComponent } from './pages/metadata-process-page/metadata-process-page.component';
 import { ComicMetadataRouting } from '@app/comic-metadata/comic-metadata.routing';
 import { MetadataProcessToolbarComponent } from './components/metadata-process-toolbar/metadata-process-toolbar.component';
@@ -67,17 +62,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     ),
     StoreModule.forFeature(METADATA_SOURCE_FEATURE_KEY, metadataSourceReducer),
     StoreModule.forFeature(
-      METADATA_AUDIT_LOG_FEATURE_KEY,
-      metadataAuditLogReducer
-    ),
-    StoreModule.forFeature(
       METADATA_UPDATE_PROCESS_FEATURE_KEY,
       metadataUpdateProcessReducer
     ),
     EffectsModule.forFeature([
       MetadataSourceListEffects,
       MetadataSourceEffects,
-      MetadataAuditLogEffects,
       MetadataUpdateProcessEffects
     ]),
     MatToolbarModule,

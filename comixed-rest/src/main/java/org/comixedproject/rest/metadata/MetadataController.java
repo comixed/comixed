@@ -27,7 +27,6 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
-import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
@@ -183,27 +182,6 @@ public class MetadataController {
                 System.currentTimeMillis())
             .addString(MetadataProcessConfiguration.PARAM_SKIP_CACHE, String.valueOf(skipCache))
             .toJobParameters());
-  }
-
-  /**
-   * Loads all metadata audit log entries.
-   *
-   * @return the list of entries
-   */
-  @GetMapping(value = "/api/metadata/log", produces = MediaType.APPLICATION_JSON_VALUE)
-  @JsonView(View.MetadataAuditLogEntryList.class)
-  @PreAuthorize("hasRole('ADMIN')")
-  public List<MetadataAuditLogEntry> loadAuditLog() {
-    log.info("Loading metadata audit log");
-    return this.metadataService.loadAuditLogEntries();
-  }
-
-  /** Clears the metadata audit log. */
-  @DeleteMapping(value = "/api/metadata/log")
-  @PreAuthorize("hasRole('ADMIN')")
-  public void clearAuditLog() {
-    log.info("Clearing metadata audit log");
-    this.metadataService.clearAuditLog();
   }
 
   /** Initiates clearing the metadata cache. */

@@ -66,7 +66,6 @@ import { MetadataSourceListComponent } from './components/metadata-source-list/m
 import { MetadataSourcesViewComponent } from './components/metadata-sources-view/metadata-sources-view.component';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { MetadataAuditLogListComponent } from './components/metadata-audit-log-list/metadata-audit-log-list.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -78,8 +77,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ServerRuntimeComponent,
     MetadataSourceListComponent,
     MetadataSourceDetailComponent,
-    MetadataSourcesViewComponent,
-    MetadataAuditLogListComponent
+    MetadataSourcesViewComponent
   ],
   imports: [
     CommonModule,

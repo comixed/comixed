@@ -31,7 +31,6 @@ import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.lists.ReadingList;
-import org.comixedproject.model.metadata.MetadataAuditLogEntry;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
@@ -78,8 +77,7 @@ public class ComicBook {
     View.LastReadList.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class,
-    View.MetadataAuditLogEntryList.class
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -214,8 +212,7 @@ public class ComicBook {
     View.LastReadList.class,
     View.DuplicatePageDetail.class,
     View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class,
-    View.MetadataAuditLogEntryList.class
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -227,8 +224,7 @@ public class ComicBook {
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class,
-    View.MetadataAuditLogEntryList.class
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -240,8 +236,7 @@ public class ComicBook {
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class,
-    View.MetadataAuditLogEntryList.class
+    View.ReadingListDetail.class
   })
   @Getter
   @Setter
@@ -253,8 +248,7 @@ public class ComicBook {
     View.ComicListView.class,
     View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
-    View.ReadingListDetail.class,
-    View.MetadataAuditLogEntryList.class
+    View.ReadingListDetail.class
   })
   @Getter
   private String issueNumber;
@@ -409,11 +403,6 @@ public class ComicBook {
   @JsonIgnore
   @Getter
   private List<LastRead> lastReads = new ArrayList<>();
-
-  @OneToMany(mappedBy = "comicBook", orphanRemoval = true, fetch = FetchType.LAZY)
-  @OrderColumn(name = "createdOn")
-  @Getter
-  private Set<MetadataAuditLogEntry> metadataAuditLogEntries = new HashSet<>();
 
   /**
    * Returns just the filename without the path.

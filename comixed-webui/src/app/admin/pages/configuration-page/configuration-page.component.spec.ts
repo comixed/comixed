@@ -191,7 +191,7 @@ describe('ConfigurationPageComponent', () => {
   });
 
   describe('query parameter processing', () => {
-    const TAB = 2;
+    const TAB = 1;
 
     it('loads the tab from the URL', () => {
       (activatedRoute.queryParams as BehaviorSubject<{}>).next({

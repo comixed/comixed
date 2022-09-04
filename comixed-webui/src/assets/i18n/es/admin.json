@@ -17,7 +17,6 @@
     },
     "tab": {
       "library": "Library",
-      "metadata-audit-log": "Metadata Audit Log",
       "metadata-sources": "Metadata Sources",
       "server-runtime": "Runtime",
       "scraping-rules": "Scraping Rules"
