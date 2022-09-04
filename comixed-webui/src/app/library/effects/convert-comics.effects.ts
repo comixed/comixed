@@ -27,8 +27,9 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { LibraryService } from '@app/library/services/library.service';
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 @Injectable()
 export class ConvertComicsEffects {
@@ -57,7 +58,7 @@ export class ConvertComicsEffects {
                 )
               )
             ),
-            map(() => comicsConverting()),
+            mergeMap(() => [comicsConverting(), clearSelectedComicBooks()]),
             catchError(error => {
               this.logger.error('Service failure:', error);
               this.alertService.error(

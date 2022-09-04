@@ -38,6 +38,7 @@ import {
   convertComicsFailed
 } from '@app/library/actions/convert-comics.actions';
 import { hot } from 'jasmine-marbles';
+import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 describe('ConvertComicsEffects', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -92,7 +93,8 @@ describe('ConvertComicsEffects', () => {
         deletePages: DELETE_PAGES,
         renamePages: RENAME_PAGES
       });
-      const outcome = comicsConverting();
+      const outcome1 = comicsConverting();
+      const outcome2 = clearSelectedComicBooks();
 
       actions$ = hot('-a', { a: action });
       libraryService.convertComics
@@ -104,7 +106,7 @@ describe('ConvertComicsEffects', () => {
         })
         .and.returnValue(of(serviceResponse));
 
-      const expected = hot('-b', { b: outcome });
+      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
       expect(effects.convertComics$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });
