@@ -53,7 +53,10 @@ import {
   SCRAPING_VOLUME_2,
   SCRAPING_VOLUME_3
 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import {
+  clearSelectedComicBooks,
+  deselectComicBooks
+} from '@app/library/actions/library-selections.actions';
 
 describe('MetadataEffects', () => {
   const SERIES = 'The Series';
@@ -238,11 +241,12 @@ describe('MetadataEffects', () => {
       });
       const outcome1 = comicScraped();
       const outcome2 = comicBookLoaded({ comicBook: COMIC });
+      const outcome3 = deselectComicBooks({ ids: [COMIC.id] });
 
       actions$ = hot('-a', { a: action });
       scrapingService.scrapeComic.and.returnValue(of(serviceResponse));
 
-      const expected = hot('-(bc)', { b: outcome1, c: outcome2 });
+      const expected = hot('-(bcd)', { b: outcome1, c: outcome2, d: outcome3 });
       expect(effects.scrapeComic$).toBeObservable(expected);
       expect(alertService.info).toHaveBeenCalledWith(jasmine.any(String));
     });

@@ -45,7 +45,10 @@ import { of } from 'rxjs';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { comicBookLoaded } from '@app/comic-books/actions/comic-book.actions';
-import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
+import {
+  clearSelectedComicBooks,
+  deselectComicBooks
+} from '@app/library/actions/library-selections.actions';
 
 @Injectable()
 export class MetadataEffects {
@@ -150,7 +153,8 @@ export class MetadataEffects {
             ),
             mergeMap((response: ComicBook) => [
               comicScraped(),
-              comicBookLoaded({ comicBook: response })
+              comicBookLoaded({ comicBook: response }),
+              deselectComicBooks({ ids: [response.id] })
             ]),
             catchError(error => {
               this.logger.error('Service failure:', error);
