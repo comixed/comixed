@@ -162,6 +162,7 @@
     "label": {
       "by-added-date": "Date Added",
       "by-cover-date": "Cover Date",
+      "by-issue-number": "Issue Number",
       "sort-by": "Sort Comics"
     }
   }
