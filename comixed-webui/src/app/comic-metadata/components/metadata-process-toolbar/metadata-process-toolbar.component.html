@@ -1,7 +1,21 @@
 <mat-toolbar class="cx-primary-light-background">
   <div class="cx-spacer"></div>
   <button
+    id="skip-metadata-cache-button"
+    class="cx-toolbar-button"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="
+      'metadata-update.tooltip.skip-cache' | translate: { skip: skipCache }
+    "
+    (click)="onToggleSkipCache()"
+  >
+    <mat-icon *ngIf="skipCache">check_box</mat-icon>
+    <mat-icon *ngIf="!skipCache">check_box_outline_blank</mat-icon>
+  </button>
+  <button
     id="start-metadata-batch-process-button"
+    class="cx-toolbar-button"
     mat-icon-button
     color="primary"
     [disabled]="selectedIds.length === 0"
