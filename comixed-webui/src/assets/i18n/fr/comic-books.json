@@ -162,6 +162,7 @@
     "label": {
       "by-added-date": "Date d'ajout",
       "by-cover-date": "Date de couverture",
+      "by-issue-number": "Issue Number",
       "sort-by": "Trier les bandes dessinées"
     }
   }

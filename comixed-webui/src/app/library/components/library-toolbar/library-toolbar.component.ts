@@ -92,7 +92,8 @@ export class LibraryToolbarComponent
   ];
   readonly sortFieldOptions: SelectionOption<string>[] = [
     { label: 'sorting.label.by-added-date', value: 'added-date' },
-    { label: 'sorting.label.by-cover-date', value: 'cover-date' }
+    { label: 'sorting.label.by-cover-date', value: 'cover-date' },
+    { label: 'sorting.label.by-issue-number', value: 'issue-number' }
   ];
 
   langChangSubscription: Subscription;

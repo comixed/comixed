@@ -118,6 +118,7 @@ export class ComicBookCoversComponent
 
   @Input() set pageIndex(pageIndex: number) {
     this._pageIndex = pageIndex;
+    /* istanbul ignore next */
     if (!!this.dataSource.paginator) {
       this.dataSource.paginator.pageIndex = this._pageIndex;
     }
@@ -209,6 +210,7 @@ export class ComicBookCoversComponent
   }
 
   ngAfterViewInit(): void {
+    /* istanbul ignore next */
     if (this.showToolbar) {
       this.logger.trace('Setting up pagination');
       this.dataSource.paginator = this.toolbar.paginator;
@@ -362,6 +364,12 @@ export class ComicBookCoversComponent
           return left.addedDate - right.addedDate;
         case 'cover-date':
           return left.coverDate - right.coverDate;
+        case 'issue-number':
+          return left.sortableIssueNumber == right.sortableIssueNumber
+            ? 0
+            : left.sortableIssueNumber > right.sortableIssueNumber
+            ? 1
+            : -1;
       }
     });
   }

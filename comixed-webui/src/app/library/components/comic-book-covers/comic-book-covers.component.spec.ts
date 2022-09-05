@@ -555,15 +555,23 @@ describe('ComicBookCoversComponent', () => {
     const LEFT = {
       ...COMIC_BOOK,
       coverDate: new Date().getTime(),
-      addedDate: new Date().getTime() - 24 * 60 * 60 * 1000
+      addedDate: new Date().getTime() - 24 * 60 * 60 * 1000,
+      sortableIssueNumber: '00010'
+    };
+    const MIDDLE = {
+      ...COMIC_BOOK,
+      coverDate: new Date().getTime(),
+      addedDate: new Date().getTime() + 24 * 60 * 60 * 1000,
+      sortableIssueNumber: '00010'
     };
     const RIGHT = {
       ...COMIC_BOOK,
       coverDate: new Date().getTime() - 24 * 60 * 60 * 1000,
-      addedDate: new Date().getTime()
+      addedDate: new Date().getTime(),
+      sortableIssueNumber: '00020'
     };
 
-    describe('can sorting by added date', () => {
+    describe('sorting by added date', () => {
       beforeEach(() => {
         component.comicBooks = [RIGHT, LEFT];
         component.sortField = 'added-date';
@@ -574,7 +582,7 @@ describe('ComicBookCoversComponent', () => {
       });
     });
 
-    describe('can sorting by cover date', () => {
+    describe('sorting by cover date', () => {
       beforeEach(() => {
         component.comicBooks = [LEFT, RIGHT];
         component.sortField = 'cover-date';
@@ -582,6 +590,34 @@ describe('ComicBookCoversComponent', () => {
 
       it('sorts correctly', () => {
         expect(component.dataSource.data[0]).toBe(RIGHT);
+      });
+    });
+
+    describe('sorting by issue number', () => {
+      describe('when the issue numbers differ', () => {
+        beforeEach(() => {
+          component.comicBooks = [RIGHT, LEFT];
+          component.sortField = 'issue-number';
+        });
+
+        it('sorts correctly', () => {
+          expect(component.dataSource.data[0]).toBe(LEFT);
+        });
+      });
+
+      describe('when the issue numbers are the same', () => {
+        beforeEach(() => {
+          component.comicBooks = [
+            RIGHT,
+            MIDDLE,
+            { ...LEFT, sortableIssueNumber: RIGHT.sortableIssueNumber }
+          ];
+          component.sortField = 'issue-number';
+        });
+
+        it('sorts correctly', () => {
+          expect(component.dataSource.data[0]).toBe(MIDDLE);
+        });
       });
     });
   });
