@@ -2,7 +2,7 @@
   [selectedIds]="selectedIds"
 ></cx-metadata-process-toolbar>
 
-<h2 *ngIf="!processState || !processState.active">
+<h2 *ngIf="processState?.active">
   {{ "metadata-process.page-title" | translate: { count: selectedIds.length } }}
 </h2>
 
@@ -11,3 +11,17 @@
   class="cx-width-100 cx-height-100"
   [processState]="processState"
 ></cx-metadata-process-status>
+
+<cx-comic-book-covers
+  *ngIf="!processState || !processState.active"
+  [title]="
+    'metadata-process.page-title' | translate: { count: selectedIds.length }
+  "
+  [showCovers]="showCovers"
+  [comicBooks]="displayedComicBooks"
+  [showActions]="false"
+  [pageSize]="pageSize"
+  [showCoverFilters]="false"
+  (archiveTypeChanged)="onArchiveTypeChanged($event)"
+  (pageIndexChanged)="onPageIndexChanged($event)"
+></cx-comic-book-covers>

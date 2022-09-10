@@ -25,6 +25,16 @@ import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { selectMetadataUpdateProcessState } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
+import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
+import { ComicBook } from '@app/comic-books/models/comic-book';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_PREFERENCE,
+  SHOW_COMIC_COVERS_PREFERENCE
+} from '@app/library/library.constants';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getUserPreference } from '@app/user';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -34,9 +44,15 @@ import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadat
 export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
   langChangeSubscription: Subscription;
   selectIdSubscription: Subscription;
+  comicBooksSubscription: Subscription;
   processStateSubscription: Subscription;
   processState: MetadataUpdateProcessState;
   selectedIds: number[] = [];
+  comicBooks: ComicBook[] = [];
+  displayedComicBooks: ComicBook[] = [];
+  userSubscription: Subscription;
+  pageSize = PAGE_SIZE_DEFAULT;
+  showCovers = false;
 
   constructor(
     private logger: LoggerService,
@@ -51,11 +67,47 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
     this.logger.trace('Subscribing to selection updates');
     this.selectIdSubscription = this.store
       .select(selectLibrarySelections)
-      .subscribe(ids => (this.selectedIds = ids));
+      .subscribe(ids => {
+        this.selectedIds = ids;
+        this.updateDisplayedComicBooks();
+      });
+    this.logger.trace('Subscribing to the comic book list');
+    this.comicBooksSubscription = this.store
+      .select(selectComicBookList)
+      .subscribe(comicBooks => {
+        this.comicBooks = comicBooks;
+        this.updateDisplayedComicBooks();
+      });
     this.logger.trace('Subscribing to process updates');
     this.processStateSubscription = this.store
       .select(selectMetadataUpdateProcessState)
       .subscribe(state => (this.processState = state));
+    this.logger.trace('Subscribing to user updates');
+    this.userSubscription = this.store
+      .select(selectUser)
+      .pipe(filter(user => !!user))
+      .subscribe(user => {
+        this.pageSize = parseInt(
+          getUserPreference(
+            user.preferences,
+            PAGE_SIZE_PREFERENCE,
+            `${PAGE_SIZE_DEFAULT}`
+          ),
+          10
+        );
+        this.showCovers =
+          getUserPreference(
+            user.preferences,
+            SHOW_COMIC_COVERS_PREFERENCE,
+            `$true`
+          ) === `${true}`;
+      });
+  }
+
+  updateDisplayedComicBooks(): void {
+    this.displayedComicBooks = this.comicBooks.filter(comicBook =>
+      this.selectedIds.includes(comicBook.id)
+    );
   }
 
   ngAfterViewInit(): void {
@@ -69,6 +121,10 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
     this.selectIdSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from process state updates');
     this.processStateSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from comic book list updates');
+    this.comicBooksSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from user updates');
+    this.userSubscription.unsubscribe();
   }
 
   private loadTranslations(): void {

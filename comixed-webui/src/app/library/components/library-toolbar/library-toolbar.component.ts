@@ -35,7 +35,7 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE,
-  SHOW_COMIC_COVERS,
+  SHOW_COMIC_COVERS_PREFERENCE,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';
@@ -112,8 +112,11 @@ export class LibraryToolbarComponent
     );
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.showCovers =
-        getUserPreference(user.preferences, SHOW_COMIC_COVERS, `${true}`) ===
-        `${true}`;
+        getUserPreference(
+          user.preferences,
+          SHOW_COMIC_COVERS_PREFERENCE,
+          `${true}`
+        ) === `${true}`;
     });
   }
 
@@ -307,7 +310,7 @@ export class LibraryToolbarComponent
     this.logger.trace('Toggling show cover mode');
     this.store.dispatch(
       saveUserPreference({
-        name: SHOW_COMIC_COVERS,
+        name: SHOW_COMIC_COVERS_PREFERENCE,
         value: `${!this.showCovers}`
       })
     );
