@@ -38,7 +38,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   PAGE_SIZE_PREFERENCE,
-  SHOW_COMIC_COVERS,
+  SHOW_COMIC_COVERS_PREFERENCE,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { MatSelectModule } from '@angular/material/select';
@@ -62,11 +62,16 @@ import { USER_READER } from '@app/user/user.fixtures';
 
 describe('LibraryToolbarComponent', () => {
   const COMIC_BOOKS = [
-    { ...COMIC_BOOK_1, yearPublished: 2022 },
-    { ...COMIC_BOOK_2, yearPublished: 2021 },
+    { ...COMIC_BOOK_1, yearPublished: 2022, coverDate: new Date().getTime() },
+    {
+      ...COMIC_BOOK_2,
+      yearPublished: 2021,
+      coverDate: new Date().getTime() - 365 * 24 * 60 * 60 * 1000
+    },
     {
       ...COMIC_BOOK_3,
-      yearPublished: 1997
+      yearPublished: 1997,
+      coverDate: new Date().getTime() - 3 * 365 * 24 * 60 * 60 * 1000
     }
   ];
   const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
@@ -349,7 +354,10 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({ name: SHOW_COMIC_COVERS, value: `${SHOW_COVERS}` })
+        saveUserPreference({
+          name: SHOW_COMIC_COVERS_PREFERENCE,
+          value: `${SHOW_COVERS}`
+        })
       );
     });
   });

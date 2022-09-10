@@ -44,7 +44,7 @@ import {
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_ARCHIVE_TYPE,
   QUERY_PARAM_PAGE_INDEX,
-  SHOW_COMIC_COVERS,
+  SHOW_COMIC_COVERS_PREFERENCE,
   SORT_FIELD_DEFAULT,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
@@ -168,8 +168,11 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
         SORT_FIELD_DEFAULT
       );
       this.showCovers =
-        getUserPreference(user.preferences, SHOW_COMIC_COVERS, `${true}`) ===
-        `${true}`;
+        getUserPreference(
+          user.preferences,
+          SHOW_COMIC_COVERS_PREFERENCE,
+          `${true}`
+        ) === `${true}`;
     });
     this.selectedSubscription = this.store
       .select(selectLibrarySelections)

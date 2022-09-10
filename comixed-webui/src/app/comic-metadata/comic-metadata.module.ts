@@ -45,6 +45,7 @@ import {
 } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { MetadataUpdateProcessEffects } from '@app/comic-metadata/effects/metadata-update-process.effects';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { LibraryModule } from '@app/library/library.module';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    LibraryModule
   ],
   exports: [CommonModule]
 })
