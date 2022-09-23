@@ -6,7 +6,7 @@
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed</artifactId>
   <packaging>pom</packaging>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2.0-1</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
