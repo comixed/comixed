@@ -23,8 +23,8 @@
       "confirmation-title": "Unblock Page Hash"
     },
     "set-state": {
-      "effect-failure": "Failed to {block,select,true{block} other{unblock}} page hash.",
-      "effect-success": "Successfully {block, select, true{blocked} other{unblocked}} page hash."
+      "effect-failure": "Failed to {blocked, select, true{block} other{unblock}} page hash.",
+      "effect-success": "Successfully {blocked, select, true{blocked} other{unblocked}} page hash."
     }
   },
   "blocked-hash-list": {

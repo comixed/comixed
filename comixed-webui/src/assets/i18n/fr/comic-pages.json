@@ -23,8 +23,8 @@
       "confirmation-title": "Déloquer une page avec un hash"
     },
     "set-state": {
-      "effect-failure": "Échec du hash de la page {block,select,true{bloquée} other{débloquée}}.",
-      "effect-success": "Succès du hash de la page {block, select, true{bloquée} other{débloquée}}."
+      "effect-failure": "Échec du hash de la page {blocked, select, true{bloquée} other{débloquée}}.",
+      "effect-success": "Succès du hash de la page {blocked, select, true{bloquée} other{débloquée}}."
     }
   },
   "blocked-hash-list": {

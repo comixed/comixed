@@ -23,8 +23,8 @@
       "confirmation-title": "Desbloquear Página com Hash"
     },
     "set-state": {
-      "effect-failure": "Falhou a {block,select,true{bloquear} other{desbloquear}} página com hash.",
-      "effect-success": "{block, select, true{Bloqueada} other{Desbloqueada}} página com hash."
+      "effect-failure": "Falhou a {blocked, select, true{bloquear} other{desbloquear}} página com hash.",
+      "effect-success": "{blocked, select, true{Bloqueada} other{Desbloqueada}} página com hash."
     }
   },
   "blocked-hash-list": {
