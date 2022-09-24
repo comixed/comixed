@@ -23,6 +23,7 @@ import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguratio
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_PAGE_RENAMING_RULE;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -56,12 +57,16 @@ public class RecreateComicFileProcessor
         ArchiveType.forValue(this.jobParameters.getString(JOB_TARGET_ARCHIVE));
     final boolean removeDeletedPages =
         Boolean.parseBoolean(this.jobParameters.getString(JOB_DELETE_MARKED_PAGES));
-    log.trace("Recreating comicBook files");
-    this.comicBookAdaptor.save(
-        comicBook,
-        archiveType,
-        removeDeletedPages,
-        this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
+    try {
+      log.trace("Recreating comicBook files");
+      this.comicBookAdaptor.save(
+          comicBook,
+          archiveType,
+          removeDeletedPages,
+          this.configurationService.getOptionValue(CFG_LIBRARY_PAGE_RENAMING_RULE, ""));
+    } catch (AdaptorException error) {
+      log.error("Failed to recreate comic book file", error);
+    }
     return comicBook;
   }
 

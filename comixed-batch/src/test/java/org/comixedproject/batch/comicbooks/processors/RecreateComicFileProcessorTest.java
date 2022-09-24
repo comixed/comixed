@@ -18,7 +18,9 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertSame;
 
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -75,6 +77,26 @@ public class RecreateComicFileProcessorTest {
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_TARGET_ARCHIVE, true, TEST_PAGE_RENAMING_RULE);
+  }
+
+  @Test
+  public void testProcessAdaptorExceptionOnSave() throws Exception {
+    Mockito.doThrow(AdaptorException.class)
+        .when(comicBookAdaptor)
+        .save(
+            Mockito.any(ComicBook.class),
+            Mockito.any(ArchiveType.class),
+            Mockito.anyBoolean(),
+            Mockito.anyString());
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBook, Mockito.never()).removeDeletedPages();
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comicBook, TEST_TARGET_ARCHIVE, false, TEST_PAGE_RENAMING_RULE);
   }
 
   @Test

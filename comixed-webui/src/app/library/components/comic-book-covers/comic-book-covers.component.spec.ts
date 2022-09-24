@@ -578,7 +578,7 @@ describe('ComicBookCoversComponent', () => {
       });
 
       it('sorts correctly', () => {
-        expect(component.dataSource.data[0]).toBe(LEFT);
+        expect(component.dataSource.data[0]).toEqual(LEFT);
       });
     });
 
@@ -589,7 +589,7 @@ describe('ComicBookCoversComponent', () => {
       });
 
       it('sorts correctly', () => {
-        expect(component.dataSource.data[0]).toBe(RIGHT);
+        expect(component.dataSource.data[0]).toEqual(RIGHT);
       });
     });
 
@@ -601,7 +601,7 @@ describe('ComicBookCoversComponent', () => {
         });
 
         it('sorts correctly', () => {
-          expect(component.dataSource.data[0]).toBe(LEFT);
+          expect(component.dataSource.data[0]).toEqual(LEFT);
         });
       });
 
@@ -616,7 +616,7 @@ describe('ComicBookCoversComponent', () => {
         });
 
         it('sorts correctly', () => {
-          expect(component.dataSource.data[0]).toBe(MIDDLE);
+          expect(component.dataSource.data[0]).toEqual(MIDDLE);
         });
       });
     });
