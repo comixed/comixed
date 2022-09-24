@@ -18,8 +18,14 @@
 
 package org.comixedproject.service.comicpages;
 
-import static junit.framework.TestCase.*;
-import static org.comixedproject.service.comicpages.BlockedHashService.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_HASH_HEADER;
+import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_LABEL_HEADER;
+import static org.comixedproject.service.comicpages.BlockedHashService.PAGE_SNAPSHOT_HEADER;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +47,11 @@ import org.comixedproject.service.library.DuplicatePageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -365,7 +375,7 @@ public class BlockedHashServiceTest {
   }
 
   @Test
-  public void testDeletedBlockedPages() {
+  public void testDeletedBlockedPages() throws PublishingException {
     final List<String> blockedPageHashes = new ArrayList<>();
     for (int index = 0; index < 25; index++) {
       blockedPageHashes.add(RandomStringUtils.random(32, true, true));
@@ -386,6 +396,37 @@ public class BlockedHashServiceTest {
         hash -> Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(hash));
     Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashes.size()))
         .delete(blockedHashRecord);
+    Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(blockedPageHashes.size()))
+        .publish(blockedHashRecord);
+  }
+
+  @Test
+  public void testDeletedBlockedPagesPublishingException() throws PublishingException {
+    final List<String> blockedPageHashes = new ArrayList<>();
+    for (int index = 0; index < 25; index++) {
+      blockedPageHashes.add(RandomStringUtils.random(32, true, true));
+    }
+
+    Mockito.when(blockedHashRepository.findByHash(Mockito.anyString()))
+        .thenReturn(blockedHashRecord);
+    Mockito.when(blockedHashRecord.getHash()).thenReturn(TEST_PAGE_HASH);
+    Mockito.doNothing().when(blockedHashRepository).delete(Mockito.any(BlockedHash.class));
+    Mockito.doThrow(PublishingException.class)
+        .when(publishBlockedPageRemovalAction)
+        .publish(Mockito.any(BlockedHash.class));
+
+    final List<String> result = service.deleteBlockedPages(blockedPageHashes);
+
+    assertNotNull(result);
+    assertEquals(blockedPageHashes.size(), result.size());
+    result.forEach(hash -> assertEquals(TEST_PAGE_HASH, hash));
+
+    blockedPageHashes.forEach(
+        hash -> Mockito.verify(blockedHashRepository, Mockito.times(1)).findByHash(hash));
+    Mockito.verify(blockedHashRepository, Mockito.times(blockedPageHashes.size()))
+        .delete(blockedHashRecord);
+    Mockito.verify(publishBlockedPageRemovalAction, Mockito.times(blockedPageHashes.size()))
+        .publish(blockedHashRecord);
   }
 
   @Test

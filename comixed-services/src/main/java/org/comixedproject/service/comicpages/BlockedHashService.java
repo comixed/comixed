@@ -273,6 +273,11 @@ public class BlockedHashService {
             log.trace("Deleting entry: id={}", entry.getId());
             this.blockedHashRepository.delete(entry);
             result.add(entry.getHash());
+            try {
+              this.publishBlockedPageRemovalAction.publish(entry);
+            } catch (PublishingException error) {
+              log.error("Failed to publish blocked hash removed", error);
+            }
           }
         });
     log.trace("Returning list of deleted blocked pages");

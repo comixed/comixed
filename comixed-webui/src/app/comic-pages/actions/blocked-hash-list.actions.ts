@@ -41,13 +41,16 @@ export const blockedHashRemoved = createAction(
   '[Blocked Hash List] A blocked page was removed',
   props<{ entry: BlockedHash }>()
 );
+
 export const markPagesWithHash = createAction(
   '[Blocked Hash List] Set the deleted flag for multiple pages',
   props<{ hashes: string[]; deleted: boolean }>()
 );
+
 export const pagesWithHashMarked = createAction(
   '[Blocked Hash List] The deleted flag set for multiple pages'
 );
+
 export const markPagesWithHashFailed = createAction(
   '[Blocked Hash List] Failed to set the deleted flag for multiple pages'
 );
