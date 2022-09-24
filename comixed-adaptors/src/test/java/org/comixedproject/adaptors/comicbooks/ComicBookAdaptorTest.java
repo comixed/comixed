@@ -18,7 +18,10 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +45,11 @@ import org.comixedproject.model.comicpages.Page;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -248,6 +255,28 @@ public class ComicBookAdaptorTest {
       Mockito.verify(contentAdaptor, Mockito.times(1))
           .loadContent(comicBook, TEST_ENTRY_FILENAME, TEST_ARCHIVE_ENTRY_CONTENT);
     }
+  }
+
+  @Test
+  public void testLoadNoContent()
+      throws AdaptorException, ArchiveAdaptorException, ContentAdaptorException {
+    Mockito.when(
+            readableArchiveAdaptor.readEntry(
+                Mockito.any(ArchiveReadHandle.class), Mockito.anyString()))
+        .thenReturn(new byte[0]);
+
+    archiveEntryList.add(archiveEntry);
+
+    adaptor.load(comicBook);
+
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
+        .openArchiveForRead(TEST_COMIC_FILENAME);
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).getEntries(readHandle);
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1))
+        .readEntry(readHandle, TEST_ENTRY_FILENAME);
+    Mockito.verify(contentAdaptor, Mockito.never())
+        .loadContent(Mockito.any(ComicBook.class), Mockito.anyString(), Mockito.any(byte[].class));
+    Mockito.verify(readableArchiveAdaptor, Mockito.times(1)).closeArchiveForRead(readHandle);
   }
 
   @Test
