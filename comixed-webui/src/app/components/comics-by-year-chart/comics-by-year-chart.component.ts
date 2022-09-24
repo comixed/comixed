@@ -47,10 +47,11 @@ export class ComicsByYearChartComponent implements AfterViewInit {
     const data = [];
     libraryState.byPublisherAndYear.forEach(entry => {
       let record = data.find(existing => existing.name === entry.year);
+      /* istanbul ignore else */
       if (!record) {
         this.logger.trace('Creating new record');
         record = {
-          name: entry.year,
+          name: `${entry.year}`,
           series: []
         };
         data.push(record);
@@ -60,7 +61,9 @@ export class ComicsByYearChartComponent implements AfterViewInit {
         value: entry.count
       });
     });
-    this.data = data;
+    this.data = data.sort((left, right) =>
+      left.name > right.name ? 1 : left.name < right.name ? -1 : 0
+    );
   }
 
   ngAfterViewInit(): void {
