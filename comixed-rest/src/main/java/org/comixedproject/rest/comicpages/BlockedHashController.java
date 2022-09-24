@@ -222,7 +222,7 @@ public class BlockedHashController {
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
     final List<String> hashes = request.getHashes();
-    log.info("Marking pages with hash for deletion");
+    log.info("Unmarking pages with hash for deletion");
     this.launchUnmarkPagesWithHashProcess(hashes);
   }
 

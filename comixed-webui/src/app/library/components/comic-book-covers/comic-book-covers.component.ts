@@ -61,6 +61,7 @@ import {
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'cx-comic-book-covers',
@@ -147,7 +148,7 @@ export class ComicBookCoversComponent
 
   @Input() set comicBooks(comicBooks: ComicBook[]) {
     this.logger.trace('Setting comics:', comicBooks);
-    this.dataSource.data = comicBooks;
+    this.dataSource.data = _.cloneDeep(comicBooks);
     this.pageIndex = this._pageIndex;
     this.sortData();
   }

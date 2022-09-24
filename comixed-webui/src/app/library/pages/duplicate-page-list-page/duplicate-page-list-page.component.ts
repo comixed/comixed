@@ -57,6 +57,7 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -162,7 +163,7 @@ export class DuplicatePageListPageComponent
   }
 
   set duplicatePages(pages: DuplicatePage[]) {
-    this._duplicatePages = pages;
+    this._duplicatePages = _.cloneDeep(pages);
     this.loadDataSource();
   }
 
