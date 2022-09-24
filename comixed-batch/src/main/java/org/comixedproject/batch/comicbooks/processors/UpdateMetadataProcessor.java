@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,15 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
-    try {
-      log.debug("Updating comicBook metadata: id={}", comicBook.getId());
-      this.comicBookAdaptor.save(comicBook, comicBook.getArchiveType(), false, "");
-    } catch (AdaptorException error) {
-      log.error("Failed to update metadata for comicBook", error);
+    if (comicBook.getArchiveType() == ArchiveType.CBR) {
+      log.warn("Cannot write CBR files");
+    } else {
+      try {
+        log.debug("Updating comicBook metadata: id={}", comicBook.getId());
+        this.comicBookAdaptor.save(comicBook, comicBook.getArchiveType(), false, "");
+      } catch (AdaptorException error) {
+        log.error("Failed to update metadata for comicBook", error);
+      }
     }
     return comicBook;
   }

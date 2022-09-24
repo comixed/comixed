@@ -66,6 +66,23 @@ public class UpdateMetadataProcessorTest {
   }
 
   @Test
+  public void testProcessForRarFile() throws Exception {
+    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBR);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.never())
+        .save(
+            Mockito.any(ComicBook.class),
+            Mockito.any(ArchiveType.class),
+            Mockito.anyBoolean(),
+            Mockito.anyString());
+  }
+
+  @Test
   public void testProcess() throws Exception {
     final ComicBook result = processor.process(comicBook);
 
