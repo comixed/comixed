@@ -60,6 +60,7 @@
     "ansi-regex": "^4.1.1",
     "color-string": "^1.5.5",
     "css-what": "^5.0.1",
+    "d3-color": "~3.1.0",
     "engine.io": "~3.6.0",
     "file-saver": "^2.0.5",
     "glob-parent": "^5.1.2",
