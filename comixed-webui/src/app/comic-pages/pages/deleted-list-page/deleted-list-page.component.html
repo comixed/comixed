@@ -1,4 +1,22 @@
-<h2>{{ "deleted-page-list.page-title" | translate }}</h2>
+<mat-toolbar class="cx-primary-light-background">
+  <mat-paginator
+    class="cx-primary-light-background cx-height-100"
+    showFirstLastButtons
+    [pageIndex]="!ready ? 0 : pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="
+      onPageChange($event.pageSize, $event.pageIndex, $event.previousPageIndex)
+    "
+  ></mat-paginator>
+</mat-toolbar>
+
+<h2>
+  {{
+    "deleted-page-list.page-title"
+      | translate: { count: dataSource.data.length }
+  }}
+</h2>
 
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="comic">

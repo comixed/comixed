@@ -73,7 +73,7 @@
       "filename": "Nom du fichier de la page",
       "hash": "Hash de la page"
     },
-    "page-title": "Liste des pages supprimées",
+    "page-title": "Deleted Page List ({count, plural, =1{One Page} other{# Pages}} Total)",
     "tab-title": "Liste des pages supprimées"
   }
 }

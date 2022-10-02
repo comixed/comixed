@@ -73,7 +73,7 @@
       "filename": "Ficheiro da Página",
       "hash": "Hash da Página"
     },
-    "page-title": "Lista de Páginas Apagadas",
+    "page-title": "Deleted Page List ({count, plural, =1{One Page} other{# Pages}} Total)",
     "tab-title": "Lista de Páginas Apagadas"
   }
 }
