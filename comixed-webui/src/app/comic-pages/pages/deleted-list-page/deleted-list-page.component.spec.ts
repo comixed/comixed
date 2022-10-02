@@ -31,8 +31,31 @@ import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatTableModule } from '@angular/material/table';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_ADMIN } from '@app/user/user.fixtures';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router
+} from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import {
+  PAGE_SIZE_PREFERENCE,
+  QUERY_PARAM_PAGE_INDEX
+} from '@app/library/library.constants';
+import { saveUserPreference } from '@app/user/actions/user.actions';
 
 describe('DeletedListPageComponent', () => {
+  const PAGE_INDEX = 11;
+  const PAGE_SIZE = 25;
+  const USER = { ...USER_ADMIN };
   const COMIC_BOOKS: ComicBook[] = [
     {
       ...COMIC_BOOK_1,
@@ -44,7 +67,8 @@ describe('DeletedListPageComponent', () => {
     }
   ];
   const initialState = {
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
   let component: DeletedListPageComponent;
@@ -53,16 +77,33 @@ describe('DeletedListPageComponent', () => {
   let setTitleSpy: jasmine.Spy<any>;
   let translateService: TranslateService;
   let store: MockStore<any>;
+  let router: Router;
+  let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DeletedListPageComponent, ComicTitlePipe],
       imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatTableModule
+        MatTableModule,
+        MatToolbarModule,
+        MatPaginatorModule
       ],
-      providers: [provideMockStore({ initialState }), TitleService]
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({}),
+            queryParams: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot
+          }
+        },
+        TitleService
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeletedListPageComponent);
@@ -71,6 +112,10 @@ describe('DeletedListPageComponent', () => {
     setTitleSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
+    activatedRoute = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
 
@@ -137,6 +182,58 @@ describe('DeletedListPageComponent', () => {
       expect(component.dataSource.sortingDataAccessor(ENTRY, 'hash')).toEqual(
         PAGE.hash
       );
+    });
+  });
+
+  describe('query parameters', () => {
+    beforeEach(() => {
+      (activatedRoute.queryParams as BehaviorSubject<any>).next({
+        [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`
+      });
+    });
+
+    it('loads the page index', () => {
+      expect(component.pageIndex).toEqual(PAGE_INDEX);
+    });
+  });
+
+  describe('paginator events', () => {
+    describe('if the page changes', () => {
+      beforeEach(() => {
+        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX + 1);
+      });
+
+      it('saves the preferred page size', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: PAGE_SIZE_PREFERENCE,
+            value: `${PAGE_SIZE}`
+          })
+        );
+      });
+
+      it('updates the location', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
+    });
+
+    describe('if the page does not change', () => {
+      beforeEach(() => {
+        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX);
+      });
+
+      it('saves the preferred page size', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: PAGE_SIZE_PREFERENCE,
+            value: `${PAGE_SIZE}`
+          })
+        );
+      });
+
+      it('updates the location', () => {
+        expect(router.navigate).not.toHaveBeenCalled();
+      });
     });
   });
 });
