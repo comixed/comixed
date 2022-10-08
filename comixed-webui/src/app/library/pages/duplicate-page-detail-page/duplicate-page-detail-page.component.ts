@@ -53,7 +53,7 @@ export class DuplicatePageDetailPageComponent
   blockedHashes: string[] = [];
   langChangeSubscription: Subscription;
   hash = '';
-  dataSource = new MatTableDataSource<ComicBook>([]);
+  dataSource = new MatTableDataSource<number>([]);
 
   readonly displayedColumns = [
     'publisher',
@@ -123,7 +123,7 @@ export class DuplicatePageDetailPageComponent
     this.logger.trace('Setting duplicate page detail');
     this._detail = detail;
     this.logger.trace('Loading affected comics');
-    this.dataSource.data = this._detail.comicBooks;
+    this.dataSource.data = this._detail.ids;
   }
 
   ngAfterViewInit(): void {

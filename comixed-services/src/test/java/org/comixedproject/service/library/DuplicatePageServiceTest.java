@@ -20,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DuplicatePageServiceTest {
   private static final String TEST_PAGE_HASH = "1234567890ABCDEF";
+  private static final Long TEST_COMIC_BOOK_ID = 771L;
 
   @InjectMocks private DuplicatePageService service;
   @Mock private PageRepository pageRepository;
@@ -32,6 +33,7 @@ public class DuplicatePageServiceTest {
   public void setUp() {
     Mockito.when(page.getHash()).thenReturn(TEST_PAGE_HASH);
     Mockito.when(page.getComicBook()).thenReturn(comicBook);
+    Mockito.when(comicBook.getId()).thenReturn(TEST_COMIC_BOOK_ID);
   }
 
   @Test
@@ -45,7 +47,7 @@ public class DuplicatePageServiceTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(TEST_PAGE_HASH, result.get(0).getHash());
-    assertTrue(result.get(0).getComicBooks().contains(comicBook));
+    assertTrue(result.get(0).getIds().contains(TEST_COMIC_BOOK_ID));
 
     Mockito.verify(pageRepository, Mockito.times(1)).getDuplicatePages();
   }
@@ -71,7 +73,7 @@ public class DuplicatePageServiceTest {
 
     assertNotNull(result);
     assertEquals(TEST_PAGE_HASH, result.getHash());
-    assertTrue(result.getComicBooks().contains(comicBook));
+    assertTrue(result.getIds().contains(TEST_COMIC_BOOK_ID));
 
     Mockito.verify(pageRepository, Mockito.times(1)).findByHash(TEST_PAGE_HASH);
   }

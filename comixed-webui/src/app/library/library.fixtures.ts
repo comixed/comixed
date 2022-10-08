@@ -26,15 +26,15 @@ import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
 
 export const DUPLICATE_PAGE_1: DuplicatePage = {
   hash: PAGE_1.hash,
-  comicBooks: [COMIC_BOOK_1]
+  ids: [COMIC_BOOK_1.id]
 };
 
 export const DUPLICATE_PAGE_2: DuplicatePage = {
   hash: PAGE_2.hash,
-  comicBooks: [COMIC_BOOK_2]
+  ids: [COMIC_BOOK_2.id]
 };
 
 export const DUPLICATE_PAGE_3: DuplicatePage = {
   hash: PAGE_3.hash,
-  comicBooks: [COMIC_BOOK_3]
+  ids: [COMIC_BOOK_3.id]
 };

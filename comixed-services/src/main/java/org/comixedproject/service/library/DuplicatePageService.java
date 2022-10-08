@@ -62,7 +62,7 @@ public class DuplicatePageService {
         mapped.put(entry.getHash(), entry);
       }
       log.trace("Loading comic into entry");
-      entry.getComicBooks().add(page.getComicBook());
+      entry.getIds().add(page.getComicBook().getId());
     }
     log.trace("Returning duplicate page list");
     return new ArrayList<>(mapped.values());
@@ -84,7 +84,7 @@ public class DuplicatePageService {
     }
     log.trace("Converting to duplicate page object");
     final DuplicatePage result = new DuplicatePage(hash);
-    pages.forEach(page -> result.getComicBooks().add(page.getComicBook()));
+    pages.forEach(page -> result.getIds().add(page.getComicBook().getId()));
     log.trace("Returning duplicate page detail");
     return result;
   }
