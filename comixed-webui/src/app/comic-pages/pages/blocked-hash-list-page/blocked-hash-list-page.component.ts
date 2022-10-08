@@ -35,7 +35,6 @@ import {
   selectBlockedPageList,
   selectBlockedPageListState
 } from '@app/comic-pages/selectors/blocked-hash-list.selectors';
-import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-pages.actions';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,6 +46,14 @@ import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatSort } from '@angular/material/sort';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getUserPreference } from '@app/user';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
+  PAGE_SIZE_PREFERENCE
+} from '@app/library/library.constants';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -56,12 +63,15 @@ import { MatSort } from '@angular/material/sort';
 export class BlockedHashListPageComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  @ViewChild('MatPagination') paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   hashStateSubscription: Subscription;
   pageSubscription: Subscription;
   langChangeSubscription: Subscription;
+  userSubscription: Subscription;
+  pageSize = PAGE_SIZE_DEFAULT;
+  readonly pageOptions = PAGE_SIZE_OPTIONS;
   dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
   readonly displayedColumns = [
     'selected',
@@ -70,9 +80,9 @@ export class BlockedHashListPageComponent
     'comic-count',
     'created-on'
   ];
-  showUploadRow = false;
-  someSelected = false;
+  hasSelections = false;
   allSelected = false;
+  private _blockedHashes: BlockedHash[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -93,16 +103,37 @@ export class BlockedHashListPageComponent
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+    this.userSubscription = this.store.select(selectUser).subscribe(user => {
+      this.pageSize = parseInt(
+        getUserPreference(
+          user.preferences,
+          PAGE_SIZE_PREFERENCE,
+          `${PAGE_SIZE_DEFAULT}`
+        ),
+        10
+      );
+    });
+  }
+
+  get entries(): BlockedHash[] {
+    return this._blockedHashes;
   }
 
   set entries(entries: BlockedHash[]) {
+    this._blockedHashes = entries;
     const oldData = this.dataSource.data;
     this.dataSource.data = entries.map(item => {
       const selected =
         oldData.find(entry => entry.item.id === item.id)?.selected || false;
       return { selected, item };
     });
-    this.someSelected = this.dataSource.data.some(entry => entry.selected);
+    this.hasSelections = this.dataSource.data.some(entry => entry.selected);
+  }
+
+  get selectedHashes(): BlockedHash[] {
+    return this.dataSource.data
+      .filter(entry => entry.selected)
+      .map(entry => entry.item);
   }
 
   ngOnDestroy(): void {
@@ -112,6 +143,8 @@ export class BlockedHashListPageComponent
     this.pageSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
+    this.logger.trace('Unsubscriing from user updates');
+    this.userSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -149,19 +182,14 @@ export class BlockedHashListPageComponent
     this.store.dispatch(downloadBlockedPages());
   }
 
-  onShowUploadRow(): void {
-    this.logger.debug('Showing upload row');
-    this.showUploadRow = true;
-  }
-
   onFileSelected(file: File): void {
-    this.showUploadRow = false;
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'blocked-hash-list.upload-file.confirmation-title'
       ),
       message: this.translateService.instant(
-        'blocked-hash-list.upload-file.confirmation-message'
+        'blocked-hash-list.upload-file.confirmation-message',
+        { filename: file.name }
       ),
       confirm: () => {
         this.logger.debug('Uploading blocked pages file:', file);
@@ -244,7 +272,7 @@ export class BlockedHashListPageComponent
 
   private updateSelections(): void {
     this.allSelected = this.dataSource.data.every(entry => entry.selected);
-    this.someSelected =
+    this.hasSelections =
       this.allSelected ||
       this.dataSource.data.some(listEntry => listEntry.selected);
   }

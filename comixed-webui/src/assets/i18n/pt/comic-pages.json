@@ -52,6 +52,7 @@
       "effect-failure": "Falhou a {deleted, select, true{marcar} other{limpar}} a seleção.",
       "effect-success": "{deleted, select, true{Marcada} other{Limpa}} para apagar."
     },
+    "page-title": "Blocked Hash List ({selected} of {count} Selected)",
     "tab-title": "Lista Hash Bloqueada",
     "tooltip": {
       "clear-deleted": "Limpar a seleção de páginas a apagar.",
@@ -61,7 +62,7 @@
       "set-deleted": "Marcar páginas selecionadas para apagar."
     },
     "upload-file": {
-      "confirmation-message": "Tem a certeza que quer carregar este ficheiro?",
+      "confirmation-message": "Tem a certeza que quer carregar \"{filename}\"?",
       "confirmation-title": "Carregar Ficheiro de Páginas Bloqueadas",
       "effect-failure": "Falhou a carregar ficheiro de páginas bloqueadas.",
       "effect-success": "Páginas bloqueadas agora contém {count, plural, =1{uma entrada} other{# entradas}}."

@@ -70,12 +70,14 @@ import { DeletedListPageComponent } from './pages/deleted-list-page/deleted-list
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDividerModule } from '@angular/material/divider';
+import { BlockedHashToolbarComponent } from './components/blocked-hash-toolbar/blocked-hash-toolbar.component';
 
 @NgModule({
   declarations: [
     BlockedHashListPageComponent,
     BlockedHashDetailPageComponent,
-    DeletedListPageComponent
+    DeletedListPageComponent,
+    BlockedHashToolbarComponent
   ],
   imports: [
     CommonModule,

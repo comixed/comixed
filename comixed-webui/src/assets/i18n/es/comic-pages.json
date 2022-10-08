@@ -52,6 +52,7 @@
       "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
       "effect-success": "{deleted, select, true{Marked} other{Cleared}} for deletion."
     },
+    "page-title": "Blocked Hash List ({selected} of {count} Selected)",
     "tab-title": "Blocked Hash List",
     "tooltip": {
       "clear-deleted": "Clear selected pages from deletion.",
@@ -61,7 +62,7 @@
       "set-deleted": "Mark selected pages for deletion."
     },
     "upload-file": {
-      "confirmation-message": "¿Está seguro de que desea cargar este archivo?",
+      "confirmation-message": "¿Está seguro de que desea cargar \"{filename}\"?",
       "confirmation-title": "Cargar archivo de páginas bloqueadas",
       "effect-failure": "No se pudo cargar el archivo de página bloqueado.",
       "effect-success": "Las páginas bloqueadas ahora contienen {count, plural, =1{one entry} other{# entries}}."

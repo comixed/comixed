@@ -52,6 +52,7 @@
       "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
       "effect-success": "{deleted, select, true{Marked} other{Cleared}} for deletion."
     },
+    "page-title": "Blocked Hash List ({selected} of {count} Selected)",
     "tab-title": "Blocked Hash List",
     "tooltip": {
       "clear-deleted": "Clear selected pages from deletion.",
@@ -61,7 +62,7 @@
       "set-deleted": "Mark selected pages for deletion."
     },
     "upload-file": {
-      "confirmation-message": "Are you sure you want to upload this file?",
+      "confirmation-message": "Are you sure you want to upload \"{filename}\"?",
       "confirmation-title": "Upload Blocked Pages File",
       "effect-failure": "Failed to upload blocked page file.",
       "effect-success": "Blocked pages now contains {count, plural, =1{one entry} other{# entries}}."
