@@ -62,15 +62,6 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="hash">
-    <mat-header-cell mat-sort-header mat-sort-header *matHeaderCellDef>
-      {{ "duplicate-pages.header.hash" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let row">
-      <span class="cx-text-nowrap">{{ row.item.hash }}</span>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="thumbnail">
     <mat-header-cell *matHeaderCellDef>
       {{ "duplicate-pages.header.thumbnail" | translate }}
@@ -88,12 +79,21 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="hash">
+    <mat-header-cell mat-sort-header mat-sort-header *matHeaderCellDef>
+      {{ "duplicate-pages.header.hash" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <span class="cx-text-nowrap">{{ row.item.hash }}</span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="comic-count">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "duplicate-pages.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let row">
-      <span class="cx-text-nowrap">{{ row.item.comicBooks.length }}</span>
+      <span class="cx-text-nowrap">{{ row.item.ids.length }}</span>
     </mat-cell>
   </ng-container>
 

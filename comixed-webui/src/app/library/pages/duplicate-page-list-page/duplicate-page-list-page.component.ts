@@ -181,7 +181,7 @@ export class DuplicatePageListPageComponent
         case 'hash':
           return data.item.hash;
         case 'comic-count':
-          return data.item.comicBooks.length;
+          return data.item.ids.length;
         case 'blocked':
           return `${this.isBlocked(data)}`;
       }

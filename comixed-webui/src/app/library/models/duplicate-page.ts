@@ -20,5 +20,5 @@ import { ComicBook } from '../../comic-books/models/comic-book';
 
 export interface DuplicatePage {
   hash: string;
-  comicBooks: ComicBook[];
+  ids: number[];
 }

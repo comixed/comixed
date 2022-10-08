@@ -52,11 +52,21 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
 import { MatSortModule } from '@angular/material/sort';
+import {
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
 
 describe('ComicsWithDuplicatePageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const IDS = COMIC_BOOKS.map(comic => comic.id);
   const HASH = PAGE_1.hash;
-  const initialState = {};
+  const initialState = {
+    [COMIC_BOOK_LIST_FEATURE_KEY]: {
+      ...initialComicBookListState,
+      comicBooks: COMIC_BOOKS
+    }
+  };
 
   let component: ComicsWithDuplicatePageComponent;
   let fixture: ComponentFixture<ComicsWithDuplicatePageComponent>;
@@ -104,7 +114,7 @@ describe('ComicsWithDuplicatePageComponent', () => {
           },
           {
             provide: MAT_DIALOG_DATA,
-            useValue: { comicBooks: COMIC_BOOKS, hash: HASH } as DuplicatePage
+            useValue: { ids: IDS, hash: HASH } as DuplicatePage
           }
         ]
       }).compileComponents();
