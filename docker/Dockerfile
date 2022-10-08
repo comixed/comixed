@@ -8,7 +8,7 @@ MAINTAINER The ComiXed Project "comixed-dev@freelists.org"
 
 RUN mkdir /app /ul
 WORKDIR /ul
-RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v1.2-SNAPSHOT/comixed-release-1.2-SNAPSHOT-GA.zip
+RUN wget -q -O comixed-release.zip https://github.com/comixed/comixed/releases/download/v1.3-SNAPSHOT/comixed-release-1.3-SNAPSHOT-GA.zip
 RUN (cd /app; unzip /ul/*.zip)
 RUN rm *.zip
 WORKDIR /app
@@ -19,4 +19,4 @@ ENV PATH="$JAVA_HOME/bin:${PATH}"
 EXPOSE 7171
 VOLUME /comic_data
 
-CMD ["bash", "/app/comixed-release-1.2-SNAPSHOT/bin/run.sh", "-L", "/library/comixed.log"]
+CMD ["bash", "/app/comixed-release-1.3-SNAPSHOT/bin/run.sh", "-L", "/library/comixed.log"]
