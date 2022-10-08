@@ -274,7 +274,7 @@ describe('DuplicatePageListPageComponent', () => {
     it('sorts by comic count', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
-      ).toEqual(ENTRY.item.comicBooks.length);
+      ).toEqual(ENTRY.item.ids.length);
     });
 
     it('sorts by blocked state', () => {

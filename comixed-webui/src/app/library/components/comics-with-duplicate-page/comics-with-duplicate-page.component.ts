@@ -16,15 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
+import { ComicBook } from '@app/comic-books/models/comic-book';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
+import { LoggerService } from '@angular-ru/cdk/logger';
 
 @Component({
   selector: 'cx-comics-with-duplicate-page',
   templateUrl: './comics-with-duplicate-page.component.html',
   styleUrls: ['./comics-with-duplicate-page.component.scss']
 })
-export class ComicsWithDuplicatePageComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public page: DuplicatePage) {}
+export class ComicsWithDuplicatePageComponent implements OnDestroy {
+  comicBookSubscription: Subscription;
+  comicBooks: ComicBook[] = [];
+
+  constructor(
+    private logger: LoggerService,
+    @Inject(MAT_DIALOG_DATA) public page: DuplicatePage,
+    private store: Store<any>
+  ) {
+    this.comicBookSubscription = this.store
+      .select(selectComicBookList)
+      .subscribe(comicBooks => {
+        this.logger.trace('Comic book update received');
+        this.comicBooks = comicBooks.filter(comicBook =>
+          this.page.ids.includes(comicBook.id)
+        );
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from comic book updates');
+    this.comicBookSubscription.unsubscribe();
+  }
 }
