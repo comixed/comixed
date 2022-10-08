@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.comixedproject</groupId>
     <artifactId>comixed</artifactId>
-    <version>1.2.0-1</version>
+    <version>1.2.0-2</version>
     <relativePath>..</relativePath>
   </parent>
   <groupId>org.comixedproject</groupId>
   <artifactId>comixed-opds</artifactId>
-  <version>1.2.0-1</version>
+  <version>1.2.0-2</version>
   <name>comixed-opds</name>
   <url>http://www.comixedproject.org</url>
   <dependencies>
@@ -23,17 +23,17 @@
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-adaptors</artifactId>
-      <version>1.2.0-1</version>
+      <version>1.2.0-2</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-services</artifactId>
-      <version>1.2.0-1</version>
+      <version>1.2.0-2</version>
     </dependency>
     <dependency>
       <groupId>org.comixedproject</groupId>
       <artifactId>comixed-auth</artifactId>
-      <version>1.2.0-1</version>
+      <version>1.2.0-2</version>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>
