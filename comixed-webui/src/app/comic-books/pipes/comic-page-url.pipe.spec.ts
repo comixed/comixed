@@ -17,10 +17,27 @@
  */
 
 import { ComicPageUrlPipe } from './comic-page-url.pipe';
+import { PAGE_1 } from '@app/comic-pages/comic-pages.fixtures';
+import { MISSING_COMIC_IMAGE_URL } from '@app/library/library.constants';
 
 describe('ComicPageUrlPipe', () => {
+  const PAGE = PAGE_1;
+
+  let pipe: ComicPageUrlPipe;
+
+  beforeEach(() => {
+    pipe = new ComicPageUrlPipe();
+  });
+
   it('create an instance', () => {
-    const pipe = new ComicPageUrlPipe();
     expect(pipe).toBeTruthy();
+  });
+
+  it('returns a URL for a page', () => {
+    expect(pipe.transform(PAGE)).not.toEqual('');
+  });
+
+  it('returns a default URL when the page is null', () => {
+    expect(pipe.transform(null)).toEqual(MISSING_COMIC_IMAGE_URL);
   });
 });

@@ -18,7 +18,10 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { interpolate } from '@app/core';
-import { GET_PAGE_CONTENT_URL } from '@app/library/library.constants';
+import {
+  GET_PAGE_CONTENT_URL,
+  MISSING_COMIC_IMAGE_URL
+} from '@app/library/library.constants';
 import { Page } from '@app/comic-books/models/page';
 
 @Pipe({
@@ -26,6 +29,10 @@ import { Page } from '@app/comic-books/models/page';
 })
 export class ComicPageUrlPipe implements PipeTransform {
   transform(page: Page): string {
-    return interpolate(GET_PAGE_CONTENT_URL, { id: page.id });
+    if (!!page) {
+      return interpolate(GET_PAGE_CONTENT_URL, { id: page.id });
+    } else {
+      return MISSING_COMIC_IMAGE_URL;
+    }
   }
 }
