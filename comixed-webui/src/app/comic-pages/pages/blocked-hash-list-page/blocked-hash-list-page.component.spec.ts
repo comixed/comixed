@@ -53,12 +53,20 @@ import {
 } from '@tragically-slick/confirmation';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BlockedHashToolbarComponent } from '@app/comic-pages/components/blocked-hash-toolbar/blocked-hash-toolbar.component';
+import { MatDividerModule } from '@angular/material/divider';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { USER_READER } from '@app/user/user.fixtures';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
   const ENTRY = BLOCKED_HASH_2;
   const initialState = {
-    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
+    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState,
+    [USER_FEATURE_KEY]: { ...initialUserState, user: USER_READER }
   };
   let component: BlockedHashListPageComponent;
   let fixture: ComponentFixture<BlockedHashListPageComponent>;
@@ -71,7 +79,10 @@ describe('BlockedHashListPageComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BlockedHashListPageComponent],
+        declarations: [
+          BlockedHashListPageComponent,
+          BlockedHashToolbarComponent
+        ],
         imports: [
           NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -84,7 +95,8 @@ describe('BlockedHashListPageComponent', () => {
           MatDialogModule,
           MatIconModule,
           MatTooltipModule,
-          MatSortModule
+          MatSortModule,
+          MatDividerModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -167,7 +179,7 @@ describe('BlockedHashListPageComponent', () => {
         }
       });
       entry = component.dataSource.data[0];
-      component.someSelected = false;
+      component.hasSelections = false;
       component.onSelectOne(entry, true);
     });
 
@@ -176,7 +188,7 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('sets the has selections flag', () => {
-      expect(component.someSelected).toBeTrue();
+      expect(component.hasSelections).toBeTrue();
     });
   });
 
@@ -197,7 +209,7 @@ describe('BlockedHashListPageComponent', () => {
     });
 
     it('sets the some selection flag', () => {
-      expect(component.someSelected).toBeTrue();
+      expect(component.hasSelections).toBeTrue();
     });
 
     describe('unselecting one item', () => {
@@ -210,7 +222,7 @@ describe('BlockedHashListPageComponent', () => {
       });
 
       it('sets the some selection flag', () => {
-        expect(component.someSelected).toBeTrue();
+        expect(component.hasSelections).toBeTrue();
       });
     });
 
@@ -224,7 +236,7 @@ describe('BlockedHashListPageComponent', () => {
       });
 
       it('clears the some selection flag', () => {
-        expect(component.someSelected).toBeFalse();
+        expect(component.hasSelections).toBeFalse();
       });
     });
   });
@@ -239,30 +251,14 @@ describe('BlockedHashListPageComponent', () => {
     });
   });
 
-  describe('clicking the upload file button', () => {
-    beforeEach(() => {
-      component.showUploadRow = false;
-      component.onShowUploadRow();
-    });
-
-    it('sets the show upload row flag', () => {
-      expect(component.showUploadRow).toBeTrue();
-    });
-  });
-
   describe('when a file is selected', () => {
     const FILE = new File([], 'test');
 
     beforeEach(() => {
-      component.showUploadRow = true;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.onFileSelected(FILE);
-    });
-
-    it('hides the upload row', () => {
-      expect(component.showUploadRow).toBeFalse();
     });
 
     it('confirms with the user', () => {
@@ -389,6 +385,17 @@ describe('BlockedHashListPageComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(ITEM, 'created-on')
       ).toEqual(ITEM.item.createdOn);
+    });
+  });
+
+  describe('getting the selected hashes', () => {
+    beforeEach(() => {
+      component.entries = ENTRIES;
+      component.dataSource.data.forEach(entry => (entry.selected = true));
+    });
+
+    it('returns the selected entries', () => {
+      expect(component.selectedHashes).toEqual(ENTRIES);
     });
   });
 });

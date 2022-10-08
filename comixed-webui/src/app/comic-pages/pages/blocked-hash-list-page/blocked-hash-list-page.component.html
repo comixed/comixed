@@ -1,69 +1,23 @@
-<mat-toolbar class="cx-primary-light-background">
-  <mat-toolbar-row>
-    <mat-paginator
-      class="cx-primary-light-background cx-height-100"
-    ></mat-paginator>
-    <div class="cx-spacer"></div>
-    <button
-      id="set-deleted-button"
-      mat-icon-button
-      color="primary"
-      [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
-      [disabled]="!someSelected"
-      (click)="onMarkSelectedForDeletion()"
-    >
-      <mat-icon>flag</mat-icon>
-    </button>
-    <button
-      id="clear-deleted-button"
-      mat-icon-button
-      color="primary"
-      [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
-      [disabled]="!someSelected"
-      (click)="onClearSelectedForDeletion()"
-    >
-      <mat-icon>outlined_flag</mat-icon>
-    </button>
-    <mat-divider vertical="true"></mat-divider>
-    <button
-      id="delete-entries"
-      mat-icon-button
-      color="warn"
-      [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
-      [disabled]="!someSelected"
-      (click)="onDeleteEntries()"
-    >
-      <mat-icon>delete</mat-icon>
-    </button>
-    <mat-divider vertical="true"></mat-divider>
-    <button
-      id="upload-button"
-      mat-icon-button
-      color="accent"
-      [matTooltip]="'blocked-hash-list.tooltip.upload-file' | translate"
-      (click)="onShowUploadRow()"
-    >
-      <mat-icon>upload</mat-icon>
-    </button>
-    <button
-      id="download-button"
-      mat-icon-button
-      color="accent"
-      [matTooltip]="'blocked-hash-list.tooltip.download-file' | translate"
-      (click)="onDownloadFile()"
-    >
-      <mat-icon>download</mat-icon>
-    </button>
-  </mat-toolbar-row>
-  <mat-toolbar-row *ngIf="showUploadRow">
-    <input
-      id="fileUpload"
-      type="file"
-      (change)="onFileSelected($event.target.files[0])"
-      (click)="$event.stopPropagation()"
-    />
-  </mat-toolbar-row>
-</mat-toolbar>
+<cx-blocked-hash-toolbar
+  [hasSelections]="hasSelections"
+  (markSelected)="onMarkSelectedForDeletion()"
+  (clearSelected)="onClearSelectedForDeletion()"
+  (deleteSelected)="onDeleteEntries()"
+  (uploadFile)="onFileSelected($event)"
+  (downloadFile)="onDownloadFile()"
+></cx-blocked-hash-toolbar>
+
+<h2>
+  {{
+    "blocked-hash-list.page-title"
+      | translate: { selected: selectedHashes.length, count: entries.length }
+  }}
+</h2>
+
+<mat-paginator
+  [pageSizeOptions]="pageOptions"
+  [pageSize]="pageSize"
+></mat-paginator>
 
 <mat-table [dataSource]="dataSource" matSort>
   <ng-container matColumnDef="selected">

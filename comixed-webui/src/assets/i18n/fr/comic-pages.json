@@ -52,6 +52,7 @@
       "effect-failure": "Échec {deleted, select, true{de l'ajout} other{de l'annulation}} du flag de suppression.",
       "effect-success": "{deleted, select, true{Marquage} other{Nettoyage}} pour suppression."
     },
+    "page-title": "Blocked Hash List ({selected} of {count} Selected)",
     "tab-title": "Liste des hashs bloqués",
     "tooltip": {
       "clear-deleted": "Effacer les pages sélectionnées de la suppression.",
@@ -61,7 +62,7 @@
       "set-deleted": "Marquer les pages sélectionnées pour suppression."
     },
     "upload-file": {
-      "confirmation-message": "Êtes-vous sûr de vouloir uploader ce fichier ?",
+      "confirmation-message": "Êtes-vous sûr de vouloir uploader \"{filename}\" ?",
       "confirmation-title": "Uploader le fichier des pages bloquées",
       "effect-failure": "Impossible de uploader le fichier de la page bloquée.",
       "effect-success": "Les pages bloquées contiennent maintenant {count, plural, =1{une entrée} other{# entrées}}."
