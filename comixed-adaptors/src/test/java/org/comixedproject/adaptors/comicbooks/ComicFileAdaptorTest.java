@@ -46,13 +46,14 @@ public class ComicFileAdaptorTest {
       TEST_ROOT_DIRECTORY + "/" + TEST_COMIC_FILENAME;
   private static final String TEST_RELATIVE_NAME_WITHOUT_RULE = TEST_COMIC_FILENAME;
   private static final String TEST_RENAMING_RULE =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $PUBMONTH $PUBYEAR $COVERDATE";
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE $TITLE $PUBMONTH $PUBYEAR $COVERDATE";
   private static final String TEST_RENAMING_RULE_PADDED_ISSUE =
-      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE(8) $PUBMONTH $PUBYEAR $COVERDATE";
+      "$PUBLISHER/$SERIES/$VOLUME/$SERIES v$VOLUME #$ISSUE(8) $TITLE $PUBMONTH $PUBYEAR $COVERDATE";
   private static final String TEST_PUBLISHER = "The Publisher";
   private static final String TEST_SERIES = "The Series";
   private static final String TEST_VOLUME = "2020";
   private static final String TEST_ISSUE = "717";
+  private static final String TEST_TITLE = "The Comic Title";
   private static final String TEST_PADDED_ISSUE = "00000717";
   private static final Date TEST_COVER_DATE = new Date(120, 6, 1);
   private static final LocalDate TEST_COVER_DATE_LOCALDATE =
@@ -85,6 +86,7 @@ public class ComicFileAdaptorTest {
     Mockito.when(comicBook.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicBook.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(comicBook.getIssueNumber()).thenReturn(TEST_ISSUE);
+    Mockito.when(comicBook.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(comicBook.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(comicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
   }
@@ -106,6 +108,7 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
+            TEST_TITLE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -123,6 +126,7 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             TEST_VOLUME,
             TEST_PADDED_ISSUE,
+            TEST_TITLE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -161,6 +165,7 @@ public class ComicFileAdaptorTest {
             TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
             TEST_VOLUME,
             TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS_SCRUBBED,
+            TEST_TITLE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -179,6 +184,7 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
+            TEST_TITLE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -197,6 +203,7 @@ public class ComicFileAdaptorTest {
             UNKNOWN_VALUE,
             TEST_VOLUME,
             TEST_ISSUE,
+            TEST_TITLE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -215,6 +222,26 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             UNKNOWN_VALUE,
             TEST_ISSUE,
+            TEST_TITLE,
+            TEST_FORMATTED_COVER_DATE,
+            TEST_PUBLISHED_MONTH,
+            TEST_PUBLISHED_YEAR),
+        result);
+  }
+
+  @Test
+  public void testCreateFileFromRuleNoTitle() {
+    Mockito.when(comicBook.getTitle()).thenReturn(null);
+
+    final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
+
+    assertEquals(
+        formattedName(
+            TEST_PUBLISHER,
+            TEST_SERIES,
+            TEST_VOLUME,
+            TEST_ISSUE,
+            UNKNOWN_VALUE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -226,17 +253,19 @@ public class ComicFileAdaptorTest {
       final String series,
       final String volume,
       final String issueNumber,
+      final String title,
       final String coverDate,
       final String publishedMonth,
       final String publishedYear) {
     return String.format(
-        "%s/%s/%s/%s v%s #%s %s %s %s",
+        "%s/%s/%s/%s v%s #%s %s %s %s %s",
         publisher,
         series,
         volume,
         series,
         volume,
         issueNumber,
+        title,
         publishedMonth,
         publishedYear,
         coverDate);
@@ -254,6 +283,7 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             TEST_VOLUME,
             UNKNOWN_VALUE,
+            TEST_TITLE,
             TEST_FORMATTED_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),
@@ -272,6 +302,7 @@ public class ComicFileAdaptorTest {
             TEST_SERIES,
             TEST_VOLUME,
             TEST_ISSUE,
+            TEST_TITLE,
             NO_COVER_DATE,
             TEST_PUBLISHED_MONTH,
             TEST_PUBLISHED_YEAR),

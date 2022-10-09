@@ -63,6 +63,10 @@ export class LibraryConfigurationComponent {
       value: 'configuration.text.comic-renaming-rule-issue-number-with-length'
     },
     {
+      label: '$TITLE',
+      value: 'configuration.text.comic-renaming-rule-title'
+    },
+    {
       label: '$COVERDATE',
       value: 'configuration.text.comic-renaming-rule-cover-date'
     },
