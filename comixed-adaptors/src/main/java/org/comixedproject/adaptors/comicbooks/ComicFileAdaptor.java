@@ -50,6 +50,7 @@ public class ComicFileAdaptor {
   public static final String PLACEHOLDER_SERIES = "$SERIES";
   public static final String PLACEHOLDER_VOLUME = "$VOLUME";
   public static final String PLACEHOLDER_ISSUE_NUMBER = "$ISSUE";
+  public static final String PLACEHOLDER_TITLE = "$TITLE";
   public static final String PLACEHOLDER_COVER_DATE = "$COVERDATE";
   public static final String PLACEHOLDER_PUBLISHED_YEAR = "$PUBYEAR";
   public static final String PLACEHOLDER_PUBLISHED_MONTH = "$PUBMONTH";
@@ -119,17 +120,19 @@ public class ComicFileAdaptor {
 
     log.trace("Generating relative filename based on renaming rule: {}", rule);
     final String publisher =
-        StringUtils.isEmpty(comicBook.getPublisher())
-            ? UNKNOWN_VALUE
-            : scrub(comicBook.getPublisher());
+        StringUtils.hasLength(comicBook.getPublisher())
+            ? scrub(comicBook.getPublisher())
+            : UNKNOWN_VALUE;
     final String series =
-        StringUtils.isEmpty(comicBook.getSeries()) ? UNKNOWN_VALUE : scrub(comicBook.getSeries());
+        StringUtils.hasLength(comicBook.getSeries()) ? scrub(comicBook.getSeries()) : UNKNOWN_VALUE;
     final String volume =
-        StringUtils.isEmpty(comicBook.getVolume()) ? UNKNOWN_VALUE : comicBook.getVolume();
+        StringUtils.hasLength(comicBook.getVolume()) ? comicBook.getVolume() : UNKNOWN_VALUE;
+    final String title =
+        StringUtils.hasLength(comicBook.getTitle()) ? comicBook.getTitle() : UNKNOWN_VALUE;
     String issueNumber =
-        !StringUtils.hasLength(comicBook.getIssueNumber())
-            ? UNKNOWN_VALUE
-            : scrub(comicBook.getIssueNumber());
+        StringUtils.hasLength(comicBook.getIssueNumber())
+            ? scrub(comicBook.getIssueNumber())
+            : UNKNOWN_VALUE;
     final String coverDate =
         comicBook.getCoverDate() != null
             ? coverDateFormat.format(comicBook.getCoverDate())
@@ -150,6 +153,7 @@ public class ComicFileAdaptor {
         rule.replace(PLACEHOLDER_PUBLISHER, publisher)
             .replace(PLACEHOLDER_SERIES, series)
             .replace(PLACEHOLDER_VOLUME, volume)
+            .replace(PLACEHOLDER_TITLE, title)
             .replaceAll(
                 // need to look for the longer version of the regex first
                 String.format(

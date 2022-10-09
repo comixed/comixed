@@ -30,6 +30,7 @@
       "comic-renaming-rule-published-year": "O ano de publicação",
       "comic-renaming-rule-publisher": "O nome da editora",
       "comic-renaming-rule-series": "O nome da série",
+      "comic-renaming-rule-title": "The title of the issue",
       "comic-renaming-rule-volume": "O volume",
       "comic-variable-caption": "Estas são as variáveis que podem ser usadas para renomear os comics.",
       "page-renaming-rule-index": "O índice da página (começa em 1)",
