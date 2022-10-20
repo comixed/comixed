@@ -54,7 +54,6 @@ Currently, ComiXed ships with support for the following databases:
 | H2         | The default database        | https://www.h2database.com/html/main.html |
 | HyperSQL   | Alternate embedded database | http://hsqldb.org/                        |
 | MySQL      |                             | https://www.mysql.com/                    |
-| PostgreSQL |                             | https://www.postgresql.org/               |
 
 ### Example: User MySQL
 
