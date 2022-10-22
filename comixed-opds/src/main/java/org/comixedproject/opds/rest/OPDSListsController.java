@@ -20,6 +20,7 @@ package org.comixedproject.opds.rest;
 
 import static org.comixedproject.opds.service.OPDSNavigationService.*;
 
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.opds.OPDSException;
@@ -58,6 +59,7 @@ public class OPDSListsController {
    */
   @GetMapping(value = "/opds/lists", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.reading-lists.get-all")
   @ResponseBody
   public OPDSNavigationFeed loadReadingLists(final Principal principal) throws OPDSException {
     final String email = principal.getName();
@@ -75,6 +77,7 @@ public class OPDSListsController {
    */
   @GetMapping(value = "/opds/lists/{id}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.reading-lists.get-one")
   @ResponseBody
   public OPDSAcquisitionFeed loadReadingListEntries(
       final Principal principal, @PathVariable("id") final Long id) throws OPDSException {

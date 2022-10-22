@@ -19,6 +19,7 @@
 package org.comixedproject.rest.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.library.DuplicatePage;
@@ -53,6 +54,7 @@ public class DuplicatePageController {
   @GetMapping(value = "/api/library/pages/duplicates", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageList.class)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.duplicate-page.get-all")
   public List<DuplicatePage> getDuplicatePageList() {
     log.info("Getting list of duplicate pages");
     return this.duplicatePageService.getDuplicatePages();
@@ -70,6 +72,7 @@ public class DuplicatePageController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.DuplicatePageDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.duplicate-page.get-for-hash")
   public DuplicatePage getForHash(@PathVariable("hash") final String hash)
       throws DuplicatePageException {
     log.info("Loading duplicate page detail: hash={}", hash);

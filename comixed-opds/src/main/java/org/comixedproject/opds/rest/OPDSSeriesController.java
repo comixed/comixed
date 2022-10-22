@@ -18,6 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -52,6 +53,7 @@ public class OPDSSeriesController {
    */
   @GetMapping(value = "/opds/library/series", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.series.get-root")
   @ResponseBody
   public OPDSNavigationFeed getRootFeedForSeries(
       @RequestParam(name = "unread") final boolean unread) {
@@ -68,6 +70,7 @@ public class OPDSSeriesController {
    */
   @GetMapping(value = "/opds/library/series/{name}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.series.get-volumes")
   @ResponseBody
   public OPDSNavigationFeed getVolumesFeedForSeries(
       @PathVariable("name") @NonNull final String name,
@@ -90,6 +93,7 @@ public class OPDSSeriesController {
       value = "/opds/library/series/{name}/volumes/{volume}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.series.get-comics")
   @ResponseBody
   public OPDSAcquisitionFeed getComicFeedForSeriesAndVolumes(
       final Principal principal,

@@ -19,6 +19,7 @@
 package org.comixedproject.rest.comicfiles;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -81,6 +82,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.comic-file.load")
   @JsonView(View.ComicFileList.class)
   public LoadComicFilesResponse loadComicFiles(
       @RequestBody() final GetAllComicsUnderRequest request) throws IOException {
@@ -102,6 +104,7 @@ public class ComicFileController {
    * @return the image content, or null
    */
   @GetMapping(value = "/api/files/import/cover")
+  @Timed(value = "comixed.comic-file.get-cover")
   public byte[] getImportFileCover(@RequestParam("filename") String filename) {
     // for some reason, during development, this value ALWAYS had a trailing
     // space...
@@ -142,6 +145,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.comic-file.batch.import-files")
   public void importComicFiles(@RequestBody() ImportComicFilesRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -168,6 +172,7 @@ public class ComicFileController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.comic-file.scrape-filename")
   public FilenameMetadataResponse scrapeFilename(
       @RequestBody() final FilenameMetadataRequest request) {
     final String filename = FilenameUtils.getBaseName(request.getFilename());

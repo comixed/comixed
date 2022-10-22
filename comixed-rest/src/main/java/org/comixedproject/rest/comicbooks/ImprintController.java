@@ -19,6 +19,7 @@
 package org.comixedproject.rest.comicbooks;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.Imprint;
@@ -48,6 +49,7 @@ public class ImprintController {
   @GetMapping(value = "/api/comics/imprints", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ImprintListView.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.imprint.get-all")
   public List<Imprint> getAll() {
     log.info("Getting all imprints");
     return this.imprintService.getAll();

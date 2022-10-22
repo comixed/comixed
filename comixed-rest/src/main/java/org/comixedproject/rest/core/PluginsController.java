@@ -19,6 +19,7 @@
 package org.comixedproject.rest.core;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.plugins.PluginException;
@@ -50,6 +51,7 @@ public class PluginsController {
    * @return the list of plugins
    */
   @GetMapping(value = "/plugins", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.plugins.get-all")
   @JsonView(View.PluginList.class)
   public List<PluginDescriptor> getList() {
     log.info("Fetching the list of plugins");
@@ -68,6 +70,7 @@ public class PluginsController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.PluginList.class)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.plugins.reload")
   public List<PluginDescriptor> reloadPlugins() throws PluginException {
     log.info("Reloading the list of plugins");
     this.pluginManager.loadPlugins();

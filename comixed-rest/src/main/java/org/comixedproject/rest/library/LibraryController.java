@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguratio
 import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,6 +101,7 @@ public class LibraryController {
    * @return the library state
    */
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.library.get-state")
   @JsonView(View.RemoteLibraryState.class)
   public RemoteLibraryState getLibraryState(final HttpSession httpSession) {
     log.info("Loading the current library state");
@@ -114,6 +116,7 @@ public class LibraryController {
    * @throws Exception if an error occurs
    */
   @PostMapping(value = "/api/library/convert", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.library.convert-comics")
   public void convertComics(@RequestBody() ConvertComicsRequest request) throws Exception {
     List<Long> idList = request.getIds();
     ArchiveType archiveType = request.getArchiveType();
@@ -149,6 +152,7 @@ public class LibraryController {
       value = "/api/library/consolidate",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.library.consolidate")
   public void consolidateLibrary(@RequestBody() ConsolidateLibraryRequest request)
       throws Exception {
     final boolean deleteRemovedComicFiles = request.getDeletePhysicalFiles();
@@ -179,6 +183,7 @@ public class LibraryController {
    * @return the response
    */
   @DeleteMapping(value = "/api/library/cache/images")
+  @Timed(value = "comixed.library.image-cache.clear")
   public ClearImageCacheResponse clearImageCache() {
     log.info("Clearing the image cache");
 
@@ -203,6 +208,7 @@ public class LibraryController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.library.load")
   @JsonView(View.ComicListView.class)
   public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
     final Long lastId = request.getLastId();
@@ -235,6 +241,7 @@ public class LibraryController {
    */
   @PostMapping(value = "/api/library/rescan", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.library.batch.rescan")
   public void rescanComics(@RequestBody() final RescanComicsRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Initiating library rescan for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
@@ -255,6 +262,7 @@ public class LibraryController {
    */
   @PostMapping(value = "/api/library/metadata", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.library.batch.metadata-update")
   public void updateMetadata(@RequestBody() final UpdateMetadataRequest request) throws Exception {
     final List<Long> ids = request.getIds();
     log.info("Updating the metadata for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
@@ -276,6 +284,7 @@ public class LibraryController {
    */
   @PostMapping(value = "/api/library/purge", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.library.batch.purge")
   public void purgeLibrary(@RequestBody() final PurgeLibraryRequest request) throws Exception {
     final List<Long> idList = request.getIds();
     log.info("Purging {} comic{}", idList.size(), idList.size() == 1 ? "" : "s");
@@ -296,6 +305,7 @@ public class LibraryController {
    */
   @PostMapping(value = "/api/library/comics/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.library.edit-comics")
   public void editMultipleComics(@RequestBody() final EditMultipleComicsRequest request)
       throws ComicBookException {
     final List<Long> ids = request.getIds();

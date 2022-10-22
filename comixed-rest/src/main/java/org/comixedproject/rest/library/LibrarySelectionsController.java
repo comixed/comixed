@@ -18,6 +18,7 @@
 
 package org.comixedproject.rest.library;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
 import lombok.extern.log4j.Log4j2;
@@ -58,6 +59,7 @@ public class LibrarySelectionsController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.selections.add")
   public Set<Long> selectComicBooks(
       final HttpSession httpSession, @RequestBody() final SelectComicBooksRequest request)
       throws LibrarySelectionException {
@@ -81,6 +83,7 @@ public class LibrarySelectionsController {
    */
   @DeleteMapping(value = "/api/library/selections")
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.selections.clear")
   public void clearSelections(final HttpSession httpSession) {
     log.info("Clearing comic selections");
     httpSession.setAttribute(LIBRARY_SELECTIONS, null);

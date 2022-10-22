@@ -20,6 +20,7 @@ package org.comixedproject.opds.rest;
 
 import static org.comixedproject.opds.service.OPDSNavigationService.*;
 
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -53,6 +54,7 @@ public class OPDSCollectionController {
    */
   @GetMapping(value = "/opds/collections/{type}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.collection.get-root")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
       @NonNull @PathVariable("type") final CollectionType collectionType,
@@ -70,6 +72,7 @@ public class OPDSCollectionController {
    * @return the feed
    */
   @GetMapping(value = "/opds/collections/{type}/{name}", produces = MediaType.APPLICATION_XML_VALUE)
+  @Timed(value = "comixed.opds.collection.get-entries")
   @ResponseBody
   public OPDSAcquisitionFeed getEntriesForCollectionFeed(
       final Principal principal,

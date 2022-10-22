@@ -18,6 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -50,6 +51,7 @@ public class OPDSDateController {
    */
   @GetMapping(value = "/opds/dates/released", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.date.get-years")
   @ResponseBody
   public OPDSNavigationFeed getYearsFeed(
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
@@ -69,6 +71,7 @@ public class OPDSDateController {
       value = "/opds/dates/released/years/{year}/weeks",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.date.get-weeks")
   @ResponseBody
   public OPDSNavigationFeed getWeeksFeedForYear(
       @PathVariable("year") @NonNull final Integer year,
@@ -90,6 +93,7 @@ public class OPDSDateController {
       value = "/opds/dates/released/years/{year}/weeks/{week}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.date.get-comics")
   @ResponseBody
   public OPDSAcquisitionFeed loadComicsForYearAndWeek(
       final Principal principal,

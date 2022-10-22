@@ -19,6 +19,7 @@
 package org.comixedproject.rest.lists;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.Set;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.lists.Story;
@@ -48,6 +49,7 @@ public class StoryController {
   @GetMapping(value = "/api/lists/stories/names", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryList.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.story.get-names")
   public Set<String> loadAllNames() {
     log.info("Getting all stories");
     return this.storyService.loadAll();
@@ -63,6 +65,7 @@ public class StoryController {
   @GetMapping(value = "/api/lists/stories", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryList.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.story.get-all-by-name")
   public Set<Story> loadAllWithName(@RequestParam(value = "name") final String name) {
     log.info("Loading all stories with name: {}", name);
     return this.storyService.findByName(name);
@@ -81,6 +84,7 @@ public class StoryController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.StoryDetail.class)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.story.create")
   public Story createStory(@RequestBody() final Story story) throws StoryException {
     log.info("Creating a new story: name={}", story.getName());
     return this.storyService.createStory(story);
