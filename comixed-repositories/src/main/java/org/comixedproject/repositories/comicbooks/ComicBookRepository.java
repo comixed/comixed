@@ -583,4 +583,15 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.batchMetadataUpdate = true")
   long findComicsForBatchMetadataUpdateCount();
+
+  /**
+   * Performs a case-insensitive search for comics whose title or description contain the given
+   * term.
+   *
+   * @param term the search term
+   * @return the list of comics
+   */
+  @Query(
+      "SELECT c FROM ComicBook c WHERE LOWER(c.title) LIKE LOWER(concat('%', :term, '%')) OR LOWER(c.description) LIKE LOWER(concat('%', :term, '%'))")
+  List<ComicBook> findForSearchTerms(@Param("term") String term);
 }

@@ -22,7 +22,6 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +60,7 @@ public class OPDSAcquisitionServiceTest {
   private static final long TEST_COMIC_ID = 279L;
   private static final Integer TEST_YEAR = 2022;
   private static final Integer TEST_WEEK = RandomUtils.nextInt(52);
+  private static final String TEST_SEARCH_TERM = "the search term";
 
   @InjectMocks private OPDSAcquisitionService service;
   @Mock private ComicBookService comicBookService;
@@ -246,6 +246,23 @@ public class OPDSAcquisitionServiceTest {
 
     Mockito.verify(comicBookService, Mockito.times(1))
         .getComicsForYearAndWeek(TEST_YEAR, TEST_WEEK, TEST_EMAIL, TEST_UNREAD);
+    Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comicBook);
+  }
+
+  @Test
+  public void testGetComicsForSearchTerm() {
+    Mockito.when(comicBookService.getComicBooksForSearchTerms(Mockito.anyString()))
+        .thenReturn(comicBookList);
+    Mockito.when(opdsUtils.createComicEntry(Mockito.any(ComicBook.class))).thenReturn(comicEntry);
+
+    final OPDSAcquisitionFeed result = service.getComicsFeedForSearchTerms(TEST_SEARCH_TERM);
+
+    assertNotNull(result);
+    assertFalse(result.getEntries().isEmpty());
+    assertEquals(comicBookList.size(), result.getEntries().size());
+
+    Mockito.verify(comicBookService, Mockito.times(1))
+        .getComicBooksForSearchTerms(TEST_SEARCH_TERM);
     Mockito.verify(opdsUtils, Mockito.times(1)).createComicEntry(comicBook);
   }
 }

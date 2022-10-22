@@ -22,7 +22,14 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
@@ -1070,5 +1077,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
       comicBook.setBatchMetadataUpdate(true);
       this.comicBookRepository.save(comicBook);
     }
+  }
+
+  /**
+   * Returns the list of comics whose title or description include the provided search term.
+   *
+   * @param term the search time
+   * @return the list of comics
+   */
+  public List<ComicBook> getComicBooksForSearchTerms(final String term) {
+    log.info("Searching comic books: term={}", term);
+    return this.comicBookRepository.findForSearchTerms(term);
   }
 }
