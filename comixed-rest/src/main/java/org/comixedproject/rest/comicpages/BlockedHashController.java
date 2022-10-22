@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfigurati
 import static org.comixedproject.batch.comicpages.UnmarkPagesWithHashConfiguration.PARAM_UNMARK_PAGES_WITH_HASH_STARTED;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -79,6 +80,7 @@ public class BlockedHashController {
    * @return the list of blocked page hashes
    */
   @GetMapping(value = "/api/pages/blocked", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.blocked-hash.get-all")
   @JsonView(View.BlockedHashList.class)
   public List<BlockedHash> getAll() {
     log.info("Load all blocked pages");
@@ -93,6 +95,7 @@ public class BlockedHashController {
    * @throws BlockedHashException if an error occurs
    */
   @GetMapping(value = "/api/pages/blocked/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.blocked-hash.get-one")
   public BlockedHash getByHash(@PathVariable("hash") final String hash)
       throws BlockedHashException {
     log.info("Loading blocked page: hash={}", hash);
@@ -109,6 +112,7 @@ public class BlockedHashController {
    */
   @PutMapping(value = "/api/pages/blocked/{hash}")
   @JsonView(View.BlockedHashDetail.class)
+  @Timed(value = "comixed.blocked-hash.update")
   @PreAuthorize("hasRole('ADMIN')")
   public BlockedHash updateBlockedPage(
       @PathVariable("hash") final String hash, @RequestBody() final BlockedHash blockedHash)
@@ -132,6 +136,7 @@ public class BlockedHashController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.add")
   public void blockPageHashes(@RequestBody() final SetBlockedPageRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -152,6 +157,7 @@ public class BlockedHashController {
    */
   @PostMapping(value = "/api/pages/blocked/mark", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.mark-pages")
   public void markPagesWithHash(@RequestBody() final MarkPageWithHashRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -198,6 +204,7 @@ public class BlockedHashController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.unblock-pages")
   public void unblockPageHashes(@RequestBody() final SetBlockedPageRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -218,6 +225,7 @@ public class BlockedHashController {
    */
   @PostMapping(value = "/api/pages/blocked/unmark", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.unmark")
   public void unmarkPagesWithHash(@RequestBody() final UnmarkPageWithHashRequest request)
       throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException,
           JobParametersInvalidException, JobRestartException {
@@ -257,6 +265,7 @@ public class BlockedHashController {
    * @throws IOException if an error occurs
    */
   @GetMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.blocked-hash.download")
   public DownloadDocument downloadFile() throws IOException {
     log.info("Downloading blocked page file");
     return this.blockedHashService.createFile();
@@ -273,6 +282,7 @@ public class BlockedHashController {
   @PostMapping(value = "/api/pages/blocked/file", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.BlockedHashList.class)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.upload")
   public List<BlockedHash> uploadFile(final MultipartFile file)
       throws BlockedHashException, IOException {
     log.info("Received uploaded blocked page file: {}", file.getOriginalFilename());
@@ -291,6 +301,7 @@ public class BlockedHashController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.BlockedHashList.class)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.blocked-hash.delete-pages")
   public List<String> deleteBlockedPages(@RequestBody() final DeleteBlockedPagesRequest request) {
     final List<String> hashes = request.getHashes();
     log.info("Deleting {} blocked hash{}", hashes.size(), hashes.size() == 1 ? "" : "es");

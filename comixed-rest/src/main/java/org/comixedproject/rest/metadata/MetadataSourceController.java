@@ -19,6 +19,7 @@
 package org.comixedproject.rest.metadata;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.MetadataSource;
@@ -47,6 +48,7 @@ public class MetadataSourceController {
    */
   @GetMapping(value = "/api/metadata/sources", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata-source.get-all")
   @JsonView(View.MetadataSourceList.class)
   public List<MetadataSource> loadMetadataSources() {
     log.info("Loading metadata source list");
@@ -65,6 +67,7 @@ public class MetadataSourceController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata-source.create")
   @JsonView(View.MetadataSourceDetail.class)
   public MetadataSource create(@RequestBody() final MetadataSource source)
       throws MetadataSourceException {
@@ -81,6 +84,7 @@ public class MetadataSourceController {
    */
   @GetMapping(value = "/api/metadata/sources/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata-source.get-one")
   @JsonView(View.MetadataSourceDetail.class)
   public MetadataSource getOne(@PathVariable("id") final Long id) throws MetadataSourceException {
     log.info("Getting metadata source: id={}", id);
@@ -100,6 +104,7 @@ public class MetadataSourceController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata-source.update")
   @JsonView(View.MetadataSourceDetail.class)
   public MetadataSource update(
       @PathVariable("id") final Long id, @RequestBody() final MetadataSource source)
@@ -116,6 +121,7 @@ public class MetadataSourceController {
    */
   @DeleteMapping(value = "/api/metadata/sources/{id}")
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata-source.delete")
   public void delete(@PathVariable("id") final Long id) throws MetadataSourceException {
     log.info("Deleting metadata source: id={}", id);
     this.metadataSourceService.delete(id);
@@ -132,6 +138,7 @@ public class MetadataSourceController {
       value = "/api/metadata/sources/{id}/preferred",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata-source.mark-preferred")
   @JsonView(View.MetadataSourceList.class)
   public List<MetadataSource> markAsPreferred(@PathVariable("id") final Long id)
       throws MetadataSourceException {

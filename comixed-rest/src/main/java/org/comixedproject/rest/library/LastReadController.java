@@ -19,6 +19,7 @@
 package org.comixedproject.rest.library;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
@@ -54,6 +55,7 @@ public class LastReadController {
    * @throws LastReadException if an error occurs
    */
   @GetMapping(value = "/api/library/read", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.last-read.get-all")
   @JsonView(View.LastReadList.class)
   public GetLastReadDatesResponse getLastReadEntries(
       final Principal principal, @RequestParam("lastId") final long lastId)
@@ -80,6 +82,7 @@ public class LastReadController {
       value = "/api/library/read",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.last-read.set")
   @JsonView(View.LastReadList.class)
   public void setComicsReadState(
       final Principal principal, @RequestBody() SetComicsReadRequest request)

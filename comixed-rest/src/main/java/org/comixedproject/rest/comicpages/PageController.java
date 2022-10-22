@@ -18,6 +18,7 @@
 
 package org.comixedproject.rest.comicpages;
 
+import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -57,6 +58,7 @@ public class PageController {
    * @throws PageException if an error occurs
    */
   @GetMapping(value = "/api/pages/{pageId}/content")
+  @Timed(value = "comixed.page.get-content")
   public ResponseEntity<byte[]> getPageContent(@PathVariable("pageId") long pageId)
       throws PageException {
     log.info("Getting image content for page: pageId={}", pageId);
@@ -108,6 +110,7 @@ public class PageController {
    * @throws PageException if an error occurs
    */
   @GetMapping(value = "/api/pages/hashes/{hash}/content")
+  @Timed(value = "comixed.page.get-content-for-hash")
   public ResponseEntity<byte[]> getPageForHash(@PathVariable("hash") final String hash)
       throws PageException {
     log.info("Getting image content for page hash: {}", hash);
@@ -123,6 +126,7 @@ public class PageController {
    */
   @PostMapping(value = "/api/pages/deleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.page.deleted")
   public void markPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Marking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");
@@ -136,6 +140,7 @@ public class PageController {
    */
   @PostMapping(value = "/api/pages/undeleted", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.page.undeleted")
   public void unmarkPagesForDeletion(@RequestBody() final UpdatePageDeletionRequest request) {
     final List<Long> ids = request.getIds();
     log.info("Unmarking {} page{} as deleted", ids.size(), ids.size() == 1 ? "" : "s");

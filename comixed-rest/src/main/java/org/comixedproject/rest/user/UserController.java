@@ -19,6 +19,7 @@
 package org.comixedproject.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.net.user.SaveCurrentUserPreferenceRequest;
@@ -50,6 +51,7 @@ public class UserController {
    * @throws ComiXedUserException if no such user exists
    */
   @GetMapping(value = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.get-current")
   @PreAuthorize("hasAnyRole('READER','ADMIN')")
   public ComiXedUser loadCurrentUser(final Principal principal) throws ComiXedUserException {
     log.info("Loading current user: {}", principal.getName());
@@ -69,6 +71,7 @@ public class UserController {
       value = "/api/user/preferences/{name}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.save-preference")
   @JsonView(View.UserDetailsView.class)
   public ComiXedUser saveCurrentUserPreference(
       final Principal principal,
@@ -93,6 +96,7 @@ public class UserController {
   @DeleteMapping(
       value = "/api/user/preferences/{name}",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.delete-preference")
   @JsonView(View.UserDetailsView.class)
   public ComiXedUser deleteCurrentUserProperty(
       final Principal principal, @PathVariable("name") final String name)
@@ -115,6 +119,7 @@ public class UserController {
       value = "/api/user/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.user.update-current")
   @JsonView(View.UserDetailsView.class)
   public ComiXedUser updateCurrentUser(
       @PathVariable("id") final long id, @RequestBody() final UpdateCurrentUserRequest request)

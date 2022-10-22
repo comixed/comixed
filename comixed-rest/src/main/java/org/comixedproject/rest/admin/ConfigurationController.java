@@ -19,6 +19,7 @@
 package org.comixedproject.rest.admin;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.admin.ConfigurationOption;
@@ -53,6 +54,7 @@ public class ConfigurationController {
    */
   @GetMapping(value = "/api/admin/config", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.configuration.get-all")
   @JsonView(View.ConfigurationList.class)
   public List<ConfigurationOption> getAll() {
     log.info("Getting all configuration options");
@@ -71,6 +73,7 @@ public class ConfigurationController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.configuration.save")
   @JsonView(View.ConfigurationList.class)
   public SaveConfigurationOptionsResponse saveOptions(
       @RequestBody() final SaveConfigurationOptionsRequest request)

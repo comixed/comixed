@@ -18,6 +18,7 @@
 
 package org.comixedproject.rest.user;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.auth.AuthToken;
 import org.comixedproject.auth.JwtTokenUtil;
@@ -56,6 +57,7 @@ public class ComiXedAuthenticationController {
    * @throws AuthenticationException if an error occurs
    */
   @PostMapping(value = "/api/token/generate", produces = MediaType.APPLICATION_JSON_VALUE)
+  @Timed(value = "comixed.auth.generate-token")
   public AuthToken generateToken(
       @RequestParam("email") String email, @RequestParam("password") String password)
       throws AuthenticationException {

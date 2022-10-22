@@ -18,6 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
+import io.micrometer.core.annotation.Timed;
 import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -52,6 +53,7 @@ public class OPDSPublisherController {
    */
   @GetMapping(value = "/opds/library/publishers", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.publisher.get-root")
   @ResponseBody
   public OPDSNavigationFeed getRootFeedForPublishers(
       @RequestParam(name = "unread") final boolean unread) {
@@ -70,6 +72,7 @@ public class OPDSPublisherController {
       value = "/opds/library/publishers/{publisher}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.publisher.get-series")
   @ResponseBody
   OPDSNavigationFeed getSeriesFeedForPublisher(
       @PathVariable("publisher") @NonNull final String publisher,
@@ -91,6 +94,7 @@ public class OPDSPublisherController {
       value = "/opds/library/publishers/{publisher}/series/{series}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.publisher.get-volumes")
   @ResponseBody
   OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
       @PathVariable("publisher") @NonNull final String publisher,
@@ -117,6 +121,7 @@ public class OPDSPublisherController {
       value = "/opds/library/publishers/{publisher}/series/{series}/volumes/{volume}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.publisher.get-comics")
   @ResponseBody
   OPDSAcquisitionFeed getComicFeedsForPublisherAndSeriesAndVolume(
       final Principal principal,

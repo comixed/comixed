@@ -19,6 +19,7 @@
 package org.comixedproject.rest.metadata;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
@@ -85,6 +86,7 @@ public class MetadataController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.load-issue")
   public IssueMetadata loadScrapingIssue(
       @PathVariable("sourceId") final Long sourceId,
       @PathVariable("volumeId") final Integer volume,
@@ -109,6 +111,7 @@ public class MetadataController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.load-volumes")
   public List<VolumeMetadata> loadScrapingVolumes(
       @PathVariable("sourceId") final Long sourceId,
       @RequestBody() final LoadVolumeMetadataRequest request)
@@ -141,6 +144,7 @@ public class MetadataController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.scrape-comic")
   @JsonView(View.ComicDetailsView.class)
   public ComicBook scrapeComic(
       @PathVariable("sourceId") final Long sourceId,
@@ -161,6 +165,7 @@ public class MetadataController {
    */
   @PostMapping(value = "/api/metadata/batch", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.batch-update")
   public void startBatchMetadataUpdate(
       @RequestBody() final StartMetadataUpdateProcessRequest request)
       throws ComicBookException, JobInstanceAlreadyCompleteException,
@@ -187,6 +192,7 @@ public class MetadataController {
   /** Initiates clearing the metadata cache. */
   @DeleteMapping(value = "/api/metadata/cache")
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.clear-cache")
   public void clearCache() {
     log.info("Clearing the metadata cache");
     this.metadataCacheService.clearCache();

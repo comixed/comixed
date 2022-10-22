@@ -18,6 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
+import io.micrometer.core.annotation.Timed;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.security.Principal;
@@ -68,6 +69,7 @@ public class OPDSComicBookController {
    * @throws OPDSException if an error occurs
    */
   @GetMapping(value = "/opds/comics/{id}/content/{filename}")
+  @Timed(value = "comixed.opds.comic-book.download")
   @ResponseBody
   public ResponseEntity<InputStreamResource> downloadComic(
       final Principal principal,
@@ -100,6 +102,7 @@ public class OPDSComicBookController {
    * @throws OPDSException if an error occurs loading the page data
    */
   @GetMapping(value = "/opds/comics/{id}/pages/{index}/{maxWidth}")
+  @Timed(value = "comixed.opds.comic-book.cover")
   public ResponseEntity<byte[]> getPageByComicAndIndexWithMaxWidth(
       @PathVariable("id") long id,
       @PathVariable("index") int index,

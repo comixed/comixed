@@ -18,6 +18,7 @@
 
 package org.comixedproject.opds.rest;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSNavigationService;
@@ -46,6 +47,7 @@ public class OPDSLibraryController {
    */
   @GetMapping(value = "/opds", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.library.get-root")
   @ResponseBody
   public OPDSNavigationFeed getRootFeed() {
     log.info("Loading OPDS root navigation feed");
@@ -60,6 +62,7 @@ public class OPDSLibraryController {
    */
   @GetMapping(value = "/opds/library", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.opds.library.get-feed")
   @ResponseBody
   public OPDSNavigationFeed getLibraryFeed(
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {

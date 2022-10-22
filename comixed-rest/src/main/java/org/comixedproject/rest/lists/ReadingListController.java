@@ -19,6 +19,7 @@
 package org.comixedproject.rest.lists;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -63,6 +64,7 @@ public class ReadingListController {
   @GetMapping(value = "/api/lists/reading", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingLists.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.get-all-for-user")
   public List<ReadingList> loadReadingListsForUser(Principal principal)
       throws ReadingListException {
     final String email = principal.getName();
@@ -84,6 +86,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.create")
   public ReadingList createReadingList(
       Principal principal, @RequestBody() SaveReadingListRequest request)
       throws ReadingListException {
@@ -111,6 +114,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.update")
   public ReadingList updateReadingList(
       Principal principal,
       @PathVariable("id") long id,
@@ -141,6 +145,7 @@ public class ReadingListController {
   @GetMapping(value = "/api/lists/reading/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.get-one-for-user")
   public ReadingList loadReadingList(final Principal principal, @PathVariable("id") final long id)
       throws ReadingListException {
     final String email = principal.getName();
@@ -163,6 +168,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.add-comics")
   public ReadingList addComicsToList(
       Principal principal,
       @PathVariable("id") Long id,
@@ -195,6 +201,7 @@ public class ReadingListController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @JsonView(View.ReadingListDetail.class)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.remove-comics")
   public ReadingList removeComicsFromList(
       Principal principal,
       @PathVariable("id") long id,
@@ -224,6 +231,7 @@ public class ReadingListController {
       value = "/api/lists/reading/{id}/download",
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.download")
   public DownloadDocument downloadReadingList(
       final Principal principal, @PathVariable("id") final long readingListId)
       throws ReadingListException {
@@ -242,6 +250,7 @@ public class ReadingListController {
    */
   @PostMapping(value = "/api/lists/reading/upload")
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.upload")
   public void uploadReadingList(final Principal principal, final MultipartFile file)
       throws IOException, ReadingListException {
     final String email = principal.getName();
@@ -259,6 +268,7 @@ public class ReadingListController {
    */
   @PostMapping(value = "/api/lists/reading/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.reading-list.delete")
   public void deleteReadingLists(
       final Principal principal, @RequestBody() final DeleteReadingListsRequest request)
       throws ReadingListException {

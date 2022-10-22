@@ -19,6 +19,7 @@
 package org.comixedproject.rest.metadata;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.metadata.FilenameScrapingRule;
@@ -50,6 +51,7 @@ public class FilenameScrapingRuleController {
    */
   @GetMapping(value = "/api/admin/scraping/rules", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.scraping-rules.get-all")
   @JsonView(View.FilenameScrapingRuleList.class)
   public List<FilenameScrapingRule> loadRules() {
     log.info("Loading all filename scraping rules");
@@ -67,6 +69,7 @@ public class FilenameScrapingRuleController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.scraping-rules.save")
   @JsonView(View.FilenameScrapingRuleList.class)
   public List<FilenameScrapingRule> saveRules(
       @RequestBody() final List<FilenameScrapingRule> rules) {
