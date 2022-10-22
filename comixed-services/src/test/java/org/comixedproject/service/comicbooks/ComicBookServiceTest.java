@@ -77,6 +77,7 @@ public class ComicBookServiceTest {
   private static final String TEST_STORY_NAME = "The Story Name";
   private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final long TEST_COMIC_COUNT = 239L;
+  private static final String TEST_SEARCH_TERMS = "The search terms";
 
   @InjectMocks private ComicBookService service;
   @Mock private ComicStateHandler comicStateHandler;
@@ -1751,5 +1752,18 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicBook, Mockito.times(1)).setBatchMetadataUpdate(true);
     Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
+  }
+
+  @Test
+  public void testGetComicBookssForSearchTerms() {
+    Mockito.when(comicBookRepository.findForSearchTerms(Mockito.anyString()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.getComicBooksForSearchTerms(TEST_SEARCH_TERMS);
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findForSearchTerms(TEST_SEARCH_TERMS);
   }
 }

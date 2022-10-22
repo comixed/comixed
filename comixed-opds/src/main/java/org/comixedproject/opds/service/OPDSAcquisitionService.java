@@ -19,7 +19,13 @@
 package org.comixedproject.opds.service;
 
 import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.service.OPDSNavigationService.*;
+import static org.comixedproject.opds.service.OPDSNavigationService.CHARACTERS_ID;
+import static org.comixedproject.opds.service.OPDSNavigationService.COMIC_STORE_DATE_FOR_YEAR_ID;
+import static org.comixedproject.opds.service.OPDSNavigationService.LOCATIONS_ID;
+import static org.comixedproject.opds.service.OPDSNavigationService.READING_LIST_FACTOR_ID;
+import static org.comixedproject.opds.service.OPDSNavigationService.SELF;
+import static org.comixedproject.opds.service.OPDSNavigationService.STORIES_ID;
+import static org.comixedproject.opds.service.OPDSNavigationService.TEAMS_ID;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -284,5 +290,29 @@ public class OPDSAcquisitionService {
     calendar.set(Calendar.WEEK_OF_YEAR, week);
     calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
     return calendar.getTime();
+  }
+
+  /**
+   * Returns a feed contain those comics that match the provided search term.
+   *
+   * @param term the term
+   * @return the feeds
+   */
+  public OPDSAcquisitionFeed getComicsFeedForSearchTerms(final String term) {
+    final OPDSAcquisitionFeed response =
+        new OPDSAcquisitionFeed(String.format("Search for term: %s", term), term);
+    log.trace("Loading comics");
+    this.comicBookService.getComicBooksForSearchTerms(term).stream()
+        .forEach(
+            comicBook -> {
+              log.trace("Adding comic to collection entries: {}", comicBook.getId());
+              response.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
+            });
+    response
+        .getLinks()
+        .add(
+            new OPDSLink(
+                NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/search?terms=%s", term)));
+    return response;
   }
 }

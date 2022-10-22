@@ -19,6 +19,7 @@
 package org.comixedproject.opds.model;
 
 import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
+import static org.comixedproject.opds.model.OPDSNavigationFeed.SEARCH_LINK_TYPE;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -71,6 +72,7 @@ public abstract class OPDSFeed<E extends OPDSFeedEntry> {
       new ArrayList<>() {
         {
           add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, "start", "/opds/"));
+          add(new OPDSLink(SEARCH_LINK_TYPE, "search", "/opds/search.xml"));
         }
       };
 

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,19 +18,30 @@
 
 package org.comixedproject.opds.model;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
- * <code>OPDSNavigationFeed</code> provides a navigation feed.
+ * <code>OpenSearchUrl</code> represents a single URL in a {@link OpenSearchDescriptor}.
  *
  * @author Darryl L. Pierce
  */
-public class OPDSNavigationFeed extends OPDSFeed<OPDSNavigationFeedEntry> {
-  public static final String NAVIGATION_FEED_LINK_TYPE =
-      "application/atom+xml; profile=opds-catalog; kind=navigation";
-  public static final String SEARCH_LINK_TYPE = "application/opensearchdescription+xml";
+@RequiredArgsConstructor
+public class OpenSearchUrl {
+  @JacksonXmlProperty(localName = "type", isAttribute = true)
+  @Getter
+  @NonNull
+  private String type;
 
-  public OPDSNavigationFeed(@NonNull final String title, @NonNull final String id) {
-    super(title, id);
-  }
+  @JacksonXmlProperty(localName = "method", isAttribute = true)
+  @Getter
+  @NonNull
+  private String method = "get";
+
+  @JacksonXmlProperty(localName = "template", isAttribute = true)
+  @Getter
+  @NonNull
+  private String template;
 }
