@@ -18,9 +18,20 @@
 
 package org.comixedproject.rest.library;
 
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_CONSOLIDATION_JOB_STARTED;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
-import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.*;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
+import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_IMPRINT;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_ISSUENO;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_PUBLISHER;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_SERIES;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_STARTED;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
 import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -37,8 +48,13 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.*;
 import org.comixedproject.model.net.library.ConsolidateLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryResponse;
+import org.comixedproject.model.net.library.PurgeLibraryRequest;
+import org.comixedproject.model.net.library.RemoteLibraryState;
+import org.comixedproject.model.net.library.RescanComicsRequest;
+import org.comixedproject.model.net.library.UpdateMetadataRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -53,7 +69,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <code>LibraryController</code> provides REST APIs for working with groups of {@link ComicBook}
@@ -94,6 +114,10 @@ public class LibraryController {
   @Autowired
   @Qualifier("purgeLibraryJob")
   private Job purgeLibraryJob;
+
+  @Autowired
+  @Qualifier("updateComicBooksJob")
+  private Job updateComicBooksJob;
 
   /**
    * Retrieves the current state of the library.
@@ -307,15 +331,20 @@ public class LibraryController {
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.library.edit-comics")
   public void editMultipleComics(@RequestBody() final EditMultipleComicsRequest request)
-      throws ComicBookException {
+      throws Exception {
     final List<Long> ids = request.getIds();
-    log.info("Updating details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
-    this.comicBookService.updateMultipleComics(
-        ids,
-        request.getPublisher(),
-        request.getSeries(),
-        request.getVolume(),
-        request.getIssueNumber(),
-        request.getImprint());
+    log.info("Preparing to update details for {} comic{}", ids.size(), ids.size() == 1 ? "" : "s");
+    this.comicBookService.updateMultipleComics(ids);
+    log.trace("Launching update comics batch process");
+    this.jobLauncher.run(
+        this.updateComicBooksJob,
+        new JobParametersBuilder()
+            .addLong(JOB_UPDATE_COMICBOOKS_STARTED, System.currentTimeMillis())
+            .addString(JOB_UPDATE_COMICBOOKS_PUBLISHER, request.getPublisher())
+            .addString(JOB_UPDATE_COMICBOOKS_SERIES, request.getSeries())
+            .addString(JOB_UPDATE_COMICBOOKS_VOLUME, request.getVolume())
+            .addString(JOB_UPDATE_COMICBOOKS_ISSUENO, request.getIssueNumber())
+            .addString(JOB_UPDATE_COMICBOOKS_IMPRINT, request.getImprint())
+            .toJobParameters());
   }
 }

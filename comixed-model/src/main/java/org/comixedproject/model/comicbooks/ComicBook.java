@@ -164,6 +164,12 @@ public class ComicBook {
   @Setter
   private boolean recreating = false;
 
+  @Column(name = "EditDetails", nullable = false, updatable = true)
+  @JsonIgnore
+  @Getter
+  @Setter
+  private boolean editDetails = false;
+
   @Formula(
       value =
           "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = id AND p.FileHash in (SELECT b.Hash FROM BlockedHashes b))")

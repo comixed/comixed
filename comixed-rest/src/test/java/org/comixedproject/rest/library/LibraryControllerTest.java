@@ -18,11 +18,23 @@
 
 package org.comixedproject.rest.library;
 
-import static junit.framework.TestCase.*;
-import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.assertTrue;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_CONSOLIDATION_JOB_STARTED;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_RENAMING_RULE;
+import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_TARGET_DIRECTORY;
 import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_PURGE_LIBRARY_START;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_IMPRINT;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_ISSUENO;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_PUBLISHER;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_SERIES;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
 import static org.comixedproject.rest.library.LibraryController.MAXIMUM_RECORDS;
 import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 import static org.comixedproject.service.admin.ConfigurationService.CFG_LIBRARY_COMIC_RENAMING_RULE;
@@ -38,7 +50,13 @@ import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
-import org.comixedproject.model.net.library.*;
+import org.comixedproject.model.net.library.ConsolidateLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryRequest;
+import org.comixedproject.model.net.library.LoadLibraryResponse;
+import org.comixedproject.model.net.library.PurgeLibraryRequest;
+import org.comixedproject.model.net.library.RemoteLibraryState;
+import org.comixedproject.model.net.library.RescanComicsRequest;
+import org.comixedproject.model.net.library.UpdateMetadataRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -49,7 +67,11 @@ import org.comixedproject.service.user.ComiXedUserException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -107,6 +129,10 @@ public class LibraryControllerTest {
   @Mock
   @Qualifier("purgeLibraryJob")
   private Job purgeLibraryJob;
+
+  @Mock
+  @Qualifier("updateComicBooksJob")
+  private Job updateComicBooksJob;
 
   @Captor private ArgumentCaptor<JobParameters> jobParametersArgumentCaptor;
 
@@ -348,47 +374,46 @@ public class LibraryControllerTest {
     Mockito.verify(jobLauncher, Mockito.times(1)).run(purgeLibraryJob, jobParameters);
   }
 
-  @Test(expected = ComicBookException.class)
-  public void testEditMultipleComicsServiceThrowsException() throws ComicBookException {
+  @Test(expected = Exception.class)
+  public void testEditMultipleComicsServiceThrowsException() throws Exception {
     Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
-    Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
 
     Mockito.doThrow(ComicBookException.class)
         .when(comicBookService)
-        .updateMultipleComics(
-            Mockito.anyList(),
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyString());
+        .updateMultipleComics(Mockito.anyList());
 
     try {
       controller.editMultipleComics(editMultipleComicsRequest);
     } finally {
-      Mockito.verify(comicBookService, Mockito.times(1))
-          .updateMultipleComics(
-              idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+      Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
     }
   }
 
   @Test
-  public void testEditMultipleComics() throws ComicBookException {
+  public void testEditMultipleComics() throws Exception {
     Mockito.when(editMultipleComicsRequest.getIds()).thenReturn(idList);
     Mockito.when(editMultipleComicsRequest.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(editMultipleComicsRequest.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(editMultipleComicsRequest.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(editMultipleComicsRequest.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     Mockito.when(editMultipleComicsRequest.getImprint()).thenReturn(TEST_IMPRINT);
+    Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
+        .thenReturn(jobExecution);
 
     controller.editMultipleComics(editMultipleComicsRequest);
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .updateMultipleComics(
-            idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+    Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
+
+    final JobParameters jobParameters = jobParametersArgumentCaptor.getValue();
+
+    assertNotNull(jobParameters);
+    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_PUBLISHER));
+    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_SERIES));
+    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_VOLUME));
+    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_ISSUENO));
+    assertTrue(jobParameters.getParameters().containsKey(JOB_UPDATE_COMICBOOKS_IMPRINT));
+
+    Mockito.verify(comicBookService, Mockito.times(1)).updateMultipleComics(idList);
+    Mockito.verify(jobLauncher, Mockito.times(1)).run(updateComicBooksJob, jobParameters);
   }
 }

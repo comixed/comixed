@@ -47,7 +47,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicMetadataSources Id="1000"
                         ComicBookId="1000"
                         MetadataSourceId="1000"
@@ -71,7 +72,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1002"
               Filename="C:/users/mcpierce/Documents/comicBooks/example3.cbz"
               ComicState="STABLE"
@@ -91,7 +93,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1003"
               Filename="C:/users/mcpierce/Documents/comicBooks/example4.cbz"
               ComicState="STABLE"
@@ -111,7 +114,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1004"
               Filename="C:/users/mcpierce/Documents/comicBooks/example5.cbz"
               ComicState="STABLE"
@@ -131,7 +135,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1005"
               Filename="C:/users/mcpierce/Documents/comicBooks/example6.cbz"
               ComicState="STABLE"
@@ -151,7 +156,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1006"
               Filename="C:/users/mcpierce/Documents/comicBooks/example7.cbz"
               ComicState="STABLE"
@@ -171,7 +177,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1010"
               Filename="C:/users/mcpierce/Documents/comicBooks/deleted-example1.cbz"
               ComicState="DELETED"
@@ -191,7 +198,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1020"
               Filename="C:/users/mcpierce/Documents/comicBooks/duplicate-1.cbz"
               ComicState="STABLE"
@@ -211,7 +219,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="1021"
               Filename="C:/users/mcpierce/Documents/comicBooks/duplicate-2.cbz"
               ComicState="STABLE"
@@ -231,7 +240,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <ComicBooks Id="2000"
               Filename="C:/users/mcpierce/Documents/comicBooks/unread-1.cbz"
               ComicState="STABLE"
@@ -251,7 +261,8 @@
               Consolidating="false"
               Recreating="true"
               PurgeComic="false"
-              CreateMetadataSource="false"/>
+              CreateMetadataSource="false"
+              EditDetails="false"/>
   <CharacterTags ComicBookId="1000"
                  Name="Captain America"/>
   <CharacterTags ComicBookId="1000"

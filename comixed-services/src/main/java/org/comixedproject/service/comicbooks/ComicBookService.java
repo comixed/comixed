@@ -54,7 +54,6 @@ import org.springframework.messaging.Message;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 /**
  * <code>ComicBookService</code> provides business rules for instances of {@link ComicBook}.
@@ -781,51 +780,17 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Updates the details for a set of comics. If any value is null then it is not updated.
+   * Prepares to update the details for a set of comics.
    *
    * @param comicIds the comics' ids
-   * @param publisher the publisher
-   * @param series the series
-   * @param issueNumber the issue number
-   * @param imprint the imprint
    * @throws ComicBookException if comic id is invalid
    */
-  public void updateMultipleComics(
-      final List<Long> comicIds,
-      final String publisher,
-      final String series,
-      final String volume,
-      final String issueNumber,
-      final String imprint)
-      throws ComicBookException {
+  public void updateMultipleComics(final List<Long> comicIds) throws ComicBookException {
+    log.debug("Updating details for {} comic{}", comicIds.size(), comicIds.size() == 1 ? "" : "s");
     for (long id : comicIds) {
-      log.trace(
-          "Updating multiple comics: publisher={} series={} volume={} issue number={} imprint={}",
-          publisher,
-          series,
-          issueNumber,
-          imprint);
       log.trace("Loading comicBook: id={}", id);
       final ComicBook comicBook = this.doGetComic(id);
-
-      if (StringUtils.hasLength(publisher)) {
-        comicBook.setPublisher(publisher);
-      }
-      if (StringUtils.hasLength(series)) {
-        comicBook.setSeries(series);
-      }
-      if (StringUtils.hasLength(volume)) {
-        comicBook.setVolume(volume);
-      }
-      if (StringUtils.hasLength(issueNumber)) {
-        comicBook.setIssueNumber(issueNumber);
-      }
-      if (StringUtils.hasLength(imprint)) {
-        comicBook.setImprint(imprint);
-      }
-
-      log.trace("Firing event: comicBook details changed");
-      this.comicStateHandler.fireEvent(comicBook, ComicEvent.detailsUpdated);
+      this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateDetails);
     }
   }
 
@@ -1088,5 +1053,16 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<ComicBook> getComicBooksForSearchTerms(final String term) {
     log.info("Searching comic books: term={}", term);
     return this.comicBookRepository.findForSearchTerms(term);
+  }
+
+  /**
+   * Retrieves comic books that have their edit details flag set.
+   *
+   * @param count the maximum records
+   * @return the comic books
+   */
+  public List<ComicBook> findComicsWithEditDetails(final int count) {
+    log.debug("Loading up to {} comics with edit flag set", count);
+    return this.comicBookRepository.findComicsWithEditDetails(PageRequest.of(0, count));
   }
 }
