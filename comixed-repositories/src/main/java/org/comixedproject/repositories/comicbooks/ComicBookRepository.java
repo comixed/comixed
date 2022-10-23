@@ -594,4 +594,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query(
       "SELECT c FROM ComicBook c WHERE LOWER(c.title) LIKE LOWER(concat('%', :term, '%')) OR LOWER(c.description) LIKE LOWER(concat('%', :term, '%'))")
   List<ComicBook> findForSearchTerms(@Param("term") String term);
+
+  /**
+   * Returns comics that have their edit details flag set.
+   *
+   * @param pageable the request size
+   * @return the comic list
+   */
+  @Query("SELECT c FROM ComicBook c WHERE c.editDetails = true")
+  List<ComicBook> findComicsWithEditDetails(Pageable pageable);
 }

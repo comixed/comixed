@@ -61,6 +61,8 @@ public enum ComicEvent {
   // the comic has been marked as unread by a user
   markAsUnread,
   scraped,
+  // start the process of updating details for some comics
+  updateDetails,
   // some detail of the comic was changed
   detailsUpdated,
   metadataCleared,

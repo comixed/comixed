@@ -52,6 +52,8 @@ public class ComicStateMachineConfiguration
   @Autowired private ConsolidateComicGuard consolidateComicGuard;
   @Autowired private ComicConsolidatedAction comicConsolidatedAction;
   @Autowired private ComicFileAlreadyRecreatingGuard comicFileAlreadyRecreatingGuard;
+  @Autowired private UpdateComicBookDetailsAction updateComicBookDetailsAction;
+  @Autowired private ComicBookDetailsUpdatedAction comicBookDetailsUpdatedAction;
   @Autowired private RecreateComicFileAction recreateComicFileAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
   @Autowired private ComicAlreadyReadByUserGuard comicAlreadReadByUserGuard;
@@ -177,24 +179,38 @@ public class ComicStateMachineConfiguration
         .target(ComicState.CHANGED)
         .event(ComicEvent.comicConsolidated)
         .action(comicConsolidatedAction)
-        // the comic details are manually changed
+        // the details are going to be edited
+        .and()
+        .withExternal()
+        .source(ComicState.STABLE)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.updateDetails)
+        .action(updateComicBookDetailsAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.updateDetails)
+        .action(updateComicBookDetailsAction)
+        // the comic details have been edited
         .and()
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.CHANGED)
         .event(ComicEvent.detailsUpdated)
+        .action(comicBookDetailsUpdatedAction)
+        .and()
+        .withExternal()
+        .source(ComicState.CHANGED)
+        .target(ComicState.CHANGED)
+        .event(ComicEvent.detailsUpdated)
+        .action(comicBookDetailsUpdatedAction)
         // the comic details are changed via scraping
         .and()
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.CHANGED)
         .event(ComicEvent.scraped)
-        // the comic details are manually changed
-        .and()
-        .withExternal()
-        .source(ComicState.CHANGED)
-        .target(ComicState.CHANGED)
-        .event(ComicEvent.detailsUpdated)
         // the comic details are change via scraping
         .and()
         .withExternal()

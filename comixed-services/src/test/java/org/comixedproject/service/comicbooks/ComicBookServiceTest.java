@@ -18,10 +18,21 @@
 
 package org.comixedproject.service.comicbooks;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.assertTrue;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
@@ -42,7 +53,11 @@ import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
@@ -1267,8 +1282,7 @@ public class ComicBookServiceTest {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
-      service.updateMultipleComics(
-          idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+      service.updateMultipleComics(idList);
     } finally {
       Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     }
@@ -1280,106 +1294,10 @@ public class ComicBookServiceTest {
 
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
-    service.updateMultipleComics(
-        idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
+    service.updateMultipleComics(idList);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
-  }
-
-  @Test
-  public void testUpdateMultipleComicsNoPublisher() throws ComicBookException {
-    idList.add(TEST_COMIC_BOOK_ID);
-
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.updateMultipleComics(
-        idList, null, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
-
-    Mockito.verify(comicBook, Mockito.never()).setPublisher(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
-  }
-
-  @Test
-  public void testUpdateMultipleComicsNoSeries() throws ComicBookException {
-    idList.add(TEST_COMIC_BOOK_ID);
-
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.updateMultipleComics(
-        idList, TEST_PUBLISHER, null, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_IMPRINT);
-
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.never()).setSeries(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
-  }
-
-  @Test
-  public void testUpdateMultipleComicsNoVolume() throws ComicBookException {
-    idList.add(TEST_COMIC_BOOK_ID);
-
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.updateMultipleComics(
-        idList, TEST_PUBLISHER, TEST_SERIES, null, TEST_ISSUE_NUMBER, TEST_IMPRINT);
-
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.never()).setVolume(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
-  }
-
-  @Test
-  public void testUpdateMultipleComicsNoIssueNumber() throws ComicBookException {
-    idList.add(TEST_COMIC_BOOK_ID);
-
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.updateMultipleComics(
-        idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, null, TEST_IMPRINT);
-
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.never()).setIssueNumber(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
-  }
-
-  @Test
-  public void testUpdateMultipleComicsNoImprint() throws ComicBookException {
-    idList.add(TEST_COMIC_BOOK_ID);
-
-    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-
-    service.updateMultipleComics(
-        idList, TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, null);
-
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.never()).setImprint(Mockito.anyString());
-    Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.detailsUpdated);
+        .fireEvent(comicBook, ComicEvent.updateDetails);
   }
 
   @Test
@@ -1761,9 +1679,23 @@ public class ComicBookServiceTest {
 
     final List<ComicBook> result = service.getComicBooksForSearchTerms(TEST_SEARCH_TERMS);
 
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findForSearchTerms(TEST_SEARCH_TERMS);
+  }
+
+  @Test
+  public void testFindComicsWithEditDetails() {
+    Mockito.when(comicBookRepository.findComicsWithEditDetails(pageableCaptor.capture()))
+        .thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.findComicsWithEditDetails(TEST_MAXIMUM_COMICS);
+
     assertNotNull(result);
     assertSame(comicBookList, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findForSearchTerms(TEST_SEARCH_TERMS);
+    final Pageable pageable = pageableCaptor.getValue();
+    assertEquals(0, pageable.getPageNumber());
+    assertEquals(TEST_MAXIMUM_COMICS, pageable.getPageSize());
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).findComicsWithEditDetails(pageable);
   }
 }
