@@ -97,7 +97,24 @@ import {
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
   const PAGE_INDEX = 23;
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const DATE = new Date();
+  const COMIC_BOOKS = [
+    {
+      ...COMIC_BOOK_1,
+      coverDate: new Date(DATE.getTime() - 365 * 24 * 60 * 60 * 1000).getTime(), // last year
+      archiveType: ArchiveType.CB7
+    },
+    {
+      ...COMIC_BOOK_3,
+      coverDate: new Date(DATE.getTime() - 760 * 24 * 60 * 60 * 1000).getTime(), // two years and a month
+      archiveType: ArchiveType.CBR
+    },
+    {
+      ...COMIC_BOOK_5,
+      coverDate: new Date().getTime(),
+      archiveType: ArchiveType.CBZ
+    }
+  ];
   const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
@@ -545,13 +562,82 @@ describe('LibraryPageComponent', () => {
   describe('selecting all comics', () => {
     beforeEach(() => {
       component.comicBooks = COMIC_BOOKS;
-      component.onSelectAllComics(true);
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        selectComicBooks({ ids: IDS })
-      );
+    describe('with no filters', () => {
+      beforeEach(() => {
+        component.coverDateFilter = { year: null, month: null };
+        component.archiveTypeFilter = null;
+        component.onSelectAllComics(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: IDS })
+        );
+      });
+    });
+
+    describe('when filtering by year', () => {
+      beforeEach(() => {
+        component.coverDateFilter = {
+          year: new Date(COMIC_BOOKS[0].coverDate).getFullYear(),
+          month: null
+        };
+        component.onSelectAllComics(true);
+      });
+
+      it('only selects comics with the given year', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: [COMIC_BOOKS[0].id] })
+        );
+      });
+    });
+
+    describe('when filtering by month', () => {
+      beforeEach(() => {
+        component.coverDateFilter = {
+          year: null,
+          month: new Date(COMIC_BOOKS[1].coverDate).getMonth()
+        };
+        component.onSelectAllComics(true);
+      });
+
+      it('only selects comics with the given month', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: [COMIC_BOOKS[1].id] })
+        );
+      });
+    });
+
+    describe('when filtering by archive type', () => {
+      beforeEach(() => {
+        component.archiveTypeFilter = COMIC_BOOKS[2].archiveType;
+        component.onSelectAllComics(true);
+      });
+
+      it('only selects comics with the given archive type', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: [COMIC_BOOKS[2].id] })
+        );
+      });
+    });
+
+    describe('when filtering by read status', () => {
+      beforeEach(() => {
+        component.lastReadDates = [
+          { id: 1, lastRead: new Date().getTime(), comicBook: COMIC_BOOKS[0] },
+          { id: 2, lastRead: new Date().getTime(), comicBook: COMIC_BOOKS[1] }
+        ];
+        component.unreadOnly = true;
+        component.onSelectAllComics(true);
+      });
+
+      it('only selects unread comics', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          selectComicBooks({ ids: [COMIC_BOOKS[2].id] })
+        );
+      });
     });
   });
 

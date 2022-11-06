@@ -82,7 +82,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   deletedOnly = false;
   unprocessedOnly = false;
   queryParamSubscription: Subscription;
-  archiveTypeFilter = null;
+  archiveTypeFilter: ArchiveType;
   pageIndex = 0;
   sortField = SORT_FIELD_DEFAULT;
   lastReadDatesSubscription: Subscription;
@@ -241,10 +241,26 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   onSelectAllComics(selected: boolean): void {
     if (selected) {
-      this.logger.trace('Selecting all comics');
+      this.logger.trace('Selecting all comics with filtering');
       this.store.dispatch(
         selectComicBooks({
-          ids: this.comicBooks.map(comicBook => comicBook.id)
+          ids: this.comicBooks
+            .filter(
+              comicBook =>
+                (!this.coverDateFilter.year ||
+                  new Date(comicBook.coverDate).getFullYear() ===
+                    this.coverDateFilter.year) &&
+                (!this.coverDateFilter.month ||
+                  new Date(comicBook.coverDate).getMonth() ===
+                    this.coverDateFilter.month) &&
+                (!this.archiveTypeFilter ||
+                  comicBook.archiveType === this.archiveTypeFilter) &&
+                (!this.unreadOnly ||
+                  !this.lastReadDates
+                    .map(lastRead => lastRead.comicBook.id)
+                    .includes(comicBook.id))
+            )
+            .map(comicBook => comicBook.id)
         })
       );
     } else {
