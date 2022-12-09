@@ -272,13 +272,30 @@ describe('NavigationBarComponent', () => {
   });
 
   describe('toggling the sidebar', () => {
+    const STATE = Math.random() > 0.5;
+
     beforeEach(() => {
+      component.sidebarOpened = STATE;
       spyOn(component.toggleSidebar, 'emit');
       component.onToggleSidebar();
     });
 
     it('emits an event', () => {
-      expect(component.toggleSidebar.emit).toHaveBeenCalled();
+      expect(component.toggleSidebar.emit).toHaveBeenCalledWith(!STATE);
+    });
+  });
+
+  describe('toggling the user account bar', () => {
+    const STATE = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.accountBarOpened = STATE;
+      spyOn(component.toggleAccountBar, 'emit');
+      component.onToggleAccountBar();
+    });
+
+    it('emits an event', () => {
+      expect(component.toggleAccountBar.emit).toHaveBeenCalledWith(!STATE);
     });
   });
 

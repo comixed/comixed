@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,46 +17,45 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {
-  AccountEditPageComponent,
-  passwordVerifyValidator
-} from './account-edit-page.component';
-import { LoggerModule } from '@angular-ru/cdk/logger';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import {
-  initialState as initialUserState,
-  USER_FEATURE_KEY
-} from '@app/user/reducers/user.reducer';
+import { EditAccountBarComponent } from './edit-account-bar.component';
+import { PREFERENCE_1, USER_READER } from '@app/user/user.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
-import { USER_READER } from '@app/user/user.fixtures';
-import { saveCurrentUser } from '@app/user/actions/user.actions';
-import { TitleService } from '@app/core/services/title.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { UserCardComponent } from '@app/user/components/user-card/user-card.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoggerModule } from '@angular-ru/cdk/logger';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { passwordVerifyValidator } from '@app/user/user.functions';
+import {
+  saveCurrentUser,
+  saveUserPreference
+} from '@app/user/actions/user.actions';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
 
-describe('AccountEditPageComponent', () => {
+describe('EditAccountBarComponent', () => {
   const USER = USER_READER;
   const PASSWORD = 'Th1s!i5!mY!P4ssw0rD';
+  const PREFERENCE = PREFERENCE_1;
   const initialState = { [USER_FEATURE_KEY]: initialUserState };
 
-  let component: AccountEditPageComponent;
-  let fixture: ComponentFixture<AccountEditPageComponent>;
+  let component: EditAccountBarComponent;
+  let fixture: ComponentFixture<EditAccountBarComponent>;
   let store: MockStore<any>;
-  let titleService: TitleService;
   let translateService: TranslateService;
   let confirmationService: ConfirmationService;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AccountEditPageComponent, UserCardComponent],
+        declarations: [EditAccountBarComponent],
         imports: [
           FormsModule,
           ReactiveFormsModule,
@@ -66,19 +65,13 @@ describe('AccountEditPageComponent', () => {
           MatIconModule,
           MatToolbarModule
         ],
-        providers: [
-          provideMockStore({ initialState }),
-          TitleService,
-          ConfirmationService
-        ]
+        providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(AccountEditPageComponent);
+      fixture = TestBed.createComponent(EditAccountBarComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
-      titleService = TestBed.inject(TitleService);
-      spyOn(titleService, 'setTitle');
       translateService = TestBed.inject(TranslateService);
       confirmationService = TestBed.inject(ConfirmationService);
       fixture.detectChanges();
@@ -89,54 +82,56 @@ describe('AccountEditPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('when the language changes', () => {
-    beforeEach(() => {
-      translateService.use('fr');
-    });
-
-    it('updates the page title', () => {
-      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('when the user is received', () => {
+  describe('loading the user form', () => {
     beforeEach(() => {
       spyOn(component.userForm.controls.password, 'setValidators');
       spyOn(component.userForm.controls.passwordVerify, 'setValidators');
       spyOn(component.userForm, 'setValidators');
-      store.setState({
-        ...initialState,
-        [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
+    });
+
+    it('returns the form controls', () => {
+      expect(component.controls).not.toBeNull();
+    });
+
+    describe('when the user is null', () => {
+      beforeEach(() => {
+        component.user = null;
+      });
+
+      it('clears the user form', () => {
+        expect(component.userForm.controls.email.value).toEqual('');
       });
     });
 
-    it('loads the user form', () => {
-      expect(component.userForm.controls.email.value).toEqual(USER.email);
-    });
+    describe('when the user is not null', () => {
+      beforeEach(() => {
+        component.user = USER;
+      });
 
-    it('resets the passwords', () => {
-      expect(component.userForm.controls.password.value).toEqual('');
-      expect(component.userForm.controls.passwordVerify.value).toEqual('');
-    });
+      it('loads the user form', () => {
+        expect(component.userForm.controls.email.value).toEqual(USER.email);
+      });
 
-    it('clears password validation', () => {
-      expect(
-        component.userForm.controls.password.setValidators
-      ).toHaveBeenCalledWith(null);
-    });
+      it('resets the passwords', () => {
+        expect(component.userForm.controls.password.value).toEqual('');
+        expect(component.userForm.controls.passwordVerify.value).toEqual('');
+      });
 
-    it('clears password verify validation', () => {
-      expect(
-        component.userForm.controls.passwordVerify.setValidators
-      ).toHaveBeenCalledWith(null);
-    });
+      it('clears password validation', () => {
+        expect(
+          component.userForm.controls.password.setValidators
+        ).toHaveBeenCalledWith(null);
+      });
 
-    it('clears password comparison validation', () => {
-      expect(component.userForm.setValidators).toHaveBeenCalledWith(null);
-    });
+      it('clears password verify validation', () => {
+        expect(
+          component.userForm.controls.passwordVerify.setValidators
+        ).toHaveBeenCalledWith(null);
+      });
 
-    it('updates the page title', () => {
-      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+      it('clears password comparison validation', () => {
+        expect(component.userForm.setValidators).toHaveBeenCalledWith(null);
+      });
     });
   });
 
@@ -276,6 +271,71 @@ describe('AccountEditPageComponent', () => {
 
     it('resets the email address', () => {
       expect(component.userForm.controls.email.value).toEqual(USER.email);
+    });
+  });
+
+  describe('closing the sidebar', () => {
+    const EMAIL = USER.email.substr(1);
+
+    beforeEach(() => {
+      component.user = USER;
+      component.userForm.controls.email.setValue(EMAIL);
+      component.userForm.controls.password.setValue(PASSWORD);
+      component.userForm.controls.passwordVerify.setValue(PASSWORD);
+      spyOn(component.closeSidebar, 'emit');
+      component.onCloseForm();
+    });
+
+    it('resets the email address', () => {
+      expect(component.userForm.controls.email.value).toEqual(USER.email);
+    });
+
+    it('emits an event', () => {
+      expect(component.closeSidebar.emit).toHaveBeenCalled();
+    });
+  });
+
+  describe('when the component size changes', () => {
+    beforeEach(() => {
+      component.avatarWidth$.next(undefined);
+      component.onWindowResized({} as any);
+    });
+
+    it('sets the avatar width', () => {
+      expect(component.avatarWidth$.value).not.toBeNull();
+    });
+  });
+
+  describe('deleting a user preference', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onDeletePreference(PREFERENCE.name);
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({ name: PREFERENCE.name, value: null })
+      );
+    });
+  });
+
+  describe('sorting', () => {
+    it('can sort by preference name', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PREFERENCE, 'name')
+      ).toEqual(PREFERENCE.name);
+    });
+
+    it('can sort by preference value', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(PREFERENCE, 'value')
+      ).toEqual(PREFERENCE.value);
     });
   });
 });

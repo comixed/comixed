@@ -56,6 +56,10 @@ $cx-selected-comic-color: #ffffff;
   width: 50% !important;
 }
 
+.cx-min-width-50 {
+  min-width: 50% !important;
+}
+
 .cx-width-75 {
   width: 75% !important;
 }
@@ -199,6 +203,10 @@ $cx-selected-comic-color: #ffffff;
   margin-right: 2px;
 }
 
+.cx-margin-10 {
+  margin: 10px
+}
+
 // table column widths
 
 $cx-column-small: 50px;
@@ -262,6 +270,11 @@ th {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.cx-action-button-container-horizontal {
+  display: flex;
+  flex-direction:  row;
 }
 
 .cx-detail-label {
@@ -359,6 +372,7 @@ th {
 .cx-action-button {
   min-width: 100px !important;
   padding-bottom: 5px !important;
+  margin-left: 5px !important;
   overflow-x: hidden !important;
   white-space: nowrap;
   text-overflow: ellipsis;

@@ -26,6 +26,7 @@
   "button": {
     "cancel": "Cancelar",
     "clear-log": "Limpar registro",
+    "close": "Close",
     "deselect": "Desmarcar",
     "deselect-all": "Desmarcar Todos",
     "download": "Descarregar",

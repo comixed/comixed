@@ -33,8 +33,8 @@
   <a
     *ngIf="!!user"
     class="cx-toolbar-link cx-padding-right-5"
-    routerLink="/account"
     routerLinkActive="cx-toolbar-link-active"
+    (click)="onToggleAccountBar()"
   >
     {{ user.email }}
   </a>
@@ -44,7 +44,7 @@
     class="cx-toolbar-button"
     mat-icon-button
     [matTooltip]="'navigation.tooltip.account' | translate"
-    [routerLink]="'/account'"
+    (click)="onToggleAccountBar()"
   >
     <img ngxGravatar [alt]="user.email" [email]="user.email" />
   </button>

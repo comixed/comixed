@@ -23,6 +23,7 @@ import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_PREFERENCE
 } from '@app/library/library.constants';
+import { FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /** Find a specific user preference. */
 export function getUserPreference(
@@ -48,6 +49,7 @@ export function isAdmin(user: User): boolean {
 }
 
 export function getPageSize(user: User): number {
+  /* istanbul ignore if */
   if (!user) {
     return PAGE_SIZE_DEFAULT;
   }
@@ -60,3 +62,13 @@ export function getPageSize(user: User): number {
     return PAGE_SIZE_DEFAULT;
   }
 }
+
+export const passwordVerifyValidator: ValidatorFn = (
+  formGroup: FormGroup
+): ValidationErrors | null => {
+  const password = formGroup.controls.password.value;
+  const passwordVerify = formGroup.controls.passwordVerify.value;
+  return (!password && !passwordVerify) || password === passwordVerify
+    ? null
+    : { passwordsDontMatch: true };
+};

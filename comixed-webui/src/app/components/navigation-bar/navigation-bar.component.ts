@@ -50,6 +50,7 @@ import { loadLatestReleaseDetails } from '@app/actions/release.actions';
 })
 export class NavigationBarComponent {
   @Output() toggleSidebar = new EventEmitter<boolean>();
+  @Output() toggleAccountBar = new EventEmitter<boolean>();
 
   isReader = false;
   isAdmin = false;
@@ -112,6 +113,17 @@ export class NavigationBarComponent {
 
   @Input() set sidebarOpened(opened: boolean) {
     this._sidebarOpened = opened;
+  }
+
+  private _accountBarOpened = false;
+
+  get accountBarOpened(): boolean {
+    return this._accountBarOpened;
+  }
+
+  @Input()
+  set accountBarOpened(opened: boolean) {
+    this._accountBarOpened = opened;
   }
 
   private _user: User;
@@ -214,5 +226,10 @@ export class NavigationBarComponent {
   onViewLatestRelease(): void {
     this.logger.trace('Opening latest release page');
     window.open(this.latestRelease.url, LATEST_RELEASE_TARGET);
+  }
+
+  onToggleAccountBar(): void {
+    this.logger.trace('Toggling account bar');
+    this.toggleAccountBar.emit(!this.accountBarOpened);
   }
 }

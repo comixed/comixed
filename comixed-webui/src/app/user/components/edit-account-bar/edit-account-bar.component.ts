@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,110 +16,125 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild
+} from '@angular/core';
+import { User } from '@app/user/models/user';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { Store } from '@ngrx/store';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { LoggerService } from '@angular-ru/cdk/logger';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { User } from '@app/user/models/user';
-import {
-  selectUser,
-  selectUserState
-} from '@app/user/selectors/user.selectors';
-import { setBusyState } from '@app/core/actions/busy.actions';
-import { TranslateService } from '@ngx-translate/core';
-import { saveCurrentUser } from '@app/user/actions/user.actions';
-import { TitleService } from '@app/core/services/title.service';
-import { getUserPreference } from '@app/user';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
+import { ConfirmationService } from '@tragically-slick/confirmation';
+import { selectUserState } from '@app/user/selectors/user.selectors';
 import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH
 } from '@app/user/user.constants';
-import { ConfirmationService } from '@tragically-slick/confirmation';
+import {
+  saveCurrentUser,
+  saveUserPreference
+} from '@app/user/actions/user.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { passwordVerifyValidator } from '@app/user/user.functions';
+import { MatTableDataSource } from '@angular/material/table';
+import { Preference } from '@app/user/models/preference';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: 'cx-account-edit',
-  templateUrl: './account-edit-page.component.html',
-  styleUrls: ['./account-edit-page.component.scss']
+  selector: 'cx-edit-account-bar',
+  templateUrl: './edit-account-bar.component.html',
+  styleUrls: ['./edit-account-bar.component.scss']
 })
-export class AccountEditPageComponent implements OnDestroy {
+export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
+  @ViewChild('avatarContainer') container: ElementRef;
+  @ViewChild(MatSort) sort: MatSort;
+
+  @Output() closeSidebar = new EventEmitter<void>();
   userForm: FormGroup;
-  userStateSubscripton: Subscription;
+  userStateSubscription: Subscription;
   userSubscription: Subscription;
-  langChangeSubscription: Subscription;
-  imageSize = PAGE_SIZE_DEFAULT;
+  avatarWidth$ = new BehaviorSubject<number>(40);
+  busy = false;
+
+  readonly displayedColumns = ['name', 'value', 'actions'];
+  dataSource = new MatTableDataSource<Preference>([]);
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private formBuilder: FormBuilder,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService,
-    private titleService: TitleService
+    private translateService: TranslateService
   ) {
     this.userForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: [''],
       passwordVerify: ['']
     });
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
-    this.userStateSubscripton = this.store
+    this.userStateSubscription = this.store
       .select(selectUserState)
       .subscribe(state => {
-        this.store.dispatch(
-          setBusyState({ enabled: state.loading || state.saving })
-        );
+        this.logger.debug(`Setting busy state to ${state.saving}`);
+        this.busy = state.saving;
       });
-    this.userSubscription = this.store
-      .select(selectUser)
-      .pipe(filter(user => !!user))
-      .subscribe(user => (this.user = user));
+  }
+
+  private _user: User = null;
+
+  get user(): User {
+    return this._user;
+  }
+
+  @Input() set user(user: User) {
+    this._user = user;
+    if (!!user) {
+      this.userForm.controls.email.setValue(user.email);
+      this.userForm.controls.password.setValue('');
+      this.userForm.controls.passwordVerify.setValue('');
+      this.onPasswordChanged();
+      this.dataSource.data = user.preferences;
+    } else {
+      this.dataSource.data = [];
+    }
   }
 
   get controls(): { [p: string]: AbstractControl } {
     return this.userForm.controls;
   }
 
-  private _user: User;
-
-  get user(): User {
-    return this._user;
-  }
-
-  set user(user: User) {
-    this._user = user;
-    this.userForm.controls.email.setValue(user.email);
-    this.userForm.controls.password.setValue('');
-    this.userForm.controls.passwordVerify.setValue('');
-    this.onPasswordChanged();
-    this.loadTranslations();
-    this.imageSize = parseInt(
-      getUserPreference(
-        user.preferences,
-        PAGE_SIZE_PREFERENCE,
-        `${this.imageSize}`
-      ),
-      10
-    );
-  }
-
   ngOnDestroy(): void {
-    this.userStateSubscripton.unsubscribe();
-    this.userSubscription.unsubscribe();
+    this.userStateSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.trace('Assigning table sort');
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'name':
+          return data.name;
+        case 'value':
+          return data.value;
+      }
+    };
+    this.loadComponentDimensions();
+  }
+
+  @HostListener('window:resize', ['$event']) onWindowResized(event: any): void {
+    this.loadComponentDimensions();
   }
 
   onPasswordChanged(): void {
@@ -182,27 +197,41 @@ export class AccountEditPageComponent implements OnDestroy {
         'user.reset-user-changes.confirmation-message'
       ),
       confirm: () => {
-        this.logger.debug('Resetting user account changes');
-        this.user = this._user;
+        this.resetUser();
       }
     });
   }
 
-  private loadTranslations(): void {
-    this.titleService.setTitle(
-      this.translateService.instant('user.edit-current-user.tab-title', {
-        email: this.user?.email
-      })
-    );
+  onCloseForm(): void {
+    this.resetUser();
+    this.logger.trace('Closing edit account sidebar');
+    this.closeSidebar.emit();
+  }
+
+  onDeletePreference(name: string): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'user.user-preferences.delete-confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'user.user-preferences.delete-confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Deleting user preference:', name);
+        this.store.dispatch(saveUserPreference({ name, value: null }));
+      }
+    });
+  }
+
+  private resetUser(): void {
+    this.logger.debug('Resetting user account changes');
+    this.user = this._user;
+  }
+
+  private loadComponentDimensions(): void {
+    /* istanbul ignore next */
+    const width = this.container?.nativeElement?.offsetWidth || 40;
+    /* istanbul ignore next */
+    this.avatarWidth$.next(!!width || width > 100 ? 100 : width);
   }
 }
-
-export const passwordVerifyValidator: ValidatorFn = (
-  formGroup: FormGroup
-): ValidationErrors | null => {
-  const password = formGroup.controls.password.value;
-  const passwordVerify = formGroup.controls.passwordVerify.value;
-  return (!password && !passwordVerify) || password === passwordVerify
-    ? null
-    : { passwordsDontMatch: true };
-};
