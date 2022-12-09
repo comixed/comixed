@@ -19,24 +19,11 @@
 import { RouterModule, Routes } from '@angular/router';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { NgModule } from '@angular/core';
-import { AccountEditPageComponent } from './pages/account-edit-page/account-edit-page.component';
-import { UserPreferencesPageComponent } from '@app/user/pages/user-preferences-page/user-preferences-page.component';
-import { UserGuard } from '@app/user/guards/user.guard';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent
-  },
-  {
-    path: 'account',
-    component: AccountEditPageComponent,
-    canActivate: [UserGuard]
-  },
-  {
-    path: 'account/preferences',
-    component: UserPreferencesPageComponent,
-    canActivate: [UserGuard]
   }
 ];
 

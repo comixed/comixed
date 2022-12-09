@@ -16,6 +16,7 @@
   [user]="user"
   [sidebarOpened]="sidenav.opened"
   (toggleSidebar)="sidenav.toggle($event)"
+  (toggleAccountBar)="accountBar.toggle($event)"
 ></cx-navigation-bar>
 
 <mat-sidenav-container class="cx-width-100 cx-height-100 cx-navbar-margin">
@@ -27,6 +28,21 @@
   >
     <cx-side-navigation [user]="user"></cx-side-navigation>
   </mat-sidenav>
+
+  <mat-sidenav
+    #accountBar
+    class="cx-accent-dark-background cx-width-50 cx-min-width-50 cx-padding-5"
+    mode="over"
+    position="end"
+  >
+    <cx-edit-account-bar
+      *ngIf="!!user"
+      class="cx-padding-5"
+      [user]="user"
+      (closeSidebar)="accountBar.close()"
+    ></cx-edit-account-bar>
+  </mat-sidenav>
+
   <mat-sidenav-content #sidebar class="cx-width-100 cx-overflow-y-scroll">
     <router-outlet></router-outlet>
     <cx-footer

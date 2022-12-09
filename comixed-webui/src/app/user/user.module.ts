@@ -37,21 +37,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from '@app/user/services/user.service';
-import { AccountEditPageComponent } from './pages/account-edit-page/account-edit-page.component';
-import { UserPreferencesPageComponent } from './pages/user-preferences-page/user-preferences-page.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GravatarModule } from 'ngx-gravatar';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { EditAccountBarComponent } from './components/edit-account-bar/edit-account-bar.component';
 
 @NgModule({
   declarations: [
     LoginPageComponent,
-    AccountEditPageComponent,
-    UserPreferencesPageComponent,
-    UserCardComponent
+    UserCardComponent,
+    EditAccountBarComponent
   ],
   providers: [UserService],
   imports: [
@@ -74,6 +72,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatTooltipModule,
     MatToolbarModule
   ],
-  exports: []
+  exports: [EditAccountBarComponent]
 })
 export class UserModule {}

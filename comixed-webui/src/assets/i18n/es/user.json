@@ -6,6 +6,8 @@
     "edit-current-user": {
       "label": {
         "email": "Correo electrónico",
+        "last-logged-in": "Last logged in {date}",
+        "member-since": "Member since {date}",
         "password": "Contraseña",
         "password-verify": "Verificar la contraseña"
       },

@@ -1,0 +1,179 @@
+<div *ngIf="!!user" #avatarContainer class="cx-width-100">
+  <div class="cx-width-100 cx-padding-left-15">
+    <img
+      id="cx-user-avatar"
+      class="cx-float-left cx-margin-left-5"
+      ngxGravatar
+      [size]="avatarWidth$ | async"
+      [alt]="user.email"
+      [email]="user.email"
+      [round]="true"
+    />
+    <div>
+      <h2>{{ user?.email }}</h2>
+      <h3>
+        {{
+          "user.edit-current-user.label.member-since"
+            | translate: { date: user?.first_login_date | date: "mediumDate" }
+        }}
+      </h3>
+      <h3>
+        {{
+          "user.edit-current-user.label.last-logged-in"
+            | translate: { date: user?.last_login_date | date: "medium" }
+        }}
+      </h3>
+    </div>
+  </div>
+
+  <div class="cx-width-100 cx-padding-left-15">
+    <form [formGroup]="userForm">
+      <mat-form-field class="cx-width-100 cx-padding-5" appearance="fill">
+        <mat-label>
+          {{ "user.edit-current-user.label.email" | translate }}
+        </mat-label>
+        <input
+          id="email-input"
+          matInput
+          type="email"
+          formControlName="email"
+          required
+        />
+        <mat-error>
+          <span *ngIf="controls.email.errors?.required">
+            {{ "validation.field-required" | translate }}
+          </span>
+          <span *ngIf="controls.email.errors?.email">
+            {{ "validation.email-required" | translate }}
+          </span>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="cx-width-100 cx-padding-5" appearance="fill">
+        <mat-label>
+          {{ "user.edit-current-user.label.password" | translate }}
+        </mat-label>
+        <input
+          id="password-input"
+          matInput
+          type="password"
+          formControlName="password"
+          (keyup)="onPasswordChanged()"
+        />
+        <mat-error>
+          <span *ngIf="!!controls.password.errors?.minlength">
+            {{
+              "validation.value-too-short"
+                | translate
+                  : {
+                      length: controls.password.errors.minlength.requiredLength
+                    }
+            }}
+          </span>
+          <span *ngIf="!!controls.password.errors?.maxlength">
+            {{
+              "validation.value-too-long"
+                | translate
+                  : {
+                      length: controls.password.errors.maxlength.requiredLength
+                    }
+            }}
+          </span>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="cx-width-100 cx-padding-5" appearance="fill">
+        <mat-label>
+          {{ "user.edit-current-user.label.password-verify" | translate }}
+        </mat-label>
+        <input
+          id="password-verify-input"
+          matInput
+          type="password"
+          formControlName="passwordVerify"
+        />
+        <mat-error>
+          <span *ngIf="userForm.errors?.passwordsDontMatch">
+            {{
+              "user.edit-current-user.validation.passwords-dont-match"
+                | translate
+            }}
+          </span>
+        </mat-error>
+      </mat-form-field>
+    </form>
+    <div class="cx-action-button-container-horizontal">
+      <button
+        mat-flat-button
+        id="edit-user-save-button"
+        class="cx-action-button"
+        color="primary"
+        [disabled]="!userForm.valid || busy"
+        [class.cx-spinner]="busy"
+        (click)="onSaveChanges()"
+      >
+        <mat-icon>save</mat-icon>
+        <mat-label>{{ "button.save" | translate }}</mat-label>
+      </button>
+      <button
+        mat-flat-button
+        id="edit-user-reset-button"
+        class="cx-action-button"
+        color="warn"
+        [disabled]="!userForm.dirty"
+        (click)="onResetChanges()"
+      >
+        <mat-icon>undo</mat-icon>
+        <mat-label>{{ "button.reset" | translate }}</mat-label>
+      </button>
+      <button
+        mat-flat-button
+        id="edit-user-close-button"
+        class="cx-action-button"
+        color="warn"
+        (click)="onCloseForm()"
+      >
+        <mat-icon>close</mat-icon>
+        <mat-label>{{ "button.close" | translate }}</mat-label>
+      </button>
+    </div>
+  </div>
+
+  <mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="name">
+      <mat-header-cell mat-sort-header *matHeaderCellDef>
+        {{ "user.user-preferences.label.preference-name" | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let entry">
+        <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <mat-header-cell mat-sort-header *matHeaderCellDef>
+        {{ "user.user-preferences.label.preference-value" | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let entry">
+        <span class="cx-width-100 cx-text-nowrap">{{ entry.value }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell mat-sort-header *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let entry">
+        <button
+          id="'delete-preference-value-' + entry.name + '-button'"
+          mat-icon-button
+          color="warn"
+          [matTooltip]="
+            'user.user-preferences.tooltip.delete-preference' | translate
+          "
+          (click)="onDeletePreference(entry.name)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>

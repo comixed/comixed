@@ -26,6 +26,7 @@
   "button": {
     "cancel": "Cancel",
     "clear-log": "Clear Log",
+    "close": "Close",
     "deselect": "Deselect",
     "deselect-all": "Deselect All",
     "download": "Download",
