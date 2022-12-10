@@ -40,6 +40,7 @@ import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
+import org.comixedproject.model.library.Series;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -592,6 +593,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<String> getAllSeries() {
     log.trace("Loading all series names");
     return this.comicBookRepository.findDistinctSeries();
+  }
+
+  public List<Series> getAllSeriesAndVolumes() {
+    log.trace("Loading all series and volumes");
+    return this.comicBookRepository.getAllSeriesAndVolumes();
   }
 
   /**

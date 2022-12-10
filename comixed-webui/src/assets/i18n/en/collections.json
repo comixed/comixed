@@ -1,4 +1,33 @@
 {
+  "collections": {
+    "series": {
+      "label": {
+        "in-library": "In Library",
+        "metadata-source": "Metadata Source",
+        "name": "Series Name",
+        "pagination-items-per-page": "Series per page",
+        "publisher": "Publisher",
+        "total-issues": "# Issues",
+        "volume": "Volume"
+      },
+      "list-page": {
+        "page-title": "Series List ({count} Total)",
+        "tab-title": "Collections: Series List"
+      },
+      "load-series": {
+        "effect-failure": "Failed to load series."
+      },
+      "placeholder": {
+        "filter-series": "Enter text to filter the series displayed."
+      },
+      "text": {
+        "no-series-found": "No series were found."
+      },
+      "tooltip": {
+        "scrape-series": "Fetch the list of issues for his series..."
+      }
+    }
+  },
   "collection-detail": {
     "tab-title": "{collection, select, characters{Character} teams{Team} locations{Location} stories{Stories} publishers{Publisher} series{Series} other{Unknown}}: {name}{volume, select, null{} other{ v{volume}}}",
     "title": {

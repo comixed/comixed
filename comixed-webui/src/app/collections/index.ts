@@ -15,3 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+import { Params } from '@angular/router';
+import { routerReducer, RouterReducerState } from '@ngrx/router-store';
+import { ActionReducerMap } from '@ngrx/store';
+import {
+  reducer as seriesReducer,
+  SERIES_FEATURE_KEY,
+  SeriesState
+} from '@app/collections/reducers/series.reducer';
+
+interface RouterStateUrl {
+  url: string;
+  params: Params;
+  queryParams: Params;
+}
+
+export interface CollectionsModuleState {
+  router: RouterReducerState<RouterStateUrl>;
+  [SERIES_FEATURE_KEY]: SeriesState;
+}
+
+export type ModuleState = CollectionsModuleState;
+
+export const reducers: ActionReducerMap<CollectionsModuleState> = {
+  router: routerReducer,
+  [SERIES_FEATURE_KEY]: seriesReducer
+};

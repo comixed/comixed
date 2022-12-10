@@ -16,23 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Pipe, PipeTransform } from '@angular/core';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
 
-import { concatMap } from 'rxjs/operators';
-import { Observable, EMPTY } from 'rxjs';
-
-import * as MetadataUpdateProcessActions from '../actions/metadata-update-process.actions';
-
-@Injectable()
-export class MetadataUpdateProcessEffects {
-  loadMetadataUpdateProcesss$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(MetadataUpdateProcessActions.metadataUpdateProcessStatusUpdated),
-      /** An EMPTY observable only emits completion. Replace with your own observable API request */
-      concatMap(() => EMPTY as Observable<{ type: string }>)
-    );
-  });
-
-  constructor(private actions$: Actions) {}
+@Pipe({
+  name: 'volumeMetadataTitle'
+})
+export class VolumeMetadataTitlePipe implements PipeTransform {
+  transform(volume: VolumeMetadata): string {
+    return `${volume.name} v${volume.startYear}`;
+  }
 }

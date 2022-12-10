@@ -28,6 +28,7 @@ export const CREATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources`;
 export const UPDATE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${id}`;
 export const DELETE_METADATA_SOURCE_URL = `${API_ROOT_URL}/metadata/sources/\${id}`;
 export const MARK_METADATA_SOURCE_AS_PREFERRED_URL = `${API_ROOT_URL}/metadata/sources/\${id}/preferred`;
+export const FETCH_ISSUES_FOR_VOLUME = `${API_ROOT_URL}/metadata/sources/\${id}/series/issues`;
 
 export const METADATA_UPDATE_PROCESS_UPDATE_TOPIC =
   '/topic/metadata.update-process.update';

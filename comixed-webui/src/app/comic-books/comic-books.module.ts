@@ -85,6 +85,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
+import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
 
 @NgModule({
   declarations: [
@@ -145,7 +146,8 @@ import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
     MatDividerModule,
     FlexModule,
     MatBadgeModule,
-    DragDropModule
+    DragDropModule,
+    ComicMetadataModule
   ],
   exports: [
     CommonModule,

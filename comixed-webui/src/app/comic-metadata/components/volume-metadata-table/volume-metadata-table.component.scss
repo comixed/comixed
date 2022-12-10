@@ -1,0 +1,64 @@
+@import 'styles';
+
+.mat-column-matchability {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-thumbnail {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+
+  img {
+    width: 90%;
+    align-self: center;
+    overflow-y: clip;
+  }
+}
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-name {
+}
+
+.mat-column-start-year {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issue-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issue-action {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-startYear {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-issueCount {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-action {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}

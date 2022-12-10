@@ -26,6 +26,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
@@ -35,10 +36,12 @@ import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.comicbooks.Credit;
+import org.comixedproject.model.metadata.Issue;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
+import org.comixedproject.service.library.IssueService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.springframework.beans.BeansException;
@@ -62,6 +65,7 @@ public class MetadataService {
   @Autowired private ComicBookService comicBookService;
   @Autowired private ComicStateHandler comicStateHandler;
   @Autowired private ImprintService imprintService;
+  @Autowired private IssueService issueService;
 
   /**
    * Retrieves a list of volumes for the given series, up to the max records specified.
@@ -160,10 +164,7 @@ public class MetadataService {
    * @throws MetadataException if an error occurs
    */
   public IssueMetadata getIssue(
-      final Long sourceId,
-      final Integer volumeId,
-      final String issueNumber,
-      final boolean skipCache)
+      final Long sourceId, final String volumeId, final String issueNumber, final boolean skipCache)
       throws MetadataException {
     final MetadataSource metadataSource = this.doLoadMetadataSource(sourceId);
     final MetadataAdaptor metadataAdaptor = this.doLoadScrapingAdaptor(metadataSource);
@@ -307,6 +308,61 @@ public class MetadataService {
     } catch (ComicBookException error) {
       throw new MetadataException("failed to load comic", error);
     }
+  }
+
+  /**
+   * Fetches the issues for a given volume from the specified metadata source.
+   *
+   * @param metadataSourceId the metadata source id
+   * @param volumeId the volume id
+   * @throws MetadataException if an error occurs
+   */
+  public void fetchIssuesForSeries(final Long metadataSourceId, final String volumeId)
+      throws MetadataException {
+    log.debug(
+        "Fetching issues for series: metadata source id={} volume id={}",
+        metadataSourceId,
+        volumeId);
+    final MetadataSource metadataSource = this.doLoadMetadataSource(metadataSourceId);
+    final MetadataAdaptor metadataAdaptor = this.doLoadScrapingAdaptor(metadataSource);
+
+    final List<IssueDetailsMetadata> issues =
+        metadataAdaptor.getAllIssues(volumeId, metadataSource);
+    if (issues.isEmpty()) {
+      log.debug("No issues found");
+      return;
+    }
+
+    log.debug("Deleting existing issues");
+    this.issueService.deleteSeriesAndVolume(issues.get(0).getSeries(), issues.get(0).getVolume());
+    log.debug("Saving {} issue{}", issues.size(), issues.size() == 1 ? "" : "s");
+    this.issueService.saveAll(
+        issues.stream()
+            .map(
+                metadata -> {
+                  log.trace(
+                      "Mapping metadata for issue: {} {} v{} #{} [{}]",
+                      metadata.getPublisher(),
+                      metadata.getSeries(),
+                      metadata.getVolume(),
+                      metadata.getIssueNumber(),
+                      metadata.getCoverDate());
+                  final Issue result =
+                      new Issue(
+                          metadata.getPublisher(),
+                          metadata.getSeries(),
+                          metadata.getVolume(),
+                          metadata.getIssueNumber());
+
+                  if (metadata.getCoverDate() != null) {
+                    result.setCoverDate(metadata.getCoverDate());
+                  }
+                  if (metadata.getStoreDate() != null) {
+                    result.setStoreDate(metadata.getStoreDate());
+                  }
+                  return result;
+                })
+            .collect(Collectors.toList()));
   }
 
   Date adjustForTimezone(final Date date) {

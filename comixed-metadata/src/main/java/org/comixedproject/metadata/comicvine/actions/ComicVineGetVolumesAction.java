@@ -110,7 +110,7 @@ public class ComicVineGetVolumesAction
                     && StringUtils.hasLength(volume.getPublisher().getName()))
                   entry.setPublisher(volume.getPublisher().getName());
                 entry.setStartYear(volume.getStartYear());
-                entry.setImageURL(volume.getImage().getScreenUrl());
+                entry.setImageURL(volume.getImage().getOriginalUrl());
                 result.add(entry);
               });
 

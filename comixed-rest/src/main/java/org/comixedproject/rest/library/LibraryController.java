@@ -122,6 +122,7 @@ public class LibraryController {
   /**
    * Retrieves the current state of the library.
    *
+   * @param httpSession the session
    * @return the library state
    */
   @GetMapping(value = "/api/library/state", produces = MediaType.APPLICATION_JSON_VALUE)

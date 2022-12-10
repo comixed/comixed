@@ -466,28 +466,6 @@ describe('CollectionDetailComponent', () => {
     });
   });
 
-  describe('when the archive type filter is changed', () => {
-    describe('when an value is selected', () => {
-      beforeEach(() => {
-        component.onArchiveTypeChanged(ArchiveType.CB7);
-      });
-
-      it('redirects the browser', () => {
-        expect(router.navigate).toHaveBeenCalled();
-      });
-    });
-
-    describe('when the value is cleared', () => {
-      beforeEach(() => {
-        component.onArchiveTypeChanged(null);
-      });
-
-      it('redirects the browser', () => {
-        expect(router.navigate).toHaveBeenCalled();
-      });
-    });
-  });
-
   describe('the cover date filters', () => {
     describe('when not provided', () => {
       beforeEach(() => {

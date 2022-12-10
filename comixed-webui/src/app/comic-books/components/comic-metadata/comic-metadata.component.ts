@@ -70,7 +70,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
-  @Input() comicBook: ComicBook;
+  @Input() comicBook: ComicBook = null;
   @Input() metadataSource: MetadataSource;
   @Input() comicSeriesName: string;
   @Input() comicVolume: string;
@@ -79,7 +79,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
   @Input() pageSize: number;
   @Input() multimode = false;
 
-  @Output() comicScraped = new EventEmitter<ComicBook>();
+  @Output() volumeSelected = new EventEmitter<VolumeMetadata>();
 
   issueSubscription: Subscription;
   scrapingStateSubscription: Subscription;
@@ -202,7 +202,7 @@ export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
     );
   }
 
-  onDecision(decision: boolean): void {
+  onDecision(decision: boolean, volume: VolumeMetadata): void {
     this.logger.trace(
       `Scraping issue was ${decision ? 'accepted' : 'rejected'}`
     );
