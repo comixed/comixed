@@ -1,0 +1,34 @@
+@import 'styles';
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+  resize: none;
+}
+
+.mat-column-name {
+}
+
+.mat-column-volume {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-total-issues {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-in-library {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-actions {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}

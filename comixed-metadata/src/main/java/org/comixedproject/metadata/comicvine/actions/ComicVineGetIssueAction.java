@@ -43,7 +43,7 @@ import reactor.core.publisher.Mono;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Log4j2
 public class ComicVineGetIssueAction extends AbstractComicVineScrapingAction<List<IssueMetadata>> {
-  @Getter @Setter private Integer volumeId;
+  @Getter @Setter private String volumeId;
   @Getter @Setter private String issueNumber;
 
   @Override

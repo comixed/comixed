@@ -46,8 +46,7 @@ public class ComicVineMetadataAdaptorTest {
   private static final String TEST_API_KEY = "TEST.API.KEY";
   private static final String TEST_SERIES_NAME = "Super Awesome ComicBook";
   private static final Integer TEST_MAX_RECORDS = RANDOM.nextInt();
-  private static final String TEST_ENCODED_VALUE = "This is the encoded value";
-  private static final Integer TEST_VOLUME_ID = RANDOM.nextInt();
+  private static final String TEST_VOLUME_ID = "129";
   private static final String TEST_ISSUE_NUMBER = "17";
   private static final String TEST_ISSUE_ID = "327";
 

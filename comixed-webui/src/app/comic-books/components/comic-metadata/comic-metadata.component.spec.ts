@@ -270,7 +270,7 @@ describe('ComicMetadataComponent', () => {
         confirmationSpy = spyOn(confirmationService, 'confirm').and.callFake(
           (confirm: Confirmation) => confirm.confirm()
         );
-        component.onDecision(true);
+        component.onDecision(true, SCRAPING_VOLUME);
       });
 
       it('fires an action', () => {
@@ -289,7 +289,7 @@ describe('ComicMetadataComponent', () => {
           component.multimode = true;
           component.confirmBeforeScraping = true;
           confirmationSpy.calls.reset();
-          component.onDecision(true);
+          component.onDecision(true, SCRAPING_VOLUME);
         });
 
         it('confirms with the user', () => {
@@ -308,7 +308,7 @@ describe('ComicMetadataComponent', () => {
           component.multimode = true;
           component.confirmBeforeScraping = false;
           confirmationSpy.calls.reset();
-          component.onDecision(true);
+          component.onDecision(true, SCRAPING_VOLUME);
         });
 
         it('does not confirm with the user', () => {
@@ -325,7 +325,7 @@ describe('ComicMetadataComponent', () => {
 
     describe('when rejected', () => {
       beforeEach(() => {
-        component.onDecision(false);
+        component.onDecision(false, null);
       });
 
       it('clears the scraping issue', () => {

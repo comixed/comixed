@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.library.Series;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.springframework.data.domain.Pageable;
@@ -318,6 +319,10 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT DISTINCT c.series FROM ComicBook c WHERE c.series IS NOT NULL")
   List<String> findDistinctSeries();
+
+  @Query(
+      "SELECT new org.comixedproject.model.library.Series(c.publisher, c.series, c.volume, COUNT(c)) FROM ComicBook c WHERE LENGTH(c.series) > 0 and c.volume IS NOT NULL GROUP BY c.publisher, c.series, c.volume")
+  List<Series> getAllSeriesAndVolumes();
 
   /**
    * Returns all comics with a given series.

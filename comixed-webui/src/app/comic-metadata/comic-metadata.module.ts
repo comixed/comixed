@@ -43,15 +43,32 @@ import {
   METADATA_UPDATE_PROCESS_FEATURE_KEY,
   reducer as metadataUpdateProcessReducer
 } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
-import { MetadataUpdateProcessEffects } from '@app/comic-metadata/effects/metadata-update-process.effects';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { LibraryModule } from '@app/library/library.module';
+import { FetchIssuesPageComponent } from './pages/fetch-issues-page/fetch-issues-page.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { VolumeMetadataTableComponent } from './components/volume-metadata-table/volume-metadata-table.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
+import {
+  FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
+  reducer as fetchIssuesForSeriesReducer
+} from '@app/comic-metadata/reducers/fetch-issues-for-series.reducer';
+import { FetchIssuesForSeriesEffects } from '@app/comic-metadata/effects/fetch-issues-for-series.effects';
 
 @NgModule({
   declarations: [
     MetadataProcessPageComponent,
     MetadataProcessToolbarComponent,
-    MetadataProcessStatusComponent
+    MetadataProcessStatusComponent,
+    FetchIssuesPageComponent,
+    VolumeMetadataTableComponent,
+    VolumeMetadataTitlePipe
   ],
   imports: [
     CommonModule,
@@ -66,18 +83,29 @@ import { LibraryModule } from '@app/library/library.module';
       METADATA_UPDATE_PROCESS_FEATURE_KEY,
       metadataUpdateProcessReducer
     ),
+    StoreModule.forFeature(
+      FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
+      fetchIssuesForSeriesReducer
+    ),
     EffectsModule.forFeature([
       MetadataSourceListEffects,
       MetadataSourceEffects,
-      MetadataUpdateProcessEffects
+      FetchIssuesForSeriesEffects
     ]),
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
     MatProgressBarModule,
-    LibraryModule
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTableModule,
+    MatSortModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    MatCardModule
   ],
-  exports: [CommonModule]
+  exports: [CommonModule, VolumeMetadataTableComponent]
 })
 export class ComicMetadataModule {}

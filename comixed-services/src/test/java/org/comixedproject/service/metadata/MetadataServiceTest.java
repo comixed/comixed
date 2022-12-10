@@ -18,7 +18,12 @@
 
 package org.comixedproject.service.metadata;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,16 +36,22 @@ import org.comixedproject.metadata.model.IssueDetailsMetadata;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.metadata.Issue;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicbooks.ImprintService;
+import org.comixedproject.service.library.IssueService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 
@@ -52,7 +63,7 @@ public class MetadataServiceTest {
   private static final String TEST_ENCODED_VALUE = "JSON object as string";
   private static final String TEST_CACHE_SOURCE = "ScrapingSource";
   private static final String TEST_VOLUME_KEY = "VolumeKey";
-  private static final Integer TEST_VOLUME_ID = 717;
+  private static final String TEST_VOLUME_ID = "717";
   private static final String TEST_ISSUE_NUMBER = "23.1";
   private static final String TEST_ISSUE_KEY = "IssueKey";
   private static final Long TEST_COMIC_ID = 127L;
@@ -71,6 +82,7 @@ public class MetadataServiceTest {
   @Mock private MetadataSourceService metadataSourceService;
   @Mock private ApplicationContext applicationContext;
   @Mock private MetadataCacheService metadataCacheService;
+  @Mock private IssueService issueService;
   @Mock private MetadataAdaptor metadataAdaptor;
   @Captor private ArgumentCaptor<List<String>> cacheEntryList;
   @Mock private ObjectMapper objectMapper;
@@ -83,15 +95,19 @@ public class MetadataServiceTest {
   @Mock private IssueDetailsMetadata issueDetailsMetadata;
   @Mock private ImprintService imprintService;
   @Mock private MetadataSource metadataSource;
+  @Mock private List<Issue> issueList;
+
+  @Captor private ArgumentCaptor<List<Issue>> issueListArgumentCaptor;
 
   private List<String> cachedEntryList = new ArrayList<>();
   private List<VolumeMetadata> fetchedVolumeList = new ArrayList<>();
+  private List<IssueDetailsMetadata> issueDetailsMetadataList = new ArrayList<>();
 
   @Before
   public void setUp() throws MetadataSourceException {
     Mockito.when(metadataAdaptor.getSource()).thenReturn(TEST_CACHE_SOURCE);
     Mockito.when(metadataAdaptor.getVolumeKey(Mockito.anyString())).thenReturn(TEST_VOLUME_KEY);
-    Mockito.when(metadataAdaptor.getIssueKey(Mockito.anyInt(), Mockito.anyString()))
+    Mockito.when(metadataAdaptor.getIssueKey(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(TEST_ISSUE_KEY);
     Mockito.when(metadataAdaptor.getIssueDetailsKey(Mockito.anyString()))
         .thenReturn(TEST_ISSUE_DETAILS_KEY);
@@ -348,11 +364,11 @@ public class MetadataServiceTest {
   @Test
   public void testGetIssueSkipCacheNoResults() throws MetadataException, MetadataSourceException {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
-    Mockito.when(metadataAdaptor.getIssueKey(Mockito.anyInt(), Mockito.anyString()))
+    Mockito.when(metadataAdaptor.getIssueKey(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(TEST_ISSUE_KEY);
     Mockito.when(
             metadataAdaptor.getIssue(
-                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
+                Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(null);
 
     final IssueMetadata result =
@@ -377,7 +393,7 @@ public class MetadataServiceTest {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
             metadataAdaptor.getIssue(
-                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
+                Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueMetadata.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -412,7 +428,7 @@ public class MetadataServiceTest {
     Mockito.when(metadataSourceService.getById(Mockito.anyLong())).thenReturn(metadataSource);
     Mockito.when(
             metadataAdaptor.getIssue(
-                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
+                Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueMetadata.class)))
         .thenThrow(JsonProcessingException.class);
@@ -441,7 +457,7 @@ public class MetadataServiceTest {
         .thenReturn(null);
     Mockito.when(
             metadataAdaptor.getIssue(
-                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
+                Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueMetadata.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -482,7 +498,7 @@ public class MetadataServiceTest {
         .thenThrow(JsonProcessingException.class);
     Mockito.when(
             metadataAdaptor.getIssue(
-                Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
+                Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class)))
         .thenReturn(issueMetadata);
     Mockito.when(objectMapper.writeValueAsString(Mockito.any(IssueMetadata.class)))
         .thenReturn(TEST_ENCODED_VALUE);
@@ -534,7 +550,7 @@ public class MetadataServiceTest {
         .readValue(TEST_ENCODED_VALUE, IssueMetadata.class);
     Mockito.verify(objectMapper, Mockito.never()).writeValueAsString(Mockito.any());
     Mockito.verify(metadataAdaptor, Mockito.never())
-        .getIssue(Mockito.anyInt(), Mockito.anyString(), Mockito.any(MetadataSource.class));
+        .getIssue(Mockito.anyString(), Mockito.anyString(), Mockito.any(MetadataSource.class));
     Mockito.verify(metadataCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
   }
@@ -773,5 +789,66 @@ public class MetadataServiceTest {
     Mockito.verify(this.loadedComicBook, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(this.loadedComicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(this.imprintService, Mockito.times(1)).update(comicBook);
+  }
+
+  @Test(expected = MetadataException.class)
+  public void testFetchIssuesForSeriesInvalidSourceId()
+      throws MetadataSourceException, MetadataException {
+    Mockito.when(metadataSourceService.getById(Mockito.anyLong()))
+        .thenThrow(MetadataSourceException.class);
+
+    try {
+      this.metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+    } finally {
+      Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
+    }
+  }
+
+  @Test(expected = MetadataException.class)
+  public void testFetchIssuesForSeriesAdaptorException() throws MetadataException {
+    Mockito.when(
+            metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
+        .thenThrow(MetadataException.class);
+
+    try {
+      this.metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+    } finally {
+      Mockito.verify(metadataAdaptor, Mockito.times(1))
+          .getAllIssues(TEST_VOLUME_ID, metadataSource);
+    }
+  }
+
+  @Test
+  public void testFetchIssuesForSeriesNoneFound() throws MetadataException {
+    Mockito.when(
+            metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
+        .thenReturn(new ArrayList<>());
+
+    metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+
+    Mockito.verify(metadataAdaptor, Mockito.times(1)).getAllIssues(TEST_VOLUME_ID, metadataSource);
+    Mockito.verify(issueService, Mockito.never()).saveAll(Mockito.anyList());
+  }
+
+  @Test
+  public void testFetchIssuesForSeries() throws MetadataException {
+    issueDetailsMetadataList.add(issueDetailsMetadata);
+
+    Mockito.when(
+            metadataAdaptor.getAllIssues(Mockito.anyString(), Mockito.any(MetadataSource.class)))
+        .thenReturn(issueDetailsMetadataList);
+    Mockito.when(issueService.saveAll(issueListArgumentCaptor.capture())).thenReturn(issueList);
+
+    metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+
+    final List<Issue> issues = issueListArgumentCaptor.getValue();
+    assertNotNull(issues);
+    assertFalse(issues.isEmpty());
+    assertEquals(TEST_PUBLISHER, issues.get(0).getPublisher());
+    assertEquals(TEST_SERIES_NAME, issues.get(0).getSeries());
+    assertEquals(TEST_VOLUME, issues.get(0).getVolume());
+    assertEquals(TEST_COVER_DATE, issues.get(0).getCoverDate());
+
+    Mockito.verify(issueService, Mockito.times(1)).saveAll(issues);
   }
 }

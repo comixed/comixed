@@ -21,8 +21,14 @@ import { NgModule } from '@angular/core';
 import { CollectionListComponent } from '@app/collections/pages/collection-list/collection-list.component';
 import { ReaderGuard } from '@app/user';
 import { CollectionDetailComponent } from '@app/collections/pages/collection-detail/collection-detail.component';
+import { SeriesListPageComponent } from '@app/collections/pages/series-list-page/series-list-page.component';
 
 const routes: Routes = [
+  {
+    path: 'library/collections/series',
+    component: SeriesListPageComponent,
+    canActivate: [ReaderGuard]
+  },
   {
     path: 'library/collections/:collectionType',
     component: CollectionListComponent,

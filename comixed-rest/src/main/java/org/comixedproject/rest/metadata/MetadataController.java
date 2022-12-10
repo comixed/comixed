@@ -28,27 +28,27 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.net.metadata.FetchIssuesForSeriesRequest;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
 import org.comixedproject.model.net.metadata.StartMetadataUpdateProcessRequest;
-import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.comixedproject.views.View;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <code>MetadataController</code> processes REST APIs relating to comic metadata events.
@@ -89,7 +89,7 @@ public class MetadataController {
   @Timed(value = "comixed.metadata.load-issue")
   public IssueMetadata loadScrapingIssue(
       @PathVariable("sourceId") final Long sourceId,
-      @PathVariable("volumeId") final Integer volume,
+      @PathVariable("volumeId") final String volume,
       @PathVariable("issueId") final String issue,
       @RequestBody() final LoadIssueMetadataRequest request)
       throws MetadataException {
@@ -161,15 +161,13 @@ public class MetadataController {
    * Initiates a metadata update batch process of the provided comic book IDs.
    *
    * @param request the request body
-   * @throws ComicBookException if an id is invalid
+   * @throws Exception if an id is invalid
    */
   @PostMapping(value = "/api/metadata/batch", consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('ADMIN')")
   @Timed(value = "comixed.metadata.batch-update")
   public void startBatchMetadataUpdate(
-      @RequestBody() final StartMetadataUpdateProcessRequest request)
-      throws ComicBookException, JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+      @RequestBody() final StartMetadataUpdateProcessRequest request) throws Exception {
     log.info("Starting batch metadata update process");
     @NonNull final List<Long> ids = request.getIds();
     @NonNull final Boolean skipCache = request.getSkipCache();
@@ -196,5 +194,26 @@ public class MetadataController {
   public void clearCache() {
     log.info("Clearing the metadata cache");
     this.metadataCacheService.clearCache();
+  }
+
+  /**
+   * Fetches the issues for a given series from a given metadata source.
+   *
+   * @param sourceId the metadata source id
+   * @param request the request body
+   * @throws MetadataException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/metadata/sources/{sourceId}/series/issues",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('ADMIN')")
+  @Timed(value = "comixed.metadata.fetch-issues")
+  public void fetchIssuesForSeries(
+      @PathVariable("sourceId") final Long sourceId,
+      @RequestBody() final FetchIssuesForSeriesRequest request)
+      throws MetadataException {
+    final String volumeId = request.getVolumeId();
+    log.info("Fetching issues for series: metadata source={} volume={}", sourceId, volumeId);
+    this.metadataService.fetchIssuesForSeries(sourceId, volumeId);
   }
 }

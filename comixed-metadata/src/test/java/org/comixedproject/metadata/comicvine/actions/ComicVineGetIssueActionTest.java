@@ -41,7 +41,7 @@ import org.springframework.http.MediaType;
 public class ComicVineGetIssueActionTest {
   private static final Random RANDOM = new Random();
   private static final String TEST_API_KEY = "This.is.the.test.api.key";
-  private static final Integer TEST_VOLUME_ID = RANDOM.nextInt();
+  private static final String TEST_VOLUME_ID = "219";
   private static final String TEST_ISSUE_NUMBER = "989";
   private static final String TEST_BAD_RESPONSE_BODY = "this is not JSON";
   private static final String TEST_GOOD_BODY =

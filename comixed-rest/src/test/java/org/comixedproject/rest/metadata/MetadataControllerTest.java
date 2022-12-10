@@ -26,6 +26,7 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.net.metadata.FetchIssuesForSeriesRequest;
 import org.comixedproject.model.net.metadata.LoadIssueMetadataRequest;
 import org.comixedproject.model.net.metadata.LoadVolumeMetadataRequest;
 import org.comixedproject.model.net.metadata.ScrapeComicRequest;
@@ -36,16 +37,16 @@ import org.comixedproject.service.metadata.MetadataCacheService;
 import org.comixedproject.service.metadata.MetadataService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +55,7 @@ public class MetadataControllerTest {
   private static final Long TEST_METADATA_SOURCE_ID = 73L;
   private static final String TEST_SERIES_NAME = "Awesome ComicBook";
   private static final Integer TEST_MAX_RECORDS = 37;
-  private static final Integer TEST_VOLUME = 2018;
+  private static final String TEST_VOLUME = "2018";
   private static final String TEST_ISSUE_NUMBER = "15";
   private static final long TEST_COMIC_ID = 213L;
   private static final String TEST_ISSUE_ID = "48132";
@@ -133,7 +134,7 @@ public class MetadataControllerTest {
   public void testLoadScrapingIssueAdaptorRaisesException() throws MetadataException {
     Mockito.when(
             metadataService.getIssue(
-                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyLong(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenThrow(MetadataException.class);
 
     try {
@@ -152,7 +153,7 @@ public class MetadataControllerTest {
   public void testLoadScrapingIssue() throws MetadataException {
     Mockito.when(
             metadataService.getIssue(
-                Mockito.anyLong(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyLong(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(comicIssue);
 
     IssueMetadata response =
@@ -208,9 +209,7 @@ public class MetadataControllerTest {
   }
 
   @Test(expected = ComicBookException.class)
-  public void testStartBatchMetadataUpdateComicBookServiceException()
-      throws ComicBookException, JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+  public void testStartBatchMetadataUpdateComicBookServiceException() throws Exception {
     Mockito.doThrow(ComicBookException.class)
         .when(comicBookService)
         .markComicBooksForBatchMetadataUpdate(Mockito.anyList());
@@ -224,9 +223,7 @@ public class MetadataControllerTest {
   }
 
   @Test
-  public void testStartBatchMetadataUpdate()
-      throws ComicBookException, JobInstanceAlreadyCompleteException,
-          JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+  public void testStartBatchMetadataUpdate() throws Exception {
     Mockito.when(jobLauncher.run(Mockito.any(Job.class), jobParametersArgumentCaptor.capture()))
         .thenReturn(jobExecution);
 
@@ -246,5 +243,29 @@ public class MetadataControllerTest {
     controller.clearCache();
 
     Mockito.verify(metadataCacheService, Mockito.times(1)).clearCache();
+  }
+
+  @Test(expected = MetadataException.class)
+  public void testFetchIssuesForSeriesServiceException() throws MetadataException {
+    Mockito.doThrow(MetadataException.class)
+        .when(metadataService)
+        .fetchIssuesForSeries(Mockito.anyLong(), Mockito.anyString());
+
+    try {
+      controller.fetchIssuesForSeries(
+          TEST_METADATA_SOURCE_ID, new FetchIssuesForSeriesRequest(String.valueOf(TEST_VOLUME)));
+    } finally {
+      Mockito.verify(metadataService, Mockito.times(1))
+          .fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, String.valueOf(TEST_VOLUME));
+    }
+  }
+
+  @Test
+  public void testFetchIssuesForSeries() throws MetadataException {
+    controller.fetchIssuesForSeries(
+        TEST_METADATA_SOURCE_ID, new FetchIssuesForSeriesRequest(String.valueOf(TEST_VOLUME)));
+
+    Mockito.verify(metadataService, Mockito.times(1))
+        .fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, String.valueOf(TEST_VOLUME));
   }
 }
