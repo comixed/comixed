@@ -90,7 +90,6 @@ export class ComicBookCoversComponent
   @Input() coverDateFilter: CoverDateFilter = { year: null, month: null };
   @Input() showCovers = true;
 
-  @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
   @Output() pageIndexChanged = new EventEmitter<number>();
   @Output() selectAllComics = new EventEmitter<boolean>();
 
@@ -239,11 +238,6 @@ export class ComicBookCoversComponent
     });
   }
 
-  onArchiveTypeChanged(archiveType: ArchiveType): void {
-    this.logger.trace('Firing archive type changed event:', archiveType);
-    this.archiveTypeChanged.emit(archiveType);
-  }
-
   onMarkAsDeleted(comic: ComicBook, deleted: boolean): void {
     this.logger.trace('Confirming deleted state with user:', comic, deleted);
     this.confirmationService.confirm({
@@ -340,10 +334,6 @@ export class ComicBookCoversComponent
 
   isRead(comic: ComicBook): boolean {
     return this.readComicIds.includes(comic.id);
-  }
-
-  onPageIndexChanged(pageIndex: number): void {
-    this.pageIndexChanged.emit(pageIndex);
   }
 
   downloadComicData(comics: ComicBook[]): void {

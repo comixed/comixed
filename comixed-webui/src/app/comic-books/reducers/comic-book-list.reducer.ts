@@ -23,8 +23,7 @@ import {
   comicBooksReceived,
   loadComicBooks,
   loadComicBooksFailed,
-  resetComicBookList,
-  setComicBookListFilter
+  resetComicBookList
 } from '../actions/comic-book-list.actions';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
@@ -41,7 +40,6 @@ export interface ComicBookListState {
   unscraped: ComicBook[];
   changed: ComicBook[];
   deleted: ComicBook[];
-  coverDateFilter: CoverDateFilter;
 }
 
 export const initialState: ComicBookListState = {
@@ -52,8 +50,7 @@ export const initialState: ComicBookListState = {
   unprocessed: [],
   unscraped: [],
   changed: [],
-  deleted: [],
-  coverDateFilter: { year: null, month: null }
+  deleted: []
 };
 
 export const reducer = createReducer(
@@ -68,8 +65,7 @@ export const reducer = createReducer(
     unprocessed: [],
     unscraped: [],
     changed: [],
-    deleted: [],
-    coverDateFilter: { year: null, month: null }
+    deleted: []
   })),
   on(loadComicBooks, state => ({ ...state, loading: true })),
   on(comicBooksReceived, (state, action) => {
@@ -97,11 +93,7 @@ export const reducer = createReducer(
       comicBook => comicBook.id !== action.comicBook.id
     );
     return comicListUpdate(state, comicBooks);
-  }),
-  on(setComicBookListFilter, (state, action) => ({
-    ...state,
-    coverDateFilter: { month: action.month, year: action.year }
-  }))
+  })
 );
 
 function comicListUpdate(

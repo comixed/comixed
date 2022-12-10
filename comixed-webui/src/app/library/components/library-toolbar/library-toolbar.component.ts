@@ -30,11 +30,16 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE,
+  QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COVER_MONTH,
+  QUERY_PARAM_COVER_YEAR,
+  QUERY_PARAM_PAGE_INDEX,
+  QUERY_PARAM_SORT_BY,
   SHOW_COMIC_COVERS_PREFERENCE,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
@@ -48,10 +53,10 @@ import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
-import { setComicBookListFilter } from '@app/comic-books/actions/comic-book-list.actions';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
+import { updateQueryParam } from '@app/core';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -76,8 +81,6 @@ export class LibraryToolbarComponent
   @Input() coverYear: number = null;
   @Input() showCoverFilters = true;
 
-  @Output() archiveTypeChanged = new EventEmitter<ArchiveType>();
-  @Output() pageIndexChanged = new EventEmitter<number>();
   @Output() selectAllComics = new EventEmitter<boolean>();
 
   userSubscription: Subscription;
@@ -105,7 +108,8 @@ export class LibraryToolbarComponent
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.langChangSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -206,13 +210,23 @@ export class LibraryToolbarComponent
     );
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      this.pageIndexChanged.emit(pageIndex);
+      updateQueryParam(
+        this.activatedRoute,
+        this.router,
+        QUERY_PARAM_PAGE_INDEX,
+        `${pageIndex}`
+      );
     }
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.trace('Archive type selected:', archiveType);
-    this.archiveTypeChanged.emit(archiveType);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_ARCHIVE_TYPE,
+      archiveType
+    );
   }
 
   onConsolidateLibrary(): void {
@@ -272,7 +286,13 @@ export class LibraryToolbarComponent
   }
 
   onSortBy(sortField: string): void {
-    this.logger.trace('Changing sort field');
+    this.logger.trace('Changing sort field:', sortField);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_SORT_BY,
+      sortField
+    );
     this.store.dispatch(
       saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: sortField })
     );
@@ -295,14 +315,22 @@ export class LibraryToolbarComponent
   }
 
   onCoverYearChange(year: number): void {
-    this.store.dispatch(
-      setComicBookListFilter({ year, month: this.coverMonth })
+    this.logger.debug('Setting cover year filter:', year);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_COVER_YEAR,
+      !!year ? `${year}` : null
     );
   }
 
   onCoverMonthChange(month: number): void {
-    this.store.dispatch(
-      setComicBookListFilter({ year: this.coverYear, month })
+    this.logger.debug('Setting cover month filter:', month);
+    updateQueryParam(
+      this.activatedRoute,
+      this.router,
+      QUERY_PARAM_COVER_MONTH,
+      !!month ? `${month}` : null
     );
   }
 

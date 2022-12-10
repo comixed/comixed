@@ -25,10 +25,7 @@ import {
   CollectionType,
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
-import {
-  selectComicBookList,
-  selectComicBookListFilter
-} from '@app/comic-books/selectors/comic-book-list.selectors';
+import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
@@ -43,6 +40,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COVER_MONTH,
+  QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_PAGE_INDEX,
   SHOW_COMIC_COVERS_PREFERENCE,
   SORT_FIELD_DEFAULT,
@@ -88,7 +87,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   archiveTypeFilter = null;
   sortField = SORT_FIELD_DEFAULT;
   coverDateFilter: CoverDateFilter = { month: null, year: null };
-  coverDateFilterSubscription: Subscription;
   showCovers = false;
 
   constructor(
@@ -155,6 +153,30 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
           this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
           this.logger.debug(`Page index: ${this.pageIndex}`);
         }
+
+        this.coverDateFilter = { month: null, year: null };
+
+        if (!!params[QUERY_PARAM_COVER_YEAR]) {
+          this.logger.debug(
+            'Cover year filter:',
+            params[QUERY_PARAM_COVER_YEAR]
+          );
+          this.coverDateFilter = {
+            ...this.coverDateFilter,
+            year: +params[QUERY_PARAM_COVER_YEAR]
+          };
+        }
+
+        if (!!params[QUERY_PARAM_COVER_MONTH]) {
+          this.logger.debug(
+            'Cover month filter:',
+            params[QUERY_PARAM_COVER_MONTH]
+          );
+          this.coverDateFilter = {
+            ...this.coverDateFilter,
+            month: +params[QUERY_PARAM_COVER_MONTH]
+          };
+        }
       }
     );
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
@@ -180,9 +202,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
-    this.coverDateFilterSubscription = this.store
-      .select(selectComicBookListFilter)
-      .subscribe(filter => (this.coverDateFilter = filter));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -203,8 +222,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from cover date filter updates');
-    this.coverDateFilterSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from language change events');
     this.langChangeSubscription.unsubscribe();
   }
