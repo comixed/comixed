@@ -55,13 +55,7 @@ export class NavigationBarComponent {
   isReader = false;
   isAdmin = false;
 
-  readonly languages: ListItem<string>[] = [
-    { label: 'English', value: 'en' },
-    { label: 'Français', value: 'fr' },
-    { label: 'Português', value: 'pt' },
-    { label: 'Español', value: 'es' },
-    { label: 'Deutsche', value: 'de' }
-  ];
+  readonly languages: ListItem<string>[] = [{ label: 'English', value: 'en' }];
   currentLanguage = '';
   readonly loggingOptions = [
     LoggerLevel.INFO,
