@@ -63,7 +63,7 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
   }
 
   @Override
-  public String getIssueKey(final Integer volume, final String issueNumber) {
+  public String getIssueKey(final String volume, final String issueNumber) {
     return String.format(ISSUE_KEY, volume, issueNumber.toUpperCase());
   }
 
@@ -74,7 +74,7 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
 
   @Override
   public IssueMetadata getIssue(
-      final Integer volume, final String issueNumber, final MetadataSource metadataSource)
+      final String volume, final String issueNumber, final MetadataSource metadataSource)
       throws MetadataException {
     String issue = issueNumber;
     while (!issue.isEmpty()
@@ -116,6 +116,6 @@ public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
    * @throws MetadataException if an error occurs
    */
   protected abstract IssueMetadata doGetIssue(
-      final Integer volume, final String issueNumber, final MetadataSource metadataSource)
+      final String volume, final String issueNumber, final MetadataSource metadataSource)
       throws MetadataException;
 }

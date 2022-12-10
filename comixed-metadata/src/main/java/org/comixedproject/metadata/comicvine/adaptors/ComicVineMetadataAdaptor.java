@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.adaptors.AbstractMetadataAdaptor;
 import org.comixedproject.metadata.adaptors.MetadataAdaptor;
+import org.comixedproject.metadata.comicvine.actions.ComicVineGetAllIssuesAction;
 import org.comixedproject.metadata.comicvine.actions.ComicVineGetIssueAction;
 import org.comixedproject.metadata.comicvine.actions.ComicVineGetIssueDetailsAction;
 import org.comixedproject.metadata.comicvine.actions.ComicVineGetVolumesAction;
@@ -47,6 +48,7 @@ public class ComicVineMetadataAdaptor extends AbstractMetadataAdaptor {
   static final String API_KEY = "api-key";
 
   @Autowired private ObjectFactory<ComicVineGetVolumesAction> getVolumesActionObjectFactory;
+  @Autowired private ObjectFactory<ComicVineGetAllIssuesAction> getAllIssuesActionObjectFactory;
   @Autowired private ObjectFactory<ComicVineGetIssueAction> getIssueActionObjectFactory;
 
   @Autowired
@@ -76,8 +78,25 @@ public class ComicVineMetadataAdaptor extends AbstractMetadataAdaptor {
   }
 
   @Override
+  public List<IssueDetailsMetadata> getAllIssues(
+      final String volume, final MetadataSource metadataSource) throws MetadataException {
+    log.debug("Fetching the list of all issues from ComicVine: volume={}", volume);
+
+    final ComicVineGetAllIssuesAction action = this.getAllIssuesActionObjectFactory.getObject();
+    action.setBaseUrl(BASE_URL);
+    action.setApiKey(this.getSourcePropertyByName(metadataSource.getProperties(), API_KEY, true));
+    action.setVolumeId(volume);
+
+    log.debug("Executing action");
+    final List<IssueDetailsMetadata> result = action.execute();
+
+    log.debug("Returning {} issue{}", result.size(), result.size() == 1 ? "" : "s");
+    return result;
+  }
+
+  @Override
   public IssueMetadata doGetIssue(
-      final Integer volume, final String issueNumber, final MetadataSource metadataSource)
+      final String volume, final String issueNumber, final MetadataSource metadataSource)
       throws MetadataException {
     log.debug("Fetching issue from ComicVine: volume={} issueNumber={}", volume, issueNumber);
 

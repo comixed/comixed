@@ -1,0 +1,123 @@
+<div class="cx-width-90 cx-padding-50">
+  <h2>
+    <span *ngIf="scrapingVolumes.length === 0">
+      {{ "metadata.fetch-issues.page-title-with-form" | translate }}
+    </span>
+    <span *ngIf="scrapingVolumes.length > 0">
+      {{
+        "metadata.fetch-issues.page-title-with-volumes"
+          | translate: { count: scrapingVolumes.length }
+      }}
+    </span>
+  </h2>
+
+  <div class="cx-horizontal-container cx-border-primary-1">
+    <div class="cx-grow-1">
+      <form [formGroup]="fetchIssuesForm" class="cx-padding-50">
+        <mat-form-field class="cx-width-100">
+          <mat-label>
+            {{ "metadata.fetch-issues.label.publisher" | translate }}
+          </mat-label>
+          <input matInput readonly formControlName="publisher" />
+        </mat-form-field>
+
+        <mat-form-field class="cx-width-100">
+          <mat-label>
+            {{ "metadata.fetch-issues.label.series" | translate }}
+          </mat-label>
+          <input matInput readonly formControlName="series" />
+        </mat-form-field>
+
+        <mat-form-field class="cx-width-25">
+          <mat-label>
+            {{ "metadata.fetch-issues.label.volume" | translate }}
+          </mat-label>
+          <input matInput readonly formControlName="volume" />
+        </mat-form-field>
+
+        <mat-form-field class="cx-width-75">
+          <mat-label>
+            {{ "metadata.fetch-issues.label.metadata-source" | translate }}
+          </mat-label>
+          <mat-select
+            formControlName="metadataSource"
+            [value]="metadataSource?.id"
+            (selectionChange)="onMetadataSourceSelected($event.value)"
+          >
+            <mat-option
+              [disabled]="scrapingVolumes.length > 0"
+              *ngFor="let source of metadataSourceList"
+              [value]="source.id"
+            >
+              {{ source.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="cx-width-100">
+          <mat-checkbox
+            id="skip-cache-checkbox"
+            color="primary"
+            formControlName="skipCache"
+            (change)="skipCache = $event.checked"
+          >
+            {{ "metadata.fetch-issues.label.skip-cache" | translate }}
+          </mat-checkbox>
+          <input matInput hidden />
+        </mat-form-field>
+        <button
+          id="cx-fetch-issues-button"
+          mat-raised-button
+          color="primary"
+          (click)="onFetchIssues()"
+          [disabled]="!fetchIssuesForm.valid"
+        >
+          <mat-label>
+            {{ "metadata.fetch-issues.button.fetch-issues" | translate }}
+          </mat-label>
+          <mat-icon>cloud_download</mat-icon>
+        </button>
+      </form>
+    </div>
+
+    <div
+      *ngIf="!!selectedVolume"
+      #volumeCoverContainer
+      class="cx-width-25 cx-height-100"
+    >
+      <mat-card class="cx-width-100 cx-padding-5">
+        <mat-card-title
+          class="cx-text-nowrap"
+          [matTooltip]="selectedVolume | volumeMetadataTitle"
+        >
+          {{ selectedVolume | volumeMetadataTitle }}
+        </mat-card-title>
+        <mat-card-subtitle class="cx-text-nowrap">
+          {{ selectedVolume.publisher }}
+        </mat-card-subtitle>
+        <mat-card-content>
+          <img
+            [src]="selectedVolume.imageUrl"
+            width="100%"
+            height="auto"
+            [alt]="element.item | volumeMetadataTitle"
+          />
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="cx-grow-1 cx-width-100">
+    <cx-volume-metadata-table
+      [class.cx-width-100]="selectedVolume === null"
+      [class.cx-width-75]="selectedVolume !== null"
+      [volumes]="scrapingVolumes"
+      [publisher]="publisher"
+      [series]="series"
+      [volume]="volume"
+      [pageSize]="pageSize"
+      (volumeSelected)="onVolumeSelected($event)"
+      (volumeChosen)="onVolumeChosen($event)"
+    ></cx-volume-metadata-table>
+  </div>
+</div>

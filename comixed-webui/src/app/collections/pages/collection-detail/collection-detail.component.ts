@@ -48,10 +48,7 @@ import {
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
 import { updateQueryParam } from '@app/core';
-import {
-  ArchiveType,
-  archiveTypeFromString
-} from '@app/comic-books/models/archive-type.enum';
+import { archiveTypeFromString } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
 import {
@@ -248,16 +245,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       this.logger.trace('Deselecting all comics');
       this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
     }
-  }
-
-  onArchiveTypeChanged(archiveType: ArchiveType): void {
-    this.logger.debug('Archive type changed:', archiveType);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_ARCHIVE_TYPE,
-      !!archiveType ? `${archiveType}` : null
-    );
   }
 
   private loadTranslations(): void {

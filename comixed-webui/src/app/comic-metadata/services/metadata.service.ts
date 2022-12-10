@@ -37,10 +37,15 @@ import { StartMetadataUpdateProcessRequest } from '@app/comic-metadata/models/ne
 import { Store } from '@ngrx/store';
 import { WebSocketService } from '@app/messaging';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
-import { METADATA_UPDATE_PROCESS_UPDATE_TOPIC } from '@app/comic-metadata/comic-metadata.constants';
+import {
+  FETCH_ISSUES_FOR_VOLUME,
+  METADATA_UPDATE_PROCESS_UPDATE_TOPIC
+} from '@app/comic-metadata/comic-metadata.constants';
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
 import { Subscription } from 'webstomp-client';
+import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
+import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
 
 /**
  * Interacts with the REST APIs during scraping.
@@ -102,7 +107,7 @@ export class MetadataService {
     maximumRecords: number;
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Loading scraping volumes:', args);
+    this.logger.debug('Loading scraping volumes:', args);
     return this.http.post(
       interpolate(LOAD_SCRAPING_VOLUMES_URL, {
         sourceId: args.metadataSource.id
@@ -128,7 +133,7 @@ export class MetadataService {
     issueNumber: string;
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Loading scraping issue:', args);
+    this.logger.debug('Loading scraping issue:', args);
     return this.http.post(
       interpolate(LOAD_SCRAPING_ISSUE_URL, {
         sourceId: args.metadataSource.id,
@@ -155,7 +160,7 @@ export class MetadataService {
     comic: ComicBook;
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Scrape comic:', args);
+    this.logger.debug('Scrape comic:', args);
     return this.http.post(
       interpolate(SCRAPE_COMIC_URL, {
         sourceId: args.metadataSource.id,
@@ -172,7 +177,7 @@ export class MetadataService {
     ids: number[];
     skipCache: boolean;
   }): Observable<any> {
-    this.logger.trace('Starting metadata update process');
+    this.logger.debug('Starting metadata update process');
     return this.http.post(interpolate(START_METADATA_UPDATE_PROCESS_URL), {
       ids: args.ids,
       skipCache: args.skipCache
@@ -180,7 +185,18 @@ export class MetadataService {
   }
 
   clearCache(): Observable<any> {
-    this.logger.trace('Clearing metadata cache');
+    this.logger.debug('Clearing metadata cache');
     return this.http.delete(interpolate(CLEAR_METADATA_CACHE_URL));
+  }
+
+  fetchIssuesForSeries(args: {
+    source: MetadataSource;
+    volume: VolumeMetadata;
+  }): Observable<any> {
+    this.logger.debug('Fetching issues for series:', args);
+    return this.http.post(
+      interpolate(FETCH_ISSUES_FOR_VOLUME, { id: args.source.id }),
+      { volumeId: args.volume.id } as FetchIssuesForSeriesRequest
+    );
   }
 }

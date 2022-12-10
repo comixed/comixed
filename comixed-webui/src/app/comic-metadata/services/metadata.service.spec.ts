@@ -50,9 +50,13 @@ import {
   MESSAGING_FEATURE_KEY
 } from '@app/messaging/reducers/messaging.reducer';
 import { Subscription } from 'webstomp-client';
-import { METADATA_UPDATE_PROCESS_UPDATE_TOPIC } from '@app/comic-metadata/comic-metadata.constants';
+import {
+  FETCH_ISSUES_FOR_VOLUME,
+  METADATA_UPDATE_PROCESS_UPDATE_TOPIC
+} from '@app/comic-metadata/comic-metadata.constants';
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
+import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
 
 describe('MetadataService', () => {
   const SERIES = 'The Series';
@@ -64,6 +68,7 @@ describe('MetadataService', () => {
   const ISSUE_NUMBER = '27';
   const COMIC = COMIC_BOOK_4;
   const METADATA_SOURCE = METADATA_SOURCE_1;
+  const SCRAPING_VOLUME = SCRAPING_VOLUME_1;
   const IDS = [7, 17, 65, 1, 29, 71];
   const PROCESS_STATE = {
     active: Math.random() > 0.5,
@@ -250,5 +255,24 @@ describe('MetadataService', () => {
     it('clears the subscription reference', () => {
       expect(service.subscription).toBeNull();
     });
+  });
+
+  it('can fetch issues for a series', () => {
+    const serviceResponse = new HttpResponse({ status: 200 });
+    service
+      .fetchIssuesForSeries({
+        source: METADATA_SOURCE,
+        volume: SCRAPING_VOLUME
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(FETCH_ISSUES_FOR_VOLUME, { id: METADATA_SOURCE.id })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      volumeId: SCRAPING_VOLUME.id
+    } as FetchIssuesForSeriesRequest);
+    req.flush(serviceResponse);
   });
 });

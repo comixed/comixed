@@ -15,3 +15,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
+
+import { Series } from '@app/collections/models/series';
+
+export const SERIES_1: Series = {
+  publisher: 'Publisher 1',
+  name: 'Series 1',
+  volume: '2022',
+  totalIssues: 717,
+  inLibrary: 129
+};
+
+export const SERIES_2: Series = {
+  publisher: 'Publisher 1',
+  name: 'Series 2',
+  volume: '2022',
+  totalIssues: 717,
+  inLibrary: 129
+};
+
+export const SERIES_3: Series = {
+  publisher: 'Publisher 1',
+  name: 'Series 3',
+  volume: '2022',
+  totalIssues: 717,
+  inLibrary: 129
+};
+
+export const SERIES_4: Series = {
+  publisher: 'Publisher 2',
+  name: 'Series 4',
+  volume: '2022',
+  totalIssues: 717,
+  inLibrary: 129
+};
+
+export const SERIES_5: Series = {
+  publisher: 'Publisher 2',
+  name: 'Series 5',
+  volume: '2022',
+  totalIssues: 717,
+  inLibrary: 129
+};

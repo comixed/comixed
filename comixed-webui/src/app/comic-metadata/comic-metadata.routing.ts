@@ -20,11 +20,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from '../user';
 import { NgModule } from '@angular/core';
 import { MetadataProcessPageComponent } from '@app/comic-metadata/pages/metadata-process-page/metadata-process-page.component';
+import { FetchIssuesPageComponent } from '@app/comic-metadata/pages/fetch-issues-page/fetch-issues-page.component';
 
 const routes: Routes = [
   {
     path: 'metadata/process',
     component: MetadataProcessPageComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'metadata/publishers/:publisher/series/:series/volumes/:volume/issues',
+    component: FetchIssuesPageComponent,
     canActivate: [AdminGuard]
   }
 ];

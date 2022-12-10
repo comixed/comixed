@@ -26,17 +26,43 @@ import { MatSortModule } from '@angular/material/sort';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryModule } from '@app/library/library.module';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
+import { SeriesListPageComponent } from './pages/series-list-page/series-list-page.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { StoreModule } from '@ngrx/store';
+import {
+  reducer as seriesReducer,
+  SERIES_FEATURE_KEY
+} from '@app/collections/reducers/series.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { SeriesEffects } from '@app/collections/effects/series.effects';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  declarations: [CollectionListComponent, CollectionDetailComponent],
+  declarations: [
+    CollectionListComponent,
+    CollectionDetailComponent,
+    SeriesListPageComponent
+  ],
   imports: [
     CommonModule,
     CollectionsRouting,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(SERIES_FEATURE_KEY, seriesReducer),
+    EffectsModule.forFeature([SeriesEffects]),
     MatTableModule,
     MatSortModule,
     LibraryModule,
-    ComicBooksModule
+    ComicBooksModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatInputModule
   ],
   exports: [CommonModule]
 })

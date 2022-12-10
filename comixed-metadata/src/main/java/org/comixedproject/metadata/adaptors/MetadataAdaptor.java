@@ -70,6 +70,17 @@ public interface MetadataAdaptor {
   String getIssueDetailsKey(String issueId);
 
   /**
+   * Returns the list of all issues for a given volume.
+   *
+   * @param volume the volume
+   * @param metadataSource the metadata source
+   * @return the list of issues
+   * @throws MetadataException if an error occurs
+   */
+  List<IssueDetailsMetadata> getAllIssues(String volume, MetadataSource metadataSource)
+      throws MetadataException;
+
+  /**
    * Returns a single issue.
    *
    * @param volume the volume
@@ -78,7 +89,7 @@ public interface MetadataAdaptor {
    * @return the issue or null
    * @throws MetadataException if an error occurs
    */
-  IssueMetadata getIssue(Integer volume, String issueNumber, MetadataSource metadataSource)
+  IssueMetadata getIssue(String volume, String issueNumber, MetadataSource metadataSource)
       throws MetadataException;
 
   /**
@@ -100,5 +111,5 @@ public interface MetadataAdaptor {
    */
   String getVolumeKey(String seriesName);
 
-  String getIssueKey(Integer volume, String issueNumber);
+  String getIssueKey(String volume, String issueNumber);
 }

@@ -39,6 +39,11 @@ import {
   MetadataUpdateProcessState,
   reducer as metadataUpdateProcessReducer
 } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
+import {
+  FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
+  FetchIssuesForSeriesState,
+  reducer as fetchIssuesForSeriesReducer
+} from '@app/comic-metadata/reducers/fetch-issues-for-series.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -52,6 +57,7 @@ export interface ComicMetadataModuleState {
   [METADATA_SOURCE_LIST_FEATURE_KEY]: MetadataSourceListState;
   [METADATA_SOURCE_FEATURE_KEY]: MetadataSourceState;
   [METADATA_UPDATE_PROCESS_FEATURE_KEY]: MetadataUpdateProcessState;
+  [FETCH_ISSUES_FOR_SERIES_FEATURE_KEY]: FetchIssuesForSeriesState;
 }
 
 export type ModuleState = ComicMetadataModuleState;
@@ -61,5 +67,6 @@ export const reducers: ActionReducerMap<ComicMetadataModuleState> = {
   [METADATA_FEATURE_KEY]: scrapingReducer,
   [METADATA_SOURCE_LIST_FEATURE_KEY]: metadataSourceListReducer,
   [METADATA_SOURCE_FEATURE_KEY]: metadataSourceReducer,
-  [METADATA_UPDATE_PROCESS_FEATURE_KEY]: metadataUpdateProcessReducer
+  [METADATA_UPDATE_PROCESS_FEATURE_KEY]: metadataUpdateProcessReducer,
+  [FETCH_ISSUES_FOR_SERIES_FEATURE_KEY]: fetchIssuesForSeriesReducer
 };

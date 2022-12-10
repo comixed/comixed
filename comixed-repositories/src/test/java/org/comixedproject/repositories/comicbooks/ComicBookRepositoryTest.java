@@ -18,7 +18,12 @@
 
 package org.comixedproject.repositories.comicbooks;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -28,6 +33,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.library.Series;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.RepositoryContext;
@@ -535,6 +541,14 @@ public class ComicBookRepositoryTest {
   @Test
   public void testGetByPublisherAndYear() {
     final List<PublisherAndYearSegment> result = repository.getByPublisherAndYear();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetAllSeriesAndVolumes() {
+    final List<Series> result = repository.getAllSeriesAndVolumes();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
