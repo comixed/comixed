@@ -50,10 +50,7 @@ import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import {
-  ArchiveType,
-  archiveTypeFromString
-} from '@app/comic-books/models/archive-type.enum';
+import { archiveTypeFromString } from '@app/comic-books/models/archive-type.enum';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 import { MatDividerModule } from '@angular/material/divider';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
@@ -346,21 +343,6 @@ describe('ComicBookCoversComponent', () => {
     });
   });
 
-  describe('when the archive type changes', () => {
-    const ARCHIVE_TYPE = Math.random() > 0.5 ? ArchiveType.CBZ : null;
-
-    beforeEach(() => {
-      spyOn(component.archiveTypeChanged, 'emit');
-      component.onArchiveTypeChanged(ARCHIVE_TYPE);
-    });
-
-    it('emits an event', () => {
-      expect(component.archiveTypeChanged.emit).toHaveBeenCalledWith(
-        ARCHIVE_TYPE
-      );
-    });
-  });
-
   describe('marking comics for deletion', () => {
     beforeEach(() => {
       component.comicBooks = COMIC_BOOKS;
@@ -619,17 +601,6 @@ describe('ComicBookCoversComponent', () => {
           expect(component.dataSource.data[0]).toEqual(MIDDLE);
         });
       });
-    });
-  });
-
-  describe('when the page index changes', () => {
-    beforeEach(() => {
-      spyOn(component.pageIndexChanged, 'emit');
-      component.onPageIndexChanged(PAGE_INDEX);
-    });
-
-    it('emits an event', () => {
-      expect(component.pageIndexChanged.emit).toHaveBeenCalledWith(PAGE_INDEX);
     });
   });
 

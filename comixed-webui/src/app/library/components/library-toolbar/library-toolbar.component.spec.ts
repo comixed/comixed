@@ -53,7 +53,6 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
-import { setComicBookListFilter } from '@app/comic-books/actions/comic-book-list.actions';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -173,12 +172,11 @@ describe('LibraryToolbarComponent', () => {
 
   describe('when the page index changes', () => {
     beforeEach(() => {
-      spyOn(component.pageIndexChanged, 'emit');
       component.onLibraryDisplayChange(PAGINATION, PAGE_INDEX, PAGE_INDEX - 1);
     });
 
-    it('emits an event', () => {
-      expect(component.pageIndexChanged.emit).toHaveBeenCalledWith(PAGE_INDEX);
+    it('updates the URL', () => {
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 
@@ -186,14 +184,11 @@ describe('LibraryToolbarComponent', () => {
     const ARCHIVE_TYPE = Math.random() > 0.5 ? ArchiveType.CBZ : null;
 
     beforeEach(() => {
-      spyOn(component.archiveTypeChanged, 'emit');
       component.onArchiveTypeChanged(ARCHIVE_TYPE);
     });
 
-    it('emits an event', () => {
-      expect(component.archiveTypeChanged.emit).toHaveBeenCalledWith(
-        ARCHIVE_TYPE
-      );
+    it('updates the URL', () => {
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 
@@ -312,35 +307,51 @@ describe('LibraryToolbarComponent', () => {
     });
   });
 
-  describe('updating the year filter', () => {
-    beforeEach(() => {
-      component.coverMonth = NOW.getMonth();
-      component.onCoverYearChange(NOW.getFullYear());
+  describe('the year filter', () => {
+    describe('setting the filter', () => {
+      beforeEach(() => {
+        component.coverMonth = NOW.getMonth();
+        component.onCoverYearChange(NOW.getFullYear());
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setComicBookListFilter({
-          year: NOW.getFullYear(),
-          month: NOW.getMonth()
-        })
-      );
+    describe('clearing the filter', () => {
+      beforeEach(() => {
+        component.coverYear = NOW.getFullYear();
+        component.onCoverYearChange(null);
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
     });
   });
 
   describe('updating the month filter', () => {
-    beforeEach(() => {
-      component.coverYear = NOW.getFullYear();
-      component.onCoverMonthChange(NOW.getMonth());
+    describe('setting the filter', () => {
+      beforeEach(() => {
+        component.coverYear = NOW.getFullYear();
+        component.onCoverMonthChange(NOW.getMonth());
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        setComicBookListFilter({
-          year: NOW.getFullYear(),
-          month: NOW.getMonth()
-        })
-      );
+    describe('clearing the filter', () => {
+      beforeEach(() => {
+        component.coverYear = NOW.getFullYear();
+        component.onCoverMonthChange(null);
+      });
+
+      it('updates the URL', () => {
+        expect(router.navigate).toHaveBeenCalled();
+      });
     });
   });
 

@@ -66,6 +66,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import {
   QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COVER_MONTH,
+  QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_PAGE_INDEX
 } from '@app/library/library.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -651,6 +653,53 @@ describe('LibraryPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         deselectComicBooks({ ids: IDS })
       );
+    });
+  });
+
+  describe('the cover date filters', () => {
+    describe('when not provided', () => {
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({});
+      });
+
+      it('has no month filter', () => {
+        expect(component.coverDateFilter.month).toBeNull();
+      });
+
+      it('has no year filter', () => {
+        expect(component.coverDateFilter.year).toBeNull();
+      });
+    });
+
+    describe('when the month is provided', () => {
+      const COVER_MONTH = 5;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_COVER_MONTH]: `${COVER_MONTH}`
+        });
+      });
+
+      it('applies the filter', () => {
+        expect(component.coverDateFilter.month).toEqual(COVER_MONTH);
+      });
+    });
+
+    describe('when the year is provided', () => {
+      const COVER_YEAR = 2021;
+
+      beforeEach(() => {
+        component.archiveTypeFilter = null;
+        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
+          [QUERY_PARAM_COVER_YEAR]: `${COVER_YEAR}`
+        });
+      });
+
+      it('applies the filter', () => {
+        expect(component.coverDateFilter.year).toEqual(COVER_YEAR);
+      });
     });
   });
 });

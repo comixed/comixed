@@ -49,11 +49,6 @@ export const selectComicBookListDeletedCount = createSelector(
     ).length
 );
 
-export const selectComicBookListFilter = createSelector(
-  selectComicBookListState,
-  state => state.coverDateFilter
-);
-
 export const selectComicBookListCollection = createSelector(
   selectComicBookList,
   (state: ComicBook[], props: CollectionListProperties) => {

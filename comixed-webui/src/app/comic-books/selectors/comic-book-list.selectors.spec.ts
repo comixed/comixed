@@ -25,7 +25,6 @@ import {
   selectComicBookListCollection,
   selectComicBookListCount,
   selectComicBookListDeletedCount,
-  selectComicBookListFilter,
   selectComicBookListState
 } from './comic-book-list.selectors';
 import {
@@ -59,8 +58,7 @@ describe('ComicBook List Selectors', () => {
       unprocessed: COMICS,
       unscraped: COMICS,
       changed: COMICS,
-      deleted: COMICS,
-      coverDateFilter: COVER_DATE_FILTER
+      deleted: COMICS
     };
   });
 
@@ -92,12 +90,6 @@ describe('ComicBook List Selectors', () => {
         comic => comic.comicState === ComicBookState.DELETED
       ).length
     );
-  });
-
-  it('should select the cover date filter', () => {
-    expect(
-      selectComicBookListFilter({ [COMIC_BOOK_LIST_FEATURE_KEY]: state })
-    ).toEqual(COVER_DATE_FILTER);
   });
 
   describe('collection types', () => {

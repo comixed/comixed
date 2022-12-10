@@ -31,10 +31,7 @@ import {
   isAdmin
 } from '@app/user/user.functions';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  selectComicBookListFilter,
-  selectComicBookListState
-} from '@app/comic-books/selectors/comic-book-list.selectors';
+import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import {
   ArchiveType,
   archiveTypeFromString
@@ -42,6 +39,8 @@ import {
 import {
   PAGE_SIZE_DEFAULT,
   QUERY_PARAM_ARCHIVE_TYPE,
+  QUERY_PARAM_COVER_MONTH,
+  QUERY_PARAM_COVER_YEAR,
   QUERY_PARAM_PAGE_INDEX,
   SHOW_COMIC_COVERS_PREFERENCE,
   SORT_FIELD_DEFAULT,
@@ -91,7 +90,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
   coverDateFilter: CoverDateFilter;
-  coverDateFilterSubscription: Subscription;
   showCovers = true;
 
   constructor(
@@ -143,6 +141,30 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
           this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
           this.logger.debug(`Page index: ${this.pageIndex}`);
         }
+
+        this.coverDateFilter = { month: null, year: null };
+
+        if (!!params[QUERY_PARAM_COVER_YEAR]) {
+          this.logger.debug(
+            'Cover year filter:',
+            params[QUERY_PARAM_COVER_YEAR]
+          );
+          this.coverDateFilter = {
+            ...this.coverDateFilter,
+            year: +params[QUERY_PARAM_COVER_YEAR]
+          };
+        }
+
+        if (!!params[QUERY_PARAM_COVER_MONTH]) {
+          this.logger.debug(
+            'Cover month filter:',
+            params[QUERY_PARAM_COVER_MONTH]
+          );
+          this.coverDateFilter = {
+            ...this.coverDateFilter,
+            month: +params[QUERY_PARAM_COVER_MONTH]
+          };
+        }
       }
     );
     this.comicBookListStateSubscription = this.store
@@ -187,9 +209,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
-    this.coverDateFilterSubscription = this.store
-      .select(selectComicBookListFilter)
-      .subscribe(filter => (this.coverDateFilter = filter));
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -216,7 +235,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
-    this.coverDateFilterSubscription.unsubscribe();
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
