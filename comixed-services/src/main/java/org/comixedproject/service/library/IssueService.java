@@ -49,15 +49,16 @@ public class IssueService {
   }
 
   /**
-   * Returns all issues for the given series and volume.
+   * Returns all issues for the given publisher, series, and volume.
    *
+   * @param publisher the publisher
    * @param series the series name
    * @param volume the volume
    * @return the issues
    */
-  public List<Issue> getAll(final String series, final String volume) {
-    log.debug("Getting all  issues: series={} volume={}", series, volume);
-    return this.issueRepository.getAll(series, volume);
+  public List<Issue> getAll(final String publisher, final String series, final String volume) {
+    log.debug("Getting all  issues: publisher={} series={} volume={}", publisher, series, volume);
+    return this.issueRepository.getAll(publisher, series, volume);
   }
 
   /**

@@ -21,6 +21,9 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { SeriesEffects } from './series.effects';
 import {
+  ISSUE_1,
+  ISSUE_2,
+  ISSUE_3,
   SERIES_1,
   SERIES_2,
   SERIES_3,
@@ -33,8 +36,11 @@ import { SeriesService } from '@app/collections/services/series.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
 import {
+  loadSeriesDetail,
+  loadSeriesDetailFailed,
   loadSeriesFailed,
   loadSeriesList,
+  seriesDetailLoaded,
   seriesLoaded
 } from '@app/collections/actions/series.actions';
 import { hot } from 'jasmine-marbles';
@@ -43,6 +49,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 describe('SeriesEffects', () => {
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const SERIES_DETAIL = [ISSUE_1, ISSUE_2, ISSUE_3];
+  const PUBLISHER = 'The publisher';
+  const SERIES = 'The series';
+  const VOLUME = '2022';
+
   let actions$: Observable<any>;
   let effects: SeriesEffects;
   let seriesService: jasmine.SpyObj<SeriesService>;
@@ -64,6 +75,9 @@ describe('SeriesEffects', () => {
             loadSeries: jasmine.createSpy('SeriesService.loadSeries()'),
             fetchIssuesForSeries: jasmine.createSpy(
               'SeriesService.fetchIssuesForSeries()'
+            ),
+            loadSeriesDetail: jasmine.createSpy(
+              'SeriesService.loadSeriesDetail()'
             )
           }
         },
@@ -118,6 +132,75 @@ describe('SeriesEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadSeriesList$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading a single series', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = SERIES_DETAIL;
+      const action = loadSeriesDetail({
+        publisher: PUBLISHER,
+        name: SERIES,
+        volume: VOLUME
+      });
+      const outcome = seriesDetailLoaded({ detail: SERIES_DETAIL });
+
+      actions$ = hot('-a', { a: action });
+      seriesService.loadSeriesDetail
+        .withArgs({
+          publisher: PUBLISHER,
+          name: SERIES,
+          volume: VOLUME
+        })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadSeriesDetail$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = loadSeriesDetail({
+        publisher: PUBLISHER,
+        name: SERIES,
+        volume: VOLUME
+      });
+      const outcome = loadSeriesDetailFailed();
+
+      actions$ = hot('-a', { a: action });
+      seriesService.loadSeriesDetail
+        .withArgs({
+          publisher: PUBLISHER,
+          name: SERIES,
+          volume: VOLUME
+        })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadSeriesDetail$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadSeriesDetail({
+        publisher: PUBLISHER,
+        name: SERIES,
+        volume: VOLUME
+      });
+      const outcome = loadSeriesDetailFailed();
+
+      actions$ = hot('-a', { a: action });
+      seriesService.loadSeriesDetail
+        .withArgs({
+          publisher: PUBLISHER,
+          name: SERIES,
+          volume: VOLUME
+        })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadSeriesDetail$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

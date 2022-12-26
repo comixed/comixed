@@ -1,0 +1,40 @@
+@import 'styles';
+
+.mat-column-publisher {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-name {
+}
+
+.mat-column-volume {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-issue-number {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-cover-date {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-store-date {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-in-library {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

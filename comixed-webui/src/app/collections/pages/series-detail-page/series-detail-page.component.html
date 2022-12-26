@@ -1,0 +1,134 @@
+<h2>
+  {{
+    "collections.series-detail.page-title"
+      | translate: { publisher: publisher, name: name, volume: volume }
+  }}
+</h2>
+
+<mat-toolbar class="cx-primary-light-background cx-width-100">
+  <mat-form-field class="cx-width-50" appearance="standard">
+    <input
+      matInput
+      #filterInput
+      id="volume-search-text-input"
+      [placeholder]="
+        'collections.series-detail.placeholder.filter-issues' | translate
+      "
+      (keyup)="dataSource.filter = filterInput.value"
+    />
+  </mat-form-field>
+  <div class="cx-spacer"></div>
+  <mat-paginator
+    showFirstLastButtons
+    class="cx-primary-light-background cx-height-100"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="pageOptions"
+    (page)="
+      onPageChange($event.pageSize, $event.pageIndex, $event.previousPageIndex)
+    "
+  ></mat-paginator>
+</mat-toolbar>
+
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="sortBy"
+  [matSortDirection]="sortDirection"
+  (matSortChange)="onSortChange($event.active, $event.direction)"
+>
+  <ng-container matColumnDef="publisher">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "collections.series.label.publisher" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.publisher }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "collections.series.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.series }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="volume">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "collections.series.label.volume" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.volume }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="issue-number">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.series.label.issue-number" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.issueNumber }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="cover-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.series.label.cover-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.coverDate | date: medium }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="store-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.series.label.store-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.storeDate | date: medium }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="in-library">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.series.label.in-library" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-icon
+        *ngIf="entry.found"
+        [matTooltip]="
+          'collections.series-detail.text.found-in-library'
+            | translate: { exists: true }
+        "
+      >
+        check
+      </mat-icon>
+      <mat-icon
+        *ngIf="!entry.found"
+        [matTooltip]="
+          'collections.series-detail.text.found-in-library'
+            | translate: { exists: false }
+        "
+      >
+        not_interested
+      </mat-icon>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="row.found ? ['/comics', getComicBookIdForRow(row)] : null"
+  ></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "collections.series-detail.text.no-detail-found" | translate }}
+    </td>
+  </tr>
+</mat-table>

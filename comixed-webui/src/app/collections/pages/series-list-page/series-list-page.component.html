@@ -89,8 +89,7 @@
         color="primary"
         [matTooltip]="'collections.series.tooltip.scrape-series' | translate"
         [routerLink]="[
-          '/metadata',
-          'publishers',
+          '/metadata/publishers',
           entry.publisher,
           'series',
           entry.name,
@@ -105,7 +104,17 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="[
+      '/library/collections/publishers',
+      row.publisher,
+      'series',
+      row.name,
+      'volumes',
+      row.volume
+    ]"
+  ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
       {{ "collections.series.text.no-series-found" | translate }}

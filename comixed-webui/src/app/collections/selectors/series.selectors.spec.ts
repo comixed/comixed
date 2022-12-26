@@ -17,8 +17,15 @@
  */
 
 import { SERIES_FEATURE_KEY, SeriesState } from '../reducers/series.reducer';
-import { selectSeriesList, selectSeriesState } from './series.selectors';
 import {
+  selectSeriesDetail,
+  selectSeriesList,
+  selectSeriesState
+} from './series.selectors';
+import {
+  ISSUE_1,
+  ISSUE_2,
+  ISSUE_3,
   SERIES_1,
   SERIES_2,
   SERIES_3,
@@ -32,7 +39,8 @@ describe('Series Selectors', () => {
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
-      series: [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5]
+      series: [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5],
+      detail: [ISSUE_1, ISSUE_2, ISSUE_3]
     };
   });
 
@@ -50,5 +58,13 @@ describe('Series Selectors', () => {
         [SERIES_FEATURE_KEY]: state
       })
     ).toEqual(state.series);
+  });
+
+  it('should select the series detail', () => {
+    expect(
+      selectSeriesDetail({
+        [SERIES_FEATURE_KEY]: state
+      })
+    ).toEqual(state.detail);
   });
 });

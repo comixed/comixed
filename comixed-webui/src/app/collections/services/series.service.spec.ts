@@ -24,6 +24,9 @@ import {
 } from '@angular/common/http/testing';
 import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-list-response';
 import {
+  ISSUE_1,
+  ISSUE_2,
+  ISSUE_3,
   SERIES_1,
   SERIES_2,
   SERIES_3,
@@ -31,11 +34,18 @@ import {
   SERIES_5
 } from '@app/collections/collections.fixtures';
 import { interpolate } from '@app/core';
-import { LOAD_SERIES_URL } from '@app/collections/collections.constants';
+import {
+  LOAD_SERIES_DETAIL_URL,
+  LOAD_SERIES_URL
+} from '@app/collections/collections.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 
 describe('SeriesService', () => {
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const SERIES_DETAIL = [ISSUE_1, ISSUE_2, ISSUE_3];
+  const PUBLISHER = 'The publisher';
+  const SERIES = 'The series';
+  const VOLUME = '2022';
 
   let service: SeriesService;
   let httpMock: HttpTestingController;
@@ -60,6 +70,28 @@ describe('SeriesService', () => {
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
     const req = httpMock.expectOne(interpolate(LOAD_SERIES_URL));
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
+    req.flush(serviceResponse);
+  });
+
+  it('can load series details', () => {
+    const serviceResponse = SERIES_DETAIL;
+    service
+      .loadSeriesDetail({
+        publisher: PUBLISHER,
+        name: SERIES,
+        volume: VOLUME
+      })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_SERIES_DETAIL_URL, {
+        publisher: PUBLISHER,
+        name: SERIES,
+        volume: VOLUME
+      })
+    );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({});
     req.flush(serviceResponse);

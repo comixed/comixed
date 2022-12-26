@@ -18,22 +18,28 @@
 
 import { createReducer, on } from '@ngrx/store';
 import {
+  loadSeriesDetail,
+  loadSeriesDetailFailed,
   loadSeriesFailed,
   loadSeriesList,
+  seriesDetailLoaded,
   seriesLoaded
 } from '../actions/series.actions';
 import { Series } from '@app/collections/models/series';
+import { Issue } from '@app/collections/models/issue';
 
 export const SERIES_FEATURE_KEY = 'series_state';
 
 export interface SeriesState {
   busy: boolean;
   series: Series[];
+  detail: Issue[];
 }
 
 export const initialState: SeriesState = {
   busy: false,
-  series: []
+  series: [],
+  detail: []
 };
 
 export const reducer = createReducer(
@@ -45,5 +51,12 @@ export const reducer = createReducer(
     busy: false,
     series: action.series
   })),
-  on(loadSeriesFailed, state => ({ ...state, busy: false }))
+  on(loadSeriesFailed, state => ({ ...state, busy: false })),
+  on(loadSeriesDetail, state => ({ ...state, busy: true, detail: [] })),
+  on(seriesDetailLoaded, (state, action) => ({
+    ...state,
+    busy: false,
+    detail: action.detail
+  })),
+  on(loadSeriesDetailFailed, state => ({ ...state, busy: false }))
 );

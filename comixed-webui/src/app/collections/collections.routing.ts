@@ -22,11 +22,17 @@ import { CollectionListComponent } from '@app/collections/pages/collection-list/
 import { ReaderGuard } from '@app/user';
 import { CollectionDetailComponent } from '@app/collections/pages/collection-detail/collection-detail.component';
 import { SeriesListPageComponent } from '@app/collections/pages/series-list-page/series-list-page.component';
+import { SeriesDetailPageComponent } from '@app/collections/pages/series-detail-page/series-detail-page.component';
 
 const routes: Routes = [
   {
     path: 'library/collections/series',
     component: SeriesListPageComponent,
+    canActivate: [ReaderGuard]
+  },
+  {
+    path: 'library/collections/publishers/:publisher/series/:name/volumes/:volume',
+    component: SeriesDetailPageComponent,
     canActivate: [ReaderGuard]
   },
   {

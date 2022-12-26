@@ -23,9 +23,11 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
 import org.comixedproject.model.library.Series;
+import org.comixedproject.model.metadata.Issue;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.rest.series.SeriesController;
 import org.comixedproject.service.collections.SeriesService;
+import org.comixedproject.service.library.CollectionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,9 +37,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SeriesControllerTest {
+  private static final String TEST_PUBLISHER = "Publisher Name";
+  private static final String TEST_SERIES = "Series Name";
+  private static final String TEST_VOLUME = "2022";
+
   @InjectMocks private SeriesController controller;
   @Mock private SeriesService seriesService;
   @Mock private List<Series> seriesList;
+  @Mock private List<Issue> seriesDetail;
 
   @Test
   public void testLoadSeriesList() {
@@ -49,5 +56,36 @@ public class SeriesControllerTest {
     assertSame(seriesList, result.getSeries());
 
     Mockito.verify(seriesService, Mockito.times(1)).getSeriesList();
+  }
+
+  @Test(expected = CollectionException.class)
+  public void testLoadSeriesDetailServiceException() throws CollectionException {
+    Mockito.when(
+            seriesService.loadSeriesDetail(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenThrow(CollectionException.class);
+
+    try {
+      controller.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+    } finally {
+      Mockito.verify(seriesService, Mockito.times(1))
+          .loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+    }
+  }
+
+  @Test
+  public void testLoadSeriesDetail() throws CollectionException {
+    Mockito.when(
+            seriesService.loadSeriesDetail(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(seriesDetail);
+
+    List<Issue> result = controller.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+
+    assertNotNull(result);
+    assertSame(seriesDetail, result);
+
+    Mockito.verify(seriesService, Mockito.times(1))
+        .loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
   }
 }
