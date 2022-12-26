@@ -21,11 +21,15 @@ package org.comixedproject.service.collections;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.comixedproject.model.library.Series;
+import org.comixedproject.model.metadata.Issue;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.library.CollectionException;
 import org.comixedproject.service.library.IssueService;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,18 +41,17 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SeriesServiceTest {
-  private static final int TEST_INDEX = 417;
-  private static final int TEST_SIZE = 25;
-  private static final String TEST_SORT = "publisher";
   private static final String TEST_PUBLISHER = "The publisher";
   private static final String TEST_SERIES = "The series";
   private static final String TEST_VOLUME = "2022";
   private static final Long TEST_ISSUE_COUNT = 29L;
   private static final Long TEST_TOTAL_ISSUES = 79L;
 
-  @InjectMocks private SeriesService seriesService;
+  @InjectMocks private SeriesService service;
   @Mock private ComicBookService comicBookService;
   @Mock private IssueService issueService;
+  @Mock private List<Issue> issueList;
+
   private List<Series> seriesList = new ArrayList<>();
 
   @Before
@@ -62,7 +65,7 @@ public class SeriesServiceTest {
     Mockito.when(issueService.getCountForSeriesAndVolume(Mockito.anyString(), Mockito.anyString()))
         .thenReturn(TEST_TOTAL_ISSUES);
 
-    final List<Series> result = seriesService.getSeriesList();
+    final List<Series> result = service.getSeriesList();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
@@ -76,5 +79,31 @@ public class SeriesServiceTest {
     Mockito.verify(comicBookService, Mockito.times(1)).getAllSeriesAndVolumes();
     Mockito.verify(issueService, Mockito.times(seriesList.size()))
         .getCountForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
+  }
+
+  @Test(expected = CollectionException.class)
+  public void testLoadSeriesDetailNotFound() throws CollectionException {
+    Mockito.when(issueService.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(Collections.emptyList());
+
+    try {
+      service.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+    } finally {
+      Mockito.verify(issueService, Mockito.times(1))
+          .getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+    }
+  }
+
+  @Test
+  public void testLoadSeriesDetail() throws CollectionException {
+    Mockito.when(issueService.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(issueList);
+
+    final List<Issue> result = service.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+
+    assertNotNull(result);
+    assertSame(issueList, result);
+
+    Mockito.verify(issueService, Mockito.times(1)).getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
   }
 }

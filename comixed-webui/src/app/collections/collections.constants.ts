@@ -19,3 +19,4 @@
 import { API_ROOT_URL } from '@app/core';
 
 export const LOAD_SERIES_URL = `${API_ROOT_URL}/library/series`;
+export const LOAD_SERIES_DETAIL_URL = `${API_ROOT_URL}/library/publishers/\${publisher}/series/\${name}/volumes/\${volume}`;

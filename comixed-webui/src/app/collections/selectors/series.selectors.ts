@@ -26,3 +26,8 @@ export const selectSeriesList = createSelector(
   selectSeriesState,
   state => state.series
 );
+
+export const selectSeriesDetail = createSelector(
+  selectSeriesState,
+  state => state.detail
+);

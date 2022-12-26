@@ -43,14 +43,19 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
   long getCountForSeriesAndVolume(@Param("series") String series, @Param("volume") String volume);
 
   /**
-   * Retrieves all records for the given series and volume.
+   * Retrieves all records for the given publisher, series, and volume.
    *
+   * @param publisher the publisher
    * @param series the series name
    * @param volume the volume
    * @return the issues
    */
-  @Query("SELECT i FROM Issue i WHERE i.series = :series AND i.volume = :volume")
-  List<Issue> getAll(@Param("series") String series, @Param("volume") String volume);
+  @Query(
+      "SELECT i FROM Issue i WHERE i.publisher = :publisher AND i.series = :series AND i.volume = :volume")
+  List<Issue> getAll(
+      @Param("publisher") String publisher,
+      @Param("series") String series,
+      @Param("volume") String volume);
 
   /**
    * Deletes all records for the given series and volume.

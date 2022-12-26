@@ -166,6 +166,7 @@ export class SeriesListPageComponent
       }
     };
     this.dataSource.paginator = this.paginator;
+    this.loadTranslations();
   }
 
   onPageChange(

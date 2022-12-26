@@ -67,6 +67,7 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
   /**
    * Returns the current state of the library.
    *
+   * @param selectedIds the selected ids
    * @return the state
    */
   public RemoteLibraryState getLibraryState(final Set<Long> selectedIds) {

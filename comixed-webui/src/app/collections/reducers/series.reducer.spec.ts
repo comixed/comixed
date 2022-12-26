@@ -18,11 +18,17 @@
 
 import { initialState, reducer, SeriesState } from './series.reducer';
 import {
+  loadSeriesDetail,
+  loadSeriesDetailFailed,
   loadSeriesFailed,
   loadSeriesList,
+  seriesDetailLoaded,
   seriesLoaded
 } from '@app/collections/actions/series.actions';
 import {
+  ISSUE_1,
+  ISSUE_2,
+  ISSUE_3,
   SERIES_1,
   SERIES_2,
   SERIES_3,
@@ -32,6 +38,10 @@ import {
 
 describe('Series Reducer', () => {
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+  const SERIES_DETAIL = [ISSUE_1, ISSUE_2, ISSUE_3];
+  const PUBLISHER = 'The Publisher';
+  const SERIES = 'The Series';
+  const VOLUME = '2022';
 
   let state: SeriesState;
 
@@ -48,8 +58,12 @@ describe('Series Reducer', () => {
       expect(state.busy).toBeFalse();
     });
 
-    it('has no series loaded', () => {
+    it('has no series list loaded', () => {
       expect(state.series).toEqual([]);
+    });
+
+    it('has no series detail loaded', () => {
+      expect(state.detail).toEqual([]);
     });
   });
 
@@ -83,6 +97,54 @@ describe('Series Reducer', () => {
   describe('failed to load series', () => {
     beforeEach(() => {
       state = reducer({ ...state, busy: true }, loadSeriesFailed());
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+  });
+
+  describe('loading a series detail', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false, detail: SERIES_DETAIL },
+        loadSeriesDetail({
+          publisher: PUBLISHER,
+          name: SERIES,
+          volume: VOLUME
+        })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    it('clears the loaded detail', () => {
+      expect(state.detail).toEqual([]);
+    });
+  });
+
+  describe('series detail loaded', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: true, series: [] },
+        seriesDetailLoaded({ detail: SERIES_DETAIL })
+      );
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+
+    it('sets the series detail', () => {
+      expect(state.detail).toEqual(SERIES_DETAIL);
+    });
+  });
+
+  describe('failed to load series detail', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: true }, loadSeriesDetailFailed());
     });
 
     it('clears the busy flag', () => {

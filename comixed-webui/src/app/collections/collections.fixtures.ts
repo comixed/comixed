@@ -17,6 +17,7 @@
  */
 
 import { Series } from '@app/collections/models/series';
+import { Issue } from '@app/collections/models/issue';
 
 export const SERIES_1: Series = {
   publisher: 'Publisher 1',
@@ -56,4 +57,37 @@ export const SERIES_5: Series = {
   volume: '2022',
   totalIssues: 717,
   inLibrary: 129
+};
+
+export const ISSUE_1: Issue = {
+  id: 1,
+  publisher: 'Publisher 1',
+  series: 'Series 1',
+  volume: '2022',
+  issueNumber: '1',
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  found: true
+};
+
+export const ISSUE_2: Issue = {
+  id: 2,
+  publisher: 'Publisher 1',
+  series: 'Series 1',
+  volume: '2022',
+  issueNumber: '2',
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  found: false
+};
+
+export const ISSUE_3: Issue = {
+  id: 3,
+  publisher: 'Publisher 1',
+  series: 'Series 1',
+  volume: '2022',
+  issueNumber: '3',
+  coverDate: new Date().getTime(),
+  storeDate: new Date().getTime(),
+  found: false
 };
