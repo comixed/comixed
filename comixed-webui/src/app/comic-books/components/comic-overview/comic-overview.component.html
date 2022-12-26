@@ -11,14 +11,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      <a
-        [routerLink]="[
-          '/library',
-          'collections',
-          'publishers',
-          comic.publisher
-        ]"
-      >
+      <a [routerLink]="['/library/collections/publishers', comic.publisher]">
         {{ comic.publisher }}
       </a>
     </span>
@@ -33,7 +26,16 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      <a [routerLink]="['/library', 'collections', 'series', comic.series]">
+      <a
+        [routerLink]="[
+          '/library/collections/publishers',
+          comic.publisher,
+          'series',
+          comic.series,
+          'volumes',
+          comic.volume
+        ]"
+      >
         {{ comic.series }}
       </a>
     </span>

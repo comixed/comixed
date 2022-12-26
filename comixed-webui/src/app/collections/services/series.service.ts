@@ -21,7 +21,10 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
-import { LOAD_SERIES_URL } from '@app/collections/collections.constants';
+import {
+  LOAD_SERIES_DETAIL_URL,
+  LOAD_SERIES_URL
+} from '@app/collections/collections.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +35,21 @@ export class SeriesService {
   loadSeries(): Observable<any> {
     this.logger.debug('Loading series');
     return this.http.post(interpolate(LOAD_SERIES_URL), {});
+  }
+
+  loadSeriesDetail(args: {
+    publisher: string;
+    name: string;
+    volume: string;
+  }): Observable<any> {
+    this.logger.debug('Loading series detail:', args);
+    return this.http.post(
+      interpolate(LOAD_SERIES_DETAIL_URL, {
+        publisher: args.publisher,
+        name: args.name,
+        volume: args.volume
+      }),
+      {}
+    );
   }
 }

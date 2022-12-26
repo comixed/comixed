@@ -18,12 +18,16 @@
 
 package org.comixedproject.rest.series;
 
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.model.metadata.Issue;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesService;
+import org.comixedproject.service.library.CollectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,5 +54,28 @@ public class SeriesController {
   public LoadSeriesListResponse loadSeriesList() {
     log.info("Loading series");
     return new LoadSeriesListResponse(this.seriesService.getSeriesList());
+  }
+
+  /**
+   * Returns the list of issues for the specified series.
+   *
+   * @param publisher the publisher
+   * @param name the series name
+   * @param volume the volume
+   * @return the issues
+   * @throws CollectionException if an error occurs
+   */
+  @PostMapping(
+      value = "/api/library/publishers/{publisher}/series/{name}/volumes/{volume}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasRole('READER')")
+  public List<Issue> loadSeriesDetail(
+      @PathVariable("publisher") final String publisher,
+      @PathVariable("name") final String name,
+      @PathVariable("volume") final String volume)
+      throws CollectionException {
+    log.info("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);
+    return this.seriesService.loadSeriesDetail(publisher, name, volume);
   }
 }

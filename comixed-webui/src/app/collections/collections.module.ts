@@ -40,12 +40,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
+import { SeriesDetailPageComponent } from './pages/series-detail-page/series-detail-page.component';
 
 @NgModule({
   declarations: [
     CollectionListComponent,
     CollectionDetailComponent,
-    SeriesListPageComponent
+    SeriesListPageComponent,
+    SeriesDetailPageComponent
   ],
   imports: [
     CommonModule,

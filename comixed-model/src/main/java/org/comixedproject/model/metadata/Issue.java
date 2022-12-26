@@ -18,6 +18,8 @@
 
 package org.comixedproject.model.metadata;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 /**
  * <code>Issue</code> represents a single issue for a series and volume.
@@ -42,44 +45,60 @@ import lombok.Setter;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Issue {
+  @JsonProperty("id")
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter
   private Long id;
 
+  @JsonProperty("publisher")
   @Column(name = "Publisher", length = 255, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String publisher;
 
+  @JsonProperty("series")
   @Column(name = "Series", length = 255, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String series;
 
+  @JsonProperty("volume")
   @Column(name = "Volume", length = 4, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String volume;
 
+  @JsonProperty("issueNumber")
   @Column(name = "IssueNumber", length = 16, nullable = false, unique = false, updatable = false)
   @Getter
   @Setter
   @NonNull
   private String issueNumber;
 
+  @JsonProperty("coverDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "CoverDate", nullable = true, unique = false, updatable = false)
   @Getter
   @Setter
   private Date coverDate;
 
+  @JsonProperty("storeDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Column(name = "StoreDate", nullable = true, unique = false, updatable = false)
   @Getter
   @Setter
   private Date storeDate;
+
+  @JsonProperty("found")
+  @Formula(
+      value =
+          "(SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END FROM ComicBooks c WHERE c.Publisher = publisher AND c.Series = series AND c.Volume = volume AND c.IssueNumber = issueNumber)")
+  @Getter
+  private boolean found;
 
   @Override
   public int hashCode() {

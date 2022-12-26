@@ -1,0 +1,260 @@
+/*
+ * ComiXed - A digital comic book library management application.
+ * Copyright (C) 2022, The ComiXed Project
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses>
+ */
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SeriesDetailPageComponent } from './series-detail-page.component';
+import { LoggerModule } from '@angular-ru/cdk/logger';
+import { RouterTestingModule } from '@angular/router/testing';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router
+} from '@angular/router';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { BehaviorSubject } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  initialState as initialSeriesState,
+  SERIES_FEATURE_KEY
+} from '@app/collections/reducers/series.reducer';
+import {
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
+import {
+  initialState as initialUserState,
+  USER_FEATURE_KEY
+} from '@app/user/reducers/user.reducer';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
+import { TitleService } from '@app/core/services/title.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ISSUE_1 } from '@app/collections/collections.fixtures';
+import {
+  COMIC_BOOK_1,
+  COMIC_BOOK_2,
+  COMIC_BOOK_3,
+  COMIC_BOOK_4,
+  COMIC_BOOK_5
+} from '@app/comic-books/comic-books.fixtures';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
+
+describe('SeriesDetailPageComponent', () => {
+  const PUBLISHER = 'The Publisher';
+  const SERIES = 'The Series';
+  const VOLUME = '2022';
+  const COMIC_BOOKS = [
+    COMIC_BOOK_1,
+    COMIC_BOOK_2,
+    COMIC_BOOK_3,
+    COMIC_BOOK_4,
+    COMIC_BOOK_5
+  ];
+  const COMIC_BOOK = COMIC_BOOK_1;
+  const ISSUE = {
+    ...ISSUE_1,
+    publisher: COMIC_BOOK.publisher,
+    series: COMIC_BOOK.series,
+    volume: COMIC_BOOK.volume,
+    issue: COMIC_BOOK.issueNumber
+  };
+  const initialState = {
+    [SERIES_FEATURE_KEY]: initialSeriesState,
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [USER_FEATURE_KEY]: initialUserState
+  };
+
+  let component: SeriesDetailPageComponent;
+  let fixture: ComponentFixture<SeriesDetailPageComponent>;
+  let activatedRoute: ActivatedRoute;
+  let router: Router;
+  let store: MockStore<any>;
+  let titleService: TitleService;
+  let translateService: TranslateService;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SeriesDetailPageComponent],
+      imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatPaginatorModule,
+        MatSortModule,
+        MatTableModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatInputModule
+      ],
+      providers: [
+        provideMockStore({ initialState }),
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: new BehaviorSubject<{}>({
+              publisher: PUBLISHER,
+              name: SERIES,
+              volume: VOLUME
+            }),
+            queryParams: new BehaviorSubject<{}>({}),
+            snapshot: {} as ActivatedRouteSnapshot
+          }
+        },
+        TitleService
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SeriesDetailPageComponent);
+    component = fixture.componentInstance;
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigateByUrl');
+    store = TestBed.inject(MockStore);
+    spyOn(store, 'dispatch');
+    titleService = TestBed.inject(TitleService);
+    translateService = TestBed.inject(TranslateService);
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('parameters', () => {
+    it('loads the publisher name', () => {
+      expect(component.publisher).toEqual(PUBLISHER);
+    });
+
+    it('loads the series name', () => {
+      expect(component.name).toEqual(SERIES);
+    });
+
+    it('loads the volume', () => {
+      expect(component.volume).toEqual(VOLUME);
+    });
+  });
+
+  describe('language change', () => {
+    beforeEach(() => {
+      spyOn(titleService, 'setTitle');
+      translateService.use('fr');
+    });
+
+    it('updates the tab title', () => {
+      expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('sorting', () => {
+    it('can sort by issue number', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ISSUE, 'issue-number')
+      ).toEqual(ISSUE.issueNumber);
+    });
+
+    it('can sort by cover date', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ISSUE, 'cover-date')
+      ).toEqual(ISSUE.coverDate);
+    });
+
+    it('can sort by store date', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ISSUE, 'store-date')
+      ).toEqual(ISSUE.storeDate);
+    });
+
+    it('can sort by the found state', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ISSUE, 'in-library')
+      ).toEqual(`${ISSUE.found}`);
+    });
+
+    it('ignores unknown fields', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ISSUE, 'in-between')
+      ).toEqual('');
+    });
+  });
+
+  describe('getting the id for an issue', () => {
+    beforeEach(() => {
+      component.comicBooks = COMIC_BOOKS;
+    });
+
+    it('returns a value when the issue is found', () => {
+      expect(component.getComicBookIdForRow(ISSUE)).toEqual(COMIC_BOOK.id);
+    });
+
+    it('returns a null when the issue is not found', () => {
+      expect(
+        component.getComicBookIdForRow({
+          ...ISSUE,
+          publisher: COMIC_BOOK.publisher.substr(1)
+        })
+      ).toBeUndefined();
+    });
+  });
+
+  describe('changing the page', () => {
+    const PAGE_SIZE = 10;
+    const PAGE_INDEX = 1;
+
+    describe('the page size changes', () => {
+      beforeEach(() => {
+        component.pageSize = PAGE_SIZE - 1;
+        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX);
+      });
+
+      it('saves the page size', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          saveUserPreference({
+            name: PAGE_SIZE_PREFERENCE,
+            value: `${PAGE_SIZE}`
+          })
+        );
+      });
+    });
+
+    describe('the page index changes', () => {
+      beforeEach(() => {
+        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX - 1);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('changing the sort options', () => {
+    beforeEach(() => {
+      component.onSortChange('issue-number', 'asc');
+    });
+
+    it('updates the url', () => {
+      expect(router.navigateByUrl).toHaveBeenCalled();
+    });
+  });
+});

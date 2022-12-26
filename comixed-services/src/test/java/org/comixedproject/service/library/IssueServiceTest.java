@@ -36,6 +36,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class IssueServiceTest {
+  private static final String TEST_PUBLISHER = "The Publisher Name";
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME = "2022";
   private static final long TEST_COUNT = 417L;
@@ -70,15 +71,17 @@ public class IssueServiceTest {
 
   @Test
   public void testGetAllForSeriesAndVolume() {
-    Mockito.when(issueRepository.getAll(Mockito.anyString(), Mockito.anyString()))
+    Mockito.when(
+            issueRepository.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(issueList);
 
-    final List<Issue> result = service.getAll(TEST_SERIES, TEST_VOLUME);
+    final List<Issue> result = service.getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
 
     assertNotNull(result);
     assertSame(issueList, result);
 
-    Mockito.verify(issueRepository, Mockito.times(1)).getAll(TEST_SERIES, TEST_VOLUME);
+    Mockito.verify(issueRepository, Mockito.times(1))
+        .getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
   }
 
   @Test

@@ -50,14 +50,16 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
   DbUnitTestExecutionListener.class
 })
 public class IssueRepositoryTest {
-  private static final String TEST_SERIES = "Captain America";
-  private static final String TEST_VOLUME = "2022";
+  private static final String TEST_PUBLISHER = "Marvel";
+  private static final String TEST_SERIES = "Steve Rogers: Captain America";
+  private static final String TEST_VOLUME = "2017";
 
   @Autowired private IssueRepository repository;
 
   @Test
   public void testLoadAllForUnknownSeriesAndVolume() {
-    final List<Issue> result = repository.getAll(TEST_SERIES.substring(1), TEST_VOLUME);
+    final List<Issue> result =
+        repository.getAll(TEST_PUBLISHER, TEST_SERIES.substring(1), TEST_VOLUME);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -65,12 +67,15 @@ public class IssueRepositoryTest {
 
   @Test
   public void testLoadAllForKnownSeriesAndVolume() {
-    final List<Issue> result = repository.getAll(TEST_SERIES, TEST_VOLUME);
+    final List<Issue> result = repository.getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
+    assertTrue(result.stream().allMatch(issue -> issue.getPublisher().equals(TEST_PUBLISHER)));
     assertTrue(result.stream().allMatch(issue -> issue.getSeries().equals(TEST_SERIES)));
     assertTrue(result.stream().allMatch(issue -> issue.getVolume().equals(TEST_VOLUME)));
+    assertTrue(result.stream().anyMatch(issue -> issue.isFound()));
+    assertTrue(result.stream().anyMatch(issue -> !issue.isFound()));
   }
 
   @Transactional
@@ -78,7 +83,7 @@ public class IssueRepositoryTest {
   public void testDeleteSeriesAndVolume() {
     repository.deleteSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
 
-    final List<Issue> result = repository.getAll(TEST_SERIES, TEST_VOLUME);
+    final List<Issue> result = repository.getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
 
     assertNotNull(result);
     assertTrue(result.isEmpty());

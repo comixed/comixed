@@ -22,6 +22,7 @@ export const QUERY_PARAM_TAB = 'tab';
 export const QUERY_PARAM_COVER_YEAR = 'year';
 export const QUERY_PARAM_COVER_MONTH = 'month';
 export const QUERY_PARAM_SORT_BY = 'sortBy';
+export const QUERY_PARAM_SORT_DIRECTION = 'sortOrder';
 export const QUERY_PARAM_ARCHIVE_TYPE = 'archive';
 export const QUERY_PARAM_PAGE_INDEX = 'index';
 export const QUERY_PARAM_PAGES_AS_GRID = 'grid';

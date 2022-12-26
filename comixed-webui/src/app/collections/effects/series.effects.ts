@@ -20,8 +20,11 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
+  loadSeriesDetail,
+  loadSeriesDetailFailed,
   loadSeriesFailed,
   loadSeriesList,
+  seriesDetailLoaded,
   seriesLoaded
 } from '../actions/series.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -30,6 +33,7 @@ import { LoadSeriesListResponse } from '@app/collections/models/net/load-series-
 import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { Issue } from '@app/collections/models/issue';
 
 @Injectable()
 export class SeriesEffects {
@@ -60,6 +64,43 @@ export class SeriesEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(loadSeriesFailed());
+      })
+    );
+  });
+
+  loadSeriesDetail$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadSeriesDetail),
+      tap(action => this.logger.debug('Loading series detail:', action)),
+      switchMap(action =>
+        this.seriesService
+          .loadSeriesDetail({
+            publisher: action.publisher,
+            name: action.name,
+            volume: action.volume
+          })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: Issue[]) =>
+              seriesDetailLoaded({ detail: response })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              this.alertService.error(
+                this.translateService.instant(
+                  'collections.series-detail.load-effect-failure'
+                )
+              );
+              return of(loadSeriesDetailFailed());
+            })
+          )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadSeriesDetailFailed());
       })
     );
   });
