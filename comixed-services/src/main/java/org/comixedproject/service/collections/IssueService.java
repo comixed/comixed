@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.service.library;
+package org.comixedproject.service.collections;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.metadata.Issue;
-import org.comixedproject.repositories.library.IssueRepository;
+import org.comixedproject.model.collections.Issue;
+import org.comixedproject.repositories.collections.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

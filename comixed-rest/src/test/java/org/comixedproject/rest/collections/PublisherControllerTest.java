@@ -1,5 +1,5 @@
 /*
- * ComiXed - A digital comicBook book library management application.
+ * ComiXed - A digital comic book library management application.
  * Copyright (C) 2022, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.rest.library;
+package org.comixedproject.rest.collections;
 
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertSame;
 
-import org.comixedproject.model.net.metadata.GetIssueCountResponse;
-import org.comixedproject.service.library.IssueService;
+import java.util.List;
+import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,25 +32,20 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class IssueControllerTest {
-  private static final String TEST_SERIES = "The series";
-  private static final String TEST_VOLUME = "2022";
-  private static final Long TEST_COUNT = 129L;
-
-  @InjectMocks private IssueController controller;
-  @Mock private IssueService issueService;
+public class PublisherControllerTest {
+  @InjectMocks private PublisherController controller;
+  @Mock private ComicBookService comicBookService;
+  @Mock private List<Publisher> publisherList;
 
   @Test
-  public void testGetCountForSeriesAndVolume() {
-    Mockito.when(issueService.getCountForSeriesAndVolume(Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(TEST_COUNT);
+  public void testGetAllPublishers() {
+    Mockito.when(comicBookService.getAllPublishersWithSeries()).thenReturn(publisherList);
 
-    final GetIssueCountResponse result = controller.getIssueCount(TEST_SERIES, TEST_VOLUME);
+    final List<Publisher> result = controller.getAllPublishers();
 
     assertNotNull(result);
-    assertEquals(TEST_COUNT, result.getCount());
+    assertSame(publisherList, result);
 
-    Mockito.verify(issueService, Mockito.times(1))
-        .getCountForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
+    Mockito.verify(comicBookService, Mockito.times(1)).getAllPublishersWithSeries();
   }
 }

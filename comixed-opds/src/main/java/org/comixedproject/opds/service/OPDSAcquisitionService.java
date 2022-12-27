@@ -162,7 +162,7 @@ public class OPDSAcquisitionService {
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
                 String.format(
-                    "/opds/library/publishers/%s/series/%s/volumes/%s?unread=%s",
+                    "/opds/collections/publishers/%s/series/%s/volumes/%s?unread=%s",
                     this.opdsUtils.urlEncodeString(publisher),
                     this.opdsUtils.urlEncodeString(series),
                     this.opdsUtils.urlEncodeString(volume),
@@ -206,7 +206,7 @@ public class OPDSAcquisitionService {
                 NAVIGATION_FEED_LINK_TYPE,
                 SELF,
                 String.format(
-                    "/opds/library/series/%s/volumes/%s?unread=%s",
+                    "/opds/collections/series/%s/volumes/%s?unread=%s",
                     this.opdsUtils.urlEncodeString(series),
                     this.opdsUtils.urlEncodeString(volume),
                     String.valueOf(unread))));

@@ -31,9 +31,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
+import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.library.Series;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.comixedproject.repositories.RepositoryContext;
@@ -549,6 +550,14 @@ public class ComicBookRepositoryTest {
   @Test
   public void testGetAllSeriesAndVolumes() {
     final List<Series> result = repository.getAllSeriesAndVolumes();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetAllPublishersWithSeriesCount() {
+    final List<Publisher> result = repository.getAllPublishersWithSeriesCount();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

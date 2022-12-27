@@ -1,5 +1,24 @@
 {
   "collections": {
+    "publishers": {
+      "label": {
+        "name": "Name",
+        "in-library": "# Of Series"
+      },
+      "list-publishers": {
+        "page-title": "Publishers ({count} Total)",
+        "tab-title": "Publishers"
+      },
+      "load-publishers": {
+        "effect-failure": "Failed to load all publishers."
+      },
+      "placeholder": {
+        "filter-publishers": "Enter text to filter the publishers displayed."
+      },
+      "text": {
+        "no-publishers-found": "No publishers were found."
+      }
+    },
     "series": {
       "label": {
         "cover-date": "Cover Date",

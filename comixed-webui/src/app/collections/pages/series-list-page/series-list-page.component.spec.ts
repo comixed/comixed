@@ -62,7 +62,6 @@ import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { Series } from '@app/collections/models/series';
 import { SERIES_1 } from '@app/collections/collections.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import Spy = jasmine.Spy;
 
 describe('SeriesListPageComponent', () => {
   const initialState = {
@@ -76,7 +75,7 @@ describe('SeriesListPageComponent', () => {
   let store: MockStore<any>;
   let activatedRoute: ActivatedRoute;
   let titleService: TitleService;
-  let titleServiceSpy: Spy;
+  let titleServiceSpy: jasmine.Spy;
   let translateService: TranslateService;
   let router: Router;
 
@@ -195,10 +194,6 @@ describe('SeriesListPageComponent', () => {
         component.dataSource.sortingDataAccessor(ENTRY.item, 'in-library')
       ).toEqual(ENTRY.item.inLibrary);
     });
-
-    afterEach(() => {
-      expect(router.navigateByUrl).toHaveBeenCalled();
-    });
   });
 
   describe('navigating the series list', () => {
@@ -229,6 +224,86 @@ describe('SeriesListPageComponent', () => {
       beforeEach(() => {
         component.pageSize = PAGE_SIZE;
         component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX - 1);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('updating the query parameters', () => {
+    it('sorts by name by default', () => {
+      expect(component.sortBy).toEqual('name');
+    });
+
+    it('uses ascending sort', () => {
+      expect(component.sortDirection).toEqual('asc');
+    });
+
+    describe('sorting by publisher', () => {
+      beforeEach(() => {
+        component.onSortChange('publisher', component.sortDirection);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+
+    describe('sorting by name', () => {
+      beforeEach(() => {
+        component.onSortChange('name', component.sortDirection);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+
+    describe('sorting by volume', () => {
+      beforeEach(() => {
+        component.onSortChange('volume', component.sortDirection);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+
+    describe('sorting by total issues', () => {
+      beforeEach(() => {
+        component.onSortChange('total-issues', component.sortDirection);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+
+    describe('sorting by issues in library', () => {
+      beforeEach(() => {
+        component.onSortChange('in-library', component.sortDirection);
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+
+    describe('using descending sort', () => {
+      beforeEach(() => {
+        component.onSortChange(component.sortBy, 'desc');
+      });
+
+      it('updates the url', () => {
+        expect(router.navigateByUrl).toHaveBeenCalled();
+      });
+    });
+
+    describe('using no sort', () => {
+      beforeEach(() => {
+        component.onSortChange(component.sortBy, '');
       });
 
       it('updates the url', () => {

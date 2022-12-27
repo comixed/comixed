@@ -51,9 +51,9 @@ public class OPDSSeriesController {
    * @param unread the unread flag
    * @return the navigation feed
    */
-  @GetMapping(value = "/opds/library/series", produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds/collections/series", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.series.get-root")
+  @Timed(value = "comixed.opds.collections.series.get-root")
   @ResponseBody
   public OPDSNavigationFeed getRootFeedForSeries(
       @RequestParam(name = "unread") final boolean unread) {
@@ -68,9 +68,9 @@ public class OPDSSeriesController {
    * @param unread the unread flag
    * @return the navigation feed
    */
-  @GetMapping(value = "/opds/library/series/{name}", produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds/collections/series/{name}", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.series.get-volumes")
+  @Timed(value = "comixed.opds.collections.series.get-volumes")
   @ResponseBody
   public OPDSNavigationFeed getVolumesFeedForSeries(
       @PathVariable("name") @NonNull final String name,
@@ -90,7 +90,7 @@ public class OPDSSeriesController {
    * @return the acquisition feed
    */
   @GetMapping(
-      value = "/opds/library/series/{name}/volumes/{volume}",
+      value = "/opds/collections/series/{name}/volumes/{volume}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.series.get-comics")

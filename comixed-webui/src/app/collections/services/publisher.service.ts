@@ -16,22 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.collections;
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { Observable } from 'rxjs';
+import { interpolate } from '@app/core';
+import { LOAD_PUBLISHERS_URL } from '@app/collections/collections.constants';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.comixedproject.model.collections.Series;
+@Injectable({
+  providedIn: 'root'
+})
+export class PublisherService {
+  constructor(private logger: LoggerService, private http: HttpClient) {}
 
-/**
- * <code>LoadSeriesListResponse</code> represents the response body when loading a series list.
- *
- * @author Darryl L. Pierce
- */
-@AllArgsConstructor
-public class LoadSeriesListResponse {
-  @JsonProperty("series")
-  @Getter
-  private List<Series> series;
+  loadPublishers(): Observable<any> {
+    this.logger.debug('Loading all publishers');
+    return this.http.get(interpolate(LOAD_PUBLISHERS_URL));
+  }
 }
