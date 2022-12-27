@@ -1,0 +1,69 @@
+<h2>
+  {{
+    "collections.publishers.list-publishers.page-title"
+      | translate: { count: dataSource.data?.length }
+  }}
+</h2>
+
+<mat-toolbar class="cx-primary-light-background cx-width-100">
+  <mat-form-field class="cx-width-50" appearance="standard">
+    <input
+      matInput
+      #filterInput
+      id="volume-search-text-input"
+      [placeholder]="
+        'collections.publishers.placeholder.filter-publishers' | translate
+      "
+      (keyup)="dataSource.filter = filterInput.value"
+    />
+  </mat-form-field>
+  <div class="cx-spacer"></div>
+  <mat-paginator
+    showFirstLastButtons
+    class="cx-primary-light-background cx-height-100"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="pageOptions"
+    (page)="
+      onPageChange($event.pageSize, $event.pageIndex, $event.previousPageIndex)
+    "
+  ></mat-paginator>
+</mat-toolbar>
+
+<mat-table
+  matSort
+  class="cx-width-100"
+  [dataSource]="dataSource"
+  [matSortActive]="sortBy"
+  [matSortDirection]="sortDirection"
+  (matSortChange)="onSortChange($event.active, $event.direction)"
+>
+  <ng-container matColumnDef="name">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.publishers.label.name" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="series-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.publishers.label.in-library" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.seriesCount }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    [routerLink]="['/library/collections/publishers', row.publisher]"
+  ></mat-row>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      {{ "collections.publishers.text.no-publishers-found" | translate }}
+    </td>
+  </tr>
+</mat-table>

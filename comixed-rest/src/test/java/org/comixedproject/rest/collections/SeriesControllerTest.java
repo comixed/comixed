@@ -22,10 +22,9 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
-import org.comixedproject.model.library.Series;
-import org.comixedproject.model.metadata.Issue;
+import org.comixedproject.model.collections.Issue;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
-import org.comixedproject.rest.series.SeriesController;
 import org.comixedproject.service.collections.SeriesService;
 import org.comixedproject.service.library.CollectionException;
 import org.junit.Test;

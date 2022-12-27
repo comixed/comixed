@@ -21,9 +21,10 @@ package org.comixedproject.repositories.comicbooks;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
-import org.comixedproject.model.library.Series;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
 import org.springframework.data.domain.Pageable;
@@ -320,8 +321,23 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   @Query("SELECT DISTINCT c.series FROM ComicBook c WHERE c.series IS NOT NULL")
   List<String> findDistinctSeries();
 
+  /**
+   * Returns the list of all publishers with the count of series for each.
+   *
+   * @return the publisher list
+   */
   @Query(
-      "SELECT new org.comixedproject.model.library.Series(c.publisher, c.series, c.volume, COUNT(c)) FROM ComicBook c WHERE LENGTH(c.series) > 0 and c.volume IS NOT NULL GROUP BY c.publisher, c.series, c.volume")
+      "SELECT new org.comixedproject.model.collections.Publisher(c.publisher, count(c)) FROM ComicBook c WHERE LENGTH(c.publisher) > 0 GROUP BY c.publisher")
+  List<Publisher> getAllPublishersWithSeriesCount();
+
+  /**
+   * Returns the list of all series along with the count of comics, grouped by publisher, name, and
+   * volume.
+   *
+   * @return the series list
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.collections.Series(c.publisher, c.series, c.volume, COUNT(c)) FROM ComicBook c WHERE LENGTH(c.series) > 0 and c.volume IS NOT NULL GROUP BY c.publisher, c.series, c.volume")
   List<Series> getAllSeriesAndVolumes();
 
   /**

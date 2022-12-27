@@ -108,10 +108,10 @@ public class OPDSNavigationServiceTest {
         "/opds/dates/released/?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(0).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/library/publishers/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/publishers/?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(1).getLinks().get(0).getReference());
     assertEquals(
-        "/opds/library/series/?unread=" + String.valueOf(TEST_UNREAD),
+        "/opds/collections/series/?unread=" + String.valueOf(TEST_UNREAD),
         result.getEntries().get(2).getLinks().get(0).getReference());
     assertEquals(
         "/opds/collections/characters/?unread=" + String.valueOf(TEST_UNREAD),

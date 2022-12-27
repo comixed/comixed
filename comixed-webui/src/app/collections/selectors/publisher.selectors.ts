@@ -16,22 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.collections;
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {
+  PUBLISHER_FEATURE_KEY,
+  PublisherState
+} from '../reducers/publisher.reducer';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.comixedproject.model.collections.Series;
+export const selectPublisherState = createFeatureSelector<PublisherState>(
+  PUBLISHER_FEATURE_KEY
+);
 
-/**
- * <code>LoadSeriesListResponse</code> represents the response body when loading a series list.
- *
- * @author Darryl L. Pierce
- */
-@AllArgsConstructor
-public class LoadSeriesListResponse {
-  @JsonProperty("series")
-  @Getter
-  private List<Series> series;
-}
+export const selectPublisherList = createSelector(
+  selectPublisherState,
+  state => state.publishers
+);
