@@ -93,12 +93,12 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
 
   onTabChange(index: number): void {
     this.logger.trace('Tab changed:', index);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_TAB,
-      `${index}`
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_TAB,
+        value: `${index}`
+      }
+    ]);
   }
 
   private loadTranslations(): void {

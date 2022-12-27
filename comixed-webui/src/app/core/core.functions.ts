@@ -41,14 +41,13 @@ export function compare(
 export function updateQueryParam(
   activatedRoute: ActivatedRoute,
   router: Router,
-  paramName: string,
-  paramValue: string
+  params: { name: string; value: string }[]
 ): void {
   const queryParams: Params = Object.assign(
     {},
     activatedRoute.snapshot.queryParams
   );
-  queryParams[paramName] = paramValue;
+  params.forEach(entry => (queryParams[entry.name] = entry.value));
   router.navigate([], {
     relativeTo: activatedRoute,
     queryParams

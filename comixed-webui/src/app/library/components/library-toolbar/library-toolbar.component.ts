@@ -210,23 +210,23 @@ export class LibraryToolbarComponent
     );
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(
-        this.activatedRoute,
-        this.router,
-        QUERY_PARAM_PAGE_INDEX,
-        `${pageIndex}`
-      );
+      updateQueryParam(this.activatedRoute, this.router, [
+        {
+          name: QUERY_PARAM_PAGE_INDEX,
+          value: `${pageIndex}`
+        }
+      ]);
     }
   }
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.trace('Archive type selected:', archiveType);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_ARCHIVE_TYPE,
-      archiveType
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_ARCHIVE_TYPE,
+        value: archiveType
+      }
+    ]);
   }
 
   onConsolidateLibrary(): void {
@@ -287,12 +287,12 @@ export class LibraryToolbarComponent
 
   onSortBy(sortField: string): void {
     this.logger.trace('Changing sort field:', sortField);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_SORT_BY,
-      sortField
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_SORT_BY,
+        value: sortField
+      }
+    ]);
     this.store.dispatch(
       saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: sortField })
     );
@@ -316,22 +316,22 @@ export class LibraryToolbarComponent
 
   onCoverYearChange(year: number): void {
     this.logger.debug('Setting cover year filter:', year);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_COVER_YEAR,
-      !!year ? `${year}` : null
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_COVER_YEAR,
+        value: !!year ? `${year}` : null
+      }
+    ]);
   }
 
   onCoverMonthChange(month: number): void {
     this.logger.debug('Setting cover month filter:', month);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_COVER_MONTH,
-      !!month ? `${month}` : null
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_COVER_MONTH,
+        value: !!month ? `${month}` : null
+      }
+    ]);
   }
 
   onToggleShowCoverMode(): void {

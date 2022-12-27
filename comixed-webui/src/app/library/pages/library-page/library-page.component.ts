@@ -239,22 +239,22 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.debug('Archive type changed:', archiveType);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_ARCHIVE_TYPE,
-      !!archiveType ? `${archiveType}` : null
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_ARCHIVE_TYPE,
+        value: !!archiveType ? `${archiveType}` : null
+      }
+    ]);
   }
 
   onPageIndexChange(pageIndex: number): void {
     this.logger.debug('Page index changed:', pageIndex);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_PAGE_INDEX,
-      `${pageIndex}`
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_PAGE_INDEX,
+        value: `${pageIndex}`
+      }
+    ]);
   }
 
   onSelectAllComics(selected: boolean): void {

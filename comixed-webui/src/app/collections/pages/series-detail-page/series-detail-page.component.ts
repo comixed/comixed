@@ -198,29 +198,26 @@ export class SeriesDetailPageComponent
     }
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(
-        this.activatedRoute,
-        this.router,
-        QUERY_PARAM_PAGE_INDEX,
-        `${pageIndex}`
-      );
+      updateQueryParam(this.activatedRoute, this.router, [
+        {
+          name: QUERY_PARAM_PAGE_INDEX,
+          value: `${pageIndex}`
+        }
+      ]);
     }
   }
 
   onSortChange(active: string, direction: 'asc' | 'desc' | ''): void {
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_SORT_BY,
-      active
-    );
-    // TODO need to process two parameters
-    // updateQueryParam(
-    //   this.activatedRoute,
-    //   this.router,
-    //   QUERY_PARAM_SORT_DIRECTION,
-    //   direction
-    // );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_SORT_BY,
+        value: active
+      },
+      {
+        name: QUERY_PARAM_SORT_DIRECTION,
+        value: direction
+      }
+    ]);
   }
 
   private loadTranslations(): void {
