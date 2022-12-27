@@ -159,12 +159,12 @@ export class DeletedListPageComponent
     );
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(
-        this.activatedRoute,
-        this.router,
-        QUERY_PARAM_PAGE_INDEX,
-        `${pageIndex}`
-      );
+      updateQueryParam(this.activatedRoute, this.router, [
+        {
+          name: QUERY_PARAM_PAGE_INDEX,
+          value: `${pageIndex}`
+        }
+      ]);
     }
   }
 

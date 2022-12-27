@@ -241,12 +241,12 @@ export class ComicBookPageComponent
 
   onTabChange(index: number): void {
     this.logger.trace('Changing active tab:', index);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_TAB,
-      `${index}`
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_TAB,
+        value: `${index}`
+      }
+    ]);
     this.updateShowPages();
   }
 
@@ -325,12 +325,12 @@ export class ComicBookPageComponent
   onTogglePageView(): void {
     this.logger.trace('Toggling showing pages as grid');
     this.showPagesAsGrid = !this.showPagesAsGrid;
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_PAGES_AS_GRID,
-      `${this.showPagesAsGrid}`
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_PAGES_AS_GRID,
+        value: `${this.showPagesAsGrid}`
+      }
+    ]);
   }
 
   onPagesChanged(pages: Page[]): void {

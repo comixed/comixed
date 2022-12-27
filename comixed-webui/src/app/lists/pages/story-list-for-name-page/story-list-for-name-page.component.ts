@@ -154,12 +154,12 @@ export class StoryListForNamePageComponent
 
   onPageChange(pageEvent: PageEvent): void {
     if (pageEvent.pageSize !== this.pageSize) {
-      updateQueryParam(
-        this.activatedRoute,
-        this.router,
-        QUERY_PARAM_PAGE_SIZE,
-        `${pageEvent.pageSize}`
-      );
+      updateQueryParam(this.activatedRoute, this.router, [
+        {
+          name: QUERY_PARAM_PAGE_SIZE,
+          value: `${pageEvent.pageSize}`
+        }
+      ]);
       this.store.dispatch(
         saveUserPreference({
           name: PAGE_SIZE_PREFERENCE,
