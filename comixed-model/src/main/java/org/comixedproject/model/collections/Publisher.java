@@ -16,22 +16,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.collections;
+package org.comixedproject.model.collections;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
+import java.util.Objects;
 import lombok.Getter;
-import org.comixedproject.model.collections.Series;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
- * <code>LoadSeriesListResponse</code> represents the response body when loading a series list.
+ * <code>Publisher</code> represents the details for a single publisher in the library.
  *
  * @author Darryl L. Pierce
  */
-@AllArgsConstructor
-public class LoadSeriesListResponse {
-  @JsonProperty("series")
+@RequiredArgsConstructor
+public class Publisher {
+  @JsonProperty("name")
+  @NonNull
   @Getter
-  private List<Series> series;
+  private String name;
+
+  @JsonProperty("seriesCount")
+  @NonNull
+  @Getter
+  private Long seriesCount;
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    final Publisher publisher = (Publisher) o;
+    return name.equals(publisher.name) && seriesCount.equals(publisher.seriesCount);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, seriesCount);
+  }
 }

@@ -16,22 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.model.net.collections;
+import { createAction, props } from '@ngrx/store';
+import { Publisher } from '@app/collections/models/publisher';
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.comixedproject.model.collections.Series;
+export const loadPublishers = createAction('[Publisher] Load publishers');
 
-/**
- * <code>LoadSeriesListResponse</code> represents the response body when loading a series list.
- *
- * @author Darryl L. Pierce
- */
-@AllArgsConstructor
-public class LoadSeriesListResponse {
-  @JsonProperty("series")
-  @Getter
-  private List<Series> series;
-}
+export const publishersLoaded = createAction(
+  '[Publisher] Publishers loaded',
+  props<{ publishers: Publisher[] }>()
+);
+
+export const loadPublishersFailed = createAction(
+  '[Publisher] Load publishers failed'
+);

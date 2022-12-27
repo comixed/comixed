@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.rest.series;
+package org.comixedproject.rest.collections;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.metadata.Issue;
+import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesService;
 import org.comixedproject.service.library.CollectionException;
@@ -66,7 +66,7 @@ public class SeriesController {
    * @throws CollectionException if an error occurs
    */
   @PostMapping(
-      value = "/api/library/publishers/{publisher}/series/{name}/volumes/{volume}",
+      value = "/api/collections/publishers/{publisher}/series/{name}/volumes/{volume}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")

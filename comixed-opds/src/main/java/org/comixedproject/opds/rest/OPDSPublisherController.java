@@ -51,9 +51,9 @@ public class OPDSPublisherController {
    * @param unread the unread flag
    * @return the navigation feed
    */
-  @GetMapping(value = "/opds/library/publishers", produces = MediaType.APPLICATION_XML_VALUE)
+  @GetMapping(value = "/opds/collections/publishers", produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.publisher.get-root")
+  @Timed(value = "comixed.opds.collections.publisher.get-root")
   @ResponseBody
   public OPDSNavigationFeed getRootFeedForPublishers(
       @RequestParam(name = "unread") final boolean unread) {
@@ -69,10 +69,10 @@ public class OPDSPublisherController {
    * @return the feed
    */
   @GetMapping(
-      value = "/opds/library/publishers/{publisher}",
+      value = "/opds/collections/publishers/{publisher}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.publisher.get-series")
+  @Timed(value = "comixed.opds.collections.publisher.get-series")
   @ResponseBody
   OPDSNavigationFeed getSeriesFeedForPublisher(
       @PathVariable("publisher") @NonNull final String publisher,
@@ -91,10 +91,10 @@ public class OPDSPublisherController {
    * @return the feed
    */
   @GetMapping(
-      value = "/opds/library/publishers/{publisher}/series/{series}",
+      value = "/opds/collections/publishers/{publisher}/series/{series}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.publisher.get-volumes")
+  @Timed(value = "comixed.opds.collections.publisher.get-volumes")
   @ResponseBody
   OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
       @PathVariable("publisher") @NonNull final String publisher,
@@ -118,10 +118,10 @@ public class OPDSPublisherController {
    * @return the feed
    */
   @GetMapping(
-      value = "/opds/library/publishers/{publisher}/series/{series}/volumes/{volume}",
+      value = "/opds/collections/publishers/{publisher}/series/{series}/volumes/{volume}",
       produces = MediaType.APPLICATION_XML_VALUE)
   @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.publisher.get-comics")
+  @Timed(value = "comixed.opds.collections.publisher.get-comics")
   @ResponseBody
   OPDSAcquisitionFeed getComicFeedsForPublisherAndSeriesAndVolume(
       final Principal principal,

@@ -37,10 +37,11 @@ import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
+import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
-import org.comixedproject.model.library.Series;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -1070,5 +1071,15 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<ComicBook> findComicsWithEditDetails(final int count) {
     log.debug("Loading up to {} comics with edit flag set", count);
     return this.comicBookRepository.findComicsWithEditDetails(PageRequest.of(0, count));
+  }
+
+  /**
+   * Returns the list of all publishers in the library, along with the count of series for each.
+   *
+   * @return the publisher list
+   */
+  public List<Publisher> getAllPublishersWithSeries() {
+    log.debug("Getting all publishers with their series counts");
+    return this.comicBookRepository.getAllPublishersWithSeriesCount();
   }
 }

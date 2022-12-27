@@ -41,20 +41,28 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { SeriesDetailPageComponent } from './pages/series-detail-page/series-detail-page.component';
+import { PublisherListPageComponent } from './pages/publisher-list-page/publisher-list-page.component';
+import {
+  PUBLISHER_FEATURE_KEY,
+  reducer as publisherReducer
+} from '@app/collections/reducers/publisher.reducer';
+import { PublisherEffects } from '@app/collections/effects/publisher.effects';
 
 @NgModule({
   declarations: [
     CollectionListComponent,
     CollectionDetailComponent,
     SeriesListPageComponent,
-    SeriesDetailPageComponent
+    SeriesDetailPageComponent,
+    PublisherListPageComponent
   ],
   imports: [
     CommonModule,
     CollectionsRouting,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(PUBLISHER_FEATURE_KEY, publisherReducer),
     StoreModule.forFeature(SERIES_FEATURE_KEY, seriesReducer),
-    EffectsModule.forFeature([SeriesEffects]),
+    EffectsModule.forFeature([PublisherEffects, SeriesEffects]),
     MatTableModule,
     MatSortModule,
     LibraryModule,

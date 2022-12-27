@@ -23,15 +23,18 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { Series } from '@app/collections/models/series';
-import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute, Router } from '@angular/router';
+import { LoggerService } from '@angular-ru/cdk/logger';
+import { MatTableDataSource } from '@angular/material/table';
+import { Publisher } from '@app/collections/models/publisher';
 import { Subscription } from 'rxjs';
-import { User } from '@app/user/models/user';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { updateQueryParam } from '@app/core';
+import { loadPublishers } from '@app/collections/actions/publisher.actions';
+import {
+  selectPublisherList,
+  selectPublisherState
+} from '@app/collections/selectors/publisher.selectors';
+import { setBusyState } from '@app/core/actions/busy.actions';
+import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
@@ -40,81 +43,71 @@ import {
   QUERY_PARAM_SORT_BY,
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/library/library.constants';
+import { updateQueryParam } from '@app/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSort, SortDirection } from '@angular/material/sort';
-import { loadSeriesList } from '@app/collections/actions/series.actions';
-import { getUserPreference } from '@app/user';
-import { selectSeriesList } from '@app/collections/selectors/series.selectors';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MatPaginator } from '@angular/material/paginator';
-import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { isAdmin } from '@app/user/user.functions';
+import { selectUser } from '@app/user/selectors/user.selectors';
+import { getUserPreference } from '@app/user';
 
 @Component({
-  selector: 'cx-series-list-page',
-  templateUrl: './series-list-page.component.html',
-  styleUrls: ['./series-list-page.component.scss']
+  selector: 'cx-publisher-list-page',
+  templateUrl: './publisher-list-page.component.html',
+  styleUrls: ['./publisher-list-page.component.scss']
 })
-export class SeriesListPageComponent
+export class PublisherListPageComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  dataSource = new MatTableDataSource<Series>([]);
-  seriesListSubscription: Subscription;
-
+  readonly displayedColumns = ['name', 'series-count'];
   readonly pageOptions = PAGE_SIZE_OPTIONS;
-  pageSize = PAGE_SIZE_DEFAULT;
-  pageIndex = 0;
 
-  displayedColumns = [
-    'publisher',
-    'name',
-    'volume',
-    'total-issues',
-    'in-library',
-    'actions'
-  ];
-
+  langChangeSubscription: Subscription;
   queryParamsSubscription: Subscription;
+  publisherListSubscription: Subscription;
+  publisherStateSubscription: Subscription;
+  userSubscription: Subscription;
+
+  dataSource = new MatTableDataSource<Publisher>([]);
+  pageIndex = 0;
+  pageSize = PAGE_SIZE_DEFAULT;
   sortBy = 'name';
   sortDirection: SortDirection = 'asc';
-  langChangeSubscription: Subscription;
-  userSubscription: Subscription;
-  user: User;
-  isAdmin = false;
-
-  selectedSeries: Series;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private confirmationSeries: ConfirmationService,
-    private titleService: TitleService,
-    private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private titleService: TitleService,
+    private translateService: TranslateService
   ) {
+    this.logger.trace('Subscribing to language change updates');
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
+      () => this.loadTranslations()
+    );
     this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
       params => {
         this.sortBy = params[QUERY_PARAM_SORT_BY] || 'name';
         this.sortDirection = params[QUERY_PARAM_SORT_DIRECTION] || 'asc';
-        if (!!params[QUERY_PARAM_PAGE_INDEX]) {
-          this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
-        }
       }
     );
-    this.logger.trace('Subscribing to language change updates');
-    this.langChangeSubscription = this.translateService.onLangChange.subscribe(
-      () => this.loadTranslations()
-    );
+    this.logger.trace('Subscribing to publisher list updates');
+    this.publisherListSubscription = this.store
+      .select(selectPublisherList)
+      .subscribe(publishers => (this.dataSource.data = publishers));
+    this.logger.trace('Subscribing to publisher state updates');
+    this.publisherStateSubscription = this.store
+      .select(selectPublisherState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.busy }))
+      );
     this.logger.trace('Subscribing to user updates');
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.user = user;
-      this.logger.trace('Loading user page size preference');
       this.pageSize = parseInt(
         getUserPreference(
           user.preferences,
@@ -123,47 +116,42 @@ export class SeriesListPageComponent
         ),
         10
       );
-      this.isAdmin = isAdmin(user);
     });
-    this.seriesListSubscription = this.store
-      .select(selectSeriesList)
-      .subscribe(series => {
-        this.dataSource.data = series;
-      });
   }
 
   ngOnInit(): void {
-    this.logger.trace('Loading series list');
-    this.store.dispatch(loadSeriesList());
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamsSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from series list updates');
-    this.seriesListSubscription.unsubscribe();
+    this.loadTranslations();
+    this.logger.trace('Loading all publishers');
+    this.store.dispatch(loadPublishers());
   }
 
   ngAfterViewInit(): void {
+    this.logger.trace('Setting up sorting');
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'publisher':
-          return data.publisher;
         case 'name':
           return data.name;
-        case 'volume':
-          return data.volume;
-        case 'total-issues':
-          return data.totalIssues;
-        case 'in-library':
-          return data.inLibrary;
+        case 'series-count':
+          return data.seriesCount;
       }
+      return '';
     };
+    this.logger.trace('Setting up pagination');
     this.dataSource.paginator = this.paginator;
-    this.loadTranslations();
+  }
+
+  ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from language changes');
+    this.langChangeSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from query parameter updates');
+    this.queryParamsSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from publisher list updates');
+    this.publisherListSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from publisher state updates');
+    this.publisherStateSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from user updates');
+    this.userSubscription.unsubscribe();
   }
 
   onPageChange(
@@ -206,10 +194,9 @@ export class SeriesListPageComponent
 
   private loadTranslations(): void {
     this.titleService.setTitle(
-      this.translateService.instant('collections.series.list-page.tab-title')
-    );
-    this.paginator._intl.itemsPerPageLabel = this.translateService.instant(
-      'collections.series.label.pagination-items-per-page'
+      this.translateService.instant(
+        'collections.publishers.list-publishers.tab-title'
+      )
     );
   }
 }

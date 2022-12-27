@@ -23,8 +23,14 @@ import { ReaderGuard } from '@app/user';
 import { CollectionDetailComponent } from '@app/collections/pages/collection-detail/collection-detail.component';
 import { SeriesListPageComponent } from '@app/collections/pages/series-list-page/series-list-page.component';
 import { SeriesDetailPageComponent } from '@app/collections/pages/series-detail-page/series-detail-page.component';
+import { PublisherListPageComponent } from '@app/collections/pages/publisher-list-page/publisher-list-page.component';
 
 const routes: Routes = [
+  {
+    path: 'library/collections/publishers',
+    component: PublisherListPageComponent,
+    canActivate: [ReaderGuard]
+  },
   {
     path: 'library/collections/series',
     component: SeriesListPageComponent,

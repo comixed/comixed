@@ -33,6 +33,8 @@
   class="cx-width-100"
   [dataSource]="dataSource"
   [matSortActive]="sortBy"
+  [matSortDirection]="sortDirection"
+  (matSortChange)="onSortChange($event.active, $event.direction)"
 >
   <ng-container matColumnDef="publisher">
     <mat-header-cell mat-sort-header *matHeaderCellDef>

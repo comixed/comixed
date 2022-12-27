@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-package org.comixedproject.repositories.library;
+package org.comixedproject.repositories.collections;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
@@ -26,7 +26,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
 import javax.transaction.Transactional;
-import org.comixedproject.model.metadata.Issue;
+import org.comixedproject.model.collections.Issue;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;

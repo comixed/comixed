@@ -20,11 +20,10 @@ package org.comixedproject.service.collections;
 
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.library.Series;
-import org.comixedproject.model.metadata.Issue;
+import org.comixedproject.model.collections.Issue;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.library.CollectionException;
-import org.comixedproject.service.library.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
