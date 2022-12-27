@@ -225,12 +225,12 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
 
   onPageIndexChanged(pageIndex: number): void {
     this.logger.debug('Page index changed:', pageIndex);
-    updateQueryParam(
-      this.activatedRoute,
-      this.router,
-      QUERY_PARAM_PAGE_INDEX,
-      `${pageIndex}`
-    );
+    updateQueryParam(this.activatedRoute, this.router, [
+      {
+        name: QUERY_PARAM_PAGE_INDEX,
+        value: `${pageIndex}`
+      }
+    ]);
   }
 
   onSelectAllComics(selected: boolean): void {

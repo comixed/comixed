@@ -146,12 +146,12 @@ export class SeriesListPageComponent
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
-      updateQueryParam(
-        this.activatedRoute,
-        this.router,
-        QUERY_PARAM_SORT_BY,
-        sortHeaderId
-      );
+      updateQueryParam(this.activatedRoute, this.router, [
+        {
+          name: QUERY_PARAM_SORT_BY,
+          value: sortHeaderId
+        }
+      ]);
       switch (sortHeaderId) {
         case 'publisher':
           return data.publisher;
@@ -185,12 +185,12 @@ export class SeriesListPageComponent
     }
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(
-        this.activatedRoute,
-        this.router,
-        QUERY_PARAM_PAGE_INDEX,
-        `${pageIndex}`
-      );
+      updateQueryParam(this.activatedRoute, this.router, [
+        {
+          name: QUERY_PARAM_PAGE_INDEX,
+          value: `${pageIndex}`
+        }
+      ]);
     }
   }
 
