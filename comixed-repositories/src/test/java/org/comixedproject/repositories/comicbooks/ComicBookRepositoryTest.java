@@ -72,6 +72,7 @@ public class ComicBookRepositoryTest {
   private static final String TEST_IMPRINT = "This is an imprint";
   private static final Long TEST_USER_ID = 1000L;
   private static final long TEST_INVALID_ID = 9797L;
+  private static final String TEST_PUBLISHER = "Marvel";
   private static final String TEST_SERIES = "Steve Rogers: Captain America";
   private static final String TEST_VOLUME = "2017";
   private static final String TEST_ISSUE_WITH_NO_NEXT = "514";
@@ -553,6 +554,15 @@ public class ComicBookRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testGetAllSeriesAndVolumesForPublisher() {
+    final List<Series> result = repository.getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.stream().allMatch(series -> series.getPublisher().equals(TEST_PUBLISHER)));
   }
 
   @Test

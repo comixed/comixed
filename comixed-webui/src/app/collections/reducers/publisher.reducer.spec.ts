@@ -18,18 +18,29 @@
 
 import { initialState, PublisherState, reducer } from './publisher.reducer';
 import {
+  loadPublisherDetail,
+  loadPublisherDetailFailed,
   loadPublishers,
   loadPublishersFailed,
+  publisherDetailLoaded,
   publishersLoaded
 } from '@app/collections/actions/publisher.actions';
 import {
   PUBLISHER_1,
   PUBLISHER_2,
-  PUBLISHER_3
+  PUBLISHER_3,
+  SERIES_1,
+  SERIES_2,
+  SERIES_3,
+  SERIES_4,
+  SERIES_5
 } from '@app/collections/collections.fixtures';
 
 describe('Publisher Reducer', () => {
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
+  const PUBLISHER = PUBLISHER_3;
+  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
+
   let state: PublisherState;
 
   beforeEach(() => {
@@ -47,6 +58,10 @@ describe('Publisher Reducer', () => {
 
     it('has no publishers', () => {
       expect(state.publishers).toEqual([]);
+    });
+
+    it('has no detail', () => {
+      expect(state.detail).toEqual([]);
     });
   });
 
@@ -87,6 +102,50 @@ describe('Publisher Reducer', () => {
   describe('failure to get all publishers', () => {
     beforeEach(() => {
       state = reducer({ ...initialState, busy: true }, loadPublishersFailed());
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+  });
+
+  describe('loading a single publisher', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: false, detail: DETAIL },
+        loadPublisherDetail({ name: PUBLISHER.name })
+      );
+    });
+
+    it('sets the busy flag', () => {
+      expect(state.busy).toBeTrue();
+    });
+
+    it('clears the detail', () => {
+      expect(state.detail).toEqual([]);
+    });
+  });
+
+  describe('receiving a single publisher', () => {
+    beforeEach(() => {
+      state = reducer(
+        { ...state, busy: true, detail: [] },
+        publisherDetailLoaded({ detail: DETAIL })
+      );
+    });
+
+    it('clears the busy flag', () => {
+      expect(state.busy).toBeFalse();
+    });
+
+    it('sets the publisher detail', () => {
+      expect(state.detail).toEqual(DETAIL);
+    });
+  });
+
+  describe('failure to receive a single publisher', () => {
+    beforeEach(() => {
+      state = reducer({ ...state, busy: true }, loadPublisherDetailFailed());
     });
 
     it('clears the busy flag', () => {

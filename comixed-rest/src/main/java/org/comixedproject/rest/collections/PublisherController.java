@@ -22,10 +22,13 @@ import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -50,5 +53,19 @@ public class PublisherController {
   public List<Publisher> getAllPublishers() {
     log.info("Getting all publishers");
     return this.comicBookService.getAllPublishersWithSeries();
+  }
+
+  /**
+   * Returns the details for a single publisher.
+   *
+   * @param name the publisher name
+   * @return the details
+   */
+  @PostMapping(value = "/api/collections/publishers/{name}")
+  @PreAuthorize("hasRole('READER')")
+  @Timed(value = "comixed.collections.publishers.get-one")
+  public List<Series> getPublisherDetail(@PathVariable("name") final String name) {
+    log.info("Getting publisher detail: name={}", name);
+    return this.comicBookService.getPublisherDetail(name);
   }
 }

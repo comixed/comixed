@@ -21,7 +21,12 @@ import { PublisherService } from './publisher.service';
 import {
   PUBLISHER_1,
   PUBLISHER_2,
-  PUBLISHER_3
+  PUBLISHER_3,
+  SERIES_1,
+  SERIES_2,
+  SERIES_3,
+  SERIES_4,
+  SERIES_5
 } from '@app/collections/collections.fixtures';
 import {
   HttpClientTestingModule,
@@ -29,10 +34,15 @@ import {
 } from '@angular/common/http/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { interpolate } from '@app/core';
-import { LOAD_PUBLISHERS_URL } from '@app/collections/collections.constants';
+import {
+  LOAD_PUBLISHER_DETAIL_URL,
+  LOAD_PUBLISHERS_URL
+} from '@app/collections/collections.constants';
 
 describe('PublisherService', () => {
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
+  const PUBLISHER = PUBLISHER_3;
+  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
 
   let service: PublisherService;
   let httpMock: HttpTestingController;
@@ -59,6 +69,21 @@ describe('PublisherService', () => {
 
     const req = httpMock.expectOne(interpolate(LOAD_PUBLISHERS_URL));
     expect(req.request.method).toEqual('GET');
+    req.flush(serviceResponse);
+  });
+
+  it('can get details for a single publisher', () => {
+    const serviceResponse = DETAIL;
+
+    service
+      .loadPublisherDetail({ name: PUBLISHER.name })
+      .subscribe(response => expect(response).toEqual(serviceResponse));
+
+    const req = httpMock.expectOne(
+      interpolate(LOAD_PUBLISHER_DETAIL_URL, { name: PUBLISHER.name })
+    );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({});
     req.flush(serviceResponse);
   });
 });

@@ -47,6 +47,7 @@ import {
   reducer as publisherReducer
 } from '@app/collections/reducers/publisher.reducer';
 import { PublisherEffects } from '@app/collections/effects/publisher.effects';
+import { PublisherDetailPageComponent } from './pages/publisher-detail-page/publisher-detail-page.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { PublisherEffects } from '@app/collections/effects/publisher.effects';
     CollectionDetailComponent,
     SeriesListPageComponent,
     SeriesDetailPageComponent,
-    PublisherListPageComponent
+    PublisherListPageComponent,
+    PublisherDetailPageComponent
   ],
   imports: [
     CommonModule,

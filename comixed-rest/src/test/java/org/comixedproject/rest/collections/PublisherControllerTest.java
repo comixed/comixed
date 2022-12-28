@@ -23,6 +23,7 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
 import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,9 +34,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PublisherControllerTest {
+  private static final String TEST_PUBLISHER_NAME = "The publisher name";
+
   @InjectMocks private PublisherController controller;
   @Mock private ComicBookService comicBookService;
   @Mock private List<Publisher> publisherList;
+  @Mock private List<Series> seriesList;
 
   @Test
   public void testGetAllPublishers() {
@@ -47,5 +51,17 @@ public class PublisherControllerTest {
     assertSame(publisherList, result);
 
     Mockito.verify(comicBookService, Mockito.times(1)).getAllPublishersWithSeries();
+  }
+
+  @Test
+  public void testGetPublisherDetail() {
+    Mockito.when(comicBookService.getPublisherDetail(Mockito.anyString())).thenReturn(seriesList);
+
+    final List<Series> result = controller.getPublisherDetail(TEST_PUBLISHER_NAME);
+
+    assertNotNull(result);
+    assertSame(seriesList, result);
+
+    Mockito.verify(comicBookService, Mockito.times(1)).getPublisherDetail(TEST_PUBLISHER_NAME);
   }
 }

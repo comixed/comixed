@@ -23,12 +23,20 @@ import { PublisherEffects } from './publisher.effects';
 import {
   PUBLISHER_1,
   PUBLISHER_2,
-  PUBLISHER_3
+  PUBLISHER_3,
+  SERIES_1,
+  SERIES_2,
+  SERIES_3,
+  SERIES_4,
+  SERIES_5
 } from '@app/collections/collections.fixtures';
 import { PublisherService } from '@app/collections/services/publisher.service';
 import {
+  loadPublisherDetail,
+  loadPublisherDetailFailed,
   loadPublishers,
   loadPublishersFailed,
+  publisherDetailLoaded,
   publishersLoaded
 } from '@app/collections/actions/publisher.actions';
 import { hot } from 'jasmine-marbles';
@@ -40,6 +48,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('PublisherEffects', () => {
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
+  const PUBLISHER = PUBLISHER_3;
+  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
 
   let actions$: Observable<any>;
   let effects: PublisherEffects;
@@ -61,6 +71,9 @@ describe('PublisherEffects', () => {
           useValue: {
             loadPublishers: jasmine.createSpy(
               'PublisherService.loadPublishers()'
+            ),
+            loadPublisherDetail: jasmine.createSpy(
+              'PublisherService.loadPublisherDetail()'
             )
           }
         },
@@ -117,6 +130,51 @@ describe('PublisherEffects', () => {
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadPublishers$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('loading a single publisher', () => {
+    it('fires an action on success', () => {
+      const serviceResponse = DETAIL;
+      const action = loadPublisherDetail({ name: PUBLISHER.name });
+      const outcome = publisherDetailLoaded({ detail: DETAIL });
+
+      actions$ = hot('-a', { a: action });
+      publisherService.loadPublisherDetail
+        .withArgs({ name: PUBLISHER.name })
+        .and.returnValue(of(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadPublisherDetail$).toBeObservable(expected);
+    });
+
+    it('fires an action on service failure', () => {
+      const serviceResponse = new HttpErrorResponse({});
+      const action = loadPublisherDetail({ name: PUBLISHER.name });
+      const outcome = loadPublisherDetailFailed();
+
+      actions$ = hot('-a', { a: action });
+      publisherService.loadPublisherDetail
+        .withArgs({ name: PUBLISHER.name })
+        .and.returnValue(throwError(serviceResponse));
+
+      const expected = hot('-b', { b: outcome });
+      expect(effects.loadPublisherDetail$).toBeObservable(expected);
+      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+    });
+
+    it('fires an action on general failure', () => {
+      const action = loadPublisherDetail({ name: PUBLISHER.name });
+      const outcome = loadPublisherDetailFailed();
+
+      actions$ = hot('-a', { a: action });
+      publisherService.loadPublisherDetail
+        .withArgs({ name: PUBLISHER.name })
+        .and.throwError('expected');
+
+      const expected = hot('-(b|)', { b: outcome });
+      expect(effects.loadPublisherDetail$).toBeObservable(expected);
       expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
     });
   });

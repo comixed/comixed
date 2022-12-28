@@ -23,7 +23,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesService;
-import org.comixedproject.service.library.CollectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,7 +62,6 @@ public class SeriesController {
    * @param name the series name
    * @param volume the volume
    * @return the issues
-   * @throws CollectionException if an error occurs
    */
   @PostMapping(
       value = "/api/collections/publishers/{publisher}/series/{name}/volumes/{volume}",
@@ -73,8 +71,7 @@ public class SeriesController {
   public List<Issue> loadSeriesDetail(
       @PathVariable("publisher") final String publisher,
       @PathVariable("name") final String name,
-      @PathVariable("volume") final String volume)
-      throws CollectionException {
+      @PathVariable("volume") final String volume) {
     log.info("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);
     return this.seriesService.loadSeriesDetail(publisher, name, volume);
   }

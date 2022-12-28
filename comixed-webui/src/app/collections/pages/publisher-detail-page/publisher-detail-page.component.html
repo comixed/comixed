@@ -1,7 +1,7 @@
 <h2>
   {{
-    "collections.publishers.list-publishers.page-title"
-      | translate: { count: dataSource.data?.length }
+    "collections.publisher-detail.page-title"
+      | translate: { name: name, count: this.dataSource.data.length }
   }}
 </h2>
 
@@ -12,7 +12,7 @@
       #filterInput
       id="volume-search-text-input"
       [placeholder]="
-        'collections.publishers.placeholder.filter-publishers' | translate
+        'collections.publisher-detail.placeholder.filter-series' | translate
       "
       (keyup)="dataSource.filter = filterInput.value"
     />
@@ -31,39 +31,65 @@
 </mat-toolbar>
 
 <mat-table
-  matSort
-  class="cx-width-100"
   [dataSource]="dataSource"
+  matSort
   [matSortActive]="sortBy"
   [matSortDirection]="sortDirection"
   (matSortChange)="onSortChange($event.active, $event.direction)"
 >
-  <ng-container matColumnDef="name">
+  <ng-container matColumnDef="series">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "collections.publishers.label.name" | translate }}
+      {{ "collections.publisher-detail.label.series-name" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap">{{ entry.name }}</span>
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="issue-count">
+  <ng-container matColumnDef="volume">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "collections.publishers.label.in-library" | translate }}
+      {{ "collections.publisher-detail.label.volume" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.issueCount }}</span>
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.volume }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="total-issues">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.publisher-detail.label.total-issues" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">{{ entry.totalIssues }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="in-library">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "collections.publisher-detail.label.in-library" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap">
+        {{ entry.inLibrary }}
+      </span>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="['/library/collections/publishers', row.name]"
+    [routerLink]="[
+      '/library/collections/publishers',
+      this.name,
+      'series',
+      row.name,
+      'volumes',
+      row.volume
+    ]"
   ></mat-row>
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" colspan="4">
-      {{ "collections.publishers.text.no-publishers-found" | translate }}
+      {{ "collections.publisher-detail.text.no-detail-found" | translate }}
     </td>
   </tr>
 </mat-table>

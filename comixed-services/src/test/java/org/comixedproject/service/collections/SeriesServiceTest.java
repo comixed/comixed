@@ -24,12 +24,10 @@ import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertSame;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.library.CollectionException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,21 +78,8 @@ public class SeriesServiceTest {
         .getCountForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
   }
 
-  @Test(expected = CollectionException.class)
-  public void testLoadSeriesDetailNotFound() throws CollectionException {
-    Mockito.when(issueService.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(Collections.emptyList());
-
-    try {
-      service.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-    } finally {
-      Mockito.verify(issueService, Mockito.times(1))
-          .getAll(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-    }
-  }
-
   @Test
-  public void testLoadSeriesDetail() throws CollectionException {
+  public void testLoadSeriesDetail() {
     Mockito.when(issueService.getAll(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(issueList);
 
