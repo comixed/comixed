@@ -21,7 +21,10 @@ import { HttpClient } from '@angular/common/http';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Observable } from 'rxjs';
 import { interpolate } from '@app/core';
-import { LOAD_PUBLISHERS_URL } from '@app/collections/collections.constants';
+import {
+  LOAD_PUBLISHER_DETAIL_URL,
+  LOAD_PUBLISHERS_URL
+} from '@app/collections/collections.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +35,13 @@ export class PublisherService {
   loadPublishers(): Observable<any> {
     this.logger.debug('Loading all publishers');
     return this.http.get(interpolate(LOAD_PUBLISHERS_URL));
+  }
+
+  loadPublisherDetail(args: { name: string }): Observable<any> {
+    this.logger.debug('Loading one publisher:', args);
+    return this.http.post(
+      interpolate(LOAD_PUBLISHER_DETAIL_URL, { name: args.name }),
+      {}
+    );
   }
 }

@@ -3,11 +3,17 @@
     "publishers": {
       "label": {
         "name": "Name",
-        "in-library": "# Of Series"
+        "in-library": "# Of Comics",
+        "series-name": "Series Name",
+        "total-issues": "# Of Issues",
+        "volume": "Volume"
       },
       "list-publishers": {
         "page-title": "Publishers ({count} Total)",
         "tab-title": "Publishers"
+      },
+      "load-publisher-detail": {
+        "effect-failure": "Failed to load details for {name}."
       },
       "load-publishers": {
         "effect-failure": "Failed to load all publishers."
@@ -17,6 +23,22 @@
       },
       "text": {
         "no-publishers-found": "No publishers were found."
+      }
+    },
+    "publisher-detail": {
+      "label": {
+        "in-library": "# In Library",
+        "series-name": "Series Name",
+        "total-issues": "# Of Issues",
+        "volume": "Volume"
+      },
+      "page-title": "Publisher: {name} ({count, plural, =1{One Series} other{# Series}})",
+      "placeholder": {
+        "filter-series": "Enter text to filter the series displayed."
+      },
+      "tab-title": "Publisher: {name}",
+      "text": {
+        "no-detail-found": "No series were found."
       }
     },
     "series": {
@@ -58,7 +80,7 @@
       "tab-title": "Series Detail: {publisher} {name} v{volume}",
       "text": {
         "found-in-library": "This issue {exists, select, true{is} other{is not}} found in the library.",
-        "no-detail-found": "No series detail found."
+        "no-detail-found": "No series detail found. Click here to load series details."
       }
     }
   },

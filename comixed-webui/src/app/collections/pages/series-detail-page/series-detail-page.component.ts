@@ -44,7 +44,7 @@ import {
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { updateQueryParam } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
 
@@ -207,7 +207,7 @@ export class SeriesDetailPageComponent
     }
   }
 
-  onSortChange(active: string, direction: 'asc' | 'desc' | ''): void {
+  onSortChange(active: string, direction: SortDirection): void {
     updateQueryParam(this.activatedRoute, this.router, [
       {
         name: QUERY_PARAM_SORT_BY,

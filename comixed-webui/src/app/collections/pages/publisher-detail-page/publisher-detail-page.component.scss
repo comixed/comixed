@@ -1,0 +1,22 @@
+@import 'styles';
+
+.mat-column-series {
+}
+
+.mat-column-volume {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-total-issues {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-column-in-library {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

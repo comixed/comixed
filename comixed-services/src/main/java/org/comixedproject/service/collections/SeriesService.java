@@ -23,7 +23,6 @@ import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.service.comicbooks.ComicBookService;
-import org.comixedproject.service.library.CollectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,13 +62,10 @@ public class SeriesService {
    * @param name the series name
    * @param volume the volume
    * @return the detail
-   * @throws CollectionException if the series is invalid
    */
   public List<Issue> loadSeriesDetail(
-      final String publisher, final String name, final String volume) throws CollectionException {
+      final String publisher, final String name, final String volume) {
     log.debug("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);
-    final List<Issue> detail = this.issueService.getAll(publisher, name, volume);
-    if (detail.isEmpty()) throw new CollectionException("No such series");
-    return detail;
+    return this.issueService.getAll(publisher, name, volume);
   }
 }

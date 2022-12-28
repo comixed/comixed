@@ -30,3 +30,8 @@ export const selectPublisherList = createSelector(
   selectPublisherState,
   state => state.publishers
 );
+
+export const selectPublisherDetail = createSelector(
+  selectPublisherState,
+  state => state.detail
+);

@@ -26,7 +26,6 @@ import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesService;
-import org.comixedproject.service.library.CollectionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -57,23 +56,8 @@ public class SeriesControllerTest {
     Mockito.verify(seriesService, Mockito.times(1)).getSeriesList();
   }
 
-  @Test(expected = CollectionException.class)
-  public void testLoadSeriesDetailServiceException() throws CollectionException {
-    Mockito.when(
-            seriesService.loadSeriesDetail(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenThrow(CollectionException.class);
-
-    try {
-      controller.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-    } finally {
-      Mockito.verify(seriesService, Mockito.times(1))
-          .loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-    }
-  }
-
   @Test
-  public void testLoadSeriesDetail() throws CollectionException {
+  public void testLoadSeriesDetail() {
     Mockito.when(
             seriesService.loadSeriesDetail(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
