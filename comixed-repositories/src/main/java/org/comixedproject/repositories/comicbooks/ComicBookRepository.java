@@ -341,6 +341,16 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<Series> getAllSeriesAndVolumes();
 
   /**
+   * Returns the list of all series along with thei count of comics for a single publisher.
+   *
+   * @param name the publisher name
+   * @return the series list
+   */
+  @Query(
+      "SELECT new org.comixedproject.model.collections.Series(c.publisher, c.series, c.volume, COUNT(c)) FROM ComicBook c WHERE c.publisher = :name AND LENGTH(c.series) > 0 and c.volume IS NOT NULL GROUP BY c.publisher, c.series, c.volume")
+  List<Series> getAllSeriesAndVolumesForPublisher(@Param("name") String name);
+
+  /**
    * Returns all comics with a given series.
    *
    * @param name the series's name

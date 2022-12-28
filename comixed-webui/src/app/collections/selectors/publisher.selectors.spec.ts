@@ -21,24 +21,32 @@ import {
   PublisherState
 } from '../reducers/publisher.reducer';
 import {
+  selectPublisherDetail,
   selectPublisherList,
   selectPublisherState
 } from './publisher.selectors';
 import {
   PUBLISHER_1,
   PUBLISHER_2,
-  PUBLISHER_3
+  PUBLISHER_3,
+  SERIES_1,
+  SERIES_2,
+  SERIES_3,
+  SERIES_4,
+  SERIES_5
 } from '@app/collections/collections.fixtures';
 
 describe('Publisher Selectors', () => {
   const PUBLISHERS = [PUBLISHER_1, PUBLISHER_2, PUBLISHER_3];
+  const DETAIL = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
 
   let state: PublisherState;
 
   beforeEach(() => {
     state = {
       busy: Math.random() > 0.5,
-      publishers: PUBLISHERS
+      publishers: PUBLISHERS,
+      detail: DETAIL
     };
   });
 
@@ -56,5 +64,13 @@ describe('Publisher Selectors', () => {
         [PUBLISHER_FEATURE_KEY]: state
       })
     ).toEqual(state.publishers);
+  });
+
+  it('should select the publisher detail', () => {
+    expect(
+      selectPublisherDetail({
+        [PUBLISHER_FEATURE_KEY]: state
+      })
+    ).toEqual(state.detail);
   });
 });

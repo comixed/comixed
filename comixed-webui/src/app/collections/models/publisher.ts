@@ -18,5 +18,5 @@
 
 export interface Publisher {
   name: string;
-  seriesCount: number;
+  issueCount: number;
 }

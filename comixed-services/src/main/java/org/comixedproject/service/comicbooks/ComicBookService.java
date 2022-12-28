@@ -1082,4 +1082,9 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Getting all publishers with their series counts");
     return this.comicBookRepository.getAllPublishersWithSeriesCount();
   }
+
+  public List<Series> getPublisherDetail(final String name) {
+    log.debug("Getting detail for one publisher: name={}", name);
+    return this.comicBookRepository.getAllSeriesAndVolumesForPublisher(name);
+  }
 }

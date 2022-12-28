@@ -39,6 +39,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.collections.Publisher;
+import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
@@ -119,6 +120,7 @@ public class ComicBookServiceTest {
   @Mock private List<RemoteLibrarySegmentState> librarySegmentList;
   @Mock private List<PublisherAndYearSegment> byPublisherAndYearList;
   @Mock private List<Publisher> publisherWithSeriesCountList;
+  @Mock private List<Series> publisherDetail;
 
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
   @Captor private ArgumentCaptor<PageRequest> pageRequestCaptor;
@@ -1712,5 +1714,19 @@ public class ComicBookServiceTest {
     assertSame(publisherWithSeriesCountList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).getAllPublishersWithSeriesCount();
+  }
+
+  @Test
+  public void testGetPublisherDetail() {
+    Mockito.when(comicBookRepository.getAllSeriesAndVolumesForPublisher(Mockito.anyString()))
+        .thenReturn(publisherDetail);
+
+    final List<Series> result = service.getPublisherDetail(TEST_PUBLISHER);
+
+    assertNotNull(result);
+    assertSame(publisherDetail, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1))
+        .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER);
   }
 }

@@ -20,8 +20,11 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
+  loadPublisherDetail,
+  loadPublisherDetailFailed,
   loadPublishers,
   loadPublishersFailed,
+  publisherDetailLoaded,
   publishersLoaded
 } from '../actions/publisher.actions';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -30,6 +33,7 @@ import { AlertService } from '@app/core/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Publisher } from '@app/collections/models/publisher';
 import { of } from 'rxjs';
+import { Series } from '@app/collections/models/series';
 
 @Injectable()
 export class PublisherEffects {
@@ -60,6 +64,38 @@ export class PublisherEffects {
           this.translateService.instant('app.general-effect-failure')
         );
         return of(loadPublishersFailed());
+      })
+    );
+  });
+
+  loadPublisherDetail$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadPublisherDetail),
+      tap(action => this.logger.debug('Loading publisher detail:', action)),
+      switchMap(action =>
+        this.publisherService.loadPublisherDetail({ name: action.name }).pipe(
+          tap(response => this.logger.debug('Response received:', response)),
+          map((response: Series[]) =>
+            publisherDetailLoaded({ detail: response })
+          ),
+          catchError(error => {
+            this.logger.error('Service failure:', error);
+            this.alertService.error(
+              this.translateService.instant(
+                'collections.publishers.load-publisher-detail.effect-failure',
+                { name: action.name }
+              )
+            );
+            return of(loadPublisherDetailFailed());
+          })
+        )
+      ),
+      catchError(error => {
+        this.logger.error('General failure:', error);
+        this.alertService.error(
+          this.translateService.instant('app.general-effect-failure')
+        );
+        return of(loadPublisherDetailFailed());
       })
     );
   });

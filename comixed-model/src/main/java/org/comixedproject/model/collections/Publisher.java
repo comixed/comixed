@@ -36,21 +36,21 @@ public class Publisher {
   @Getter
   private String name;
 
-  @JsonProperty("seriesCount")
+  @JsonProperty("issueCount")
   @NonNull
   @Getter
-  private Long seriesCount;
+  private Long issueCount;
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final Publisher publisher = (Publisher) o;
-    return name.equals(publisher.name) && seriesCount.equals(publisher.seriesCount);
+    return name.equals(publisher.name) && issueCount.equals(publisher.issueCount);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, seriesCount);
+    return Objects.hash(name, issueCount);
   }
 }

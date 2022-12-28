@@ -168,10 +168,10 @@ describe('PublisherListPageComponent', () => {
       );
     });
 
-    it('can sort by series count', () => {
+    it('can sort by issue count', () => {
       expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'series-count')
-      ).toEqual(ENTRY.seriesCount);
+        component.dataSource.sortingDataAccessor(ENTRY, 'issue-count')
+      ).toEqual(ENTRY.issueCount);
     });
 
     it('ignores unknown sorts', () => {

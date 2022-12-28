@@ -41,7 +41,16 @@
       {{ "collections.series.label.publisher" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap">{{ entry.publisher }}</span>
+      <span class="cx-width-100 cx-text-nowrap">
+        <a
+          [routerLink]="[
+            '/library/collections/publishers',
+            entry.publisher.name
+          ]"
+        >
+          {{ entry.publisher }}
+        </a>
+      </span>
     </mat-cell>
   </ng-container>
 
