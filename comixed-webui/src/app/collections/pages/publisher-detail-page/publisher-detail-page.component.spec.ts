@@ -21,11 +21,7 @@ import { PublisherDetailPageComponent } from './publisher-detail-page.component'
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -45,6 +41,7 @@ import {
   QUERY_PARAM_SORT_BY,
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/library/library.constants';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('PublisherDetailPageComponent', () => {
   const initialState = { [PUBLISHER_FEATURE_KEY]: initialPublisherState };
@@ -54,7 +51,7 @@ describe('PublisherDetailPageComponent', () => {
   let component: PublisherDetailPageComponent;
   let fixture: ComponentFixture<PublisherDetailPageComponent>;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
   let titleService: TitleService;
   let translateService: TranslateService;
   let store: MockStore<any>;
@@ -86,8 +83,8 @@ describe('PublisherDetailPageComponent', () => {
     fixture = TestBed.createComponent(PublisherDetailPageComponent);
     component = fixture.componentInstance;
     activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
+    urlParameterService = TestBed.inject(UrlParameterService);
+    spyOn(urlParameterService, 'updateQueryParam');
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
@@ -242,7 +239,7 @@ describe('PublisherDetailPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });
@@ -253,7 +250,7 @@ describe('PublisherDetailPageComponent', () => {
     });
 
     it('updates the url', () => {
-      expect(router.navigateByUrl).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 });

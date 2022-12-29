@@ -44,11 +44,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { MatMenuModule } from '@angular/material/menu';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
   COMIC_BOOK_LIST_FEATURE_KEY,
@@ -95,6 +91,7 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -133,7 +130,7 @@ describe('LibraryPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
 
   beforeEach(
     waitForAsync(() => {
@@ -190,8 +187,8 @@ describe('LibraryPageComponent', () => {
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
       activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       fixture.detectChanges();
     })
   );
@@ -536,7 +533,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('redirects the browser', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -546,7 +543,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('redirects the browser', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });
@@ -557,7 +554,7 @@ describe('LibraryPageComponent', () => {
     });
 
     it('redirects the browser', () => {
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 

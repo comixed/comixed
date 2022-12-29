@@ -31,7 +31,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '@app/user/models/user';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import { updateQueryParam } from '@app/core';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
@@ -50,6 +49,7 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { isAdmin } from '@app/user/user.functions';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-series-list-page',
@@ -95,7 +95,8 @@ export class SeriesListPageComponent
     private titleService: TitleService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private urlParameterService: UrlParameterService
   ) {
     this.logger.trace('Subscribing to query parameter updates');
     this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
@@ -182,7 +183,7 @@ export class SeriesListPageComponent
     }
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_INDEX,
           value: `${pageIndex}`
@@ -192,7 +193,7 @@ export class SeriesListPageComponent
   }
 
   onSortChange(active: string, direction: 'asc' | 'desc' | ''): void {
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_SORT_BY,
         value: active

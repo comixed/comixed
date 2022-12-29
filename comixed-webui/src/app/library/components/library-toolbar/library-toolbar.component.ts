@@ -56,7 +56,7 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { updateQueryParam } from '@app/core';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -109,7 +109,8 @@ export class LibraryToolbarComponent
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private urlParameterService: UrlParameterService
   ) {
     this.langChangSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -210,7 +211,7 @@ export class LibraryToolbarComponent
     );
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_INDEX,
           value: `${pageIndex}`
@@ -221,7 +222,7 @@ export class LibraryToolbarComponent
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.trace('Archive type selected:', archiveType);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_ARCHIVE_TYPE,
         value: archiveType
@@ -287,7 +288,7 @@ export class LibraryToolbarComponent
 
   onSortBy(sortField: string): void {
     this.logger.trace('Changing sort field:', sortField);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_SORT_BY,
         value: sortField
@@ -316,7 +317,7 @@ export class LibraryToolbarComponent
 
   onCoverYearChange(year: number): void {
     this.logger.debug('Setting cover year filter:', year);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_COVER_YEAR,
         value: !!year ? `${year}` : null
@@ -326,7 +327,7 @@ export class LibraryToolbarComponent
 
   onCoverMonthChange(month: number): void {
     this.logger.debug('Setting cover month filter:', month);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_COVER_MONTH,
         value: !!month ? `${month}` : null

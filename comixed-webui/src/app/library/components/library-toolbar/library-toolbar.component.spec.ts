@@ -58,6 +58,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('LibraryToolbarComponent', () => {
   const COMIC_BOOKS = [
@@ -84,6 +85,7 @@ describe('LibraryToolbarComponent', () => {
   let component: LibraryToolbarComponent;
   let fixture: ComponentFixture<LibraryToolbarComponent>;
   let store: MockStore<any>;
+  let urlParameterService: UrlParameterService;
   let router: Router;
   let confirmationService: ConfirmationService;
   let translateService: TranslateService;
@@ -114,6 +116,8 @@ describe('LibraryToolbarComponent', () => {
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       router = TestBed.inject(Router);
       spyOn(router, 'navigate');
       confirmationService = TestBed.inject(ConfirmationService);
@@ -176,7 +180,7 @@ describe('LibraryToolbarComponent', () => {
     });
 
     it('updates the URL', () => {
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 
@@ -188,7 +192,7 @@ describe('LibraryToolbarComponent', () => {
     });
 
     it('updates the URL', () => {
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 
@@ -315,7 +319,7 @@ describe('LibraryToolbarComponent', () => {
       });
 
       it('updates the URL', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -326,7 +330,7 @@ describe('LibraryToolbarComponent', () => {
       });
 
       it('updates the URL', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });
@@ -339,7 +343,7 @@ describe('LibraryToolbarComponent', () => {
       });
 
       it('updates the URL', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -350,7 +354,7 @@ describe('LibraryToolbarComponent', () => {
       });
 
       it('updates the URL', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });

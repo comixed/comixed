@@ -86,6 +86,7 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('CollectionDetailComponent', () => {
   const COMIC_BOOKS = [
@@ -116,6 +117,7 @@ describe('CollectionDetailComponent', () => {
   let router: Router;
   let titleService: TitleService;
   let translateService: TranslateService;
+  let urlParameterService: UrlParameterService;
 
   beforeEach(
     waitForAsync(() => {
@@ -168,8 +170,9 @@ describe('CollectionDetailComponent', () => {
       spyOn(store, 'dispatch');
       activatedRoute = TestBed.inject(ActivatedRoute);
       router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
       spyOn(router, 'navigateByUrl');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
       translateService = TestBed.inject(TranslateService);
@@ -361,7 +364,7 @@ describe('CollectionDetailComponent', () => {
     });
 
     it('redirects the browsers', () => {
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 

@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import {
@@ -29,7 +29,7 @@ import {
   getUserPreference,
   isAdmin
 } from '@app/user/user.functions';
-import { interpolate, updateQueryParam } from '@app/core';
+import { interpolate } from '@app/core';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
   PAGE_SIZE_DEFAULT,
@@ -72,6 +72,7 @@ import { Page } from '@app/comic-books/models/page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -119,7 +120,7 @@ export class ComicBookPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private urlParameterService: UrlParameterService,
     private titleService: TitleService,
     private translateService: TranslateService,
     private comicTitlePipe: ComicTitlePipe,
@@ -241,7 +242,7 @@ export class ComicBookPageComponent
 
   onTabChange(index: number): void {
     this.logger.trace('Changing active tab:', index);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_TAB,
         value: `${index}`
@@ -325,7 +326,7 @@ export class ComicBookPageComponent
   onTogglePageView(): void {
     this.logger.trace('Toggling showing pages as grid');
     this.showPagesAsGrid = !this.showPagesAsGrid;
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_PAGES_AS_GRID,
         value: `${this.showPagesAsGrid}`

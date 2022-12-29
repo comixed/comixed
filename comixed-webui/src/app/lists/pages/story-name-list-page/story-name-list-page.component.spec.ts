@@ -23,11 +23,7 @@ import {
   STORY_LIST_FEATURE_KEY
 } from '@app/lists/reducers/story-list.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
@@ -47,6 +43,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('StoryNameListPageComponent', () => {
   const NAMES = [STORY_1.name, STORY_2.name, STORY_3.name];
@@ -61,7 +58,7 @@ describe('StoryNameListPageComponent', () => {
   let store: MockStore<any>;
   let dispatchSpy: jasmine.Spy<any>;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
   let translateService: TranslateService;
   let titleService: TitleService;
 
@@ -97,8 +94,8 @@ describe('StoryNameListPageComponent', () => {
       store = TestBed.inject(MockStore);
       dispatchSpy = spyOn(store, 'dispatch');
       activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       translateService = TestBed.inject(TranslateService);
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
@@ -162,7 +159,7 @@ describe('StoryNameListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
 
       it('update the user preference', () => {

@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
@@ -42,11 +42,11 @@ import {
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/library/library.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { updateQueryParam } from '@app/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-series-detail-page',
@@ -91,7 +91,7 @@ export class SeriesDetailPageComponent
   constructor(
     private logger: LoggerService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private urlParameterService: UrlParameterService,
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService
@@ -198,7 +198,7 @@ export class SeriesDetailPageComponent
     }
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_INDEX,
           value: `${pageIndex}`
@@ -208,7 +208,7 @@ export class SeriesDetailPageComponent
   }
 
   onSortChange(active: string, direction: SortDirection): void {
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_SORT_BY,
         value: active

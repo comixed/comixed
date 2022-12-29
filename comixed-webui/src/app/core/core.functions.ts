@@ -17,7 +17,6 @@
  */
 
 import * as _ from 'lodash';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 import { API_ROOT_URL } from '@app/core/core.constants';
 
 /** Interpolates the given values into the provided string. */
@@ -35,23 +34,6 @@ export function compare(
   ascending: boolean
 ): number {
   return (a < b ? -1 : 1) * (ascending ? 1 : -1);
-}
-
-/** Updates a parameter in the browser's URL. */
-export function updateQueryParam(
-  activatedRoute: ActivatedRoute,
-  router: Router,
-  params: { name: string; value: string }[]
-): void {
-  const queryParams: Params = Object.assign(
-    {},
-    activatedRoute.snapshot.queryParams
-  );
-  params.forEach(entry => (queryParams[entry.name] = entry.value));
-  router.navigate([], {
-    relativeTo: activatedRoute,
-    queryParams
-  });
 }
 
 /** Flattens an array of arrays and returns unique elements. */
