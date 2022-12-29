@@ -98,6 +98,7 @@ import {
 } from '@tragically-slick/confirmation';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('ComicBookPageComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
@@ -124,6 +125,7 @@ describe('ComicBookPageComponent', () => {
   let component: ComicBookPageComponent;
   let fixture: ComponentFixture<ComicBookPageComponent>;
   let router: Router;
+  let urlParameterService: UrlParameterService;
   let activatedRoute: ActivatedRoute;
   let store: MockStore<any>;
   let translateService: TranslateService;
@@ -185,8 +187,8 @@ describe('ComicBookPageComponent', () => {
 
       fixture = TestBed.createComponent(ComicBookPageComponent);
       component = fixture.componentInstance;
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       activatedRoute = TestBed.inject(ActivatedRoute);
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
@@ -265,7 +267,7 @@ describe('ComicBookPageComponent', () => {
 
     it('updates the URL when the tab changes', () => {
       component.onTabChange(TAB);
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
 
     it('sets the grid view', () => {
@@ -502,7 +504,7 @@ describe('ComicBookPageComponent', () => {
     });
 
     it('updates the URL when the tab changes', () => {
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 
@@ -517,7 +519,7 @@ describe('ComicBookPageComponent', () => {
     });
 
     it('updates the URL when the tab changes', () => {
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 

@@ -48,11 +48,7 @@ import {
 import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatTabsModule } from '@angular/material/tabs';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { MatCardModule } from '@angular/material/card';
@@ -82,6 +78,7 @@ import {
   initialState as initialFilenameScrapingRulesState
 } from '@app/admin/reducers/filename-scraping-rule-list.reducer';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -109,7 +106,7 @@ describe('ConfigurationPageComponent', () => {
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
 
   beforeEach(
     waitForAsync(() => {
@@ -153,7 +150,8 @@ describe('ConfigurationPageComponent', () => {
               queryParams: new BehaviorSubject<{}>({}),
               snapshot: {} as ActivatedRouteSnapshot
             }
-          }
+          },
+          UrlParameterService
         ]
       }).compileComponents();
 
@@ -165,8 +163,8 @@ describe('ConfigurationPageComponent', () => {
       titleService = TestBed.inject(TitleService);
       setTitleSpy = spyOn(titleService, 'setTitle');
       activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       fixture.detectChanges();
     })
   );
@@ -202,7 +200,7 @@ describe('ConfigurationPageComponent', () => {
 
     it('updates the URL when the tab changes', () => {
       component.onTabChange(TAB);
-      expect(router.navigate).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 });

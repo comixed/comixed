@@ -29,9 +29,9 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { loadConfigurationOptions } from '@app/admin/actions/configuration-option-list.actions';
-import { updateQueryParam } from '@app/core';
 import { QUERY_PARAM_TAB } from '@app/library/library.constants';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-configuration-page',
@@ -52,7 +52,7 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private urlParameterService: UrlParameterService
   ) {
     this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
       params => {
@@ -93,7 +93,7 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
 
   onTabChange(index: number): void {
     this.logger.trace('Tab changed:', index);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_TAB,
         value: `${index}`

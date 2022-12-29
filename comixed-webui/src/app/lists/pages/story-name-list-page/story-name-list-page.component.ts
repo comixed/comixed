@@ -35,8 +35,7 @@ import {
 } from '@app/lists/selectors/story-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadStoryNames } from '@app/lists/actions/story-list.actions';
-import { ActivatedRoute, Router } from '@angular/router';
-import { updateQueryParam } from '@app/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
@@ -48,6 +47,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getPageSize } from '@app/user/user.functions';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-story-name-list-page',
@@ -74,7 +74,7 @@ export class StoryNameListPageComponent
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private router: Router,
+    private urlParameterService: UrlParameterService,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private titleService: TitleService
@@ -136,7 +136,7 @@ export class StoryNameListPageComponent
   onPageChange(pageEvent: PageEvent): void {
     if (this.pageSize !== pageEvent.pageSize) {
       this.logger.trace('Page size changed');
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_SIZE,
           value: `${pageEvent.pageSize}`

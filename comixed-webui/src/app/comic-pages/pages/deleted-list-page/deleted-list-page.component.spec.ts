@@ -40,17 +40,14 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
   PAGE_SIZE_PREFERENCE,
   QUERY_PARAM_PAGE_INDEX
 } from '@app/library/library.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('DeletedListPageComponent', () => {
   const PAGE_INDEX = 11;
@@ -77,7 +74,7 @@ describe('DeletedListPageComponent', () => {
   let setTitleSpy: jasmine.Spy<any>;
   let translateService: TranslateService;
   let store: MockStore<any>;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
   let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
@@ -113,8 +110,8 @@ describe('DeletedListPageComponent', () => {
     translateService = TestBed.inject(TranslateService);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigate');
+    urlParameterService = TestBed.inject(UrlParameterService);
+    spyOn(urlParameterService, 'updateQueryParam');
     activatedRoute = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
@@ -213,7 +210,7 @@ describe('DeletedListPageComponent', () => {
       });
 
       it('updates the location', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -232,7 +229,7 @@ describe('DeletedListPageComponent', () => {
       });
 
       it('updates the location', () => {
-        expect(router.navigate).not.toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).not.toHaveBeenCalled();
       });
     });
   });

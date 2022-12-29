@@ -30,7 +30,7 @@ import {
   getUserPreference,
   isAdmin
 } from '@app/user/user.functions';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import {
   ArchiveType,
@@ -46,7 +46,6 @@ import {
   SORT_FIELD_DEFAULT,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
-import { updateQueryParam } from '@app/core';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
@@ -57,6 +56,7 @@ import {
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-library-page',
@@ -98,7 +98,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private urlParameterService: UrlParameterService
   ) {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
@@ -239,7 +239,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   onArchiveTypeChanged(archiveType: ArchiveType): void {
     this.logger.debug('Archive type changed:', archiveType);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_ARCHIVE_TYPE,
         value: !!archiveType ? `${archiveType}` : null
@@ -249,7 +249,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
   onPageIndexChange(pageIndex: number): void {
     this.logger.debug('Page index changed:', pageIndex);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_PAGE_INDEX,
         value: `${pageIndex}`

@@ -34,7 +34,7 @@ import {
   selectStories,
   selectStoryListState
 } from '@app/lists/selectors/story-list.selectors';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { loadStoriesForName } from '@app/lists/actions/story-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import {
@@ -44,11 +44,11 @@ import {
 } from '@app/library/library.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { updateQueryParam } from '@app/core';
 import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getPageSize } from '@app/user/user.functions';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-story-list-for-name-page',
@@ -82,7 +82,7 @@ export class StoryListForNamePageComponent
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private router: Router,
+    private urlParameterService: UrlParameterService,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private titleService: TitleService
@@ -154,7 +154,7 @@ export class StoryListForNamePageComponent
 
   onPageChange(pageEvent: PageEvent): void {
     if (pageEvent.pageSize !== this.pageSize) {
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_SIZE,
           value: `${pageEvent.pageSize}`

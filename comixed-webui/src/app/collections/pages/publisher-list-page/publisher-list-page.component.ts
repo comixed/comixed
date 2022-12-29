@@ -43,14 +43,14 @@ import {
   QUERY_PARAM_SORT_BY,
   QUERY_PARAM_SORT_DIRECTION
 } from '@app/library/library.constants';
-import { updateQueryParam } from '@app/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-publisher-list-page',
@@ -81,7 +81,7 @@ export class PublisherListPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private urlParameterService: UrlParameterService,
     private titleService: TitleService,
     private translateService: TranslateService
   ) {
@@ -170,7 +170,7 @@ export class PublisherListPageComponent
     }
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_INDEX,
           value: `${pageIndex}`
@@ -180,7 +180,7 @@ export class PublisherListPageComponent
   }
 
   onSortChange(active: string, direction: 'asc' | 'desc' | ''): void {
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_SORT_BY,
         value: active

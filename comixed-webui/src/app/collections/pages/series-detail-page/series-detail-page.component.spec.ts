@@ -20,11 +20,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SeriesDetailPageComponent } from './series-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -58,6 +54,7 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('SeriesDetailPageComponent', () => {
   const PUBLISHER = 'The Publisher';
@@ -87,7 +84,7 @@ describe('SeriesDetailPageComponent', () => {
   let component: SeriesDetailPageComponent;
   let fixture: ComponentFixture<SeriesDetailPageComponent>;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
   let store: MockStore<any>;
   let titleService: TitleService;
   let translateService: TranslateService;
@@ -128,8 +125,8 @@ describe('SeriesDetailPageComponent', () => {
     fixture = TestBed.createComponent(SeriesDetailPageComponent);
     component = fixture.componentInstance;
     activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
+    urlParameterService = TestBed.inject(UrlParameterService);
+    spyOn(urlParameterService, 'updateQueryParam');
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
     titleService = TestBed.inject(TitleService);
@@ -243,7 +240,7 @@ describe('SeriesDetailPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });
@@ -254,7 +251,7 @@ describe('SeriesDetailPageComponent', () => {
     });
 
     it('updates the url', () => {
-      expect(router.navigateByUrl).toHaveBeenCalled();
+      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 });

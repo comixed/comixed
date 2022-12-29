@@ -40,10 +40,10 @@ import {
   QUERY_PARAM_PAGE_INDEX
 } from '@app/library/library.constants';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { updateQueryParam } from '@app/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-deleted-list-page',
@@ -74,7 +74,7 @@ export class DeletedListPageComponent
     private translationService: TranslateService,
     private titleService: TitleService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private urlParameterService: UrlParameterService
   ) {
     this.langChangeSubscription =
       this.translationService.onLangChange.subscribe(() =>
@@ -159,7 +159,7 @@ export class DeletedListPageComponent
     );
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_INDEX,
           value: `${pageIndex}`

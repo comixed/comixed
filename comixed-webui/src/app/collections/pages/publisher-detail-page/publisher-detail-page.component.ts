@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import {
@@ -43,12 +43,12 @@ import {
   selectPublisherState
 } from '@app/collections/selectors/publisher.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { updateQueryParam } from '@app/core';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { loadPublisherDetail } from '@app/collections/actions/publisher.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-publisher-detail-page',
@@ -85,7 +85,7 @@ export class PublisherDetailPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private urlParameterService: UrlParameterService,
     private titleService: TitleService,
     private translateService: TranslateService
   ) {
@@ -166,7 +166,7 @@ export class PublisherDetailPageComponent
     }
     if (pageIndex !== previousPageIndex) {
       this.logger.debug('Page index changed:', pageIndex);
-      updateQueryParam(this.activatedRoute, this.router, [
+      this.urlParameterService.updateQueryParam([
         {
           name: QUERY_PARAM_PAGE_INDEX,
           value: `${pageIndex}`
@@ -176,7 +176,7 @@ export class PublisherDetailPageComponent
   }
 
   onSortChange(active: string, direction: SortDirection): void {
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_SORT_BY,
         value: active

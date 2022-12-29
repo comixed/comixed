@@ -28,11 +28,7 @@ import {
 export * from '@app/core/core.constants';
 export * from '@app/core/core.functions';
 
-export {
-  interpolate,
-  compare,
-  updateQueryParam
-} from '@app/core/core.functions';
+export { interpolate, compare } from '@app/core/core.functions';
 
 interface RouterStateUrl {
   url: string;

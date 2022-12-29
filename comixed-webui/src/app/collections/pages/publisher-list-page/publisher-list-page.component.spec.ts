@@ -21,11 +21,7 @@ import { PublisherListPageComponent } from './publisher-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -48,6 +44,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { PUBLISHER_3 } from '@app/collections/collections.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('PublisherListPageComponent', () => {
   const ENTRY = PUBLISHER_3;
@@ -62,7 +59,7 @@ describe('PublisherListPageComponent', () => {
   let store: MockStore<any>;
   let storeDispatchSpy: jasmine.Spy;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
   let translateService: TranslateService;
   let titleService: TitleService;
 
@@ -99,8 +96,8 @@ describe('PublisherListPageComponent', () => {
     store = TestBed.inject(MockStore);
     storeDispatchSpy = spyOn(store, 'dispatch');
     activatedRoute = TestBed.inject(ActivatedRoute);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
+    urlParameterService = TestBed.inject(UrlParameterService);
+    spyOn(urlParameterService, 'updateQueryParam');
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
@@ -136,7 +133,7 @@ describe('PublisherListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -146,7 +143,7 @@ describe('PublisherListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -156,7 +153,7 @@ describe('PublisherListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });
@@ -213,7 +210,7 @@ describe('PublisherListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });

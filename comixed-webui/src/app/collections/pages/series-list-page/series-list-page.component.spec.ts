@@ -45,11 +45,7 @@ import {
 } from '@app/comic-metadata/reducers/metadata-source-list.reducer';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
 import {
@@ -62,6 +58,7 @@ import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { Series } from '@app/collections/models/series';
 import { SERIES_1 } from '@app/collections/collections.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('SeriesListPageComponent', () => {
   const initialState = {
@@ -77,7 +74,7 @@ describe('SeriesListPageComponent', () => {
   let titleService: TitleService;
   let titleServiceSpy: jasmine.Spy;
   let translateService: TranslateService;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -122,8 +119,8 @@ describe('SeriesListPageComponent', () => {
     titleService = TestBed.inject(TitleService);
     titleServiceSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
-    router = TestBed.inject(Router);
-    spyOn(router, 'navigateByUrl');
+    urlParameterService = TestBed.inject(UrlParameterService);
+    spyOn(urlParameterService, 'updateQueryParam');
     fixture.detectChanges();
   });
 
@@ -227,7 +224,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });
@@ -247,7 +244,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -257,7 +254,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -267,7 +264,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -277,7 +274,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -287,7 +284,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -297,7 +294,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
 
@@ -307,7 +304,7 @@ describe('SeriesListPageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigateByUrl).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
     });
   });

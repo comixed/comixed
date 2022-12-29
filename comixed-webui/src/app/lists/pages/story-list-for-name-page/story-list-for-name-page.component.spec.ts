@@ -21,11 +21,7 @@ import { StoryListForNamePageComponent } from './story-list-for-name-page.compon
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -49,6 +45,7 @@ import {
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { USER_READER } from '@app/user/user.fixtures';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('StoryListForNamePageComponent', () => {
   const STORIES = [STORY_1, STORY_2, STORY_3];
@@ -63,7 +60,7 @@ describe('StoryListForNamePageComponent', () => {
   let store: MockStore<any>;
   let dispatchSpy: jasmine.Spy<any>;
   let activatedRoute: ActivatedRoute;
-  let router: Router;
+  let urlParameterService: UrlParameterService;
   let titleService: TitleService;
   let translateService: TranslateService;
 
@@ -101,8 +98,8 @@ describe('StoryListForNamePageComponent', () => {
       store = TestBed.inject(MockStore);
       dispatchSpy = spyOn(store, 'dispatch');
       activatedRoute = TestBed.inject(ActivatedRoute);
-      router = TestBed.inject(Router);
-      spyOn(router, 'navigate');
+      urlParameterService = TestBed.inject(UrlParameterService);
+      spyOn(urlParameterService, 'updateQueryParam');
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
       translateService = TestBed.inject(TranslateService);
@@ -202,7 +199,7 @@ describe('StoryListForNamePageComponent', () => {
       });
 
       it('updates the url', () => {
-        expect(router.navigate).toHaveBeenCalled();
+        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
       });
 
       it('update the user preference', () => {

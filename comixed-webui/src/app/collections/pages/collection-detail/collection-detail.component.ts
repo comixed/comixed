@@ -47,7 +47,6 @@ import {
   SORT_FIELD_DEFAULT,
   SORT_FIELD_PREFERENCE
 } from '@app/library/library.constants';
-import { updateQueryParam } from '@app/core';
 import { archiveTypeFromString } from '@app/comic-books/models/archive-type.enum';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
@@ -56,6 +55,7 @@ import {
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
+import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -90,6 +90,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
+    private urlParameterService: UrlParameterService,
     private router: Router,
     private translateService: TranslateService,
     private titleService: TitleService
@@ -225,7 +226,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
 
   onPageIndexChanged(pageIndex: number): void {
     this.logger.debug('Page index changed:', pageIndex);
-    updateQueryParam(this.activatedRoute, this.router, [
+    this.urlParameterService.updateQueryParam([
       {
         name: QUERY_PARAM_PAGE_INDEX,
         value: `${pageIndex}`
