@@ -27,6 +27,8 @@ import org.comixedproject.metadata.MetadataException;
 import org.comixedproject.metadata.comicvine.model.ComicVineGetAllIssuesQueryResponse;
 import org.comixedproject.metadata.comicvine.model.ComicVineIssue;
 import org.comixedproject.metadata.model.IssueDetailsMetadata;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -45,6 +47,9 @@ import reactor.core.publisher.Mono;
 @Log4j2
 public class ComicVineGetAllIssuesAction
     extends AbstractComicVineScrapingAction<List<IssueDetailsMetadata>> {
+  @Autowired
+  private ObjectFactory<ComicVineGetIssueWithDetailsAction> getIssueWithDetailsActionObjectFactory;
+
   @Getter @Setter private String volumeId;
 
   @Override
@@ -85,6 +90,7 @@ public class ComicVineGetAllIssuesAction
 
       for (int index = 0; index < response.getResults().getIssues().size(); index++) {
         final ComicVineIssue issue = response.getResults().getIssues().get(index);
+
         final IssueDetailsMetadata entry = new IssueDetailsMetadata();
         entry.setPublisher(response.getResults().getPublisher().getName());
         entry.setSeries(response.getResults().getName());
@@ -92,6 +98,22 @@ public class ComicVineGetAllIssuesAction
         entry.setVolume(response.getResults().getStartYear());
         entry.setCoverDate(issue.getCoverDate());
         entry.setStoreDate(issue.getStoreDate());
+
+        try {
+          log.trace("Fetching issue metadata: id={}", issue.getId());
+          log.trace("Creating issue details action");
+          final ComicVineGetIssueWithDetailsAction issueDetails =
+              this.getIssueWithDetailsActionObjectFactory.getObject();
+          issueDetails.setBaseUrl(this.getBaseUrl());
+          issueDetails.setApiKey(this.getApiKey());
+          issueDetails.setIssueId(issue.getId());
+          final ComicVineIssue metadata = issueDetails.execute();
+          entry.setCoverDate(metadata.getCoverDate());
+          entry.setStoreDate(metadata.getStoreDate());
+        } catch (Exception error) {
+          log.error("Failed to get issue cover and store dates", error);
+        }
+
         result.add(entry);
       }
 

@@ -31,7 +31,7 @@ public class ComicVineVolume {
   @JsonProperty("id")
   @Getter
   @Setter
-  private Integer id;
+  private String id;
 
   @JsonProperty("count_of_issues")
   @Getter

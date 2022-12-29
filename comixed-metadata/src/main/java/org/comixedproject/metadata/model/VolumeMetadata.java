@@ -33,7 +33,7 @@ public class VolumeMetadata {
   @JsonProperty(value = "id")
   @Getter
   @Setter
-  private long id;
+  private String id;
 
   @JsonProperty(value = "name")
   @Getter

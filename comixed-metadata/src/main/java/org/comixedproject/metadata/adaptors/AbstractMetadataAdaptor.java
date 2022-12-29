@@ -42,7 +42,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public abstract class AbstractMetadataAdaptor implements MetadataAdaptor {
   private static final String VOLUMES_KEY = "volumes[%s]";
-  private static final String ISSUE_KEY = "issues[%d-%s]";
+  private static final String ISSUE_KEY = "issues[%s-%s]";
   private static final String ISSUE_DETAILS_KEY = "issue[%s]";
 
   @Autowired protected ObjectMapper objectMapper;
