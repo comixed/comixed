@@ -75,5 +75,5 @@ public class IssueMetadata {
   @JsonProperty(value = "volumeId")
   @Getter
   @Setter
-  private int volumeId;
+  private String volumeId;
 }
