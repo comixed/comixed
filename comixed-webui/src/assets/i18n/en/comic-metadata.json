@@ -105,7 +105,7 @@
   },
   "scraping": {
     "current-comic": {
-      "title": "Currently Comic ({count} Total)"
+      "title": "Current Comic ({count} Remaining)"
     },
     "label": {
       "100-records": "100 Records",
