@@ -1,6 +1,5 @@
 <div
   *ngIf="busy"
-  id="cx-navigation-bar"
   class="cx-overlay cx-width-100 cx-height-100"
 >
   <div class="cx-centered">
@@ -13,6 +12,7 @@
 </div>
 
 <cx-navigation-bar
+  id="cx-navigation-bar"
   [user]="user"
   [sidebarOpened]="sidenav.opened"
   (toggleSidebar)="sidenav.toggle($event)"
