@@ -18,16 +18,8 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FooterComponent } from './footer.component';
-import {
-  initialState as initialImportCountState,
-  PROCESS_COMICS_FEATURE_KEY
-} from '@app/reducers/process-comics.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
   initialState as initialLastReadState,
   LAST_READ_LIST_FEATURE_KEY
@@ -45,8 +37,6 @@ describe('FooterComponent', () => {
   const initialState = {
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
     [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
-    [PROCESS_COMICS_FEATURE_KEY]: initialImportCountState,
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
   };
   let component: FooterComponent;

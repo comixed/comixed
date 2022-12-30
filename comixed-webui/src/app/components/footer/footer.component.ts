@@ -19,14 +19,10 @@
 import { Component, Input } from '@angular/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 import { User } from '@app/user/models/user';
-import {
-  selectComicBookListCount,
-  selectComicBookListDeletedCount
-} from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { selectLibrarySelectionsState } from '@app/library/selectors/library-selections.selectors';
+import { selectLibraryState } from '@app/library/selectors/library.selectors';
 
 @Component({
   selector: 'cx-footer',
@@ -43,20 +39,16 @@ export class FooterComponent {
   deletedCount = 0;
 
   constructor(private logger: LoggerModule, private store: Store<any>) {
-    this.store
-      .select(selectProcessComicsState)
-      .subscribe(state => (this.importCount = state.active ? state.total : 0));
-    this.store
-      .select(selectComicBookListCount)
-      .subscribe(count => (this.comicCount = count));
+    this.store.select(selectLibraryState).subscribe(state => {
+      this.comicCount = state.totalComics;
+      this.importCount = state.unscrapedComics;
+      this.deletedCount = state.deletedComics;
+    });
     this.store
       .select(selectLastReadEntries)
       .subscribe(entries => (this.readCount = entries.length));
     this.store
       .select(selectLibrarySelectionsState)
       .subscribe(state => (this.selectedCount = state.ids.length));
-    this.store
-      .select(selectComicBookListDeletedCount)
-      .subscribe(count => (this.deletedCount = count));
   }
 }
