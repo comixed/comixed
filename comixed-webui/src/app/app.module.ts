@@ -55,7 +55,6 @@ import { MatCardModule } from '@angular/material/card';
 import { AdminModule } from '@app/admin/admin.module';
 import { MatDividerModule } from '@angular/material/divider';
 import { MessagingModule } from '@app/messaging/messaging.module';
-import { TaskCountService } from '@app/services/task-count.service';
 import { ImportCountEffects } from '@app/effects/import-count.effects';
 import { MatSelectModule } from '@angular/material/select';
 import { FooterComponent } from './components/footer/footer.component';
@@ -150,10 +149,7 @@ import { ReadComicsChartComponent } from './components/read-comics-chart/read-co
     MatGridListModule
   ],
   providers: [
-    [
-      { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true },
-      TaskCountService
-    ]
+    [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]
   ],
   bootstrap: [AppComponent]
 })

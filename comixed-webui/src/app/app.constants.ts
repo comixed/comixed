@@ -42,4 +42,3 @@ export const LATEST_RELEASE_TARGET = '_cx_latest_release';
 // messaging constants
 
 export const PROCESS_COMICS_TOPIC = '/topic/process-comics.status';
-export const TASK_COUNT_TOPIC = '/topic/taskcount';

@@ -21,7 +21,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { TitleService } from '@app/core/services/title.service';
-import { selectServerStatusState } from '@app/selectors/server-status.selectors';
 import { Store } from '@ngrx/store';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
@@ -37,7 +36,6 @@ import { LibraryState } from '@app/library/reducers/library.reducer';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
-  serverStateSubscription: Subscription;
   loading = false;
   taskCount = 0;
 
@@ -57,11 +55,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
-    this.serverStateSubscription = this.store
-      .select(selectServerStatusState)
-      .subscribe(state => {
-        this.taskCount = state.taskCount;
-      });
     this.libraryStateSubscription = this.store
       .select(selectLibraryState)
       .subscribe(state => {
@@ -91,8 +84,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from server state changes');
-    this.serverStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from comic updates');
     this.comicBookListStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from last read updates');

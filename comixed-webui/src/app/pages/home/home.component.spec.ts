@@ -22,10 +22,6 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import {
-  initialState as initialServerStatusState,
-  SERVER_STATUS_FEATURE_KEY
-} from '@app/reducers/server-status.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
   COMIC_BOOK_LIST_FEATURE_KEY,
@@ -54,7 +50,6 @@ import { ReadComicsChartComponent } from '@app/components/read-comics-chart/read
 describe('HomeComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
   const initialState = {
-    [SERVER_STATUS_FEATURE_KEY]: initialServerStatusState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState
   };

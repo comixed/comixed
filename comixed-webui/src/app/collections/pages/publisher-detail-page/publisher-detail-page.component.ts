@@ -190,10 +190,9 @@ export class PublisherDetailPageComponent
 
   private loadTranslations(): void {
     this.titleService.setTitle(
-      this.translateService.instant(
-        'collections.publisher-detail.tab-title',
-        { name: this.name }
-      )
+      this.translateService.instant('collections.publisher-detail.tab-title', {
+        name: this.name
+      })
     );
   }
 }
