@@ -50,7 +50,6 @@ import { ComicFileCoverUrlPipe } from '@app/comic-files/pipes/comic-file-cover-u
 import { MatCardModule } from '@angular/material/card';
 import { ComicPageComponent } from '@app/comic-books/components/comic-page/comic-page.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
@@ -71,6 +70,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { PAGE_SIZE_PREFERENCE } from '@app/core';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;

@@ -29,12 +29,9 @@ import {
   getUserPreference,
   isAdmin
 } from '@app/user/user.functions';
-import { interpolate } from '@app/core';
+import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
-  PAGE_SIZE_DEFAULT,
-  QUERY_PARAM_PAGES_AS_GRID,
-  QUERY_PARAM_TAB,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import {
@@ -72,7 +69,7 @@ import { Page } from '@app/comic-books/models/page';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-comic-book-page',
@@ -83,8 +80,6 @@ export class ComicBookPageComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   paramSubscription: Subscription;
-  queryParamSubscription: Subscription;
-  currentTab = 0;
   scrapingStateSubscription: Subscription;
   comicSubscription: Subscription;
   comicUpdateSubscription: MessagingSubscription;
@@ -112,15 +107,13 @@ export class ComicBookPageComponent
   lastReadDates: LastRead[] = [];
   isRead = false;
   lastRead: LastRead = null;
-  showPages = false;
   messagingStarted = false;
-  showPagesAsGrid = true;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService,
+    private urlParameterService: QueryParameterService,
     private titleService: TitleService,
     private translateService: TranslateService,
     private comicTitlePipe: ComicTitlePipe,
@@ -136,17 +129,6 @@ export class ComicBookPageComponent
       this.logger.trace('ComicBook id parameter:', params.comicId);
       this.store.dispatch(loadComicBook({ id: this.comicId }));
     });
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (+params[QUERY_PARAM_TAB]) {
-          this.currentTab = +params[QUERY_PARAM_TAB];
-          this.updateShowPages();
-        }
-        if (!!params[QUERY_PARAM_PAGES_AS_GRID]) {
-          this.showPagesAsGrid = params[QUERY_PARAM_PAGES_AS_GRID] === 'true';
-        }
-      }
-    );
     this.scrapingStateSubscription = this.store
       .select(selectMetadataState)
       .subscribe(state =>
@@ -240,17 +222,6 @@ export class ComicBookPageComponent
     this.store.dispatch(resetMetadataState());
   }
 
-  onTabChange(index: number): void {
-    this.logger.trace('Changing active tab:', index);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_TAB,
-        value: `${index}`
-      }
-    ]);
-    this.updateShowPages();
-  }
-
   onLoadScrapingVolumes(
     series: string,
     volume: string,
@@ -323,17 +294,6 @@ export class ComicBookPageComponent
     }
   }
 
-  onTogglePageView(): void {
-    this.logger.trace('Toggling showing pages as grid');
-    this.showPagesAsGrid = !this.showPagesAsGrid;
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_PAGES_AS_GRID,
-        value: `${this.showPagesAsGrid}`
-      }
-    ]);
-  }
-
   onPagesChanged(pages: Page[]): void {
     this.pages = pages;
   }
@@ -361,10 +321,6 @@ export class ComicBookPageComponent
         );
       }
     });
-  }
-
-  private updateShowPages(): void {
-    this.showPages = this.showPages || this.currentTab === 2;
   }
 
   private loadTranslations(): void {

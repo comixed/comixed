@@ -37,6 +37,7 @@ import { CollectionListEntry } from '@app/collections/models/collection-list-ent
 import { MatSort } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-collection-list',
@@ -63,7 +64,8 @@ export class CollectionListComponent
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    public urlParameterService: QueryParameterService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;

@@ -21,3 +21,16 @@ export const WS_ROOT_URL = '/ws';
 
 export const TEXT_NO = 'text.no';
 export const TEXT_YES = 'text.yes';
+
+export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+export const PAGE_SIZE_DEFAULT = PAGE_SIZE_OPTIONS[0];
+export const QUERY_PARAM_PAGE_SIZE = 'page-size';
+export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
+export const QUERY_PARAM_PAGE_INDEX = 'page';
+export const QUERY_PARAM_SORT_BY = 'sort-by';
+export const QUERY_PARAM_SORT_DIRECTION = 'sort';
+export const QUERY_PARAM_TAB = 'tab';
+export const QUERY_PARAM_COVER_YEAR = 'cover-year';
+export const QUERY_PARAM_COVER_MONTH = 'cover-month';
+export const QUERY_PARAM_ARCHIVE_TYPE = 'archive-type';
+export const QUERY_PARAM_PAGES_AS_GRID = 'pages-as-grid';

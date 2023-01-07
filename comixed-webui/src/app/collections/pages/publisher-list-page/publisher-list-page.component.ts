@@ -34,23 +34,18 @@ import {
   selectPublisherState
 } from '@app/collections/selectors/publisher.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE,
-  QUERY_PARAM_PAGE_INDEX,
-  QUERY_PARAM_SORT_BY,
-  QUERY_PARAM_SORT_DIRECTION
-} from '@app/library/library.constants';
-import { ActivatedRoute } from '@angular/router';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
+  PAGE_SIZE_PREFERENCE
+} from '@app/core';
 
 @Component({
   selector: 'cx-publisher-list-page',
@@ -66,7 +61,6 @@ export class PublisherListPageComponent
   readonly pageOptions = PAGE_SIZE_OPTIONS;
 
   langChangeSubscription: Subscription;
-  queryParamsSubscription: Subscription;
   publisherListSubscription: Subscription;
   publisherStateSubscription: Subscription;
   userSubscription: Subscription;
@@ -80,21 +74,13 @@ export class PublisherListPageComponent
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    public urlParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
-    );
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.sortBy = params[QUERY_PARAM_SORT_BY] || 'name';
-        this.sortDirection = params[QUERY_PARAM_SORT_DIRECTION] || 'asc';
-      }
     );
     this.logger.trace('Subscribing to publisher list updates');
     this.publisherListSubscription = this.store
@@ -144,52 +130,12 @@ export class PublisherListPageComponent
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from publisher list updates');
     this.publisherListSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from publisher state updates');
     this.publisherStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
-  }
-
-  onPageChange(
-    pageSize: number,
-    pageIndex: number,
-    previousPageIndex: number
-  ): void {
-    if (this.pageSize != pageSize) {
-      this.logger.trace('Page size changed');
-      this.store.dispatch(
-        saveUserPreference({
-          name: PAGE_SIZE_PREFERENCE,
-          value: `${pageSize}`
-        })
-      );
-    }
-    if (pageIndex !== previousPageIndex) {
-      this.logger.debug('Page index changed:', pageIndex);
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_INDEX,
-          value: `${pageIndex}`
-        }
-      ]);
-    }
-  }
-
-  onSortChange(active: string, direction: 'asc' | 'desc' | ''): void {
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_SORT_BY,
-        value: active
-      },
-      {
-        name: QUERY_PARAM_SORT_DIRECTION,
-        value: direction
-      }
-    ]);
   }
 
   private loadTranslations(): void {

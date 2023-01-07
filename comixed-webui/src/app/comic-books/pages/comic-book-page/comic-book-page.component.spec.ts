@@ -30,11 +30,7 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Router
-} from '@angular/router';
+import { Router } from '@angular/router';
 import {
   COMIC_BOOK_1,
   COMIC_BOOK_2
@@ -43,11 +39,6 @@ import { ComicOverviewComponent } from '@app/comic-books/components/comic-overvi
 import { ComicStoryComponent } from '@app/comic-books/components/comic-story/comic-story.component';
 import { ComicPagesComponent } from '@app/comic-books/components/comic-pages/comic-pages.component';
 import { ComicEditComponent } from '@app/comic-books/components/comic-edit/comic-edit.component';
-import { BehaviorSubject } from 'rxjs';
-import {
-  QUERY_PARAM_PAGES_AS_GRID,
-  QUERY_PARAM_TAB
-} from '@app/library/library.constants';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -98,7 +89,6 @@ import {
 } from '@tragically-slick/confirmation';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { METADATA_SOURCE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('ComicBookPageComponent', () => {
   const COMIC_BOOK = COMIC_BOOK_1;
@@ -125,8 +115,6 @@ describe('ComicBookPageComponent', () => {
   let component: ComicBookPageComponent;
   let fixture: ComponentFixture<ComicBookPageComponent>;
   let router: Router;
-  let urlParameterService: UrlParameterService;
-  let activatedRoute: ActivatedRoute;
   let store: MockStore<any>;
   let translateService: TranslateService;
   let titleService: TitleService;
@@ -161,14 +149,6 @@ describe('ComicBookPageComponent', () => {
         providers: [
           provideMockStore({ initialState }),
           {
-            provide: ActivatedRoute,
-            useValue: {
-              queryParams: new BehaviorSubject<{}>({}),
-              params: new BehaviorSubject<{}>({}),
-              snapshot: {} as ActivatedRouteSnapshot
-            }
-          },
-          {
             provide: MatDialogRef,
             useValue: {}
           },
@@ -187,9 +167,6 @@ describe('ComicBookPageComponent', () => {
 
       fixture = TestBed.createComponent(ComicBookPageComponent);
       component = fixture.componentInstance;
-      urlParameterService = TestBed.inject(UrlParameterService);
-      spyOn(urlParameterService, 'updateQueryParam');
-      activatedRoute = TestBed.inject(ActivatedRoute);
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
       translateService = TestBed.inject(TranslateService);
@@ -252,38 +229,6 @@ describe('ComicBookPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         setChosenMetadataSource({ metadataSource: METADATA_SOURCE })
       );
-    });
-  });
-
-  describe('query parameter processing', () => {
-    const TAB = 3;
-
-    it('loads the tab from the URL', () => {
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        [QUERY_PARAM_TAB]: `${TAB}`
-      });
-      expect(component.currentTab).toEqual(TAB);
-    });
-
-    it('updates the URL when the tab changes', () => {
-      component.onTabChange(TAB);
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-    });
-
-    it('sets the grid view', () => {
-      component.showPagesAsGrid = false;
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        [QUERY_PARAM_PAGES_AS_GRID]: 'true'
-      });
-      expect(component.showPagesAsGrid).toBeTrue();
-    });
-
-    it('clears the grid view', () => {
-      component.showPagesAsGrid = true;
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        [QUERY_PARAM_PAGES_AS_GRID]: 'false'
-      });
-      expect(component.showPagesAsGrid).toBeFalse();
     });
   });
 
@@ -490,36 +435,6 @@ describe('ComicBookPageComponent', () => {
 
     it('clears the subscription', () => {
       expect(component.comicUpdateSubscription).toBeNull();
-    });
-  });
-
-  describe('toggling show pages as grid on', () => {
-    beforeEach(() => {
-      component.showPagesAsGrid = false;
-      component.onTogglePageView();
-    });
-
-    it('sets the flag', () => {
-      expect(component.showPagesAsGrid).toBeTrue();
-    });
-
-    it('updates the URL when the tab changes', () => {
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-    });
-  });
-
-  describe('toggling show pages as grid off', () => {
-    beforeEach(() => {
-      component.showPagesAsGrid = true;
-      component.onTogglePageView();
-    });
-
-    it('sets the flag', () => {
-      expect(component.showPagesAsGrid).toBeFalse();
-    });
-
-    it('updates the URL when the tab changes', () => {
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 

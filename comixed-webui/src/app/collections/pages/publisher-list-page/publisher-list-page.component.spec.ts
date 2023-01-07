@@ -21,8 +21,6 @@ import { PublisherListPageComponent } from './publisher-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -42,9 +40,6 @@ import {
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { TitleService } from '@app/core/services/title.service';
 import { PUBLISHER_3 } from '@app/collections/collections.fixtures';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('PublisherListPageComponent', () => {
   const ENTRY = PUBLISHER_3;
@@ -58,8 +53,6 @@ describe('PublisherListPageComponent', () => {
   let fixture: ComponentFixture<PublisherListPageComponent>;
   let store: MockStore<any>;
   let storeDispatchSpy: jasmine.Spy;
-  let activatedRoute: ActivatedRoute;
-  let urlParameterService: UrlParameterService;
   let translateService: TranslateService;
   let titleService: TitleService;
 
@@ -78,26 +71,13 @@ describe('PublisherListPageComponent', () => {
         MatSortModule,
         MatInputModule
       ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            queryParams: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
-          }
-        },
-        TitleService
-      ]
+      providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PublisherListPageComponent);
     component = fixture.componentInstance;
     store = TestBed.inject(MockStore);
     storeDispatchSpy = spyOn(store, 'dispatch');
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    urlParameterService = TestBed.inject(UrlParameterService);
-    spyOn(urlParameterService, 'updateQueryParam');
     translateService = TestBed.inject(TranslateService);
     titleService = TestBed.inject(TitleService);
     spyOn(titleService, 'setTitle');
@@ -118,46 +98,6 @@ describe('PublisherListPageComponent', () => {
     });
   });
 
-  describe('updating the query parameters', () => {
-    it('sorts by name by default', () => {
-      expect(component.sortBy).toEqual('name');
-    });
-
-    it('uses ascending sort', () => {
-      expect(component.sortDirection).toEqual('asc');
-    });
-
-    describe('sorting by series count', () => {
-      beforeEach(() => {
-        component.onSortChange('series-count', component.sortDirection);
-      });
-
-      it('updates the url', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-
-    describe('using descending sort', () => {
-      beforeEach(() => {
-        component.onSortChange(component.sortBy, 'desc');
-      });
-
-      it('updates the url', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-
-    describe('using no sort', () => {
-      beforeEach(() => {
-        component.onSortChange(component.sortBy, '');
-      });
-
-      it('updates the url', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-  });
-
   describe('sorting the table', () => {
     it('can sort by publisher name', () => {
       expect(component.dataSource.sortingDataAccessor(ENTRY, 'name')).toEqual(
@@ -175,43 +115,6 @@ describe('PublisherListPageComponent', () => {
       expect(component.dataSource.sortingDataAccessor(ENTRY, 'count')).toEqual(
         ''
       );
-    });
-  });
-
-  describe('navigating the publisher list', () => {
-    const PAGE_INDEX = 10;
-    const PAGE_SIZE = 10;
-
-    beforeEach(() => {
-      component.pageIndex = PAGE_INDEX - 1;
-      component.pageSize = 25;
-    });
-
-    describe('changing the page size', () => {
-      beforeEach(() => {
-        storeDispatchSpy.calls.reset();
-        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX);
-      });
-
-      it('updates the saved user preference', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          saveUserPreference({
-            name: PAGE_SIZE_PREFERENCE,
-            value: `${PAGE_SIZE}`
-          })
-        );
-      });
-    });
-
-    describe('changing the page index', () => {
-      beforeEach(() => {
-        component.pageSize = PAGE_SIZE;
-        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX - 1);
-      });
-
-      it('updates the url', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
     });
   });
 });

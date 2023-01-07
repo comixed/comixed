@@ -19,11 +19,8 @@
 import { Preference } from '@app/user/models/preference';
 import { User } from '@app/user/models/user';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
 import { FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 /** Find a specific user preference. */
 export function getUserPreference(

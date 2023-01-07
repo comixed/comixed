@@ -24,7 +24,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 @Component({
   selector: 'cx-blocked-hash-toolbar',

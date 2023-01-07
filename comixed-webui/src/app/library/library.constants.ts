@@ -18,23 +18,7 @@
 
 import { API_ROOT_URL } from '../core';
 
-export const QUERY_PARAM_TAB = 'tab';
-export const QUERY_PARAM_COVER_YEAR = 'year';
-export const QUERY_PARAM_COVER_MONTH = 'month';
-export const QUERY_PARAM_SORT_BY = 'sortBy';
-export const QUERY_PARAM_SORT_DIRECTION = 'sortOrder';
-export const QUERY_PARAM_ARCHIVE_TYPE = 'archive';
-export const QUERY_PARAM_PAGE_INDEX = 'index';
-export const QUERY_PARAM_PAGES_AS_GRID = 'grid';
-
 export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
-
-export const PUBLISHERS_GROUP = 'publishers';
-export const SERIES_GROUP = 'series';
-export const CHARACTERS_GROUP = 'characters';
-export const TEAMS_GROUP = 'teams';
-export const LOCATIONS_GROUP = 'locations';
-export const STORIES_GROUP = 'stories';
 
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
@@ -78,12 +62,7 @@ export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
 export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
 
-// display options
-export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
-export const PAGE_SIZE_PREFERENCE = 'preference.page-size';
-export const PAGE_SIZE_DEFAULT = PAGE_SIZE_OPTIONS[0];
 export const SORT_FIELD_PREFERENCE = 'preference.sort-field';
-export const SORT_FIELD_DEFAULT = 'added-date';
 export const SHOW_COMIC_COVERS_PREFERENCE = 'show-comic-covers';
 export const DUPLICATE_PAGES_UNBLOCKED_PAGES_ONLY =
   'preference.duplicate-pages.unblocked-only';

@@ -60,12 +60,6 @@ import {
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import {
-  QUERY_PARAM_ARCHIVE_TYPE,
-  QUERY_PARAM_COVER_MONTH,
-  QUERY_PARAM_COVER_YEAR,
-  QUERY_PARAM_PAGE_INDEX
-} from '@app/library/library.constants';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { UnreadComicsPipe } from '@app/library/pipes/unread-comics.pipe';
 import {
@@ -91,7 +85,6 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -137,7 +130,6 @@ describe('LibraryPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let activatedRoute: ActivatedRoute;
-  let urlParameterService: UrlParameterService;
 
   beforeEach(
     waitForAsync(() => {
@@ -194,8 +186,6 @@ describe('LibraryPageComponent', () => {
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
       activatedRoute = TestBed.inject(ActivatedRoute);
-      urlParameterService = TestBed.inject(UrlParameterService);
-      spyOn(urlParameterService, 'updateQueryParam');
       fixture.detectChanges();
     })
   );
@@ -443,196 +433,9 @@ describe('LibraryPageComponent', () => {
     });
   });
 
-  describe('loading the translations', () => {});
-
-  describe('the page index query parameter', () => {
-    beforeEach(() => {
-      component.pageIndex = 0;
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`
-      });
-    });
-
-    it('sets the page index', () => {
-      expect(component.pageIndex).toEqual(PAGE_INDEX);
-    });
-  });
-
-  describe('filtering by archive type', () => {
-    describe('when it is CBZ', () => {
-      const ARCHIVE_TYPE = ArchiveType.CBZ;
-
-      beforeEach(() => {
-        component.archiveTypeFilter = null;
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
-        });
-      });
-
-      it('sets the archive type filter', () => {
-        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
-      });
-    });
-
-    describe('when it is CBR', () => {
-      const ARCHIVE_TYPE = ArchiveType.CBR;
-
-      beforeEach(() => {
-        component.archiveTypeFilter = null;
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
-        });
-      });
-
-      it('sets the archive type filter', () => {
-        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
-      });
-    });
-
-    describe('when it is CB7', () => {
-      const ARCHIVE_TYPE = ArchiveType.CB7;
-
-      beforeEach(() => {
-        component.archiveTypeFilter = null;
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
-        });
-      });
-
-      it('sets the archive type filter', () => {
-        expect(component.archiveTypeFilter).toEqual(ARCHIVE_TYPE);
-      });
-    });
-
-    describe('when it is not valid', () => {
-      const ARCHIVE_TYPE = 'CBH';
-
-      beforeEach(() => {
-        component.archiveTypeFilter = null;
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          [QUERY_PARAM_ARCHIVE_TYPE]: `${ARCHIVE_TYPE}`
-        });
-      });
-
-      it('clears the archive type filter', () => {
-        expect(component.archiveTypeFilter).toBeNull();
-      });
-    });
-
-    describe('when it is not provided', () => {
-      const ARCHIVE_TYPE = null;
-
-      beforeEach(() => {
-        component.archiveTypeFilter = null;
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({});
-      });
-
-      it('clears the archive type filter', () => {
-        expect(component.archiveTypeFilter).toBeNull();
-      });
-    });
-  });
-
-  describe('when the archive type filter is changed', () => {
-    describe('when an value is selected', () => {
-      beforeEach(() => {
-        component.onArchiveTypeChanged(ArchiveType.CB7);
-      });
-
-      it('redirects the browser', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-
-    describe('when the value is cleared', () => {
-      beforeEach(() => {
-        component.onArchiveTypeChanged(null);
-      });
-
-      it('redirects the browser', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('when the page index changes', () => {
-    beforeEach(() => {
-      component.onPageIndexChange(PAGE_INDEX);
-    });
-
-    it('redirects the browser', () => {
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-    });
-  });
-
   describe('selecting all comics', () => {
     beforeEach(() => {
       component.comicBooks = COMIC_BOOKS;
-    });
-
-    describe('with no filters', () => {
-      beforeEach(() => {
-        component.coverDateFilter = { year: null, month: null };
-        component.archiveTypeFilter = null;
-        component.onSelectAllComics(true);
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: IDS })
-        );
-      });
-    });
-
-    describe('when filtering by year', () => {
-      beforeEach(() => {
-        component.coverDateFilter = {
-          year: new Date(COMIC_BOOKS[0].coverDate).getFullYear(),
-          month: null
-        };
-        component.onSelectAllComics(true);
-      });
-
-      it('only selects comics with the given year', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: [COMIC_BOOKS[0].id] })
-        );
-      });
-    });
-
-    describe('when filtering by month', () => {
-      const MONTH = new Date(COMIC_BOOKS[1].coverDate).getMonth();
-
-      beforeEach(() => {
-        component.coverDateFilter = {
-          year: null,
-          month: MONTH
-        };
-        component.onSelectAllComics(true);
-      });
-
-      it('only selects comics with the given month', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({
-            ids: COMIC_BOOKS.filter(
-              book => new Date(book.coverDate).getMonth() === MONTH
-            ).map(book => book.id)
-          })
-        );
-      });
-    });
-
-    describe('when filtering by archive type', () => {
-      beforeEach(() => {
-        component.archiveTypeFilter = COMIC_BOOKS[2].archiveType;
-        component.onSelectAllComics(true);
-      });
-
-      it('only selects comics with the given archive type', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: [COMIC_BOOKS[2].id] })
-        );
-      });
     });
 
     describe('when filtering by read status', () => {
@@ -664,53 +467,6 @@ describe('LibraryPageComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           deselectComicBooks({ ids: IDS })
         );
-      });
-    });
-
-    describe('the cover date filters', () => {
-      describe('when not provided', () => {
-        beforeEach(() => {
-          component.archiveTypeFilter = null;
-          (activatedRoute.queryParams as BehaviorSubject<{}>).next({});
-        });
-
-        it('has no month filter', () => {
-          expect(component.coverDateFilter.month).toBeNull();
-        });
-
-        it('has no year filter', () => {
-          expect(component.coverDateFilter.year).toBeNull();
-        });
-      });
-
-      describe('when the month is provided', () => {
-        const COVER_MONTH = 5;
-
-        beforeEach(() => {
-          component.archiveTypeFilter = null;
-          (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-            [QUERY_PARAM_COVER_MONTH]: `${COVER_MONTH}`
-          });
-        });
-
-        it('applies the filter', () => {
-          expect(component.coverDateFilter.month).toEqual(COVER_MONTH);
-        });
-      });
-
-      describe('when the year is provided', () => {
-        const COVER_YEAR = 2021;
-
-        beforeEach(() => {
-          component.archiveTypeFilter = null;
-          (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-            [QUERY_PARAM_COVER_YEAR]: `${COVER_YEAR}`
-          });
-        });
-
-        it('applies the filter', () => {
-          expect(component.coverDateFilter.year).toEqual(COVER_YEAR);
-        });
       });
     });
   });

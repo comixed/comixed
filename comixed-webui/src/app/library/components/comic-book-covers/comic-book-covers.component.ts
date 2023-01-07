@@ -36,7 +36,6 @@ import { editMultipleComics } from '@app/library/actions/library.actions';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { ComicDetailsDialogComponent } from '@app/library/components/comic-details-dialog/comic-details-dialog.component';
-import { PAGE_SIZE_DEFAULT } from '@app/library/library.constants';
 import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { TranslateService } from '@ngx-translate/core';
@@ -62,6 +61,7 @@ import {
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import * as _ from 'lodash';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 @Component({
   selector: 'cx-comic-book-covers',
@@ -90,7 +90,6 @@ export class ComicBookCoversComponent
   @Input() coverDateFilter: CoverDateFilter = { year: null, month: null };
   @Input() showCovers = true;
 
-  @Output() pageIndexChanged = new EventEmitter<number>();
   @Output() selectAllComics = new EventEmitter<boolean>();
 
   pagination = PAGE_SIZE_DEFAULT;

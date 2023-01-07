@@ -27,14 +27,11 @@ import { selectMetadataUpdateProcessState } from '@app/comic-metadata/selectors/
 import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE,
-  SHOW_COMIC_COVERS_PREFERENCE
-} from '@app/library/library.constants';
+import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 @Component({
   selector: 'cx-metadata-process-page',

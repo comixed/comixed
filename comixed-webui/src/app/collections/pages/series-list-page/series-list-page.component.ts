@@ -31,25 +31,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from '@app/user/models/user';
 import { selectUser } from '@app/user/selectors/user.selectors';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE,
-  QUERY_PARAM_PAGE_INDEX,
-  QUERY_PARAM_SORT_BY,
-  QUERY_PARAM_SORT_DIRECTION
-} from '@app/library/library.constants';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { loadSeriesList } from '@app/collections/actions/series.actions';
-import { getUserPreference } from '@app/user';
 import { selectSeriesList } from '@app/collections/selectors/series.selectors';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { isAdmin } from '@app/user/user.functions';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-series-list-page',
@@ -66,8 +57,6 @@ export class SeriesListPageComponent
   seriesListSubscription: Subscription;
 
   readonly pageOptions = PAGE_SIZE_OPTIONS;
-  pageSize = PAGE_SIZE_DEFAULT;
-  pageIndex = 0;
 
   displayedColumns = [
     'publisher',
@@ -78,9 +67,6 @@ export class SeriesListPageComponent
     'actions'
   ];
 
-  queryParamsSubscription: Subscription;
-  sortBy = 'name';
-  sortDirection: SortDirection = 'asc';
   langChangeSubscription: Subscription;
   userSubscription: Subscription;
   user: User;
@@ -96,18 +82,8 @@ export class SeriesListPageComponent
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private urlParameterService: UrlParameterService
+    public urlParameterService: QueryParameterService
   ) {
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.sortBy = params[QUERY_PARAM_SORT_BY] || 'name';
-        this.sortDirection = params[QUERY_PARAM_SORT_DIRECTION] || 'asc';
-        if (!!params[QUERY_PARAM_PAGE_INDEX]) {
-          this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
-        }
-      }
-    );
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -116,14 +92,6 @@ export class SeriesListPageComponent
     this.userSubscription = this.store.select(selectUser).subscribe(user => {
       this.user = user;
       this.logger.trace('Loading user page size preference');
-      this.pageSize = parseInt(
-        getUserPreference(
-          user.preferences,
-          PAGE_SIZE_PREFERENCE,
-          `${PAGE_SIZE_DEFAULT}`
-        ),
-        10
-      );
       this.isAdmin = isAdmin(user);
     });
     this.seriesListSubscription = this.store
@@ -139,8 +107,6 @@ export class SeriesListPageComponent
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from user updates');
     this.userSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from series list updates');
@@ -165,44 +131,6 @@ export class SeriesListPageComponent
     };
     this.dataSource.paginator = this.paginator;
     this.loadTranslations();
-  }
-
-  onPageChange(
-    pageSize: number,
-    pageIndex: number,
-    previousPageIndex: number
-  ): void {
-    if (this.pageSize != pageSize) {
-      this.logger.trace('Page size changed');
-      this.store.dispatch(
-        saveUserPreference({
-          name: PAGE_SIZE_PREFERENCE,
-          value: `${pageSize}`
-        })
-      );
-    }
-    if (pageIndex !== previousPageIndex) {
-      this.logger.debug('Page index changed:', pageIndex);
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_INDEX,
-          value: `${pageIndex}`
-        }
-      ]);
-    }
-  }
-
-  onSortChange(active: string, direction: 'asc' | 'desc' | ''): void {
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_SORT_BY,
-        value: active
-      },
-      {
-        name: QUERY_PARAM_SORT_DIRECTION,
-        value: direction
-      }
-    ]);
   }
 
   private loadTranslations(): void {

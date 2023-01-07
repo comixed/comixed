@@ -2,11 +2,15 @@
   <mat-paginator
     class="cx-primary-light-background cx-height-100"
     showFirstLastButtons
-    [pageIndex]="!ready ? 0 : pageIndex"
-    [pageSize]="pageSize"
+    [pageIndex]="urlParameterService.pageIndex$ | async"
+    [pageSize]="urlParameterService.pageSize$ | async"
     [pageSizeOptions]="pageSizeOptions"
     (page)="
-      onPageChange($event.pageSize, $event.pageIndex, $event.previousPageIndex)
+      urlParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
     "
   ></mat-paginator>
 </mat-toolbar>
@@ -18,7 +22,15 @@
   }}
 </h2>
 
-<mat-table [dataSource]="dataSource" matSort>
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="urlParameterService.sortBy$ | async"
+  [matSortDirection]="urlParameterService.sortDirection$ | async"
+  (matSortChange)="
+    urlParameterService.onSortChange($event.active, $event.direction)
+  "
+>
   <ng-container matColumnDef="comic">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "deleted-page-list.header.comic" | translate }}

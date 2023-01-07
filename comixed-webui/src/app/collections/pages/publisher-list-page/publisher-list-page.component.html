@@ -25,7 +25,11 @@
     [pageIndex]="pageIndex"
     [pageSizeOptions]="pageOptions"
     (page)="
-      onPageChange($event.pageSize, $event.pageIndex, $event.previousPageIndex)
+      urlParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
     "
   ></mat-paginator>
 </mat-toolbar>
@@ -34,9 +38,11 @@
   matSort
   class="cx-width-100"
   [dataSource]="dataSource"
-  [matSortActive]="sortBy"
-  [matSortDirection]="sortDirection"
-  (matSortChange)="onSortChange($event.active, $event.direction)"
+  [matSortActive]="urlParameterService.sortBy$ | async"
+  [matSortDirection]="urlParameterService.sortDirection$ | async"
+  (matSortChange)="
+    urlParameterService.onSortChange($event.active, $event.direction)
+  "
 >
   <ng-container matColumnDef="name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>

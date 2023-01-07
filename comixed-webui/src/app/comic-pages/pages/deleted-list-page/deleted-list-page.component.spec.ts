@@ -40,14 +40,6 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import {
-  PAGE_SIZE_PREFERENCE,
-  QUERY_PARAM_PAGE_INDEX
-} from '@app/library/library.constants';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('DeletedListPageComponent', () => {
   const PAGE_INDEX = 11;
@@ -74,8 +66,6 @@ describe('DeletedListPageComponent', () => {
   let setTitleSpy: jasmine.Spy<any>;
   let translateService: TranslateService;
   let store: MockStore<any>;
-  let urlParameterService: UrlParameterService;
-  let activatedRoute: ActivatedRoute;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -89,18 +79,7 @@ describe('DeletedListPageComponent', () => {
         MatToolbarModule,
         MatPaginatorModule
       ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            params: new BehaviorSubject<{}>({}),
-            queryParams: new BehaviorSubject<{}>({}),
-            snapshot: {} as ActivatedRouteSnapshot
-          }
-        },
-        TitleService
-      ]
+      providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DeletedListPageComponent);
@@ -109,10 +88,6 @@ describe('DeletedListPageComponent', () => {
     setTitleSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
-    urlParameterService = TestBed.inject(UrlParameterService);
-    spyOn(urlParameterService, 'updateQueryParam');
-    activatedRoute = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
 
@@ -179,58 +154,6 @@ describe('DeletedListPageComponent', () => {
       expect(component.dataSource.sortingDataAccessor(ENTRY, 'hash')).toEqual(
         PAGE.hash
       );
-    });
-  });
-
-  describe('query parameters', () => {
-    beforeEach(() => {
-      (activatedRoute.queryParams as BehaviorSubject<any>).next({
-        [QUERY_PARAM_PAGE_INDEX]: `${PAGE_INDEX}`
-      });
-    });
-
-    it('loads the page index', () => {
-      expect(component.pageIndex).toEqual(PAGE_INDEX);
-    });
-  });
-
-  describe('paginator events', () => {
-    describe('if the page changes', () => {
-      beforeEach(() => {
-        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX + 1);
-      });
-
-      it('saves the preferred page size', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          saveUserPreference({
-            name: PAGE_SIZE_PREFERENCE,
-            value: `${PAGE_SIZE}`
-          })
-        );
-      });
-
-      it('updates the location', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-
-    describe('if the page does not change', () => {
-      beforeEach(() => {
-        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX);
-      });
-
-      it('saves the preferred page size', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          saveUserPreference({
-            name: PAGE_SIZE_PREFERENCE,
-            value: `${PAGE_SIZE}`
-          })
-        );
-      });
-
-      it('updates the location', () => {
-        expect(urlParameterService.updateQueryParam).not.toHaveBeenCalled();
-      });
     });
   });
 });

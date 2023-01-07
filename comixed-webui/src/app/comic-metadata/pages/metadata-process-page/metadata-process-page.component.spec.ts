@@ -38,16 +38,13 @@ import {
   COMIC_BOOK_4,
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE,
-  SHOW_COMIC_COVERS_PREFERENCE
-} from '@app/library/library.constants';
+import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 describe('MetadataProcessPageComponent', () => {
   const IDS = [4, 17, 6];

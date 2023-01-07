@@ -35,15 +35,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import {
-  PAGE_SIZE_PREFERENCE,
-  SHOW_COMIC_COVERS_PREFERENCE,
-  SORT_FIELD_PREFERENCE
-} from '@app/library/library.constants';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
 import { MatDividerModule } from '@angular/material/divider';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
@@ -58,7 +51,6 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('LibraryToolbarComponent', () => {
   const COMIC_BOOKS = [
@@ -85,7 +77,6 @@ describe('LibraryToolbarComponent', () => {
   let component: LibraryToolbarComponent;
   let fixture: ComponentFixture<LibraryToolbarComponent>;
   let store: MockStore<any>;
-  let urlParameterService: UrlParameterService;
   let router: Router;
   let confirmationService: ConfirmationService;
   let translateService: TranslateService;
@@ -116,8 +107,6 @@ describe('LibraryToolbarComponent', () => {
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
-      urlParameterService = TestBed.inject(UrlParameterService);
-      spyOn(urlParameterService, 'updateQueryParam');
       router = TestBed.inject(Router);
       spyOn(router, 'navigate');
       confirmationService = TestBed.inject(ConfirmationService);
@@ -156,43 +145,6 @@ describe('LibraryToolbarComponent', () => {
 
     it('updates the items per page label', () => {
       expect(component.paginator._intl.itemsPerPageLabel).not.toBeNull();
-    });
-  });
-
-  describe('when the page size changes', () => {
-    beforeEach(() => {
-      component.onLibraryDisplayChange(PAGINATION, PAGE_INDEX, PAGE_INDEX);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: PAGE_SIZE_PREFERENCE,
-          value: `${PAGINATION}`
-        })
-      );
-    });
-  });
-
-  describe('when the page index changes', () => {
-    beforeEach(() => {
-      component.onLibraryDisplayChange(PAGINATION, PAGE_INDEX, PAGE_INDEX - 1);
-    });
-
-    it('updates the URL', () => {
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-    });
-  });
-
-  describe('when the archive type changes', () => {
-    const ARCHIVE_TYPE = Math.random() > 0.5 ? ArchiveType.CBZ : null;
-
-    beforeEach(() => {
-      component.onArchiveTypeChanged(ARCHIVE_TYPE);
-    });
-
-    it('updates the URL', () => {
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 
@@ -253,20 +205,6 @@ describe('LibraryToolbarComponent', () => {
     });
   });
 
-  describe('when sorting field changes', () => {
-    const SORT_FIELD = 'sort-field';
-
-    beforeEach(() => {
-      component.onSortBy(SORT_FIELD);
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: SORT_FIELD })
-      );
-    });
-  });
-
   describe('purging the library', () => {
     beforeEach(() => {
       component.selectedIds = IDS;
@@ -308,72 +246,6 @@ describe('LibraryToolbarComponent', () => {
 
     it('emits an event', () => {
       expect(component.selectAllComics.emit).toHaveBeenCalledWith(false);
-    });
-  });
-
-  describe('the year filter', () => {
-    describe('setting the filter', () => {
-      beforeEach(() => {
-        component.coverMonth = NOW.getMonth();
-        component.onCoverYearChange(NOW.getFullYear());
-      });
-
-      it('updates the URL', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-
-    describe('clearing the filter', () => {
-      beforeEach(() => {
-        component.coverYear = NOW.getFullYear();
-        component.onCoverYearChange(null);
-      });
-
-      it('updates the URL', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('updating the month filter', () => {
-    describe('setting the filter', () => {
-      beforeEach(() => {
-        component.coverYear = NOW.getFullYear();
-        component.onCoverMonthChange(NOW.getMonth());
-      });
-
-      it('updates the URL', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-
-    describe('clearing the filter', () => {
-      beforeEach(() => {
-        component.coverYear = NOW.getFullYear();
-        component.onCoverMonthChange(null);
-      });
-
-      it('updates the URL', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('toggling show cover mode', () => {
-    const SHOW_COVERS = Math.random() > 0.5;
-
-    beforeEach(() => {
-      component.showCovers = !SHOW_COVERS;
-      component.onToggleShowCoverMode();
-    });
-
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(
-        saveUserPreference({
-          name: SHOW_COMIC_COVERS_PREFERENCE,
-          value: `${SHOW_COVERS}`
-        })
-      );
     });
   });
 });

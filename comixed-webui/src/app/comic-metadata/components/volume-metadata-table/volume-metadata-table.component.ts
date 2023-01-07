@@ -35,11 +35,8 @@ import {
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS
-} from '@app/library/library.constants';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-volume-metadata-table',

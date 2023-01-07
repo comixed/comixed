@@ -48,12 +48,12 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { MatSort } from '@angular/material/sort';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
+import { MatPaginator } from '@angular/material/paginator';
 import {
   PAGE_SIZE_DEFAULT,
   PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
-import { MatPaginator } from '@angular/material/paginator';
+} from '@app/core';
 
 @Component({
   selector: 'cx-blocked-hash-list',

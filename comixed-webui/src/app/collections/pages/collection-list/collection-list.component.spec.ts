@@ -37,6 +37,9 @@ import { CollectionListEntry } from '@app/collections/models/collection-list-ent
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatSortModule } from '@angular/material/sort';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CollectionListComponent', () => {
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -54,16 +57,19 @@ describe('CollectionListComponent', () => {
   let router: Router;
   let titleService: TitleService;
   let translateService: TranslateService;
+  let queryParameterService: jasmine.SpyObj<QueryParameterService>;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [CollectionListComponent],
         imports: [
+          NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
-          MatTableModule
+          MatTableModule,
+          MatSortModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -73,7 +79,11 @@ describe('CollectionListComponent', () => {
               params: new BehaviorSubject<{}>({})
             }
           },
-          TitleService
+          TitleService,
+          {
+            provide: QueryParameterService,
+            useValue: {}
+          }
         ]
       }).compileComponents();
 
@@ -87,6 +97,9 @@ describe('CollectionListComponent', () => {
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
       translateService = TestBed.inject(TranslateService);
+      queryParameterService = TestBed.inject(
+        QueryParameterService
+      ) as jasmine.SpyObj<QueryParameterService>;
       fixture.detectChanges();
     })
   );

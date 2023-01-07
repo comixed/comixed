@@ -23,7 +23,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Story } from '@app/lists/models/story';
@@ -37,18 +37,12 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { loadStoriesForName } from '@app/lists/actions/story-list.actions';
 import { setBusyState } from '@app/core/actions/busy.actions';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
-import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getPageSize } from '@app/user/user.functions';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-story-list-for-name-page',
@@ -64,7 +58,6 @@ export class StoryListForNamePageComponent
   dataSource = new MatTableDataSource<Story>([]);
   paramSubscription: Subscription;
   storyName = '';
-  queryParamSubscription: Subscription;
   langChangeSubscription: Subscription;
   storyStateSubscription: Subscription;
   storySubscription: Subscription;
@@ -82,23 +75,16 @@ export class StoryListForNamePageComponent
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private urlParameterService: UrlParameterService,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    public urlParameterService: QueryParameterService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.logger.trace('Loading story name from parameters');
       this.storyName = params.name;
       this.store.dispatch(loadStoriesForName({ name: this.storyName }));
     });
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (+params[QUERY_PARAM_PAGE_SIZE]) {
-          this.pageSize = +params[QUERY_PARAM_PAGE_SIZE];
-        }
-      }
-    );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -140,8 +126,6 @@ export class StoryListForNamePageComponent
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from parameter updates');
     this.paramSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from query parameter updates');
-    this.queryParamSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from display updates');
@@ -150,23 +134,6 @@ export class StoryListForNamePageComponent
     this.storyStateSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from story updates');
     this.storySubscription.unsubscribe();
-  }
-
-  onPageChange(pageEvent: PageEvent): void {
-    if (pageEvent.pageSize !== this.pageSize) {
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_SIZE,
-          value: `${pageEvent.pageSize}`
-        }
-      ]);
-      this.store.dispatch(
-        saveUserPreference({
-          name: PAGE_SIZE_PREFERENCE,
-          value: `${pageEvent.pageSize}`
-        })
-      );
-    }
   }
 
   private loadTranslations(): void {

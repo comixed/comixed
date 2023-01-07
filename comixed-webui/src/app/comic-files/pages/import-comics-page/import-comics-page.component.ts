@@ -27,10 +27,6 @@ import { filter } from 'rxjs/operators';
 import { getUserPreference } from '@app/user';
 import { Title } from '@angular/platform-browser';
 import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
-import {
   selectComicFileListState,
   selectComicFiles,
   selectComicFileSelections
@@ -42,6 +38,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { User } from '@app/user/models/user';
 import { selectProcessComicsState } from '@app/selectors/process-comics.selectors';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 @Component({
   selector: 'cx-import-comics',
