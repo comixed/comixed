@@ -9,9 +9,15 @@
   <mat-paginator
     class="cx-primary-light-background cx-height-100"
     showFirstLastButtons="true"
-    [pageSize]="pageSize"
+    [pageSize]="urlParameterService.pageSize$ | async"
     [pageSizeOptions]="pageSizeOptions"
-    (page)="onPageChange($event)"
+    (page)="
+      urlParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
+    "
   ></mat-paginator>
   <div class="cx-spacer"></div>
 </mat-toolbar>
@@ -20,7 +26,15 @@
   {{ "story-list-for-name.page-title" | translate: { name: storyName } }}
 </h2>
 
-<mat-table [dataSource]="dataSource" matSort>
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="urlParameterService.sortBy$ | async"
+  [matSortDirection]="urlParameterService.sortDirection$ | async"
+  (matSortChange)="
+    urlParameterService.onSortChange($event.active, $event.direction)
+  "
+>
   <ng-container matColumnDef="story-name">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "story-list.label.story-name" | translate }}

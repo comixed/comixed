@@ -29,9 +29,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { loadConfigurationOptions } from '@app/admin/actions/configuration-option-list.actions';
-import { QUERY_PARAM_TAB } from '@app/library/library.constants';
-import { ActivatedRoute } from '@angular/router';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-configuration-page',
@@ -43,28 +41,14 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   langChangeSubscription: Subscription;
   optionSubscription: Subscription;
   options: ConfigurationOption[] = [];
-  queryParamSubscription: Subscription;
-  currentTab = 0;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService
+    public urlParameterService: QueryParameterService
   ) {
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (+params[QUERY_PARAM_TAB]) {
-          this.logger.debug(
-            'Setting configuration tab:',
-            params[QUERY_PARAM_TAB]
-          );
-          this.currentTab = +params[QUERY_PARAM_TAB];
-        }
-      }
-    );
     this.configStateSubscription = this.store
       .select(selectConfigurationOptionListState)
       .subscribe(state => {
@@ -89,16 +73,6 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     this.configStateSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.optionSubscription.unsubscribe();
-  }
-
-  onTabChange(index: number): void {
-    this.logger.trace('Tab changed:', index);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_TAB,
-        value: `${index}`
-      }
-    ]);
   }
 
   private loadTranslations(): void {

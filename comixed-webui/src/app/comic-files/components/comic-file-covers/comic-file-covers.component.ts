@@ -36,10 +36,7 @@ import { ComicFileToolbarComponent } from '@app/comic-files/components/comic-fil
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { getUserPreference } from '@app/user';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 @Component({
   selector: 'cx-comic-file-covers',

@@ -33,20 +33,12 @@ import { selectSeriesDetail } from '@app/collections/selectors/series.selectors'
 import { Issue } from '@app/collections/models/issue';
 import { loadSeriesDetail } from '@app/collections/actions/series.actions';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE,
-  QUERY_PARAM_PAGE_INDEX,
-  QUERY_PARAM_SORT_BY,
-  QUERY_PARAM_SORT_DIRECTION
-} from '@app/library/library.constants';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-series-detail-page',
@@ -69,7 +61,6 @@ export class SeriesDetailPageComponent
     'in-library'
   ];
   paramSubscription: Subscription;
-  queryParamSubscription: Subscription;
   seriesDetailSubscription: Subscription;
   comicBookListSubscription: Subscription;
   userSubscription: Subscription;
@@ -77,10 +68,6 @@ export class SeriesDetailPageComponent
 
   dataSource = new MatTableDataSource<Issue>([]);
 
-  pageSize = PAGE_SIZE_DEFAULT;
-  pageIndex = 0;
-  sortBy = 'issue-number';
-  sortDirection = 'asc';
   readonly pageOptions = PAGE_SIZE_OPTIONS;
 
   publisher = '';
@@ -91,10 +78,10 @@ export class SeriesDetailPageComponent
   constructor(
     private logger: LoggerService,
     private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService,
     private store: Store<any>,
     private titleService: TitleService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    public urlParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
@@ -112,14 +99,6 @@ export class SeriesDetailPageComponent
         })
       );
     });
-    this.logger.trace('Subscribing to query parameter updates');
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        this.sortBy = params[QUERY_PARAM_SORT_BY];
-        this.sortDirection = params[QUERY_PARAM_SORT_DIRECTION];
-        this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
-      }
-    );
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -180,44 +159,6 @@ export class SeriesDetailPageComponent
         comicBook.issueNumber === issue.issueNumber
     );
     return found?.id;
-  }
-
-  onPageChange(
-    pageSize: number,
-    pageIndex: number,
-    previousPageIndex: number
-  ): void {
-    if (this.pageSize != pageSize) {
-      this.logger.trace('Page size changed');
-      this.store.dispatch(
-        saveUserPreference({
-          name: PAGE_SIZE_PREFERENCE,
-          value: `${pageSize}`
-        })
-      );
-    }
-    if (pageIndex !== previousPageIndex) {
-      this.logger.debug('Page index changed:', pageIndex);
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_INDEX,
-          value: `${pageIndex}`
-        }
-      ]);
-    }
-  }
-
-  onSortChange(active: string, direction: SortDirection): void {
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_SORT_BY,
-        value: active
-      },
-      {
-        name: QUERY_PARAM_SORT_DIRECTION,
-        value: direction
-      }
-    ]);
   }
 
   private loadTranslations(): void {

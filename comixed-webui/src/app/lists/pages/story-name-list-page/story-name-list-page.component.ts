@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
@@ -35,19 +35,10 @@ import {
 } from '@app/lists/selectors/story-list.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadStoryNames } from '@app/lists/actions/story-list.actions';
-import { ActivatedRoute } from '@angular/router';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE
-} from '@app/library/library.constants';
-import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { getPageSize } from '@app/user/user.functions';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-story-name-list-page',
@@ -63,9 +54,6 @@ export class StoryNameListPageComponent
   dataSource = new MatTableDataSource<string>([]);
   storyListSubscription: Subscription;
   nameSubscription: Subscription;
-  userSubscription: Subscription;
-  queryParamSubscription: Subscription;
-  pageSize = PAGE_SIZE_DEFAULT;
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   langChangeSubscription: Subscription;
 
@@ -74,18 +62,10 @@ export class StoryNameListPageComponent
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private urlParameterService: UrlParameterService,
-    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    public urlParameterService: QueryParameterService
   ) {
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (+params[QUERY_PARAM_PAGE_SIZE]) {
-          this.pageSize = +params[QUERY_PARAM_PAGE_SIZE];
-        }
-      }
-    );
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
@@ -97,10 +77,6 @@ export class StoryNameListPageComponent
     this.nameSubscription = this.store
       .select(selectStoryNames)
       .subscribe(names => (this.dataSource.data = names));
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.logger.trace('Setting page size');
-      this.pageSize = getPageSize(user);
-    });
   }
 
   ngOnInit(): void {
@@ -123,33 +99,10 @@ export class StoryNameListPageComponent
   }
 
   ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from query parameters');
-    this.queryParamSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from story list state changes');
     this.storyListSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from name changse');
     this.nameSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
-  }
-
-  onPageChange(pageEvent: PageEvent): void {
-    if (this.pageSize !== pageEvent.pageSize) {
-      this.logger.trace('Page size changed');
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_SIZE,
-          value: `${pageEvent.pageSize}`
-        }
-      ]);
-      this.logger.trace('Saving user preference');
-      this.store.dispatch(
-        saveUserPreference({
-          name: PAGE_SIZE_PREFERENCE,
-          value: `${pageEvent.pageSize}`
-        })
-      );
-    }
   }
 
   private loadTranslations(): void {

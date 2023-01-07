@@ -33,17 +33,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DeletedPageListEntry } from '@app/comic-pages/models/ui/deleted-page-list-entry';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE,
-  QUERY_PARAM_PAGE_INDEX
-} from '@app/library/library.constants';
-import { saveUserPreference } from '@app/user/actions/user.actions';
 import { ActivatedRoute } from '@angular/router';
-import { selectUser } from '@app/user/selectors/user.selectors';
-import { getUserPreference } from '@app/user';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-deleted-list-page',
@@ -59,14 +51,9 @@ export class DeletedListPageComponent
   readonly displayedColumns = ['comic', 'filename', 'hash'];
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 
-  queryParamSubscription: Subscription;
-  pageIndex = 0;
-  pageSize = PAGE_SIZE_DEFAULT;
   langChangeSubscription: Subscription;
-  userSubscription: Subscription;
   comicListSubscription: Subscription;
   dataSource = new MatTableDataSource<DeletedPageListEntry>();
-  ready = false;
 
   constructor(
     private logger: LoggerService,
@@ -74,32 +61,13 @@ export class DeletedListPageComponent
     private translationService: TranslateService,
     private titleService: TitleService,
     private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService
+    public urlParameterService: QueryParameterService
   ) {
     this.langChangeSubscription =
       this.translationService.onLangChange.subscribe(() =>
         this.loadTranslations()
       );
-    this.logger.trace('Subscribing to query param changes');
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (!!params[QUERY_PARAM_PAGE_INDEX]) {
-          this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
-          this.logger.debug(`Page index: ${this.pageIndex}`);
-        }
-      }
-    );
     this.logger.trace('Subscribing to user changes');
-    this.userSubscription = this.store.select(selectUser).subscribe(user => {
-      this.pageSize = parseInt(
-        getUserPreference(
-          user.preferences,
-          PAGE_SIZE_PREFERENCE,
-          `${this.pageSize}`
-        ),
-        10
-      );
-    });
     this.logger.trace('Subscribing to comic list changes');
     this.comicListSubscription = this.store
       .select(selectComicBookList)
@@ -129,43 +97,15 @@ export class DeletedListPageComponent
           return data.page.hash;
       }
     };
-    this.ready = true;
   }
 
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language change updates');
     this.langChangeSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from query param updates');
-    this.queryParamSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from user updates');
-    this.userSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
     this.loadTranslations();
-  }
-
-  onPageChange(
-    pageSize: number,
-    pageIndex: number,
-    previousPageIndex: number
-  ): void {
-    this.logger.trace('Page size changed');
-    this.store.dispatch(
-      saveUserPreference({
-        name: PAGE_SIZE_PREFERENCE,
-        value: `${pageSize}`
-      })
-    );
-    if (pageIndex !== previousPageIndex) {
-      this.logger.debug('Page index changed:', pageIndex);
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_INDEX,
-          value: `${pageIndex}`
-        }
-      ]);
-    }
   }
 
   private loadTranslations(): void {

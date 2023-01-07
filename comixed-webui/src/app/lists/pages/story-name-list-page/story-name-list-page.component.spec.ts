@@ -23,8 +23,6 @@ import {
   STORY_LIST_FEATURE_KEY
 } from '@app/lists/reducers/story-list.reducer';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MatTableModule } from '@angular/material/table';
@@ -33,17 +31,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { QUERY_PARAM_PAGE_SIZE } from '@app/app.constants';
 import { STORY_1, STORY_2, STORY_3 } from '@app/lists/lists.fixtures';
 import { TitleService } from '@app/core/services/title.service';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('StoryNameListPageComponent', () => {
   const NAMES = [STORY_1.name, STORY_2.name, STORY_3.name];
@@ -57,8 +51,6 @@ describe('StoryNameListPageComponent', () => {
   let fixture: ComponentFixture<StoryNameListPageComponent>;
   let store: MockStore<any>;
   let dispatchSpy: jasmine.Spy<any>;
-  let activatedRoute: ActivatedRoute;
-  let urlParameterService: UrlParameterService;
   let translateService: TranslateService;
   let titleService: TitleService;
 
@@ -76,26 +68,13 @@ describe('StoryNameListPageComponent', () => {
           MatPaginatorModule,
           MatSortModule
         ],
-        providers: [
-          provideMockStore({ initialState }),
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              queryParams: new BehaviorSubject<{}>({}),
-              snapshot: {} as ActivatedRouteSnapshot
-            }
-          },
-          TitleService
-        ]
+        providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(StoryNameListPageComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       dispatchSpy = spyOn(store, 'dispatch');
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      urlParameterService = TestBed.inject(UrlParameterService);
-      spyOn(urlParameterService, 'updateQueryParam');
       translateService = TestBed.inject(TranslateService);
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
@@ -114,78 +93,6 @@ describe('StoryNameListPageComponent', () => {
 
     it('loads the tab title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('page size', () => {
-    const PAGE_SIZE = 25;
-
-    describe('when the user preference is different', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [USER_FEATURE_KEY]: {
-            ...initialUserState,
-            user: {
-              ...USER,
-              preferences: [
-                { name: PAGE_SIZE_PREFERENCE, value: `${PAGE_SIZE}` }
-              ]
-            }
-          }
-        });
-      });
-
-      it('sets the page size', () => {
-        expect(component.pageSize).toEqual(PAGE_SIZE);
-      });
-    });
-
-    describe('when provided in the url', () => {
-      beforeEach(() => {
-        (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-          [QUERY_PARAM_PAGE_SIZE]: `${PAGE_SIZE}`
-        });
-      });
-
-      it('sets the page size', () => {
-        expect(component.pageSize).toEqual(PAGE_SIZE);
-      });
-    });
-
-    describe('when changed', () => {
-      beforeEach(() => {
-        component.onPageChange({ pageSize: PAGE_SIZE } as any);
-      });
-
-      it('updates the url', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-
-      it('update the user preference', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          saveUserPreference({
-            name: PAGE_SIZE_PREFERENCE,
-            value: `${PAGE_SIZE}`
-          })
-        );
-      });
-    });
-
-    describe('when unchanged', () => {
-      beforeEach(() => {
-        component.pageSize = PAGE_SIZE;
-        dispatchSpy.calls.reset();
-        component.onPageChange({
-          pageSize: PAGE_SIZE,
-          pageIndex: 0,
-          length: 0
-        });
-      });
-
-      it('does nothing', () => {
-        expect(store.dispatch).not.toHaveBeenCalled();
-      });
     });
   });
 

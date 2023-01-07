@@ -24,8 +24,6 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
   MAXIMUM_RECORDS_PREFERENCE,
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -43,6 +41,7 @@ import { TitleService } from '@app/core/services/title.service';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 @Component({
   selector: 'cx-scraping-page',

@@ -3,9 +3,9 @@
   [title]="'library.page-title.' + pageContent"
   [comicBooks]="
     comicBooks
-      | archiveType: archiveTypeFilter
+      | archiveType: (urlParameterService.archiveType$ | async)
       | unreadComics: unreadOnly:lastReadDates
-      | coverDateFilter: coverDateFilter
+      | coverDateFilter: (urlParameterService.coverYear$ | async)
   "
   [selectedIds]="selectedIds"
   [lastRead]="lastReadDates"
@@ -15,12 +15,10 @@
   [showUpdateMetadata]="showUpdateMetadata"
   [showConsolidate]="showConsolidate"
   [showPurge]="showPurge"
-  [sortField]="sortField"
-  [archiveType]="archiveTypeFilter"
-  [pageIndex]="pageIndex"
+  [pageIndex]="urlParameterService.pageIndex$ | async"
+  [sortField]="urlParameterService.sortBy$ | async"
+  [coverDateFilter]="urlParameterService.coverYear$ | async"
+  [archiveType]="urlParameterService.archiveType$ | async"
   [showCovers]="showCovers"
-  [coverDateFilter]="coverDateFilter"
-  (archiveTypeChanged)="onArchiveTypeChanged($event)"
-  (pageIndexChanged)="onPageIndexChange($event)"
   (selectAllComics)="onSelectAllComics($event)"
 ></cx-comic-book-covers>

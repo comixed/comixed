@@ -52,9 +52,6 @@ import {
   COMIC_BOOK_4,
   COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
-import { saveUserPreference } from '@app/user/actions/user.actions';
-import { PAGE_SIZE_PREFERENCE } from '@app/library/library.constants';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('SeriesDetailPageComponent', () => {
   const PUBLISHER = 'The Publisher';
@@ -83,9 +80,6 @@ describe('SeriesDetailPageComponent', () => {
 
   let component: SeriesDetailPageComponent;
   let fixture: ComponentFixture<SeriesDetailPageComponent>;
-  let activatedRoute: ActivatedRoute;
-  let urlParameterService: UrlParameterService;
-  let store: MockStore<any>;
   let titleService: TitleService;
   let translateService: TranslateService;
 
@@ -124,11 +118,6 @@ describe('SeriesDetailPageComponent', () => {
 
     fixture = TestBed.createComponent(SeriesDetailPageComponent);
     component = fixture.componentInstance;
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    urlParameterService = TestBed.inject(UrlParameterService);
-    spyOn(urlParameterService, 'updateQueryParam');
-    store = TestBed.inject(MockStore);
-    spyOn(store, 'dispatch');
     titleService = TestBed.inject(TitleService);
     translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
@@ -211,47 +200,6 @@ describe('SeriesDetailPageComponent', () => {
           publisher: COMIC_BOOK.publisher.substr(1)
         })
       ).toBeUndefined();
-    });
-  });
-
-  describe('changing the page', () => {
-    const PAGE_SIZE = 10;
-    const PAGE_INDEX = 1;
-
-    describe('the page size changes', () => {
-      beforeEach(() => {
-        component.pageSize = PAGE_SIZE - 1;
-        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX);
-      });
-
-      it('saves the page size', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          saveUserPreference({
-            name: PAGE_SIZE_PREFERENCE,
-            value: `${PAGE_SIZE}`
-          })
-        );
-      });
-    });
-
-    describe('the page index changes', () => {
-      beforeEach(() => {
-        component.onPageChange(PAGE_SIZE, PAGE_INDEX, PAGE_INDEX - 1);
-      });
-
-      it('updates the url', () => {
-        expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('changing the sort options', () => {
-    beforeEach(() => {
-      component.onSortChange('issue-number', 'asc');
-    });
-
-    it('updates the url', () => {
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 });

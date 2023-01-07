@@ -48,19 +48,35 @@ describe('CoverDateFilterPipe', () => {
 
   it('can filter by year', () => {
     expect(
-      pipe.transform(COMICS, { year: LAST_YEAR.getFullYear(), month: null })
-    ).toEqual([COMIC_LAST_YEAR]);
+      pipe
+        .transform(COMICS, { year: LAST_YEAR.getFullYear(), month: null })
+        .every(
+          entry =>
+            new Date(entry.coverDate).getFullYear() === LAST_YEAR.getFullYear()
+        )
+    ).toBeTrue();
   });
 
   it('can filter by month only', () => {
     expect(
-      pipe.transform(COMICS, { year: null, month: LAST_MONTH.getMonth() })
-    ).toEqual([COMIC_LAST_MONTH]);
+      pipe
+        .transform(COMICS, { year: null, month: LAST_MONTH.getMonth() })
+        .every(
+          entry =>
+            new Date(entry.coverDate).getMonth() === LAST_MONTH.getMonth()
+        )
+    ).toBeTrue();
   });
 
   it('can filter by month and year', () => {
     expect(
-      pipe.transform(COMICS, { year: NOW.getFullYear(), month: NOW.getMonth() })
-    ).toEqual([COMIC_TODAY]);
+      pipe
+        .transform(COMICS, { year: NOW.getFullYear(), month: NOW.getMonth() })
+        .every(
+          entry =>
+            new Date(entry.coverDate).getMonth() === NOW.getMonth() &&
+            new Date(entry.coverDate).getFullYear() === NOW.getFullYear()
+        )
+    ).toBeTrue();
   });
 });

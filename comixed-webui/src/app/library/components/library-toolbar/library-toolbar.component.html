@@ -16,7 +16,7 @@
     [pageSize]="pageSize"
     [pageIndex]="pageIndex"
     (page)="
-      onLibraryDisplayChange(
+      urlParameterService.onPageChange(
         $event.pageSize,
         $event.pageIndex,
         $event.previousPageIndex
@@ -27,7 +27,7 @@
   <mat-form-field *ngIf="showCoverFilters" appearance="standard">
     <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
     <mat-select
-      (selectionChange)="onCoverYearChange($event.value)"
+      (selectionChange)="urlParameterService.onCoverYearChanged($event.value)"
       [value]="coverYear"
     >
       <mat-option *ngFor="let option of coverYears" [value]="option.value">
@@ -38,7 +38,7 @@
   <mat-form-field *ngIf="showCoverFilters" appearance="standard">
     <mat-label>{{ "filtering.label.month" | translate }}</mat-label>
     <mat-select
-      (selectionChange)="onCoverMonthChange($event.value)"
+      (selectionChange)="urlParameterService.onCoverMonthChanged($event.value)"
       [value]="coverMonth"
     >
       <mat-option *ngFor="let option of coverMonths" [value]="option.value">
@@ -48,7 +48,10 @@
   </mat-form-field>
   <mat-form-field *ngIf="showCoverFilters" appearance="standard">
     <mat-label>{{ "sorting.label.sort-by" | translate }}</mat-label>
-    <mat-select (selectionChange)="onSortBy($event.value)" [value]="sortField">
+    <mat-select
+      (selectionChange)="urlParameterService.onSortChange($event.value, 'asc')"
+      [value]="sortField"
+    >
       <mat-option
         *ngFor="let option of sortFieldOptions"
         [value]="option.value"
@@ -60,8 +63,8 @@
   <mat-form-field *ngIf="showCoverFilters" appearance="standard">
     <mat-label>{{ "archive-type.label.select" | translate }}</mat-label>
     <mat-select
-      (selectionChange)="onArchiveTypeChanged($event.value)"
-      [value]="archiveType"
+      (selectionChange)="urlParameterService.onArchiveTypeChanged($event.value)"
+      [value]="urlParameterService.archiveType$ | async"
     >
       <mat-option
         *ngFor="let option of archiveTypeOptions"

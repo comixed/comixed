@@ -36,8 +36,7 @@ import { MatInputModule } from '@angular/material/input';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import {
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
-  IMPORT_ROOT_DIRECTORY_PREFERENCE,
-  PAGE_SIZE_PREFERENCE
+  IMPORT_ROOT_DIRECTORY_PREFERENCE
 } from '@app/library/library.constants';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
@@ -55,6 +54,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { PAGE_SIZE_PREFERENCE } from '@app/core';
 
 describe('ComicFileToolbarComponent', () => {
   const USER = USER_ADMIN;

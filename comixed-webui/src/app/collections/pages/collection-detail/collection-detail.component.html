@@ -1,9 +1,12 @@
 <cx-comic-book-covers
   [comicBooks]="
     comicBooks
-      | archiveType: archiveTypeFilter
+      | archiveType: (urlParameterService.archiveType$ | async)
       | coverDateFilter
-        : { year: coverDateFilter.year, month: coverDateFilter.month }
+        : {
+            year: (urlParameterService.coverYear$ | async).year,
+            month: (urlParameterService.coverYear$ | async).month
+          }
   "
   [title]="
     'collection-detail.title.' + collectionType
@@ -18,12 +21,11 @@
   [readingLists]="readingLists"
   [showConsolidate]="isAdmin"
   [isAdmin]="isAdmin"
-  [pageSize]="pageSize"
-  [sortField]="sortField"
-  [archiveType]="archiveTypeFilter"
-  [pageIndex]="pageIndex"
+  [pageSize]="urlParameterService.pageSize$ | async"
+  [pageIndex]="urlParameterService.pageIndex$ | async"
+  [sortField]="urlParameterService.sortBy$ | async"
+  [coverDateFilter]="urlParameterService.coverYear$ | async"
+  [archiveType]="urlParameterService.archiveType$ | async"
   [showCovers]="showCovers"
-  [coverDateFilter]="coverDateFilter"
-  (pageIndexChanged)="onPageIndexChanged($event)"
   (selectAllComics)="onSelectAllComics($event)"
 ></cx-comic-book-covers>

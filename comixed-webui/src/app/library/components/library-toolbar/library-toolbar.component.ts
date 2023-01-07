@@ -31,18 +31,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE,
-  QUERY_PARAM_ARCHIVE_TYPE,
-  QUERY_PARAM_COVER_MONTH,
-  QUERY_PARAM_COVER_YEAR,
-  QUERY_PARAM_PAGE_INDEX,
-  QUERY_PARAM_SORT_BY,
-  SHOW_COMIC_COVERS_PREFERENCE,
-  SORT_FIELD_PREFERENCE
-} from '@app/library/library.constants';
+import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { saveUserPreference } from '@app/user/actions/user.actions';
@@ -56,7 +45,8 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -110,7 +100,7 @@ export class LibraryToolbarComponent
     private translateService: TranslateService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService
+    public urlParameterService: QueryParameterService
   ) {
     this.langChangSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
@@ -197,39 +187,6 @@ export class LibraryToolbarComponent
     });
   }
 
-  onLibraryDisplayChange(
-    pageSize: number,
-    pageIndex: number,
-    previousPageIndex: number
-  ): void {
-    this.logger.trace('Page size changed');
-    this.store.dispatch(
-      saveUserPreference({
-        name: PAGE_SIZE_PREFERENCE,
-        value: `${pageSize}`
-      })
-    );
-    if (pageIndex !== previousPageIndex) {
-      this.logger.debug('Page index changed:', pageIndex);
-      this.urlParameterService.updateQueryParam([
-        {
-          name: QUERY_PARAM_PAGE_INDEX,
-          value: `${pageIndex}`
-        }
-      ]);
-    }
-  }
-
-  onArchiveTypeChanged(archiveType: ArchiveType): void {
-    this.logger.trace('Archive type selected:', archiveType);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_ARCHIVE_TYPE,
-        value: archiveType
-      }
-    ]);
-  }
-
   onConsolidateLibrary(): void {
     this.logger.trace('Confirming with the user to consolidate the library');
     this.confirmationService.confirm({
@@ -286,19 +243,6 @@ export class LibraryToolbarComponent
     });
   }
 
-  onSortBy(sortField: string): void {
-    this.logger.trace('Changing sort field:', sortField);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_SORT_BY,
-        value: sortField
-      }
-    ]);
-    this.store.dispatch(
-      saveUserPreference({ name: SORT_FIELD_PREFERENCE, value: sortField })
-    );
-  }
-
   onPurgeLibrary(): void {
     this.logger.trace('Confirming purging the library');
     this.confirmationService.confirm({
@@ -313,26 +257,6 @@ export class LibraryToolbarComponent
         this.store.dispatch(purgeLibrary({ ids: this.selectedIds }));
       }
     });
-  }
-
-  onCoverYearChange(year: number): void {
-    this.logger.debug('Setting cover year filter:', year);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_COVER_YEAR,
-        value: !!year ? `${year}` : null
-      }
-    ]);
-  }
-
-  onCoverMonthChange(month: number): void {
-    this.logger.debug('Setting cover month filter:', month);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_COVER_MONTH,
-        value: !!month ? `${month}` : null
-      }
-    ]);
   }
 
   onToggleShowCoverMode(): void {

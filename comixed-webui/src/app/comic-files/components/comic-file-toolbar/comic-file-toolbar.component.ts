@@ -31,10 +31,7 @@ import {
   IMPORT_MAXIMUM_RESULTS_DEFAULT,
   IMPORT_MAXIMUM_RESULTS_PREFERENCE,
   IMPORT_ROOT_DIRECTORY_DEFAULT,
-  IMPORT_ROOT_DIRECTORY_PREFERENCE,
-  PAGE_SIZE_DEFAULT,
-  PAGE_SIZE_OPTIONS,
-  PAGE_SIZE_PREFERENCE
+  IMPORT_ROOT_DIRECTORY_PREFERENCE
 } from '@app/library/library.constants';
 import {
   clearComicFileSelections,
@@ -47,6 +44,11 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MatPaginator } from '@angular/material/paginator';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import {
+  PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
+  PAGE_SIZE_PREFERENCE
+} from '@app/core';
 
 @Component({
   selector: 'cx-comic-file-toolbar',

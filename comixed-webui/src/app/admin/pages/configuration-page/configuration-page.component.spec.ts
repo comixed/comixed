@@ -48,9 +48,6 @@ import {
 import { LibraryConfigurationComponent } from '@app/admin/components/library-configuration/library-configuration.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { QUERY_PARAM_TAB } from '@app/library/library.constants';
 import { MatCardModule } from '@angular/material/card';
 import { MetadataSourcesViewComponent } from '@app/admin/components/metadata-sources-view/metadata-sources-view.component';
 import { ServerRuntimeComponent } from '@app/admin/components/server-runtime/server-runtime.component';
@@ -78,7 +75,6 @@ import {
   initialState as initialFilenameScrapingRulesState
 } from '@app/admin/reducers/filename-scraping-rule-list.reducer';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -105,8 +101,6 @@ describe('ConfigurationPageComponent', () => {
   let translateService: TranslateService;
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy;
-  let activatedRoute: ActivatedRoute;
-  let urlParameterService: UrlParameterService;
 
   beforeEach(
     waitForAsync(() => {
@@ -141,18 +135,7 @@ describe('ConfigurationPageComponent', () => {
           MatCheckboxModule,
           DragDropModule
         ],
-        providers: [
-          provideMockStore({ initialState }),
-          TitleService,
-          {
-            provide: ActivatedRoute,
-            useValue: {
-              queryParams: new BehaviorSubject<{}>({}),
-              snapshot: {} as ActivatedRouteSnapshot
-            }
-          },
-          UrlParameterService
-        ]
+        providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(ConfigurationPageComponent);
@@ -162,9 +145,6 @@ describe('ConfigurationPageComponent', () => {
       translateService = TestBed.inject(TranslateService);
       titleService = TestBed.inject(TitleService);
       setTitleSpy = spyOn(titleService, 'setTitle');
-      activatedRoute = TestBed.inject(ActivatedRoute);
-      urlParameterService = TestBed.inject(UrlParameterService);
-      spyOn(urlParameterService, 'updateQueryParam');
       fixture.detectChanges();
     })
   );
@@ -185,22 +165,6 @@ describe('ConfigurationPageComponent', () => {
 
     it('updates the title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('query parameter processing', () => {
-    const TAB = 1;
-
-    it('loads the tab from the URL', () => {
-      (activatedRoute.queryParams as BehaviorSubject<{}>).next({
-        [QUERY_PARAM_TAB]: `${TAB}`
-      });
-      expect(component.currentTab).toEqual(TAB);
-    });
-
-    it('updates the URL when the tab changes', () => {
-      component.onTabChange(TAB);
-      expect(urlParameterService.updateQueryParam).toHaveBeenCalled();
     });
   });
 });

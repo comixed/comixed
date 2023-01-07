@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { IssueMetadata } from '@app/comic-metadata/models/issue-metadata';
-import { PAGE_SIZE_OPTIONS } from '@app/library/library.constants';
+import { PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-issue-metadata-detail',

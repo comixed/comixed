@@ -28,9 +28,6 @@ export const LOAD_LATEST_RELEASE_DETAILS_URL = `${API_ROOT_URL}/app/release/late
 export const LANGUAGE_PREFERENCE = 'preference.language';
 export const LOGGER_LEVEL_PREFERENCE = 'preference.logging.level';
 
-export const QUERY_PARAM_SIDEBAR = 'sidebar';
-export const QUERY_PARAM_PAGE_SIZE = 'pageSize';
-
 // external pages
 
 export const WIKI_PAGE_URL = 'https://github.com/comixed/comixed/wiki';

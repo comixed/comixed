@@ -32,31 +32,18 @@ import {
 } from '@app/user/user.functions';
 import { ActivatedRoute } from '@angular/router';
 import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
-import {
-  ArchiveType,
-  archiveTypeFromString
-} from '@app/comic-books/models/archive-type.enum';
-import {
-  PAGE_SIZE_DEFAULT,
-  QUERY_PARAM_ARCHIVE_TYPE,
-  QUERY_PARAM_COVER_MONTH,
-  QUERY_PARAM_COVER_YEAR,
-  QUERY_PARAM_PAGE_INDEX,
-  SHOW_COMIC_COVERS_PREFERENCE,
-  SORT_FIELD_DEFAULT,
-  SORT_FIELD_PREFERENCE
-} from '@app/library/library.constants';
+import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
-import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import {
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
-import { UrlParameterService } from '@app/core/services/url-parameter.service';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { PAGE_SIZE_DEFAULT } from '@app/core';
 
 @Component({
   selector: 'cx-library-page',
@@ -80,16 +67,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   changedOnly = false;
   deletedOnly = false;
   unprocessedOnly = false;
-  queryParamSubscription: Subscription;
-  archiveTypeFilter: ArchiveType;
-  pageIndex = 0;
-  sortField = SORT_FIELD_DEFAULT;
   lastReadDatesSubscription: Subscription;
   lastReadDates: LastRead[];
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
-  coverDateFilter: CoverDateFilter;
   showCovers = true;
 
   constructor(
@@ -98,7 +80,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     private titleService: TitleService,
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
-    private urlParameterService: UrlParameterService
+    public urlParameterService: QueryParameterService
   ) {
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
@@ -127,46 +109,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         this.pageContent = 'unprocessed-only';
       }
     });
-    this.queryParamSubscription = this.activatedRoute.queryParams.subscribe(
-      params => {
-        if (!!params[QUERY_PARAM_ARCHIVE_TYPE]) {
-          const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE];
-          this.logger.debug('Received archive type query param:', archiveType);
-          this.archiveTypeFilter = archiveTypeFromString(archiveType);
-        } else {
-          this.logger.debug('Resetting archive type filter');
-          this.archiveTypeFilter = null;
-        }
-        if (!!params[QUERY_PARAM_PAGE_INDEX]) {
-          this.pageIndex = +params[QUERY_PARAM_PAGE_INDEX];
-          this.logger.debug(`Page index: ${this.pageIndex}`);
-        }
-
-        this.coverDateFilter = { month: null, year: null };
-
-        if (!!params[QUERY_PARAM_COVER_YEAR]) {
-          this.logger.debug(
-            'Cover year filter:',
-            params[QUERY_PARAM_COVER_YEAR]
-          );
-          this.coverDateFilter = {
-            ...this.coverDateFilter,
-            year: +params[QUERY_PARAM_COVER_YEAR]
-          };
-        }
-
-        if (!!params[QUERY_PARAM_COVER_MONTH]) {
-          this.logger.debug(
-            'Cover month filter:',
-            params[QUERY_PARAM_COVER_MONTH]
-          );
-          this.coverDateFilter = {
-            ...this.coverDateFilter,
-            month: +params[QUERY_PARAM_COVER_MONTH]
-          };
-        }
-      }
-    );
     this.comicBookListStateSubscription = this.store
       .select(selectComicBookListState)
       .subscribe(state => {
@@ -191,11 +133,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       this.isAdmin = isAdmin(user);
       this.logger.trace('Getting page size');
       this.pageSize = getPageSize(user);
-      this.sortField = getUserPreference(
-        user.preferences,
-        SORT_FIELD_PREFERENCE,
-        SORT_FIELD_DEFAULT
-      );
       this.showCovers =
         getUserPreference(
           user.preferences,
@@ -237,42 +174,25 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     this.readingListsSubscription.unsubscribe();
   }
 
-  onArchiveTypeChanged(archiveType: ArchiveType): void {
-    this.logger.debug('Archive type changed:', archiveType);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_ARCHIVE_TYPE,
-        value: !!archiveType ? `${archiveType}` : null
-      }
-    ]);
-  }
-
-  onPageIndexChange(pageIndex: number): void {
-    this.logger.debug('Page index changed:', pageIndex);
-    this.urlParameterService.updateQueryParam([
-      {
-        name: QUERY_PARAM_PAGE_INDEX,
-        value: `${pageIndex}`
-      }
-    ]);
-  }
-
   onSelectAllComics(selected: boolean): void {
     if (selected) {
       this.logger.trace('Selecting all comics with filtering');
+      const coverDateFilter = this.urlParameterService.coverYear$.getValue();
+      const archiveTypeFilter =
+        this.urlParameterService.archiveType$.getValue();
       this.store.dispatch(
         selectComicBooks({
           ids: this.comicBooks
             .filter(
               comicBook =>
-                (!this.coverDateFilter.year ||
+                (!coverDateFilter.year ||
                   new Date(comicBook.coverDate).getFullYear() ===
-                    this.coverDateFilter.year) &&
-                (!this.coverDateFilter.month ||
+                    coverDateFilter.year) &&
+                (!coverDateFilter.month ||
                   new Date(comicBook.coverDate).getMonth() ===
-                    this.coverDateFilter.month) &&
-                (!this.archiveTypeFilter ||
-                  comicBook.archiveType === this.archiveTypeFilter) &&
+                    coverDateFilter.month) &&
+                (!archiveTypeFilter ||
+                  comicBook.archiveType === archiveTypeFilter) &&
                 (!this.unreadOnly ||
                   !this.lastReadDates
                     .map(lastRead => lastRead.comicBook.id)

@@ -23,19 +23,22 @@
   </button>
   <div class="cx-spacer"></div>
   <button
-    *ngIf="showPages"
     id="toggle-page-view-button"
     class="cx-toolbar-button"
     mat-icon-button
     color="primary"
     [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
-    (click)="onTogglePageView()"
+    (click)="urlParameterService.onTogglePagesAsGrid()"
   >
-    <mat-icon *ngIf="showPagesAsGrid">grid_view</mat-icon>
-    <mat-icon *ngIf="!showPagesAsGrid">list_view</mat-icon>
+    <mat-icon *ngIf="urlParameterService.pagesAsGrid$ | async">
+      grid_view
+    </mat-icon>
+    <mat-icon *ngIf="(urlParameterService.pagesAsGrid$ | async) === false">
+      list_view
+    </mat-icon>
   </button>
   <button
-    *ngIf="isAdmin && showPages"
+    *ngIf="isAdmin"
     id="save-page-order-button"
     class="cx-toolbar-button"
     mat-icon-button
@@ -45,11 +48,7 @@
   >
     <mat-icon>save</mat-icon>
   </button>
-  <mat-divider
-    *ngIf="showPages"
-    class="cx-height-100"
-    vertical="true"
-  ></mat-divider>
+  <mat-divider class="cx-height-100" vertical="true"></mat-divider>
   <button
     id="update-comic-info-button"
     class="cx-toolbar-button"
@@ -164,8 +163,8 @@
   <div class="cx-padding-left-5" fxFlex.gt-sm="80%" fxFlex.sm="100%">
     <mat-tab-group
       animationDuration="0ms"
-      [selectedIndex]="currentTab"
-      (selectedTabChange)="onTabChange($event.index)"
+      [selectedIndex]="urlParameterService.currentTab$ | async"
+      (selectedTabChange)="urlParameterService.onTabChange($event.index)"
     >
       <mat-tab [label]="'comic-book.label.comic-overview' | translate">
         <cx-comic-overview
@@ -180,9 +179,8 @@
       <mat-tab [label]="'comic-book.label.comic-pages' | translate">
         <cx-comic-pages
           class="cx-width-100"
-          *ngIf="showPages"
           [comic]="comicBook"
-          [showPagesAsGrid]="showPagesAsGrid"
+          [showPagesAsGrid]="urlParameterService.pagesAsGrid$ | async"
           [isAdmin]="isAdmin"
           (pagesChanged)="onPagesChanged($event)"
         ></cx-comic-pages>
