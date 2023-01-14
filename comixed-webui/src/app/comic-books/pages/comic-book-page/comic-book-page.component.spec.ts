@@ -280,7 +280,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC_BOOK], read: true })
+          setComicBooksRead({ comicBooks: [COMIC_BOOK.detail], read: true })
         );
       });
     });
@@ -292,7 +292,7 @@ describe('ComicBookPageComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          setComicBooksRead({ comicBooks: [COMIC_BOOK], read: false })
+          setComicBooksRead({ comicBooks: [COMIC_BOOK.detail], read: false })
         );
       });
     });
@@ -385,7 +385,7 @@ describe('ComicBookPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        markComicsDeleted({ comicBooks: [COMIC_BOOK], deleted: DELETED })
+        markComicsDeleted({ comicBooks: [COMIC_BOOK.detail], deleted: DELETED })
       );
     });
   });
@@ -481,12 +481,12 @@ describe('ComicBookPageComponent', () => {
     });
 
     it('returns true when the state is DELETED', () => {
-      component.comicBook.comicState = ComicBookState.DELETED;
+      component.comicBook.detail.comicState = ComicBookState.DELETED;
       expect(component.isDeleted).toBeTrue();
     });
 
     it('returns true when the state is not DELETED', () => {
-      component.comicBook.comicState = ComicBookState.CHANGED;
+      component.comicBook.detail.comicState = ComicBookState.CHANGED;
       expect(component.isDeleted).toBeFalse();
     });
   });

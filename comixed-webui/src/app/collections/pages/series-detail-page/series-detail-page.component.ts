@@ -39,6 +39,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-series-detail-page',
@@ -73,7 +74,7 @@ export class SeriesDetailPageComponent
   publisher = '';
   name = '';
   volume = '';
-  comicBooks: ComicBook[] = [];
+  comicBooks: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -158,7 +159,7 @@ export class SeriesDetailPageComponent
         comicBook.volume === issue.volume &&
         comicBook.issueNumber === issue.issueNumber
     );
-    return found?.id;
+    return found?.comicId;
   }
 
   private loadTranslations(): void {

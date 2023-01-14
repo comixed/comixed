@@ -73,11 +73,11 @@ export class DeletedListPageComponent
       .select(selectComicBookList)
       .subscribe(comics => {
         let pages: DeletedPageListEntry[] = [];
-        comics.forEach(comic =>
-          comic.pages
-            .filter(page => page.deleted)
-            .forEach(page => pages.push({ comic, page }))
-        );
+        // comics.forEach(comic =>
+        //   comic.pages
+        //     .filter(page => page.deleted)
+        //     .forEach(page => pages.push({ comic, page }))
+        // );
         this.dataSource.data = pages;
       });
   }

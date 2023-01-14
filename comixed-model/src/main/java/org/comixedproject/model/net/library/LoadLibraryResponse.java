@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.views.View;
 
 /**
@@ -36,7 +36,7 @@ public class LoadLibraryResponse {
   @JsonProperty("comicBooks")
   @JsonView(View.ComicListView.class)
   @Getter
-  private List<ComicBook> comicBooks;
+  private List<ComicDetail> comicBooks;
 
   @JsonProperty("lastId")
   @JsonView(View.ComicListView.class)

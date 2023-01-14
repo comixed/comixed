@@ -22,11 +22,11 @@ import {
   ComicBookListState
 } from '../reducers/comic-book-list.reducer';
 import { CollectionType } from '@app/collections/models/comic-collection.enum';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { CollectionListProperties } from '@app/collections/models/collection-list-properties';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MISSING_VOLUME_PLACEHOLDER } from '@app/comic-books/comic-books.constants';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const selectComicBookListState =
   createFeatureSelector<ComicBookListState>(COMIC_BOOK_LIST_FEATURE_KEY);
@@ -51,7 +51,7 @@ export const selectComicBookListDeletedCount = createSelector(
 
 export const selectComicBookListCollection = createSelector(
   selectComicBookList,
-  (state: ComicBook[], props: CollectionListProperties) => {
+  (state: ComicDetail[], props: CollectionListProperties) => {
     let entries = [];
     state.forEach(comicBook => {
       switch (props.collectionType) {
@@ -66,16 +66,16 @@ export const selectComicBookListCollection = createSelector(
           );
           break;
         case CollectionType.CHARACTERS:
-          entries = entries.concat(comicBook.characters);
+          // entries = entries.concat(comicBook.characters);
           break;
         case CollectionType.TEAMS:
-          entries = entries.concat(comicBook.teams);
+          // entries = entries.concat(comicBook.teams);
           break;
         case CollectionType.LOCATIONS:
-          entries = entries.concat(comicBook.locations);
+          // entries = entries.concat(comicBook.locations);
           break;
         case CollectionType.STORIES:
-          entries = entries.concat(comicBook.stories);
+          // entries = entries.concat(comicBook.stories);
           break;
       }
     });

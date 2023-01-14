@@ -26,7 +26,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -62,6 +61,7 @@ import {
 } from '@app/library/actions/library-selections.actions';
 import * as _ from 'lodash';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-comic-book-covers',
@@ -93,11 +93,11 @@ export class ComicBookCoversComponent
   @Output() selectAllComics = new EventEmitter<boolean>();
 
   pagination = PAGE_SIZE_DEFAULT;
-  dataSource = new MatTableDataSource<ComicBook>([]);
-  comic: ComicBook = null;
+  dataSource = new MatTableDataSource<ComicDetail>([]);
+  comic: ComicDetail = null;
   contextMenuX = '';
   contextMenuY = '';
-  private _comicBooksObservable = new BehaviorSubject<ComicBook[]>([]);
+  private _comicBooksObservable = new BehaviorSubject<ComicDetail[]>([]);
 
   constructor(
     private logger: LoggerService,
@@ -140,11 +140,11 @@ export class ComicBookCoversComponent
     return this._readComicIds;
   }
 
-  get comicBooks(): ComicBook[] {
+  get comicBooks(): ComicDetail[] {
     return this._comicBooksObservable.getValue();
   }
 
-  @Input() set comicBooks(comicBooks: ComicBook[]) {
+  @Input() set comicBooks(comicBooks: ComicDetail[]) {
     this.logger.trace('Setting comics:', comicBooks);
     this.dataSource.data = _.cloneDeep(comicBooks);
     this.pageIndex = this._pageIndex;
@@ -155,9 +155,9 @@ export class ComicBookCoversComponent
     this._readComicIds = lastRead.map(entry => entry.comicBook.id);
   }
 
-  get selectedComicBooks(): ComicBook[] {
+  get selectedComicBooks(): ComicDetail[] {
     return this.comicBooks.filter(comicBook =>
-      this.selectedIds.includes(comicBook.id)
+      this.selectedIds.includes(comicBook.comicId)
     );
   }
 
@@ -169,21 +169,21 @@ export class ComicBookCoversComponent
     this.dataSource.disconnect();
   }
 
-  isSelected(comicBook: ComicBook): boolean {
-    return this.selectedIds.includes(comicBook.id);
+  isSelected(comicBook: ComicDetail): boolean {
+    return this.selectedIds.includes(comicBook.comicId);
   }
 
-  onSelectionChanged(comicBook: ComicBook, selected: boolean): void {
+  onSelectionChanged(comicBook: ComicDetail, selected: boolean): void {
     if (selected) {
       this.logger.trace('Marking comic as selected:', comicBook);
-      this.store.dispatch(selectComicBooks({ ids: [comicBook.id] }));
+      this.store.dispatch(selectComicBooks({ ids: [comicBook.comicId] }));
     } else {
       this.logger.trace('Unmarking comic as selected:', comicBook);
-      this.store.dispatch(deselectComicBooks({ ids: [comicBook.id] }));
+      this.store.dispatch(deselectComicBooks({ ids: [comicBook.comicId] }));
     }
   }
 
-  onShowContextMenu(comic: ComicBook, x: string, y: string): void {
+  onShowContextMenu(comic: ComicDetail, x: string, y: string): void {
     this.logger.trace('Popping up context menu for:', comic);
     this.comic = comic;
     this.contextMenuX = x;
@@ -191,12 +191,12 @@ export class ComicBookCoversComponent
     this.contextMenu.openMenu();
   }
 
-  onShowComicDetails(comic: ComicBook): void {
+  onShowComicDetails(comic: ComicDetail): void {
     this.logger.trace('Showing comic details:', comic);
     this.dialog.open(ComicDetailsDialogComponent, { data: comic });
   }
 
-  onMarkOneComicRead(comic: ComicBook, read: boolean): void {
+  onMarkOneComicRead(comic: ComicDetail, read: boolean): void {
     this.logger.trace('Setting one comic read state:', comic, read);
     this.store.dispatch(setComicBooksRead({ comicBooks: [comic], read }));
   }
@@ -216,11 +216,11 @@ export class ComicBookCoversComponent
     }
   }
 
-  isChanged(comic: ComicBook): boolean {
+  isChanged(comic: ComicDetail): boolean {
     return comic.comicState === ComicBookState.CHANGED;
   }
 
-  onUpdateMetadata(comic: ComicBook): void {
+  onUpdateMetadata(comic: ComicDetail): void {
     this.logger.trace('Confirming updating ComicInfo.xml');
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -232,12 +232,12 @@ export class ComicBookCoversComponent
       ),
       confirm: () => {
         this.logger.trace('Updating comic info:', comic);
-        this.store.dispatch(updateMetadata({ ids: [comic.id] }));
+        this.store.dispatch(updateMetadata({ ids: [comic.comicId] }));
       }
     });
   }
 
-  onMarkAsDeleted(comic: ComicBook, deleted: boolean): void {
+  onMarkAsDeleted(comic: ComicDetail, deleted: boolean): void {
     this.logger.trace('Confirming deleted state with user:', comic, deleted);
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -303,7 +303,7 @@ export class ComicBookCoversComponent
     });
   }
 
-  onConvertOne(comicBook: ComicBook, format: string): void {
+  onConvertOne(comicBook: ComicDetail, format: string): void {
     this.doConversion(
       this.translateService.instant(
         'library.convert-comics.convert-one.confirmation-title'
@@ -331,11 +331,11 @@ export class ComicBookCoversComponent
     );
   }
 
-  isRead(comic: ComicBook): boolean {
-    return this.readComicIds.includes(comic.id);
+  isRead(comic: ComicDetail): boolean {
+    return this.readComicIds.includes(comic.comicId);
   }
 
-  downloadComicData(comics: ComicBook[]): void {
+  downloadComicData(comics: ComicDetail[]): void {
     this.logger.debug('Downloading comic metadata:', comics);
     this.fileDownloadService.saveFileContent({
       content: new Blob([JSON.stringify(comics)], { type: 'application/json' }),
@@ -343,7 +343,7 @@ export class ComicBookCoversComponent
     });
   }
 
-  isDeleted(comic: ComicBook): boolean {
+  isDeleted(comic: ComicDetail): boolean {
     return comic.comicState === ComicBookState.DELETED;
   }
 
@@ -368,7 +368,7 @@ export class ComicBookCoversComponent
     title: string,
     message: string,
     format: string,
-    comics: ComicBook[]
+    comics: ComicDetail[]
   ): void {
     const archiveType = archiveTypeFromString(format);
     this.logger.trace('Confirming conversion with user');
@@ -418,5 +418,9 @@ export class ComicBookCoversComponent
         });
       }
     });
+  }
+
+  isUnprocessed(comic: ComicDetail): boolean {
+    return comic.comicState === ComicBookState.UNPROCESSED;
   }
 }

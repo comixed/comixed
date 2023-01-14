@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Page } from '@app/comic-books/models/page';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export interface DeletedPageListEntry {
-  comic: ComicBook;
+  comic: ComicDetail;
   page: Page;
 }

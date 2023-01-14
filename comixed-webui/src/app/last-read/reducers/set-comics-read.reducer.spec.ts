@@ -21,7 +21,7 @@ import {
   reducer,
   SetComicsReadState
 } from './set-comics-read-state.reducer';
-import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicBooksReadSet,
   setComicBooksRead,
@@ -29,7 +29,7 @@ import {
 } from '@app/last-read/actions/set-comics-read.actions';
 
 describe('SetComicRead Reducer', () => {
-  const COMIC = COMIC_BOOK_4;
+  const COMIC = COMIC_DETAIL_4;
   const READ = Math.random() > 0.5;
 
   let state: SetComicsReadState;

@@ -26,6 +26,7 @@ import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.
 import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
 
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,9 +51,12 @@ public class UpdateComicBooksProcessorTest {
   @Mock private JobExecution jobExecution;
   @Mock private JobParameters jobParameters;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
 
   @Before
   public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     processor.beforeStep(stepExecution);
@@ -69,11 +73,11 @@ public class UpdateComicBooksProcessorTest {
   public void testProcess() throws Exception {
     processor.process(comicBook);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUENO);
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUENO);
+    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
   }
 
   @Test
@@ -82,7 +86,7 @@ public class UpdateComicBooksProcessorTest {
 
     processor.process(comicBook);
 
-    Mockito.verify(comicBook, Mockito.never()).setPublisher(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setPublisher(Mockito.anyString());
   }
 
   @Test
@@ -91,7 +95,7 @@ public class UpdateComicBooksProcessorTest {
 
     processor.process(comicBook);
 
-    Mockito.verify(comicBook, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setSeries(Mockito.anyString());
   }
 
   @Test
@@ -100,7 +104,7 @@ public class UpdateComicBooksProcessorTest {
 
     processor.process(comicBook);
 
-    Mockito.verify(comicBook, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setVolume(Mockito.anyString());
   }
 
   @Test
@@ -109,7 +113,7 @@ public class UpdateComicBooksProcessorTest {
 
     processor.process(comicBook);
 
-    Mockito.verify(comicBook, Mockito.never()).setIssueNumber(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setIssueNumber(Mockito.anyString());
   }
 
   @Test
@@ -118,7 +122,7 @@ public class UpdateComicBooksProcessorTest {
 
     processor.process(comicBook);
 
-    Mockito.verify(comicBook, Mockito.never()).setImprint(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setImprint(Mockito.anyString());
   }
 
   @Test

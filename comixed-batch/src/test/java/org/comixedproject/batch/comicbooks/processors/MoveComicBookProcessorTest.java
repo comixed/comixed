@@ -28,6 +28,7 @@ import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +58,7 @@ public class MoveComicBookProcessorTest {
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private File comicFile;
 
   @Captor private ArgumentCaptor<File> createDirectoryArgumentCaptor;
@@ -70,7 +72,8 @@ public class MoveComicBookProcessorTest {
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getJobParameters()).thenReturn(jobParameters);
     processor.beforeStep(stepExecution);
-    Mockito.when(comicBook.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(archiveType);
   }
 
   @Test

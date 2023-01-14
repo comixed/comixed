@@ -63,7 +63,10 @@ describe('ComicOverviewComponent', () => {
   describe('checking if a comic is changed', () => {
     describe('when ADDED', () => {
       beforeEach(() => {
-        component.comic = { ...COMIC, comicState: ComicBookState.ADDED };
+        component.comic = {
+          ...COMIC,
+          detail: { ...COMIC.detail, comicState: ComicBookState.ADDED }
+        };
       });
 
       it('sets it to false', () => {
@@ -77,7 +80,10 @@ describe('ComicOverviewComponent', () => {
 
     describe('when CHANGED', () => {
       beforeEach(() => {
-        component.comic = { ...COMIC, comicState: ComicBookState.CHANGED };
+        component.comic = {
+          ...COMIC,
+          detail: { ...COMIC.detail, comicState: ComicBookState.CHANGED }
+        };
       });
 
       it('sets it to true', () => {
@@ -91,7 +97,10 @@ describe('ComicOverviewComponent', () => {
 
     describe('when STABLE', () => {
       beforeEach(() => {
-        component.comic = { ...COMIC, comicState: ComicBookState.STABLE };
+        component.comic = {
+          ...COMIC,
+          detail: { ...COMIC.detail, comicState: ComicBookState.STABLE }
+        };
       });
 
       it('sets it to false', () => {
@@ -105,7 +114,10 @@ describe('ComicOverviewComponent', () => {
 
     describe('when DELETED', () => {
       beforeEach(() => {
-        component.comic = { ...COMIC, comicState: ComicBookState.DELETED };
+        component.comic = {
+          ...COMIC,
+          detail: { ...COMIC.detail, comicState: ComicBookState.DELETED }
+        };
       });
 
       it('sets it to false', () => {

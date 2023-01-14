@@ -18,10 +18,8 @@
 
 package org.comixedproject.model.archives;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.comixedproject.views.View;
 
 /**
  * <code>ArchiveType</code> reports the archive type detected for a file.
@@ -34,17 +32,11 @@ public enum ArchiveType {
   CBR("RAR ComicBook", "application/vnc.comicbook+rar", "cbr"),
   CB7("7Z ComicBook", "application/vnc.comicbook+octet-stream", "cb7");
 
-  @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
-  private String name;
+  @Getter private String name;
 
-  @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
-  private String mimeType;
+  @Getter private String mimeType;
 
-  @JsonView(View.AuditLogEntryDetail.class)
-  @Getter
-  private String extension;
+  @Getter private String extension;
 
   public static ArchiveType forValue(String name) {
     for (ArchiveType value : values()) {

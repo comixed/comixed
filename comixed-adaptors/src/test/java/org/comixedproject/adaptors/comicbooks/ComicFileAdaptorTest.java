@@ -30,6 +30,7 @@ import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.Locale;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,17 +79,19 @@ public class ComicFileAdaptorTest {
 
   @InjectMocks private ComicFileAdaptor adaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
 
   @Before
   public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.getFilename()).thenReturn(TEST_FULL_COMIC_FILENAME);
-    Mockito.when(comicBook.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(comicBook.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(comicBook.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(comicBook.getIssueNumber()).thenReturn(TEST_ISSUE);
+    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE);
+    Mockito.when(comicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    Mockito.when(comicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
     Mockito.when(comicBook.getTitle()).thenReturn(TEST_TITLE);
-    Mockito.when(comicBook.getCoverDate()).thenReturn(TEST_COVER_DATE);
-    Mockito.when(comicBook.getStoreDate()).thenReturn(TEST_STORE_DATE);
   }
 
   @Test
@@ -153,9 +156,9 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleWithUnsupportedCharacters() {
-    Mockito.when(comicBook.getPublisher()).thenReturn(TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS);
-    Mockito.when(comicBook.getSeries()).thenReturn(TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS);
-    Mockito.when(comicBook.getIssueNumber()).thenReturn(TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS);
+    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER_WITH_UNSUPPORTED_CHARACTERS);
+    Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES_WITH_UNSUPPORTED_CHARACTERS);
+    Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_WITH_UNSUPPORTED_CHARACTERS);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 
@@ -174,7 +177,7 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleNoPublisher() {
-    Mockito.when(comicBook.getPublisher()).thenReturn(null);
+    Mockito.when(comicDetail.getPublisher()).thenReturn(null);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 
@@ -193,7 +196,7 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleNoSeries() {
-    Mockito.when(comicBook.getSeries()).thenReturn(null);
+    Mockito.when(comicDetail.getSeries()).thenReturn(null);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 
@@ -212,7 +215,7 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleNoVolume() {
-    Mockito.when(comicBook.getVolume()).thenReturn(null);
+    Mockito.when(comicDetail.getVolume()).thenReturn(null);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 
@@ -273,7 +276,7 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleNoIssueNumber() {
-    Mockito.when(comicBook.getIssueNumber()).thenReturn(null);
+    Mockito.when(comicDetail.getIssueNumber()).thenReturn(null);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 
@@ -292,7 +295,7 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleNoCoverDate() {
-    Mockito.when(comicBook.getCoverDate()).thenReturn(null);
+    Mockito.when(comicDetail.getCoverDate()).thenReturn(null);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 

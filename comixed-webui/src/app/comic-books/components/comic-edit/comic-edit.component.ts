@@ -180,11 +180,11 @@ export class ComicEditComponent implements OnInit, OnDestroy {
       );
     }
     this.comicForm.controls.referenceId.setValue(comic.metadata?.referenceId);
-    this.comicForm.controls.publisher.setValue(comic.publisher);
-    this.comicForm.controls.series.setValue(comic.series);
-    this.comicForm.controls.volume.setValue(comic.volume);
-    this.comicForm.controls.issueNumber.setValue(comic.issueNumber);
-    this.comicForm.controls.imprint.setValue(comic.imprint);
+    this.comicForm.controls.publisher.setValue(comic.detail.publisher);
+    this.comicForm.controls.series.setValue(comic.detail.series);
+    this.comicForm.controls.volume.setValue(comic.detail.volume);
+    this.comicForm.controls.issueNumber.setValue(comic.detail.issueNumber);
+    this.comicForm.controls.imprint.setValue(comic.detail.imprint);
     this.comicForm.controls.sortName.setValue(comic.sortName);
     this.comicForm.controls.title.setValue(comic.title);
     this.comicForm.controls.description.setValue(comic.description);
@@ -272,11 +272,11 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     const imprint = this.imprints.find(entry => entry.name === name);
     this.logger.trace('Setting publisher name');
     this.comicForm.controls.publisher.setValue(
-      imprint?.publisher || this.comic.publisher
+      imprint?.publisher || this.comic.detail.publisher
     );
     this.logger.trace('Setting imprint name');
     this.comicForm.controls.imprint.setValue(
-      imprint?.name || this.comic.imprint
+      imprint?.name || this.comic.detail.imprint
     );
   }
 
@@ -340,11 +340,14 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.logger.trace('Encoding comic');
     return {
       ...this.comic,
-      publisher: this.comicForm.controls.publisher.value,
-      series: this.comicForm.controls.series.value,
-      volume: this.comicForm.controls.volume.value,
-      issueNumber: this.comicForm.controls.issueNumber.value,
-      imprint: this.comicForm.controls.imprint.value,
+      detail: {
+        ...this.comic.detail,
+        publisher: this.comicForm.controls.publisher.value,
+        imprint: this.comicForm.controls.imprint.value,
+        series: this.comicForm.controls.series.value,
+        volume: this.comicForm.controls.volume.value,
+        issueNumber: this.comicForm.controls.issueNumber.value
+      },
       sortName: this.comicForm.controls.sortName.value,
       title: this.comicForm.controls.title.value,
       description: this.comicForm.controls.description.value

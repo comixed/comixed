@@ -21,7 +21,10 @@ import {
   reducer,
   ScrapeMetadataState
 } from './scrape-metadata.reducer';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_2,
+  COMIC_DETAIL_2
+} from '@app/comic-books/comic-books.fixtures';
 import {
   metadataScrapedFromFilename,
   resetScrapedMetadata,
@@ -32,9 +35,9 @@ import {
 describe('ScrapeMetadata Reducer', () => {
   const FILENAME = COMIC_BOOK_2.baseFilename;
   const FOUND = Math.random() > 0.5;
-  const SERIES = COMIC_BOOK_2.series;
-  const VOLUME = COMIC_BOOK_2.volume;
-  const ISSUE_NUMBER = COMIC_BOOK_2.issueNumber;
+  const SERIES = COMIC_DETAIL_2.series;
+  const VOLUME = COMIC_DETAIL_2.volume;
+  const ISSUE_NUMBER = COMIC_DETAIL_2.issueNumber;
 
   let state: ScrapeMetadataState;
 

@@ -204,9 +204,9 @@ describe('ComicEditComponent', () => {
 
     it('emits an event', () => {
       expect(component.scrape.emit).toHaveBeenCalledWith({
-        series: COMIC.series,
-        volume: COMIC.volume,
-        issueNumber: COMIC.issueNumber,
+        series: COMIC.detail.series,
+        volume: COMIC.detail.volume,
+        issueNumber: COMIC.detail.issueNumber,
         maximumRecords: MAXIMUM_RECORDS,
         skipCache: SKIP_CACHE
       });
@@ -284,13 +284,13 @@ describe('ComicEditComponent', () => {
 
       it('updates the imprint', () => {
         expect(component.comicForm.controls.imprint.value).toEqual(
-          COMIC.imprint
+          COMIC.detail.imprint
         );
       });
 
       it('updates the publisher', () => {
         expect(component.comicForm.controls.publisher.value).toEqual(
-          COMIC.publisher
+          COMIC.detail.publisher
         );
       });
     });
@@ -303,24 +303,28 @@ describe('ComicEditComponent', () => {
         [SCRAPE_METADATA_FEATURE_KEY]: {
           ...initialScrapeMetadataState,
           found: true,
-          series: COMIC.series,
-          volume: COMIC.volume,
-          issueNumber: COMIC.issueNumber
+          series: COMIC.detail.series,
+          volume: COMIC.detail.volume,
+          issueNumber: COMIC.detail.issueNumber
         }
       });
     });
 
     it('sets the series', () => {
-      expect(component.comicForm.controls.series.value).toEqual(COMIC.series);
+      expect(component.comicForm.controls.series.value).toEqual(
+        COMIC.detail.series
+      );
     });
 
     it('sets the volume', () => {
-      expect(component.comicForm.controls.volume.value).toEqual(COMIC.volume);
+      expect(component.comicForm.controls.volume.value).toEqual(
+        COMIC.detail.volume
+      );
     });
 
     it('sets the issue number', () => {
       expect(component.comicForm.controls.issueNumber.value).toEqual(
-        COMIC.issueNumber
+        COMIC.detail.issueNumber
       );
     });
   });
@@ -368,8 +372,8 @@ describe('ComicEditComponent', () => {
       expect(component.readyToScrape).toBeFalse();
     });
 
-    it('requires a validate form', () => {
-      component.comic = {} as ComicBook;
+    it('requires a valid form', () => {
+      component.comic = { detail: {} } as ComicBook;
       expect(component.readyToScrape).toBeFalse();
     });
   });

@@ -87,6 +87,6 @@
   <mat-row
     [matTooltip]="row | comicTitle"
     *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="['/comics', row.id]"
+    [routerLink]="['/comics', row.comicId]"
   ></mat-row>
 </mat-table>

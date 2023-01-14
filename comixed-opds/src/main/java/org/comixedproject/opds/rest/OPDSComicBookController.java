@@ -86,7 +86,7 @@ public class OPDSComicBookController {
           (int) comicBook.getFile().length(),
           new InputStreamResource(new FileInputStream(comicBook.getFile())),
           comicBook.getBaseFilename(),
-          MediaType.parseMediaType(comicBook.getArchiveType().getMimeType()));
+          MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()));
     } catch (ComicBookException | FileNotFoundException | LastReadException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);
     }

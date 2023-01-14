@@ -24,11 +24,11 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatSort } from '@angular/material/sort';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-comic-list-view',
@@ -38,7 +38,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 export class ComicListViewComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
-  @Output() selectedEntries = new EventEmitter<ComicBook[]>();
+  @Output() selectedEntries = new EventEmitter<ComicDetail[]>();
 
   readonly displayedColumns = [
     'selection',
@@ -48,27 +48,28 @@ export class ComicListViewComponent implements AfterViewInit {
     'issue-number',
     'cover-date',
     'added-date',
-    'page-count',
     'archive-type'
   ];
-  dataSource = new MatTableDataSource<SelectableListItem<ComicBook>>([]);
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
   allSelected = false;
 
   constructor(private logger: LoggerService) {}
 
-  private _comicBooks: ComicBook[] = [];
+  private _comicBooks: ComicDetail[] = [];
 
-  get comicBooks(): ComicBook[] {
+  get comicBooks(): ComicDetail[] {
     return this._comicBooks;
   }
 
-  @Input() set comicBooks(comicBooks: ComicBook[]) {
+  @Input() set comicBooks(comicBooks: ComicDetail[]) {
     this.logger.trace('Comics assigned');
     this._comicBooks = comicBooks;
     this.logger.trace('Loading data source');
     const oldData = this.dataSource.data;
     this.dataSource.data = comicBooks.map(comicBook => {
-      const oldEntry = oldData.find(entry => entry.item.id === comicBook.id);
+      const oldEntry = oldData.find(
+        entry => entry.item.comicId === comicBook.comicId
+      );
       return {
         item: comicBook,
         selected: oldEntry?.selected || false
@@ -95,8 +96,6 @@ export class ComicListViewComponent implements AfterViewInit {
           return data.item.coverDate;
         case 'added-date':
           return data.item.addedDate;
-        case 'page-count':
-          return data.item.pages.length;
         case 'archive-type':
           return data.item.archiveType.toUpperCase();
       }
@@ -110,7 +109,7 @@ export class ComicListViewComponent implements AfterViewInit {
   }
 
   onSetOneSelectedState(
-    entry: SelectableListItem<ComicBook>,
+    entry: SelectableListItem<ComicDetail>,
     checked: boolean
   ): void {
     this.logger.trace('Setting one item selected state:', entry, checked);

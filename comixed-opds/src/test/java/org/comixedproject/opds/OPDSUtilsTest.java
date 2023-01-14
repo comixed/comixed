@@ -34,6 +34,7 @@ import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.Credit;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.opds.model.OPDSLink;
@@ -58,6 +59,7 @@ public class OPDSUtilsTest {
 
   @InjectMocks private OPDSUtils utils;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
@@ -68,7 +70,8 @@ public class OPDSUtilsTest {
 
   @Before
   public void setUp() {
-    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(comicBook.getFilename()).thenReturn(TEST_FILENAME);
     Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
     creditList.add(new Credit(comicBook, TEST_CREDIT_NAME, TEST_CREDIT_ROLE));

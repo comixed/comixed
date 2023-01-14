@@ -65,14 +65,14 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
               .getObjectMapper()
               .readValue(new ByteArrayInputStream(content), ComicInfo.class);
       log.trace("Setting comic metadata");
-      comicBook.setPublisher(comicInfo.getPublisher());
-      comicBook.setSeries(comicInfo.getSeries());
-      comicBook.setVolume(comicInfo.getVolume());
-      comicBook.setIssueNumber(comicInfo.getIssueNumber());
+      comicBook.getComicDetail().setPublisher(comicInfo.getPublisher());
+      comicBook.getComicDetail().setSeries(comicInfo.getSeries());
+      comicBook.getComicDetail().setVolume(comicInfo.getVolume());
+      comicBook.getComicDetail().setIssueNumber(comicInfo.getIssueNumber());
       if (comicInfo.getYear() != null && comicInfo.getMonth() != null) {
         GregorianCalendar gc =
             new GregorianCalendar(comicInfo.getYear(), comicInfo.getMonth() - 1, 1);
-        comicBook.setCoverDate(gc.getTime());
+        comicBook.getComicDetail().setCoverDate(gc.getTime());
       }
       comicBook.setTitle(comicInfo.getTitle());
       comicBook.setDescription(comicInfo.getSummary());
@@ -136,13 +136,13 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
   public byte[] createContent(ComicBook comicBook) throws ContentAdaptorException {
     log.trace("Mapping comic metadata to ComicInfo");
     final ComicInfo comicInfo = new ComicInfo();
-    comicInfo.setPublisher(comicBook.getPublisher());
-    comicInfo.setSeries(comicBook.getSeries());
-    comicInfo.setVolume(comicBook.getVolume());
-    comicInfo.setIssueNumber(comicBook.getIssueNumber());
-    if (comicBook.getCoverDate() != null) {
+    comicInfo.setPublisher(comicBook.getComicDetail().getPublisher());
+    comicInfo.setSeries(comicBook.getComicDetail().getSeries());
+    comicInfo.setVolume(comicBook.getComicDetail().getVolume());
+    comicInfo.setIssueNumber(comicBook.getComicDetail().getIssueNumber());
+    if (comicBook.getComicDetail().getCoverDate() != null) {
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(comicBook.getCoverDate());
+      calendar.setTime(comicBook.getComicDetail().getCoverDate());
       comicInfo.setYear(calendar.get(Calendar.YEAR));
       comicInfo.setMonth(calendar.get(Calendar.MONTH) + 1);
     }

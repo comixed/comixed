@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 /**
  * Fired when a comic selection event occurs.
  */
 export interface ComicSelectEvent {
-  comic: ComicBook;
+  comic: ComicDetail;
   selected: boolean;
 }

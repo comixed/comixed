@@ -25,9 +25,8 @@ import {
   loadComicBooksFailed,
   resetComicBookList
 } from '../actions/comic-book-list.actions';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const COMIC_BOOK_LIST_FEATURE_KEY = 'comic_book_list_state';
 
@@ -35,11 +34,11 @@ export interface ComicBookListState {
   loading: boolean;
   lastId: number;
   lastPayload: boolean;
-  comicBooks: ComicBook[];
-  unprocessed: ComicBook[];
-  unscraped: ComicBook[];
-  changed: ComicBook[];
-  deleted: ComicBook[];
+  comicBooks: ComicDetail[];
+  unprocessed: ComicDetail[];
+  unscraped: ComicDetail[];
+  changed: ComicDetail[];
+  deleted: ComicDetail[];
 }
 
 export const initialState: ComicBookListState = {
@@ -70,7 +69,7 @@ export const reducer = createReducer(
   on(loadComicBooks, state => ({ ...state, loading: true })),
   on(comicBooksReceived, (state, action) => {
     let comicBooks = state.comicBooks.filter(comicBook =>
-      action.comicBooks.every(entry => entry.id !== comicBook.id)
+      action.comicBooks.every(entry => entry.comicId !== comicBook.comicId)
     );
     comicBooks = comicBooks.concat(action.comicBooks);
     const lastId = action.lastId;
@@ -83,14 +82,14 @@ export const reducer = createReducer(
   on(loadComicBooksFailed, state => ({ ...state, loading: false })),
   on(comicBookListUpdateReceived, (state, action) => {
     const comicBooks = state.comicBooks.filter(
-      comicBook => comicBook.id !== action.comicBook.id
+      comicBook => comicBook.comicId !== action.comicBook.comicId
     );
     comicBooks.push(action.comicBook);
     return comicListUpdate(state, comicBooks);
   }),
   on(comicBookListRemovalReceived, (state, action) => {
     const comicBooks = state.comicBooks.filter(
-      comicBook => comicBook.id !== action.comicBook.id
+      comicBook => comicBook.comicId !== action.comicBook.comicId
     );
     return comicListUpdate(state, comicBooks);
   })
@@ -98,16 +97,17 @@ export const reducer = createReducer(
 
 function comicListUpdate(
   state: ComicBookListState,
-  comicBooks: ComicBook[]
+  comicBooks: ComicDetail[]
 ): ComicBookListState {
   return {
     ...state,
     comicBooks,
     unprocessed: comicBooks.filter(
-      comic =>
-        !comic.fileDetails || comic.comicState === ComicBookState.UNPROCESSED
+      comic => comic.comicState === ComicBookState.UNPROCESSED
     ),
-    unscraped: comicBooks.filter(comic => !comic.metadata),
+    unscraped: comicBooks.filter(
+      comic => isEmpty(comic.publisher) || isEmpty(comic.series)
+    ),
     changed: comicBooks.filter(
       comic => comic.comicState == ComicBookState.CHANGED
     ),
@@ -116,4 +116,8 @@ function comicListUpdate(
     ),
     loading: false
   };
+}
+
+function isEmpty(text: string): boolean {
+  return !!text && text.length > 0;
 }

@@ -27,7 +27,6 @@ import {
   LOAD_LAST_READ_ENTRIES_URL,
   SET_COMIC_READ_STATUS_URL
 } from '@app/last-read/last-read.constants';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'webstomp-client';
 import { selectMessagingState } from '@app/messaging/selectors/messaging.selectors';
@@ -40,6 +39,7 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { LastRead } from '@app/last-read/models/last-read';
 import { SetComicsReadRequest } from '@app/last-read/models/net/set-comics-read-request';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -122,10 +122,10 @@ export class LastReadService {
     );
   }
 
-  setRead(args: { comics: ComicBook[]; read: boolean }): Observable<any> {
+  setRead(args: { comics: ComicDetail[]; read: boolean }): Observable<any> {
     this.logger.debug('Service: set comics read:', args);
     return this.http.post(interpolate(SET_COMIC_READ_STATUS_URL), {
-      ids: args.comics.map(comic => comic.id),
+      ids: args.comics.map(comic => comic.comicId),
       read: args.read
     } as SetComicsReadRequest);
   }

@@ -74,15 +74,6 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="page-count">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "comic-book.label.page-count" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.item.pages.length }}</span>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="archive-type">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-book.label.archive-type" | translate }}

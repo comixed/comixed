@@ -17,8 +17,8 @@
  */
 
 import {
-  MarkComicsDeletedState,
   initialState,
+  MarkComicsDeletedState,
   reducer
 } from './mark-comics-deleted.reducer';
 import {
@@ -26,10 +26,10 @@ import {
   markComicsDeleted,
   markComicsDeletedFailed
 } from '@app/comic-books/actions/mark-comics-deleted.actions';
-import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
 
 describe('MarkComicsDeleted Reducer', () => {
-  const COMIC = COMIC_BOOK_1;
+  const COMIC = COMIC_DETAIL_1;
   const DELETED = Math.random() > 0.5;
 
   let state: MarkComicsDeletedState;

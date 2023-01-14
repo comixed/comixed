@@ -36,6 +36,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.lists.PublishReadingListDeletedAction;
 import org.comixedproject.messaging.lists.PublishReadingListUpdateAction;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.model.net.DownloadDocument;
@@ -88,6 +89,7 @@ public class ReadingListServiceTest {
   @Mock private ComiXedUser user;
   @Mock private List<ReadingList> readingLists;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private State<ReadingListState, ReadingListEvent> incomingState;
   @Mock private MessageHeaders messageHeaders;
   @Mock private Message<ReadingListEvent> incomingMessage;
@@ -111,10 +113,11 @@ public class ReadingListServiceTest {
     Mockito.when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
     Mockito.when(readingList.getName()).thenReturn(TEST_READING_LIST_NAME);
     Mockito.when(readingList.getComicBooks()).thenReturn(comicBookList);
-    Mockito.when(comicBook.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(comicBook.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(comicBook.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(comicBook.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
   }
 
   @Test(expected = ReadingListException.class)

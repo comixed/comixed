@@ -22,7 +22,9 @@ import static junit.framework.TestCase.assertEquals;
 
 import java.io.IOException;
 import org.comixedproject.AdaptorTestContext;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,14 +45,15 @@ public class FilenameContentAdaptorTest extends BaseContentAdaptorTest {
   @Before
   public void setUp() {
     comicBook = new ComicBook();
+    comicBook.setComicDetail(new ComicDetail(comicBook, ArchiveType.CBZ));
   }
 
   @Test
   public void testLoadComicInfoFile() throws IOException, ContentAdaptorException {
     adaptor.loadContent(comicBook, COMICINFO_XML, this.loadFile(TEST_COMICINFO_XML_FILE));
 
-    assertEquals("Test Publisher", comicBook.getPublisher());
-    assertEquals("Test Series", comicBook.getSeries());
-    assertEquals("2011", comicBook.getVolume());
+    assertEquals("Test Publisher", comicBook.getComicDetail().getPublisher());
+    assertEquals("Test Series", comicBook.getComicDetail().getSeries());
+    assertEquals("2011", comicBook.getComicDetail().getVolume());
   }
 }

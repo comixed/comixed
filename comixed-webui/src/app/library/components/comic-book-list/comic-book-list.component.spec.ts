@@ -21,31 +21,31 @@ import { ComicBookListComponent } from './comic-book-list.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 describe('ComicBookListComponent', () => {
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
   ];
 
   let component: ComicBookListComponent;
   let fixture: ComponentFixture<ComicBookListComponent>;
-  const dataSource = new MatTableDataSource<ComicBook>(COMIC_BOOKS);
+  const dataSource = new MatTableDataSource<ComicDetail>(COMIC_BOOKS);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

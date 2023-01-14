@@ -120,29 +120,33 @@ public class ComicFileAdaptor {
 
     log.trace("Generating relative filename based on renaming rule: {}", rule);
     final String publisher =
-        StringUtils.hasLength(comicBook.getPublisher())
-            ? scrub(comicBook.getPublisher())
+        StringUtils.hasLength(comicBook.getComicDetail().getPublisher())
+            ? scrub(comicBook.getComicDetail().getPublisher())
             : UNKNOWN_VALUE;
     final String series =
-        StringUtils.hasLength(comicBook.getSeries()) ? scrub(comicBook.getSeries()) : UNKNOWN_VALUE;
+        StringUtils.hasLength(comicBook.getComicDetail().getSeries())
+            ? scrub(comicBook.getComicDetail().getSeries())
+            : UNKNOWN_VALUE;
     final String volume =
-        StringUtils.hasLength(comicBook.getVolume()) ? comicBook.getVolume() : UNKNOWN_VALUE;
+        StringUtils.hasLength(comicBook.getComicDetail().getVolume())
+            ? comicBook.getComicDetail().getVolume()
+            : UNKNOWN_VALUE;
     final String title =
         StringUtils.hasLength(comicBook.getTitle()) ? comicBook.getTitle() : UNKNOWN_VALUE;
     String issueNumber =
-        StringUtils.hasLength(comicBook.getIssueNumber())
-            ? scrub(comicBook.getIssueNumber())
+        StringUtils.hasLength(comicBook.getComicDetail().getIssueNumber())
+            ? scrub(comicBook.getComicDetail().getIssueNumber())
             : UNKNOWN_VALUE;
     final String coverDate =
-        comicBook.getCoverDate() != null
-            ? coverDateFormat.format(comicBook.getCoverDate())
+        comicBook.getComicDetail().getCoverDate() != null
+            ? coverDateFormat.format(comicBook.getComicDetail().getCoverDate())
             : NO_COVER_DATE;
     issueNumber = this.checkForPadding(rule, PLACEHOLDER_ISSUE_NUMBER, issueNumber);
     String publishedMonth = "";
     String publishedYear = "";
-    if (comicBook.getStoreDate() != null) {
+    if (comicBook.getComicDetail().getStoreDate() != null) {
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(comicBook.getStoreDate());
+      calendar.setTime(comicBook.getComicDetail().getStoreDate());
       log.trace("Getting store year");
       publishedYear = String.valueOf(calendar.get(Calendar.YEAR));
       log.trace("Getting store month");

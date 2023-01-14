@@ -27,6 +27,8 @@ import { ComicDetailCardComponent } from '@app/comic-books/components/comic-deta
 import { provideMockStore } from '@ngrx/store/testing';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicStoryComponent', () => {
   const COMIC = COMIC_BOOK_2;
@@ -41,11 +43,13 @@ describe('ComicStoryComponent', () => {
         declarations: [ComicStoryComponent, ComicDetailCardComponent],
         imports: [
           NoopAnimationsModule,
+          RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatExpansionModule,
           MatCardModule,
-          MatChipsModule
+          MatChipsModule,
+          MatTooltipModule
         ],
         providers: [provideMockStore({ initialState })]
       }).compileComponents();

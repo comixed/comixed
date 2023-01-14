@@ -26,6 +26,7 @@
         fxFlex.lg-md="100%"
       >
         <cx-comic-detail-card
+          [comic]="comic.detail"
           [title]="credit.name"
           [subtitle]="credit.role"
           imageUrl="/assets/img/credit.png"
@@ -50,6 +51,7 @@
         fxFlex.lg-md="100%"
       >
         <cx-comic-detail-card
+          [comic]="comic.detail"
           [title]="character"
           [routerLink]="['/library', 'collections', 'characters', character]"
           imageUrl="/assets/img/character.png"
@@ -73,6 +75,7 @@
         fxFlex.lg-md="100%"
       >
         <cx-comic-detail-card
+          [comic]="comic.detail"
           [title]="team"
           [routerLink]="['/library', 'collections', 'teams', team]"
           imageUrl="/assets/img/team.png"
@@ -97,6 +100,7 @@
         fxFlex.lg-md="100%"
       >
         <cx-comic-detail-card
+          [comic]="comic.detail"
           [title]="location"
           [routerLink]="['/library', 'collections', 'locations', location]"
           imageUrl="/assets/img/location.png"
@@ -121,6 +125,7 @@
         fxFlex.lg-md="100%"
       >
         <cx-comic-detail-card
+          [comic]="comic.detail"
           [title]="story"
           [routerLink]="['/library', 'collections', 'stories', story]"
           imageUrl="/assets/img/story.png"

@@ -32,10 +32,12 @@ export class ComicOverviewComponent {
   @Input() isAdmin = false;
 
   get deleted(): boolean {
-    return this.comic.comicState === ComicBookState.DELETED;
+    return this.comic.detail.comicState === ComicBookState.DELETED;
   }
 
   get comicChanged(): boolean {
-    return !!this.comic && this.comic.comicState === ComicBookState.CHANGED;
+    return (
+      !!this.comic && this.comic.detail.comicState === ComicBookState.CHANGED
+    );
   }
 }

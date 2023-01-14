@@ -86,26 +86,46 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     final Optional<ComicBook> nextComic =
         this.comicBookRepository
             .findIssuesAfterComic(
-                result.getSeries(),
-                result.getVolume(),
-                result.getIssueNumber(),
-                result.getCoverDate())
+                result.getComicDetail().getSeries(),
+                result.getComicDetail().getVolume(),
+                result.getComicDetail().getIssueNumber(),
+                result.getComicDetail().getCoverDate())
             .stream()
-            .filter(comic -> comic.getCoverDate().compareTo(result.getCoverDate()) >= 0)
-            .sorted((o1, o2) -> o1.getCoverDate().compareTo(o2.getCoverDate()))
+            .filter(
+                comic ->
+                    comic
+                            .getComicDetail()
+                            .getCoverDate()
+                            .compareTo(result.getComicDetail().getCoverDate())
+                        >= 0)
+            .sorted(
+                (o1, o2) ->
+                    o1.getComicDetail()
+                        .getCoverDate()
+                        .compareTo(o2.getComicDetail().getCoverDate()))
             .findFirst();
     if (nextComic.isPresent()) result.setNextIssueId(nextComic.get().getId());
 
     final Optional<ComicBook> prevComic =
         this.comicBookRepository
             .findIssuesBeforeComic(
-                result.getSeries(),
-                result.getVolume(),
-                result.getIssueNumber(),
-                result.getCoverDate())
+                result.getComicDetail().getSeries(),
+                result.getComicDetail().getVolume(),
+                result.getComicDetail().getIssueNumber(),
+                result.getComicDetail().getCoverDate())
             .stream()
-            .filter(comic -> comic.getCoverDate().compareTo(result.getCoverDate()) <= 0)
-            .sorted((o1, o2) -> o2.getCoverDate().compareTo(o1.getCoverDate()))
+            .filter(
+                comic ->
+                    comic
+                            .getComicDetail()
+                            .getCoverDate()
+                            .compareTo(result.getComicDetail().getCoverDate())
+                        <= 0)
+            .sorted(
+                (o1, o2) ->
+                    o2.getComicDetail()
+                        .getCoverDate()
+                        .compareTo(o1.getComicDetail().getCoverDate()))
             .findFirst();
     if (prevComic.isPresent()) result.setPreviousIssueId(prevComic.get().getId());
 
@@ -154,11 +174,11 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
 
     log.trace("Updating the comic fields");
 
-    comic.setPublisher(update.getPublisher());
-    comic.setSeries(update.getSeries());
-    comic.setVolume(update.getVolume());
-    comic.setIssueNumber(update.getIssueNumber());
-    comic.setImprint(update.getImprint());
+    comic.getComicDetail().setPublisher(update.getComicDetail().getPublisher());
+    comic.getComicDetail().setSeries(update.getComicDetail().getSeries());
+    comic.getComicDetail().setVolume(update.getComicDetail().getVolume());
+    comic.getComicDetail().setIssueNumber(update.getComicDetail().getIssueNumber());
+    comic.getComicDetail().setImprint(update.getComicDetail().getImprint());
     comic.setSortName(update.getSortName());
     comic.setTitle(update.getTitle());
     comic.setDescription(update.getDescription());
@@ -253,18 +273,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.comicBookRepository.findByFilename(filename);
   }
 
-  /**
-   * Returns a list of comics with ids greater than the threshold specified.
-   *
-   * @param threshold the id threshold
-   * @param max the maximum number of records
-   * @return the list of comics
-   */
-  public List<ComicBook> getComicsById(final long threshold, final int max) {
-    log.debug("Finding {} comic{} with id greater than {}", max, max == 1 ? "" : "s", threshold);
-    return this.comicBookRepository.findComicsWithIdGreaterThan(threshold, PageRequest.of(0, max));
-  }
-
   @Override
   @Transactional
   public void onComicStateChange(
@@ -280,7 +288,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
         log.error("Failed to publish comic removal", error);
       }
     } else {
-      comic.setComicState(state.getId());
+      comic.getComicDetail().setComicState(state.getId());
       comic.setLastModifiedOn(new Date());
       final ComicBook updated = this.comicBookRepository.save(comic);
       log.trace("Publishing comic  update");
@@ -313,7 +321,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     this.comicBookMetadataAdaptor.clear(comic);
     log.trace("Firing comic state event");
     this.comicStateHandler.fireEvent(comic, ComicEvent.metadataCleared);
-    log.trace("Retrieving upated comic");
+    log.trace("Retrieving updated comic");
     return this.doGetComic(comicId);
   }
 

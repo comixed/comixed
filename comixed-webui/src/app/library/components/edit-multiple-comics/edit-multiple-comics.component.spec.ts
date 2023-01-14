@@ -27,9 +27,9 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5,
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5,
   IMPRINT_1,
   IMPRINT_2,
   IMPRINT_3
@@ -48,9 +48,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditMultipleComicsComponent', () => {
   const COMICS = [
-    COMIC_BOOK_1,
-    { ...COMIC_BOOK_3, publisher: COMIC_BOOK_1.publisher },
-    { ...COMIC_BOOK_5, publisher: COMIC_BOOK_1.publisher }
+    COMIC_DETAIL_1,
+    { ...COMIC_DETAIL_3, publisher: COMIC_DETAIL_1.publisher },
+    { ...COMIC_DETAIL_5, publisher: COMIC_DETAIL_1.publisher }
   ];
   const IMPRINTS = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const initialState = {

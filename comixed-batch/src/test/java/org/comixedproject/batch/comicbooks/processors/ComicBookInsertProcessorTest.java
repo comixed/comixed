@@ -24,6 +24,7 @@ import java.util.Date;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicfiles.ComicFileDescriptor;
 import org.comixedproject.model.metadata.FilenameMetadata;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -52,11 +53,13 @@ public class ComicBookInsertProcessorTest {
   @Mock private FilenameScrapingRuleService filenameScrapingRuleService;
   @Mock private ComicBook comicBookRecord;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
 
   private FilenameMetadata filenameMetadata;
 
   @Before
   public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(descriptor.getFilename()).thenReturn(TEST_FILENAME);
     filenameMetadata =
         new FilenameMetadata(true, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER, TEST_COVER_DATE);
@@ -100,10 +103,10 @@ public class ComicBookInsertProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicBook, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
 
     Mockito.verify(comicBookService, Mockito.times(1)).findByFilename(TEST_FILENAME);
     Mockito.verify(comicBookAdaptor, Mockito.times(1)).createComic(TEST_FILENAME);
@@ -124,10 +127,10 @@ public class ComicBookInsertProcessorTest {
     assertNotNull(result);
     assertSame(comicBook, result);
 
-    Mockito.verify(comicBook, Mockito.never()).setSeries(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.never()).setVolume(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.never()).setIssueNumber(Mockito.anyString());
-    Mockito.verify(comicBook, Mockito.never()).setCoverDate(Mockito.any(Date.class));
+    Mockito.verify(comicDetail, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setIssueNumber(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.never()).setCoverDate(Mockito.any(Date.class));
 
     Mockito.verify(comicBookService, Mockito.times(1)).findByFilename(TEST_FILENAME);
     Mockito.verify(filenameScrapingRuleService, Mockito.times(1))

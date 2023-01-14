@@ -59,14 +59,15 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param series the series name
    * @return the list of comics
    */
-  List<ComicBook> findBySeries(String series);
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.series = :series")
+  List<ComicBook> findBySeries(@Param("series") String series);
 
   @Query(
       "SELECT c FROM ComicBook c LEFT JOIN FETCH c.metadata mds LEFT JOIN FETCH c.pages WHERE c.id = :id")
   ComicBook getById(@Param("id") long id);
 
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate <= :coverDate ORDER BY c.coverDate,c.issueNumber DESC")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate <= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber DESC")
   List<ComicBook> findIssuesBeforeComic(
       @Param("series") final String series,
       @Param("volume") final String volume,
@@ -74,7 +75,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       @Param("coverDate") final Date coverDate);
 
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.series = :series AND c.volume = :volume AND c.issueNumber <> :issueNumber AND c.coverDate >= :coverDate ORDER BY c.coverDate,c.issueNumber ASC")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume AND c.comicDetail.issueNumber <> :issueNumber AND c.comicDetail.coverDate >= :coverDate ORDER BY c.comicDetail.coverDate, c.comicDetail.issueNumber ASC")
   List<ComicBook> findIssuesAfterComic(
       @Param("series") String series,
       @Param("volume") String volume,
@@ -83,16 +84,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
 
   @Query("SELECT c FROM ComicBook c ORDER BY c.id")
   List<ComicBook> findComicsToMove(Pageable pageable);
-
-  /**
-   * Returns a page of {@link ComicBook} objects with an id greater than the supplied threshold.
-   *
-   * @param threshold the threshold id
-   * @param page the page parameter
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c WHERE c.id > :threshold ORDER BY c.id")
-  List<ComicBook> findComicsWithIdGreaterThan(@Param("threshold") Long threshold, Pageable page);
 
   /**
    * Returns all comics containing a page with the given hash.
@@ -105,21 +96,13 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
   List<ComicBook> findComicsForPageHash(@Param("hash") String hash);
 
   /**
-   * Loads all comics, ordered by date added.
-   *
-   * @return the list of comics
-   */
-  @Query("SELECT c FROM ComicBook c ORDER BY c.dateAdded")
-  List<ComicBook> loadComicList();
-
-  /**
    * Loads all comics with the given state, ordered by last modified date.
    *
    * @param state the state
    * @param pageable the page request
    * @return the comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicState = :state")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = :state")
   List<ComicBook> findForState(@Param("state") ComicState state, Pageable pageable);
 
   /**
@@ -128,7 +111,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param state the state
    * @return the count
    */
-  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = :state")
+  @Query("SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = :state")
   long findForStateCount(@Param("state") ComicState state);
 
   /**
@@ -138,7 +121,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.createMetadataSource = true")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.createMetadataSource = true")
   List<ComicBook> findUnprocessedComicsWithCreateMetadataFlagSet(Pageable pageable);
 
   /**
@@ -148,7 +131,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
   List<ComicBook> findUnprocessedComicsWithoutContent(Pageable pageable);
 
   /**
@@ -157,7 +140,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = false")
   int findUnprocessedComicsWithoutContentCount();
 
   /**
@@ -166,7 +149,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.createMetadataSource = true")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.createMetadataSource = true")
   int findComicsWithCreateMeatadataSourceFlag();
 
   /**
@@ -176,7 +159,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false")
   List<ComicBook> findUnprocessedComicsForMarkedPageBlocking(Pageable pageable);
 
   /**
@@ -185,7 +168,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = false")
   int findUnprocessedComicsForMarkedPageBlockingCount();
 
   /**
@@ -195,7 +178,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
   List<ComicBook> findUnprocessedComicsWithoutFileDetails(Pageable pageable);
 
   /**
@@ -204,7 +187,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true AND c.id NOT IN (SELECT d.comicBook.id FROM ComicFileDetails d)")
   int findUnprocessedComicsWithoutFileDetailsCount();
 
   /**
@@ -214,7 +197,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.fileDetails fd WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
+      "SELECT c FROM ComicBook c LEFT JOIN FETCH c.fileDetails fd WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
   List<ComicBook> findProcessedComics(Pageable pageable);
 
   /**
@@ -223,7 +206,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the count
    */
   @Query(
-      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
+      "SELECT COUNT(c) FROM ComicBook c WHERE c.comicDetail.comicState = 'UNPROCESSED' AND c.fileContentsLoaded = true AND c.blockedPagesMarked = true")
   int findProcessedComicsCount();
 
   /**
@@ -232,7 +215,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicState = 'CHANGED' AND c.updateMetadata = true")
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'CHANGED' AND c.updateMetadata = true")
   List<ComicBook> findComicsWithMetadataToUpdate(Pageable pageable);
 
   /**
@@ -250,7 +234,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.comicState = 'DELETED'")
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.comicState = 'DELETED'")
   List<ComicBook> findComicsMarkedForDeletion(Pageable pageable);
 
   /**
@@ -259,7 +243,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param pageable the page request
    * @return the list of comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.consolidating = true AND c.comicState != 'DELETED'")
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.consolidating = true AND c.comicDetail.comicState != 'DELETED'")
   List<ComicBook> findComicsToBeMoved(Pageable pageable);
 
   /**
@@ -290,7 +275,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comic
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.publisher = :publisher AND c.series = :series AND c.volume = :volume and c.issueNumber = :issueNumber")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series = :series AND c.comicDetail.volume = :volume and c.comicDetail.issueNumber = :issueNumber")
   ComicBook findComic(
       @Param("publisher") String publisher,
       @Param("series") String series,
@@ -302,7 +287,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    *
    * @return the publisher names
    */
-  @Query("SELECT DISTINCT c.publisher FROM ComicBook c WHERE c.publisher IS NOT NULL")
+  @Query(
+      "SELECT DISTINCT c.comicDetail.publisher FROM ComicBook c WHERE c.comicDetail.publisher IS NOT NULL")
   List<String> findDistinctPublishers();
 
   /**
@@ -311,14 +297,16 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param name the publisher's name
    * @return the comics
    */
-  List<ComicBook> findAllByPublisher(String name);
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.publisher = :publisher")
+  List<ComicBook> findAllByPublisher(@Param("publisher") String name);
 
   /**
    * Returns the distinct list of series names.
    *
    * @return the series names
    */
-  @Query("SELECT DISTINCT c.series FROM ComicBook c WHERE c.series IS NOT NULL")
+  @Query(
+      "SELECT DISTINCT c.comicDetail.series FROM ComicBook c WHERE c.comicDetail.series IS NOT NULL")
   List<String> findDistinctSeries();
 
   /**
@@ -327,7 +315,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publisher list
    */
   @Query(
-      "SELECT new org.comixedproject.model.collections.Publisher(c.publisher, count(c)) FROM ComicBook c WHERE LENGTH(c.publisher) > 0 GROUP BY c.publisher")
+      "SELECT new org.comixedproject.model.collections.Publisher(c.comicDetail.publisher, count(c)) FROM ComicBook c WHERE LENGTH(c.comicDetail.publisher) > 0 GROUP BY c.comicDetail.publisher")
   List<Publisher> getAllPublishersWithSeriesCount();
 
   /**
@@ -337,7 +325,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the series list
    */
   @Query(
-      "SELECT new org.comixedproject.model.collections.Series(c.publisher, c.series, c.volume, COUNT(c)) FROM ComicBook c WHERE LENGTH(c.series) > 0 and c.volume IS NOT NULL GROUP BY c.publisher, c.series, c.volume")
+      "SELECT new org.comixedproject.model.collections.Series(c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume, COUNT(c)) FROM ComicBook c WHERE LENGTH(c.comicDetail.series) > 0 and c.comicDetail.volume IS NOT NULL GROUP BY c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume")
   List<Series> getAllSeriesAndVolumes();
 
   /**
@@ -347,7 +335,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the series list
    */
   @Query(
-      "SELECT new org.comixedproject.model.collections.Series(c.publisher, c.series, c.volume, COUNT(c)) FROM ComicBook c WHERE c.publisher = :name AND LENGTH(c.series) > 0 and c.volume IS NOT NULL GROUP BY c.publisher, c.series, c.volume")
+      "SELECT new org.comixedproject.model.collections.Series(c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume, COUNT(c)) FROM ComicBook c WHERE c.comicDetail.publisher = :name AND LENGTH(c.comicDetail.series) > 0 and c.comicDetail.volume IS NOT NULL GROUP BY c.comicDetail.publisher, c.comicDetail.series, c.comicDetail.volume")
   List<Series> getAllSeriesAndVolumesForPublisher(@Param("name") String name);
 
   /**
@@ -356,7 +344,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param name the series's name
    * @return the comics
    */
-  List<ComicBook> findAllBySeries(String name);
+  @Query("SELECT c FROM ComicBook c WHERE c.comicDetail.series = :name")
+  List<ComicBook> findAllBySeries(@Param("name") String name);
 
   /**
    * Returns the distinct list of character names.
@@ -429,7 +418,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers
    */
   @Query(
-      "SELECT DISTINCT c.publisher FROM ComicBook c JOIN c.stories WHERE :name MEMBER OF c.stories")
+      "SELECT DISTINCT c.comicDetail.publisher FROM ComicBook c JOIN c.stories WHERE :name MEMBER OF c.stories")
   List<String> findDistinctPublishersForStory(@Param("name") String name);
 
   /**
@@ -446,7 +435,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    *
    * @return the list of years
    */
-  @Query("SELECT DISTINCT(YEAR(c.coverDate)) FROM ComicBook c WHERE c.coverDate IS NOT NULL")
+  @Query(
+      "SELECT DISTINCT(YEAR(c.comicDetail.coverDate)) FROM ComicBook c WHERE c.comicDetail.coverDate IS NOT NULL")
   List<Integer> loadYearsWithComics();
 
   /**
@@ -456,7 +446,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the week numbers
    */
   @Query(
-      "SELECT DISTINCT(c.coverDate) FROM ComicBook c WHERE c.coverDate IS NOT NULL AND YEAR(c.coverDate) = :year")
+      "SELECT DISTINCT(c.comicDetail.coverDate) FROM ComicBook c WHERE c.comicDetail.coverDate IS NOT NULL AND YEAR(c.comicDetail.coverDate) = :year")
   List<Date> loadWeeksForYear(@Param("year") Integer year);
 
   /**
@@ -467,7 +457,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the list of comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.coverDate IS NOT NULL AND (c.coverDate >= :startDate AND c.coverDate <= :endDate)")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.coverDate IS NOT NULL AND (c.comicDetail.coverDate >= :startDate AND c.comicDetail.coverDate <= :endDate)")
   List<ComicBook> findWithCoverDateRange(
       @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
@@ -478,7 +468,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the series names
    */
   @Query(
-      "SELECT DISTINCT c.series FROM ComicBook c WHERE c.publisher = :publisher AND c.series IS NOT NULL")
+      "SELECT DISTINCT c.comicDetail.series FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series IS NOT NULL")
   Set<String> getAllSeriesForPublisher(@Param("publisher") String publisher);
 
   /**
@@ -489,7 +479,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the volumes
    */
   @Query(
-      "SELECT DISTINCT c.volume FROM ComicBook c WHERE c.publisher = :publisher AND c.series = :series AND c.volume IS NOT NULL")
+      "SELECT DISTINCT c.comicDetail.volume FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series = :series AND c.comicDetail.volume IS NOT NULL")
   Set<String> getAllVolumesForPublisherAndSeries(
       @Param("publisher") String publisher, @Param("series") String series);
 
@@ -502,7 +492,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the comics
    */
   @Query(
-      "SELECT c FROM ComicBook c WHERE c.publisher = :publisher AND c.series=:series AND c.volume = :volume")
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.publisher = :publisher AND c.comicDetail.series=:series AND c.comicDetail.volume = :volume")
   List<ComicBook> getAllComicBooksForPublisherAndSeriesAndVolume(
       @Param("publisher") String publisher,
       @Param("series") String series,
@@ -514,7 +504,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param series the series name
    * @return the volumes
    */
-  @Query("SELECT DISTINCT c.volume FROM ComicBook c WHERE c.series = :series")
+  @Query(
+      "SELECT DISTINCT c.comicDetail.volume FROM ComicBook c WHERE c.comicDetail.series = :series")
   Set<String> findDistinctVolumesForSeries(@Param("series") String series);
 
   /**
@@ -524,7 +515,8 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @param volume the volume
    * @return the comics
    */
-  @Query("SELECT c FROM ComicBook c WHERE c.series = :series AND c.volume = :volume")
+  @Query(
+      "SELECT c FROM ComicBook c WHERE c.comicDetail.series = :series AND c.comicDetail.volume = :volume")
   List<ComicBook> getAllComicBooksForSeriesAndVolume(
       @Param("series") String series, @Param("volume") String volume);
 
@@ -541,7 +533,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers state
    */
   @Query(
-      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(c.publisher, COUNT(c)) FROM ComicBook c WHERE c.publisher IS NOT NULL GROUP BY c.publisher")
+      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(c.comicDetail.publisher, COUNT(c)) FROM ComicBook c WHERE c.comicDetail.publisher IS NOT NULL GROUP BY c.comicDetail.publisher")
   List<RemoteLibrarySegmentState> getPublishersState();
 
   /**
@@ -550,7 +542,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers state
    */
   @Query(
-      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(c.series, COUNT(c)) FROM ComicBook c WHERE c.series IS NOT NULL GROUP BY c.series")
+      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(c.comicDetail.series, COUNT(c)) FROM ComicBook c WHERE c.comicDetail.series IS NOT NULL GROUP BY c.comicDetail.series")
   List<RemoteLibrarySegmentState> getSeriesState();
 
   /**
@@ -595,7 +587,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the publishers state
    */
   @Query(
-      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(CAST(c.comicState AS text), COUNT(c)) FROM ComicBook c GROUP BY c.comicState")
+      "SELECT new org.comixedproject.model.net.library.RemoteLibrarySegmentState(CAST(c.comicDetail.comicState AS text), COUNT(c)) FROM ComicBook c GROUP BY c.comicDetail.comicState")
   List<RemoteLibrarySegmentState> getComicBooksState();
 
   /**
@@ -604,7 +596,7 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    * @return the statistics
    */
   @Query(
-      "SELECT new org.comixedproject.model.net.library.PublisherAndYearSegment(c.publisher, YEAR(c.coverDate), COUNT(c)) FROM ComicBook c WHERE c.publisher IS NOT NULL AND c.coverDate IS NOT NULL GROUP BY c.publisher, YEAR(c.coverDate)")
+      "SELECT new org.comixedproject.model.net.library.PublisherAndYearSegment(c.comicDetail.publisher, YEAR(c.comicDetail.coverDate), COUNT(c)) FROM ComicBook c WHERE c.comicDetail.publisher IS NOT NULL AND c.comicDetail.coverDate IS NOT NULL GROUP BY c.comicDetail.publisher, YEAR(c.comicDetail.coverDate)")
   List<PublisherAndYearSegment> getByPublisherAndYear();
 
   /**

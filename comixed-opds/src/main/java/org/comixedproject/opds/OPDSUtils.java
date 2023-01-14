@@ -66,7 +66,7 @@ public class OPDSUtils {
    */
   public OPDSLink createComicLink(final ComicBook comicBook) {
     return new OPDSLink(
-        comicBook.getArchiveType().getMimeType(),
+        comicBook.getComicDetail().getArchiveType().getMimeType(),
         OPDS_ACQUISITION_RELATION,
         String.format(
             COMIC_LINK_URL, comicBook.getId(), this.urlEncodeString(comicBook.getBaseFilename())));

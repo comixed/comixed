@@ -36,7 +36,7 @@ import org.comixedproject.views.View;
 public class Credit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   private Long id;
 
@@ -49,7 +49,7 @@ public class Credit {
 
   @Column(name = "Name", length = 255, nullable = false, updatable = false)
   @JsonProperty("name")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   @NonNull
@@ -57,7 +57,7 @@ public class Credit {
 
   @Column(name = "Role", length = 255, nullable = false, updatable = false)
   @JsonProperty("role")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   @NonNull

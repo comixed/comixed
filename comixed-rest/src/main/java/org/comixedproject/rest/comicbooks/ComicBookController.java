@@ -131,10 +131,17 @@ public class ComicBookController {
     this.comicBookService.undeleteComics(ids);
   }
 
+  /**
+   * Downloads a single comic book, identified by record id.
+   *
+   * @param id the record id
+   * @return the comic book
+   * @throws ComicBookException if an error occurs
+   */
   @GetMapping(value = "/api/comics/{id}/download")
   @Timed(value = "comixed.comic-book.download")
   public ResponseEntity<InputStreamResource> downloadComic(@PathVariable("id") long id)
-      throws IOException, ComicBookException {
+      throws ComicBookException {
     log.info("Preparing to download comicBook: id={}", id);
 
     final ComicBook comicBook = this.comicBookService.getComic(id);
@@ -152,7 +159,8 @@ public class ComicBookController {
     return ResponseEntity.ok()
         .contentLength(content.length)
         .header("Content-Disposition", "attachment; filename=\"" + comicBook.getFilename() + "\"")
-        .contentType(MediaType.parseMediaType(comicBook.getArchiveType().getMimeType()))
+        .contentType(
+            MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()))
         .body(new InputStreamResource(new ByteArrayInputStream(content)));
   }
 

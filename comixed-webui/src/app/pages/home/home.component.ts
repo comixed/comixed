@@ -28,6 +28,7 @@ import { LastRead } from '@app/last-read/models/last-read';
 import { selectLastReadListState } from '@app/last-read/selectors/last-read-list.selectors';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-home',
@@ -42,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   libraryStateSubscription: Subscription;
   libraryState: LibraryState = null;
   comicBookListStateSubscription: Subscription;
-  comicBooks: ComicBook[] = [];
+  comicBooks: ComicDetail[] = [];
   lastReadStateSubscription: Subscription;
   lastRead: LastRead[] = [];
 

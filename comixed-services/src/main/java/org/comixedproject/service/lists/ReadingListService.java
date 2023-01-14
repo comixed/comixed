@@ -389,10 +389,10 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
                 } else {
                   return new String[] {
                     String.valueOf(index),
-                    model.getPublisher(),
-                    model.getSeries(),
-                    model.getVolume(),
-                    model.getIssueNumber()
+                    model.getComicDetail().getPublisher(),
+                    model.getComicDetail().getSeries(),
+                    model.getComicDetail().getVolume(),
+                    model.getComicDetail().getIssueNumber()
                   };
                 }
               });

@@ -55,7 +55,6 @@ public class MetadataSource {
   @JsonView({
     View.MetadataSourceList.class,
     View.ComicDetailsView.class,
-    View.AuditLogEntryDetail.class
   })
   @Getter
   @Setter

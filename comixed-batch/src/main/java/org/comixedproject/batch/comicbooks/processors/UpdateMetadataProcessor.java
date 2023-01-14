@@ -39,12 +39,13 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
-    if (comicBook.getArchiveType() == ArchiveType.CBR) {
+    if (comicBook.getComicDetail().getArchiveType() == ArchiveType.CBR) {
       log.warn("Cannot write CBR files");
     } else {
       try {
         log.debug("Updating comicBook metadata: id={}", comicBook.getId());
-        this.comicBookAdaptor.save(comicBook, comicBook.getArchiveType(), false, "");
+        this.comicBookAdaptor.save(
+            comicBook, comicBook.getComicDetail().getArchiveType(), false, "");
       } catch (AdaptorException error) {
         log.error("Failed to update metadata for comicBook", error);
       }

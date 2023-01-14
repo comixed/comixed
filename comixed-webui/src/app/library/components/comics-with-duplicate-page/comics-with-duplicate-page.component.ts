@@ -24,6 +24,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-comics-with-duplicate-page',
@@ -32,7 +33,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 })
 export class ComicsWithDuplicatePageComponent implements OnDestroy {
   comicBookSubscription: Subscription;
-  comicBooks: ComicBook[] = [];
+  comicBooks: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -44,7 +45,7 @@ export class ComicsWithDuplicatePageComponent implements OnDestroy {
       .subscribe(comicBooks => {
         this.logger.trace('Comic book update received');
         this.comicBooks = comicBooks.filter(comicBook =>
-          this.page.ids.includes(comicBook.id)
+          this.page.ids.includes(comicBook.comicId)
         );
       });
   }

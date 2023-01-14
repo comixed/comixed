@@ -61,7 +61,7 @@ public class MoveComicProcessor
       log.trace("Creating target directory (if needed)");
       this.fileAdaptor.createDirectory(targetDirectory);
       log.trace("Getting comicBook extension");
-      final String comicExtension = comicBook.getArchiveType().getExtension();
+      final String comicExtension = comicBook.getComicDetail().getArchiveType().getExtension();
       log.trace("Generating new comicBook filename");
       String targetFilename = this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule);
       log.trace("Finding available filename");

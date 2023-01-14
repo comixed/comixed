@@ -39,7 +39,10 @@ import {
   SCRAPE_FILENAME_URL,
   SEND_COMIC_FILES_URL
 } from '@app/comic-files/comic-file.constants';
-import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_2,
+  COMIC_DETAIL_2
+} from '@app/comic-books/comic-books.fixtures';
 import { FilenameMetadataResponse } from '@app/comic-files/models/net/filename-metadata-response';
 import { FilenameMetadataRequest } from '@app/comic-files/models/net/filename-metadata-request';
 import { ComicFileGroup } from '@app/comic-files/models/comic-file-group';
@@ -58,10 +61,10 @@ describe('ComicImportService', () => {
   const FILES = [COMIC_FILE_1, COMIC_FILE_2, COMIC_FILE_3];
   const MAXIMUM = 100;
   const FILENAME = COMIC_BOOK_2.baseFilename;
-  const SERIES = COMIC_BOOK_2.series;
-  const VOLUME = COMIC_BOOK_2.volume;
-  const ISSUE_NUMBER = COMIC_BOOK_2.issueNumber;
-  const COVER_DATE = COMIC_BOOK_2.coverDate;
+  const SERIES = COMIC_DETAIL_2.series;
+  const VOLUME = COMIC_DETAIL_2.volume;
+  const ISSUE_NUMBER = COMIC_DETAIL_2.issueNumber;
+  const COVER_DATE = COMIC_DETAIL_2.coverDate;
 
   let service: ComicImportService;
   let httpMock: HttpTestingController;

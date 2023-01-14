@@ -52,6 +52,7 @@ import {
 } from '@app/lists/actions/reading-lists.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -67,7 +68,7 @@ export class ReadingListPageComponent implements OnDestroy {
   readingListRemovalSubscription: MessagingSubscription;
   readingListForm: FormGroup;
   readingListId = -1;
-  selectedEntries: ComicBook[] = [];
+  selectedEntries: ComicDetail[] = [];
   langChangeSubscription: Subscription;
 
   constructor(
@@ -244,7 +245,7 @@ export class ReadingListPageComponent implements OnDestroy {
     });
   }
 
-  onSelectionChanged(selected: ComicBook[]): void {
+  onSelectionChanged(selected: ComicDetail[]): void {
     this.logger.debug('Selected reading list comics changed:', selected);
     this.selectedEntries = selected;
   }

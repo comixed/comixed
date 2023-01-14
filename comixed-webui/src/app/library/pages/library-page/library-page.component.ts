@@ -17,7 +17,6 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -44,6 +43,7 @@ import {
 } from '@app/library/actions/library-selections.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-library-page',
@@ -151,13 +151,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _comicBooks: ComicBook[] = [];
+  private _comicBooks: ComicDetail[] = [];
 
-  get comicBooks(): ComicBook[] {
+  get comicBooks(): ComicDetail[] {
     return this._comicBooks;
   }
 
-  set comicBooks(comics: ComicBook[]) {
+  set comicBooks(comics: ComicDetail[]) {
     this._comicBooks = comics;
   }
 
@@ -196,9 +196,9 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
                 (!this.unreadOnly ||
                   !this.lastReadDates
                     .map(lastRead => lastRead.comicBook.id)
-                    .includes(comicBook.id))
+                    .includes(comicBook.comicId))
             )
-            .map(comicBook => comicBook.id)
+            .map(comicBook => comicBook.comicId)
         })
       );
     } else {

@@ -46,7 +46,7 @@ public class UpdateComicBooksProcessor
   private JobParameters jobParameters;
 
   @Override
-  public ComicBook process(final ComicBook comic) throws Exception {
+  public ComicBook process(final ComicBook comicBook) throws Exception {
     log.trace("Loading job parameters");
     final String publisher = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_PUBLISHER);
     final String series = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_SERIES);
@@ -56,25 +56,25 @@ public class UpdateComicBooksProcessor
 
     if (StringUtils.hasLength(publisher)) {
       log.debug("Setting publisher to {}", publisher);
-      comic.setPublisher(publisher);
+      comicBook.getComicDetail().setPublisher(publisher);
     }
     if (StringUtils.hasLength(series)) {
       log.debug("Setting series to {}", series);
-      comic.setSeries(series);
+      comicBook.getComicDetail().setSeries(series);
     }
     if (StringUtils.hasLength(volume)) {
       log.debug("Setting volume to {}", volume);
-      comic.setVolume(volume);
+      comicBook.getComicDetail().setVolume(volume);
     }
     if (StringUtils.hasLength(issueNumber)) {
       log.debug("Setting issue number to {}", issueNumber);
-      comic.setIssueNumber(issueNumber);
+      comicBook.getComicDetail().setIssueNumber(issueNumber);
     }
     if (StringUtils.hasLength(imprint)) {
       log.debug("Setting imprint to {}", imprint);
-      comic.setImprint(imprint);
+      comicBook.getComicDetail().setImprint(imprint);
     }
-    return comic;
+    return comicBook;
   }
 
   @Override

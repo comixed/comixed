@@ -48,11 +48,11 @@ import {
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -79,16 +79,18 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 
 describe('CollectionDetailComponent', () => {
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    { ...COMIC_BOOK_2, publisher: null, series: null, volume: null },
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    COMIC_DETAIL_1,
+    { ...COMIC_DETAIL_2, publisher: null, series: null, volume: null },
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
   ];
-  const IDS = COMIC_BOOKS.map(comic => comic.id);
+  const IDS = COMIC_BOOKS.map(comic => comic.comicId);
   const PAGE_INDEX = 22;
   const USER = USER_READER;
   const initialState = {
@@ -117,6 +119,8 @@ describe('CollectionDetailComponent', () => {
           CollectionDetailComponent,
           ComicBookCoversComponent,
           LibraryToolbarComponent,
+          ComicTitlePipe,
+          ComicCoverUrlPipe,
           ArchiveTypePipe,
           CoverDateFilterPipe
         ],
@@ -269,62 +273,6 @@ describe('CollectionDetailComponent', () => {
           collectionType: 'series',
           collectionName: COMIC_BOOKS[0].series,
           volume: COMIC_BOOKS[0].volume
-        });
-      });
-
-      it('selects comics', () => {
-        expect(component.comicBooks).not.toEqual([]);
-      });
-    });
-
-    describe('when the collection type is characters', () => {
-      beforeEach(() => {
-        component.comicBooks = [];
-        (activatedRoute.params as BehaviorSubject<{}>).next({
-          collectionType: 'characters',
-          collectionName: COMIC_BOOKS[0].characters[0]
-        });
-      });
-
-      it('selects comics', () => {
-        expect(component.comicBooks).not.toEqual([]);
-      });
-    });
-
-    describe('when the collection type is teams', () => {
-      beforeEach(() => {
-        component.comicBooks = [];
-        (activatedRoute.params as BehaviorSubject<{}>).next({
-          collectionType: 'teams',
-          collectionName: COMIC_BOOKS[0].teams[0]
-        });
-      });
-
-      it('selects comics', () => {
-        expect(component.comicBooks).not.toEqual([]);
-      });
-    });
-
-    describe('when the collection type is locations', () => {
-      beforeEach(() => {
-        component.comicBooks = [];
-        (activatedRoute.params as BehaviorSubject<{}>).next({
-          collectionType: 'locations',
-          collectionName: COMIC_BOOKS[0].locations[0]
-        });
-      });
-
-      it('selects comics', () => {
-        expect(component.comicBooks).not.toEqual([]);
-      });
-    });
-
-    describe('when the collection type is stories', () => {
-      beforeEach(() => {
-        component.comicBooks = [];
-        (activatedRoute.params as BehaviorSubject<{}>).next({
-          collectionType: 'stories',
-          collectionName: COMIC_BOOKS[0].stories[0]
         });
       });
 

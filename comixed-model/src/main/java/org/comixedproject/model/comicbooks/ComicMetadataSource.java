@@ -51,7 +51,7 @@ public class ComicMetadataSource {
   @ManyToOne
   @JoinColumn(name = "MetadataSourceId", nullable = false, updatable = false)
   @JsonProperty("metadataSource")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   @NonNull
@@ -59,7 +59,7 @@ public class ComicMetadataSource {
 
   @Column(name = "ReferenceId", length = 32, nullable = false, updatable = true)
   @JsonProperty("referenceId")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   @NonNull

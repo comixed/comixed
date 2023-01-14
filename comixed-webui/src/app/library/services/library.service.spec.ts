@@ -19,10 +19,10 @@
 import { TestBed } from '@angular/core/testing';
 import { LibraryService } from './library.service';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4
 } from '@app/comic-books/comic-books.fixtures';
 import {
   HttpClientTestingModule,
@@ -62,8 +62,13 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
 
 describe('LibraryService', () => {
-  const COMIC_BOOK = COMIC_BOOK_1;
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_2, COMIC_BOOK_3, COMIC_BOOK_4];
+  const COMIC_BOOK = COMIC_DETAIL_1;
+  const COMIC_BOOKS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4
+  ];
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
@@ -131,7 +136,7 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(SET_READ_STATE_URL));
     expect(req.request.method).toEqual('PUT');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.id),
+      ids: COMIC_BOOKS.map(comic => comic.comicId),
       read: READ
     } as SetComicReadRequest);
     req.flush(serviceResponse);
@@ -159,7 +164,7 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(RESCAN_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.id)
+      ids: COMIC_BOOKS.map(comic => comic.comicId)
     } as RescanComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });
@@ -190,7 +195,7 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(CONVERT_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.id),
+      ids: COMIC_BOOKS.map(comic => comic.comicId),
       archiveType: ARCHIVE_TYPE,
       deletePages: DELETE_PAGES,
       renamePages: RENAME_PAGES
@@ -220,7 +225,7 @@ describe('LibraryService', () => {
     const req = httpMock.expectOne(interpolate(EDIT_MULTIPLE_COMICS_URL));
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
-      ids: COMIC_BOOKS.map(comic => comic.id),
+      ids: COMIC_BOOKS.map(comic => comic.comicId),
       publisher: COMIC_DETAILS.publisher,
       series: COMIC_DETAILS.series,
       volume: COMIC_DETAILS.volume,

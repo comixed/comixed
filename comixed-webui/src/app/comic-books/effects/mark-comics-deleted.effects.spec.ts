@@ -25,9 +25,9 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import {
@@ -40,7 +40,7 @@ import { MarkComicsDeletedEffects } from '@app/comic-books/effects/mark-comics-d
 import { clearSelectedComicBooks } from '@app/library/actions/library-selections.actions';
 
 describe('MarkComicsDeletedEffects', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const DELETED = Math.random() > 0.5;
 
   let actions$: Observable<any>;

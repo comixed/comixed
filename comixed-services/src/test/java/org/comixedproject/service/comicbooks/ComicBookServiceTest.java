@@ -38,9 +38,11 @@ import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.comicbooks.PublishComicRemovalAction;
 import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.LastRead;
@@ -103,7 +105,9 @@ public class ComicBookServiceTest {
   @Mock private PublishComicRemovalAction comicRemovalPublishAction;
   @Mock private ComicBookMetadataAdaptor comicBookMetadataAdaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private ComicBook incomingComicBook;
+  @Mock private ComicDetail incomingComicDetail;
   @Mock private ComicBook comicBookRecord;
   @Mock private State<ComicState, ComicEvent> state;
   @Mock private Message<ComicEvent> message;
@@ -128,6 +132,7 @@ public class ComicBookServiceTest {
   @Captor private ArgumentCaptor<Date> endDateArgumentCaptor;
 
   private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<ComicDetail> comicDetailList = new ArrayList<>();
   private List<ComicBook> comicsBySeries = new ArrayList<>();
   private ComicBook previousComicBook = new ComicBook();
   private ComicBook currentComicBook = new ComicBook();
@@ -140,18 +145,32 @@ public class ComicBookServiceTest {
 
   @Before
   public void setUp() throws ComiXedUserException {
-    previousComicBook.setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
-    previousComicBook.setCoverDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
-    currentComicBook.setSeries(TEST_SERIES);
-    currentComicBook.setVolume(TEST_VOLUME);
-    currentComicBook.setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
-    currentComicBook.setCoverDate(new Date(System.currentTimeMillis()));
-    currentComicBook.setCoverDate(TEST_COVER_DATE);
-    nextComicBook.setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
-    nextComicBook.setCoverDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
+
+    previousComicBook.setComicDetail(new ComicDetail(previousComicBook, ArchiveType.CBZ));
+    previousComicBook.getComicDetail().setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
+    previousComicBook
+        .getComicDetail()
+        .setCoverDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
+
+    currentComicBook.setComicDetail(new ComicDetail(currentComicBook, ArchiveType.CBZ));
+    currentComicBook.getComicDetail().setSeries(TEST_SERIES);
+    currentComicBook.getComicDetail().setVolume(TEST_VOLUME);
+    currentComicBook.getComicDetail().setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
+    currentComicBook.getComicDetail().setCoverDate(new Date(System.currentTimeMillis()));
+    currentComicBook.getComicDetail().setCoverDate(TEST_COVER_DATE);
+
+    nextComicBook.setComicDetail(new ComicDetail(nextComicBook, ArchiveType.CBZ));
+    nextComicBook.getComicDetail().setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
+    nextComicBook
+        .getComicDetail()
+        .setCoverDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
+
     comicsBySeries.add(nextComicBook);
     comicsBySeries.add(previousComicBook);
     comicsBySeries.add(currentComicBook);
+
     calendar.setTime(now);
 
     Mockito.when(lastRead.getUser()).thenReturn(lastReadUser);
@@ -205,7 +224,7 @@ public class ComicBookServiceTest {
 
     service.onComicStateChange(state, message);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setComicState(TEST_STATE);
+    Mockito.verify(comicDetail, Mockito.times(1)).setComicState(TEST_STATE);
     Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
     Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
     Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookRecord);
@@ -225,7 +244,7 @@ public class ComicBookServiceTest {
 
     service.onComicStateChange(state, message);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setComicState(TEST_STATE);
+    Mockito.verify(comicDetail, Mockito.times(1)).setComicState(TEST_STATE);
     Mockito.verify(comicBook, Mockito.times(1)).setLastModifiedOn(Mockito.any(Date.class));
     Mockito.verify(comicBookRepository, Mockito.times(1)).save(comicBook);
     Mockito.verify(comicUpdatePublishAction, Mockito.times(1)).publish(comicBookRecord);
@@ -373,12 +392,12 @@ public class ComicBookServiceTest {
   @Test
   public void testUpdateComic() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(incomingComicBook.getPublisher()).thenReturn(TEST_PUBLISHER);
-    Mockito.when(incomingComicBook.getSeries()).thenReturn(TEST_SERIES);
-    Mockito.when(incomingComicBook.getVolume()).thenReturn(TEST_VOLUME);
-    Mockito.when(incomingComicBook.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
+    Mockito.when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(incomingComicDetail.getSeries()).thenReturn(TEST_SERIES);
+    Mockito.when(incomingComicDetail.getVolume()).thenReturn(TEST_VOLUME);
+    Mockito.when(incomingComicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
     // TODO update metadata source
-    Mockito.when(incomingComicBook.getImprint()).thenReturn(TEST_IMPRINT);
+    Mockito.when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComicBook.getSortName()).thenReturn(TEST_SORTABLE_NAME);
     Mockito.when(incomingComicBook.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(incomingComicBook.getDescription()).thenReturn(TEST_DESCRIPTION);
@@ -389,13 +408,13 @@ public class ComicBookServiceTest {
     assertSame(comicBook, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries(TEST_SERIES);
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES);
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
     // TODO update metadata source
     Mockito.verify(comicBook, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comicBook, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(comicStateHandler, Mockito.times(1))
@@ -422,25 +441,6 @@ public class ComicBookServiceTest {
     service.deleteComic(comicBook);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).delete(comicBook);
-  }
-
-  @Test
-  public void testGetComicsById() {
-    Mockito.when(
-            comicBookRepository.findComicsWithIdGreaterThan(
-                Mockito.anyLong(), pageableCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getComicsById(TEST_COMIC_BOOK_ID, TEST_MAXIMUM_COMICS);
-
-    assertNotNull(result);
-    assertSame(comicBookList, result);
-    assertNotNull(pageableCaptor.getValue());
-    assertEquals(0, pageableCaptor.getValue().getPageNumber());
-    assertEquals(TEST_MAXIMUM_COMICS, pageableCaptor.getValue().getPageSize());
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findComicsWithIdGreaterThan(TEST_COMIC_BOOK_ID, pageableCaptor.getValue());
   }
 
   @Test

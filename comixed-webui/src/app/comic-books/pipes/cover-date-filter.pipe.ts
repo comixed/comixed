@@ -17,14 +17,14 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({
   name: 'coverDateFilter'
 })
 export class CoverDateFilterPipe implements PipeTransform {
-  transform(comicBooks: ComicBook[], filter: CoverDateFilter): ComicBook[] {
+  transform(comicBooks: ComicDetail[], filter: CoverDateFilter): ComicDetail[] {
     return comicBooks
       .filter(
         comicBook =>

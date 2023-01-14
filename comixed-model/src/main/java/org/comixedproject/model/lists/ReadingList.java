@@ -45,14 +45,14 @@ public class ReadingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
   private Long id;
 
   @Column(name = "ReadingListState", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
   @JsonProperty("readingListState")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
   @Setter
   private ReadingListState readingListState = ReadingListState.STABLE;
@@ -73,13 +73,13 @@ public class ReadingList {
 
   @Column(name = "Name", length = 128)
   @JsonProperty("name")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
   private String name;
 
   @Column(name = "Summary", length = 256, nullable = true)
   @JsonProperty("summary")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @Getter
   @Setter
   private String summary;
@@ -87,7 +87,7 @@ public class ReadingList {
   @Column(name = "CreatedOn")
   @CreatedDate
   @JsonProperty("createdOn")
-  @JsonView({View.ComicListView.class, View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class, View.ReadingLists.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @Getter
   @Setter
@@ -96,11 +96,7 @@ public class ReadingList {
   @Column(name = "LastModifiedOn")
   @LastModifiedDate
   @JsonProperty("lastModifiedOn")
-  @JsonView({
-    View.ComicListView.class,
-    View.ReadingListDetail.class,
-    View.AuditLogEntryDetail.class
-  })
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
   @Getter
   @Setter
@@ -112,7 +108,7 @@ public class ReadingList {
       joinColumns = {@JoinColumn(name = "ReadingListId")},
       inverseJoinColumns = {@JoinColumn(name = "ComicBookId")})
   @JsonProperty("comicBooks")
-  @JsonView({View.ReadingLists.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ReadingLists.class})
   @Getter
   private List<ComicBook> comicBooks = new ArrayList<>();
 

@@ -23,7 +23,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { SetComicsReadEffects } from './set-comics-read.effects';
 import { LastReadService } from '@app/last-read/services/last-read.service';
 import { AlertService } from '@app/core/services/alert.service';
-import { COMIC_BOOK_4 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_DETAIL_4 } from '@app/comic-books/comic-books.fixtures';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -41,7 +41,7 @@ import {
 import { LAST_READ_2 } from '@app/last-read/last-read.fixtures';
 
 describe('UpdateReadStatusEffects', () => {
-  const COMIC = COMIC_BOOK_4;
+  const COMIC = COMIC_DETAIL_4;
   const READ = Math.random() > 0.5;
   const ENTRY = LAST_READ_2;
 

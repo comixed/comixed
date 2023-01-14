@@ -92,7 +92,6 @@ export class ComicBookPageComponent
   pages: Page[];
   userSubscription: Subscription;
   isAdmin = false;
-  displaySubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
   volumesSubscription: Subscription;
   skipCache = false;
@@ -196,7 +195,7 @@ export class ComicBookPageComponent
   }
 
   get isDeleted(): boolean {
-    return this.comicBook.comicState === ComicBookState.DELETED;
+    return this.comicBook.detail.comicState === ComicBookState.DELETED;
   }
 
   ngOnInit(): void {
@@ -246,7 +245,7 @@ export class ComicBookPageComponent
   setReadState(read: boolean): void {
     this.logger.debug('Marking comic read status:', read);
     this.store.dispatch(
-      setComicBooksRead({ comicBooks: [this.comicBook], read })
+      setComicBooksRead({ comicBooks: [this.comicBook.detail], read })
     );
   }
 
@@ -280,7 +279,7 @@ export class ComicBookPageComponent
       confirm: () => {
         this.logger.trace('Marking comic for deletion');
         this.store.dispatch(
-          markComicsDeleted({ comicBooks: [this.comicBook], deleted })
+          markComicsDeleted({ comicBooks: [this.comicBook.detail], deleted })
         );
       }
     });
@@ -330,7 +329,9 @@ export class ComicBookPageComponent
   private loadPageTitle(): void {
     if (!!this.comicBook) {
       this.logger.trace('Updating page title');
-      this.titleService.setTitle(this.comicTitlePipe.transform(this.comicBook));
+      this.titleService.setTitle(
+        this.comicTitlePipe.transform(this.comicBook.detail)
+      );
     }
   }
 

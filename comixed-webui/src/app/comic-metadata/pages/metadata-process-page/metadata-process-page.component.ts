@@ -26,12 +26,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { selectMetadataUpdateProcessState } from '@app/comic-metadata/selectors/metadata-update-process.selectors';
 import { MetadataUpdateProcessState } from '@app/comic-metadata/reducers/metadata-update-process.reducer';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -45,8 +45,8 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
   processStateSubscription: Subscription;
   processState: MetadataUpdateProcessState;
   selectedIds: number[] = [];
-  comicBooks: ComicBook[] = [];
-  displayedComicBooks: ComicBook[] = [];
+  comicBooks: ComicDetail[] = [];
+  displayedComicBooks: ComicDetail[] = [];
   userSubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
   showCovers = false;
@@ -103,7 +103,7 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
 
   updateDisplayedComicBooks(): void {
     this.displayedComicBooks = this.comicBooks.filter(comicBook =>
-      this.selectedIds.includes(comicBook.id)
+      this.selectedIds.includes(comicBook.comicId)
     );
   }
 
