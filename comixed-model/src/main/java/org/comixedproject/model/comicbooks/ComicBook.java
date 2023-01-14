@@ -19,14 +19,12 @@
 package org.comixedproject.model.comicbooks;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.io.File;
 import java.util.*;
 import javax.persistence.*;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
-import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.model.library.LastRead;
@@ -35,7 +33,6 @@ import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.data.annotation.CreatedDate;
 
 /**
  * <code>ComicBook</code> represents a single digital comic issue.
@@ -49,33 +46,12 @@ import org.springframework.data.annotation.CreatedDate;
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ComicBook {
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @OrderColumn(name = "PageNumber")
-  @JsonProperty("pages")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  List<Page> pages = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "StoryTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("stories")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  List<String> stories = new ArrayList<>();
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
   @JsonView({
     View.ComicListView.class,
     View.LastReadList.class,
-    View.AuditLogEntryDetail.class,
     View.DuplicatePageList.class,
     View.ReadingListDetail.class
   })
@@ -85,42 +61,125 @@ public class ComicBook {
 
   @Column(name = "Filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   @NonNull
   private String filename;
 
-  @Column(name = "ArchiveType", nullable = false, updatable = true)
-  @Enumerated(EnumType.STRING)
-  @JsonProperty("archiveType")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  @Setter
-  @NonNull
-  private ArchiveType archiveType;
-
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comicBook", orphanRemoval = true)
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class
-  })
+  @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
   @Getter
   @Setter
   private ComicFileDetails fileDetails;
 
-  @Column(name = "ComicState", nullable = false, updatable = true)
-  @Enumerated(EnumType.STRING)
-  @JsonProperty("comicState")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonProperty("detail")
+  @JsonView({View.ComicDetailsView.class, View.ReadingListDetail.class})
   @Getter
   @Setter
-  private ComicState comicState = ComicState.ADDED;
+  private ComicDetail comicDetail;
+
+  @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonProperty("metadata")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private ComicMetadataSource metadata;
+
+  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderColumn(name = "PageNumber")
+  @JsonProperty("pages")
+  @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
+  @Getter
+  List<Page> pages = new ArrayList<>();
+
+  @Formula(
+      value =
+          "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = id AND p.FileHash in (SELECT b.Hash FROM BlockedHashes b))")
+  @JsonProperty("blockedPageCount")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private int blockedPageCount;
+
+  @Column(name = "Title", length = 128)
+  @JsonProperty("title")
+  @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
+  @Getter
+  @Setter
+  private String title;
+
+  @Column(name = "Notes", length = 128, nullable = true, updatable = true)
+  @Lob
+  @JsonProperty("notes")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String notes;
+
+  @Column(name = "Description")
+  @Lob
+  @JsonProperty("description")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private String description;
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "CharacterTags", joinColumns = @JoinColumn(name = "ComicBookId"))
+  @Column(name = "Name")
+  @JsonProperty("characters")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private List<String> characters = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "TeamTags", joinColumns = @JoinColumn(name = "ComicBookId"))
+  @Column(name = "Name")
+  @JsonProperty("teams")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private List<String> teams = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "LocationTags", joinColumns = @JoinColumn(name = "ComicBookId"))
+  @Column(name = "Name")
+  @JsonProperty("locations")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private List<String> locations = new ArrayList<>();
+
+  @ElementCollection
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @CollectionTable(name = "StoryTags", joinColumns = @JoinColumn(name = "ComicBookId"))
+  @Column(name = "Name")
+  @JsonProperty("stories")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  List<String> stories = new ArrayList<>();
+
+  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonProperty("credits")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private Set<Credit> credits = new HashSet<>();
+
+  @Transient
+  @JsonProperty("nextIssueId")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private Long nextIssueId;
+
+  @Transient
+  @JsonProperty("previousIssueId")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private Long previousIssueId;
 
   @Column(name = "CreateMetadataSource", nullable = false, updatable = true)
   @JsonIgnore
@@ -170,201 +229,6 @@ public class ComicBook {
   @Setter
   private boolean editDetails = false;
 
-  @Formula(
-      value =
-          "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = id AND p.FileHash in (SELECT b.Hash FROM BlockedHashes b))")
-  @JsonProperty("blockedPageCount")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  private int blockedPageCount;
-
-  @Formula(
-      "(SELECT COUNT(*) FROM ComicBooks c WHERE c.Series = series AND c.Volume = volume AND c.IssueNumber = IssueNumber AND c.CoverDate = CoverDate)")
-  @JsonProperty("duplicateCount")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  private Integer duplicateCount;
-
-  @Column(name = "CoverDate", nullable = true)
-  @Temporal(TemporalType.DATE)
-  @JsonProperty("coverDate")
-  @JsonFormat(shape = Shape.NUMBER_INT)
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  @Setter
-  private Date coverDate;
-
-  @Column(name = "StoreDate", nullable = true)
-  @Temporal(TemporalType.DATE)
-  @JsonProperty("storeDate")
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  @Setter
-  private Date storeDate;
-
-  @Column(name = "Publisher", length = 255)
-  @JsonProperty("publisher")
-  @JsonView({
-    View.ComicListView.class,
-    View.LastReadList.class,
-    View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  @Setter
-  private String publisher;
-
-  @Column(name = "Series", length = 255)
-  @JsonProperty("series")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  @Setter
-  private String series;
-
-  @Column(name = "Volume", length = 4)
-  @JsonProperty("volume")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  @Setter
-  private String volume;
-
-  @Column(name = "IssueNumber", length = 16)
-  @JsonProperty("issueNumber")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class,
-    View.ReadingListDetail.class
-  })
-  @Getter
-  private String issueNumber;
-
-  @Column(name = "Title", length = 128)
-  @JsonProperty("title")
-  @JsonView({
-    View.ComicListView.class,
-    View.AuditLogEntryDetail.class,
-    View.DuplicatePageList.class
-  })
-  @Getter
-  @Setter
-  private String title;
-
-  @Column(name = "Description")
-  @Lob
-  @JsonProperty("description")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private String description;
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "CharacterTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("characters")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  private List<String> characters = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "TeamTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("teams")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  private List<String> teams = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "LocationTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("locations")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  private List<String> locations = new ArrayList<>();
-
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonProperty("credits")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  private Set<Credit> credits = new HashSet<>();
-
-  @Transient
-  @JsonProperty("nextIssueId")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private Long nextIssueId;
-
-  @Transient
-  @JsonProperty("previousIssueId")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private Long previousIssueId;
-
-  @Column(name = "Imprint")
-  @JsonProperty("imprint")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private String imprint;
-
-  @Column(name = "Notes", length = 128, nullable = true, updatable = true)
-  @Lob
-  @JsonProperty("notes")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private String notes;
-
-  @Formula(value = "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = id)")
-  @JsonIgnore
-  @Transient
-  private Integer calculatedPageCount;
-
-  @Formula(
-      value = "(SELECT COUNT(*) FROM Pages p where p.ComicBookId = id AND p.PageState = 'DELETED')")
-  @JsonIgnore
-  @Getter
-  private Integer calculatedDeletedPageCount;
-
-  @Column(name = "CreatedOn", updatable = false, nullable = false)
-  @CreatedDate
-  @JsonProperty("addedDate")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({
-    View.ComicListView.class,
-    View.DuplicatePageDetail.class,
-    View.AuditLogEntryDetail.class,
-    View.ReadingListDetail.class
-  })
-  @Temporal(TemporalType.TIMESTAMP)
-  @Getter
-  private Date dateAdded = new Date();
-
   @Column(name = "PurgeComic", nullable = false, updatable = true)
   @JsonIgnore
   @Getter
@@ -374,25 +238,18 @@ public class ComicBook {
   @Column(name = "LastModifiedOn", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")
   @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
   @Setter
   private Date lastModifiedOn = new Date();
-
-  @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonProperty("metadata")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  @Getter
-  @Setter
-  private ComicMetadataSource metadata;
 
   @Transient @Getter @Setter private String metadataSourceName;
   @Transient @Getter @Setter private String metadataReferenceId;
 
   @Column(name = "SortName", length = 128)
   @JsonProperty("sortName")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String sortName;
@@ -401,7 +258,7 @@ public class ComicBook {
       mappedBy = "comicBooks",
       cascade = {CascadeType.ALL})
   @JsonProperty("readingLists")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   private Set<ReadingList> readingLists = new HashSet<>();
 
@@ -416,7 +273,7 @@ public class ComicBook {
    * @return the filename
    */
   @JsonProperty("baseFilename")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   public String getBaseFilename() {
     return FilenameUtils.getName(this.filename);
   }
@@ -442,7 +299,7 @@ public class ComicBook {
    * @return <code>true</code> if the file is missing
    */
   @JsonProperty("missing")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   public boolean isMissing() {
     return !this.getFile().exists();
   }
@@ -456,31 +313,6 @@ public class ComicBook {
     if (this.pages.contains(page)) return this.pages.indexOf(page);
 
     return -1;
-  }
-
-  @Transient
-  @JsonProperty("sortableIssueNumber")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  public String getSortableIssueNumber() {
-    final String result = "00000" + (this.issueNumber != null ? this.issueNumber : "");
-
-    return result.substring(result.length() - 5);
-  }
-
-  /**
-   * Sets the issue number for the comic.
-   *
-   * @param issueNumber the issue number
-   */
-  public void setIssueNumber(String issueNumber) {
-    log.trace("Setting issue number=" + issueNumber);
-    if ((issueNumber != null) && issueNumber.startsWith("0")) {
-      log.trace("Removing leading 0s from issue number");
-      while (issueNumber.startsWith("0") && !issueNumber.equals("0")) {
-        issueNumber = issueNumber.substring(1);
-      }
-    }
-    this.issueNumber = issueNumber;
   }
 
   /**
@@ -503,22 +335,9 @@ public class ComicBook {
    */
   @Transient
   @JsonProperty("pageCount")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   public int getPageCount() {
     if (!this.pages.isEmpty()) return this.pages.size();
-    if (this.calculatedPageCount != null) return this.calculatedPageCount.intValue();
-    return 0;
-  }
-
-  @Transient
-  @JsonProperty(value = "publishedYear")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
-  public int getYearPublished() {
-    if (this.coverDate != null) {
-      GregorianCalendar calendar = new GregorianCalendar();
-      calendar.setTime(this.coverDate);
-      return calendar.get(Calendar.YEAR);
-    }
     return 0;
   }
 
@@ -552,10 +371,6 @@ public class ComicBook {
     for (int index = 0; index < this.pages.size(); index++) {
       this.pages.get(index).setPageNumber(index);
     }
-  }
-
-  public Integer getDuplicateCount() {
-    return (this.duplicateCount != null) ? (this.duplicateCount - 1) : 0;
   }
 
   /** Removes pages that are marked for deletion. */

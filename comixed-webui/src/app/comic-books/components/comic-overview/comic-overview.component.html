@@ -11,8 +11,13 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      <a [routerLink]="['/library/collections/publishers', comic.publisher]">
-        {{ comic.publisher }}
+      <a
+        [routerLink]="[
+          '/library/collections/publishers',
+          comic.detail.publisher
+        ]"
+      >
+        {{ comic.detail.publisher }}
       </a>
     </span>
   </mat-grid-tile>
@@ -29,14 +34,14 @@
       <a
         [routerLink]="[
           '/library/collections/publishers',
-          comic.publisher,
+          comic.detail.publisher,
           'series',
-          comic.series,
+          comic.detail.series,
           'volumes',
-          comic.volume
+          comic.detail.volume
         ]"
       >
-        {{ comic.series }}
+        {{ comic.detail.series }}
       </a>
     </span>
   </mat-grid-tile>
@@ -50,7 +55,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.volume }}
+      {{ comic.detail.volume }}
     </span>
   </mat-grid-tile>
 
@@ -63,7 +68,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.issueNumber }}
+      {{ comic.detail.issueNumber }}
     </span>
   </mat-grid-tile>
 
@@ -76,7 +81,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.coverDate | date: "MMMM yyyy" }}
+      {{ comic.detail.coverDate | date: "MMMM yyyy" }}
     </span>
   </mat-grid-tile>
 
@@ -89,7 +94,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.storeDate | date: "longDate" }}
+      {{ comic.detail.storeDate | date: "longDate" }}
     </span>
   </mat-grid-tile>
 
@@ -106,7 +111,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ "comic-book.text.state-" + comic.comicState | translate }}
+      {{ "comic-book.text.state-" + comic.detail.comicState | translate }}
     </span>
   </mat-grid-tile>
 
@@ -146,7 +151,7 @@
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.addedDate | date: "medium" }}
+      {{ comic.detail.addedDate | date: "medium" }}
     </span>
   </mat-grid-tile>
 
@@ -209,7 +214,7 @@
   </mat-grid-tile>
 
   <mat-grid-tile
-    *ngIf="!!comic.imprint"
+    *ngIf="!!comic.detail.imprint"
     class="cx-accent-light-background"
     colspan="1"
     rowspan="1"
@@ -218,11 +223,11 @@
       {{ "comic-book.label.imprint" | translate }}
     </span>
   </mat-grid-tile>
-  <mat-grid-tile *ngIf="!!comic.imprint" colspan="3" rowspan="1">
+  <mat-grid-tile *ngIf="!!comic.detail.imprint" colspan="3" rowspan="1">
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >
-      {{ comic.imprint }}
+      {{ comic.detail.imprint }}
     </span>
   </mat-grid-tile>
 </mat-grid-list>

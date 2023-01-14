@@ -42,17 +42,18 @@ public class ImprintService {
    */
   public void update(final ComicBook comicBook) {
     log.trace("Looking for imprint");
-    final Imprint imprint = this.imprintRepository.findByName(comicBook.getPublisher());
+    final Imprint imprint =
+        this.imprintRepository.findByName(comicBook.getComicDetail().getPublisher());
     if (imprint == null) {
       log.trace("Publisher is not an imprint");
-      comicBook.setImprint("");
+      comicBook.getComicDetail().setImprint("");
       return;
     }
-    final String publisher = comicBook.getPublisher();
+    final String publisher = comicBook.getComicDetail().getPublisher();
 
     log.trace("Updating publisher and imprint: {} => {}", publisher, imprint);
-    comicBook.setPublisher(imprint.getPublisher());
-    comicBook.setImprint(imprint.getName());
+    comicBook.getComicDetail().setPublisher(imprint.getPublisher());
+    comicBook.getComicDetail().setImprint(imprint.getName());
   }
 
   /**

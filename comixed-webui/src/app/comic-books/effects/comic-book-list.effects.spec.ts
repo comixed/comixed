@@ -23,9 +23,9 @@ import { ComicBookListEffects } from './comic-book-list.effects';
 import { ComicBookListService } from '@app/comic-books/services/comic-book-list.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import {
   comicBooksReceived,
@@ -38,7 +38,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-response';
 
 describe('ComicBookListEffects', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
   const LAST_PAGE = Math.random() > 0.5;
 

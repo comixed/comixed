@@ -23,14 +23,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang.time.DateUtils;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -45,8 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -66,7 +61,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 })
 public class ComicBookRepositoryTest {
   private static final String TEST_COMIC_SORT_NAME = "My First Comic";
-  private static final long TEST_COMIC_ID = 1000L;
+  private static final long TEST_COMIC_ID = 1001L;
   private static final long TEST_COMIC_ID_WITH_BLOCKED_PAGES = 1001L;
   private static final Long TEST_COMIC_ID_WITH_DELETED_PAGES = 1002L;
   private static final String TEST_IMPRINT = "This is an imprint";
@@ -97,17 +92,6 @@ public class ComicBookRepositoryTest {
     comicBook = repository.getById(TEST_COMIC_ID);
   }
 
-  @Test
-  public void testLoadComicList() {
-    final List<ComicBook> result = repository.loadComicList();
-
-    for (int index = 0; index < result.size() - 1; index++) {
-      assertTrue(
-          result.get(index).getDateAdded().getTime()
-              <= result.get(index + 1).getDateAdded().getTime());
-    }
-  }
-
   @Test(expected = NullPointerException.class)
   public void testFilenameIsRequired() {
     comicBook.setFilename(null);
@@ -134,106 +118,13 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
-  public void testCoverDateCanBeNull() {
-    comicBook.setCoverDate(null);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertNull(result.getCoverDate());
-  }
-
-  @Test
-  public void testCoverDateCanBeUpdated() {
-    comicBook.setCoverDate(new Date());
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertEquals(
-        DateUtils.truncate(comicBook.getCoverDate(), Calendar.DAY_OF_MONTH),
-        DateUtils.truncate(result.getCoverDate(), Calendar.DAY_OF_MONTH));
-  }
-
-  @Test
-  public void testVolumeCanBeNull() {
-    comicBook.setVolume(null);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertNull(result.getVolume());
-  }
-
-  @Test
-  public void testVolumeCanBeUpdated() {
-    String volume = comicBook.getVolume().substring(1);
-    comicBook.setVolume(volume);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertEquals(volume, result.getVolume());
-  }
-
-  @Test
-  public void testIssueNumberCanBeNull() {
-    comicBook.setIssueNumber(null);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertNull(result.getIssueNumber());
-  }
-
-  @Test
-  public void testIssueNumberCanBeUpdated() {
-    String issueno = comicBook.getIssueNumber().substring(1);
-    comicBook.setIssueNumber(issueno);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertEquals(issueno, result.getIssueNumber());
-  }
-
-  @Test
-  public void testDescriptionCanBeNull() {
-    comicBook.setDescription(null);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertNull(result.getDescription());
-  }
-
-  @Test
-  public void testDescriptionCanBeUpdated() {
-    String description = comicBook.getDescription().substring(1);
-    comicBook.setDescription(description);
-
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertEquals(description, result.getDescription());
-  }
-
-  @Test
   public void testStoryArcs() {
     assertEquals(1, comicBook.getStories().size());
   }
 
   @Test
   public void testTeams() {
-    assertEquals(2, comicBook.getTeams().size());
+    assertEquals(1, comicBook.getTeams().size());
   }
 
   @Test
@@ -259,40 +150,6 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
-  public void testComicsReturnTheirDeletedPageCount() {
-    ComicBook result = repository.findById(TEST_COMIC_ID_WITH_DELETED_PAGES).get();
-
-    assertEquals(3, result.getCalculatedDeletedPageCount().intValue());
-  }
-
-  @Test
-  public void testComicsReturnWithTheirImprint() {
-    ComicBook result = repository.findById(TEST_COMIC_ID).get();
-
-    assertNotNull(result.getImprint());
-    assertEquals("Marvel Digital", result.getImprint());
-  }
-
-  @Test
-  public void testComicsImprintCanBeChanged() {
-    ComicBook record = repository.findById(TEST_COMIC_ID).get();
-    record.setImprint(TEST_IMPRINT);
-
-    repository.save(record);
-
-    ComicBook result = repository.findById(TEST_COMIC_ID).get();
-    assertEquals(TEST_IMPRINT, result.getImprint());
-  }
-
-  @Test
-  public void testComicsReturnWithSortName() {
-    ComicBook result = repository.findById(TEST_COMIC_ID).get();
-
-    assertNotNull(result.getSortName());
-    assertEquals(TEST_COMIC_SORT_NAME, result.getSortName());
-  }
-
-  @Test
   public void testComicSortNameCanBeChanged() {
     ComicBook record = repository.findById(TEST_COMIC_ID).get();
 
@@ -310,16 +167,6 @@ public class ComicBookRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
     assertEquals(1, result.size());
-  }
-
-  @Test
-  public void testGetComics() {
-    final List<ComicBook> result =
-        repository.findAll(PageRequest.of(1, 2, Sort.by(Direction.DESC, "dateAdded"))).getContent();
-
-    assertNotNull(result);
-    assertEquals(2, result.size());
-    assertTrue(result.get(0).getDateAdded().after(result.get(1).getDateAdded()));
   }
 
   private void testComicOrder(long id, long timestamp, List<ComicBook> comicBookList) {
@@ -370,7 +217,8 @@ public class ComicBookRepositoryTest {
 
     assertFalse(result.isEmpty());
     for (int index = 0; index < result.size(); index++) {
-      assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_NEXT) > 0);
+      assertTrue(
+          result.get(index).getComicDetail().getIssueNumber().compareTo(TEST_ISSUE_WITH_NEXT) > 0);
     }
   }
 
@@ -391,7 +239,8 @@ public class ComicBookRepositoryTest {
 
     assertFalse(result.isEmpty());
     for (int index = 0; index < result.size(); index++) {
-      assertTrue(result.get(index).getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
+      assertTrue(
+          result.get(index).getComicDetail().getIssueNumber().compareTo(TEST_ISSUE_WITH_PREV) < 0);
     }
   }
 
@@ -404,45 +253,8 @@ public class ComicBookRepositoryTest {
     assertFalse(result.isEmpty());
     assertEquals(TEST_BATCH_SIZE, result.size());
     for (ComicBook comicBook : result) {
-      assertEquals(ComicState.DELETED, comicBook.getComicState());
+      assertEquals(ComicState.DELETED, comicBook.getComicDetail().getComicState());
     }
-  }
-
-  @Test
-  public void testComicWithDuplicates() {
-    List<ComicBook> result = repository.findAll();
-
-    for (int index = 0; index < result.size(); index++) {
-      if (result.get(index).getId().equals(TEST_COMIC_ID_WITH_DUPLICATES)) {
-        assertTrue(result.get(index).getDuplicateCount() > 0);
-        return;
-      }
-    }
-
-    fail("Did not find the expected comicBook");
-  }
-
-  @Test
-  public void testComicWithoutDuplicates() {
-    List<ComicBook> result = repository.findAll();
-
-    for (int index = 0; index < result.size(); index++) {
-      if (!result.get(index).getId().equals(TEST_COMIC_ID_WITH_DUPLICATES)) {
-        assertEquals(0, result.get(index).getDuplicateCount().intValue());
-        return;
-      }
-    }
-
-    fail("Did not find the expected comicBook");
-  }
-
-  @Test
-  public void testDelete() {
-    repository.delete(comicBook);
-
-    ComicBook result = repository.getById(TEST_COMIC_ID);
-
-    assertNull(result);
   }
 
   @Test

@@ -46,7 +46,7 @@ import java.util.Random;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
 import org.comixedproject.model.archives.ArchiveType;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
@@ -60,6 +60,7 @@ import org.comixedproject.model.net.library.UpdateMetadataRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -99,10 +100,11 @@ public class LibraryControllerTest {
   @Mock private LibraryService libraryService;
   @Mock private RemoteLibraryStateService remoteLibraryStateService;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private ConfigurationService configurationService;
   @Mock private List<Long> idList;
-  @Mock private ComicBook comicBook;
-  @Mock private ComicBook lastComicBook;
+  @Mock private ComicDetail comicDetail;
+  @Mock private ComicDetail lastComicDetail;
   @Mock private JobLauncher jobLauncher;
   @Mock private JobExecution jobExecution;
   @Mock private EditMultipleComicsRequest editMultipleComicsRequest;
@@ -138,7 +140,7 @@ public class LibraryControllerTest {
 
   @Before
   public void testSetUp() {
-    Mockito.when(lastComicBook.getId()).thenReturn(TEST_LAST_COMIC_ID);
+    Mockito.when(lastComicDetail.getId()).thenReturn(TEST_LAST_COMIC_ID);
   }
 
   @Test
@@ -248,9 +250,9 @@ public class LibraryControllerTest {
 
   @Test
   public void testLoadLibraryNoComics() throws ComiXedUserException {
-    final List<ComicBook> comicBooks = new ArrayList<>();
+    final List<ComicDetail> comicBooks = new ArrayList<>();
 
-    Mockito.when(comicBookService.getComicsById(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(comicDetailService.loadById(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicBooks);
 
     final LoadLibraryResponse result =
@@ -260,18 +262,18 @@ public class LibraryControllerTest {
     assertTrue(result.getComicBooks().isEmpty());
     assertTrue(result.isLastPayload());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getComicsById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
   }
 
   @Test
   public void testLoadLibraryMoreComicsRemaining() throws ComiXedUserException {
-    final List<ComicBook> comicBooks = new ArrayList<>();
-    for (int index = 0; index < MAXIMUM_RECORDS - 1; index++) comicBooks.add(comicBook);
-    comicBooks.add(lastComicBook);
-    comicBooks.add(comicBook);
+    final List<ComicDetail> comicBooks = new ArrayList<>();
+    for (int index = 0; index < MAXIMUM_RECORDS - 1; index++) comicBooks.add(comicDetail);
+    comicBooks.add(lastComicDetail);
+    comicBooks.add(comicDetail);
 
-    Mockito.when(comicBookService.getComicsById(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(comicDetailService.loadById(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicBooks);
 
     final LoadLibraryResponse result =
@@ -282,17 +284,17 @@ public class LibraryControllerTest {
     assertEquals(MAXIMUM_RECORDS, result.getComicBooks().size());
     assertFalse(result.isLastPayload());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getComicsById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
   }
 
   @Test
   public void testLoadLibraryExactNumber() throws ComiXedUserException {
-    final List<ComicBook> comicBooks = new ArrayList<>();
-    for (int index = 0; index < MAXIMUM_RECORDS - 1; index++) comicBooks.add(comicBook);
-    comicBooks.add(lastComicBook);
+    final List<ComicDetail> comicBooks = new ArrayList<>();
+    for (int index = 0; index < MAXIMUM_RECORDS - 1; index++) comicBooks.add(comicDetail);
+    comicBooks.add(lastComicDetail);
 
-    Mockito.when(comicBookService.getComicsById(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(comicDetailService.loadById(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicBooks);
 
     final LoadLibraryResponse result =
@@ -303,17 +305,17 @@ public class LibraryControllerTest {
     assertEquals(MAXIMUM_RECORDS, result.getComicBooks().size());
     assertTrue(result.isLastPayload());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getComicsById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
   }
 
   @Test
   public void testLoadLibrary() throws ComiXedUserException {
-    final List<ComicBook> comicBooks = new ArrayList<>();
-    for (int index = 0; index < MAXIMUM_RECORDS - 2; index++) comicBooks.add(comicBook);
-    comicBooks.add(lastComicBook);
+    final List<ComicDetail> comicBooks = new ArrayList<>();
+    for (int index = 0; index < MAXIMUM_RECORDS - 2; index++) comicBooks.add(comicDetail);
+    comicBooks.add(lastComicDetail);
 
-    Mockito.when(comicBookService.getComicsById(Mockito.anyLong(), Mockito.anyInt()))
+    Mockito.when(comicDetailService.loadById(Mockito.anyLong(), Mockito.anyInt()))
         .thenReturn(comicBooks);
 
     final LoadLibraryResponse result =
@@ -324,8 +326,8 @@ public class LibraryControllerTest {
     assertEquals(MAXIMUM_RECORDS - 1, result.getComicBooks().size());
     assertTrue(result.isLastPayload());
 
-    Mockito.verify(comicBookService, Mockito.times(1))
-        .getComicsById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
+    Mockito.verify(comicDetailService, Mockito.times(1))
+        .loadById(TEST_LAST_COMIC_ID, MAXIMUM_RECORDS + 1);
   }
 
   @Test

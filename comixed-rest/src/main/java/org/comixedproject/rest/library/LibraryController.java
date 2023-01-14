@@ -45,6 +45,7 @@ import org.comixedproject.batch.comicbooks.ProcessComicsConfiguration;
 import org.comixedproject.batch.comicbooks.UpdateMetadataConfiguration;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.net.admin.ClearImageCacheResponse;
 import org.comixedproject.model.net.comicbooks.ConvertComicsRequest;
 import org.comixedproject.model.net.comicbooks.EditMultipleComicsRequest;
@@ -58,6 +59,7 @@ import org.comixedproject.model.net.library.UpdateMetadataRequest;
 import org.comixedproject.service.admin.ConfigurationService;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.library.LibraryException;
 import org.comixedproject.service.library.LibraryService;
 import org.comixedproject.service.library.RemoteLibraryStateService;
@@ -89,6 +91,7 @@ public class LibraryController {
   @Autowired private LibraryService libraryService;
   @Autowired private RemoteLibraryStateService remoteLibraryStateService;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private ConfigurationService configurationService;
 
   @Autowired
@@ -239,7 +242,7 @@ public class LibraryController {
     final Long lastId = request.getLastId();
     log.info("Loading library content: last id was {}", lastId);
 
-    List<ComicBook> comicBooks = this.comicBookService.getComicsById(lastId, MAXIMUM_RECORDS + 1);
+    List<ComicDetail> comicBooks = this.comicDetailService.loadById(lastId, MAXIMUM_RECORDS + 1);
     boolean lastPayload = true;
     if (comicBooks.size() > MAXIMUM_RECORDS) {
       comicBooks = comicBooks.subList(0, MAXIMUM_RECORDS);

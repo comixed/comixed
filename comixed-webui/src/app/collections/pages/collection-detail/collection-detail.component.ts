@@ -26,7 +26,6 @@ import {
   collectionTypeFromString
 } from '@app/collections/models/comic-collection.enum';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -41,6 +40,7 @@ import {
 } from '@app/library/actions/library-selections.actions';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -55,7 +55,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   collectionName: string;
   volume: string;
   volumeDisplayed: string;
-  comicBooks: ComicBook[] = [];
+  comicBooks: ComicDetail[] = [];
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
   readingListsSubscription: Subscription;
@@ -104,13 +104,13 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
                     (comicBook.volume || '') === this.volume
                   );
                 case CollectionType.CHARACTERS:
-                  return comicBook.characters.includes(this.collectionName);
+                  return []; // comicBook.characters.includes(this.collectionName);
                 case CollectionType.TEAMS:
-                  return comicBook.teams.includes(this.collectionName);
+                  return []; // comicBook.teams.includes(this.collectionName);
                 case CollectionType.LOCATIONS:
-                  return comicBook.locations.includes(this.collectionName);
+                  return []; // comicBook.locations.includes(this.collectionName);
                 case CollectionType.STORIES:
-                  return comicBook.stories.includes(this.collectionName);
+                  return []; // comicBook.stories.includes(this.collectionName);
               }
             });
           });
@@ -159,7 +159,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
       this.logger.trace('Selecting all comics');
       this.store.dispatch(
         selectComicBooks({
-          ids: this.comicBooks.map(comicBook => comicBook.id)
+          ids: this.comicBooks.map(comicBook => comicBook.comicId)
         })
       );
     } else {

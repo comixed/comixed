@@ -25,6 +25,7 @@ import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,10 +41,12 @@ public class UpdateMetadataProcessorTest {
   @InjectMocks private UpdateMetadataProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
 
   @Before
   public void setUp() {
-    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
   }
 
   @Test
@@ -67,7 +70,7 @@ public class UpdateMetadataProcessorTest {
 
   @Test
   public void testProcessForRarFile() throws Exception {
-    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBR);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(ArchiveType.CBR);
 
     final ComicBook result = processor.process(comicBook);
 

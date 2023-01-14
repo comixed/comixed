@@ -37,6 +37,7 @@ import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -91,6 +92,7 @@ public class MetadataServiceTest {
   @Mock private ComicBookService comicBookService;
   @Mock private ComicStateHandler comicStateHandler;
   @Mock private ComicBook loadedComicBook;
+  @Mock private ComicDetail loadedComicDetail;
   @Mock private ComicBook savedComicBook;
   @Mock private IssueDetailsMetadata issueDetailsMetadata;
   @Mock private ImprintService imprintService;
@@ -105,6 +107,8 @@ public class MetadataServiceTest {
 
   @Before
   public void setUp() throws MetadataSourceException {
+    Mockito.when(loadedComicBook.getComicDetail()).thenReturn(loadedComicDetail);
+
     Mockito.when(metadataAdaptor.getSource()).thenReturn(TEST_CACHE_SOURCE);
     Mockito.when(metadataAdaptor.getVolumeKey(Mockito.anyString())).thenReturn(TEST_VOLUME_KEY);
     Mockito.when(metadataAdaptor.getIssueKey(Mockito.anyString(), Mockito.anyString()))
@@ -584,7 +588,7 @@ public class MetadataServiceTest {
     Mockito.verify(metadataCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
-    this.verifyComicScrapingNotDone();
+    verifyComicScrapingNotDone();
   }
 
   @Test
@@ -620,7 +624,7 @@ public class MetadataServiceTest {
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(loadedComicBook, ComicEvent.scraped);
 
-    this.verifyComicScraping(loadedComicBook);
+    verifyComicScraping(loadedComicBook);
   }
 
   @Test
@@ -658,7 +662,7 @@ public class MetadataServiceTest {
     Mockito.verify(metadataCacheService, Mockito.times(1))
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
-    this.verifyComicScraping(loadedComicBook);
+    verifyComicScraping(loadedComicBook);
   }
 
   @Test
@@ -690,7 +694,7 @@ public class MetadataServiceTest {
     Mockito.verify(metadataCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
-    this.verifyComicScraping(loadedComicBook);
+    verifyComicScraping(loadedComicBook);
   }
 
   @Test
@@ -721,7 +725,7 @@ public class MetadataServiceTest {
     Mockito.verify(metadataCacheService, Mockito.never())
         .saveToCache(Mockito.anyString(), Mockito.anyString(), Mockito.anyList());
 
-    this.verifyComicScraping(loadedComicBook);
+    verifyComicScraping(loadedComicBook);
   }
 
   @Test
@@ -743,7 +747,7 @@ public class MetadataServiceTest {
     assertNotNull(result);
     assertSame(savedComicBook, result);
 
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setCoverDate(Mockito.any(Date.class));
+    Mockito.verify(loadedComicDetail, Mockito.never()).setCoverDate(Mockito.any(Date.class));
   }
 
   @Test
@@ -765,30 +769,30 @@ public class MetadataServiceTest {
     assertNotNull(result);
     assertSame(savedComicBook, result);
 
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setStoreDate(Mockito.any(Date.class));
+    Mockito.verify(loadedComicDetail, Mockito.never()).setStoreDate(Mockito.any(Date.class));
   }
 
   private void verifyComicScrapingNotDone() {
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setPublisher(Mockito.anyString());
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setSeries(Mockito.anyString());
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setVolume(Mockito.anyString());
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setCoverDate(Mockito.any(Date.class));
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setStoreDate(Mockito.any(Date.class));
-    Mockito.verify(this.loadedComicBook, Mockito.never()).setDescription(Mockito.anyString());
+    Mockito.verify(loadedComicDetail, Mockito.never()).setPublisher(Mockito.anyString());
+    Mockito.verify(loadedComicDetail, Mockito.never()).setSeries(Mockito.anyString());
+    Mockito.verify(loadedComicDetail, Mockito.never()).setVolume(Mockito.anyString());
+    Mockito.verify(loadedComicDetail, Mockito.never()).setCoverDate(Mockito.any(Date.class));
+    Mockito.verify(loadedComicDetail, Mockito.never()).setStoreDate(Mockito.any(Date.class));
+    Mockito.verify(loadedComicBook, Mockito.never()).setDescription(Mockito.anyString());
   }
 
   private void verifyComicScraping(final ComicBook comicBook) {
     // TODO verify metadata source reference
-    Mockito.verify(this.loadedComicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
-    Mockito.verify(this.loadedComicBook, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
-    Mockito.verify(this.loadedComicBook, Mockito.times(1)).setVolume(TEST_VOLUME);
-    Mockito.verify(this.loadedComicBook, Mockito.times(1))
-        .setCoverDate(this.metadataService.adjustForTimezone(TEST_COVER_DATE));
-    Mockito.verify(this.loadedComicBook, Mockito.times(1))
-        .setStoreDate(this.metadataService.adjustForTimezone(TEST_STORE_DATE));
-    Mockito.verify(this.loadedComicBook, Mockito.times(1)).setTitle(TEST_TITLE);
-    Mockito.verify(this.loadedComicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
-    Mockito.verify(this.imprintService, Mockito.times(1)).update(comicBook);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
+    Mockito.verify(loadedComicDetail, Mockito.times(1))
+        .setCoverDate(metadataService.adjustForTimezone(TEST_COVER_DATE));
+    Mockito.verify(loadedComicDetail, Mockito.times(1))
+        .setStoreDate(metadataService.adjustForTimezone(TEST_STORE_DATE));
+    Mockito.verify(loadedComicBook, Mockito.times(1)).setTitle(TEST_TITLE);
+    Mockito.verify(loadedComicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
   }
 
   @Test(expected = MetadataException.class)
@@ -798,7 +802,7 @@ public class MetadataServiceTest {
         .thenThrow(MetadataSourceException.class);
 
     try {
-      this.metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+      metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
     } finally {
       Mockito.verify(metadataSourceService, Mockito.times(1)).getById(TEST_METADATA_SOURCE_ID);
     }
@@ -811,7 +815,7 @@ public class MetadataServiceTest {
         .thenThrow(MetadataException.class);
 
     try {
-      this.metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
+      metadataService.fetchIssuesForSeries(TEST_METADATA_SOURCE_ID, TEST_VOLUME_ID);
     } finally {
       Mockito.verify(metadataAdaptor, Mockito.times(1))
           .getAllIssues(TEST_VOLUME_ID, metadataSource);

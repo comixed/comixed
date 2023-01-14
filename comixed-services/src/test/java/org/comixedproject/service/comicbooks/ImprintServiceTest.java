@@ -23,6 +23,7 @@ import static junit.framework.TestCase.assertSame;
 
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.Imprint;
 import org.comixedproject.repositories.comicbooks.ImprintRepository;
 import org.junit.Before;
@@ -41,12 +42,14 @@ public class ImprintServiceTest {
   @InjectMocks private ImprintService imprintService;
   @Mock private ImprintRepository imprintRepository;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private Imprint imprint;
   @Mock private List<Imprint> imprintList;
 
   @Before
   public void setUp() {
-    Mockito.when(comicBook.getPublisher()).thenReturn(TEST_IMPRINT);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_IMPRINT);
     Mockito.when(imprint.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(imprint.getName()).thenReturn(TEST_IMPRINT);
   }
@@ -57,8 +60,8 @@ public class ImprintServiceTest {
 
     imprintService.update(comicBook);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
+    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
   }
 
   @Test
@@ -67,8 +70,8 @@ public class ImprintServiceTest {
 
     imprintService.update(comicBook);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setImprint("");
-    Mockito.verify(comicBook, Mockito.never()).setPublisher(Mockito.anyString());
+    Mockito.verify(comicDetail, Mockito.times(1)).setImprint("");
+    Mockito.verify(comicDetail, Mockito.never()).setPublisher(Mockito.anyString());
   }
 
   @Test

@@ -26,17 +26,17 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 describe('ComicListViewComponent', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
     [READING_LISTS_FEATURE_KEY]: initialReadingListsState
   };
@@ -91,7 +91,7 @@ describe('ComicListViewComponent', () => {
     const ENTRY = {
       selected: Math.random() > 0.5,
       item: COMICS[0]
-    } as SelectableListItem<ComicBook>;
+    } as SelectableListItem<ComicDetail>;
 
     it('can sort by selection state', () => {
       expect(
@@ -133,12 +133,6 @@ describe('ComicListViewComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'added-date')
       ).toEqual(ENTRY.item.addedDate);
-    });
-
-    it('can sort by selection state', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'page-count')
-      ).toEqual(ENTRY.item.pages.length);
     });
 
     it('can sort by selection state', () => {

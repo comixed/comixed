@@ -17,14 +17,17 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Pipe({
   name: 'archiveType'
 })
 export class ArchiveTypePipe implements PipeTransform {
-  transform(comicBooks: ComicBook[], archiveType: ArchiveType): ComicBook[] {
+  transform(
+    comicBooks: ComicDetail[],
+    archiveType: ArchiveType
+  ): ComicDetail[] {
     return comicBooks.filter(
       comicBook => !archiveType || comicBook.archiveType === archiveType
     );

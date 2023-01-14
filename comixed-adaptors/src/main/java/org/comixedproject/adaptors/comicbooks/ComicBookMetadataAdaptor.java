@@ -42,11 +42,11 @@ public class ComicBookMetadataAdaptor {
    */
   public void clear(ComicBook comicBook) {
     comicBook.setMetadata(null);
-    comicBook.setPublisher("");
-    comicBook.setSeries("");
-    comicBook.setVolume("");
-    comicBook.setIssueNumber("");
-    comicBook.setCoverDate(null);
+    comicBook.getComicDetail().setPublisher("");
+    comicBook.getComicDetail().setSeries("");
+    comicBook.getComicDetail().setVolume("");
+    comicBook.getComicDetail().setIssueNumber("");
+    comicBook.getComicDetail().setCoverDate(null);
     comicBook.setTitle("");
     comicBook.setDescription("");
     comicBook.getStories().clear();
@@ -63,17 +63,20 @@ public class ComicBookMetadataAdaptor {
    * @return the title
    */
   public String getDisplayableTitle(final ComicBook comicBook) {
-    if (StringUtils.hasLength(comicBook.getSeries())
-        && StringUtils.hasLength(comicBook.getVolume())
-        && StringUtils.hasLength(comicBook.getIssueNumber())) {
+    if (StringUtils.hasLength(comicBook.getComicDetail().getSeries())
+        && StringUtils.hasLength(comicBook.getComicDetail().getVolume())
+        && StringUtils.hasLength(comicBook.getComicDetail().getIssueNumber())) {
       String coverDate = "??/??";
-      if (comicBook.getCoverDate() != null) {
-        coverDate = this.coverDateFormat.format(comicBook.getCoverDate());
+      if (comicBook.getComicDetail().getCoverDate() != null) {
+        coverDate = this.coverDateFormat.format(comicBook.getComicDetail().getCoverDate());
       }
       log.trace("Returning detailed displayable title");
       return String.format(
           "%s v%s #%s (%s)",
-          comicBook.getSeries(), comicBook.getVolume(), comicBook.getIssueNumber(), coverDate);
+          comicBook.getComicDetail().getSeries(),
+          comicBook.getComicDetail().getVolume(),
+          comicBook.getComicDetail().getIssueNumber(),
+          coverDate);
     }
     log.trace("Returning base filename as displayable title");
     return comicBook.getBaseFilename();

@@ -26,7 +26,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -47,6 +46,7 @@ import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-library-toolbar',
@@ -115,13 +115,13 @@ export class LibraryToolbarComponent
     });
   }
 
-  private _comicBooks: ComicBook[] = [];
+  private _comicBooks: ComicDetail[] = [];
 
-  get comicBooks(): ComicBook[] {
+  get comicBooks(): ComicDetail[] {
     return this._comicBooks;
   }
 
-  @Input() set comicBooks(comics: ComicBook[]) {
+  @Input() set comicBooks(comics: ComicDetail[]) {
     this._comicBooks = comics;
     this.coverYears = [
       { label: 'filtering.label.all-years', value: null } as ListItem<number>
@@ -137,8 +137,10 @@ export class LibraryToolbarComponent
     );
   }
 
-  get selectedComicBooks(): ComicBook[] {
-    return this.comicBooks.filter(comic => this.selectedIds.includes(comic.id));
+  get selectedComicBooks(): ComicDetail[] {
+    return this.comicBooks.filter(comic =>
+      this.selectedIds.includes(comic.comicId)
+    );
   }
 
   ngOnInit(): void {

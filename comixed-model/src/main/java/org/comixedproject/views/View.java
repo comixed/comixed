@@ -76,12 +76,6 @@ public interface View {
   /** Used when viewing the list of plugins. */
   public interface PluginList {}
 
-  /** Used when viewing a list of audit log entries. */
-  public interface AuditLogEntryList {}
-
-  /** Used when viewing a list of audit log detail. */
-  public interface AuditLogEntryDetail {}
-
   /** Used when viewing a list of comic files. */
   public interface ComicFileList {}
 

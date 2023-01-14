@@ -18,11 +18,11 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ComicSelectEvent } from '@app/comic-books/models/event/comic-select-event';
 import { UpdateComicInfoEvent } from '@app/comic-books/models/event/update-comic-info-event';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-comic-detail-card',
@@ -30,7 +30,7 @@ import { ComicBookState } from '@app/comic-books/models/comic-book-state';
   styleUrls: ['./comic-detail-card.component.scss']
 })
 export class ComicDetailCardComponent {
-  @Input() comic: ComicBook;
+  @Input() comic: ComicDetail;
   @Input() coverTooltip: string;
   @Input() title: string;
   @Input() subtitle: string = '';
@@ -52,7 +52,7 @@ export class ComicDetailCardComponent {
   constructor(private logger: LoggerService) {}
 
   get deleted(): boolean {
-    return this.comic?.comicState === ComicBookState.DELETED;
+    return this.comic.comicState === ComicBookState.DELETED;
   }
 
   onCoverClicked(): void {
@@ -76,7 +76,7 @@ export class ComicDetailCardComponent {
     });
   }
 
-  onUpdateComicInfo(comic: ComicBook): void {
+  onUpdateComicInfo(comic: ComicDetail): void {
     this.logger.trace('Firing update comic info event:', comic);
     this.updateComicInfo.emit({ comic });
   }

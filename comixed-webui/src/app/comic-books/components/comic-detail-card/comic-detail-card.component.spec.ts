@@ -21,7 +21,7 @@ import { ComicDetailCardComponent } from './comic-detail-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { COMIC_BOOK_3 } from '@app/comic-books/comic-books.fixtures';
+import { COMIC_DETAIL_3 } from '@app/comic-books/comic-books.fixtures';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
@@ -29,7 +29,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ComicDetailCardComponent', () => {
-  const COMIC = COMIC_BOOK_3;
+  const COMIC = COMIC_DETAIL_3;
   const initialState = {};
 
   let component: ComicDetailCardComponent;
@@ -54,7 +54,7 @@ describe('ComicDetailCardComponent', () => {
 
       fixture = TestBed.createComponent(ComicDetailCardComponent);
       component = fixture.componentInstance;
-      component.comic = COMIC_BOOK_3;
+      component.comic = COMIC_DETAIL_3;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
       fixture.detectChanges();

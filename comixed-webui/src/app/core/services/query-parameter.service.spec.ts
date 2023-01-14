@@ -72,6 +72,7 @@ describe('QueryParameterService', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
     routerNavigateSpy = spyOn(router, 'navigate');
+    routerNavigateSpy = spyOn(router, 'navigateByUrl');
   });
 
   it('should be created', () => {

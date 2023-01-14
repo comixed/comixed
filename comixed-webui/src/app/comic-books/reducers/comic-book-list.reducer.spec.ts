@@ -30,16 +30,16 @@ import {
   resetComicBookList
 } from '@app/comic-books/actions/comic-book-list.actions';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ComicBook List Reducer', () => {
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
 
   let state: ComicBookListState;
 
@@ -93,11 +93,11 @@ describe('ComicBook List Reducer', () => {
           loading: true,
           lastId: LAST_ID,
           lastPayload: true,
-          comicBooks: [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5],
-          unprocessed: [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5],
-          unscraped: [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5],
-          changed: [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5],
-          deleted: [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5]
+          comicBooks: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5],
+          unprocessed: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5],
+          unscraped: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5],
+          changed: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5],
+          deleted: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5]
         },
         resetComicBookList()
       );
@@ -153,9 +153,9 @@ describe('ComicBook List Reducer', () => {
     const EXISTING_COMIC_BOOK = COMIC_BOOKS[0];
     const UPDATED_COMIC_BOOK = {
       ...EXISTING_COMIC_BOOK,
-      filename: EXISTING_COMIC_BOOK.filename.substr(1)
+      publisher: EXISTING_COMIC_BOOK.publisher.substr(1)
     };
-    const BATCH = [UPDATED_COMIC_BOOK, COMIC_BOOK_2, COMIC_BOOK_4];
+    const BATCH = [UPDATED_COMIC_BOOK, COMIC_DETAIL_2, COMIC_DETAIL_4];
     const LAST_PAGE = Math.random() > 0.5;
 
     beforeEach(() => {
@@ -208,8 +208,8 @@ describe('ComicBook List Reducer', () => {
   });
 
   describe('receiving a new comic', () => {
-    const EXISTING = COMIC_BOOK_1;
-    const NEW = COMIC_BOOK_2;
+    const EXISTING = COMIC_DETAIL_1;
+    const NEW = COMIC_DETAIL_2;
 
     beforeEach(() => {
       state = reducer(
@@ -228,8 +228,8 @@ describe('ComicBook List Reducer', () => {
   });
 
   describe('updating an existing comic', () => {
-    const EXISTING = COMIC_BOOK_1;
-    const UPDATED = { ...EXISTING, filename: EXISTING.filename.substr(1) };
+    const EXISTING = COMIC_DETAIL_1;
+    const UPDATED = { ...EXISTING, publisher: EXISTING.publisher.substr(1) };
 
     beforeEach(() => {
       state = reducer(

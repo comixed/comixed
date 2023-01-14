@@ -35,6 +35,7 @@ import org.comixedproject.adaptors.encoders.WebResponseEncoder;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
@@ -72,6 +73,7 @@ public class OPDSComicBookControllerTest {
   @Mock private OPDSUtils opdsUtils;
   @Mock private WebResponseEncoder webResponseEncoder;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private ResponseEntity<InputStreamResource> encodedInputStreamResourceResponse;
   @Mock private Page page;
   @Mock private ResponseEntity<byte[]> encodedByteArrayResponse;
@@ -86,6 +88,7 @@ public class OPDSComicBookControllerTest {
 
   @Before
   public void setUp() throws IOException {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
@@ -116,7 +119,7 @@ public class OPDSComicBookControllerTest {
   @Test
   public void testDownloadComic() throws ComicBookException, OPDSException, LastReadException {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
-    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
 
     Mockito.when(
             webResponseEncoder.encode(

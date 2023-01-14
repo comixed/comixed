@@ -21,9 +21,9 @@ import { LibraryToolbarComponent } from './library-toolbar.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3
 } from '@app/comic-books/comic-books.fixtures';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -54,19 +54,19 @@ import { USER_READER } from '@app/user/user.fixtures';
 
 describe('LibraryToolbarComponent', () => {
   const COMIC_BOOKS = [
-    { ...COMIC_BOOK_1, yearPublished: 2022, coverDate: new Date().getTime() },
+    { ...COMIC_DETAIL_1, yearPublished: 2022, coverDate: new Date().getTime() },
     {
-      ...COMIC_BOOK_2,
+      ...COMIC_DETAIL_2,
       yearPublished: 2021,
       coverDate: new Date().getTime() - 365 * 24 * 60 * 60 * 1000
     },
     {
-      ...COMIC_BOOK_3,
+      ...COMIC_DETAIL_3,
       yearPublished: 1997,
       coverDate: new Date().getTime() - 3 * 365 * 24 * 60 * 60 * 1000
     }
   ];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicId);
   const PAGINATION = Math.floor(Math.abs(Math.random() * 1000));
   const PAGE_INDEX = 2;
   const NOW = new Date();
@@ -220,7 +220,7 @@ describe('LibraryToolbarComponent', () => {
 
     it('fires an action to purge the library', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.id) })
+        purgeLibrary({ ids: COMIC_BOOKS.map(comic => comic.comicId) })
       );
     });
   });

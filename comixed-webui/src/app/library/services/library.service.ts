@@ -32,7 +32,6 @@ import {
   START_LIBRARY_CONSOLIDATION_URL,
   UPDATE_METADATA_URL
 } from '@app/library/library.constants';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { SetComicReadRequest } from '@app/library/models/net/set-comic-read-request';
 import { ConsolidateLibraryRequest } from '@app/library/models/net/consolidate-library-request';
 import { RescanComicsRequest } from '@app/library/models/net/rescan-comics-request';
@@ -48,6 +47,7 @@ import { selectMessagingState } from '@app/messaging/selectors/messaging.selecto
 import { User } from '@app/user/models/user';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
 import { Subscription } from 'webstomp-client';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -90,10 +90,10 @@ export class LibraryService {
    * @param args.comics the comics to be updated
    * @param args.read the read state
    */
-  setRead(args: { comicBooks: ComicBook[]; read: boolean }): Observable<any> {
+  setRead(args: { comicBooks: ComicDetail[]; read: boolean }): Observable<any> {
     this.logger.trace('Setting comic read state:', args);
     return this.http.put(interpolate(SET_READ_STATE_URL), {
-      ids: args.comicBooks.map(comic => comic.id),
+      ids: args.comicBooks.map(comic => comic.comicId),
       read: args.read
     } as SetComicReadRequest);
   }
@@ -105,10 +105,10 @@ export class LibraryService {
     } as ConsolidateLibraryRequest);
   }
 
-  rescanComics(args: { comicBooks: ComicBook[] }): Observable<any> {
+  rescanComics(args: { comicBooks: ComicDetail[] }): Observable<any> {
     this.logger.trace('Rescan comics:', args);
     return this.http.post(interpolate(RESCAN_COMICS_URL), {
-      ids: args.comicBooks.map(comic => comic.id)
+      ids: args.comicBooks.map(comic => comic.comicId)
     } as RescanComicsRequest);
   }
 
@@ -120,14 +120,14 @@ export class LibraryService {
   }
 
   convertComics(args: {
-    comicBooks: ComicBook[];
+    comicBooks: ComicDetail[];
     archiveType: ArchiveType;
     renamePages: boolean;
     deletePages: boolean;
   }): Observable<any> {
     this.logger.trace('Converting comics:', args);
     return this.http.post(interpolate(CONVERT_COMICS_URL), {
-      ids: args.comicBooks.map(comic => comic.id),
+      ids: args.comicBooks.map(comic => comic.comicId),
       archiveType: args.archiveType,
       renamePages: args.renamePages,
       deletePages: args.deletePages
@@ -142,12 +142,12 @@ export class LibraryService {
   }
 
   editMultipleComics(args: {
-    comicBooks: ComicBook[];
+    comicBooks: ComicDetail[];
     details: EditMultipleComics;
   }): Observable<any> {
     this.logger.trace('Editing multiple comics');
     return this.http.post(interpolate(EDIT_MULTIPLE_COMICS_URL), {
-      ids: args.comicBooks.map(comic => comic.id),
+      ids: args.comicBooks.map(comic => comic.comicId),
       publisher: args.details.publisher,
       series: args.details.series,
       volume: args.details.volume,

@@ -116,7 +116,8 @@ public class ComicStateHandler extends LifecycleObjectSupport {
         .doWithAllRegions(
             access ->
                 access.resetStateMachine(
-                    new DefaultStateMachineContext<>(comicBook.getComicState(), null, null, null)));
+                    new DefaultStateMachineContext<>(
+                        comicBook.getComicDetail().getComicState(), null, null, null)));
     this.stateMachine.start();
     this.stateMachine.sendEvent(message);
   }

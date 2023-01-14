@@ -20,9 +20,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { ComicBookListService } from './comic-book-list.service';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3
 } from '@app/comic-books/comic-books.fixtures';
 import {
   initialState as initialMessagingState,
@@ -92,20 +92,20 @@ describe('ComicBookListService', () => {
     beforeEach(() => {
       webSocketService.requestResponse.and.callFake(
         (message, body, destination, callback) => {
-          callback(COMIC_BOOK_1);
+          callback(COMIC_DETAIL_1);
           return {} as Subscription;
         }
       );
       webSocketService.subscribe
         .withArgs(COMIC_LIST_UPDATE_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_BOOK_2);
+          callback(COMIC_DETAIL_2);
           return {} as Subscription;
         });
       webSocketService.subscribe
         .withArgs(COMIC_LIST_REMOVAL_TOPIC, jasmine.anything())
         .and.callFake((destination, callback) => {
-          callback(COMIC_BOOK_3);
+          callback(COMIC_DETAIL_3);
           return {} as Subscription;
         });
       store.setState({
@@ -130,13 +130,13 @@ describe('ComicBookListService', () => {
 
     it('processes comic updates', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        comicBookListUpdateReceived({ comicBook: COMIC_BOOK_2 })
+        comicBookListUpdateReceived({ comicBook: COMIC_DETAIL_2 })
       );
     });
 
     it('processes comic removals', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        comicBookListRemovalReceived({ comicBook: COMIC_BOOK_3 })
+        comicBookListRemovalReceived({ comicBook: COMIC_DETAIL_3 })
       );
     });
   });

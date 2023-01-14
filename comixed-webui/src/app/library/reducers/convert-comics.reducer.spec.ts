@@ -22,9 +22,9 @@ import {
   reducer
 } from './convert-comics.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import {
@@ -34,7 +34,7 @@ import {
 } from '@app/library/actions/convert-comics.actions';
 
 describe('ConvertComics Reducer', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;

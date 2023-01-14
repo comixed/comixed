@@ -21,6 +21,7 @@ package org.comixedproject.adaptors.comicbooks;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.Credit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class ComicBookDataAdaptorTest {
   @InjectMocks private ComicBookMetadataAdaptor adaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private List<String> characterList;
   @Mock private List<String> teamList;
   @Mock private List<String> locationList;
@@ -41,6 +43,7 @@ public class ComicBookDataAdaptorTest {
 
   @Test
   public void testClear() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicBook.getCharacters()).thenReturn(characterList);
     Mockito.when(comicBook.getTeams()).thenReturn(teamList);
     Mockito.when(comicBook.getLocations()).thenReturn(locationList);
@@ -49,11 +52,11 @@ public class ComicBookDataAdaptorTest {
 
     adaptor.clear(comicBook);
 
-    Mockito.verify(comicBook, Mockito.times(1)).setPublisher("");
-    Mockito.verify(comicBook, Mockito.times(1)).setSeries("");
-    Mockito.verify(comicBook, Mockito.times(1)).setVolume("");
-    Mockito.verify(comicBook, Mockito.times(1)).setIssueNumber("");
-    Mockito.verify(comicBook, Mockito.times(1)).setCoverDate(null);
+    Mockito.verify(comicDetail, Mockito.times(1)).setPublisher("");
+    Mockito.verify(comicDetail, Mockito.times(1)).setSeries("");
+    Mockito.verify(comicDetail, Mockito.times(1)).setVolume("");
+    Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber("");
+    Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(null);
     Mockito.verify(comicBook, Mockito.times(1)).setTitle("");
     Mockito.verify(comicBook, Mockito.times(1)).setDescription("");
     Mockito.verify(characterList, Mockito.times(1)).clear();

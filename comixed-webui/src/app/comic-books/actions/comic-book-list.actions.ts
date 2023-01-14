@@ -17,7 +17,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const resetComicBookList = createAction(
   '[Comic Book List] Indicates the loading process is started'
@@ -30,7 +30,7 @@ export const loadComicBooks = createAction(
 
 export const comicBooksReceived = createAction(
   '[Comic Book List] A batch of comics was received',
-  props<{ comicBooks: ComicBook[]; lastId: number; lastPayload: boolean }>()
+  props<{ comicBooks: ComicDetail[]; lastId: number; lastPayload: boolean }>()
 );
 
 export const loadComicBooksFailed = createAction(
@@ -39,12 +39,12 @@ export const loadComicBooksFailed = createAction(
 
 export const comicBookListUpdateReceived = createAction(
   '[Comic Book List] A comic update was received',
-  props<{ comicBook: ComicBook }>()
+  props<{ comicBook: ComicDetail }>()
 );
 
 export const comicBookListRemovalReceived = createAction(
   '[Comic Book List] A comic removal was received',
-  props<{ comicBook: ComicBook }>()
+  props<{ comicBook: ComicDetail }>()
 );
 
 export const setComicBookListFilter = createAction(

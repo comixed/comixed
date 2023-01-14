@@ -19,32 +19,22 @@
 import { FileDetails } from '@app/comic-books/models/file-details';
 import { ComicCredit } from '@app/comic-books/models/comic-credit';
 import { Page } from '@app/comic-books/models/page';
-import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export interface ComicBook {
   id: number;
-  archiveType: ArchiveType;
   filename: string;
   baseFilename: string;
-  comicState: ComicBookState;
   missing: boolean;
   fileDetails: FileDetails;
-  addedDate: number;
-  lastModifiedOn: number;
-  publisher: string;
-  series: string;
-  volume: string;
-  issueNumber: string;
-  coverDate: number;
-  storeDate: number;
-  yearPublished: number;
+  detail: ComicDetail;
+  metadata: ComicMetadataSource;
+  pages?: Page[];
+  blockedPageCount: number;
   title: string;
-  sortableIssueNumber: string;
-  sortName: string;
-  imprint: string;
-  pageCount: number;
+  notes: string;
+  description?: string;
   characters: string[];
   teams: string[];
   locations: string[];
@@ -52,11 +42,6 @@ export interface ComicBook {
   credits: ComicCredit[];
   nextIssueId: number;
   previousIssueId: number;
-  blockedPageCount: number;
-  deletedPageCount: number;
-  description?: string;
-  notes: string;
-  pages?: Page[];
-  duplicateCount?: number;
-  metadata: ComicMetadataSource;
+  sortName: string;
+  lastModifiedOn: number;
 }

@@ -26,8 +26,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LibraryService } from '@app/library/services/library.service';
 import { LibraryEffects } from '@app/library/effects/library.effects';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3
 } from '@app/comic-books/comic-books.fixtures';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -44,8 +44,8 @@ import { RemoteLibraryState } from '@app/library/models/net/remote-library-state
 import { comicBookSelectionsUpdated } from '@app/library/actions/library-selections.actions';
 
 describe('LibraryEffects', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3];
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicId);
   const LIBRARY_STATE = { selectedIds: IDS } as RemoteLibraryState;
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',

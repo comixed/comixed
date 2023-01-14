@@ -57,10 +57,10 @@ public class ComicInsertProcessor implements ItemProcessor<ComicFileDescriptor, 
           this.filenameScrapingRuleService.loadFilenameMetadata(comicBook.getBaseFilename());
       if (metadata.isFound()) {
         log.trace("Scraping rule applied");
-        comicBook.setSeries(metadata.getSeries());
-        comicBook.setVolume(metadata.getVolume());
-        comicBook.setIssueNumber(metadata.getIssueNumber());
-        comicBook.setCoverDate(metadata.getCoverDate());
+        comicBook.getComicDetail().setSeries(metadata.getSeries());
+        comicBook.getComicDetail().setVolume(metadata.getVolume());
+        comicBook.getComicDetail().setIssueNumber(metadata.getIssueNumber());
+        comicBook.getComicDetail().setCoverDate(metadata.getCoverDate());
       }
       log.trace("Returning comicBook");
       return comicBook;

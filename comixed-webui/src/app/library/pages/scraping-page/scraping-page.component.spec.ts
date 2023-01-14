@@ -43,10 +43,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { loadVolumeMetadata } from '@app/comic-metadata/actions/metadata.actions';
 import { TitleService } from '@app/core/services/title.service';
@@ -62,8 +62,8 @@ import {
 
 describe('ScrapingPageComponent', () => {
   const USER = USER_READER;
-  const COMIC = COMIC_BOOK_2;
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC = COMIC_DETAIL_2;
+  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const MAXIMUM_RECORDS = 100;
   const SKIP_CACHE = Math.random() > 0.5;
   const METADATA_SOURCE = METADATA_SOURCE_1;

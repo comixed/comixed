@@ -29,12 +29,14 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.*;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicfiles.ComicFileService;
 import org.comixedproject.service.comicpages.PageCacheService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -60,6 +62,7 @@ public class ComicBookControllerTest {
   @Mock private ComicBookService comicBookService;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private List<Long> comicIds;
   @Mock private ComicFileService comicFileService;
   @Mock private FileTypeAdaptor fileTypeAdaptor;
@@ -68,6 +71,11 @@ public class ComicBookControllerTest {
   @Mock private List<PageOrderEntry> pageOrderEntrylist;
 
   @Captor private ArgumentCaptor<InputStream> inputStreamCaptor;
+
+  @Before
+  public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+  }
 
   @Test
   public void testGetComicForNonexistentComic() throws ComicBookException {
@@ -173,7 +181,7 @@ public class ComicBookControllerTest {
     Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_COMIC_CONTENT);
     Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILE);
-    Mockito.when(comicBook.getArchiveType()).thenReturn(ArchiveType.CBZ);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(ArchiveType.CBZ);
 
     ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
 
@@ -185,7 +193,7 @@ public class ComicBookControllerTest {
     Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(comicBook);
     Mockito.verify(comicBook, Mockito.atLeast(1)).getFilename();
-    Mockito.verify(comicBook, Mockito.times(1)).getArchiveType();
+    Mockito.verify(comicDetail, Mockito.times(1)).getArchiveType();
   }
 
   @Test

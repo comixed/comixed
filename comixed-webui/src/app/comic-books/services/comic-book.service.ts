@@ -18,7 +18,6 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { HttpClient } from '@angular/common/http';
 import {
@@ -40,6 +39,8 @@ import { Page } from '@app/comic-books/models/page';
 import { MarkPagesDeletedRequest } from '@app/comic-books/models/net/mark-pages-deleted-request';
 import { PageOrderEntry } from '@app/comic-books/models/net/page-order-entry';
 import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-order-request';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 @Injectable({
   providedIn: 'root'
@@ -89,10 +90,10 @@ export class ComicBookService {
    * @param args.deleted the deleted state
    */
   markComicsDeleted(args: {
-    comicBooks: ComicBook[];
+    comicBooks: ComicDetail[];
     deleted: boolean;
   }): Observable<any> {
-    const ids = args.comicBooks.map(comic => comic.id);
+    const ids = args.comicBooks.map(comic => comic.comicId);
     if (args.deleted) {
       this.logger.trace(
         'Service: marking comics for deletion:',

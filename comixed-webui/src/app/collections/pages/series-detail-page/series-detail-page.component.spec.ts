@@ -21,7 +21,7 @@ import { SeriesDetailPageComponent } from './series-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -46,11 +46,11 @@ import { TitleService } from '@app/core/services/title.service';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ISSUE_1 } from '@app/collections/collections.fixtures';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('SeriesDetailPageComponent', () => {
@@ -58,13 +58,13 @@ describe('SeriesDetailPageComponent', () => {
   const SERIES = 'The Series';
   const VOLUME = '2022';
   const COMIC_BOOKS = [
-    COMIC_BOOK_1,
-    COMIC_BOOK_2,
-    COMIC_BOOK_3,
-    COMIC_BOOK_4,
-    COMIC_BOOK_5
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
   ];
-  const COMIC_BOOK = COMIC_BOOK_1;
+  const COMIC_BOOK = COMIC_DETAIL_1;
   const ISSUE = {
     ...ISSUE_1,
     publisher: COMIC_BOOK.publisher,
@@ -190,7 +190,7 @@ describe('SeriesDetailPageComponent', () => {
     });
 
     it('returns a value when the issue is found', () => {
-      expect(component.getComicBookIdForRow(ISSUE)).toEqual(COMIC_BOOK.id);
+      expect(component.getComicBookIdForRow(ISSUE)).toEqual(COMIC_BOOK.comicId);
     });
 
     it('returns a null when the issue is not found', () => {

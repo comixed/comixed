@@ -27,7 +27,6 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { MatTableDataSource } from '@angular/material/table';
 import { selectSeriesDetail } from '@app/collections/selectors/series.selectors';
 import { Issue } from '@app/collections/models/issue';
@@ -39,6 +38,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_OPTIONS } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-series-detail-page',
@@ -73,7 +73,7 @@ export class SeriesDetailPageComponent
   publisher = '';
   name = '';
   volume = '';
-  comicBooks: ComicBook[] = [];
+  comicBooks: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -158,7 +158,7 @@ export class SeriesDetailPageComponent
         comicBook.volume === issue.volume &&
         comicBook.issueNumber === issue.issueNumber
     );
-    return found?.id;
+    return found?.comicId;
   }
 
   private loadTranslations(): void {

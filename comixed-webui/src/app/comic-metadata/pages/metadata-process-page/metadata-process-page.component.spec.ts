@@ -32,11 +32,11 @@ import {
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import {
@@ -108,19 +108,19 @@ describe('MetadataProcessPageComponent', () => {
 
   describe('updating the displayed comics', () => {
     beforeEach(() => {
-      component.selectedIds = [COMIC_BOOK_1.id];
+      component.selectedIds = [COMIC_DETAIL_1.comicId];
       component.comicBooks = [
-        COMIC_BOOK_1,
-        COMIC_BOOK_2,
-        COMIC_BOOK_3,
-        COMIC_BOOK_4,
-        COMIC_BOOK_5
+        COMIC_DETAIL_1,
+        COMIC_DETAIL_2,
+        COMIC_DETAIL_3,
+        COMIC_DETAIL_4,
+        COMIC_DETAIL_5
       ];
       component.updateDisplayedComicBooks();
     });
 
     it('only displays the selected comic books', () => {
-      expect(component.displayedComicBooks).toEqual([COMIC_BOOK_1]);
+      expect(component.displayedComicBooks).toEqual([COMIC_DETAIL_1]);
     });
 
     describe('when the selection changes', () => {
@@ -129,13 +129,13 @@ describe('MetadataProcessPageComponent', () => {
           ...initialState,
           [LIBRARY_SELECTIONS_FEATURE_KEY]: {
             ...initialLibrarySelectionsState,
-            ids: [COMIC_BOOK_2.id]
+            ids: [COMIC_DETAIL_2.comicId]
           }
         });
       });
 
       it('updates the displayed comic books', () => {
-        expect(component.displayedComicBooks).toEqual([COMIC_BOOK_2]);
+        expect(component.displayedComicBooks).toEqual([COMIC_DETAIL_2]);
       });
     });
   });

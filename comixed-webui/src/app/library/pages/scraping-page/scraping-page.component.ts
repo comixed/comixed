@@ -19,7 +19,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -42,6 +41,7 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-scraping-page',
@@ -55,7 +55,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   selectedComicsSubscription: Subscription;
   metadataSourceSubscription: Subscription;
   metadataSource: MetadataSource;
-  currentComic: ComicBook = null;
+  currentComic: ComicDetail = null;
   currentSeries = '';
   currentVolume = '';
   currentIssueNumber = '';
@@ -65,7 +65,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
   scrapingVolumeSubscription: Subscription;
   scrapingVolumes: VolumeMetadata[] = [];
   pageSize = PAGE_SIZE_DEFAULT;
-  comics: ComicBook[] = [];
+  comics: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -126,13 +126,13 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.loadComics();
   }
 
-  private _allComics: ComicBook[] = [];
+  private _allComics: ComicDetail[] = [];
 
-  get allComics(): ComicBook[] {
+  get allComics(): ComicDetail[] {
     return this._allComics;
   }
 
-  set allComics(comics: ComicBook[]) {
+  set allComics(comics: ComicDetail[]) {
     this._allComics = comics;
     this.loadComics();
   }
@@ -149,7 +149,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
     this.scrapingVolumeSubscription.unsubscribe();
   }
 
-  onSelectionChanged(comicBook: ComicBook): void {
+  onSelectionChanged(comicBook: ComicDetail): void {
     this.logger.trace('Selected comic changed:', comicBook);
     this.currentComic = comicBook;
   }
@@ -179,7 +179,7 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
 
   private loadComics(): void {
     this.comics = this.allComics.filter(comic =>
-      this.selectedIds.includes(comic.id)
+      this.selectedIds.includes(comic.comicId)
     );
   }
 }

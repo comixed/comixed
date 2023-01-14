@@ -24,7 +24,9 @@ import static junit.framework.TestCase.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
 import org.comixedproject.model.metadata.ComicInfo;
 import org.comixedproject.model.metadata.MetadataSource;
@@ -60,6 +62,7 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
   @Before
   public void setup() {
     adaptor.xmlConverter.getObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
+    comicBook.setComicDetail(new ComicDetail(comicBook, ArchiveType.CBZ));
   }
 
   @Test(expected = ContentAdaptorException.class)
@@ -79,10 +82,10 @@ public class ComicMetadataContentAdaptorTest extends BaseContentAdaptorTest {
     assertFalse(comicBook.getStories().isEmpty());
     assertFalse(comicBook.getCredits().isEmpty());
 
-    assertEquals(comicBook.getPublisher(), TEST_PUBLISHER_NAME);
-    assertEquals(comicBook.getSeries(), TEST_SERIES_NAME);
-    assertEquals(comicBook.getVolume(), TEST_VOLUME_NAME);
-    assertEquals(comicBook.getIssueNumber(), TEST_ISSUE_NUMBER);
+    assertEquals(comicBook.getComicDetail().getPublisher(), TEST_PUBLISHER_NAME);
+    assertEquals(comicBook.getComicDetail().getSeries(), TEST_SERIES_NAME);
+    assertEquals(comicBook.getComicDetail().getVolume(), TEST_VOLUME_NAME);
+    assertEquals(comicBook.getComicDetail().getIssueNumber(), TEST_ISSUE_NUMBER);
     assertEquals(comicBook.getTitle(), TEST_TITLE);
     assertEquals(comicBook.getDescription(), TEST_DESCRIPTION);
 

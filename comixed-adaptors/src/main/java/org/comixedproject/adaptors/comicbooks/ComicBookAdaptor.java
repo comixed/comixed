@@ -41,6 +41,7 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +71,10 @@ public class ComicBookAdaptor {
     log.trace("Getting archive adaptor for comic file");
     final ArchiveAdaptor archiveAdaptor = this.fileTypeAdaptor.getArchiveAdaptorFor(filename);
     log.trace("Creating comic: {}", filename);
-    return new ComicBook(filename, archiveAdaptor.getArchiveType());
+    final ComicBook result = new ComicBook(filename);
+    log.trace("Creating comic detail");
+    result.setComicDetail(new ComicDetail(result, archiveAdaptor.getArchiveType()));
+    return result;
   }
 
   /**
@@ -187,7 +191,7 @@ public class ComicBookAdaptor {
       log.trace("Updating filename: {}", destinationFilename);
       comicBook.setFilename(destinationFilename);
       log.debug("Assigning archive type to comic book: {}", targetArchiveType);
-      comicBook.setArchiveType(targetArchiveType);
+      comicBook.getComicDetail().setArchiveType(targetArchiveType);
     } catch (AdaptorException
         | ArchiveAdaptorException
         | IOException
@@ -273,7 +277,7 @@ public class ComicBookAdaptor {
     try {
       log.trace("Getting archive adaptor for comic book");
       final ArchiveAdaptor archiveAdaptor =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getArchiveType());
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getArchiveType());
       log.trace("Opening comic book file");
       final ArchiveReadHandle readHandle =
           archiveAdaptor.openArchiveForRead(comicBook.getFilename());

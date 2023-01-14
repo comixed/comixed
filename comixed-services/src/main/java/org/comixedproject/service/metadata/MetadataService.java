@@ -266,14 +266,18 @@ public class MetadataService {
       // have to use a final reference here due to the lambdas later in this block
       final ComicBook comicBook = result;
       log.debug("Updating comicBook with scraped data");
-      comicBook.setPublisher(issueDetails.getPublisher());
-      comicBook.setSeries(issueDetails.getSeries());
-      comicBook.setVolume(issueDetails.getVolume());
-      comicBook.setIssueNumber(issueDetails.getIssueNumber());
+      comicBook.getComicDetail().setPublisher(issueDetails.getPublisher());
+      comicBook.getComicDetail().setSeries(issueDetails.getSeries());
+      comicBook.getComicDetail().setVolume(issueDetails.getVolume());
+      comicBook.getComicDetail().setIssueNumber(issueDetails.getIssueNumber());
       if (issueDetails.getCoverDate() != null)
-        comicBook.setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
+        comicBook
+            .getComicDetail()
+            .setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
       if (issueDetails.getStoreDate() != null)
-        comicBook.setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
+        comicBook
+            .getComicDetail()
+            .setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
       comicBook.setTitle(issueDetails.getTitle());
       comicBook.setDescription(issueDetails.getDescription());
       comicBook.getCharacters().clear();

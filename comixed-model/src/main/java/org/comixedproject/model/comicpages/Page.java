@@ -41,7 +41,7 @@ public class Page {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   private Long id;
 
@@ -62,7 +62,7 @@ public class Page {
 
   @Column(name = "Filename", length = 1024, updatable = true, nullable = false)
   @JsonProperty("filename")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   @NonNull
@@ -70,14 +70,14 @@ public class Page {
 
   @Column(name = "FileHash", length = 32, updatable = true, nullable = false)
   @JsonProperty("hash")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   @Setter
   private String hash;
 
   @Column(name = "PageNumber", nullable = false, updatable = true)
   @JsonProperty("pageNumber")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   @NonNull
@@ -85,14 +85,14 @@ public class Page {
 
   @Column(name = "Width", updatable = true)
   @JsonProperty("width")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer width = -1;
 
   @Column(name = "Height", updatable = true)
   @JsonProperty("height")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   @Getter
   @Setter
   private Integer height = -1;
@@ -100,7 +100,7 @@ public class Page {
   @Formula(
       "(SELECT CASE WHEN (FileHash IN (SELECT b.hash FROM BlockedHashes b)) THEN true ELSE false END)")
   @JsonProperty("blocked")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   @Getter
   private boolean blocked;
 
@@ -111,7 +111,7 @@ public class Page {
    */
   @Transient
   @JsonProperty("index")
-  @JsonView({View.ComicDetailsView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicDetailsView.class})
   public int getIndex() {
     return this.comicBook.getIndexFor(this);
   }
@@ -135,7 +135,7 @@ public class Page {
 
   @Transient
   @JsonProperty("deleted")
-  @JsonView({View.ComicListView.class, View.AuditLogEntryDetail.class})
+  @JsonView({View.ComicListView.class})
   public boolean isDeleted() {
     return PageState.DELETED.equals(this.pageState);
   }

@@ -17,11 +17,11 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicBook } from '@app/comic-books/models/comic-book';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const setComicBooksRead = createAction(
   '[Set Comics Read] Update the comic read state',
-  props<{ comicBooks: ComicBook[]; read: boolean }>()
+  props<{ comicBooks: ComicDetail[]; read: boolean }>()
 );
 
 export const comicBooksReadSet = createAction(

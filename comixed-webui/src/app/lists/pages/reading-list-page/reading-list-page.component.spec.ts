@@ -42,9 +42,9 @@ import {
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
 import { ComicListViewComponent } from '@app/lists/components/comic-list-view/comic-list-view.component';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import {
@@ -72,7 +72,7 @@ import {
 
 describe('ReadingListPageComponent', () => {
   const READING_LIST = READING_LIST_3;
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,

@@ -17,13 +17,13 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 export const editMultipleComics = createAction(
   '[Library] Edit multiple comics',
-  props<{ comicBooks: ComicBook[]; details: EditMultipleComics }>()
+  props<{ comicBooks: ComicDetail[]; details: EditMultipleComics }>()
 );
 
 export const multipleComicsEdited = createAction(

@@ -18,20 +18,25 @@
 
 import { UnreadComicsPipe } from './unread-comics.pipe';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3
 } from '@app/comic-books/comic-books.fixtures';
 import { LastRead } from '@app/last-read/models/last-read';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 describe('UnreadComicsPipe', () => {
-  const UNREAD_COMIC = COMIC_BOOK_1;
-  const READ_COMIC = COMIC_BOOK_2;
-  const OTHER_UNREAD_COMIC = COMIC_BOOK_3;
+  const UNREAD_COMIC = COMIC_DETAIL_1;
+  const READ_COMIC = COMIC_DETAIL_2;
+  const OTHER_UNREAD_COMIC = COMIC_DETAIL_3;
 
   const COMICS = [UNREAD_COMIC, READ_COMIC, OTHER_UNREAD_COMIC];
   const LAST_READ_DATES = [
-    { id: 1, comicBook: READ_COMIC, lastRead: new Date().getTime() } as LastRead
+    {
+      id: 1,
+      comicBook: { id: READ_COMIC.comicId } as ComicBook,
+      lastRead: new Date().getTime()
+    } as LastRead
   ];
 
   let pipe: UnreadComicsPipe;

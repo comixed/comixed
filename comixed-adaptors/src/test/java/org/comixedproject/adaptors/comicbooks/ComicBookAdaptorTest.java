@@ -41,6 +41,7 @@ import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicpages.Page;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,6 +74,7 @@ public class ComicBookAdaptorTest {
   @Mock private ArchiveAdaptor readableArchiveAdaptor;
   @Mock private ArchiveAdaptor writeableArchiveAdaptor;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private Page page;
   @Mock private ArchiveReadHandle readHandle;
   @Mock private ArchiveWriteHandle writeHandle;
@@ -95,7 +97,8 @@ public class ComicBookAdaptorTest {
   public void setUp()
       throws ArchiveAdaptorException, AdaptorException, ContentAdaptorException, IOException {
     Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
-    Mockito.when(comicBook.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(readableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
         .thenReturn(readHandle);
     Mockito.when(writeableArchiveAdaptor.openArchiveForWrite(temporaryArchiveFile.capture()))
@@ -159,7 +162,7 @@ public class ComicBookAdaptorTest {
 
     assertNotNull(result);
     assertEquals(TEST_COMIC_FILENAME, result.getFilename());
-    assertSame(TEST_ARCHIVE_TYPE, result.getArchiveType());
+    assertSame(TEST_ARCHIVE_TYPE, result.getComicDetail().getArchiveType());
 
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
   }

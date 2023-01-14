@@ -28,9 +28,9 @@ import {
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
@@ -48,7 +48,7 @@ import {
 import { ReadComicsChartComponent } from '@app/components/read-comics-chart/read-comics-chart.component';
 
 describe('HomeComponent', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
     [LAST_READ_LIST_FEATURE_KEY]: initialLastReadState

@@ -51,11 +51,11 @@ import {
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
@@ -85,6 +85,7 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -92,29 +93,29 @@ describe('LibraryPageComponent', () => {
   const DATE = new Date();
   const COMIC_BOOKS = [
     {
-      ...COMIC_BOOK_1,
+      ...COMIC_DETAIL_1,
       coverDate: new Date(DATE.getTime() - 365 * 24 * 60 * 60 * 1000).getTime(), // last year
       archiveType: ArchiveType.CB7
     },
     {
-      ...COMIC_BOOK_2,
+      ...COMIC_DETAIL_2,
       coverDate: new Date(
         DATE.getTime() - 6 * 30 * 24 * 60 * 60 * 1000
       ).getTime(), // six months ago
       archiveType: ArchiveType.CB7
     },
     {
-      ...COMIC_BOOK_3,
+      ...COMIC_DETAIL_3,
       coverDate: new Date(DATE.getTime() - 760 * 24 * 60 * 60 * 1000).getTime(), // two years and a month
       archiveType: ArchiveType.CBR
     },
     {
-      ...COMIC_BOOK_5,
+      ...COMIC_DETAIL_5,
       coverDate: new Date().getTime(),
       archiveType: ArchiveType.CBZ
     }
   ];
-  const IDS = COMIC_BOOKS.map(comicBook => comicBook.id);
+  const IDS = COMIC_BOOKS.map(comicBook => comicBook.comicId);
   const initialState = {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
     [LIBRARY_FEATURE_KEY]: initialLibraryState,
@@ -303,34 +304,38 @@ describe('LibraryPageComponent', () => {
 
   describe('loading all pages', () => {
     const UNREAD = {
-      ...COMIC_BOOK_1,
+      ...COMIC_DETAIL_1,
       lastRead: null,
-      comicState: ComicBookState.STABLE,
+      detail: { ...COMIC_DETAIL_1, state: ComicBookState.STABLE },
       metadataSource: {
         metadataSource: { id: 54321 } as MetadataSource
       } as ComicMetadataSource
     };
     const DELETED = {
-      ...COMIC_BOOK_2,
+      ...COMIC_DETAIL_2,
       lastRead: new Date().getTime(),
-      comicState: ComicBookState.DELETED,
+      detail: { ...COMIC_DETAIL_2, state: ComicBookState.DELETED },
       metadataSource: {
         metadataSource: { id: 12345 } as MetadataSource
       } as ComicMetadataSource
     };
     const UNSCRAPED = {
-      ...COMIC_BOOK_3,
+      ...COMIC_DETAIL_3,
       lastRead: null,
-      comicState: ComicBookState.STABLE,
-      metadataSource: null
+      detail: {
+        ...COMIC_DETAIL_3,
+        comicState: ComicBookState.STABLE,
+        publisher: '',
+        series: ''
+      }
     };
     const UNPROCESSED = {
-      ...COMIC_BOOK_4,
-      fileDetails: null
+      ...COMIC_DETAIL_4,
+      detail: { ...COMIC_DETAIL_4, state: ComicBookState.UNPROCESSED }
     };
     const CHANGED = {
-      ...COMIC_BOOK_4,
-      comicState: ComicBookState.CHANGED
+      ...COMIC_DETAIL_4,
+      detail: { ...COMIC_DETAIL_4, state: ComicBookState.CHANGED }
     };
 
     describe('for deleted comics', () => {
@@ -350,9 +355,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unread comics', () => {
-        component.comicBooks.every(comic =>
-          expect(comic.comicState).toEqual(ComicBookState.DELETED)
-        );
+        expect(component.comicBooks).toEqual([DELETED]);
       });
     });
 
@@ -376,7 +379,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unscraped comics', () => {
-        component.comicBooks.every(comic => expect(comic.metadata).toBeNull());
+        expect(component.comicBooks).toEqual([UNSCRAPED]);
       });
     });
 
@@ -400,9 +403,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the changed comics', () => {
-        component.comicBooks.every(comic =>
-          expect(comic.comicState).toEqual(ComicBookState.CHANGED)
-        );
+        expect(component.comicBooks).toEqual([CHANGED]);
       });
     });
 
@@ -426,9 +427,7 @@ describe('LibraryPageComponent', () => {
       });
 
       it('only loads the unprocessed comics', () => {
-        component.comicBooks.every(comic =>
-          expect(comic.fileDetails).toBeNull()
-        );
+        expect(component.comicBooks).toEqual([UNPROCESSED]);
       });
     });
   });
@@ -441,8 +440,20 @@ describe('LibraryPageComponent', () => {
     describe('when filtering by read status', () => {
       beforeEach(() => {
         component.lastReadDates = [
-          { id: 1, lastRead: new Date().getTime(), comicBook: COMIC_BOOKS[0] },
-          { id: 2, lastRead: new Date().getTime(), comicBook: COMIC_BOOKS[1] }
+          {
+            id: 1,
+            lastRead: new Date().getTime(),
+            comicBook: {
+              id: COMIC_BOOKS[0].comicId
+            } as ComicBook
+          },
+          {
+            id: 2,
+            lastRead: new Date().getTime(),
+            comicBook: {
+              id: COMIC_BOOKS[1].comicId
+            } as ComicBook
+          }
         ];
         component.unreadOnly = true;
         component.onSelectAllComics(true);
@@ -451,8 +462,8 @@ describe('LibraryPageComponent', () => {
       it('only selects unread comics', () => {
         const lastReadIds = component.lastReadDates.map(date => date.id);
         const ids = COMIC_BOOKS.filter(
-          book => !lastReadIds.includes(book.id)
-        ).map(book => book.id);
+          book => !lastReadIds.includes(book.comicId)
+        ).map(book => book.comicId);
         expect(store.dispatch).toHaveBeenCalledWith(selectComicBooks({ ids }));
       });
     });

@@ -76,10 +76,10 @@ public class Cb7ArchiveAdaptorTest {
   }
 
   @Test(expected = ArchiveAdaptorException.class)
-  public void testGetEntryNotFound() throws IOException, ArchiveAdaptorException {
+  public void testGetEntryNotFound() throws ArchiveAdaptorException {
     final Cb7ArchiveReadHandle archiveHandle = adaptor.openArchiveForRead(TEST_ZIP_FILENAME);
     try {
-      final byte[] result = adaptor.readEntry(archiveHandle, "exampleCBR.gif");
+      adaptor.readEntry(archiveHandle, "exampleCBR.gif");
     } finally {
       adaptor.closeArchiveForRead(archiveHandle);
     }

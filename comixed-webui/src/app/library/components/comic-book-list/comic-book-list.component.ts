@@ -18,8 +18,8 @@
 
 import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LoggerService } from '@angular-ru/cdk/logger';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
 
 @Component({
   selector: 'cx-comic-book-list',
@@ -28,7 +28,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 })
 export class ComicBookListComponent {
   @Input()
-  dataSource: MatTableDataSource<ComicBook>;
+  dataSource: MatTableDataSource<ComicDetail>;
 
   readonly displayedColumns = [
     'publisher',
