@@ -30,7 +30,6 @@ import {
 } from '@app/library/selectors/duplicate-page-detail.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { MatTableDataSource } from '@angular/material/table';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import { filter } from 'rxjs/operators';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
@@ -108,11 +107,6 @@ export class DuplicatePageDetailPageComponent
     );
   }
 
-  ngOnInit() {
-    this.logger.trace('Loading blocked hash list');
-    this.store.dispatch(loadBlockedHashList());
-  }
-
   private _detail: DuplicatePage;
 
   get detail(): DuplicatePage {
@@ -124,6 +118,11 @@ export class DuplicatePageDetailPageComponent
     this._detail = detail;
     this.logger.trace('Loading affected comics');
     this.dataSource.data = this._detail.ids;
+  }
+
+  ngOnInit() {
+    this.logger.trace('Loading blocked hash list');
+    this.store.dispatch(loadBlockedHashList());
   }
 
   ngAfterViewInit(): void {

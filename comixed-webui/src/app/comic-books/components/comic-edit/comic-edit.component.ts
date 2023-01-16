@@ -186,8 +186,8 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.comicForm.controls.issueNumber.setValue(comic.detail.issueNumber);
     this.comicForm.controls.imprint.setValue(comic.detail.imprint);
     this.comicForm.controls.sortName.setValue(comic.sortName);
-    this.comicForm.controls.title.setValue(comic.title);
-    this.comicForm.controls.description.setValue(comic.description);
+    this.comicForm.controls.title.setValue(comic.detail.title);
+    this.comicForm.controls.description.setValue(comic.detail.description);
     this.comicForm.updateValueAndValidity();
   }
 
@@ -281,7 +281,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
   }
 
   onScrapeFilename(): void {
-    const filename = this.comic.baseFilename;
+    const filename = this.comic.detail.baseFilename;
     this.logger.trace('Scraping the comic filename:', filename);
     this.store.dispatch(scrapeMetadataFromFilename({ filename }));
   }
@@ -346,11 +346,11 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         imprint: this.comicForm.controls.imprint.value,
         series: this.comicForm.controls.series.value,
         volume: this.comicForm.controls.volume.value,
-        issueNumber: this.comicForm.controls.issueNumber.value
+        issueNumber: this.comicForm.controls.issueNumber.value,
+        title: this.comicForm.controls.title.value,
+        description: this.comicForm.controls.description.value
       },
-      sortName: this.comicForm.controls.sortName.value,
-      title: this.comicForm.controls.title.value,
-      description: this.comicForm.controls.description.value
+      sortName: this.comicForm.controls.sortName.value
     } as ComicBook;
   }
 }

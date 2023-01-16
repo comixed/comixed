@@ -26,8 +26,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
-import org.comixedproject.model.comicbooks.Credit;
+import org.comixedproject.model.comicbooks.ComicTag;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.metadata.ComicInfo;
 import org.comixedproject.model.metadata.ComicInfoMetadataSource;
 import org.springframework.beans.factory.InitializingBean;
@@ -74,9 +76,9 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
             new GregorianCalendar(comicInfo.getYear(), comicInfo.getMonth() - 1, 1);
         comicBook.getComicDetail().setCoverDate(gc.getTime());
       }
-      comicBook.setTitle(comicInfo.getTitle());
-      comicBook.setDescription(comicInfo.getSummary());
-      comicBook.setNotes(comicInfo.getNotes());
+      comicBook.getComicDetail().setTitle(comicInfo.getTitle());
+      comicBook.getComicDetail().setDescription(comicInfo.getSummary());
+      comicBook.getComicDetail().setNotes(comicInfo.getNotes());
       if (comicInfo.getMetadata() != null
           && StringUtils.hasLength(comicInfo.getMetadata().getName())
           && StringUtils.hasLength(comicInfo.getMetadata().getReferenceId())) {
@@ -84,24 +86,46 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
         comicBook.setMetadataSourceName(comicInfo.getMetadata().getName());
         comicBook.setMetadataReferenceId(comicInfo.getMetadata().getReferenceId());
       }
-      this.addElementsToList(comicInfo.getCharacters(), comicBook.getCharacters());
-      this.addElementsToList(comicInfo.getTeams(), comicBook.getTeams());
-      this.addElementsToList(comicInfo.getLocations(), comicBook.getLocations());
-      this.addElementsToList(comicInfo.getAlternateSeries(), comicBook.getStories());
+      this.addElementsToList(
+          comicInfo.getCharacters(),
+          comicBook.getComicDetail().getTags().stream()
+              .filter(tag -> tag.getType() == ComicTagType.CHARACTER)
+              .map(ComicTag::getValue)
+              .collect(Collectors.toList()));
+      this.addElementsToList(
+          comicInfo.getTeams(),
+          comicBook.getComicDetail().getTags().stream()
+              .filter(tag -> tag.getType() == ComicTagType.TEAM)
+              .map(ComicTag::getValue)
+              .collect(Collectors.toList()));
+      this.addElementsToList(
+          comicInfo.getLocations(),
+          comicBook.getComicDetail().getTags().stream()
+              .filter(tag -> tag.getType() == ComicTagType.LOCATION)
+              .map(ComicTag::getValue)
+              .collect(Collectors.toList()));
+      this.addElementsToList(
+          comicInfo.getAlternateSeries(),
+          comicBook.getComicDetail().getTags().stream()
+              .filter(tag -> tag.getType() == ComicTagType.STORY)
+              .map(ComicTag::getValue)
+              .collect(Collectors.toList()));
+      final ComicDetail detail = comicBook.getComicDetail();
       this.commandSeparatedList(comicInfo.getWriter())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "writer")));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.WRITER, name)));
       this.commandSeparatedList(comicInfo.getEditor())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "editor")));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.EDITOR, name)));
       this.commandSeparatedList(comicInfo.getPenciller())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "penciller")));
+          .forEach(
+              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.PENCILLER, name)));
       this.commandSeparatedList(comicInfo.getInker())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "inker")));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.INKER, name)));
       this.commandSeparatedList(comicInfo.getColorist())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "colorist")));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COLORIST, name)));
       this.commandSeparatedList(comicInfo.getLetterer())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "letterer")));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.LETERRER, name)));
       this.commandSeparatedList(comicInfo.getCoverArtist())
-          .forEach(name -> comicBook.getCredits().add(new Credit(comicBook, name, "cover")));
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.COVER, name)));
     } catch (IOException error) {
       throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
     }
@@ -146,62 +170,87 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
       comicInfo.setYear(calendar.get(Calendar.YEAR));
       comicInfo.setMonth(calendar.get(Calendar.MONTH) + 1);
     }
-    comicInfo.setTitle(comicBook.getTitle());
-    comicInfo.setCharacters(String.join(",", comicBook.getCharacters()));
-    comicInfo.setTeams(String.join(",", comicBook.getTeams()));
-    comicInfo.setLocations(String.join(",", comicBook.getLocations()));
-    comicInfo.setAlternateSeries(String.join(",", comicBook.getStories()));
+    comicInfo.setTitle(comicBook.getComicDetail().getTitle());
+    final ComicDetail detail = comicBook.getComicDetail();
+    comicInfo.setCharacters(
+        String.join(
+            ",",
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.CHARACTER)
+                .map(ComicTag::getValue)
+                .collect(Collectors.toList())));
+    comicInfo.setTeams(
+        String.join(
+            ",",
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.TEAM)
+                .map(ComicTag::getValue)
+                .collect(Collectors.toList())));
+    comicInfo.setLocations(
+        String.join(
+            ",",
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.LOCATION)
+                .map(ComicTag::getValue)
+                .collect(Collectors.toList())));
+    comicInfo.setAlternateSeries(
+        String.join(
+            ",",
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.STORY)
+                .map(ComicTag::getValue)
+                .collect(Collectors.toList())));
     comicInfo.setWriter(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("writer"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.WRITER)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setEditor(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("editor"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.EDITOR)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setPenciller(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("penciller"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.PENCILLER)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setInker(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("inker"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.INKER)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setColorist(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("colorist"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.COLORIST)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setLetterer(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("letterer"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.LETERRER)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
     comicInfo.setCoverArtist(
         String.join(
             ",",
-            comicBook.getCredits().stream()
-                .filter(credit -> credit.getRole().equals("cover"))
-                .map(Credit::getName)
+            detail.getTags().stream()
+                .filter(tag -> tag.getType() == ComicTagType.COVER)
+                .map(ComicTag::getValue)
                 .collect(Collectors.toList())));
-    comicInfo.setNotes(comicBook.getNotes());
-    comicInfo.setSummary(comicBook.getDescription());
+    comicInfo.setNotes(comicBook.getComicDetail().getNotes());
+    comicInfo.setSummary(comicBook.getComicDetail().getDescription());
     final ComicMetadataSource metadata = comicBook.getMetadata();
     if (metadata != null
         && StringUtils.hasLength(metadata.getMetadataSource().getName())

@@ -41,6 +41,6 @@ public class AddComicToReadingListAction extends AbstractReadingListAction {
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(context);
     log.trace("Adding comicBook to reading list");
-    readingList.getComicBooks().add(comicBook);
+    readingList.getEntries().add(comicBook.getComicDetail());
   }
 }

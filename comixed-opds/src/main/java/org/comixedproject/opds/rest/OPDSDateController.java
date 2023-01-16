@@ -23,13 +23,18 @@ import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.opds.OPDSException;
-import org.comixedproject.opds.model.*;
+import org.comixedproject.opds.model.OPDSAcquisitionFeed;
+import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <code>OPDSDateController</code> provides endpoints for listing comics by store date year and
@@ -46,6 +51,7 @@ public class OPDSDateController {
   /**
    * Returns navigation links for the store date years in the library.
    *
+   * @param principal the user principal
    * @param unread the unread flag
    * @return the years as navigation links
    */
@@ -54,14 +60,17 @@ public class OPDSDateController {
   @Timed(value = "comixed.opds.date.get-years")
   @ResponseBody
   public OPDSNavigationFeed getYearsFeed(
+      final Principal principal,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
-    log.info("Loading comic years");
-    return this.opdsNavigationService.getYearsFeed(unread);
+    final String email = principal.getName();
+    log.info("Loading comic years: email={} unread={}", email, unread);
+    return this.opdsNavigationService.getYearsFeed(email, unread);
   }
 
   /**
    * Returns navigation links for the weeks of the given year in the library.
    *
+   * @param principal the user principal
    * @param year the year
    * @param unread the unread flag
    * @return the weeks as navigation links
@@ -74,16 +83,19 @@ public class OPDSDateController {
   @Timed(value = "comixed.opds.date.get-weeks")
   @ResponseBody
   public OPDSNavigationFeed getWeeksFeedForYear(
+      final Principal principal,
       @PathVariable("year") @NonNull final Integer year,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread)
       throws OPDSException {
-    log.info("Loading comics for year {}", year);
-    return this.opdsNavigationService.getWeeksFeedForYear(year, unread);
+    final String email = principal.getName();
+    log.info("Loading comics: year={} email={} unread={}", year, email, unread);
+    return this.opdsNavigationService.getWeeksFeedForYear(year, email, unread);
   }
 
   /**
    * Returns an acquisition feed for all comics in the given week of the given year.
    *
+   * @param principal the user principal
    * @param year the year
    * @param week the week
    * @param unread the unread flag

@@ -18,39 +18,39 @@
 
 import { LastRead } from './models/last-read';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_2,
-  COMIC_BOOK_3,
-  COMIC_BOOK_4,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
 } from '../comic-books/comic-books.fixtures';
 
 export const LAST_READ_1: LastRead = {
   id: 1,
-  comicBook: COMIC_BOOK_1,
+  comicDetail: COMIC_DETAIL_1,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_2: LastRead = {
   id: 2,
-  comicBook: COMIC_BOOK_2,
+  comicDetail: COMIC_DETAIL_2,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_3: LastRead = {
   id: 3,
-  comicBook: COMIC_BOOK_3,
+  comicDetail: COMIC_DETAIL_3,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_4: LastRead = {
   id: 4,
-  comicBook: COMIC_BOOK_4,
+  comicDetail: COMIC_DETAIL_4,
   lastRead: new Date().getTime()
 };
 
 export const LAST_READ_5: LastRead = {
   id: 5,
-  comicBook: COMIC_BOOK_5,
+  comicDetail: COMIC_DETAIL_5,
   lastRead: new Date().getTime()
 };

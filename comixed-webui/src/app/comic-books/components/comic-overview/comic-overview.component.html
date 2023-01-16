@@ -123,9 +123,9 @@
   <mat-grid-tile colspan="3" rowspan="1">
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-      [matTooltip]="comic.filename"
+      [matTooltip]="comic.detail.filename"
     >
-      {{ comic.filename }}
+      {{ comic.detail.filename }}
     </span>
   </mat-grid-tile>
 
@@ -174,7 +174,7 @@
   </mat-grid-tile>
 
   <mat-grid-tile
-    *ngIf="comic.notes?.length > 0"
+    *ngIf="comic.detail.notes?.length > 0"
     class="cx-accent-light-background"
     colspan="1"
     rowspan="1"
@@ -183,7 +183,7 @@
       {{ "comic-book.label.scraping-notes" | translate }}
     </span>
   </mat-grid-tile>
-  <mat-grid-tile *ngIf="comic.notes?.length > 0" colspan="3" rowspan="1">
+  <mat-grid-tile *ngIf="comic.detail.notes?.length > 0" colspan="3" rowspan="1">
     <span
       class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
     >

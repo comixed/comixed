@@ -106,7 +106,8 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
    */
   public void markComicAsRead(final ComicBook comicBook, final ComiXedUser user) {
     log.trace("Creating last read record");
-    final LastRead lastRead = this.lastReadRepository.save(new LastRead(comicBook, user));
+    final LastRead lastRead =
+        this.lastReadRepository.save(new LastRead(comicBook.getComicDetail(), user));
     try {
       this.publishLastReadUpdatedAction.publish(lastRead);
     } catch (PublishingException error) {
@@ -116,7 +117,8 @@ public class LastReadService implements InitializingBean, ComicStateChangeListen
 
   public void markComicAsUnread(final ComicBook comicBook, final ComiXedUser user) {
     log.trace("Loading last read record");
-    final LastRead lastRead = this.lastReadRepository.loadEntryForComicAndUser(comicBook, user);
+    final LastRead lastRead =
+        this.lastReadRepository.loadEntryForComicAndUser(comicBook.getComicDetail(), user);
     log.trace("Deleting last read record");
     this.lastReadRepository.delete(lastRead);
     try {

@@ -526,7 +526,7 @@ describe('ComicBookCoversComponent', () => {
 
     it('stores the read comic ids', () => {
       expect(component.readComicIds).toEqual(
-        LAST_READ_DATES.map(entry => entry.comicBook.id)
+        LAST_READ_DATES.map(entry => entry.comicDetail.id)
       );
     });
 
@@ -534,7 +534,7 @@ describe('ComicBookCoversComponent', () => {
       expect(
         component.isRead(
           COMIC_BOOKS.find(
-            entry => entry.comicId === LAST_READ_DATES[0].comicBook.id
+            entry => entry.id === LAST_READ_DATES[0].comicDetail.id
           )
         )
       ).toBeTrue();

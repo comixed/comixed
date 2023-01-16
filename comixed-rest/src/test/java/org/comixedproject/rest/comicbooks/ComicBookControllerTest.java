@@ -180,7 +180,7 @@ public class ComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookService.getComicContent(Mockito.any(ComicBook.class)))
         .thenReturn(TEST_COMIC_CONTENT);
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILE);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILE);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(ArchiveType.CBZ);
 
     ResponseEntity<InputStreamResource> result = controller.downloadComic(TEST_COMIC_ID);
@@ -192,7 +192,7 @@ public class ComicBookControllerTest {
 
     Mockito.verify(comicBookService, Mockito.times(1)).getComic(TEST_COMIC_ID);
     Mockito.verify(comicBookService, Mockito.times(1)).getComicContent(comicBook);
-    Mockito.verify(comicBook, Mockito.atLeast(1)).getFilename();
+    Mockito.verify(comicDetail, Mockito.atLeast(1)).getFilename();
     Mockito.verify(comicDetail, Mockito.times(1)).getArchiveType();
   }
 
@@ -252,7 +252,7 @@ public class ComicBookControllerTest {
     Mockito.when(comicBookService.getComic(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBook.isMissing()).thenReturn(false);
     Mockito.when(comicBook.getPageCount()).thenReturn(0);
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILE);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILE);
     Mockito.when(comicFileService.getImportFileCover(Mockito.anyString()))
         .thenReturn(TEST_PAGE_CONTENT);
     Mockito.when(fileTypeAdaptor.getType(inputStreamCaptor.capture()))

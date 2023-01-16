@@ -48,6 +48,7 @@ public class OPDSSeriesController {
   /**
    * Returns the series root navigation feed.
    *
+   * @param principal the user principal
    * @param unread the unread flag
    * @return the navigation feed
    */
@@ -56,14 +57,16 @@ public class OPDSSeriesController {
   @Timed(value = "comixed.opds.collections.series.get-root")
   @ResponseBody
   public OPDSNavigationFeed getRootFeedForSeries(
-      @RequestParam(name = "unread") final boolean unread) {
-    log.info("Getting publisher root feed");
-    return this.opdsNavigationService.getRootFeedForSeries(unread);
+      final Principal principal, @RequestParam(name = "unread") final boolean unread) {
+    final String email = principal.getName();
+    log.info("Getting publisher root feed: email={} unread={}", email, unread);
+    return this.opdsNavigationService.getRootFeedForSeries(email, unread);
   }
 
   /**
    * Returns the volumes navigation feed for a series.
    *
+   * @param principal the user principal
    * @param name the series name
    * @param unread the unread flag
    * @return the navigation feed
@@ -73,11 +76,13 @@ public class OPDSSeriesController {
   @Timed(value = "comixed.opds.collections.series.get-volumes")
   @ResponseBody
   public OPDSNavigationFeed getVolumesFeedForSeries(
+      final Principal principal,
       @PathVariable("name") @NonNull final String name,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     final String seriesName = this.opdsUtils.urlDecodeString(name);
-    log.info("Getting volumes feed for series: {}", seriesName);
-    return this.opdsNavigationService.getVolumesFeedForSeries(seriesName, unread);
+    final String email = principal.getName();
+    log.info("Getting volumes feed: series={} email={} unread={}", seriesName, email, unread);
+    return this.opdsNavigationService.getVolumesFeedForSeries(seriesName, email, unread);
   }
 
   /**

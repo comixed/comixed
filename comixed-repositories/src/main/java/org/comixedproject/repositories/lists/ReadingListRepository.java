@@ -61,7 +61,7 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
   ReadingList getReadingListForUserAndId(@Param("owner") ComiXedUser owner, @Param("id") long id);
 
   @Query(
-      "SELECT l FROM ReadingList l JOIN FETCH l.comicBooks WHERE l.owner.email = :email AND :comicBook MEMBER OF l.comicBooks")
+      "SELECT l FROM ReadingList l JOIN FETCH l.entries WHERE l.owner.email = :email AND :comicBook MEMBER OF l.entries")
   List<ReadingList> findByOwnerAndComic(
       @Param("email") String email, @Param("comicBook") ComicBook comicBook);
 
@@ -71,6 +71,6 @@ public interface ReadingListRepository extends CrudRepository<ReadingList, Long>
    * @param id the record id
    * @return the reading list
    */
-  @Query("SELECT l FROM ReadingList l LEFT JOIN FETCH l.comicBooks WHERE l.id = :id")
+  @Query("SELECT l FROM ReadingList l LEFT JOIN FETCH l.entries WHERE l.id = :id")
   ReadingList getById(@Param("id") Long id);
 }

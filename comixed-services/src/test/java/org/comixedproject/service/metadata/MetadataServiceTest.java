@@ -778,7 +778,7 @@ public class MetadataServiceTest {
     Mockito.verify(loadedComicDetail, Mockito.never()).setVolume(Mockito.anyString());
     Mockito.verify(loadedComicDetail, Mockito.never()).setCoverDate(Mockito.any(Date.class));
     Mockito.verify(loadedComicDetail, Mockito.never()).setStoreDate(Mockito.any(Date.class));
-    Mockito.verify(loadedComicBook, Mockito.never()).setDescription(Mockito.anyString());
+    Mockito.verify(loadedComicDetail, Mockito.never()).setDescription(Mockito.anyString());
   }
 
   private void verifyComicScraping(final ComicBook comicBook) {
@@ -790,8 +790,8 @@ public class MetadataServiceTest {
         .setCoverDate(metadataService.adjustForTimezone(TEST_COVER_DATE));
     Mockito.verify(loadedComicDetail, Mockito.times(1))
         .setStoreDate(metadataService.adjustForTimezone(TEST_STORE_DATE));
-    Mockito.verify(loadedComicBook, Mockito.times(1)).setTitle(TEST_TITLE);
-    Mockito.verify(loadedComicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
   }
 

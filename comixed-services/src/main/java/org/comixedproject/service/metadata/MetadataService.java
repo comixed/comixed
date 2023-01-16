@@ -35,8 +35,10 @@ import org.comixedproject.metadata.model.IssueMetadata;
 import org.comixedproject.metadata.model.VolumeMetadata;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicMetadataSource;
-import org.comixedproject.model.comicbooks.Credit;
+import org.comixedproject.model.comicbooks.ComicTag;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.model.metadata.MetadataSource;
 import org.comixedproject.service.collections.IssueService;
 import org.comixedproject.service.comicbooks.ComicBookException;
@@ -278,30 +280,43 @@ public class MetadataService {
         comicBook
             .getComicDetail()
             .setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
-      comicBook.setTitle(issueDetails.getTitle());
-      comicBook.setDescription(issueDetails.getDescription());
-      comicBook.getCharacters().clear();
-      issueDetails.getCharacters().forEach(character -> comicBook.getCharacters().add(character));
-      comicBook.getTeams().clear();
-      issueDetails.getTeams().forEach(team -> comicBook.getTeams().add(team));
-      comicBook.getLocations().clear();
-      issueDetails.getLocations().forEach(location -> comicBook.getLocations().add(location));
-      comicBook.getStories().clear();
-      issueDetails.getStories().forEach(story -> comicBook.getStories().add(story));
-      comicBook.getCredits().clear();
+      comicBook.getComicDetail().setTitle(issueDetails.getTitle());
+      comicBook.getComicDetail().setDescription(issueDetails.getDescription());
+      final ComicDetail detail = comicBook.getComicDetail();
+      detail.getTags().clear();
       issueDetails
-          .getCredits()
+          .getCharacters()
+          .forEach(
+              character ->
+                  detail.getTags().add(new ComicTag(detail, ComicTagType.CHARACTER, character)));
+      issueDetails
+          .getTeams()
+          .forEach(team -> detail.getTags().add(new ComicTag(detail, ComicTagType.TEAM, team)));
+      issueDetails
+          .getLocations()
+          .forEach(
+              location ->
+                  detail.getTags().add(new ComicTag(detail, ComicTagType.LOCATION, location)));
+      issueDetails
+          .getStories()
+          .forEach(story -> detail.getTags().add(new ComicTag(detail, ComicTagType.STORY, story)));
+      issueDetails.getCredits().stream()
+          .filter(credit -> ComicTagType.forValue(credit.getRole()) != null)
           .forEach(
               entry ->
-                  comicBook
-                      .getCredits()
-                      .add(new Credit(comicBook, entry.getName(), entry.getRole())));
+                  detail
+                      .getTags()
+                      .add(
+                          new ComicTag(
+                              detail, ComicTagType.forValue(entry.getRole()), entry.getName())));
       log.trace("Creating comicBook metadata record");
       comicBook.setMetadata(
           new ComicMetadataSource(comicBook, metadataSource, issueDetails.getSourceId()));
-      comicBook.setNotes(
-          String.format(
-              "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
+      comicBook
+          .getComicDetail()
+          .setNotes(
+              String.format(
+                  "ComicBook metadata scraped using ComiXed & %s.", metadataAdaptor.getSource()));
       log.trace("Checking for imprint");
       this.imprintService.update(comicBook);
       log.trace("Updating comicBook state: scraped");

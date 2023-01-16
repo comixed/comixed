@@ -23,6 +23,7 @@ import static org.comixedproject.state.lists.ReadingListStateHandler.HEADER_READ
 
 import java.util.List;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.lists.ReadingListState;
 import org.comixedproject.state.lists.ReadingListEvent;
@@ -43,21 +44,23 @@ public class AddComicBookToReadingListActionTest {
   @Mock private MessageHeaders messageHeaders;
   @Mock private ReadingList readingList;
   @Mock private ComicBook comicBook;
-  @Mock private List<ComicBook> readingListEntries;
+  @Mock private ComicDetail comicDetail;
+  @Mock private List<ComicDetail> readingListEntries;
 
   @Before
   public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(context.getMessageHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_READING_LIST, ReadingList.class))
         .thenReturn(readingList);
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
-    Mockito.when(readingList.getComicBooks()).thenReturn(readingListEntries);
+    Mockito.when(readingList.getEntries()).thenReturn(readingListEntries);
   }
 
   @Test
   public void testExecute() {
     action.execute(context);
 
-    Mockito.verify(readingListEntries, Mockito.times(1)).add(comicBook);
+    Mockito.verify(readingListEntries, Mockito.times(1)).add(comicDetail);
   }
 }

@@ -128,7 +128,10 @@ describe('ComicBook Reducer', () => {
   });
 
   describe('successfully updating a single comic', () => {
-    const UPDATED_COMIC = { ...COMIC, filename: COMIC.filename.substr(1) };
+    const UPDATED_COMIC = {
+      ...COMIC,
+      filename: COMIC.detail.filename.substr(1)
+    };
 
     beforeEach(() => {
       state = reducer(

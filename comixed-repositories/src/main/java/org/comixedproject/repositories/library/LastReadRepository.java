@@ -19,7 +19,7 @@
 package org.comixedproject.repositories.library;
 
 import java.util.List;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
 import org.springframework.data.domain.Pageable;
@@ -49,11 +49,12 @@ public interface LastReadRepository extends CrudRepository<LastRead, Long> {
   /**
    * Retrieves the last read entry for the given comicBook and user.
    *
-   * @param comicBook the comicBook
+   * @param comicDetail the comicBook
    * @param user the user
    * @return the entry, or null if non exists
    */
-  @Query("SELECT e FROM LastRead e WHERE e.comicBook = :comicBook AND e.user = :user")
+  @Query(
+      "SELECT e FROM LastRead e JOIN FETCH e.comicDetail WHERE e.comicDetail = :comicDetail AND e.user = :user")
   LastRead loadEntryForComicAndUser(
-      @Param("comicBook") ComicBook comicBook, @Param("user") ComiXedUser user);
+      @Param("comicDetail") ComicDetail comicDetail, @Param("user") ComiXedUser user);
 }

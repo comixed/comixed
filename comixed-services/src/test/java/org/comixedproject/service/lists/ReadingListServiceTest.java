@@ -103,7 +103,7 @@ public class ReadingListServiceTest {
   @Captor private ArgumentCaptor<CsvRowDecoder> rowDecoderArgumentCaptor;
 
   private List<Long> idList = new ArrayList<>();
-  private List<ComicBook> comicBookList = new ArrayList<>();
+  private List<ComicDetail> comicDetailList = new ArrayList<>();
 
   @Before
   public void setUp() throws ComiXedUserException {
@@ -112,8 +112,7 @@ public class ReadingListServiceTest {
     Mockito.when(readingList.getId()).thenReturn(TEST_READING_LIST_ID);
     Mockito.when(owner.getEmail()).thenReturn(TEST_OWNER_EMAIL);
     Mockito.when(readingList.getName()).thenReturn(TEST_READING_LIST_NAME);
-    Mockito.when(readingList.getComicBooks()).thenReturn(comicBookList);
-    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(readingList.getEntries()).thenReturn(comicDetailList);
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
@@ -198,7 +197,7 @@ public class ReadingListServiceTest {
     assertSame(user, readingListArgumentCaptor.getValue().getOwner());
     assertEquals(TEST_READING_LIST_NAME, readingListArgumentCaptor.getValue().getName());
     assertEquals(TEST_READING_LIST_SUMMARY, readingListArgumentCaptor.getValue().getSummary());
-    assertEquals(0, readingListArgumentCaptor.getValue().getComicBooks().size());
+    assertEquals(0, readingListArgumentCaptor.getValue().getEntries().size());
     assertNotNull(readingListArgumentCaptor.getValue().getLastModifiedOn());
 
     Mockito.verify(userService, Mockito.times(1)).findByEmail(TEST_USER_EMAIL);
@@ -488,7 +487,7 @@ public class ReadingListServiceTest {
 
   @Test(expected = ReadingListException.class)
   public void testEncodeReadingListEncodingException() throws IOException, ReadingListException {
-    comicBookList.add(comicBook);
+    comicDetailList.add(comicDetail);
 
     Mockito.when(readingListRepository.getById(TEST_READING_LIST_ID)).thenReturn(readingList);
     Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
@@ -499,13 +498,13 @@ public class ReadingListServiceTest {
     } finally {
       Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
       Mockito.verify(csvAdaptor, Mockito.times(1))
-          .encodeRecords(comicBookList, rowEncoderArgumentCaptor.getValue());
+          .encodeRecords(comicDetailList, rowEncoderArgumentCaptor.getValue());
     }
   }
 
   @Test
   public void testEncodeReadingList() throws ReadingListException, IOException {
-    comicBookList.add(comicBook);
+    comicDetailList.add(comicDetail);
 
     Mockito.when(readingListRepository.getById(TEST_READING_LIST_ID)).thenReturn(readingList);
     Mockito.when(csvAdaptor.encodeRecords(Mockito.anyList(), rowEncoderArgumentCaptor.capture()))
@@ -521,18 +520,18 @@ public class ReadingListServiceTest {
 
     final CsvRowEncoder encoder = rowEncoderArgumentCaptor.getValue();
     assertNotNull(encoder);
-    String[] row = encoder.createRow(0, comicBook);
+    String[] row = encoder.createRow(0, comicDetail);
     assertArrayEquals(
         new String[] {
           POSITION_HEADER, PUBLISHER_HEADER, SERIES_HEADER, VOLUME_HEADER, ISSUE_NUMBER_HEADER
         },
         row);
-    row = encoder.createRow(1, comicBook);
+    row = encoder.createRow(1, comicDetail);
     assertArrayEquals(
         new String[] {"1", TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_ISSUE_NUMBER}, row);
 
     Mockito.verify(readingListRepository, Mockito.times(1)).getById(TEST_READING_LIST_ID);
-    Mockito.verify(csvAdaptor, Mockito.times(1)).encodeRecords(comicBookList, encoder);
+    Mockito.verify(csvAdaptor, Mockito.times(1)).encodeRecords(comicDetailList, encoder);
   }
 
   @Test(expected = ReadingListException.class)

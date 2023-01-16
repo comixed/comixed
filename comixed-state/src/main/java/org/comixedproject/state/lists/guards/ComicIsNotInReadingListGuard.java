@@ -35,12 +35,18 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class ComicIsNotInReadingListGuard extends AbstractReadingListGuard {
+  /**
+   * Returns whether the comic in question is already in the reading list.
+   *
+   * @param context the message context
+   * @return true if the comic is not in the reading list
+   */
   @Override
   public boolean evaluate(final StateContext<ReadingListState, ReadingListEvent> context) {
     log.trace("Fetching reading list");
     final ReadingList readingList = this.fetchReadingList(context);
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(context);
-    return !comicBook.getReadingLists().contains(readingList);
+    return !readingList.getEntries().contains(comicBook.getComicDetail());
   }
 }

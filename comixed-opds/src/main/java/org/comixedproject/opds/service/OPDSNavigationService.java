@@ -34,7 +34,7 @@ import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.*;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +64,12 @@ public class OPDSNavigationService {
   public static final long READING_LIST_FACTOR_ID = 1000000L;
   private static final String STORE_DATE_YEARS_ID = "20";
   static final int COMIC_STORE_DATE_FOR_YEAR_ID = 20;
+  public static final String TAG_TYPE_CHARACTER = "CHARACTER";
+  public static final String TAG_TYPE_TEAM = "TEAM";
+  public static final String TAG_TYPE_LOCATION = "LOCATION";
+  public static final String TAG_TYPE_STORY = "STORY";
 
-  @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private ReadingListService readingListService;
   @Autowired private OPDSUtils opdsUtils;
 
@@ -201,16 +205,18 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Retrieves the root navigation feed for publishers.
+   * Retrieves the root navigation feed for publishers. Filters out comics read by the user if the
+   * flag is set.
    *
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
-  public OPDSNavigationFeed getRootFeedForPublishers(final boolean unread) {
+  public OPDSNavigationFeed getRootFeedForPublishers(final String email, final boolean unread) {
     log.trace("Getting root feed for publishers");
     final OPDSNavigationFeed feed =
         new OPDSNavigationFeed("Publishers", String.valueOf(PUBLISHERS_ID));
-    this.comicBookService.getAllPublishers().stream()
+    this.comicDetailService.getAllPublishers(email, unread).stream()
         .map(
             publisher ->
                 new CollectionFeedEntry(
@@ -239,18 +245,20 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Retrieves a navigation feed of series for the given publisher.
+   * Retrieves a navigation feed of series for the given publisher. Filters out comics read by the
+   * user if the flag is set.
    *
-   * @param publisher the publisher
+   * @param publisher the publisher @Param email the user's email
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
   public OPDSNavigationFeed getSeriesFeedForPublisher(
-      final String publisher, final boolean unread) {
+      final String publisher, final String email, final boolean unread) {
     OPDSNavigationFeed result =
         new OPDSNavigationFeed(
             String.format("Publisher: %s", publisher), String.valueOf(PUBLISHERS_ID));
-    this.comicBookService.getAllSeriesForPublisher(publisher).stream()
+    this.comicDetailService.getAllSeriesForPublisher(publisher, email, unread).stream()
         .forEach(
             series -> {
               final OPDSNavigationFeedEntry feedEntry =
@@ -273,18 +281,21 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Retrieves the navigation feed for the given publisher and series.
+   * Retrieves the navigation feed for the given publisher and series. Filters out comics read by
+   * the user if the flag is set.
    *
    * @param publisher the publisher
-   * @param series the series
+   * @param series the series @Param email the user's email
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
   public OPDSNavigationFeed getVolumeFeedForPublisherAndSeries(
-      final String publisher, final String series, final boolean unread) {
+      final String publisher, final String series, final String email, final boolean unread) {
     OPDSNavigationFeed result =
         new OPDSNavigationFeed(String.format("Series: %s", series), String.valueOf(SERIES_ID));
-    this.comicBookService.getAllVolumesForPublisherAndSeries(publisher, series).stream()
+    this.comicDetailService.getAllVolumesForPublisherAndSeries(publisher, series, email, unread)
+        .stream()
         .forEach(
             volume -> {
               final OPDSNavigationFeedEntry feedEntry =
@@ -310,15 +321,17 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Returns the root navigation feed for series.
+   * Returns the root navigation feed for series. Filters out comics read by the user if the flag is
+   * set.
    *
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
-  public OPDSNavigationFeed getRootFeedForSeries(final boolean unread) {
+  public OPDSNavigationFeed getRootFeedForSeries(final String email, final boolean unread) {
     log.trace("Loading root feed for series");
     final OPDSNavigationFeed feed = new OPDSNavigationFeed("Series", String.valueOf(SERIES_ID));
-    this.comicBookService.getAllSeries().stream()
+    this.comicDetailService.getAllSeries(email, unread).stream()
         .map(
             series ->
                 new CollectionFeedEntry(series, this.opdsUtils.createIdForEntry("SERIES", series)))
@@ -354,17 +367,20 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Builds the volumes navigation feed for a single series.
+   * Builds the volumes navigation feed for a single series. Filters out comics read by the user if
+   * the flag is set.
    *
    * @param name the series name
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
-  public OPDSNavigationFeed getVolumesFeedForSeries(final String name, final boolean unread) {
+  public OPDSNavigationFeed getVolumesFeedForSeries(
+      final String name, final String email, final boolean unread) {
     log.trace("Loading volumes feed for series: {}", name);
     OPDSNavigationFeed result =
         new OPDSNavigationFeed(String.format("Series: %s", name), String.valueOf(SERIES_ID));
-    this.comicBookService.getAllVolumesForSeries(name).stream()
+    this.comicDetailService.getAllVolumesForSeries(name, email, unread).stream()
         .forEach(
             volume -> {
               final OPDSNavigationFeedEntry feedEntry =
@@ -389,62 +405,65 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Retrieves the navigation feed for a given collection type.
+   * Retrieves the navigation feed for a given collection type. Filters out comics read by the user
+   * if * the flag is set.
    *
    * @param collectionType the collection type
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
   public OPDSNavigationFeed getCollectionFeed(
-      @NonNull final CollectionType collectionType, final boolean unread) {
+      @NonNull final CollectionType collectionType, final String email, final boolean unread) {
     log.info("Fetching the feed root for a collection: {}", collectionType);
     switch (collectionType) {
       case characters:
         return createCollectionFeed(
-            collectionType,
+            TAG_TYPE_CHARACTER,
             new OPDSNavigationFeed("Characters", String.valueOf(CHARACTERS_ID)),
             CHARACTERS_ID,
-            this.comicBookService.getAllCharacters().stream()
+            this.comicDetailService.getAllValuesForTag(TAG_TYPE_CHARACTER, email, unread).stream()
                 .map(
                     character ->
                         new CollectionFeedEntry(
-                            character, this.opdsUtils.createIdForEntry("CHARACTER", character)))
+                            character,
+                            this.opdsUtils.createIdForEntry(TAG_TYPE_CHARACTER, character)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case teams:
         return createCollectionFeed(
-            collectionType,
+            TAG_TYPE_TEAM,
             new OPDSNavigationFeed("Teams", String.valueOf(TEAMS_ID)),
             TEAMS_ID,
-            this.comicBookService.getAllTeams().stream()
+            this.comicDetailService.getAllValuesForTag(TAG_TYPE_TEAM, email, unread).stream()
                 .map(
                     team ->
                         new CollectionFeedEntry(
-                            team, this.opdsUtils.createIdForEntry("TEAM", team)))
+                            team, this.opdsUtils.createIdForEntry(TAG_TYPE_TEAM, team)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case locations:
         return createCollectionFeed(
-            collectionType,
+            TAG_TYPE_LOCATION,
             new OPDSNavigationFeed("Locations", String.valueOf(LOCATIONS_ID)),
             LOCATIONS_ID,
-            this.comicBookService.getAllLocations().stream()
+            this.comicDetailService.getAllValuesForTag(TAG_TYPE_LOCATION, email, unread).stream()
                 .map(
                     location ->
                         new CollectionFeedEntry(
-                            location, this.opdsUtils.createIdForEntry("LOCATION", location)))
+                            location, this.opdsUtils.createIdForEntry(TAG_TYPE_LOCATION, location)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
       case stories:
         return createCollectionFeed(
-            collectionType,
+            TAG_TYPE_STORY,
             new OPDSNavigationFeed("Stories", String.valueOf(STORIES_ID)),
             STORIES_ID,
-            this.comicBookService.getAllStories().stream()
+            this.comicDetailService.getAllValuesForTag(TAG_TYPE_STORY, email, unread).stream()
                 .map(
                     story ->
                         new CollectionFeedEntry(
-                            story, this.opdsUtils.createIdForEntry("STORY", story)))
+                            story, this.opdsUtils.createIdForEntry(TAG_TYPE_STORY, story)))
                 .collect(Collectors.toUnmodifiableList()),
             unread);
     }
@@ -469,8 +488,7 @@ public class OPDSNavigationService {
             final OPDSNavigationFeedEntry entry =
                 new OPDSNavigationFeedEntry(
                     String.format(
-                        "%s (%d comics)",
-                        readingList.getName(), readingList.getComicBooks().size()),
+                        "%s (%d comics)", readingList.getName(), readingList.getEntries().size()),
                     String.valueOf(READING_LIST_FACTOR_ID + readingList.getId()));
             entry.setContent(new OPDSNavigationFeedContent(readingList.getSummary()));
             entry
@@ -489,15 +507,17 @@ public class OPDSNavigationService {
   }
 
   /**
-   * Returns the navigation feed for comic cover date years.
+   * Returns the navigation feed for comic cover date years. Optionally filters by the unread state
+   * for the given user.
    *
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
-  public OPDSNavigationFeed getYearsFeed(final boolean unread) {
+  public OPDSNavigationFeed getYearsFeed(final String email, final boolean unread) {
     final OPDSNavigationFeed response =
         new OPDSNavigationFeed("Store Date: Years", STORE_DATE_YEARS_ID);
-    this.comicBookService.getYearsForComics().stream()
+    this.comicDetailService.getAllYears(email, unread).stream()
         .sorted()
         .forEach(
             year -> {
@@ -520,17 +540,20 @@ public class OPDSNavigationService {
 
   /**
    * Retrieves the navigation feed for cover date weeks in the library for a specific year.
+   * Optionally filters by the unread state for the given user.
    *
    * @param year the year
+   * @param email the user's email
    * @param unread the unread flag
    * @return the navigation feed
    */
-  public OPDSNavigationFeed getWeeksFeedForYear(final int year, final boolean unread) {
+  public OPDSNavigationFeed getWeeksFeedForYear(
+      final int year, final String email, final boolean unread) {
     final OPDSNavigationFeed response =
         new OPDSNavigationFeed(
             "Comics For Year: " + year, String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
-    log.trace("Loading days with comics for year");
-    this.comicBookService.getWeeksForYear(year).stream()
+    log.trace("Loading days with comics for year: year={} email={} unread={}", year, email, unread);
+    this.comicDetailService.getAllWeeksForYear(year, email, unread).stream()
         .sorted()
         .forEach(
             weekNumber -> {
@@ -562,7 +585,7 @@ public class OPDSNavigationService {
   }
 
   private OPDSNavigationFeed createCollectionFeed(
-      final CollectionType collectionType,
+      final String collectionType,
       final OPDSNavigationFeed feed,
       final long entryOffset,
       final List<CollectionFeedEntry> entries,

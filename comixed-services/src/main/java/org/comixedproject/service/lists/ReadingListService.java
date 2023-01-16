@@ -376,7 +376,7 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
       log.trace("Encoding reading list");
       final byte[] content =
           this.csvAdaptor.encodeRecords(
-              readingList.getComicBooks(),
+              readingList.getEntries(),
               (index, model) -> {
                 if (index == 0) {
                   return new String[] {
@@ -389,10 +389,10 @@ public class ReadingListService implements ReadingListStateChangeListener, Initi
                 } else {
                   return new String[] {
                     String.valueOf(index),
-                    model.getComicDetail().getPublisher(),
-                    model.getComicDetail().getSeries(),
-                    model.getComicDetail().getVolume(),
-                    model.getComicDetail().getIssueNumber()
+                    model.getPublisher(),
+                    model.getSeries(),
+                    model.getVolume(),
+                    model.getIssueNumber()
                   };
                 }
               });

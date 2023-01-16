@@ -84,14 +84,14 @@ public class ComicFileAdaptorTest {
   @Before
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_FULL_COMIC_FILENAME);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FULL_COMIC_FILENAME);
     Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(comicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(comicDetail.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(comicDetail.getIssueNumber()).thenReturn(TEST_ISSUE);
     Mockito.when(comicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(comicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
-    Mockito.when(comicBook.getTitle()).thenReturn(TEST_TITLE);
+    Mockito.when(comicDetail.getTitle()).thenReturn(TEST_TITLE);
   }
 
   @Test
@@ -234,7 +234,7 @@ public class ComicFileAdaptorTest {
 
   @Test
   public void testCreateFileFromRuleNoTitle() {
-    Mockito.when(comicBook.getTitle()).thenReturn(null);
+    Mockito.when(comicDetail.getTitle()).thenReturn(null);
 
     final String result = adaptor.createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
 

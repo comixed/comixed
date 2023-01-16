@@ -7,5 +7,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <include file="/db/migrations/1.4/001_1380_split_up_comicbooks.xml"/>
+  <include file="/db/migrations/1.4/002_1490_add_comic_collection_tags.xml"/>
 
 </databaseChangeLog>

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.ColumnTransformer;
@@ -84,11 +84,21 @@ public class ReadingList {
   @Setter
   private String summary;
 
+  @ManyToMany
+  @JoinTable(
+      name = "ReadingListEntries",
+      joinColumns = {@JoinColumn(name = "ReadingListId")},
+      inverseJoinColumns = {@JoinColumn(name = "ComicDetailId")})
+  @JsonProperty("entries")
+  @JsonView({View.ReadingLists.class})
+  @Getter
+  private List<ComicDetail> entries = new ArrayList<>();
+
   @Column(name = "CreatedOn")
   @CreatedDate
   @JsonProperty("createdOn")
   @JsonView({View.ComicListView.class, View.ReadingLists.class})
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter
   private Date createdOn = new Date();
@@ -97,20 +107,10 @@ public class ReadingList {
   @LastModifiedDate
   @JsonProperty("lastModifiedOn")
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter
   private Date lastModifiedOn = new Date();
-
-  @ManyToMany
-  @JoinTable(
-      name = "ReadingListEntries",
-      joinColumns = {@JoinColumn(name = "ReadingListId")},
-      inverseJoinColumns = {@JoinColumn(name = "ComicBookId")})
-  @JsonProperty("comicBooks")
-  @JsonView({View.ReadingLists.class})
-  @Getter
-  private List<ComicBook> comicBooks = new ArrayList<>();
 
   public void setName(final String name) {
     this.name = name;

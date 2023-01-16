@@ -25,17 +25,17 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 })
 export class UnreadComicsPipe implements PipeTransform {
   transform(
-    comicBooks: ComicDetail[],
+    comicDetails: ComicDetail[],
     unreadOnly: boolean,
     lastReadDates: LastRead[]
   ): ComicDetail[] {
     if (!unreadOnly) {
-      return comicBooks;
+      return comicDetails;
     }
 
-    return comicBooks.filter(comicBook => {
+    return comicDetails.filter(comicDetail => {
       return !lastReadDates.find(
-        date => date.comicBook.id === comicBook.comicId
+        lastRead => lastRead.comicDetail.id === comicDetail.id
       );
     });
   }

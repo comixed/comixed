@@ -111,8 +111,8 @@ public class ComicFileAdaptor {
     if (StringUtils.isEmpty(renamingRule)) {
       log.trace(
           "No renaming rules: using original filename: {}",
-          FilenameUtils.getBaseName(comicBook.getFilename()));
-      return FilenameUtils.getBaseName(comicBook.getFilename());
+          FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename()));
+      return FilenameUtils.getBaseName(comicBook.getComicDetail().getFilename());
     }
 
     log.trace("Scrubbing renaming rule: {}", renamingRule);
@@ -132,7 +132,9 @@ public class ComicFileAdaptor {
             ? comicBook.getComicDetail().getVolume()
             : UNKNOWN_VALUE;
     final String title =
-        StringUtils.hasLength(comicBook.getTitle()) ? comicBook.getTitle() : UNKNOWN_VALUE;
+        StringUtils.hasLength(comicBook.getComicDetail().getTitle())
+            ? comicBook.getComicDetail().getTitle()
+            : UNKNOWN_VALUE;
     String issueNumber =
         StringUtils.hasLength(comicBook.getComicDetail().getIssueNumber())
             ? scrub(comicBook.getComicDetail().getIssueNumber())

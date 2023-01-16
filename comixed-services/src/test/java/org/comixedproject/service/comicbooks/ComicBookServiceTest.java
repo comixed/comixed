@@ -19,7 +19,6 @@
 package org.comixedproject.service.comicbooks;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertSame;
@@ -27,7 +26,6 @@ import static junit.framework.TestCase.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -115,7 +113,7 @@ public class ComicBookServiceTest {
   @Mock private ImprintService imprintService;
   @Mock private List<String> collectionList;
   @Mock private List<String> publisherList;
-  @Mock private ComicBook readComicBook;
+  @Mock private ComicDetail readComicDetail;
   @Mock private LastRead lastRead;
   @Mock private ComiXedUser lastReadUser;
   @Mock private List<Integer> yearList;
@@ -148,20 +146,23 @@ public class ComicBookServiceTest {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(incomingComicBook.getComicDetail()).thenReturn(incomingComicDetail);
 
-    previousComicBook.setComicDetail(new ComicDetail(previousComicBook, ArchiveType.CBZ));
+    previousComicBook.setComicDetail(
+        new ComicDetail(previousComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
     previousComicBook.getComicDetail().setIssueNumber(TEST_PREVIOUS_ISSUE_NUMBER);
     previousComicBook
         .getComicDetail()
         .setCoverDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000));
 
-    currentComicBook.setComicDetail(new ComicDetail(currentComicBook, ArchiveType.CBZ));
+    currentComicBook.setComicDetail(
+        new ComicDetail(currentComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
     currentComicBook.getComicDetail().setSeries(TEST_SERIES);
     currentComicBook.getComicDetail().setVolume(TEST_VOLUME);
     currentComicBook.getComicDetail().setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
     currentComicBook.getComicDetail().setCoverDate(new Date(System.currentTimeMillis()));
     currentComicBook.getComicDetail().setCoverDate(TEST_COVER_DATE);
 
-    nextComicBook.setComicDetail(new ComicDetail(nextComicBook, ArchiveType.CBZ));
+    nextComicBook.setComicDetail(
+        new ComicDetail(nextComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
     nextComicBook.getComicDetail().setIssueNumber(TEST_NEXT_ISSUE_NUMBER);
     nextComicBook
         .getComicDetail()
@@ -173,10 +174,7 @@ public class ComicBookServiceTest {
 
     calendar.setTime(now);
 
-    Mockito.when(lastRead.getUser()).thenReturn(lastReadUser);
-    Mockito.when(lastReadUser.getEmail()).thenReturn(TEST_EMAIL);
     lastReadList.add(lastRead);
-    Mockito.when(readComicBook.getLastReads()).thenReturn(lastReadList);
   }
 
   @Test
@@ -291,20 +289,18 @@ public class ComicBookServiceTest {
 
   @Test(expected = ComicBookException.class)
   public void testDeleteComicNonexistent() throws ComicBookException {
-    Mockito.when(comicBookRepository.getByIdWithReadingLists(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     try {
       service.deleteComic(TEST_COMIC_BOOK_ID);
     } finally {
-      Mockito.verify(comicBookRepository, Mockito.times(1))
-          .getByIdWithReadingLists(TEST_COMIC_BOOK_ID);
+      Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
     }
   }
 
   @Test
   public void testDeleteComic() throws ComicBookException {
-    Mockito.when(comicBookRepository.getByIdWithReadingLists(Mockito.anyLong()))
-        .thenReturn(comicBook);
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBookRecord);
 
     final ComicBook result = service.deleteComic(TEST_COMIC_BOOK_ID);
@@ -312,11 +308,9 @@ public class ComicBookServiceTest {
     assertNotNull(result);
     assertSame(comicBookRecord, result);
 
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getByIdWithReadingLists(TEST_COMIC_BOOK_ID);
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicStateHandler, Mockito.times(1))
-        .fireEvent(comicBook, ComicEvent.deleteComic);
+        .fireEvent(comicBookRecord, ComicEvent.deleteComic);
   }
 
   @Test(expected = ComicBookException.class)
@@ -347,25 +341,25 @@ public class ComicBookServiceTest {
 
   @Test
   public void testGetComicContentNonexistent() {
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME.substring(1));
 
     final byte[] result = this.service.getComicContent(comicBook);
 
     assertNull(result);
 
-    Mockito.verify(comicBook, Mockito.atLeast(1)).getFilename();
+    Mockito.verify(comicDetail, Mockito.atLeast(1)).getFilename();
   }
 
   @Test
   public void testGetComicContent() {
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
 
     final byte[] result = this.service.getComicContent(comicBook);
 
     assertNotNull(result);
     assertEquals(new File(TEST_COMIC_FILENAME).length(), result.length);
 
-    Mockito.verify(comicBook, Mockito.atLeast(1)).getFilename();
+    Mockito.verify(comicDetail, Mockito.atLeast(1)).getFilename();
   }
 
   @Test(expected = ComicBookException.class)
@@ -399,8 +393,8 @@ public class ComicBookServiceTest {
     // TODO update metadata source
     Mockito.when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComicBook.getSortName()).thenReturn(TEST_SORTABLE_NAME);
-    Mockito.when(incomingComicBook.getTitle()).thenReturn(TEST_TITLE);
-    Mockito.when(incomingComicBook.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(incomingComicDetail.getTitle()).thenReturn(TEST_TITLE);
+    Mockito.when(incomingComicDetail.getDescription()).thenReturn(TEST_DESCRIPTION);
 
     final ComicBook result = service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook);
 
@@ -415,8 +409,8 @@ public class ComicBookServiceTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
     // TODO update metadata source
     Mockito.verify(comicBook, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
-    Mockito.verify(comicBook, Mockito.times(1)).setTitle(TEST_TITLE);
-    Mockito.verify(comicBook, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(comicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
+    Mockito.verify(comicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.detailsUpdated);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);
@@ -824,27 +818,26 @@ public class ComicBookServiceTest {
 
   @Test
   public void testDeleteComicsInvalidId() {
+    idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getByIdWithReadingLists(Mockito.anyLong())).thenReturn(null);
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(null);
 
     service.deleteComics(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
-        .getByIdWithReadingLists(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
   }
 
   @Test
   public void testDeleteComics() {
+    idList.clear();
     idList.add(TEST_COMIC_BOOK_ID);
 
-    Mockito.when(comicBookRepository.getByIdWithReadingLists(Mockito.anyLong()))
-        .thenReturn(comicBook);
+    Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
 
     service.deleteComics(idList);
 
-    Mockito.verify(comicBookRepository, Mockito.times(idList.size()))
-        .getByIdWithReadingLists(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicBookRepository, Mockito.times(idList.size())).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicStateHandler, Mockito.times(idList.size()))
         .fireEvent(comicBook, ComicEvent.deleteComic);
   }
@@ -925,18 +918,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testFindPublishers() {
-    Mockito.when(comicBookRepository.findDistinctPublishers()).thenReturn(collectionList);
-
-    final List<String> result = service.getAllPublishers();
-
-    assertNotNull(result);
-    assertSame(collectionList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctPublishers();
-  }
-
-  @Test
   public void testFindSeries() {
     Mockito.when(comicBookRepository.findDistinctSeries()).thenReturn(collectionList);
 
@@ -946,222 +927,6 @@ public class ComicBookServiceTest {
     assertSame(collectionList, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctSeries();
-  }
-
-  @Test
-  public void testGetAllForSeries() {
-    comicBookList.add(comicBook);
-
-    Mockito.when(comicBookRepository.findAllBySeries(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForSeries(TEST_SERIES, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllBySeries(TEST_SERIES);
-  }
-
-  @Test
-  public void testGetAllForSeriesUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(comicBookRepository.findAllBySeries(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForSeries(TEST_SERIES, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllBySeries(TEST_SERIES);
-  }
-
-  @Test
-  public void testFindCharacters() {
-    Mockito.when(comicBookRepository.findDistinctCharacters()).thenReturn(collectionList);
-
-    final List<String> result = service.getAllCharacters();
-
-    assertNotNull(result);
-    assertSame(collectionList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctCharacters();
-  }
-
-  @Test
-  public void testGetAllForCharacter() {
-    comicBookList.add(comicBook);
-
-    Mockito.when(comicBookRepository.findAllByCharacters(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForCharacter(TEST_CHARACTER, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByCharacters(TEST_CHARACTER);
-  }
-
-  @Test
-  public void testGetAllForCharacterUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(comicBookRepository.findAllByCharacters(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForCharacter(TEST_CHARACTER, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByCharacters(TEST_CHARACTER);
-  }
-
-  @Test
-  public void testFindTeams() {
-    Mockito.when(comicBookRepository.findDistinctTeams()).thenReturn(collectionList);
-
-    final List<String> result = service.getAllTeams();
-
-    assertNotNull(result);
-    assertSame(collectionList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctTeams();
-  }
-
-  @Test
-  public void testGetAllForTeam() {
-    comicBookList.add(comicBook);
-
-    Mockito.when(comicBookRepository.findAllByTeams(Mockito.anyString())).thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForTeam(TEST_TEAM, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByTeams(TEST_TEAM);
-  }
-
-  @Test
-  public void testGetAllForTeamUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(comicBookRepository.findAllByTeams(Mockito.anyString())).thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForTeam(TEST_TEAM, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByTeams(TEST_TEAM);
-  }
-
-  @Test
-  public void testFindLocations() {
-    Mockito.when(comicBookRepository.findDistinctLocations()).thenReturn(collectionList);
-
-    final List<String> result = service.getAllLocations();
-
-    assertNotNull(result);
-    assertSame(collectionList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctLocations();
-  }
-
-  @Test
-  public void testGetAllForLocation() {
-    comicBookList.add(comicBook);
-
-    Mockito.when(comicBookRepository.findAllByLocations(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForLocation(TEST_LOCATION, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByLocations(TEST_LOCATION);
-  }
-
-  @Test
-  public void testGetAllForLocationUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(comicBookRepository.findAllByLocations(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForLocation(TEST_LOCATION, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByLocations(TEST_LOCATION);
-  }
-
-  @Test
-  public void testFindStories() {
-    Mockito.when(comicBookRepository.findDistinctStories()).thenReturn(collectionList);
-
-    final List<String> result = service.getAllStories();
-
-    assertNotNull(result);
-    assertSame(collectionList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctStories();
-  }
-
-  @Test
-  public void testGetAllForStory() {
-    comicBookList.add(comicBook);
-
-    Mockito.when(comicBookRepository.findAllByStories(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForStory(TEST_STORY_NAME, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByStories(TEST_STORY_NAME);
-  }
-
-  @Test
-  public void testGetAllForStoryUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(comicBookRepository.findAllByStories(Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result = service.getAllForStory(TEST_STORY_NAME, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findAllByStories(TEST_STORY_NAME);
   }
 
   @Test
@@ -1302,223 +1067,6 @@ public class ComicBookServiceTest {
 
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.updateDetails);
-  }
-
-  @Test
-  public void testGetYearsForComics() {
-    Mockito.when(comicBookRepository.loadYearsWithComics()).thenReturn(yearList);
-
-    final List<Integer> result = service.getYearsForComics();
-
-    assertNotNull(result);
-    assertSame(yearList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).loadYearsWithComics();
-  }
-
-  @Test
-  public void testGetWeeksForComics() {
-    weeksList.add(now);
-
-    Mockito.when(comicBookRepository.loadWeeksForYear(Mockito.anyInt())).thenReturn(weeksList);
-
-    final List<Integer> result = service.getWeeksForYear(calendar.get(Calendar.YEAR));
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(calendar.get(Calendar.WEEK_OF_YEAR)));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .loadWeeksForYear(calendar.get(Calendar.YEAR));
-  }
-
-  @Test
-  public void testGetComicsForYearAndWeek() {
-    comicBookList.add(comicBook);
-
-    Mockito.when(
-            comicBookRepository.findWithCoverDateRange(
-                startDateArgumentCaptor.capture(), endDateArgumentCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.getComicsForYearAndWeek(
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-
-    final Date startDate = startDateArgumentCaptor.getValue();
-    assertNotNull(startDate);
-    final Date endDate = endDateArgumentCaptor.getValue();
-    assertNotNull(endDate);
-    assertTrue(startDate.before(endDate));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findWithCoverDateRange(startDate, endDate);
-  }
-
-  @Test
-  public void testGetComicsForYearAndWeekUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(
-            comicBookRepository.findWithCoverDateRange(
-                startDateArgumentCaptor.capture(), endDateArgumentCaptor.capture()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.getComicsForYearAndWeek(
-            calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    final Date startDate = startDateArgumentCaptor.getValue();
-    assertNotNull(startDate);
-    final Date endDate = endDateArgumentCaptor.getValue();
-    assertNotNull(endDate);
-    assertTrue(startDate.before(endDate));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .findWithCoverDateRange(startDate, endDate);
-  }
-
-  @Test
-  public void testGetAllSeriesForPublisher() {
-    Mockito.when(comicBookRepository.getAllSeriesForPublisher(Mockito.anyString()))
-        .thenReturn(seriesList);
-
-    final Set<String> result = service.getAllSeriesForPublisher(TEST_PUBLISHER);
-
-    assertNotNull(result);
-    assertSame(seriesList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllSeriesForPublisher(TEST_PUBLISHER);
-  }
-
-  @Test
-  public void testGetAllVolumesForPublisherAndSeries() {
-    Mockito.when(
-            comicBookRepository.getAllVolumesForPublisherAndSeries(
-                Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(volumeList);
-
-    final Set<String> result =
-        service.getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES);
-
-    assertNotNull(result);
-    assertSame(volumeList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllVolumesForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES);
-  }
-
-  @Test
-  public void testGetComicBooksForPublisherAndSeriesAndVolume() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(
-            comicBookRepository.getAllComicBooksForPublisherAndSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.getAllComicBooksForPublisherAndSeriesAndVolume(
-            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertTrue(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllComicBooksForPublisherAndSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-  }
-
-  @Test
-  public void testGetComicBooksForPublisherAndSeriesAndVolumeUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(
-            comicBookRepository.getAllComicBooksForPublisherAndSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.getAllComicBooksForPublisherAndSeriesAndVolume(
-            TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllComicBooksForPublisherAndSeriesAndVolume(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
-  }
-
-  @Test
-  public void testFGetAllVolumesForSeries() {
-    Mockito.when(comicBookRepository.findDistinctVolumesForSeries(Mockito.anyString()))
-        .thenReturn(volumeList);
-
-    final Set<String> result = service.getAllVolumesForSeries(TEST_SERIES);
-
-    assertNotNull(result);
-    assertSame(volumeList, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).findDistinctVolumesForSeries(TEST_SERIES);
-  }
-
-  @Test
-  public void testGetAllComicsForSeriesAndVolume() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(
-            comicBookRepository.getAllComicBooksForSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.getAllComicBooksForSeriesAndVolume(TEST_SERIES, TEST_VOLUME, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertTrue(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllComicBooksForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
-  }
-
-  @Test
-  public void testGetAllComicsForSeriesAndVolumeUnread() {
-    comicBookList.add(comicBook);
-    comicBookList.add(readComicBook);
-
-    Mockito.when(
-            comicBookRepository.getAllComicBooksForSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicBookList);
-
-    final List<ComicBook> result =
-        service.getAllComicBooksForSeriesAndVolume(TEST_SERIES, TEST_VOLUME, TEST_EMAIL, true);
-
-    assertNotNull(result);
-    assertFalse(result.isEmpty());
-    assertTrue(result.contains(comicBook));
-    assertFalse(result.contains(readComicBook));
-
-    Mockito.verify(comicBookRepository, Mockito.times(1))
-        .getAllComicBooksForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
   }
 
   @Test
@@ -1679,9 +1227,9 @@ public class ComicBookServiceTest {
   @Test
   public void testGetComicBookssForSearchTerms() {
     Mockito.when(comicBookRepository.findForSearchTerms(Mockito.anyString()))
-        .thenReturn(comicBookList);
+        .thenReturn(comicDetailList);
 
-    final List<ComicBook> result = service.getComicBooksForSearchTerms(TEST_SEARCH_TERMS);
+    final List<ComicDetail> result = service.getComicBooksForSearchTerms(TEST_SEARCH_TERMS);
 
     Mockito.verify(comicBookRepository, Mockito.times(1)).findForSearchTerms(TEST_SEARCH_TERMS);
   }

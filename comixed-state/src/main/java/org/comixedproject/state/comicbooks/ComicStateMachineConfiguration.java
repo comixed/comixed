@@ -56,8 +56,6 @@ public class ComicStateMachineConfiguration
   @Autowired private ComicBookDetailsUpdatedAction comicBookDetailsUpdatedAction;
   @Autowired private RecreateComicFileAction recreateComicFileAction;
   @Autowired private ComicFileRecreatedAction comicFileRecreatedAction;
-  @Autowired private ComicAlreadyReadByUserGuard comicAlreadReadByUserGuard;
-  @Autowired private ComicNotAlreadyReadByUserGuard comicNotAlreadReadByUserGuard;
   @Autowired private PrepareToPurgeComicAction prepareToPurgeComicAction;
 
   @Override
@@ -282,26 +280,22 @@ public class ComicStateMachineConfiguration
         .source(ComicState.STABLE)
         .target(ComicState.STABLE)
         .event(ComicEvent.markAsRead)
-        .guard(comicNotAlreadReadByUserGuard)
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.markAsRead)
-        .guard(comicNotAlreadReadByUserGuard)
         // the comic has been marked as unread
         .and()
         .withExternal()
         .source(ComicState.STABLE)
         .target(ComicState.STABLE)
         .event(ComicEvent.markAsUnread)
-        .guard(comicAlreadReadByUserGuard)
         .and()
         .withExternal()
         .source(ComicState.CHANGED)
         .target(ComicState.CHANGED)
         .event(ComicEvent.markAsUnread)
-        .guard(comicAlreadReadByUserGuard)
         // the comic was marked for deletion
         .and()
         .withExternal()

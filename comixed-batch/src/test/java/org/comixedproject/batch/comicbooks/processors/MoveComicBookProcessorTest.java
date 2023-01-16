@@ -81,7 +81,7 @@ public class MoveComicBookProcessorTest {
     Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
     Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(
                 Mockito.any(ComicBook.class), Mockito.anyString()))
@@ -90,7 +90,7 @@ public class MoveComicBookProcessorTest {
             comicFileAdaptor.findAvailableFilename(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
-    Mockito.when(comicBook.getFile()).thenReturn(comicFile);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.doNothing()
         .when(fileAdaptor)
         .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
@@ -124,7 +124,7 @@ public class MoveComicBookProcessorTest {
     Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
     Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
     Mockito.when(
             comicFileAdaptor.createFilenameFromRule(
                 Mockito.any(ComicBook.class), Mockito.anyString()))
@@ -133,7 +133,7 @@ public class MoveComicBookProcessorTest {
             comicFileAdaptor.findAvailableFilename(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
-    Mockito.when(comicBook.getFile()).thenReturn(comicFile);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.doThrow(IOException.class)
         .when(fileAdaptor)
         .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());

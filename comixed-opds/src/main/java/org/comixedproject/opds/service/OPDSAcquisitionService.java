@@ -33,14 +33,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.opds.OPDSException;
 import org.comixedproject.opds.OPDSUtils;
 import org.comixedproject.opds.model.CollectionType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSLink;
-import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.service.lists.ReadingListException;
 import org.comixedproject.service.lists.ReadingListService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 public class OPDSAcquisitionService {
-  @Autowired private ComicBookService comicBookService;
+  public static final String TAG_TYPE_CHARACTER = "CHARACTER";
+  public static final String TAG_TYPE_TEAM = "TEAM";
+  public static final String TAG_TYPE_LOCATION = "LOCATION";
+  public static final String TAG_TYPE_STORY = "STORY";
+
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private ReadingListService readingListService;
   @Autowired private OPDSUtils opdsUtils;
 
@@ -75,33 +80,38 @@ public class OPDSAcquisitionService {
       final CollectionType collectionType,
       final String collectionName,
       final boolean unread) {
+    String feedLabel = "";
+    String feedId = "";
+    String tagType = "";
     switch (collectionType) {
       case characters:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Character: %s", collectionName), String.valueOf(CHARACTERS_ID)),
-            this.comicBookService.getAllForCharacter(collectionName, email, unread));
+        feedLabel = String.format("Character: %s", collectionName);
+        feedId = String.valueOf(CHARACTERS_ID);
+        tagType = TAG_TYPE_CHARACTER;
+        break;
       case teams:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Team: %s", collectionName), String.valueOf(TEAMS_ID)),
-            this.comicBookService.getAllForTeam(collectionName, email, unread));
+        feedLabel = String.format("Team: %s", collectionName);
+        feedId = String.valueOf(TEAMS_ID);
+        tagType = TAG_TYPE_TEAM;
+        break;
       case locations:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Location: %s", collectionName), String.valueOf(LOCATIONS_ID)),
-            this.comicBookService.getAllForLocation(collectionName, email, unread));
+        feedLabel = String.format("Location: %s", collectionName);
+        feedId = String.valueOf(LOCATIONS_ID);
+        tagType = TAG_TYPE_LOCATION;
+        break;
       case stories:
-        return this.createCollectionEntriesFeed(
-            new OPDSAcquisitionFeed(
-                String.format("Story: %s", collectionName), String.valueOf(STORIES_ID)),
-            this.comicBookService.getAllForStory(collectionName, email, unread));
+        feedLabel = String.format("Story: %s", collectionName);
+        feedId = String.valueOf(STORIES_ID);
+        tagType = TAG_TYPE_STORY;
+        break;
     }
-    return null;
+    return this.createCollectionEntriesFeed(
+        new OPDSAcquisitionFeed(String.format(feedLabel, collectionName), feedId),
+        this.comicDetailService.getAllComicsForTag(tagType, email, unread));
   }
 
   private OPDSAcquisitionFeed createCollectionEntriesFeed(
-      final OPDSAcquisitionFeed feed, final List<ComicBook> entries) {
+      final OPDSAcquisitionFeed feed, final List<ComicDetail> entries) {
     entries.forEach(
         comic -> {
           log.trace("Adding comic to collection entries: {}", comic.getId());
@@ -148,7 +158,7 @@ public class OPDSAcquisitionService {
             String.valueOf(
                 this.opdsUtils.createIdForEntry(
                     "PUBLISHER:SERIES:VOLUME", publisher + ":" + series + ":" + volume)));
-    this.comicBookService
+    this.comicDetailService
         .getAllComicBooksForPublisherAndSeriesAndVolume(publisher, series, volume, email, unread)
         .forEach(
             comicBook -> {
@@ -192,12 +202,12 @@ public class OPDSAcquisitionService {
             String.format("%s v%s", series, volume),
             String.valueOf(
                 this.opdsUtils.createIdForEntry("SERIES:VOLUME", series + ":" + volume)));
-    this.comicBookService
-        .getAllComicBooksForSeriesAndVolume(series, volume, email, unread)
+    this.comicDetailService
+        .getAllComicsForSeriesAndVolume(series, volume, email, unread)
         .forEach(
-            comicBook -> {
+            comicDetail -> {
               log.trace("Adding comic book to feed");
-              result.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
+              result.getEntries().add(this.opdsUtils.createComicEntry(comicDetail));
             });
     result
         .getLinks()
@@ -227,12 +237,12 @@ public class OPDSAcquisitionService {
       final ReadingList list = this.readingListService.loadReadingListForUser(email, id);
       final OPDSAcquisitionFeed response =
           new OPDSAcquisitionFeed(
-              String.format("Reading List: %s (%d)", list.getName(), list.getComicBooks().size()),
+              String.format("Reading List: %s (%d)", list.getName(), list.getEntries().size()),
               String.valueOf(READING_LIST_FACTOR_ID + list.getId()));
       response
           .getLinks()
           .add(new OPDSLink(NAVIGATION_FEED_LINK_TYPE, SELF, String.format("/opds/lists/%d/", id)));
-      list.getComicBooks()
+      list.getEntries().stream()
           .forEach(
               comic -> {
                 log.trace("Adding comic to reading list entries: {}", comic.getId());
@@ -267,7 +277,7 @@ public class OPDSAcquisitionService {
                 simpleDateFormat.format(weekStarts), simpleDateFormat.format(weekEnds)),
             String.valueOf(COMIC_STORE_DATE_FOR_YEAR_ID + year));
     log.trace("Loading comics");
-    this.comicBookService.getComicsForYearAndWeek(year, week, email, unread).stream()
+    this.comicDetailService.getComicsForYearAndWeek(year, week, email, unread).stream()
         .forEach(
             comicBook -> {
               log.trace("Adding comic to collection entries: {}", comicBook.getId());
@@ -302,11 +312,11 @@ public class OPDSAcquisitionService {
     final OPDSAcquisitionFeed response =
         new OPDSAcquisitionFeed(String.format("Search for term: %s", term), term);
     log.trace("Loading comics");
-    this.comicBookService.getComicBooksForSearchTerms(term).stream()
+    this.comicDetailService.getComicForSearchTerm(term).stream()
         .forEach(
-            comicBook -> {
-              log.trace("Adding comic to collection entries: {}", comicBook.getId());
-              response.getEntries().add(this.opdsUtils.createComicEntry(comicBook));
+            comicDetail -> {
+              log.trace("Adding comic to collection entries: {}", comicDetail.getId());
+              response.getEntries().add(this.opdsUtils.createComicEntry(comicDetail));
             });
     response
         .getLinks()

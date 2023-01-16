@@ -144,15 +144,15 @@ export class ComicBookCoversComponent
     return this._comicBooksObservable.getValue();
   }
 
-  @Input() set comicBooks(comicBooks: ComicDetail[]) {
-    this.logger.trace('Setting comics:', comicBooks);
-    this.dataSource.data = _.cloneDeep(comicBooks);
+  @Input() set comicBooks(comicDetails: ComicDetail[]) {
+    this.logger.trace('Setting comics:', comicDetails);
+    this.dataSource.data = _.cloneDeep(comicDetails);
     this.pageIndex = this._pageIndex;
     this.sortData();
   }
 
   @Input() set lastRead(lastRead: LastRead[]) {
-    this._readComicIds = lastRead.map(entry => entry.comicBook.id);
+    this._readComicIds = lastRead.map(entry => entry.comicDetail.id);
   }
 
   get selectedComicBooks(): ComicDetail[] {
@@ -169,36 +169,36 @@ export class ComicBookCoversComponent
     this.dataSource.disconnect();
   }
 
-  isSelected(comicBook: ComicDetail): boolean {
-    return this.selectedIds.includes(comicBook.comicId);
+  isSelected(comicDetail: ComicDetail): boolean {
+    return this.selectedIds.includes(comicDetail.comicId);
   }
 
-  onSelectionChanged(comicBook: ComicDetail, selected: boolean): void {
+  onSelectionChanged(comicDetail: ComicDetail, selected: boolean): void {
     if (selected) {
-      this.logger.trace('Marking comic as selected:', comicBook);
-      this.store.dispatch(selectComicBooks({ ids: [comicBook.comicId] }));
+      this.logger.trace('Marking comic as selected:', comicDetail);
+      this.store.dispatch(selectComicBooks({ ids: [comicDetail.comicId] }));
     } else {
-      this.logger.trace('Unmarking comic as selected:', comicBook);
-      this.store.dispatch(deselectComicBooks({ ids: [comicBook.comicId] }));
+      this.logger.trace('Unmarking comic as selected:', comicDetail);
+      this.store.dispatch(deselectComicBooks({ ids: [comicDetail.comicId] }));
     }
   }
 
-  onShowContextMenu(comic: ComicDetail, x: string, y: string): void {
-    this.logger.trace('Popping up context menu for:', comic);
-    this.comic = comic;
+  onShowContextMenu(comicDetail: ComicDetail, x: string, y: string): void {
+    this.logger.trace('Popping up context menu for:', comicDetail);
+    this.comic = comicDetail;
     this.contextMenuX = x;
     this.contextMenuY = y;
     this.contextMenu.openMenu();
   }
 
-  onShowComicDetails(comic: ComicDetail): void {
-    this.logger.trace('Showing comic details:', comic);
-    this.dialog.open(ComicDetailsDialogComponent, { data: comic });
+  onShowComicDetails(comicDetail: ComicDetail): void {
+    this.logger.trace('Showing comic details:', comicDetail);
+    this.dialog.open(ComicDetailsDialogComponent, { data: comicDetail });
   }
 
-  onMarkOneComicRead(comic: ComicDetail, read: boolean): void {
-    this.logger.trace('Setting one comic read state:', comic, read);
-    this.store.dispatch(setComicBooksRead({ comicBooks: [comic], read }));
+  onMarkOneComicRead(comicDetail: ComicDetail, read: boolean): void {
+    this.logger.trace('Setting one comic read state:', comicDetail, read);
+    this.store.dispatch(setComicBooksRead({ comicBooks: [comicDetail], read }));
   }
 
   onMarkMultipleComicsRead(read: boolean): void {
@@ -216,11 +216,11 @@ export class ComicBookCoversComponent
     }
   }
 
-  isChanged(comic: ComicDetail): boolean {
-    return comic.comicState === ComicBookState.CHANGED;
+  isChanged(comicDetail: ComicDetail): boolean {
+    return comicDetail.comicState === ComicBookState.CHANGED;
   }
 
-  onUpdateMetadata(comic: ComicDetail): void {
+  onUpdateMetadata(comicDetail: ComicDetail): void {
     this.logger.trace('Confirming updating ComicInfo.xml');
     this.confirmationService.confirm({
       title: this.translateService.instant(
@@ -231,14 +231,18 @@ export class ComicBookCoversComponent
         { count: 1 }
       ),
       confirm: () => {
-        this.logger.trace('Updating comic info:', comic);
-        this.store.dispatch(updateMetadata({ ids: [comic.comicId] }));
+        this.logger.trace('Updating comic info:', comicDetail);
+        this.store.dispatch(updateMetadata({ ids: [comicDetail.comicId] }));
       }
     });
   }
 
-  onMarkAsDeleted(comic: ComicDetail, deleted: boolean): void {
-    this.logger.trace('Confirming deleted state with user:', comic, deleted);
+  onMarkAsDeleted(comicDetail: ComicDetail, deleted: boolean): void {
+    this.logger.trace(
+      'Confirming deleted state with user:',
+      comicDetail,
+      deleted
+    );
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'comic-book.mark-as-deleted.confirmation-title',
@@ -251,9 +255,9 @@ export class ComicBookCoversComponent
         { deleted }
       ),
       confirm: () => {
-        this.logger.trace('Firing deleted state change:', comic, deleted);
+        this.logger.trace('Firing deleted state change:', comicDetail, deleted);
         this.store.dispatch(
-          markComicsDeleted({ comicBooks: [comic], deleted })
+          markComicsDeleted({ comicBooks: [comicDetail], deleted })
         );
       }
     });
@@ -331,20 +335,22 @@ export class ComicBookCoversComponent
     );
   }
 
-  isRead(comic: ComicDetail): boolean {
-    return this.readComicIds.includes(comic.comicId);
+  isRead(comicDetail: ComicDetail): boolean {
+    return this.readComicIds.includes(comicDetail.id);
   }
 
-  downloadComicData(comics: ComicDetail[]): void {
-    this.logger.debug('Downloading comic metadata:', comics);
+  downloadComicData(comicDetails: ComicDetail[]): void {
+    this.logger.debug('Downloading comic metadata:', comicDetails);
     this.fileDownloadService.saveFileContent({
-      content: new Blob([JSON.stringify(comics)], { type: 'application/json' }),
+      content: new Blob([JSON.stringify(comicDetails)], {
+        type: 'application/json'
+      }),
       filename: 'debug-metadata.json'
     });
   }
 
-  isDeleted(comic: ComicDetail): boolean {
-    return comic.comicState === ComicBookState.DELETED;
+  isDeleted(comicDetail: ComicDetail): boolean {
+    return comicDetail.comicState === ComicBookState.DELETED;
   }
 
   sortData(): void {
@@ -368,7 +374,7 @@ export class ComicBookCoversComponent
     title: string,
     message: string,
     format: string,
-    comics: ComicDetail[]
+    comicDetails: ComicDetail[]
   ): void {
     const archiveType = archiveTypeFromString(format);
     this.logger.trace('Confirming conversion with user');
@@ -379,7 +385,7 @@ export class ComicBookCoversComponent
         this.logger.trace('Firing action to convert comics');
         this.store.dispatch(
           convertComics({
-            comicBooks: comics,
+            comicBooks: comicDetails,
             archiveType,
             deletePages: true,
             renamePages: true
@@ -420,7 +426,7 @@ export class ComicBookCoversComponent
     });
   }
 
-  isUnprocessed(comic: ComicDetail): boolean {
-    return comic.comicState === ComicBookState.UNPROCESSED;
+  isUnprocessed(comicDetail: ComicDetail): boolean {
+    return comicDetail.comicState === ComicBookState.UNPROCESSED;
   }
 }

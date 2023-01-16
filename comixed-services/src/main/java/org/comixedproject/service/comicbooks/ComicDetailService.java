@@ -18,7 +18,13 @@
 
 package org.comixedproject.service.comicbooks;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
@@ -47,5 +53,320 @@ public class ComicDetailService {
   public List<ComicDetail> loadById(final long lastId, final int maximum) {
     log.debug("Loading comic detail records: last id={} maximum={}", lastId, maximum);
     return this.comicDetailRepository.getWithIdGreaterThan(lastId, PageRequest.of(0, maximum));
+  }
+
+  /**
+   * Returns the set of all publishers. Filters out comics read by the user if the flag is set.
+   *
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the publishers
+   */
+  public Set<String> getAllPublishers(final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading all publishers with unread comics: email={}", email);
+      return this.comicDetailRepository.getAllUnreadPublishers(email);
+    } else {
+      log.debug("Loading all publishers");
+      return this.comicDetailRepository.getAllPublishers();
+    }
+  }
+
+  /**
+   * Returns the set of series for the given publisher. Filters out comics read by the user if the
+   * flag is set.
+   *
+   * @param publisher the publisher
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the series
+   */
+  public Set<String> getAllSeriesForPublisher(
+      final String publisher, final String email, final boolean unread) {
+    if (unread) {
+      log.debug(
+          "Loading all series for publisher with unread comics: publisher={} email={}",
+          publisher,
+          email);
+      return this.comicDetailRepository.getAllUnreadSeriesForPublisher(publisher, email);
+    } else {
+      log.debug("Loading all series for publisher: publisher={}", publisher);
+      return this.comicDetailRepository.getAllSeriesForPublisher(publisher);
+    }
+  }
+
+  /**
+   * Returns the set of volumes for the given publisher and series. Filters out comics read by the
+   * user if the flag is set.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the volumes
+   */
+  public Set<String> getAllVolumesForPublisherAndSeries(
+      final String publisher, final String series, final String email, final boolean unread) {
+    if (unread) {
+      log.debug(
+          "Loading all volumes for publisher and series with unread comics: publisher={} series={} email={}",
+          publisher,
+          series,
+          email);
+      return this.comicDetailRepository.getAllUnreadVolumesForPublisherAndSeries(
+          publisher, series, email);
+    } else {
+      log.debug(
+          "LOading all volumes for publisher and series: publisher={} series={} email={}",
+          publisher,
+          series);
+      return this.comicDetailRepository.getAllVolumesForPublisherAndSeries(publisher, series);
+    }
+  }
+
+  /**
+   * Returns the list of all series.
+   *
+   * @return the series list
+   */
+  public Set<String> getAllSeries() {
+    log.debug("Loading all series");
+    return this.comicDetailRepository.getAllSeries();
+  }
+
+  /**
+   * Returns the set of series names. Filters out comics read by the user if the flag is set.
+   *
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the series
+   */
+  public Set<String> getAllSeries(final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading all series with unread comics: email={}", email);
+      return this.comicDetailRepository.getAllUnreadSeries(email);
+    } else {
+      log.debug("Loading all series");
+      return this.comicDetailRepository.getAllSeries();
+    }
+  }
+
+  /**
+   * Returns the set of volumes for the given series. Filters out comics read by the user if the
+   * flag is set.
+   *
+   * @param series the series name
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the volumes
+   */
+  public Set<String> getAllVolumesForSeries(
+      final String series, final String email, final boolean unread) {
+    if (unread) {
+      log.debug(
+          "Loading all volumes for series with unread comics: series={} email={}", series, email);
+      return this.comicDetailRepository.getAllUnreadVolumesForSeries(series, email);
+    } else {
+      log.debug("Loading all volumes for series: {}", series);
+      return this.comicDetailRepository.getAllVolumesForSeries(series);
+    }
+  }
+
+  /**
+   * Returns the list of entries for the given series and volume. Filters out comics read by the
+   * user if the flag is set.
+   *
+   * @param series the series
+   * @param volume the volume
+   * @param email the user email
+   * @param unread the unread flag
+   * @return the comic details
+   */
+  public List<ComicDetail> getAllComicsForSeriesAndVolume(
+      final String series, final String volume, final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading unread issues: series={} volume={} email={}", series, volume, email);
+      return this.comicDetailRepository.getAllUnreadForSeriesAndVolume(series, volume, email);
+    }
+
+    log.debug("Loading all issues: series={} volume={}", series, volume);
+    return this.comicDetailRepository.getAllForSeriesAndVolume(series, volume);
+  }
+
+  /**
+   * Returns the list of entries for the given publisher, series, and volume. Optionally filters by
+   * the unread status for the given user.
+   *
+   * @param publisher the publisher
+   * @param series the series
+   * @param volume the volume
+   * @param email the user email
+   * @param unread the unread flag
+   * @return the comic details
+   */
+  public List<ComicDetail> getAllComicBooksForPublisherAndSeriesAndVolume(
+      final String publisher,
+      final String series,
+      final String volume,
+      final String email,
+      final boolean unread) {
+    if (unread) {
+      log.debug(
+          "Loading unread comics: publisher={} series={} volume={} email={}",
+          publisher,
+          series,
+          volume,
+          email);
+      return this.comicDetailRepository.getAllUnreadForPublisherAndSeriesAndVolume(
+          publisher, series, volume, email);
+    }
+
+    log.debug(
+        "Loading comics: publisher={} series={} volume={} email={}",
+        publisher,
+        series,
+        volume,
+        email);
+    return this.comicDetailRepository.getAllForPublisherAndSeriesAndVolume(
+        publisher, series, volume);
+  }
+
+  /**
+   * Returns the set of all comics with a given tag type. Optionally filters by the unread state for
+   * the given user.
+   *
+   * @param tagType the tag type
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the comic details
+   */
+  public Set<String> getAllValuesForTag(
+      final String tagType, final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading all unread comics: tag type={} email={}", tagType, email);
+      return this.comicDetailRepository.getAllUnreadValuesForTagType(tagType, email);
+    } else {
+      log.debug("Lading all comics: tag type={}", tagType);
+      return this.comicDetailRepository.getAllValuesForTagType(tagType);
+    }
+  }
+
+  /**
+   * Returns the list of all cover date years. Optionally filters by the unread state for the given
+   * user.
+   *
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the years
+   */
+  public Set<Integer> getAllYears(final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading all years with unread comics: email={}", email);
+      return this.comicDetailRepository.getAllUnreadYears(email);
+    } else {
+      log.debug("Loading all years");
+      return this.comicDetailRepository.getAllYears();
+    }
+  }
+
+  /**
+   * Returns the list of all weeks for a given year. Optionally filters by the unread state for the
+   * given user.
+   *
+   * @param year the year
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the weeks
+   */
+  public Set<Integer> getAllWeeksForYear(final int year, final String email, final boolean unread) {
+    final GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+    if (unread) {
+      log.debug("Loading all weeks with unread comics for year: year={} email={}", year, email);
+      return this.comicDetailRepository.getAllUnreadWeeksForYear(year, email).stream()
+          .map(
+              coverDate -> {
+                calendar.setTime(coverDate);
+                return calendar.get(Calendar.WEEK_OF_YEAR);
+              })
+          .collect(Collectors.toSet());
+    } else {
+      log.debug("Loading all weeks for year: year={}", year);
+      return this.comicDetailRepository.getAllWeeksForYear(year).stream()
+          .map(
+              coverDate -> {
+                calendar.setTime(coverDate);
+                return calendar.get(Calendar.WEEK_OF_YEAR);
+              })
+          .collect(Collectors.toSet());
+    }
+  }
+
+  /**
+   * Returns the list of comics for the given year and week. Optionally filters by the unread state
+   * for the given user.
+   *
+   * @param year the year
+   * @param week the week
+   * @param email the user's email
+   * @param unread the unread flag
+   * @return the matching comics
+   */
+  public List<ComicDetail> getComicsForYearAndWeek(
+      final int year, final int week, final String email, final boolean unread) {
+    log.trace("Converting year and week to start and end dates");
+    final GregorianCalendar calendar = new GregorianCalendar();
+    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+    calendar.set(Calendar.YEAR, year);
+    calendar.set(Calendar.WEEK_OF_YEAR, week);
+    log.trace("Getting first day of requested week");
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+    final Date startDate = calendar.getTime();
+    log.trace("Getting last day of requested week");
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+    final Date endDate = calendar.getTime();
+
+    if (unread) {
+      log.debug(
+          "Loading unread comics for given year and week: year={} week={} email={}",
+          year,
+          week,
+          email);
+      return this.comicDetailRepository.getAllUnreadForYearAndWeek(startDate, endDate, email);
+    } else {
+      log.debug("Loading all comics for year and week: year={} week={}", year, week);
+      return this.comicDetailRepository.getAllForYearAndWeek(startDate, endDate);
+    }
+  }
+
+  /**
+   * Returns all comics that match the given search term.
+   *
+   * @param term the search term
+   * @return the matching comics
+   */
+  public List<ComicDetail> getComicForSearchTerm(final String term) {
+    log.debug("Loading all comics for search term: \"{}\"", term);
+    return this.comicDetailRepository.getForSearchTerm(term);
+  }
+
+  /**
+   * Returns all comics with the given tag type. Optionally filters by the unread state for the
+   * given user.
+   *
+   * @param tagType the tag type
+   * @param email the use's email
+   * @param unread the unread flag
+   * @return the matching comics
+   */
+  public List<ComicDetail> getAllComicsForTag(
+      final String tagType, final String email, final boolean unread) {
+    if (unread) {
+      log.debug("Loading all unread comics for tag type: tag type={} email={}", tagType, email);
+      return this.comicDetailRepository.getAllUnreadComicsForTagType(tagType, email);
+    } else {
+      log.debug("Loading all comics for tag type: tag type={}", tagType);
+      return this.comicDetailRepository.getAllComicsForTagType(tagType);
+    }
   }
 }

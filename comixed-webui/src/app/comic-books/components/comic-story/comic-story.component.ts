@@ -16,9 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
-import { MatAccordion } from '@angular/material/expansion';
+import {
+  ComicTagType,
+  CreditTags
+} from '@app/comic-books/models/comic-tag-type';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 @Component({
   selector: 'cx-comic-story',
@@ -26,7 +30,28 @@ import { MatAccordion } from '@angular/material/expansion';
   styleUrls: ['./comic-story.component.scss']
 })
 export class ComicStoryComponent {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
+  credits: ComicTag[] = [];
+  characters: ComicTag[] = [];
+  teams: ComicTag[] = [];
+  locations: ComicTag[] = [];
+  stories: ComicTag[] = [];
 
-  @Input() comic: ComicBook;
+  private _comicBook: ComicBook;
+
+  get comic(): ComicBook {
+    return this._comicBook;
+  }
+
+  @Input() set comic(comic: ComicBook) {
+    this._comicBook = comic;
+    this.credits = this.getTags(comic.detail.tags, CreditTags);
+    this.characters = this.getTags(comic.detail.tags, [ComicTagType.CHARACTER]);
+    this.teams = this.getTags(comic.detail.tags, [ComicTagType.TEAM]);
+    this.locations = this.getTags(comic.detail.tags, [ComicTagType.LOCATION]);
+    this.stories = this.getTags(comic.detail.tags, [ComicTagType.STORY]);
+  }
+
+  private getTags(tags: ComicTag[], allowed: ComicTagType[]): ComicTag[] {
+    return tags.filter(tag => allowed.includes(tag.type));
+  }
 }

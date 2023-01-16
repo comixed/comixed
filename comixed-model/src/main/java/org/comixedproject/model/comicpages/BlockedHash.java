@@ -69,7 +69,7 @@ public class BlockedHash {
 
   @Column(name = "CreatedOn", nullable = false, updatable = false)
   @JsonProperty("createdOn")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView(View.BlockedHashList.class)
   @Getter
   private Date createdOn = new Date();

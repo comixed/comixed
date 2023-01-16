@@ -18,11 +18,10 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.model.comicbooks.Credit;
+import org.comixedproject.model.comicbooks.ComicTag;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,20 +34,12 @@ public class ComicBookDataAdaptorTest {
   @InjectMocks private ComicBookMetadataAdaptor adaptor;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
-  @Mock private List<String> characterList;
-  @Mock private List<String> teamList;
-  @Mock private List<String> locationList;
-  @Mock private List<String> storyList;
-  @Mock private Set<Credit> creditList;
+  @Mock private Set<ComicTag> comicTags;
 
   @Test
   public void testClear() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicBook.getCharacters()).thenReturn(characterList);
-    Mockito.when(comicBook.getTeams()).thenReturn(teamList);
-    Mockito.when(comicBook.getLocations()).thenReturn(locationList);
-    Mockito.when(comicBook.getStories()).thenReturn(storyList);
-    Mockito.when(comicBook.getCredits()).thenReturn(creditList);
+    Mockito.when(comicDetail.getTags()).thenReturn(comicTags);
 
     adaptor.clear(comicBook);
 
@@ -57,12 +48,8 @@ public class ComicBookDataAdaptorTest {
     Mockito.verify(comicDetail, Mockito.times(1)).setVolume("");
     Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber("");
     Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(null);
-    Mockito.verify(comicBook, Mockito.times(1)).setTitle("");
-    Mockito.verify(comicBook, Mockito.times(1)).setDescription("");
-    Mockito.verify(characterList, Mockito.times(1)).clear();
-    Mockito.verify(teamList, Mockito.times(1)).clear();
-    Mockito.verify(locationList, Mockito.times(1)).clear();
-    Mockito.verify(storyList, Mockito.times(1)).clear();
-    Mockito.verify(creditList, Mockito.times(1)).clear();
+    Mockito.verify(comicDetail, Mockito.times(1)).setTitle("");
+    Mockito.verify(comicDetail, Mockito.times(1)).setDescription("");
+    Mockito.verify(comicTags, Mockito.times(1)).clear();
   }
 }

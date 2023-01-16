@@ -21,10 +21,14 @@ package org.comixedproject.model.comicbooks;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,6 +38,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -45,6 +51,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.views.View;
 import org.springframework.data.annotation.CreatedDate;
@@ -62,6 +69,7 @@ import org.springframework.data.annotation.CreatedDate;
 public class ComicDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonView({View.ComicListView.class})
   @Getter
   private Long id;
 
@@ -70,6 +78,14 @@ public class ComicDetail {
   @NonNull
   @Getter
   private ComicBook comicBook;
+
+  @Column(name = "Filename", nullable = false, unique = true, length = 1024)
+  @JsonProperty("filename")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  @NonNull
+  private String filename;
 
   @Column(name = "ArchiveType", nullable = false, updatable = true)
   @Enumerated(EnumType.STRING)
@@ -146,6 +162,43 @@ public class ComicDetail {
   @Getter
   private String issueNumber;
 
+  @Column(name = "Title", length = 128)
+  @JsonProperty("title")
+  @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
+  @Getter
+  @Setter
+  private String title;
+
+  @Column(name = "Notes", length = 128, nullable = true, updatable = true)
+  @Lob
+  @JsonProperty("notes")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String notes;
+
+  @Column(name = "Description")
+  @Lob
+  @JsonProperty("description")
+  @JsonView({View.ComicDetailsView.class})
+  @Getter
+  @Setter
+  private String description;
+
+  @OneToMany(
+      mappedBy = "comicDetail",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  @JsonProperty("tags")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class
+  })
+  @Getter
+  private Set<ComicTag> tags = new HashSet<>();
+
   @Column(name = "CoverDate", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("coverDate")
@@ -162,6 +215,7 @@ public class ComicDetail {
   @Column(name = "StoreDate", nullable = true)
   @Temporal(TemporalType.DATE)
   @JsonProperty("storeDate")
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
@@ -174,7 +228,7 @@ public class ComicDetail {
   @Column(name = "AddedDate", updatable = false, nullable = false)
   @CreatedDate
   @JsonProperty("addedDate")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
@@ -192,11 +246,33 @@ public class ComicDetail {
   @JsonProperty("comicId")
   @JsonView({
     View.ComicListView.class,
+    View.LastReadList.class,
     View.DuplicatePageDetail.class,
     View.ReadingListDetail.class
   })
   public Long getComicId() {
     return this.comicBook.getId();
+  }
+
+  /**
+   * Returns just the filename without the path.
+   *
+   * @return the filename
+   */
+  @JsonProperty("baseFilename")
+  @JsonView({View.ComicDetailsView.class})
+  public String getBaseFilename() {
+    return FilenameUtils.getName(this.filename);
+  }
+
+  /**
+   * Returns a file reference to the comic.
+   *
+   * @return the file
+   */
+  @Transient
+  public File getFile() {
+    return new File(this.filename);
   }
 
   /**
@@ -241,7 +317,7 @@ public class ComicDetail {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicDetail that = (ComicDetail) o;
-    return comicBook.equals(that.comicBook)
+    return filename.equals(that.filename)
         && archiveType == that.archiveType
         && comicState == that.comicState
         && Objects.equals(publisher, that.publisher)
@@ -249,15 +325,18 @@ public class ComicDetail {
         && Objects.equals(series, that.series)
         && Objects.equals(volume, that.volume)
         && Objects.equals(issueNumber, that.issueNumber)
+        && Objects.equals(title, that.title)
+        && Objects.equals(notes, that.notes)
+        && Objects.equals(description, that.description)
+        && Objects.equals(tags, that.tags)
         && Objects.equals(coverDate, that.coverDate)
-        && Objects.equals(storeDate, that.storeDate)
-        && Objects.equals(dateAdded, that.dateAdded);
+        && Objects.equals(storeDate, that.storeDate);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        comicBook,
+        filename,
         archiveType,
         comicState,
         publisher,
@@ -265,8 +344,11 @@ public class ComicDetail {
         series,
         volume,
         issueNumber,
+        title,
+        notes,
+        description,
+        tags,
         coverDate,
-        storeDate,
-        dateAdded);
+        storeDate);
   }
 }

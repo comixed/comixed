@@ -18,10 +18,13 @@
 
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
-import { Page } from '@app/comic-books/models/page';
+import { ComicTag } from '@app/comic-books/models/comic-tag';
 
 export interface ComicDetail {
+  id: number;
   comicId: number;
+  filename: string;
+  baseFilename: string;
   archiveType: ArchiveType;
   comicState: ComicBookState;
   publisher: string;
@@ -30,9 +33,12 @@ export interface ComicDetail {
   volume: string;
   issueNumber: string;
   sortableIssueNumber: string;
+  title: string;
+  notes: string;
+  description: string;
+  tags: ComicTag[];
   coverDate: number;
   yearPublished: number;
   storeDate: number;
   addedDate: number;
-  pages?: Page[];
 }

@@ -24,7 +24,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
 import java.util.Optional;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.repositories.RepositoryContext;
@@ -65,14 +65,14 @@ public class ReadingListRepositoryTest {
   @Autowired private ComicBookRepository comicBookRepository;
 
   private ComiXedUser reader;
-  private ComicBook comicBook1;
-  private ComicBook comicBook2;
+  private ComicDetail comicDetail1;
+  private ComicDetail comicDetail2;
 
   @Before
   public void setUp() {
     reader = userRepository.findById(TEST_USER_ID_1).get();
-    comicBook1 = comicBookRepository.findById(TEST_COMIC_ID_1).get();
-    comicBook2 = comicBookRepository.findById(TEST_COMIC_ID_2).get();
+    comicDetail1 = comicBookRepository.findById(TEST_COMIC_ID_1).get().getComicDetail();
+    comicDetail2 = comicBookRepository.findById(TEST_COMIC_ID_2).get().getComicDetail();
   }
 
   @Test
@@ -115,29 +115,29 @@ public class ReadingListRepositoryTest {
 
     list.setOwner(reader);
     list.setName(TEST_NEW_LIST_NAME);
-    list.getComicBooks().add(comicBook1);
-    list.getComicBooks().add(comicBook2);
+    list.getEntries().add(comicDetail1);
+    list.getEntries().add(comicDetail2);
 
     final ReadingList result = repository.save(list);
 
     assertNotNull(result);
     assertEquals(reader.getId(), result.getOwner().getId());
-    assertEquals(list.getComicBooks().size(), result.getComicBooks().size());
+    assertEquals(list.getEntries().size(), result.getEntries().size());
   }
 
   @Test
   public void testUpdateReadingList() {
     ReadingList list = repository.getById(TEST_READING_LIST_ID_1);
 
-    list.getComicBooks().add(comicBook2);
+    list.getEntries().add(comicDetail2);
     repository.save(list);
 
     ReadingList result = repository.getById(list.getId());
 
-    assertEquals(list.getComicBooks().size(), result.getComicBooks().size());
+    assertEquals(list.getEntries().size(), result.getEntries().size());
     boolean found = false;
-    for (ComicBook entry : result.getComicBooks()) {
-      found |= (entry.getId().longValue() == comicBook2.getId().longValue());
+    for (ComicDetail entry : result.getEntries()) {
+      found |= (entry.getId().longValue() == comicDetail2.getId().longValue());
     }
     assertTrue(found);
   }
@@ -151,29 +151,5 @@ public class ReadingListRepositoryTest {
     Optional<ReadingList> result = repository.findById(TEST_COMIC_ID_1);
 
     assertFalse(result.isPresent());
-  }
-
-  @Test
-  public void testAddComicsToReadingList() {
-    ReadingList list = repository.getById(TEST_COMIC_ID_1);
-    ComicBook newComicBook = comicBookRepository.getById(1021L);
-
-    list.getComicBooks().add(newComicBook);
-
-    ReadingList result = repository.save(list);
-
-    assertTrue(result.getComicBooks().contains(newComicBook));
-  }
-
-  @Test
-  public void testRemoveComicsFromReadingList() {
-    ReadingList list = repository.getById(TEST_COMIC_ID_1);
-    ComicBook comicBook = comicBookRepository.getById(1001L);
-
-    list.getComicBooks().remove(comicBook);
-
-    ReadingList result = repository.save(list);
-
-    assertFalse(result.getComicBooks().contains(comicBook));
   }
 }

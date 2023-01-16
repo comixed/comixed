@@ -51,6 +51,8 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { saveUserPreference } from '@app/user/actions/user.actions';
+import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 
 describe('LibraryToolbarComponent', () => {
   const COMIC_BOOKS = [
@@ -246,6 +248,24 @@ describe('LibraryToolbarComponent', () => {
 
     it('emits an event', () => {
       expect(component.selectAllComics.emit).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('toggling show cover mode', () => {
+    const SHOW_COVER = Math.random() > 0.5;
+
+    beforeEach(() => {
+      component.showCovers = SHOW_COVER;
+      component.onToggleShowCoverMode();
+    });
+
+    it('saves the user preference', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: SHOW_COMIC_COVERS_PREFERENCE,
+          value: `${!SHOW_COVER}`
+        })
+      );
     });
   });
 });

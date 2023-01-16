@@ -111,7 +111,7 @@ describe('ComicBook List Selectors', () => {
       ).not.toEqual([]);
     });
 
-    xit('can select for characters', () => {
+    it('can select for characters', () => {
       expect(
         selectComicBookListCollection(
           { [COMIC_BOOK_LIST_FEATURE_KEY]: state },
@@ -120,7 +120,7 @@ describe('ComicBook List Selectors', () => {
       ).not.toEqual([]);
     });
 
-    xit('can select for teams', () => {
+    it('can select for teams', () => {
       expect(
         selectComicBookListCollection(
           { [COMIC_BOOK_LIST_FEATURE_KEY]: state },
@@ -129,7 +129,7 @@ describe('ComicBook List Selectors', () => {
       ).not.toEqual([]);
     });
 
-    xit('can select for locations', () => {
+    it('can select for locations', () => {
       expect(
         selectComicBookListCollection(
           { [COMIC_BOOK_LIST_FEATURE_KEY]: state },
@@ -138,7 +138,7 @@ describe('ComicBook List Selectors', () => {
       ).not.toEqual([]);
     });
 
-    xit('can select for stories', () => {
+    it('can select for stories', () => {
       expect(
         selectComicBookListCollection(
           { [COMIC_BOOK_LIST_FEATURE_KEY]: state },

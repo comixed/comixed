@@ -158,7 +158,9 @@ public class ComicBookController {
 
     return ResponseEntity.ok()
         .contentLength(content.length)
-        .header("Content-Disposition", "attachment; filename=\"" + comicBook.getFilename() + "\"")
+        .header(
+            "Content-Disposition",
+            "attachment; filename=\"" + comicBook.getComicDetail().getFilename() + "\"")
         .contentType(
             MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()))
         .body(new InputStreamResource(new ByteArrayInputStream(content)));
@@ -220,7 +222,8 @@ public class ComicBookController {
     } else {
       log.debug("ComicBook is unprocessed; getting the first image instead");
       return this.getResponseEntityForImage(
-          this.comicFileService.getImportFileCover(comicBook.getFilename()), "cover-image");
+          this.comicFileService.getImportFileCover(comicBook.getComicDetail().getFilename()),
+          "cover-image");
     }
   }
 
