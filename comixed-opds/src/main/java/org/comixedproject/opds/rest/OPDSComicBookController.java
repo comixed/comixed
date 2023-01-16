@@ -81,11 +81,11 @@ public class OPDSComicBookController {
       ComicBook comicBook = this.comicBookService.getComic(id);
       log.trace("Marking comic as read by user");
       this.lastReadService.setLastReadState(principal.getName(), id, true);
-      log.trace("Returning encoded file: {}", comicBook.getFilename());
+      log.trace("Returning encoded file: {}", comicBook.getComicDetail().getFilename());
       return this.webResponseEncoder.encode(
-          (int) comicBook.getFile().length(),
-          new InputStreamResource(new FileInputStream(comicBook.getFile())),
-          comicBook.getBaseFilename(),
+          (int) comicBook.getComicDetail().getFile().length(),
+          new InputStreamResource(new FileInputStream(comicBook.getComicDetail().getFile())),
+          comicBook.getComicDetail().getBaseFilename(),
           MediaType.parseMediaType(comicBook.getComicDetail().getArchiveType().getMimeType()));
     } catch (ComicBookException | FileNotFoundException | LastReadException error) {
       throw new OPDSException("Failed to download comic: id=" + id, error);

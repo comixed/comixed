@@ -1,3 +1,38 @@
+<h2>
+  {{
+    "collection-list.page-title"
+      | translate
+        : { collection: collectionType, count: dataSource.data?.length }
+  }}
+</h2>
+
+<mat-toolbar class="cx-primary-light-background cx-width-100">
+  <mat-form-field class="cx-width-50" appearance="standard">
+    <input
+      matInput
+      #filterInput
+      id="volume-search-text-input"
+      [placeholder]="'collection-list.placeholder.filter-entries' | translate"
+      (keyup)="dataSource.filter = filterInput.value"
+    />
+  </mat-form-field>
+  <div class="cx-spacer"></div>
+  <mat-paginator
+    showFirstLastButtons
+    class="cx-primary-light-background cx-height-100"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="pageOptions"
+    (page)="
+      urlParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
+    "
+  ></mat-paginator>
+</mat-toolbar>
+
 <mat-table
   [dataSource]="dataSource"
   matSort

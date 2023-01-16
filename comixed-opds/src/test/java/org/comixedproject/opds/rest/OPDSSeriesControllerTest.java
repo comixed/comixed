@@ -27,6 +27,7 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -51,17 +52,24 @@ public class OPDSSeriesControllerTest {
   @Mock private OPDSAcquisitionFeed opdsAcquisitionFeed;
   @Mock private Principal principal;
 
+  @Before
+  public void setUp() {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+  }
+
   @Test
   public void testGetRootFeedForSeries() {
-    Mockito.when(opdsNavigationService.getRootFeedForSeries(Mockito.anyBoolean()))
+    Mockito.when(
+            opdsNavigationService.getRootFeedForSeries(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
 
-    final OPDSNavigationFeed result = controller.getRootFeedForSeries(TEST_UNREAD);
+    final OPDSNavigationFeed result = controller.getRootFeedForSeries(principal, TEST_UNREAD);
 
     assertNotNull(result);
     assertSame(opdsNavigationFeed, result);
 
-    Mockito.verify(opdsNavigationService, Mockito.times(1)).getRootFeedForSeries(TEST_UNREAD);
+    Mockito.verify(opdsNavigationService, Mockito.times(1))
+        .getRootFeedForSeries(TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
@@ -70,23 +78,22 @@ public class OPDSSeriesControllerTest {
         .thenReturn(TEST_SERIES_NAME_DECODED);
     Mockito.when(
             opdsNavigationService.getVolumesFeedForSeries(
-                Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
 
     final OPDSNavigationFeed result =
-        controller.getVolumesFeedForSeries(TEST_SERIES_NAME_ENCODED, TEST_UNREAD);
+        controller.getVolumesFeedForSeries(principal, TEST_SERIES_NAME_ENCODED, TEST_UNREAD);
 
     assertNotNull(result);
     assertSame(opdsNavigationFeed, result);
 
     Mockito.verify(opdsUtils, Mockito.times(1)).urlDecodeString(TEST_SERIES_NAME_ENCODED);
     Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getVolumesFeedForSeries(TEST_SERIES_NAME_DECODED, TEST_UNREAD);
+        .getVolumesFeedForSeries(TEST_SERIES_NAME_DECODED, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetComicFeedForSeriesAndVolume() {
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(opdsUtils.urlDecodeString(TEST_SERIES_NAME_ENCODED))
         .thenReturn(TEST_SERIES_NAME_DECODED);
     Mockito.when(opdsUtils.urlDecodeString(TEST_VOLUME_NAME_ENCODED))

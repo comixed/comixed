@@ -23,7 +23,6 @@ import {
   COMIC_DETAIL_3
 } from '@app/comic-books/comic-books.fixtures';
 import { LastRead } from '@app/last-read/models/last-read';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 
 describe('UnreadComicsPipe', () => {
   const UNREAD_COMIC = COMIC_DETAIL_1;
@@ -34,7 +33,7 @@ describe('UnreadComicsPipe', () => {
   const LAST_READ_DATES = [
     {
       id: 1,
-      comicBook: { id: READ_COMIC.comicId } as ComicBook,
+      comicDetail: READ_COMIC,
       lastRead: new Date().getTime()
     } as LastRead
   ];

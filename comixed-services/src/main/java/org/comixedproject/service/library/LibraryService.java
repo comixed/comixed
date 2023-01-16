@@ -105,7 +105,7 @@ public class LibraryService {
               log.trace(
                   "Preparing comics for consolidation: [{}] {}",
                   comic.getId(),
-                  comic.getFilename());
+                  comic.getComicDetail().getFilename());
               this.comicStateHandler.fireEvent(comic, ComicEvent.consolidateComic, headers);
             });
   }

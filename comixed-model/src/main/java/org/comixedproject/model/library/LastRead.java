@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
-import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.user.ComiXedUser;
 import org.comixedproject.views.View;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,13 +46,13 @@ public class LastRead {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "ComicBookId", insertable = true, updatable = false, nullable = false)
-  @JsonProperty("comicBook")
+  @JoinColumn(name = "ComicDetailId", insertable = true, updatable = false, nullable = false)
+  @JsonProperty("comicDetail")
   @JsonView({View.LastReadList.class})
   @Getter
   @Setter
   @NonNull
-  private ComicBook comicBook;
+  private ComicDetail comicDetail;
 
   @ManyToOne
   @JoinColumn(name = "UserId", insertable = true, updatable = false, nullable = false)
@@ -63,7 +63,7 @@ public class LastRead {
 
   @Column(name = "LastReadOn", insertable = true, updatable = false, nullable = false)
   @JsonProperty("lastRead")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({View.LastReadList.class})
   @Getter
   @Setter
@@ -80,13 +80,13 @@ public class LastRead {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final LastRead that = (LastRead) o;
-    return Objects.equals(comicBook, that.comicBook)
+    return Objects.equals(comicDetail, that.comicDetail)
         && Objects.equals(user, that.user)
         && Objects.equals(lastReadOn, that.lastReadOn);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(comicBook, user, lastReadOn);
+    return Objects.hash(comicDetail, user, lastReadOn);
   }
 }

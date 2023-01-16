@@ -94,7 +94,7 @@ public class ComicBookInsertProcessorTest {
   public void testProcess() throws Exception {
     Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicBookAdaptor.createComic(Mockito.anyString())).thenReturn(comicBook);
-    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
     Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
         .thenReturn(filenameMetadata);
 
@@ -118,7 +118,7 @@ public class ComicBookInsertProcessorTest {
   public void testProcessNoneApplied() throws Exception {
     Mockito.when(comicBookService.findByFilename(Mockito.anyString())).thenReturn(null);
     Mockito.when(comicBookAdaptor.createComic(Mockito.anyString())).thenReturn(comicBook);
-    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
+    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_BASE_FILENAME);
     Mockito.when(filenameScrapingRuleService.loadFilenameMetadata(Mockito.anyString()))
         .thenReturn(new FilenameMetadata());
 

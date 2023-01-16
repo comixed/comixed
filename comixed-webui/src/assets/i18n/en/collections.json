@@ -100,6 +100,10 @@
       "comic-count": "# Comics",
       "name": "Collection Name"
     },
+    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({count} Total)",
+    "placeholder": {
+      "filter-entries": "Enter text to filer the entries displayed."
+    },
     "tab-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}}",
     "text": {
       "undefined": "[UNDEFINED]"

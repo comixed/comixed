@@ -41,6 +41,6 @@ public class RemoveComicFromReadingListAction extends AbstractReadingListAction 
     log.trace("Fetching comicBook");
     final ComicBook comicBook = this.fetchComic(context);
     log.trace("Removing comicBook from reading list");
-    readingList.getComicBooks().remove(comicBook);
+    readingList.getEntries().remove(comicBook.getComicDetail());
   }
 }

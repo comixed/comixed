@@ -31,6 +31,7 @@ import java.util.List;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.net.library.PublisherAndYearSegment;
 import org.comixedproject.model.net.library.RemoteLibrarySegmentState;
@@ -40,7 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
@@ -92,51 +92,6 @@ public class ComicBookRepositoryTest {
     comicBook = repository.getById(TEST_COMIC_ID);
   }
 
-  @Test(expected = NullPointerException.class)
-  public void testFilenameIsRequired() {
-    comicBook.setFilename(null);
-    repository.save(comicBook);
-  }
-
-  @Test(expected = DataIntegrityViolationException.class)
-  public void testFilenameMustBeUnique() {
-    ComicBook newComicBook = new ComicBook();
-    newComicBook.setFilename(comicBook.getFilename());
-
-    repository.save(newComicBook);
-  }
-
-  @Test
-  public void testFilenameIsUpdatable() {
-    String filename = comicBook.getFilename().substring(1);
-    comicBook.setFilename(filename);
-    repository.save(comicBook);
-
-    ComicBook result = repository.findById(comicBook.getId()).get();
-
-    assertEquals(filename, result.getFilename());
-  }
-
-  @Test
-  public void testStoryArcs() {
-    assertEquals(1, comicBook.getStories().size());
-  }
-
-  @Test
-  public void testTeams() {
-    assertEquals(1, comicBook.getTeams().size());
-  }
-
-  @Test
-  public void testCharacters() {
-    assertEquals(3, comicBook.getCharacters().size());
-  }
-
-  @Test
-  public void testLocations() {
-    assertEquals(3, comicBook.getLocations().size());
-  }
-
   @Test
   public void testPageCount() {
     assertEquals(5, comicBook.getPageCount());
@@ -162,7 +117,7 @@ public class ComicBookRepositoryTest {
 
   @Test
   public void testFindAllUnreadByUser() {
-    List<ComicBook> result = repository.findAllUnreadByUser(TEST_USER_ID);
+    List<ComicDetail> result = repository.findAllUnreadByUser(TEST_USER_ID);
 
     assertNotNull(result);
     assertFalse(result.isEmpty());

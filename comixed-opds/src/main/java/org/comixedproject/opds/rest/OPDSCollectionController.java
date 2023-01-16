@@ -48,6 +48,7 @@ public class OPDSCollectionController {
   /**
    * Retrieves the root feed for a collection.
    *
+   * @param principal the user principal
    * @param collectionType the collection type
    * @param unread the unread flag
    * @return the feed
@@ -57,15 +58,22 @@ public class OPDSCollectionController {
   @Timed(value = "comixed.opds.collection.get-root")
   @ResponseBody
   public OPDSNavigationFeed getCollectionFeed(
+      final Principal principal,
       @NonNull @PathVariable("type") final CollectionType collectionType,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
-    log.info("Loading OPDS navigation feed for collection: {} unread={}", collectionType, unread);
-    return this.opdsNavigationService.getCollectionFeed(collectionType, unread);
+    final String email = principal.getName();
+    log.info(
+        "Loading OPDS navigation feed for collection: {} email={} unread={}",
+        collectionType,
+        email,
+        unread);
+    return this.opdsNavigationService.getCollectionFeed(collectionType, email, unread);
   }
 
   /**
    * Retrieves the feed for a single collection.
    *
+   * @param principal the user principal
    * @param collectionType the collection type
    * @param name the collection name
    * @param unread the unread flag

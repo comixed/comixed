@@ -29,9 +29,9 @@ import {
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
 import { MatTableModule } from '@angular/material/table';
@@ -42,7 +42,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CollectionListComponent', () => {
-  const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
     [COMIC_BOOK_LIST_FEATURE_KEY]: {
       ...initialComicBookListState,

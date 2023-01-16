@@ -89,8 +89,8 @@ public class OPDSComicBookControllerTest {
   @Before
   public void setUp() throws IOException {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicBook.getFile()).thenReturn(comicFile);
-    Mockito.when(comicBook.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
+    Mockito.when(comicDetail.getBaseFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(page.getFilename()).thenReturn(TEST_PAGE_NAME);
     Mockito.when(page.getWidth()).thenReturn(TEST_PAGE_WIDTH);

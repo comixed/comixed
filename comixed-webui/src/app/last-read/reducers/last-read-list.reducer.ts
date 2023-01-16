@@ -57,13 +57,13 @@ export const reducer = createReducer(
   }),
   on(lastReadDateUpdated, (state, action) => {
     const entries = state.entries
-      .filter(entry => entry.comicBook.id !== action.entry.comicBook.id)
+      .filter(entry => entry.comicDetail.id !== action.entry.comicDetail.id)
       .concat([action.entry]);
     return { ...state, entries };
   }),
   on(lastReadDateRemoved, (state, action) => {
     const entries = state.entries.filter(
-      entry => entry.comicBook.id !== action.entry.comicBook.id
+      entry => entry.comicDetail.id !== action.entry.comicDetail.id
     );
     return { ...state, entries };
   }),

@@ -41,6 +41,7 @@ import {
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 @Component({
   selector: 'cx-collection-detail',
@@ -104,13 +105,25 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
                     (comicBook.volume || '') === this.volume
                   );
                 case CollectionType.CHARACTERS:
-                  return []; // comicBook.characters.includes(this.collectionName);
+                  return comicBook.tags
+                    .filter(tag => tag.type === ComicTagType.CHARACTER)
+                    .map(tag => tag.value)
+                    .includes(this.collectionName);
                 case CollectionType.TEAMS:
-                  return []; // comicBook.teams.includes(this.collectionName);
+                  return comicBook.tags
+                    .filter(tag => tag.type === ComicTagType.TEAM)
+                    .map(tag => tag.value)
+                    .includes(this.collectionName);
                 case CollectionType.LOCATIONS:
-                  return []; // comicBook.locations.includes(this.collectionName);
+                  return comicBook.tags
+                    .filter(tag => tag.type === ComicTagType.LOCATION)
+                    .map(tag => tag.value)
+                    .includes(this.collectionName);
                 case CollectionType.STORIES:
-                  return []; // comicBook.stories.includes(this.collectionName);
+                  return comicBook.tags
+                    .filter(tag => tag.type === ComicTagType.STORY)
+                    .map(tag => tag.value)
+                    .includes(this.collectionName);
               }
             });
           });

@@ -21,6 +21,7 @@ package org.comixedproject.adaptors.comicbooks;
 import java.text.SimpleDateFormat;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -47,13 +48,9 @@ public class ComicBookMetadataAdaptor {
     comicBook.getComicDetail().setVolume("");
     comicBook.getComicDetail().setIssueNumber("");
     comicBook.getComicDetail().setCoverDate(null);
-    comicBook.setTitle("");
-    comicBook.setDescription("");
-    comicBook.getStories().clear();
-    comicBook.getTeams().clear();
-    comicBook.getCharacters().clear();
-    comicBook.getLocations().clear();
-    comicBook.getCredits().clear();
+    comicBook.getComicDetail().setTitle("");
+    comicBook.getComicDetail().setDescription("");
+    comicBook.getComicDetail().getTags().clear();
   }
 
   /**
@@ -62,23 +59,19 @@ public class ComicBookMetadataAdaptor {
    * @param comicBook the comic book
    * @return the title
    */
-  public String getDisplayableTitle(final ComicBook comicBook) {
-    if (StringUtils.hasLength(comicBook.getComicDetail().getSeries())
-        && StringUtils.hasLength(comicBook.getComicDetail().getVolume())
-        && StringUtils.hasLength(comicBook.getComicDetail().getIssueNumber())) {
-      String coverDate = "??/??";
-      if (comicBook.getComicDetail().getCoverDate() != null) {
-        coverDate = this.coverDateFormat.format(comicBook.getComicDetail().getCoverDate());
-      }
-      log.trace("Returning detailed displayable title");
-      return String.format(
-          "%s v%s #%s (%s)",
-          comicBook.getComicDetail().getSeries(),
-          comicBook.getComicDetail().getVolume(),
-          comicBook.getComicDetail().getIssueNumber(),
-          coverDate);
-    }
-    log.trace("Returning base filename as displayable title");
-    return comicBook.getBaseFilename();
+  public String getDisplayableTitle(final ComicDetail comicBook) {
+    log.trace("Getting cover date");
+    final String coverDate =
+        comicBook.getCoverDate() != null
+            ? this.coverDateFormat.format(comicBook.getCoverDate())
+            : "??/??";
+    final String series =
+        StringUtils.hasLength(comicBook.getSeries()) ? comicBook.getSeries() : "[Unnamed Series]";
+    final String volume =
+        StringUtils.hasLength(comicBook.getVolume()) ? comicBook.getVolume() : "----";
+    final String issueNumber =
+        StringUtils.hasLength(comicBook.getIssueNumber()) ? comicBook.getIssueNumber() : "##";
+    log.trace("Assembling displayable title");
+    return String.format("%s v%s #%s (%s)", series, volume, issueNumber, coverDate);
   }
 }

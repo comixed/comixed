@@ -337,7 +337,7 @@ describe('ComicEditComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        scrapeMetadataFromFilename({ filename: COMIC.baseFilename })
+        scrapeMetadataFromFilename({ filename: COMIC.detail.baseFilename })
       );
     });
   });

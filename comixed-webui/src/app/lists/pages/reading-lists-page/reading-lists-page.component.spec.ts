@@ -136,7 +136,7 @@ describe('ReadingListsPageComponent', () => {
     it('can sort by comic count', () => {
       expect(
         component.dataSource.sortingDataAccessor(LIST, 'comic-count')
-      ).toEqual(LIST.item.comicBooks.length);
+      ).toEqual(LIST.item.entries.length);
     });
 
     it('can sort by created date', () => {

@@ -81,6 +81,7 @@ import {
 } from '@app/library/reducers/library-selections.reducer';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 describe('CollectionDetailComponent', () => {
   const COMIC_BOOKS = [
@@ -272,6 +273,74 @@ describe('CollectionDetailComponent', () => {
         (activatedRoute.params as BehaviorSubject<{}>).next({
           collectionType: 'series',
           collectionName: COMIC_BOOKS[0].series,
+          volume: COMIC_BOOKS[0].volume
+        });
+      });
+
+      it('selects comics', () => {
+        expect(component.comicBooks).not.toEqual([]);
+      });
+    });
+
+    describe('when the collection type is characters', () => {
+      beforeEach(() => {
+        component.comicBooks = [];
+        (activatedRoute.params as BehaviorSubject<{}>).next({
+          collectionType: 'characters',
+          collectionName: COMIC_BOOKS[0].tags.find(
+            entry => entry.type === ComicTagType.CHARACTER
+          ).value,
+          volume: COMIC_BOOKS[0].volume
+        });
+      });
+
+      it('selects comics', () => {
+        expect(component.comicBooks).not.toEqual([]);
+      });
+    });
+
+    describe('when the collection type is teams', () => {
+      beforeEach(() => {
+        component.comicBooks = [];
+        (activatedRoute.params as BehaviorSubject<{}>).next({
+          collectionType: 'teams',
+          collectionName: COMIC_BOOKS[0].tags.find(
+            entry => entry.type === ComicTagType.TEAM
+          ).value,
+          volume: COMIC_BOOKS[0].volume
+        });
+      });
+
+      it('selects comics', () => {
+        expect(component.comicBooks).not.toEqual([]);
+      });
+    });
+
+    describe('when the collection type is locations', () => {
+      beforeEach(() => {
+        component.comicBooks = [];
+        (activatedRoute.params as BehaviorSubject<{}>).next({
+          collectionType: 'locations',
+          collectionName: COMIC_BOOKS[0].tags.find(
+            entry => entry.type === ComicTagType.LOCATION
+          ).value,
+          volume: COMIC_BOOKS[0].volume
+        });
+      });
+
+      it('selects comics', () => {
+        expect(component.comicBooks).not.toEqual([]);
+      });
+    });
+
+    describe('when the collection type is stories', () => {
+      beforeEach(() => {
+        component.comicBooks = [];
+        (activatedRoute.params as BehaviorSubject<{}>).next({
+          collectionType: 'stories',
+          collectionName: COMIC_BOOKS[0].tags.find(
+            entry => entry.type === ComicTagType.STORY
+          ).value,
           volume: COMIC_BOOKS[0].volume
         });
       });

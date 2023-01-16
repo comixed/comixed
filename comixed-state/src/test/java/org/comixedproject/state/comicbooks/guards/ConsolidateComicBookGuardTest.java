@@ -25,6 +25,7 @@ import static org.junit.Assert.assertFalse;
 import java.io.File;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.junit.Before;
@@ -48,6 +49,7 @@ public class ConsolidateComicBookGuardTest {
   @Mock private StateContext<ComicState, ComicEvent> context;
   @Mock private MessageHeaders messageHeaders;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private ComicFileAdaptor comicFileAdaptor;
 
   @Before
@@ -58,7 +60,8 @@ public class ConsolidateComicBookGuardTest {
         .thenReturn(TEST_TARGET_DIRECTORY);
     Mockito.when(messageHeaders.get(HEADER_RENAMING_RULE, String.class))
         .thenReturn(TEST_RENAMING_RULE);
-    Mockito.when(comicBook.getFile())
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getFile())
         .thenReturn(new File(TEST_TARGET_DIRECTORY, TEST_OLD_FILENAME));
   }
 

@@ -49,7 +49,8 @@ public class LoadFileDetailsProcessor implements ItemProcessor<ComicBook, ComicB
     log.trace("Getting comicBook file hash");
     try {
       fileDetails.setHash(
-          this.genericUtilitiesAdaptor.createHash(new FileInputStream(comicBook.getFilename())));
+          this.genericUtilitiesAdaptor.createHash(
+              new FileInputStream(comicBook.getComicDetail().getFilename())));
 
       return comicBook;
     } catch (IOException error) {

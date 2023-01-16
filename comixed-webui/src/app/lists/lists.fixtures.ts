@@ -27,7 +27,7 @@ export const READING_LIST_1: ReadingList = {
   owner: USER_READER,
   createdOn: new Date().getTime(),
   lastModifiedOn: new Date().getTime(),
-  comicBooks: []
+  entries: []
 };
 
 export const READING_LIST_2: ReadingList = {
@@ -37,7 +37,7 @@ export const READING_LIST_2: ReadingList = {
   owner: USER_READER,
   createdOn: new Date().getTime(),
   lastModifiedOn: new Date().getTime(),
-  comicBooks: []
+  entries: []
 };
 
 export const READING_LIST_3: ReadingList = {
@@ -47,7 +47,7 @@ export const READING_LIST_3: ReadingList = {
   owner: USER_READER,
   createdOn: new Date().getTime(),
   lastModifiedOn: new Date().getTime(),
-  comicBooks: []
+  entries: []
 };
 
 export const READING_LIST_4: ReadingList = {
@@ -57,7 +57,7 @@ export const READING_LIST_4: ReadingList = {
   owner: USER_READER,
   createdOn: new Date().getTime(),
   lastModifiedOn: new Date().getTime(),
-  comicBooks: []
+  entries: []
 };
 
 export const READING_LIST_5: ReadingList = {
@@ -67,7 +67,7 @@ export const READING_LIST_5: ReadingList = {
   owner: USER_READER,
   createdOn: new Date().getTime(),
   lastModifiedOn: new Date().getTime(),
-  comicBooks: []
+  entries: []
 };
 
 export const STORY_1: Story = {

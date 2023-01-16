@@ -85,7 +85,6 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
-import { ComicBook } from '@app/comic-books/models/comic-book';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -443,16 +442,12 @@ describe('LibraryPageComponent', () => {
           {
             id: 1,
             lastRead: new Date().getTime(),
-            comicBook: {
-              id: COMIC_BOOKS[0].comicId
-            } as ComicBook
+            comicDetail: COMIC_BOOKS[0]
           },
           {
             id: 2,
             lastRead: new Date().getTime(),
-            comicBook: {
-              id: COMIC_BOOKS[1].comicId
-            } as ComicBook
+            comicDetail: COMIC_BOOKS[1]
           }
         ];
         component.unreadOnly = true;

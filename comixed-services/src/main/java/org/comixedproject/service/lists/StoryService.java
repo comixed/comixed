@@ -30,6 +30,7 @@ import org.comixedproject.model.lists.Story;
 import org.comixedproject.model.lists.StoryState;
 import org.comixedproject.repositories.lists.StoryRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.state.lists.StoryEvent;
 import org.comixedproject.state.lists.StoryStateChangeListener;
 import org.comixedproject.state.lists.StoryStateHandler;
@@ -51,6 +52,7 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
   @Autowired private StoryStateHandler storyStateHandler;
   @Autowired private StoryRepository storyRepository;
   @Autowired private ComicBookService comicBookService;
+  @Autowired private ComicDetailService comicDetailService;
   @Autowired private PublishStoryListUpdateAction publishStoryListUpdateAction;
 
   @Override
@@ -95,8 +97,8 @@ public class StoryService implements InitializingBean, StoryStateChangeListener 
               log.trace("Adding defined story: {}", story.getName());
               result.add(story.getName());
             });
-    this.comicBookService
-        .getAllStories()
+    this.comicDetailService
+        .getAllSeries()
         .forEach(
             story -> {
               log.trace("Adding story tag: {}", story);

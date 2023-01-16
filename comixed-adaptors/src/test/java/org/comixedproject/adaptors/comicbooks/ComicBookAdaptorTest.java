@@ -96,8 +96,8 @@ public class ComicBookAdaptorTest {
   @Before
   public void setUp()
       throws ArchiveAdaptorException, AdaptorException, ContentAdaptorException, IOException {
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_COMIC_FILENAME);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(TEST_ARCHIVE_TYPE);
     Mockito.when(readableArchiveAdaptor.openArchiveForRead(Mockito.anyString()))
         .thenReturn(readHandle);
@@ -122,7 +122,8 @@ public class ComicBookAdaptorTest {
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
         .thenReturn(TEST_FINAL_FILENAME);
 
-    Mockito.when(comicBook.getFile()).thenReturn(comicFile);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
     Mockito.when(page.getFilename()).thenReturn(TEST_ENTRY_FILENAME);
     pageList.add(page);
@@ -161,7 +162,7 @@ public class ComicBookAdaptorTest {
     final ComicBook result = adaptor.createComic(TEST_COMIC_FILENAME);
 
     assertNotNull(result);
-    assertEquals(TEST_COMIC_FILENAME, result.getFilename());
+    assertEquals(TEST_COMIC_FILENAME, result.getComicDetail().getFilename());
     assertSame(TEST_ARCHIVE_TYPE, result.getComicDetail().getArchiveType());
 
     Mockito.verify(fileTypeAdaptor, Mockito.times(1)).getArchiveAdaptorFor(TEST_COMIC_FILENAME);
@@ -422,7 +423,7 @@ public class ComicBookAdaptorTest {
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(comicFile);
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(moveSourceFile.getValue(), moveDestinationFile.getValue());
-    Mockito.verify(comicBook, Mockito.times(1)).setFilename(TEST_FINAL_FILENAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setFilename(TEST_FINAL_FILENAME);
   }
 
   @Test(expected = AdaptorException.class)

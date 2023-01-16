@@ -71,9 +71,9 @@ public class ComicBookAdaptor {
     log.trace("Getting archive adaptor for comic file");
     final ArchiveAdaptor archiveAdaptor = this.fileTypeAdaptor.getArchiveAdaptorFor(filename);
     log.trace("Creating comic: {}", filename);
-    final ComicBook result = new ComicBook(filename);
+    final ComicBook result = new ComicBook();
     log.trace("Creating comic detail");
-    result.setComicDetail(new ComicDetail(result, archiveAdaptor.getArchiveType()));
+    result.setComicDetail(new ComicDetail(result, filename, archiveAdaptor.getArchiveType()));
     return result;
   }
 
@@ -87,10 +87,10 @@ public class ComicBookAdaptor {
     try {
       log.trace("Getting archive adaptor for comic book file");
       final ArchiveAdaptor archiveAdaptor =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getFilename());
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
       log.trace("Opening comic book file");
       final ArchiveReadHandle readHandle =
-          archiveAdaptor.openArchiveForRead(comicBook.getFilename());
+          archiveAdaptor.openArchiveForRead(comicBook.getComicDetail().getFilename());
       log.trace("Loading comic book file entries");
       final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
       for (int index = 0; index < entries.size(); index++) {
@@ -133,7 +133,7 @@ public class ComicBookAdaptor {
       throws AdaptorException {
     try {
       final ArchiveAdaptor sourceArchive =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getFilename());
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
       final ArchiveAdaptor destinationArchive =
           this.fileTypeAdaptor.getArchiveAdaptorFor(targetArchiveType);
 
@@ -144,7 +144,7 @@ public class ComicBookAdaptor {
 
       log.trace("Preparing to save comic book file");
       final ArchiveReadHandle readHandle =
-          sourceArchive.openArchiveForRead(comicBook.getFilename());
+          sourceArchive.openArchiveForRead(comicBook.getComicDetail().getFilename());
 
       final String temporaryFilename =
           File.createTempFile(
@@ -178,18 +178,20 @@ public class ComicBookAdaptor {
       destinationArchive.closeArchiveForWrite(writeHandle);
 
       log.trace("Replacing original file");
-      this.fileAdaptor.deleteFile(comicBook.getFile());
-      final String directory = comicBook.getFile().getAbsoluteFile().getParent();
+      this.fileAdaptor.deleteFile(comicBook.getComicDetail().getFile());
+      final String directory = comicBook.getComicDetail().getFile().getAbsoluteFile().getParent();
       final String destinationFilename =
           this.comicFileAdaptor.findAvailableFilename(
-              comicBook.getFilename(),
-              directory + File.separator + FileNameUtils.getBaseName(comicBook.getFilename()),
+              comicBook.getComicDetail().getFilename(),
+              directory
+                  + File.separator
+                  + FileNameUtils.getBaseName(comicBook.getComicDetail().getFilename()),
               0,
               targetArchiveType.getExtension());
       log.trace("Copying file: {} => {}", temporaryFilename, destinationFilename);
       this.fileAdaptor.moveFile(new File(temporaryFilename), new File(destinationFilename));
       log.trace("Updating filename: {}", destinationFilename);
-      comicBook.setFilename(destinationFilename);
+      comicBook.getComicDetail().setFilename(destinationFilename);
       log.debug("Assigning archive type to comic book: {}", targetArchiveType);
       comicBook.getComicDetail().setArchiveType(targetArchiveType);
     } catch (AdaptorException
@@ -213,10 +215,10 @@ public class ComicBookAdaptor {
     try {
       log.trace("Getting archive adaptor for comic book file");
       final ArchiveAdaptor archiveAdaptor =
-          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getFilename());
+          this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getFilename());
       log.trace("Opening archive");
       final ArchiveReadHandle readHandle =
-          archiveAdaptor.openArchiveForRead(comicBook.getFilename());
+          archiveAdaptor.openArchiveForRead(comicBook.getComicDetail().getFilename());
       log.trace("Loading page content");
       final byte[] content =
           archiveAdaptor.readEntry(readHandle, comicBook.getPages().get(pageNumber).getFilename());
@@ -280,7 +282,7 @@ public class ComicBookAdaptor {
           this.fileTypeAdaptor.getArchiveAdaptorFor(comicBook.getComicDetail().getArchiveType());
       log.trace("Opening comic book file");
       final ArchiveReadHandle readHandle =
-          archiveAdaptor.openArchiveForRead(comicBook.getFilename());
+          archiveAdaptor.openArchiveForRead(comicBook.getComicDetail().getFilename());
       log.trace("Loading comic book file entries");
       final List<ComicArchiveEntry> entries = archiveAdaptor.getEntries(readHandle);
       for (int index = 0; index < entries.size(); index++) {

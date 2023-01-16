@@ -28,6 +28,7 @@ import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,26 +53,30 @@ public class OPDSCollectionControllerTest {
   @Mock private Principal principal;
   @Mock private OPDSUtils opdsUtils;
 
+  @Before
+  public void setUp() {
+    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
+  }
+
   @Test
   public void testGetCollectionFeed() {
     Mockito.when(
             opdsNavigationService.getCollectionFeed(
-                Mockito.any(CollectionType.class), Mockito.anyBoolean()))
+                Mockito.any(CollectionType.class), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed response =
-        controller.getCollectionFeed(TEST_COLLECTION_TYPE, TEST_UNREAD);
+        controller.getCollectionFeed(principal, TEST_COLLECTION_TYPE, TEST_UNREAD);
 
     assertNotNull(response);
     assertSame(navigationFeed, response);
 
     Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getCollectionFeed(TEST_COLLECTION_TYPE, TEST_UNREAD);
+        .getCollectionFeed(TEST_COLLECTION_TYPE, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetEntriesForCollectionFeed() {
-    Mockito.when(principal.getName()).thenReturn(TEST_EMAIL);
     Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString())).thenReturn(TEST_DECODED_NAME);
     Mockito.when(
             opdsAcquisitionService.getEntriesForCollectionFeed(

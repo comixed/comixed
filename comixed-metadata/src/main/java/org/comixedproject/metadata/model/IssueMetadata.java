@@ -36,13 +36,13 @@ public class IssueMetadata {
   private String id;
 
   @JsonProperty(value = "coverDate")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter
   private Date coverDate;
 
   @JsonProperty("storeDate")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @Getter
   @Setter
   private Date storeDate;

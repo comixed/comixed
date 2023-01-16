@@ -18,7 +18,8 @@
 
 package org.comixedproject.opds.rest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -79,50 +80,56 @@ public class OPDSPublisherControllerTest {
 
   @Test
   public void testGetRootFeedForPublishers() {
-    Mockito.when(opdsNavigationService.getRootFeedForPublishers(Mockito.anyBoolean()))
+    Mockito.when(
+            opdsNavigationService.getRootFeedForPublishers(
+                Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(navigationFeed);
 
-    final OPDSNavigationFeed result = controller.getRootFeedForPublishers(TEST_UNREAD);
+    final OPDSNavigationFeed result = controller.getRootFeedForPublishers(principal, TEST_UNREAD);
 
     assertNotNull(result);
     assertSame(navigationFeed, result);
 
-    Mockito.verify(opdsNavigationService, Mockito.times(1)).getRootFeedForPublishers(TEST_UNREAD);
+    Mockito.verify(opdsNavigationService, Mockito.times(1))
+        .getRootFeedForPublishers(TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetSeriesFeedForPublisher() {
     Mockito.when(
             opdsNavigationService.getSeriesFeedForPublisher(
-                Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed result =
-        controller.getSeriesFeedForPublisher(TEST_PUBLISHER_ENCODED, TEST_UNREAD);
+        controller.getSeriesFeedForPublisher(principal, TEST_PUBLISHER_ENCODED, TEST_UNREAD);
 
     assertNotNull(result);
     assertSame(navigationFeed, result);
 
     Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getSeriesFeedForPublisher(TEST_PUBLISHER, TEST_UNREAD);
+        .getSeriesFeedForPublisher(TEST_PUBLISHER, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetVolumeFeedForPublisherAndSeries() {
     Mockito.when(
             opdsNavigationService.getVolumeFeedForPublisherAndSeries(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()))
         .thenReturn(navigationFeed);
 
     final OPDSNavigationFeed response =
         controller.getVolumeFeedForPublisherAndSeries(
-            TEST_PUBLISHER_ENCODED, TEST_SERIES_ENCODED, TEST_UNREAD);
+            principal, TEST_PUBLISHER_ENCODED, TEST_SERIES_ENCODED, TEST_UNREAD);
 
     assertNotNull(response);
     assertSame(navigationFeed, response);
 
     Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getVolumeFeedForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_UNREAD);
+        .getVolumeFeedForPublisherAndSeries(TEST_PUBLISHER, TEST_SERIES, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test

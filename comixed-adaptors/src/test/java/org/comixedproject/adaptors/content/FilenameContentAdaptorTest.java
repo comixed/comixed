@@ -45,7 +45,7 @@ public class FilenameContentAdaptorTest extends BaseContentAdaptorTest {
   @Before
   public void setUp() {
     comicBook = new ComicBook();
-    comicBook.setComicDetail(new ComicDetail(comicBook, ArchiveType.CBZ));
+    comicBook.setComicDetail(new ComicDetail(comicBook, COMICINFO_XML, ArchiveType.CBZ));
   }
 
   @Test

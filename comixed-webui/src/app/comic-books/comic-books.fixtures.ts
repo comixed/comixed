@@ -17,7 +17,6 @@
  */
 
 import { FileDetails } from '@app/comic-books/models/file-details';
-import { ComicCredit } from '@app/comic-books/models/comic-credit';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
@@ -29,22 +28,11 @@ import {
 } from '@app/comic-pages/comic-pages.fixtures';
 import { Imprint } from '@app/comic-books/models/imprint';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
 
 export const FILE_DETAILS_1: FileDetails = {
   id: 1,
   hash: '1234567890ABCDEF1234567890ABCDEF'
-};
-
-export const COMIC_CREDIT_1: ComicCredit = {
-  id: 1,
-  name: 'Art Maker',
-  role: 'artist'
-};
-
-export const COMIC_CREDIT_2: ComicCredit = {
-  id: 2,
-  name: 'Penn Siller',
-  role: 'penciller'
 };
 
 export const IMPRINT_1: Imprint = {
@@ -66,7 +54,10 @@ export const IMPRINT_3: Imprint = {
 };
 
 export const COMIC_DETAIL_1: ComicDetail = {
+  id: 101,
   comicId: 1,
+  filename: '/Users/comixedreader/Documents/library/comicfile1.cbz',
+  baseFilename: 'comicfile1.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicBookState.STABLE,
   publisher: 'First Publisher',
@@ -75,6 +66,16 @@ export const COMIC_DETAIL_1: ComicDetail = {
   volume: '2017',
   issueNumber: '1',
   sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  description: 'The description of this comic',
+  notes: '',
+  tags: [
+    { type: ComicTagType.WRITER, value: 'Chris Claremont' },
+    { type: ComicTagType.CHARACTER, value: 'Captain America' },
+    { type: ComicTagType.TEAM, value: 'The Avengers' },
+    { type: ComicTagType.LOCATION, value: 'Brooklyn' },
+    { type: ComicTagType.STORY, value: 'Secret Invasion' }
+  ],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   yearPublished: 2019,
@@ -82,15 +83,22 @@ export const COMIC_DETAIL_1: ComicDetail = {
 };
 
 export const COMIC_DETAIL_2: ComicDetail = {
+  id: 102,
   comicId: 2,
   comicState: ComicBookState.STABLE,
   archiveType: ArchiveType.CBR,
+  filename: '/Users/comixedreader/Documents/library/comicfile2.cbz',
+  baseFilename: 'comicfile2.cbz',
   publisher: 'First Publisher',
   imprint: null,
   series: 'Last Series',
   volume: '2015',
   issueNumber: '2',
   sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  description: 'The description of this comic',
+  notes: '',
+  tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   yearPublished: 2018,
@@ -98,8 +106,11 @@ export const COMIC_DETAIL_2: ComicDetail = {
 };
 
 export const COMIC_DETAIL_3: ComicDetail = {
+  id: 103,
   comicId: 3,
   archiveType: ArchiveType.CB7,
+  filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
+  baseFilename: 'comicfile3.cbz',
   comicState: ComicBookState.STABLE,
   publisher: 'Second Publisher',
   imprint: null,
@@ -107,6 +118,10 @@ export const COMIC_DETAIL_3: ComicDetail = {
   volume: '2015',
   issueNumber: '3',
   sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  description: 'The description of this comic',
+  notes: '',
+  tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   yearPublished: 1953,
@@ -114,7 +129,10 @@ export const COMIC_DETAIL_3: ComicDetail = {
 };
 
 export const COMIC_DETAIL_4: ComicDetail = {
+  id: 104,
   comicId: 4,
+  filename: '/Users/comixedreader/Documents/library/comicfile4.cbz',
+  baseFilename: 'comicfile4.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicBookState.STABLE,
   publisher: 'Third Publisher',
@@ -123,6 +141,10 @@ export const COMIC_DETAIL_4: ComicDetail = {
   volume: '1972',
   issueNumber: '1',
   sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  description: 'The description of this comic',
+  notes: '',
+  tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   yearPublished: 1972,
@@ -130,8 +152,11 @@ export const COMIC_DETAIL_4: ComicDetail = {
 };
 
 export const COMIC_DETAIL_5: ComicDetail = {
-  archiveType: ArchiveType.CBZ,
+  id: 15,
   comicId: 5,
+  archiveType: ArchiveType.CBZ,
+  filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
+  baseFilename: 'comicfile1.cbz',
   comicState: ComicBookState.STABLE,
   publisher: 'Second Publisher',
   imprint: null,
@@ -139,6 +164,10 @@ export const COMIC_DETAIL_5: ComicDetail = {
   volume: '1965',
   issueNumber: '1',
   sortableIssueNumber: '00001',
+  title: 'First ComicBook Title',
+  notes: '',
+  description: 'The description of this comic',
+  tags: [],
   coverDate: new Date().getTime(),
   storeDate: new Date().getTime(),
   yearPublished: 2000,
@@ -147,21 +176,10 @@ export const COMIC_DETAIL_5: ComicDetail = {
 
 export const COMIC_BOOK_1: ComicBook = {
   id: 1,
-  filename: '/Users/comixedreader/Documents/library/comicfile1.cbz',
-  baseFilename: 'comicfile1.cbz',
   detail: COMIC_DETAIL_1,
   sortName: 'comicfile1',
-  title: 'First ComicBook Title',
-  stories: ['story1', 'story2', 'story3'],
-  description: 'The description of this comic',
-  notes: '',
-  missing: false,
-  characters: ['character1', 'character2', 'character3'],
-  teams: ['team1'],
-  locations: ['location1', 'location2'],
   pages: [PAGE_1, PAGE_2, PAGE_3, PAGE_4],
   blockedPageCount: 0,
-  credits: [],
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -171,21 +189,10 @@ export const COMIC_BOOK_1: ComicBook = {
 
 export const COMIC_BOOK_2: ComicBook = {
   id: 2,
-  filename: '/Users/comixedreader/Documents/library/comicfile2.cbz',
-  baseFilename: 'comicfile2.cbz',
   detail: COMIC_DETAIL_2,
-  sortName: 'comicfile1',
-  title: 'First ComicBook Title',
-  stories: ['story1'],
-  description: 'The description of this comic',
-  notes: '',
-  missing: false,
-  characters: ['character2', 'character3', 'character4'],
-  teams: ['team2'],
-  locations: ['location1', 'location2'],
+  sortName: 'comicfile2',
   pages: [PAGE_1],
   blockedPageCount: 0,
-  credits: [],
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -195,21 +202,10 @@ export const COMIC_BOOK_2: ComicBook = {
 
 export const COMIC_BOOK_3: ComicBook = {
   id: 3,
-  filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
-  baseFilename: 'comicfile3.cbz',
   detail: COMIC_DETAIL_3,
-  sortName: 'comicfile1',
-  title: 'First ComicBook Title',
-  stories: ['story1'],
-  description: 'The description of this comic',
-  notes: '',
-  missing: false,
-  characters: ['character3', 'character4', 'character5'],
-  teams: ['team1'],
-  locations: ['location1', 'location2'],
+  sortName: 'comicfile3',
   pages: [PAGE_1],
   blockedPageCount: 0,
-  credits: [],
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -219,21 +215,10 @@ export const COMIC_BOOK_3: ComicBook = {
 
 export const COMIC_BOOK_4: ComicBook = {
   id: 4,
-  filename: '/Users/comixedreader/Documents/library/comicfile4.cbz',
-  baseFilename: 'comicfile4.cbz',
   detail: COMIC_DETAIL_4,
-  sortName: 'comicfile1',
-  title: 'First ComicBook Title',
-  stories: [],
-  description: 'The description of this comic',
-  notes: '',
-  missing: false,
-  characters: [],
-  teams: [],
-  locations: [],
+  sortName: 'comicfile14',
   pages: [PAGE_1],
   blockedPageCount: 0,
-  credits: [],
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,
@@ -243,21 +228,10 @@ export const COMIC_BOOK_4: ComicBook = {
 
 export const COMIC_BOOK_5: ComicBook = {
   id: 5,
-  filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
-  baseFilename: 'comicfile1.cbz',
   detail: COMIC_DETAIL_5,
   sortName: 'comicfile5',
-  title: 'First ComicBook Title',
-  stories: [],
-  description: 'The description of this comic',
-  notes: '',
-  missing: false,
-  characters: [],
-  teams: [],
-  locations: [],
   pages: [PAGE_1],
   blockedPageCount: 0,
-  credits: [COMIC_CREDIT_1, COMIC_CREDIT_2],
   lastModifiedOn: 0,
   nextIssueId: null,
   previousIssueId: null,

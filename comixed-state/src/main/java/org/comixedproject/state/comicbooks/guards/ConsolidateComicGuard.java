@@ -54,7 +54,7 @@ public class ConsolidateComicGuard extends AbstractComicGuard {
     log.trace("Generating target name");
     final String targetName = this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule);
     log.trace("Ensuring the comicBook filename would be different");
-    final String absoluteSource = comicBook.getFile().getAbsolutePath();
+    final String absoluteSource = comicBook.getComicDetail().getFile().getAbsolutePath();
     final String absoluteTarget =
         new File(String.format("%s/%s", targetDirectory, targetName)).getAbsolutePath();
     return !StringUtils.equals(absoluteSource, absoluteTarget);

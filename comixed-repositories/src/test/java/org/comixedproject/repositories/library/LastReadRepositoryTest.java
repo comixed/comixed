@@ -107,24 +107,27 @@ public class LastReadRepositoryTest {
   @Test
   public void testFindEntryForUserAndComicForUserWithNoEntries() {
     final LastRead result =
-        this.repository.loadEntryForComicAndUser(comicBookWithEntries, userWithoutEntries);
+        this.repository.loadEntryForComicAndUser(
+            comicBookWithEntries.getComicDetail(), userWithoutEntries);
 
     assertNull(result);
   }
 
   @Test
   public void testFindEntryForUserAndComicForUserWithEntriesButNoThisComic() {
-    final LastRead result = this.repository.loadEntryForComicAndUser(comicBookWithNoEntries, user);
+    final LastRead result =
+        this.repository.loadEntryForComicAndUser(comicBookWithNoEntries.getComicDetail(), user);
 
     assertNull(result);
   }
 
   @Test
   public void testFindEntryForUserAndComic() {
-    final LastRead result = this.repository.loadEntryForComicAndUser(comicBookWithEntries, user);
+    final LastRead result =
+        this.repository.loadEntryForComicAndUser(comicBookWithEntries.getComicDetail(), user);
 
     assertNotNull(result);
     assertEquals(user, result.getUser());
-    assertEquals(comicBookWithEntries, result.getComicBook());
+    assertEquals(comicBookWithEntries.getComicDetail().getId(), result.getComicDetail().getId());
   }
 }

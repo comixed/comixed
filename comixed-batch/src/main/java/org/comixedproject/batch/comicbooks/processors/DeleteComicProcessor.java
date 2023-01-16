@@ -53,8 +53,8 @@ public class DeleteComicProcessor
     this.comicBookService.deleteComic(comicBook);
     if (Boolean.parseBoolean(
         this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
-      log.trace("Deleting physical file: {}", comicBook.getFilename());
-      this.fileAdaptor.deleteFile(comicBook.getFile());
+      log.trace("Deleting physical file: {}", comicBook.getComicDetail().getFilename());
+      this.fileAdaptor.deleteFile(comicBook.getComicDetail().getFile());
     }
     return comicBook;
   }

@@ -22,15 +22,10 @@ import static org.comixedproject.state.comicbooks.ComicStateHandler.HEADER_COMIC
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
@@ -40,6 +35,7 @@ import org.comixedproject.messaging.comicbooks.PublishComicUpdateAction;
 import org.comixedproject.model.collections.Publisher;
 import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
@@ -154,7 +150,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   @Transactional
   public ComicBook deleteComic(final long id) throws ComicBookException {
     log.debug("Marking comic for deletion: id={}", id);
-    final var comic = this.comicBookRepository.getByIdWithReadingLists(id);
+    final var comic = this.doGetComic(id);
     this.comicStateHandler.fireEvent(comic, ComicEvent.deleteComic);
     return this.doGetComic(id);
   }
@@ -180,8 +176,8 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     comic.getComicDetail().setIssueNumber(update.getComicDetail().getIssueNumber());
     comic.getComicDetail().setImprint(update.getComicDetail().getImprint());
     comic.setSortName(update.getSortName());
-    comic.setTitle(update.getTitle());
-    comic.setDescription(update.getDescription());
+    comic.getComicDetail().setTitle(update.getComicDetail().getTitle());
+    comic.getComicDetail().setDescription(update.getComicDetail().getDescription());
 
     this.imprintService.update(comic);
 
@@ -197,7 +193,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   @Transactional
   public ComicBook save(final ComicBook comicBook) {
-    log.debug("Saving comicBook: filename={}", comicBook.getFilename());
+    log.debug("Saving comicBook: filename={}", comicBook.getComicDetail().getFilename());
 
     this.imprintService.update(comicBook);
 
@@ -216,10 +212,10 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    */
   @Transactional
   public byte[] getComicContent(final ComicBook comicBook) {
-    log.debug("Getting file content: filename={}", comicBook.getFilename());
+    log.debug("Getting file content: filename={}", comicBook.getComicDetail().getFilename());
 
     try {
-      return FileUtils.readFileToByteArray(new File(comicBook.getFilename()));
+      return FileUtils.readFileToByteArray(new File(comicBook.getComicDetail().getFilename()));
     } catch (IOException error) {
       log.error("Failed to read comicBook file content", error);
       return null;
@@ -529,10 +525,15 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public void deleteComics(final List<Long> ids) {
     ids.forEach(
         id -> {
-          final ComicBook comicBook = this.comicBookRepository.getByIdWithReadingLists(id);
-          if (comicBook != null) {
-            log.trace("Marking comicBook for deletion: id={}", comicBook.getId());
-            this.comicStateHandler.fireEvent(comicBook, ComicEvent.deleteComic);
+          final ComicBook comicBook;
+          try {
+            comicBook = this.doGetComic(id);
+            if (comicBook != null) {
+              log.trace("Marking comicBook for deletion: id={}", comicBook.getId());
+              this.comicStateHandler.fireEvent(comicBook, ComicEvent.deleteComic);
+            }
+          } catch (ComicBookException error) {
+            log.error("Failed to load comic", error);
           }
         });
   }
@@ -585,16 +586,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   }
 
   /**
-   * Returns the list of all publisher names.
-   *
-   * @return the list of names.
-   */
-  public List<String> getAllPublishers() {
-    log.trace("Loading all publisher names");
-    return this.comicBookRepository.findDistinctPublishers();
-  }
-
-  /**
    * Returns the list of all series names.
    *
    * @return the list of names.
@@ -607,136 +598,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
   public List<Series> getAllSeriesAndVolumes() {
     log.trace("Loading all series and volumes");
     return this.comicBookRepository.getAllSeriesAndVolumes();
-  }
-
-  /**
-   * Returns all comics for a single series by name. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param name the series name
-   * @param email the users email
-   * @param unread the unread flag
-   * @return the comics
-   */
-  public List<ComicBook> getAllForSeries(
-      final String name, final String email, final boolean unread) {
-    log.trace("Loading all comics for one series: unread={}", unread);
-    return this.filterReadComics(email, unread, this.comicBookRepository.findAllBySeries(name));
-  }
-
-  private List<ComicBook> filterReadComics(
-      final String email, final boolean unread, List<ComicBook> result) {
-    if (unread) {
-      log.trace("Filtering out read comics: name={}", email);
-      result =
-          result.stream()
-              .filter(
-                  comicBook ->
-                      comicBook.getLastReads().stream()
-                          .noneMatch(lastRead -> lastRead.getUser().getEmail().equals(email)))
-              .collect(Collectors.toList());
-    }
-    return result;
-  }
-
-  /**
-   * Returns the list of all character names.
-   *
-   * @return the list of names.
-   */
-  public List<String> getAllCharacters() {
-    log.trace("Loading all character names");
-    return this.comicBookRepository.findDistinctCharacters();
-  }
-
-  /**
-   * Returns all comics for a single character by name. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param name the character name
-   * @param email the users email
-   * @param unread the unread flag
-   * @return the comics
-   */
-  public List<ComicBook> getAllForCharacter(
-      final String name, final String email, final boolean unread) {
-    log.trace("Loading all comics for one character: unread={}", unread);
-    return this.filterReadComics(email, unread, this.comicBookRepository.findAllByCharacters(name));
-  }
-
-  /**
-   * Returns the list of all team names.
-   *
-   * @return the list of names.
-   */
-  public List<String> getAllTeams() {
-    log.trace("Loading all team names");
-    return this.comicBookRepository.findDistinctTeams();
-  }
-
-  /**
-   * Returns all comics for a single team by name. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param name the team name
-   * @param email the users email
-   * @param unread the unread flag
-   * @return the comics
-   */
-  public List<ComicBook> getAllForTeam(
-      final String name, final String email, final boolean unread) {
-    log.trace("Loading all comics for one team: unread={}", unread);
-    return this.filterReadComics(email, unread, this.comicBookRepository.findAllByTeams(name));
-  }
-
-  /**
-   * Returns the list of all location names.
-   *
-   * @return the list of names.
-   */
-  public List<String> getAllLocations() {
-    log.trace("Loading all location names");
-    return this.comicBookRepository.findDistinctLocations();
-  }
-
-  /**
-   * Returns all comics for a single location by name. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param name the location name
-   * @param email the users email
-   * @param unread the unread flag
-   * @return the comics
-   */
-  public List<ComicBook> getAllForLocation(
-      final String name, final String email, final boolean unread) {
-    log.trace("Loading all comics for one location: unread={}", unread);
-    return this.filterReadComics(email, unread, this.comicBookRepository.findAllByLocations(name));
-  }
-
-  /**
-   * Returns the list of all stories.
-   *
-   * @return the list of names.
-   */
-  public List<String> getAllStories() {
-    log.trace("Loading all story names");
-    return this.comicBookRepository.findDistinctStories();
-  }
-
-  /**
-   * Returns all comics for a single story by name. If the unread flag is set to true, then only
-   * comics unread by the given user are returned.
-   *
-   * @param name the story name
-   * @param email the users email
-   * @param unread the unread flag
-   * @return the comics
-   */
-  public List<ComicBook> getAllForStory(
-      final String name, final String email, final boolean unread) {
-    log.trace("Loading all comics in one story: unread={}", unread);
-    return this.filterReadComics(email, unread, this.comicBookRepository.findAllByStories(name));
   }
 
   public List<String> getAllPublishersForStory(final String name) {
@@ -807,123 +668,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
       final ComicBook comicBook = this.doGetComic(id);
       this.comicStateHandler.fireEvent(comicBook, ComicEvent.updateDetails);
     }
-  }
-
-  /**
-   * Returns the set of years for comics in the library.
-   *
-   * @return the list of years
-   */
-  public List<Integer> getYearsForComics() {
-    final GregorianCalendar calendar = new GregorianCalendar();
-    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return this.comicBookRepository.loadYearsWithComics();
-  }
-
-  /**
-   * Returns the weeks for the given year for which the library contains comics.
-   *
-   * @param year the year
-   * @return the list of weeks
-   */
-  public List<Integer> getWeeksForYear(final Integer year) {
-    final GregorianCalendar calendar = new GregorianCalendar();
-    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-    return this.comicBookRepository.loadWeeksForYear(year).stream()
-        .map(
-            coverDate -> {
-              calendar.setTime(coverDate);
-              return calendar.get(Calendar.WEEK_OF_YEAR);
-            })
-        .collect(Collectors.toList());
-  }
-
-  public List<ComicBook> getComicsForYearAndWeek(
-      final Integer year, final Integer week, final String email, final boolean unread) {
-    final GregorianCalendar calendar = new GregorianCalendar();
-    calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-    calendar.set(Calendar.YEAR, year);
-    calendar.set(Calendar.WEEK_OF_YEAR, week);
-    log.trace("Getting first day of requested week");
-    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-    final Date startDate = calendar.getTime();
-    log.trace("Getting last day of requested week");
-    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-    final Date endDate = calendar.getTime();
-    List<ComicBook> result =
-        this.comicBookRepository.findWithCoverDateRange(startDate, endDate).stream()
-            .collect(Collectors.toList());
-    result = filterReadComics(email, unread, result);
-    return result;
-  }
-
-  /**
-   * Returns the list of series names for a given publisher.
-   *
-   * @param publisher the publisher name
-   * @return the series names
-   */
-  public Set<String> getAllSeriesForPublisher(final String publisher) {
-    log.debug("Loading series for publisher: publisher={}", publisher);
-    return this.comicBookRepository.getAllSeriesForPublisher(publisher);
-  }
-
-  public Set<String> getAllVolumesForPublisherAndSeries(
-      final String publisher, final String series) {
-    log.debug("Loading volumes for series: publisher={} series={}", publisher, series);
-    return this.comicBookRepository.getAllVolumesForPublisherAndSeries(publisher, series);
-  }
-
-  /**
-   * Returns the lkist of all comics for a given publisher, series and volume.
-   *
-   * @param publisher the publisher
-   * @param series the series
-   * @param volume the volume
-   * @param email the reader's email address
-   * @param unread the unread flag
-   * @return the list of comics
-   */
-  public List<ComicBook> getAllComicBooksForPublisherAndSeriesAndVolume(
-      final String publisher,
-      final String series,
-      final String volume,
-      final String email,
-      final boolean unread) {
-    log.debug(
-        "Loading comics for volume: publisher={} series={} volume={}", publisher, series, volume);
-    return this.filterReadComics(
-        email,
-        unread,
-        this.comicBookRepository.getAllComicBooksForPublisherAndSeriesAndVolume(
-            publisher, series, volume));
-  }
-
-  /**
-   * Returns the list of all volumes for a given series.
-   *
-   * @param series the series name
-   * @return the volumes
-   */
-  public Set<String> getAllVolumesForSeries(final String series) {
-    log.debug("Loading all volumes for series: {}", series);
-    return this.comicBookRepository.findDistinctVolumesForSeries(series);
-  }
-
-  /**
-   * Returns the list of all comics for the given series and volume.
-   *
-   * @param series the series name
-   * @param volume the volume
-   * @param email the reader's email address
-   * @param unread the unread flag
-   * @return the list of comics
-   */
-  public List<ComicBook> getAllComicBooksForSeriesAndVolume(
-      final String series, final String volume, final String email, final boolean unread) {
-    log.debug("Loading all comics for series and volume: {} v{}", series, volume);
-    return this.filterReadComics(
-        email, unread, this.comicBookRepository.getAllComicBooksForSeriesAndVolume(series, volume));
   }
 
   /**
@@ -1065,7 +809,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
    * @param term the search time
    * @return the list of comics
    */
-  public List<ComicBook> getComicBooksForSearchTerms(final String term) {
+  public List<ComicDetail> getComicBooksForSearchTerms(final String term) {
     log.info("Searching comic books: term={}", term);
     return this.comicBookRepository.findForSearchTerms(term);
   }

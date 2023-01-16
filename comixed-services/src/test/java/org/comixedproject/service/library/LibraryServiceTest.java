@@ -28,11 +28,13 @@ import java.util.Map;
 import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.comicbooks.ComicBookException;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.state.comicbooks.ComicEvent;
 import org.comixedproject.state.comicbooks.ComicStateHandler;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -49,6 +51,7 @@ public class LibraryServiceTest {
   @InjectMocks private LibraryService service;
   @Mock private ComicBookService comicBookService;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private FileAdaptor fileAdaptor;
   @Mock private PageCacheService pageCacheService;
   @Mock private ComicStateHandler comicStateHandler;
@@ -57,6 +60,11 @@ public class LibraryServiceTest {
 
   private List<ComicBook> comicBookList = new ArrayList<>();
   private List<Long> comicIdList = new ArrayList<>();
+
+  @Before
+  public void setUp() {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+  }
 
   @Test
   public void testClearImageCache() throws LibraryException, IOException {

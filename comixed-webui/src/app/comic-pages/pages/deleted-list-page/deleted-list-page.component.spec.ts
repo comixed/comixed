@@ -48,12 +48,12 @@ describe('DeletedListPageComponent', () => {
   const USER = { ...USER_ADMIN };
   const COMIC_BOOKS: ComicDetail[] = [
     {
-      ...COMIC_DETAIL_1,
-      pages: [
-        { ...PAGE_1, deleted: false },
-        { ...PAGE_2, deleted: true },
-        { ...PAGE_3, deleted: true }
-      ]
+      ...COMIC_DETAIL_1
+      // pages: [
+      //   { ...PAGE_1, deleted: false },
+      //   { ...PAGE_2, deleted: true },
+      //   { ...PAGE_3, deleted: true }
+      // ]
     }
   ];
   const initialState = {

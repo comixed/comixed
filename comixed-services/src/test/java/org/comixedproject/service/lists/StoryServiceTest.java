@@ -23,6 +23,7 @@ import static org.comixedproject.state.lists.StoryStateHandler.HEADER_STORY;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.messaging.PublishingException;
@@ -31,6 +32,7 @@ import org.comixedproject.model.lists.Story;
 import org.comixedproject.model.lists.StoryState;
 import org.comixedproject.repositories.lists.StoryRepository;
 import org.comixedproject.service.comicbooks.ComicBookService;
+import org.comixedproject.service.comicbooks.ComicDetailService;
 import org.comixedproject.state.lists.StoryEvent;
 import org.comixedproject.state.lists.StoryStateHandler;
 import org.junit.Before;
@@ -52,6 +54,7 @@ public class StoryServiceTest {
   @InjectMocks private StoryService service;
   @Mock private StoryRepository storyRepository;
   @Mock private ComicBookService comicBookService;
+  @Mock private ComicDetailService comicDetailService;
   @Mock private StoryStateHandler storyStateHandler;
   @Mock private State<StoryState, StoryEvent> state;
   @Mock private Message<StoryEvent> message;
@@ -112,13 +115,13 @@ public class StoryServiceTest {
   public void testLoadAll() {
     final List<Story> stories = new ArrayList<>();
     stories.add(story);
-    final List<String> distinctStories = new ArrayList<>();
+    final Set<String> distinctStories = new HashSet<>();
     distinctStories.add(TEST_STORY_NAME);
     final String otherStory = String.format("Other story %d", System.currentTimeMillis());
     distinctStories.add(otherStory);
 
     Mockito.when(storyRepository.findAll()).thenReturn(stories);
-    Mockito.when(comicBookService.getAllStories()).thenReturn(distinctStories);
+    Mockito.when(comicDetailService.getAllSeries()).thenReturn(distinctStories);
 
     final Set<String> result = service.loadAll();
 
@@ -127,7 +130,7 @@ public class StoryServiceTest {
     assertTrue(result.contains(otherStory));
 
     Mockito.verify(storyRepository, Mockito.times(1)).findAll();
-    Mockito.verify(comicBookService, Mockito.times(1)).getAllStories();
+    Mockito.verify(comicDetailService, Mockito.times(1)).getAllSeries();
   }
 
   @Test

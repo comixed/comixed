@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PAR
 import java.io.File;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.service.comicbooks.ComicBookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,7 @@ public class DeleteComicBookProcessorTest {
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private File file;
 
   @Before
@@ -54,8 +56,9 @@ public class DeleteComicBookProcessorTest {
     Mockito.when(stepExecution.getJobExecution()).thenReturn(jobExecution);
     Mockito.when(jobExecution.getExecutionContext()).thenReturn(executionContext);
     processor.beforeStep(stepExecution);
-    Mockito.when(comicBook.getFile()).thenReturn(file);
-    Mockito.when(comicBook.getFilename()).thenReturn(TEST_FILENAME);
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getFile()).thenReturn(file);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_FILENAME);
   }
 
   @Test

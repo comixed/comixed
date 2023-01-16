@@ -86,7 +86,7 @@ export class ReadComicsChartComponent implements AfterViewInit {
         return {
           name: publisher,
           value: this.lastRead.filter(
-            entry => entry.comicBook.detail.publisher === publisher
+            entry => entry.comicDetail.publisher === publisher
           ).length
         };
       })

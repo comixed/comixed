@@ -68,12 +68,12 @@ public class MoveComicProcessor
       targetFilename = String.format("%s/%s", targetDirectory, targetFilename);
       targetFilename =
           this.comicFileAdaptor.findAvailableFilename(
-              comicBook.getFilename(), targetFilename, 0, comicExtension);
+              comicBook.getComicDetail().getFilename(), targetFilename, 0, comicExtension);
       final File targetFile = new File(targetFilename);
       log.trace("Moving comicBook file");
-      this.fileAdaptor.moveFile(comicBook.getFile(), targetFile);
+      this.fileAdaptor.moveFile(comicBook.getComicDetail().getFile(), targetFile);
       log.trace("Updating comicBook filename: {}", targetFile.getAbsoluteFile());
-      comicBook.setFilename(targetFile.getAbsolutePath());
+      comicBook.getComicDetail().setFilename(targetFile.getAbsolutePath());
     } catch (IOException error) {
       log.error("Failed to move comics", error);
     }

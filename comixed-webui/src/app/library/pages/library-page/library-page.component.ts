@@ -195,7 +195,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
                   comicBook.archiveType === archiveTypeFilter) &&
                 (!this.unreadOnly ||
                   !this.lastReadDates
-                    .map(lastRead => lastRead.comicBook.id)
+                    .map(lastRead => lastRead.comicDetail.comicId)
                     .includes(comicBook.comicId))
             )
             .map(comicBook => comicBook.comicId)

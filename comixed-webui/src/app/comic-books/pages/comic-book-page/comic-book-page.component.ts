@@ -176,10 +176,11 @@ export class ComicBookPageComponent
       .select(selectLastReadEntries)
       .subscribe(entries => {
         this.isRead = entries
-          .map(entry => entry.comicBook.id)
+          .map(entry => entry.comicDetail.comicId)
           .includes(this.comicId);
         this.lastRead =
-          entries.find(entry => entry.comicBook.id === this.comicId) || null;
+          entries.find(entry => entry.comicDetail.comicId === this.comicId) ||
+          null;
       });
     this.messagingSubscription = this.store
       .select(selectMessagingState)

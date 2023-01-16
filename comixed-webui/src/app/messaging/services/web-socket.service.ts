@@ -120,7 +120,6 @@ export class WebSocketService {
         if (content.finished === true) {
           this.logger.trace('End of content');
           subscription.unsubscribe();
-          return;
         } else {
           this.logger.trace('Received content:', content);
           callback(content);

@@ -56,29 +56,32 @@ public class OPDSDateControllerTest {
 
   @Test
   public void testGetYearsFeed() {
-    Mockito.when(opdsNavigationService.getYearsFeed(Mockito.anyBoolean()))
+    Mockito.when(opdsNavigationService.getYearsFeed(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
 
-    final OPDSNavigationFeed response = controller.getYearsFeed(TEST_UNREAD);
+    final OPDSNavigationFeed response = controller.getYearsFeed(principal, TEST_UNREAD);
 
     assertNotNull(response);
     assertSame(opdsNavigationFeed, response);
 
-    Mockito.verify(opdsNavigationService, Mockito.times(1)).getYearsFeed(TEST_UNREAD);
+    Mockito.verify(opdsNavigationService, Mockito.times(1)).getYearsFeed(TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetWeeksForYear() throws OPDSException {
-    Mockito.when(opdsNavigationService.getWeeksFeedForYear(Mockito.anyInt(), Mockito.anyBoolean()))
+    Mockito.when(
+            opdsNavigationService.getWeeksFeedForYear(
+                Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
 
-    final OPDSNavigationFeed response = controller.getWeeksFeedForYear(TEST_YEAR, TEST_UNREAD);
+    final OPDSNavigationFeed response =
+        controller.getWeeksFeedForYear(principal, TEST_YEAR, TEST_UNREAD);
 
     assertNotNull(response);
     assertSame(opdsNavigationFeed, response);
 
     Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getWeeksFeedForYear(TEST_YEAR, TEST_UNREAD);
+        .getWeeksFeedForYear(TEST_YEAR, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test

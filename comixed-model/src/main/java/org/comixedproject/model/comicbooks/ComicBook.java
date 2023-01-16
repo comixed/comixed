@@ -18,21 +18,37 @@
 
 package org.comixedproject.model.comicbooks;
 
-import com.fasterxml.jackson.annotation.*;
-import java.io.File;
-import java.util.*;
-import javax.persistence.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FilenameUtils;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
-import org.comixedproject.model.library.LastRead;
-import org.comixedproject.model.lists.ReadingList;
 import org.comixedproject.views.View;
 import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  * <code>ComicBook</code> represents a single digital comic issue.
@@ -43,29 +59,15 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "ComicBooks")
 @Log4j2
 @NoArgsConstructor
-@RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ComicBook {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @JsonProperty("id")
-  @JsonView({
-    View.ComicListView.class,
-    View.LastReadList.class,
-    View.DuplicatePageList.class,
-    View.ReadingListDetail.class
-  })
+  @JsonView({View.ComicListView.class, View.DuplicatePageList.class, View.ReadingListDetail.class})
   @Getter
   @Setter
   private Long id;
-
-  @Column(name = "Filename", nullable = false, unique = true, length = 1024)
-  @JsonProperty("filename")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  @Setter
-  @NonNull
-  private String filename;
 
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "comicBook", orphanRemoval = true)
   @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
@@ -101,71 +103,6 @@ public class ComicBook {
   @JsonView({View.ComicListView.class})
   @Getter
   private int blockedPageCount;
-
-  @Column(name = "Title", length = 128)
-  @JsonProperty("title")
-  @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
-  @Getter
-  @Setter
-  private String title;
-
-  @Column(name = "Notes", length = 128, nullable = true, updatable = true)
-  @Lob
-  @JsonProperty("notes")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  @Setter
-  private String notes;
-
-  @Column(name = "Description")
-  @Lob
-  @JsonProperty("description")
-  @JsonView({View.ComicDetailsView.class})
-  @Getter
-  @Setter
-  private String description;
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "CharacterTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("characters")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  private List<String> characters = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "TeamTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("teams")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  private List<String> teams = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "LocationTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("locations")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  private List<String> locations = new ArrayList<>();
-
-  @ElementCollection
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @CollectionTable(name = "StoryTags", joinColumns = @JoinColumn(name = "ComicBookId"))
-  @Column(name = "Name")
-  @JsonProperty("stories")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  List<String> stories = new ArrayList<>();
-
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonProperty("credits")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  private Set<Credit> credits = new HashSet<>();
 
   @Transient
   @JsonProperty("nextIssueId")
@@ -237,7 +174,7 @@ public class ComicBook {
 
   @Column(name = "LastModifiedOn", updatable = true, nullable = false)
   @JsonProperty("lastModifiedOn")
-  @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+  @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
   @JsonView({View.ComicListView.class})
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
@@ -254,45 +191,6 @@ public class ComicBook {
   @Setter
   private String sortName;
 
-  @ManyToMany(
-      mappedBy = "comicBooks",
-      cascade = {CascadeType.ALL})
-  @JsonProperty("readingLists")
-  @JsonView({View.ComicDetailsView.class})
-  @Getter
-  private Set<ReadingList> readingLists = new HashSet<>();
-
-  @OneToMany(mappedBy = "comicBook", cascade = CascadeType.REMOVE, orphanRemoval = true)
-  @JsonIgnore
-  @Getter
-  private List<LastRead> lastReads = new ArrayList<>();
-
-  /**
-   * Returns just the filename without the path.
-   *
-   * @return the filename
-   */
-  @JsonProperty("baseFilename")
-  @JsonView({View.ComicDetailsView.class})
-  public String getBaseFilename() {
-    return FilenameUtils.getName(this.filename);
-  }
-
-  /**
-   * Returns the cover {@link Page}.
-   *
-   * @return the cover, or <code>null</code> if the comic is empty
-   */
-  public Page getCover() {
-    log.trace("Getting cover for comic: filename=" + this.filename);
-    /*
-     * if there are no pages or the underlying file is missing then show the
-     * missing
-     * offset image
-     */
-    return this.pages.isEmpty() || this.isMissing() ? null : this.pages.get(0);
-  }
-
   /**
    * Reports if the underlying comic file is missing.
    *
@@ -301,12 +199,7 @@ public class ComicBook {
   @JsonProperty("missing")
   @JsonView({View.ComicListView.class})
   public boolean isMissing() {
-    return !this.getFile().exists();
-  }
-
-  @Transient
-  public File getFile() {
-    return new File(this.filename);
+    return !this.getComicDetail().getFile().exists();
   }
 
   public int getIndexFor(Page page) {
@@ -386,15 +279,18 @@ public class ComicBook {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(filename);
-  }
-
-  @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicBook comicBook = (ComicBook) o;
-    return filename.equals(comicBook.filename);
+    return fileDetails.equals(comicBook.fileDetails)
+        && comicDetail.equals(comicBook.comicDetail)
+        && metadata.equals(comicBook.metadata)
+        && pages.equals(comicBook.pages);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(fileDetails, comicDetail, metadata, pages);
   }
 }

@@ -29,6 +29,7 @@ import org.comixedproject.messaging.PublishingException;
 import org.comixedproject.messaging.library.PublishLastReadRemovedAction;
 import org.comixedproject.messaging.library.PublishLastReadUpdatedAction;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.user.ComiXedUser;
@@ -66,6 +67,7 @@ public class LastReadServiceTest {
   @Mock private ComiXedUser user;
   @Mock private List<LastRead> lastReadEntries;
   @Mock private ComicBook comicBook;
+  @Mock private ComicDetail comicDetail;
   @Mock private LastRead savedLastReadEntry;
   @Mock private LastRead lastReadEntry;
   @Mock private State<ComicState, ComicEvent> state;
@@ -80,6 +82,7 @@ public class LastReadServiceTest {
 
   @Before
   public void setUp() throws ComiXedUserException {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(message.getHeaders()).thenReturn(messageHeaders);
     Mockito.when(messageHeaders.get(HEADER_COMIC, ComicBook.class)).thenReturn(comicBook);
     Mockito.when(messageHeaders.get(HEADER_USER, ComiXedUser.class)).thenReturn(user);
@@ -143,7 +146,7 @@ public class LastReadServiceTest {
 
     final LastRead record = lastReadArgumentCaptor.getValue();
     assertNotNull(record);
-    assertSame(comicBook, record.getComicBook());
+    assertSame(comicDetail, record.getComicDetail());
     assertSame(user, record.getUser());
 
     Mockito.verify(publishLastReadUpdatedAction, Mockito.times(1)).publish(savedLastReadEntry);
@@ -160,7 +163,7 @@ public class LastReadServiceTest {
 
     final LastRead record = lastReadArgumentCaptor.getValue();
     assertNotNull(record);
-    assertSame(comicBook, record.getComicBook());
+    assertSame(comicDetail, record.getComicDetail());
     assertSame(user, record.getUser());
 
     Mockito.verify(publishLastReadUpdatedAction, Mockito.times(1)).publish(savedLastReadEntry);
@@ -171,12 +174,13 @@ public class LastReadServiceTest {
     Mockito.when(message.getPayload()).thenReturn(ComicEvent.markAsUnread);
     Mockito.when(
             lastReadRepository.loadEntryForComicAndUser(
-                Mockito.any(ComicBook.class), Mockito.any(ComiXedUser.class)))
+                Mockito.any(ComicDetail.class), Mockito.any(ComiXedUser.class)))
         .thenReturn(savedLastReadEntry);
 
     service.onComicStateChange(state, message);
 
-    Mockito.verify(lastReadRepository, Mockito.times(1)).loadEntryForComicAndUser(comicBook, user);
+    Mockito.verify(lastReadRepository, Mockito.times(1))
+        .loadEntryForComicAndUser(comicDetail, user);
     Mockito.verify(lastReadRepository, Mockito.times(1)).delete(savedLastReadEntry);
     Mockito.verify(publishLastReadRemovedAction, Mockito.times(1)).publish(savedLastReadEntry);
   }
@@ -186,7 +190,7 @@ public class LastReadServiceTest {
     Mockito.when(message.getPayload()).thenReturn(ComicEvent.markAsUnread);
     Mockito.when(
             lastReadRepository.loadEntryForComicAndUser(
-                Mockito.any(ComicBook.class), Mockito.any(ComiXedUser.class)))
+                Mockito.any(ComicDetail.class), Mockito.any(ComiXedUser.class)))
         .thenReturn(savedLastReadEntry);
     Mockito.doThrow(PublishingException.class)
         .when(publishLastReadRemovedAction)
@@ -194,7 +198,8 @@ public class LastReadServiceTest {
 
     service.onComicStateChange(state, message);
 
-    Mockito.verify(lastReadRepository, Mockito.times(1)).loadEntryForComicAndUser(comicBook, user);
+    Mockito.verify(lastReadRepository, Mockito.times(1))
+        .loadEntryForComicAndUser(comicDetail, user);
     Mockito.verify(lastReadRepository, Mockito.times(1)).delete(savedLastReadEntry);
     Mockito.verify(publishLastReadRemovedAction, Mockito.times(1)).publish(savedLastReadEntry);
   }

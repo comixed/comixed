@@ -34,10 +34,12 @@ import {
 import { selectComicBookListCollection } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
 import { CollectionListEntry } from '@app/collections/models/collection-list-entry';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, SortDirection } from '@angular/material/sort';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { PAGE_SIZE_DEFAULT, PAGE_SIZE_OPTIONS } from '@app/core';
 
 @Component({
   selector: 'cx-collection-list',
@@ -47,7 +49,8 @@ import { QueryParameterService } from '@app/core/services/query-parameter.servic
 export class CollectionListComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   typeSubscription: Subscription;
   paramSubscription: Subscription;
@@ -55,6 +58,12 @@ export class CollectionListComponent
   routableTypeName: string;
   collectionSubscription: Subscription;
   dataSource = new MatTableDataSource<CollectionListEntry>([]);
+  readonly pageOptions = PAGE_SIZE_OPTIONS;
+  pageIndex = 0;
+  pageSize = PAGE_SIZE_DEFAULT;
+  sortBy = 'name';
+  sortDirection: SortDirection = 'asc';
+
   readonly displayedColumns = ['name', 'comic-count'];
   langChangeSubscription: Subscription;
 
@@ -130,7 +139,8 @@ export class CollectionListComponent
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.matSort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
         case 'name':
