@@ -27,6 +27,7 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -152,7 +153,7 @@ public class ComicDetailService {
   }
 
   /**
-   * Returns the set of volumes for the given series. Filters out comics read by the user if the
+   * Returns the set of publishers for the given series. Filters out comics read by the user if the
    * flag is set.
    *
    * @param series the series name
@@ -160,37 +161,18 @@ public class ComicDetailService {
    * @param unread the unread flag
    * @return the volumes
    */
-  public Set<String> getAllVolumesForSeries(
+  public Set<String> getAllPublishersForSeries(
       final String series, final String email, final boolean unread) {
     if (unread) {
       log.debug(
-          "Loading all volumes for series with unread comics: series={} email={}", series, email);
-      return this.comicDetailRepository.getAllUnreadVolumesForSeries(series, email);
+          "Loading all publishers for series with unread comics: series={} email={}",
+          series,
+          email);
+      return this.comicDetailRepository.getAllUnreadPublishersForSeries(series, email);
     } else {
-      log.debug("Loading all volumes for series: {}", series);
-      return this.comicDetailRepository.getAllVolumesForSeries(series);
+      log.debug("Loading all publishers for series: {}", series);
+      return this.comicDetailRepository.getAllPublishersForSeries(series);
     }
-  }
-
-  /**
-   * Returns the list of entries for the given series and volume. Filters out comics read by the
-   * user if the flag is set.
-   *
-   * @param series the series
-   * @param volume the volume
-   * @param email the user email
-   * @param unread the unread flag
-   * @return the comic details
-   */
-  public List<ComicDetail> getAllComicsForSeriesAndVolume(
-      final String series, final String volume, final String email, final boolean unread) {
-    if (unread) {
-      log.debug("Loading unread issues: series={} volume={} email={}", series, volume, email);
-      return this.comicDetailRepository.getAllUnreadForSeriesAndVolume(series, volume, email);
-    }
-
-    log.debug("Loading all issues: series={} volume={}", series, volume);
-    return this.comicDetailRepository.getAllForSeriesAndVolume(series, volume);
   }
 
   /**
@@ -241,7 +223,7 @@ public class ComicDetailService {
    * @return the comic details
    */
   public Set<String> getAllValuesForTag(
-      final String tagType, final String email, final boolean unread) {
+      final ComicTagType tagType, final String email, final boolean unread) {
     if (unread) {
       log.debug("Loading all unread comics: tag type={} email={}", tagType, email);
       return this.comicDetailRepository.getAllUnreadValuesForTagType(tagType, email);
@@ -360,7 +342,7 @@ public class ComicDetailService {
    * @return the matching comics
    */
   public List<ComicDetail> getAllComicsForTag(
-      final String tagType, final String email, final boolean unread) {
+      final ComicTagType tagType, final String email, final boolean unread) {
     if (unread) {
       log.debug("Loading all unread comics for tag type: tag type={} email={}", tagType, email);
       return this.comicDetailRepository.getAllUnreadComicsForTagType(tagType, email);

@@ -28,6 +28,7 @@ import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicBookMetadataAdaptor;
 import org.comixedproject.adaptors.file.FileTypeAdaptor;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedContent;
 import org.comixedproject.opds.model.OPDSAcquisitionFeedEntry;
 import org.comixedproject.opds.model.OPDSLink;
@@ -130,6 +131,17 @@ public class OPDSUtils {
     result.getLinks().add(this.createComicLink(comicDetail));
     result.setContent(new OPDSAcquisitionFeedContent(comicDetail.getBaseFilename()));
     return result;
+  }
+
+  /**
+   * Generates a unique identifier for the given type and name.
+   *
+   * @param type the type
+   * @param name the name
+   * @return the identifier
+   */
+  public Long createIdForEntry(@NonNull final ComicTagType type, @NonNull final String name) {
+    return createIdForEntry(type.getOpdsValue(), name);
   }
 
   /**

@@ -77,46 +77,18 @@ public class OPDSSeriesControllerTest {
     Mockito.when(opdsUtils.urlDecodeString(Mockito.anyString()))
         .thenReturn(TEST_SERIES_NAME_DECODED);
     Mockito.when(
-            opdsNavigationService.getVolumesFeedForSeries(
+            opdsNavigationService.getPublishersFeedForSeries(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(opdsNavigationFeed);
 
     final OPDSNavigationFeed result =
-        controller.getVolumesFeedForSeries(principal, TEST_SERIES_NAME_ENCODED, TEST_UNREAD);
+        controller.getPublishersFeedForSeries(principal, TEST_SERIES_NAME_ENCODED, TEST_UNREAD);
 
     assertNotNull(result);
     assertSame(opdsNavigationFeed, result);
 
     Mockito.verify(opdsUtils, Mockito.times(1)).urlDecodeString(TEST_SERIES_NAME_ENCODED);
     Mockito.verify(opdsNavigationService, Mockito.times(1))
-        .getVolumesFeedForSeries(TEST_SERIES_NAME_DECODED, TEST_EMAIL, TEST_UNREAD);
-  }
-
-  @Test
-  public void testGetComicFeedForSeriesAndVolume() {
-    Mockito.when(opdsUtils.urlDecodeString(TEST_SERIES_NAME_ENCODED))
-        .thenReturn(TEST_SERIES_NAME_DECODED);
-    Mockito.when(opdsUtils.urlDecodeString(TEST_VOLUME_NAME_ENCODED))
-        .thenReturn(TEST_VOLUME_NAME_DECODED);
-    Mockito.when(
-            opdsAcquisitionService.getComicFeedForSeriesAndVolumes(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyString(),
-                Mockito.anyBoolean()))
-        .thenReturn(opdsAcquisitionFeed);
-
-    final OPDSAcquisitionFeed result =
-        controller.getComicFeedForSeriesAndVolumes(
-            principal, TEST_SERIES_NAME_ENCODED, TEST_VOLUME_NAME_ENCODED, TEST_UNREAD);
-
-    assertNotNull(result);
-    assertSame(opdsAcquisitionFeed, result);
-
-    Mockito.verify(opdsUtils, Mockito.times(1)).urlDecodeString(TEST_SERIES_NAME_ENCODED);
-    Mockito.verify(opdsUtils, Mockito.times(1)).urlDecodeString(TEST_VOLUME_NAME_ENCODED);
-    Mockito.verify(opdsAcquisitionService, Mockito.times(1))
-        .getComicFeedForSeriesAndVolumes(
-            TEST_SERIES_NAME_DECODED, TEST_VOLUME_NAME_DECODED, TEST_EMAIL, TEST_UNREAD);
+        .getPublishersFeedForSeries(TEST_SERIES_NAME_DECODED, TEST_EMAIL, TEST_UNREAD);
   }
 }

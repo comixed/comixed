@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -53,7 +54,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the publishers
    */
   @Query(
-      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
+      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.publisher IS NOT NULL AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
   Set<String> getAllUnreadPublishers(@Param("email") String email);
 
   /**
@@ -61,7 +62,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    *
    * @return the publishers
    */
-  @Query("SELECT DISTINCT d.publisher FROM ComicDetail d")
+  @Query("SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.publisher IS NOT NULL")
   Set<String> getAllPublishers();
 
   /**
@@ -121,7 +122,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the series
    */
   @Query(
-      "SELECT DISTINCT d.series FROM ComicDetail d WHERE d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
+      "SELECT DISTINCT d.series FROM ComicDetail d WHERE d.series IS NOT NULL AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
   Set<String> getAllUnreadSeries(@Param("email") String email);
 
   /**
@@ -129,11 +130,11 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    *
    * @return the series
    */
-  @Query("SELECT DISTINCT d.series FROM ComicDetail d")
+  @Query("SELECT DISTINCT d.series FROM ComicDetail d WHERE d.series IS NOT NULL")
   Set<String> getAllSeries();
 
   /**
-   * Returns the set of volumes for the given series with comics that have not been read by the
+   * Returns the set of publishers for the given series with comics that have not been read by the
    * specified user.
    *
    * @param series the series
@@ -141,44 +142,18 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the volumes
    */
   @Query(
-      "SELECT DISTINCT d.volume FROM ComicDetail d WHERE d.series = :series AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
-  Set<String> getAllUnreadVolumesForSeries(
+      "SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.series = :series AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
+  Set<String> getAllUnreadPublishersForSeries(
       @Param("series") String series, @Param("email") String email);
 
   /**
-   * Returns the set of volumes for the given series.
+   * Returns the set of publishers for the given series.
    *
    * @param series the series
    * @return the volumes
    */
-  @Query("SELECT DISTINCT d.volume FROM ComicDetail d WHERE d.series = :series")
-  Set<String> getAllVolumesForSeries(@Param("series") String series);
-
-  /**
-   * Returns all records for the given series and volume that do not have a read entry for the given
-   * user.
-   *
-   * @param series the series
-   * @param volume the volume
-   * @param email the email
-   * @return the matching records
-   */
-  @Query(
-      "SELECT d FROM ComicDetail d WHERE d.series = :series AND d.volume = :volume AND d.comicBook.id NOT IN (SELECT r.comicDetail.id FROM LastRead r WHERE r.user.email = :email) ORDER BY d.coverDate")
-  List<ComicDetail> getAllUnreadForSeriesAndVolume(
-      @Param("series") String series, @Param("volume") String volume, @Param("email") String email);
-
-  /**
-   * Returns all records for the given series and volume.
-   *
-   * @param series the series
-   * @param volume the volume
-   * @return the matching records
-   */
-  @Query(
-      "SELECT d FROM ComicDetail d WHERE d.series = :series AND d.volume = :volume ORDER BY d.coverDate")
-  List<ComicDetail> getAllForSeriesAndVolume(
-      @Param("series") String series, @Param("volume") String volume);
+  @Query("SELECT DISTINCT d.publisher FROM ComicDetail d WHERE d.series = :series")
+  Set<String> getAllPublishersForSeries(@Param("series") String series);
 
   /**
    * Returns all records for the given publisher, series, and volume that do not have a read entry
@@ -223,7 +198,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query(
       "SELECT DISTINCT t.value FROM ComicTag t WHERE t.type = :tagType AND t.comicDetail NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
   Set<String> getAllUnreadValuesForTagType(
-      @Param("tagType") String tagType, @Param("email") String email);
+      @Param("tagType") ComicTagType tagType, @Param("email") String email);
 
   /**
    * Returns all comics with the given tag type.
@@ -232,7 +207,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the matching records
    */
   @Query("SELECT DISTINCT t.value FROM ComicTag t WHERE t.type = :tagType")
-  Set<String> getAllValuesForTagType(@Param("tagType") String tagType);
+  Set<String> getAllValuesForTagType(@Param("tagType") ComicTagType tagType);
 
   /**
    * Returns all years with comics that do not have a read entry for the given user.
@@ -241,7 +216,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the matching years
    */
   @Query(
-      "SELECT DISTINCT YEAR(d.coverDate) FROM ComicDetail d WHERE d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
+      "SELECT DISTINCT YEAR(d.coverDate) FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d NOT IN (SELECT r.comicDetail FROM LastRead r WHERE r.user.email = :email)")
   Set<Integer> getAllUnreadYears(@Param("email") String email);
 
   /**
@@ -249,7 +224,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    *
    * @return the years
    */
-  @Query("SELECT DISTINCT YEAR(d.coverDate) FROM ComicDetail d")
+  @Query("SELECT DISTINCT YEAR(d.coverDate) FROM ComicDetail d WHERE d.coverDate IS NOT NULL")
   Set<Integer> getAllYears();
 
   /**
@@ -260,7 +235,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the matching weeks
    */
   @Query(
-      "SELECT DISTINCT d.coverDate FROM ComicDetail d WHERE year(d.coverDate) = :year AND d NOT IN (SELECT r.comicDetail from LastRead r WHERE r.user.email = :email)")
+      "SELECT DISTINCT d.coverDate FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND year(d.coverDate) = :year AND d NOT IN (SELECT r.comicDetail from LastRead r WHERE r.user.email = :email)")
   Set<Date> getAllUnreadWeeksForYear(@Param("year") int year, @Param("email") String email);
 
   /**
@@ -269,7 +244,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @param year the year
    * @return the matching weeks
    */
-  @Query("SELECT DISTINCT d.coverDate FROM ComicDetail d WHERE year(d.coverDate) = :year")
+  @Query(
+      "SELECT DISTINCT d.coverDate FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND year(d.coverDate) = :year")
   Set<Date> getAllWeeksForYear(@Param("year") int year);
 
   /**
@@ -281,14 +257,14 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @return the matching records
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate AND d.comicBook.id NOT IN (SELECT r.comicDetail.id FROM LastRead r WHERE r.user.email = :email) ORDER BY d.comicBook")
+      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate AND d.comicBook.id NOT IN (SELECT r.comicDetail.id FROM LastRead r WHERE r.user.email = :email) ORDER BY d.comicBook")
   List<ComicDetail> getAllUnreadForYearAndWeek(
       @Param("startDate") Date startDate,
       @Param("endDate") Date endDate,
       @Param("email") String email);
 
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate ORDER BY d.comicBook")
+      "SELECT d FROM ComicDetail d WHERE d.coverDate IS NOT NULL AND d.coverDate IS NOT NULL AND d.coverDate >= :startDate AND d.coverDate <= :endDate ORDER BY d.comicBook")
   List<ComicDetail> getAllForYearAndWeek(
       @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
@@ -313,7 +289,7 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
   @Query(
       "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType) AND d NOT IN (SELECT r.comicDetail from LastRead r WHERE r.user.email = :email)")
   List<ComicDetail> getAllUnreadComicsForTagType(
-      @Param("tagType") String tagType, @Param("email") String email);
+      @Param("tagType") ComicTagType tagType, @Param("email") String email);
 
   /**
    * Returns all comics with the given tag type.
@@ -323,5 +299,5 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    */
   @Query(
       "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType)")
-  List<ComicDetail> getAllComicsForTagType(@Param("tagType") String tagType);
+  List<ComicDetail> getAllComicsForTagType(@Param("tagType") ComicTagType tagType);
 }

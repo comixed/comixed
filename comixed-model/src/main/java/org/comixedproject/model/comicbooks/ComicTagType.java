@@ -30,19 +30,20 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public enum ComicTagType {
-  CHARACTER("character"),
-  TEAM("team"),
-  LOCATION("location"),
-  STORY("story"),
-  WRITER("writer"),
-  EDITOR("editor"),
-  PENCILLER("penciller"),
-  INKER("inker"),
-  COLORIST("colorist"),
-  LETERRER("leterrer"),
-  COVER("cover");
+  CHARACTER("character", "CHARACTER"),
+  TEAM("team", "TEAM"),
+  LOCATION("location", "LOCATION"),
+  STORY("story", "STORIE"),
+  WRITER("writer", "WRITER"),
+  EDITOR("editor", "EDITOR"),
+  PENCILLER("penciller", "PENCILLER"),
+  INKER("inker", "INKER"),
+  COLORIST("colorist", "COLORIST"),
+  LETERRER("leterrer", "LETERRER"),
+  COVER("cover", "COVER");
 
   @Getter private String value;
+  @Getter private String opdsValue;
 
   public static ComicTagType forValue(final String value) {
     final Optional<ComicTagType> result =
