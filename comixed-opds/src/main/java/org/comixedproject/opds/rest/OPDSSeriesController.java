@@ -23,7 +23,6 @@ import java.security.Principal;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.opds.OPDSUtils;
-import org.comixedproject.opds.model.OPDSAcquisitionFeed;
 import org.comixedproject.opds.model.OPDSNavigationFeed;
 import org.comixedproject.opds.service.OPDSAcquisitionService;
 import org.comixedproject.opds.service.OPDSNavigationService;
@@ -59,7 +58,7 @@ public class OPDSSeriesController {
   public OPDSNavigationFeed getRootFeedForSeries(
       final Principal principal, @RequestParam(name = "unread") final boolean unread) {
     final String email = principal.getName();
-    log.info("Getting publisher root feed: email={} unread={}", email, unread);
+    log.info("Getting series root feed: email={} unread={}", email, unread);
     return this.opdsNavigationService.getRootFeedForSeries(email, unread);
   }
 
@@ -75,41 +74,13 @@ public class OPDSSeriesController {
   @PreAuthorize("hasRole('READER')")
   @Timed(value = "comixed.opds.collections.series.get-volumes")
   @ResponseBody
-  public OPDSNavigationFeed getVolumesFeedForSeries(
+  public OPDSNavigationFeed getPublishersFeedForSeries(
       final Principal principal,
       @PathVariable("name") @NonNull final String name,
       @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
     final String seriesName = this.opdsUtils.urlDecodeString(name);
     final String email = principal.getName();
     log.info("Getting volumes feed: series={} email={} unread={}", seriesName, email, unread);
-    return this.opdsNavigationService.getVolumesFeedForSeries(seriesName, email, unread);
-  }
-
-  /**
-   * Returns the acquisition feed of comics for a given series and volume.
-   *
-   * @param principal the user principal
-   * @param series the series name
-   * @param volume the volume
-   * @param unread the unread flag
-   * @return the acquisition feed
-   */
-  @GetMapping(
-      value = "/opds/collections/series/{name}/volumes/{volume}",
-      produces = MediaType.APPLICATION_XML_VALUE)
-  @PreAuthorize("hasRole('READER')")
-  @Timed(value = "comixed.opds.series.get-comics")
-  @ResponseBody
-  public OPDSAcquisitionFeed getComicFeedForSeriesAndVolumes(
-      final Principal principal,
-      @PathVariable("name") @NonNull final String series,
-      @PathVariable("volume") @NonNull final String volume,
-      @RequestParam(name = "unread", defaultValue = "false") final boolean unread) {
-    final String email = principal.getName();
-    final String seriesName = this.opdsUtils.urlDecodeString(series);
-    final String volumeName = this.opdsUtils.urlDecodeString(volume);
-    log.info("Getting acquisition feed for series and volume: {} v{}", seriesName, volumeName);
-    return this.opdsAcquisitionService.getComicFeedForSeriesAndVolumes(
-        seriesName, volumeName, email, unread);
+    return this.opdsNavigationService.getPublishersFeedForSeries(seriesName, email, unread);
   }
 }

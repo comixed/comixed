@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicTagType;
 import org.comixedproject.repositories.comicbooks.ComicDetailRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class ComicDetailServiceTest {
   private static final String TEST_PUBLISHER = "THe Publisher Name";
   private static final String TEST_SERIES = "The Series Name";
   private static final String TEST_VOLUME = "2023";
-  private static final String TEST_TAG = "CHARACTERS";
+  private static final ComicTagType TEST_TAG = ComicTagType.CHARACTER;
   private static final int TEST_YEAR = 2023;
   private static final int TEST_WEEK = 17;
   private static final String TEST_SEARCH_TERM = "Random text...";
@@ -222,66 +223,32 @@ public class ComicDetailServiceTest {
   }
 
   @Test
-  public void testGetAllVolumesForSeriesWithUnread() {
+  public void testGetAllPublishersForSeriesWithUnread() {
     Mockito.when(
-            comicDetailRepository.getAllUnreadVolumesForSeries(
+            comicDetailRepository.getAllUnreadPublishersForSeries(
                 Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(volumeList);
+        .thenReturn(publisherList);
 
-    final Set<String> result = service.getAllVolumesForSeries(TEST_SERIES, TEST_EMAIL, true);
+    final Set<String> result = service.getAllPublishersForSeries(TEST_SERIES, TEST_EMAIL, true);
 
     assertNotNull(result);
-    assertSame(volumeList, result);
+    assertSame(publisherList, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadVolumesForSeries(TEST_SERIES, TEST_EMAIL);
+        .getAllUnreadPublishersForSeries(TEST_SERIES, TEST_EMAIL);
   }
 
   @Test
-  public void testGetAllVolumesForSeries() {
-    Mockito.when(comicDetailRepository.getAllVolumesForSeries(Mockito.anyString()))
-        .thenReturn(volumeList);
+  public void testGetAllPublishersForSeries() {
+    Mockito.when(comicDetailRepository.getAllPublishersForSeries(Mockito.anyString()))
+        .thenReturn(publisherList);
 
-    final Set<String> result = service.getAllVolumesForSeries(TEST_SERIES, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertSame(volumeList, result);
-
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllVolumesForSeries(TEST_SERIES);
-  }
-
-  @Test
-  public void testGetAllComicsForSeriesAndVolumesWithUnread() {
-    Mockito.when(
-            comicDetailRepository.getAllUnreadForSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicDetailList);
-
-    final List<ComicDetail> result =
-        service.getAllComicsForSeriesAndVolume(TEST_SERIES, TEST_VOLUME, TEST_EMAIL, true);
+    final Set<String> result = service.getAllPublishersForSeries(TEST_SERIES, TEST_EMAIL, false);
 
     assertNotNull(result);
-    assertSame(comicDetailList, result);
+    assertSame(publisherList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadForSeriesAndVolume(TEST_SERIES, TEST_VOLUME, TEST_EMAIL);
-  }
-
-  @Test
-  public void testGetAllComicsForSeriesAndVolumes() {
-    Mockito.when(
-            comicDetailRepository.getAllForSeriesAndVolume(
-                Mockito.anyString(), Mockito.anyString()))
-        .thenReturn(comicDetailList);
-
-    final List<ComicDetail> result =
-        service.getAllComicsForSeriesAndVolume(TEST_SERIES, TEST_VOLUME, TEST_EMAIL, false);
-
-    assertNotNull(result);
-    assertSame(comicDetailList, result);
-
-    Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllForSeriesAndVolume(TEST_SERIES, TEST_VOLUME);
+    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllPublishersForSeries(TEST_SERIES);
   }
 
   @Test
@@ -325,7 +292,7 @@ public class ComicDetailServiceTest {
   public void testGetAllValuesForTagsWithUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadValuesForTagType(
-                Mockito.anyString(), Mockito.anyString()))
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(tagList);
 
     final Set<String> result = service.getAllValuesForTag(TEST_TAG, TEST_EMAIL, true);
@@ -339,7 +306,7 @@ public class ComicDetailServiceTest {
 
   @Test
   public void testGetAllValuesForTags() {
-    Mockito.when(comicDetailRepository.getAllValuesForTagType(Mockito.anyString()))
+    Mockito.when(comicDetailRepository.getAllValuesForTagType(Mockito.any(ComicTagType.class)))
         .thenReturn(tagList);
 
     final Set<String> result = service.getAllValuesForTag(TEST_TAG, TEST_EMAIL, false);
@@ -463,7 +430,7 @@ public class ComicDetailServiceTest {
   public void testGetComicsForTagWithUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadComicsForTagType(
-                Mockito.anyString(), Mockito.anyString()))
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(comicDetailList);
 
     final List<ComicDetail> result = service.getAllComicsForTag(TEST_TAG, TEST_EMAIL, true);
@@ -477,7 +444,7 @@ public class ComicDetailServiceTest {
 
   @Test
   public void testGetComicsForTag() {
-    Mockito.when(comicDetailRepository.getAllComicsForTagType(Mockito.anyString()))
+    Mockito.when(comicDetailRepository.getAllComicsForTagType(Mockito.any(ComicTagType.class)))
         .thenReturn(comicDetailList);
 
     final List<ComicDetail> result = service.getAllComicsForTag(TEST_TAG, TEST_EMAIL, false);
