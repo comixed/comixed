@@ -61,7 +61,7 @@ public class PublishComicBookRemovalActionTest {
     try {
       action.publish(comicBook);
     } finally {
-      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicListView.class);
+      Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicDetailsView.class);
     }
   }
 
@@ -71,10 +71,10 @@ public class PublishComicBookRemovalActionTest {
 
     action.publish(comicBook);
 
-    Mockito.verify(objectMapper, Mockito.times(1)).writerWithView(View.ComicListView.class);
+    Mockito.verify(objectMapper, Mockito.times(2)).writerWithView(View.ComicDetailsView.class);
     Mockito.verify(objectWriter, Mockito.times(2)).writeValueAsString(comicBook);
     Mockito.verify(messagingTemplate, Mockito.times(1))
-        .convertAndSend(Constants.COMIC_LIST_REMOVAL_TOPIC, TEST_COMIC_AS_JSON);
+        .convertAndSend(PublishComicRemovalAction.COMIC_LIST_REMOVAL_TOPIC, TEST_COMIC_AS_JSON);
     Mockito.verify(messagingTemplate, Mockito.times(1))
         .convertAndSend(
             String.format(Constants.COMIC_BOOK_REMOVAL_TOPIC, TEST_COMIC_ID), TEST_COMIC_AS_JSON);

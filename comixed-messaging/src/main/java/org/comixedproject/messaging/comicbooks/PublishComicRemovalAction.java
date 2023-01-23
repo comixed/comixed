@@ -35,10 +35,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishComicRemovalAction extends AbstractPublishAction<ComicBook> {
+  /** Topic which receives comic list removals in real time. */
+  public static final String COMIC_LIST_REMOVAL_TOPIC = "/topic/comic-list.removal";
+
   @Override
   public void publish(final ComicBook comicBook) throws PublishingException {
     log.trace("Publishing comicBook list removal");
-    this.doPublish(Constants.COMIC_LIST_REMOVAL_TOPIC, comicBook, View.ComicListView.class);
+    this.doPublish(COMIC_LIST_REMOVAL_TOPIC, comicBook, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book removal");
     this.doPublish(
         String.format(Constants.COMIC_BOOK_REMOVAL_TOPIC, comicBook.getId()),

@@ -81,37 +81,37 @@ export const reducer = createReducer(
   }),
   on(loadComicBooksFailed, state => ({ ...state, loading: false })),
   on(comicBookListUpdateReceived, (state, action) => {
-    const comicBooks = state.comicBooks.filter(
-      comicBook => comicBook.comicId !== action.comicBook.comicId
+    const comicDetails = state.comicBooks.filter(
+      comicBook => comicBook.id !== action.comicDetail.id
     );
-    comicBooks.push(action.comicBook);
-    return comicListUpdate(state, comicBooks);
+    comicDetails.push(action.comicDetail);
+    return comicListUpdate(state, comicDetails);
   }),
   on(comicBookListRemovalReceived, (state, action) => {
-    const comicBooks = state.comicBooks.filter(
-      comicBook => comicBook.comicId !== action.comicBook.comicId
+    const comicDetails = state.comicBooks.filter(
+      comicBook => comicBook.id !== action.comicDetail.id
     );
-    return comicListUpdate(state, comicBooks);
+    return comicListUpdate(state, comicDetails);
   })
 );
 
 function comicListUpdate(
   state: ComicBookListState,
-  comicBooks: ComicDetail[]
+  comicDetails: ComicDetail[]
 ): ComicBookListState {
   return {
     ...state,
-    comicBooks,
-    unprocessed: comicBooks.filter(
+    comicBooks: comicDetails,
+    unprocessed: comicDetails.filter(
       comic => comic.comicState === ComicBookState.UNPROCESSED
     ),
-    unscraped: comicBooks.filter(
+    unscraped: comicDetails.filter(
       comic => isEmpty(comic.publisher) || isEmpty(comic.series)
     ),
-    changed: comicBooks.filter(
+    changed: comicDetails.filter(
       comic => comic.comicState == ComicBookState.CHANGED
     ),
-    deleted: comicBooks.filter(
+    deleted: comicDetails.filter(
       comic => comic.comicState === ComicBookState.DELETED
     ),
     loading: false

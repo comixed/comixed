@@ -214,7 +214,7 @@ describe('ComicBook List Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, comicBooks: [EXISTING] },
-        comicBookListUpdateReceived({ comicBook: NEW })
+        comicBookListUpdateReceived({ comicDetail: NEW })
       );
     });
 
@@ -234,7 +234,7 @@ describe('ComicBook List Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, comicBooks: [EXISTING] },
-        comicBookListUpdateReceived({ comicBook: UPDATED })
+        comicBookListUpdateReceived({ comicDetail: UPDATED })
       );
     });
 
@@ -253,7 +253,7 @@ describe('ComicBook List Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, comicBooks: COMIC_BOOKS },
-        comicBookListRemovalReceived({ comicBook: REMOVED })
+        comicBookListRemovalReceived({ comicDetail: REMOVED })
       );
     });
 

@@ -34,10 +34,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 public class PublishComicUpdateAction extends AbstractPublishAction<ComicBook> {
+  public static final String COMIC_LIST_UPDATE_TOPIC = "/topic/comic-list.update";
+
   @Override
   public void publish(final ComicBook comicBook) throws PublishingException {
     log.trace("Publishing comicBook list update");
-    this.doPublish(Constants.COMIC_LIST_UPDATE_TOPIC, comicBook, View.ComicListView.class);
+    this.doPublish(COMIC_LIST_UPDATE_TOPIC, comicBook, View.ComicDetailsView.class);
     log.trace("Publishing comicBook book update");
     this.doPublish(
         String.format(Constants.COMIC_BOOK_UPDATE_TOPIC, comicBook.getId()),

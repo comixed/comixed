@@ -39,12 +39,12 @@ export const loadComicBooksFailed = createAction(
 
 export const comicBookListUpdateReceived = createAction(
   '[Comic Book List] A comic update was received',
-  props<{ comicBook: ComicDetail }>()
+  props<{ comicDetail: ComicDetail }>()
 );
 
 export const comicBookListRemovalReceived = createAction(
   '[Comic Book List] A comic removal was received',
-  props<{ comicBook: ComicDetail }>()
+  props<{ comicDetail: ComicDetail }>()
 );
 
 export const setComicBookListFilter = createAction(
