@@ -51,7 +51,9 @@ export class ComicBookListService {
           COMIC_LIST_UPDATE_TOPIC,
           comicBook => {
             this.logger.debug('Received comic list update:', comicBook);
-            this.store.dispatch(comicBookListUpdateReceived({ comicBook }));
+            this.store.dispatch(
+              comicBookListUpdateReceived({ comicDetail: comicBook.detail })
+            );
           }
         );
         this.logger.trace('Subscribing to comic list removals');
@@ -59,7 +61,9 @@ export class ComicBookListService {
           COMIC_LIST_REMOVAL_TOPIC,
           comicBook => {
             this.logger.debug('Received comic removal update:', comicBook);
-            this.store.dispatch(comicBookListRemovalReceived({ comicBook }));
+            this.store.dispatch(
+              comicBookListRemovalReceived({ comicDetail: comicBook.detail })
+            );
           }
         );
       }
