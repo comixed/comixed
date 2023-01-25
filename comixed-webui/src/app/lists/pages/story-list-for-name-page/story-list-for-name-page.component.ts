@@ -78,7 +78,7 @@ export class StoryListForNamePageComponent
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private titleService: TitleService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.logger.trace('Loading story name from parameters');

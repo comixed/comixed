@@ -47,8 +47,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ComicBookCoversComponent } from './components/comic-book-covers/comic-book-covers.component';
-import { LibraryToolbarComponent } from './components/library-toolbar/library-toolbar.component';
 import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ComicDetailsDialogComponent } from './components/comic-details-dialog/comic-details-dialog.component';
@@ -109,11 +107,9 @@ import { LibrarySelectionsEffects } from '@app/library/effects/library-selection
 @NgModule({
   declarations: [
     LibraryPageComponent,
-    LibraryToolbarComponent,
     SelectedComicsComponent,
     ComicDetailsDialogComponent,
     ScrapingPageComponent,
-    ComicBookCoversComponent,
     ArchiveTypePipe,
     UnreadComicsPipe,
     DuplicatePageListPageComponent,
@@ -187,6 +183,6 @@ import { LibrarySelectionsEffects } from '@app/library/effects/library-selection
     MatProgressBarModule,
     MatDividerModule
   ],
-  exports: [CommonModule, CoreModule, ComicBookCoversComponent, ArchiveTypePipe]
+  exports: [CommonModule, CoreModule, ArchiveTypePipe]
 })
 export class LibraryModule {}

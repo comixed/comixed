@@ -1,0 +1,54 @@
+@import 'src/styles';
+
+.mat-column-selection {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
+.mat-column-thumbnail {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
+.mat-column-archive-type {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
+.mat-column-comic-state {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
+.mat-column-publisher {
+  width: $cx-column-large;
+  max-width: $cx-column-large;
+}
+
+.mat-column-series {
+}
+
+.mat-column-volume {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
+.mat-column-issue-number {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+}
+
+.mat-column-cover-date {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-store-date {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}
+
+.mat-column-added-date {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+}

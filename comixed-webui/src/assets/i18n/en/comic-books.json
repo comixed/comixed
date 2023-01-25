@@ -129,6 +129,20 @@
       "title": "Undo Changes"
     }
   },
+  "comic-detail-list-view": {
+    "label": {
+      "added-date": "Added",
+      "archive-type": "Archive",
+      "comic-state": "State",
+      "cover-date": "Cover Date",
+      "issue-number": "Issue #",
+      "publisher": "Publisher",
+      "series": "Series",
+      "store-date": "Store Date",
+      "thumbnail": "",
+      "volume": "Volume"
+    }
+  },
   "comic-format": {
     "load-formats": {
       "effect-failure": "Failed to load comic formats."

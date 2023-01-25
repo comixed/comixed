@@ -76,7 +76,7 @@ export class PublisherDetailPageComponent
     private activatedRoute: ActivatedRoute,
     private titleService: TitleService,
     private translateService: TranslateService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {

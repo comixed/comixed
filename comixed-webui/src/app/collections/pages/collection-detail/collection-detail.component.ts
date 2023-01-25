@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -42,13 +48,22 @@ import { selectLibrarySelections } from '@app/library/selectors/library-selectio
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-collection-detail',
   templateUrl: './collection-detail.component.html',
   styleUrls: ['./collection-detail.component.scss']
 })
-export class CollectionDetailComponent implements OnInit, OnDestroy {
+export class CollectionDetailComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+
   paramsSubscription: Subscription;
   comicSubscription: Subscription;
   routableTypeName: string;
@@ -56,7 +71,6 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
   collectionName: string;
   volume: string;
   volumeDisplayed: string;
-  comicBooks: ComicDetail[] = [];
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
   readingListsSubscription: Subscription;
@@ -73,7 +87,7 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private translateService: TranslateService,
     private titleService: TitleService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.paramsSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;
@@ -148,6 +162,29 @@ export class CollectionDetailComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()
     );
+  }
+
+  get comicBooks(): ComicDetail[] {
+    return this.dataSource.data.map(entry => entry.item);
+  }
+
+  set comicBooks(comicBooks: ComicDetail[]) {
+    const page = this.dataSource.paginator?.pageIndex;
+    const oldData = this.dataSource.data;
+    this.dataSource.data = comicBooks.map(comic => {
+      return {
+        item: comic,
+        selected: oldData.find(entry => entry.item.id === comic.id)?.selected
+      };
+    });
+    if (!!this.dataSource.paginator) {
+      this.dataSource.paginator.pageIndex = page;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.trace('Setting up pagination');
+    this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {

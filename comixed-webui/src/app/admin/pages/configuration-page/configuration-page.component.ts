@@ -47,7 +47,7 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.configStateSubscription = this.store
       .select(selectConfigurationOptionListState)

@@ -32,6 +32,8 @@ import { getUserPreference } from '@app/user';
 import { filter } from 'rxjs/operators';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-metadata-process-page',
@@ -39,17 +41,18 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
   styleUrls: ['./metadata-process-page.component.scss']
 })
 export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+
   langChangeSubscription: Subscription;
   selectIdSubscription: Subscription;
   comicBooksSubscription: Subscription;
   processStateSubscription: Subscription;
   processState: MetadataUpdateProcessState;
   selectedIds: number[] = [];
-  comicBooks: ComicDetail[] = [];
-  displayedComicBooks: ComicDetail[] = [];
   userSubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
   showCovers = false;
+  private _comics: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -66,14 +69,14 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
       .select(selectLibrarySelections)
       .subscribe(ids => {
         this.selectedIds = ids;
-        this.updateDisplayedComicBooks();
+        this.comicBooks = this.comicBooks;
       });
     this.logger.trace('Subscribing to the comic book list');
     this.comicBooksSubscription = this.store
       .select(selectComicBookList)
       .subscribe(comicBooks => {
         this.comicBooks = comicBooks;
-        this.updateDisplayedComicBooks();
+        this.comicBooks = this.comicBooks;
       });
     this.logger.trace('Subscribing to process updates');
     this.processStateSubscription = this.store
@@ -101,10 +104,21 @@ export class MetadataProcessPageComponent implements OnDestroy, AfterViewInit {
       });
   }
 
-  updateDisplayedComicBooks(): void {
-    this.displayedComicBooks = this.comicBooks.filter(comicBook =>
-      this.selectedIds.includes(comicBook.comicId)
-    );
+  get comicBooks(): ComicDetail[] {
+    return this._comics;
+  }
+
+  set comicBooks(comicBooks: ComicDetail[]) {
+    this._comics = comicBooks;
+    const oldData = this.dataSource.data;
+    this.dataSource.data = comicBooks
+      .filter(comic => this.selectedIds.includes(comic.id))
+      .map(comic => {
+        return {
+          item: comic,
+          selected: oldData.find(entry => entry.item.id === comic.id)?.selected
+        };
+      });
   }
 
   ngAfterViewInit(): void {

@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,21 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { ComicCoverUrlPipe } from './comic-cover-url.pipe';
-import { API_ROOT_URL } from '@app/core';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
-import { MISSING_COMIC_IMAGE_URL } from '@app/library/library.constants';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 
-describe('ComicCoverUrlPipe', () => {
-  const pipe = new ComicCoverUrlPipe();
-
-  it('returns the URL for the comic cover image', () => {
-    expect(pipe.transform(COMIC_DETAIL_1)).toEqual(
-      `${API_ROOT_URL}/comics/${COMIC_DETAIL_1.comicId}/cover/content`
-    );
-  });
-
-  it('returns the missing image url for null comics', () => {
-    expect(pipe.transform(null)).toEqual(MISSING_COMIC_IMAGE_URL);
-  });
-});
+export function archiveTypeFromString(key: string): ArchiveType {
+  switch (key) {
+    case 'CBZ':
+      return ArchiveType.CBZ;
+    case 'CBR':
+      return ArchiveType.CBR;
+    case 'CB7':
+      return ArchiveType.CB7;
+  }
+  return null;
+}

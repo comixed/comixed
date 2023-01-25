@@ -12,16 +12,9 @@
   [processState]="processState"
 ></cx-metadata-process-status>
 
-<cx-comic-book-covers
+<cx-comic-detail-list-view
   *ngIf="!processState || !processState.active"
-  [title]="
-    'metadata-process.page-title' | translate: { count: selectedIds.length }
-  "
-  [showCovers]="showCovers"
-  [comicBooks]="displayedComicBooks"
-  [showActions]="false"
-  [pageSize]="pageSize"
-  [showCoverFilters]="false"
-  (archiveTypeChanged)="onArchiveTypeChanged($event)"
-  (pageIndexChanged)="onPageIndexChanged($event)"
-></cx-comic-book-covers>
+  class="cx-width-100"
+  [dataSource]="dataSource"
+  [selectedIds]="selectedIds"
+></cx-comic-detail-list-view>

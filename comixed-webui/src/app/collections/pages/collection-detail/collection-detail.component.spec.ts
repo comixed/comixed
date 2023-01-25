@@ -27,14 +27,12 @@ import {
 } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComicBookCoversComponent } from '@app/library/components/comic-book-covers/comic-book-covers.component';
 import {
   initialState as initialLibraryState,
   LIBRARY_FEATURE_KEY
 } from '@app/library/reducers/library.reducer';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -82,6 +80,10 @@ import {
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { MatInputModule } from '@angular/material/input';
+import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('CollectionDetailComponent', () => {
   const COMIC_BOOKS = [
@@ -118,8 +120,7 @@ describe('CollectionDetailComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           CollectionDetailComponent,
-          ComicBookCoversComponent,
-          LibraryToolbarComponent,
+          ComicDetailListViewComponent,
           ComicTitlePipe,
           ComicCoverUrlPipe,
           ArchiveTypePipe,
@@ -141,7 +142,10 @@ describe('CollectionDetailComponent', () => {
           MatOptionModule,
           MatDividerModule,
           MatSortModule,
-          MatPaginatorModule
+          MatPaginatorModule,
+          MatInputModule,
+          MatTableModule,
+          MatCheckboxModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -249,6 +253,21 @@ describe('CollectionDetailComponent', () => {
       it('uses the missing volume value', () => {
         expect(component.volume).toEqual('');
       });
+    });
+  });
+
+  describe('updating comics with existing selections', () => {
+    beforeEach(() => {
+      component.dataSource.data = [{ item: COMIC_BOOKS[0], selected: true }];
+      component.comicBooks = COMIC_BOOKS;
+    });
+
+    it('retains previous selections', () => {
+      expect(
+        component.dataSource.data.find(
+          entry => entry.item.id === COMIC_BOOKS[0].id
+        ).selected
+      ).toBeTrue();
     });
   });
 

@@ -28,12 +28,12 @@
     mat-icon-button
     color="primary"
     [matTooltip]="'comic-book.tooltip.toggle-page-view' | translate"
-    (click)="urlParameterService.onTogglePagesAsGrid()"
+    (click)="queryParameterService.onTogglePagesAsGrid()"
   >
-    <mat-icon *ngIf="urlParameterService.pagesAsGrid$ | async">
+    <mat-icon *ngIf="queryParameterService.pagesAsGrid$ | async">
       grid_view
     </mat-icon>
-    <mat-icon *ngIf="(urlParameterService.pagesAsGrid$ | async) === false">
+    <mat-icon *ngIf="(queryParameterService.pagesAsGrid$ | async) === false">
       list_view
     </mat-icon>
   </button>
@@ -163,8 +163,8 @@
   <div class="cx-padding-left-5" fxFlex.gt-sm="80%" fxFlex.sm="100%">
     <mat-tab-group
       animationDuration="0ms"
-      [selectedIndex]="urlParameterService.currentTab$ | async"
-      (selectedTabChange)="urlParameterService.onTabChange($event.index)"
+      [selectedIndex]="queryParameterService.currentTab$ | async"
+      (selectedTabChange)="queryParameterService.onTabChange($event.index)"
     >
       <mat-tab [label]="'comic-book.label.comic-overview' | translate">
         <cx-comic-overview
@@ -180,7 +180,7 @@
         <cx-comic-pages
           class="cx-width-100"
           [comic]="comicBook"
-          [showPagesAsGrid]="urlParameterService.pagesAsGrid$ | async"
+          [showPagesAsGrid]="queryParameterService.pagesAsGrid$ | async"
           [isAdmin]="isAdmin"
           (pagesChanged)="onPagesChanged($event)"
         ></cx-comic-pages>

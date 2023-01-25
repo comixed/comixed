@@ -46,11 +46,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicPageUrlPipe } from '@app/comic-books/pipes/comic-page-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
-import { IssueMetadataTitlePipe } from '@app/comic-metadata/pipes/issue-metadata-title.pipe';
-import {
-  reducer as scrapingReducer,
-  METADATA_FEATURE_KEY
-} from '@app/comic-metadata/reducers/metadata.reducer';
+import { IssueMetadataTitlePipe } from '@app/comic-books/pipes/issue-metadata-title.pipe';
 import {
   COMIC_BOOK_LIST_FEATURE_KEY,
   reducer as comicListReducer
@@ -59,7 +55,6 @@ import {
   COMIC_BOOK_FEATURE_KEY,
   reducer as comicReducer
 } from '@app/comic-books/reducers/comic-book.reducer';
-import { MetadataEffects } from '@app/comic-metadata/effects/metadata.effects';
 import { ComicBookListEffects } from '@app/comic-books/effects/comic-book-list.effects';
 import { ComicBookEffects } from '@app/comic-books/effects/comic-book.effects';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -85,7 +80,10 @@ import { FlexModule } from '@angular/flex-layout';
 import { MatBadgeModule } from '@angular/material/badge';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
-import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
+import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume-metadata-table/volume-metadata-table.component';
+import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
+import { ComicDetailListViewComponent } from './components/comic-detail-list-view/comic-detail-list-view.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -103,12 +101,14 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
     ComicTitlePipe,
     IssueMetadataTitlePipe,
     PageHashUrlPipe,
-    CoverDateFilterPipe
+    CoverDateFilterPipe,
+    VolumeMetadataTableComponent,
+    VolumeMetadataTitlePipe,
+    ComicDetailListViewComponent
   ],
   imports: [
     CommonModule,
     ComicBooksRouting,
-    StoreModule.forFeature(METADATA_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(COMIC_BOOK_LIST_FEATURE_KEY, comicListReducer),
     StoreModule.forFeature(COMIC_BOOK_FEATURE_KEY, comicReducer),
     StoreModule.forFeature(IMPRINT_LIST_FEATURE_KEY, imprintListReducer),
@@ -117,7 +117,6 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
       markComicsDeletedReducer
     ),
     EffectsModule.forFeature([
-      MetadataEffects,
       ComicBookListEffects,
       ComicBookEffects,
       ImprintListEffects,
@@ -147,7 +146,7 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
     FlexModule,
     MatBadgeModule,
     DragDropModule,
-    ComicMetadataModule
+    MatCheckboxModule
   ],
   exports: [
     CommonModule,
@@ -158,7 +157,9 @@ import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
     ComicTitlePipe,
     ComicCoverUrlPipe,
     PageHashUrlPipe,
-    CoverDateFilterPipe
+    CoverDateFilterPipe,
+    VolumeMetadataTableComponent,
+    ComicDetailListViewComponent
   ]
 })
 export class ComicBooksModule {

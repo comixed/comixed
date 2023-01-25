@@ -16,7 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
@@ -29,7 +35,7 @@ import {
   getUserPreference,
   isAdmin
 } from '@app/user/user.functions';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { selectComicBookListState } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import { LastRead } from '@app/last-read/models/last-read';
@@ -38,19 +44,40 @@ import { ReadingList } from '@app/lists/models/reading-list';
 import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selectors';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import {
+  clearSelectedComicBooks,
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { PAGE_SIZE_DEFAULT } from '@app/core';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { ListItem } from '@app/core/models/ui/list-item';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { updateMetadata } from '@app/library/actions/update-metadata.actions';
+import { ConfirmationService } from '@tragically-slick/confirmation';
+import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
+import { purgeLibrary } from '@app/library/actions/purge-library.actions';
+import { rescanComics } from '@app/library/actions/rescan-comics.actions';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-library-page',
   templateUrl: './library-page.component.html',
   styleUrls: ['./library-page.component.scss']
 })
-export class LibraryPageComponent implements OnInit, OnDestroy {
+export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+
+  showActions = true;
+  showComicFilters = true;
+
+  queryParamsSubscription: Subscription;
+
   comicBookListStateSubscription: Subscription;
   selectedSubscription: Subscription;
   selectedIds: number[] = [];
@@ -73,15 +100,29 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
   showCovers = true;
+  coverYears: ListItem<number>[] = [];
+  coverMonths: ListItem<number>[] = [];
+  readonly archiveTypeOptions: SelectionOption<ArchiveType>[] = [
+    { label: 'archive-type.label.all', value: null },
+    { label: 'archive-type.label.cbz', value: ArchiveType.CBZ },
+    { label: 'archive-type.label.cbr', value: ArchiveType.CBR },
+    { label: 'archive-type.label.cb7', value: ArchiveType.CB7 }
+  ];
+  private _comicDetails: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private titleService: TitleService,
+    private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
+    this.queryParamsSubscription = this.activatedRoute.queryParams.subscribe(
+      params => this.loadDataSource()
+    );
     this.dataSubscription = this.activatedRoute.data.subscribe(data => {
       this.unreadOnly = !!data.unread && data.unread === true;
       this.unscrapedOnly = !!data.unscraped && data.unscraped === true;
@@ -114,15 +155,15 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         this.store.dispatch(setBusyState({ enabled: state.loading }));
         if (this.unscrapedOnly) {
-          this._comicBooks = state.unscraped;
+          this.comicBooks = state.unscraped;
         } else if (this.changedOnly) {
-          this._comicBooks = state.changed;
+          this.comicBooks = state.changed;
         } else if (this.deletedOnly) {
-          this._comicBooks = state.deleted;
+          this.comicBooks = state.deleted;
         } else if (this.unprocessedOnly) {
-          this._comicBooks = state.unprocessed;
+          this.comicBooks = state.unprocessed;
         } else {
-          this._comicBooks = state.comicBooks;
+          this.comicBooks = state.comicBooks;
         }
       });
     this.selectedSubscription = this.store
@@ -151,14 +192,43 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _comicBooks: ComicDetail[] = [];
-
   get comicBooks(): ComicDetail[] {
-    return this._comicBooks;
+    return this._comicDetails;
   }
 
   set comicBooks(comics: ComicDetail[]) {
-    this._comicBooks = comics;
+    this.logger.debug('Setting comics:', comics);
+    this._comicDetails = comics;
+    this.logger.debug('Loading cover year options');
+    this.coverYears = [
+      { label: 'filtering.label.all-years', value: null } as ListItem<number>
+    ].concat(
+      comics
+        .filter(comic => !!comic.coverDate)
+        .map(comic => new Date(comic.coverDate).getFullYear())
+        .filter((year, index, self) => index === self.indexOf(year))
+        .sort((left, right) => left - right)
+        .map(year => {
+          return { value: year, label: `${year}` } as ListItem<number>;
+        })
+    );
+    this.logger.debug('Loading cover month options');
+    this.coverMonths = [
+      { label: 'filtering.label.all-months', value: null }
+    ].concat(
+      Array.from(Array(12).keys()).map(month => {
+        return {
+          value: month,
+          label: `filtering.label.month-${month}`
+        } as ListItem<number>;
+      })
+    );
+    this.loadDataSource();
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.trace('Setting up pagination');
+    this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
@@ -166,6 +236,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.queryParamsSubscription.unsubscribe();
     this.dataSubscription.unsubscribe();
     this.comicBookListStateSubscription.unsubscribe();
     this.selectedSubscription.unsubscribe();
@@ -177,34 +248,173 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
   onSelectAllComics(selected: boolean): void {
     if (selected) {
       this.logger.trace('Selecting all comics with filtering');
-      const coverDateFilter = this.urlParameterService.coverYear$.getValue();
+      const coverDateFilter = this.queryParameterService.coverYear$.getValue();
       const archiveTypeFilter =
-        this.urlParameterService.archiveType$.getValue();
+        this.queryParameterService.archiveType$.getValue();
       this.store.dispatch(
         selectComicBooks({
           ids: this.comicBooks
             .filter(
               comicBook =>
-                (!coverDateFilter.year ||
-                  new Date(comicBook.coverDate).getFullYear() ===
-                    coverDateFilter.year) &&
-                (!coverDateFilter.month ||
-                  new Date(comicBook.coverDate).getMonth() ===
-                    coverDateFilter.month) &&
-                (!archiveTypeFilter ||
-                  comicBook.archiveType === archiveTypeFilter) &&
-                (!this.unreadOnly ||
-                  !this.lastReadDates
-                    .map(lastRead => lastRead.comicDetail.comicId)
-                    .includes(comicBook.comicId))
+                coverDateFilter.year === null ||
+                coverDateFilter.year ===
+                  new Date(comicBook.coverDate).getFullYear()
             )
-            .map(comicBook => comicBook.comicId)
+            .filter(
+              comicBook =>
+                coverDateFilter.month === null ||
+                coverDateFilter.month ===
+                  new Date(comicBook.coverDate).getMonth()
+            )
+            .filter(
+              comicBook =>
+                !archiveTypeFilter ||
+                comicBook.archiveType === archiveTypeFilter
+            )
+            .filter(
+              comicBook =>
+                !this.unreadOnly ||
+                !this.lastReadDates
+                  .map(entry => entry.comicDetail.id)
+                  .includes(comicBook.id)
+            )
+            .map(comicBook => comicBook.id)
         })
       );
     } else {
       this.logger.trace('Deselecting all comics');
       this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
     }
+  }
+
+  onSelectAll(): void {
+    this.logger.debug('Selecting all comics');
+    this.store.dispatch(
+      selectComicBooks({
+        ids: this.dataSource.filteredData.map(comic => comic.item.id)
+      })
+    );
+  }
+
+  onDeselectAll(): void {
+    this.logger.debug('Deselecting all comics');
+    this.store.dispatch(clearSelectedComicBooks());
+  }
+
+  onUpdateMetadata(): void {
+    this.logger.trace('Confirming with the user to update metadata');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.update-metadata.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.update-metadata.confirmation-message',
+        { count: this.selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: update metadata');
+        this.store.dispatch(
+          updateMetadata({
+            ids: this.selectedIds
+          })
+        );
+      }
+    });
+  }
+
+  onConsolidateLibrary(): void {
+    this.logger.trace('Confirming with the user to consolidate the library');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.consolidate.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.consolidate.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: consolidate library');
+        this.store.dispatch(startLibraryConsolidation());
+      }
+    });
+  }
+
+  onPurgeLibrary(): void {
+    this.logger.trace('Confirming purging the library');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.purge-library.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.purge-library.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: purge library');
+        this.store.dispatch(purgeLibrary({ ids: this.selectedIds }));
+      }
+    });
+  }
+
+  onScrapeComics(): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'scraping.start-scraping.confirmation-title',
+        { count: this.selectedIds.length }
+      ),
+      message: this.translateService.instant(
+        'scraping.start-scraping.confirmation-message',
+        { count: this.selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.debug('Start scraping comics');
+        this.router.navigate(['/library', 'scrape']);
+      }
+    });
+  }
+
+  onRescanComics(): void {
+    this.logger.trace('Confirming with the user to rescan the selected comics');
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.rescan-comics.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.rescan-comics.confirmation-message',
+        { count: this.selectedIds.length }
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action to rescan comics');
+        this.store.dispatch(
+          rescanComics({
+            comicBooks: this.comicBooks.filter(comic =>
+              this.selectedIds.includes(comic.id)
+            )
+          })
+        );
+      }
+    });
+  }
+
+  private loadDataSource(): void {
+    this.dataSource.data = this.comicBooks
+      .filter(
+        comic =>
+          (!this.queryParameterService.coverYear$.getValue() ||
+            ((!this.queryParameterService.coverYear$.getValue().year ||
+              new Date(comic.coverDate).getFullYear() ===
+                this.queryParameterService.coverYear$.getValue().year) &&
+              (!this.queryParameterService.coverYear$.getValue().month ||
+                new Date(comic.coverDate).getMonth() ===
+                  this.queryParameterService.coverYear$.getValue().month))) &&
+          (!this.queryParameterService.archiveType$.getValue() ||
+            comic.archiveType ===
+              this.queryParameterService.archiveType$.getValue())
+      )
+      .map(comic => {
+        return {
+          item: comic,
+          selected: this.selectedIds.includes(comic.id)
+        };
+      });
   }
 
   private loadTranslations(): void {

@@ -1,10 +1,3 @@
-<h2>
-  {{
-    "collections.publisher-detail.page-title"
-      | translate: { name: name, count: this.dataSource.data.length }
-  }}
-</h2>
-
 <mat-toolbar class="cx-primary-light-background cx-width-100">
   <mat-form-field class="cx-width-50" appearance="standard">
     <input
@@ -25,7 +18,7 @@
     [pageIndex]="pageIndex"
     [pageSizeOptions]="pageOptions"
     (page)="
-      urlParameterService.onPageChange(
+      queryParameterService.onPageChange(
         $event.pageSize,
         $event.pageIndex,
         $event.previousPageIndex
@@ -34,13 +27,20 @@
   ></mat-paginator>
 </mat-toolbar>
 
+<h2>
+  {{
+    "collections.publisher-detail.page-title"
+      | translate: { name: name, count: this.dataSource.data.length }
+  }}
+</h2>
+
 <mat-table
   [dataSource]="dataSource"
   matSort
-  [matSortActive]="urlParameterService.sortBy$ | async"
-  [matSortDirection]="urlParameterService.sortDirection$ | async"
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
   (matSortChange)="
-    urlParameterService.onSortChange($event.active, $event.direction)
+    queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
   <ng-container matColumnDef="series">

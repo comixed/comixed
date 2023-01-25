@@ -112,7 +112,7 @@ export class ComicBookPageComponent
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private urlParameterService: QueryParameterService,
+    private queryParameterService: QueryParameterService,
     private titleService: TitleService,
     private translateService: TranslateService,
     private comicTitlePipe: ComicTitlePipe,

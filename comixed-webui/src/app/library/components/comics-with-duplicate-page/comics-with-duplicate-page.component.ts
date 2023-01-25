@@ -24,6 +24,8 @@ import { Subscription } from 'rxjs';
 import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-comics-with-duplicate-page',
@@ -31,8 +33,9 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
   styleUrls: ['./comics-with-duplicate-page.component.scss']
 })
 export class ComicsWithDuplicatePageComponent implements OnDestroy {
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+
   comicBookSubscription: Subscription;
-  comicBooks: ComicDetail[] = [];
 
   constructor(
     private logger: LoggerService,
@@ -43,10 +46,20 @@ export class ComicsWithDuplicatePageComponent implements OnDestroy {
       .select(selectComicBookList)
       .subscribe(comicBooks => {
         this.logger.trace('Comic book update received');
-        this.comicBooks = comicBooks.filter(comicBook =>
-          this.page.ids.includes(comicBook.comicId)
+        this.comics = comicBooks.filter(comicBook =>
+          this.page.ids.includes(comicBook.id)
         );
       });
+  }
+
+  get comics(): ComicDetail[] {
+    return this.dataSource.data.map(entry => entry.item);
+  }
+
+  set comics(details: ComicDetail[]) {
+    this.dataSource.data = details.map(comic => {
+      return { item: comic, selected: false };
+    });
   }
 
   ngOnDestroy(): void {
