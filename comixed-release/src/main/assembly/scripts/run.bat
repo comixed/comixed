@@ -29,7 +29,7 @@ SET ARG=%~2
 IF "%PARAM%" == "-h" GOTO show_help
 IF "%PARAM%" == "-d" SET DEBUG="ON"
 IF "%PARAM%" == "-D" SET FULLDEBUG="ON"
-IF "%PARAM%" == "-C" SET DB_CONSOLE="ON"
+IF "%PARAM%" == "-C" SET DBCONSOLE="ON"
 IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
 IF "%PARAM%" == "-p" GOTO set_jdbc_pwrd
@@ -96,6 +96,7 @@ ECHO.
 ECHO OTHER OPTIONS:
 ECHO  -d            - Enable debugging (def. off)
 ECHO  -D            - Turn on ALL debugging (def. off)
+ECHO  -C            - Turn on H2 database console"
 ECHO  -L [LOGFILE]  - Write logs to a logfile
 ECHO  -h            - Show help (this text)
 ECHO.
