@@ -76,7 +76,7 @@ export class PublisherListPageComponent
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(

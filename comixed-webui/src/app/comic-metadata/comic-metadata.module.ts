@@ -48,32 +48,35 @@ import { FetchIssuesPageComponent } from './pages/fetch-issues-page/fetch-issues
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { VolumeMetadataTableComponent } from './components/volume-metadata-table/volume-metadata-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
-import { VolumeMetadataTitlePipe } from './pipes/volume-metadata-title.pipe';
 import {
   FETCH_ISSUES_FOR_SERIES_FEATURE_KEY,
   reducer as fetchIssuesForSeriesReducer
 } from '@app/comic-metadata/reducers/fetch-issues-for-series.reducer';
 import { FetchIssuesForSeriesEffects } from '@app/comic-metadata/effects/fetch-issues-for-series.effects';
+import {
+  METADATA_FEATURE_KEY,
+  reducer as scrapingReducer
+} from '@app/comic-metadata/reducers/metadata.reducer';
+import { MetadataEffects } from '@app/comic-metadata/effects/metadata.effects';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
   declarations: [
     MetadataProcessPageComponent,
     MetadataProcessToolbarComponent,
     MetadataProcessStatusComponent,
-    FetchIssuesPageComponent,
-    VolumeMetadataTableComponent,
-    VolumeMetadataTitlePipe
+    FetchIssuesPageComponent
   ],
   imports: [
     CommonModule,
     ComicMetadataRouting,
     TranslateModule.forRoot(),
+    StoreModule.forFeature(METADATA_FEATURE_KEY, scrapingReducer),
     StoreModule.forFeature(
       METADATA_SOURCE_LIST_FEATURE_KEY,
       metadataSourceListReducer
@@ -88,6 +91,7 @@ import { FetchIssuesForSeriesEffects } from '@app/comic-metadata/effects/fetch-i
       fetchIssuesForSeriesReducer
     ),
     EffectsModule.forFeature([
+      MetadataEffects,
       MetadataSourceListEffects,
       MetadataSourceEffects,
       FetchIssuesForSeriesEffects
@@ -104,8 +108,9 @@ import { FetchIssuesForSeriesEffects } from '@app/comic-metadata/effects/fetch-i
     MatSortModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    MatCardModule
+    MatCardModule,
+    ComicBooksModule
   ],
-  exports: [CommonModule, VolumeMetadataTableComponent]
+  exports: [CommonModule]
 })
 export class ComicMetadataModule {}

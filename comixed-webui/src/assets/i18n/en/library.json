@@ -138,6 +138,11 @@
       "no-series": "Unknown Series",
       "pagination-items-per-page": "Covers Per Page"
     },
+    "list-page": {
+      "placeholder": {
+        "filter-comics": "Enter text to filter the comics displayed."
+      }
+    },
     "load-library-state": {
       "effect-failure": "Failed to load remote library state."
     },

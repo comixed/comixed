@@ -61,7 +61,7 @@ export class DeletedListPageComponent
     private translationService: TranslateService,
     private titleService: TitleService,
     private activatedRoute: ActivatedRoute,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.langChangeSubscription =
       this.translationService.onLangChange.subscribe(() =>

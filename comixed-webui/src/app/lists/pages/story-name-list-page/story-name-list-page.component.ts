@@ -64,7 +64,7 @@ export class StoryNameListPageComponent
     private store: Store<any>,
     private translateService: TranslateService,
     private titleService: TitleService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
       () => this.loadTranslations()

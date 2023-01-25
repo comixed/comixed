@@ -2,11 +2,11 @@
   <mat-paginator
     class="cx-primary-light-background cx-height-100"
     showFirstLastButtons
-    [pageIndex]="urlParameterService.pageIndex$ | async"
-    [pageSize]="urlParameterService.pageSize$ | async"
+    [pageIndex]="queryParameterService.pageIndex$ | async"
+    [pageSize]="queryParameterService.pageSize$ | async"
     [pageSizeOptions]="pageSizeOptions"
     (page)="
-      urlParameterService.onPageChange(
+      queryParameterService.onPageChange(
         $event.pageSize,
         $event.pageIndex,
         $event.previousPageIndex
@@ -25,10 +25,10 @@
 <mat-table
   [dataSource]="dataSource"
   matSort
-  [matSortActive]="urlParameterService.sortBy$ | async"
-  [matSortDirection]="urlParameterService.sortDirection$ | async"
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
   (matSortChange)="
-    urlParameterService.onSortChange($event.active, $event.direction)
+    queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
   <ng-container matColumnDef="comic">

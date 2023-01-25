@@ -23,12 +23,10 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
-import { ComicBookCoversComponent } from '@app/library/components/comic-book-covers/comic-book-covers.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
-import { LibraryToolbarComponent } from '@app/library/components/library-toolbar/library-toolbar.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,9 +37,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
 import {
-  COMIC_BOOK_1,
-  COMIC_BOOK_3,
-  COMIC_BOOK_5
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_5
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicDetailCardComponent } from '@app/comic-books/components/comic-detail-card/comic-detail-card.component';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
@@ -56,9 +54,12 @@ import {
   COMIC_BOOK_LIST_FEATURE_KEY,
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
+import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('ComicsWithDuplicatePageComponent', () => {
-  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const IDS = COMIC_BOOKS.map(comic => comic.id);
   const HASH = PAGE_1.hash;
   const initialState = {
@@ -76,9 +77,8 @@ describe('ComicsWithDuplicatePageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           ComicsWithDuplicatePageComponent,
-          ComicBookCoversComponent,
-          LibraryToolbarComponent,
           ComicDetailCardComponent,
+          ComicDetailListViewComponent,
           ComicTitlePipe,
           ComicCoverUrlPipe
         ],
@@ -104,7 +104,9 @@ describe('ComicsWithDuplicatePageComponent', () => {
           MatExpansionModule,
           MatGridListModule,
           MatTooltipModule,
-          MatSortModule
+          MatSortModule,
+          MatTableModule,
+          MatCheckboxModule
         ],
         providers: [
           provideMockStore({ initialState }),
@@ -127,5 +129,20 @@ describe('ComicsWithDuplicatePageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('loading comic books', () => {
+    beforeEach(() => {
+      component.dataSource.data = [];
+      component.comics = COMIC_BOOKS;
+    });
+
+    it('updates the data source', () => {
+      expect(component.dataSource.data).not.toEqual([]);
+    });
+
+    it('returns the set of comics', () => {
+      expect(component.comics).toEqual(COMIC_BOOKS);
+    });
   });
 });

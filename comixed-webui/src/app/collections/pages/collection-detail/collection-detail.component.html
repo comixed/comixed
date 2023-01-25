@@ -1,31 +1,37 @@
-<cx-comic-book-covers
-  [comicBooks]="
-    comicBooks
-      | archiveType: (urlParameterService.archiveType$ | async)
-      | coverDateFilter
-        : {
-            year: (urlParameterService.coverYear$ | async).year,
-            month: (urlParameterService.coverYear$ | async).month
-          }
-  "
-  [title]="
-    'collection-detail.title.' + collectionType
-      | translate
-        : {
-            name: collectionName,
-            count: comicBooks?.length || 0,
-            volume: volume || '----'
-          }
-  "
+<mat-toolbar class="cx-primary-light-background">
+  <mat-form-field class="cx-width-25" appearance="standard">
+    <input
+      matInput
+      #filterInput
+      id="volume-search-text-input"
+      [placeholder]="'library.list-page.placeholder.filter-comics' | translate"
+      (keyup)="dataSource.filter = filterInput.value"
+    />
+  </mat-form-field>
+
+  <div class="cx-spacer"></div>
+
+  <mat-paginator
+    class="cx-primary-light-background cx-height-100"
+    [pageIndex]="queryParameterService.pageIndex$ | async"
+    [pageSize]="queryParameterService.pageSize$ | async"
+    [pageSizeOptions]="queryParameterService.pageSizeOptions"
+    (page)="
+      queryParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
+    "
+  ></mat-paginator>
+</mat-toolbar>
+
+<h2>
+  {{ queryParameterService.archiveType$ | async }}
+</h2>
+
+<cx-comic-detail-list-view
+  class="cx-width-100"
+  [dataSource]="dataSource"
   [selectedIds]="selectedIds"
-  [readingLists]="readingLists"
-  [showConsolidate]="isAdmin"
-  [isAdmin]="isAdmin"
-  [pageSize]="urlParameterService.pageSize$ | async"
-  [pageIndex]="urlParameterService.pageIndex$ | async"
-  [sortField]="urlParameterService.sortBy$ | async"
-  [coverDateFilter]="urlParameterService.coverYear$ | async"
-  [archiveType]="urlParameterService.archiveType$ | async"
-  [showCovers]="showCovers"
-  (selectAllComics)="onSelectAllComics($event)"
-></cx-comic-book-covers>
+></cx-comic-detail-list-view>

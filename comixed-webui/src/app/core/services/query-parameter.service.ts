@@ -22,6 +22,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { BehaviorSubject } from 'rxjs';
 import {
   PAGE_SIZE_DEFAULT,
+  PAGE_SIZE_OPTIONS,
   QUERY_PARAM_ARCHIVE_TYPE,
   QUERY_PARAM_COVER_MONTH,
   QUERY_PARAM_COVER_YEAR,
@@ -34,15 +35,14 @@ import {
 } from '@app/core';
 import { SortDirection } from '@angular/material/sort';
 import { CoverDateFilter } from '@app/comic-books/models/ui/cover-date-filter';
-import {
-  ArchiveType,
-  archiveTypeFromString
-} from '@app/comic-books/models/archive-type.enum';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QueryParameterService {
+  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   pageSize$ = new BehaviorSubject<number>(PAGE_SIZE_DEFAULT);
   pageIndex$ = new BehaviorSubject<number>(0);
   sortBy$ = new BehaviorSubject<string>(null);

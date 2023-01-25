@@ -81,7 +81,7 @@ export class SeriesDetailPageComponent
     private store: Store<any>,
     private titleService: TitleService,
     private translateService: TranslateService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to parameter updates');
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {

@@ -21,15 +21,3 @@ export enum ArchiveType {
   CBR = 'CBR',
   CB7 = 'CB7'
 }
-
-export function archiveTypeFromString(key: string): ArchiveType {
-  switch (key) {
-    case 'CBZ':
-      return ArchiveType.CBZ;
-    case 'CBR':
-      return ArchiveType.CBR;
-    case 'CB7':
-      return ArchiveType.CB7;
-  }
-  return null;
-}

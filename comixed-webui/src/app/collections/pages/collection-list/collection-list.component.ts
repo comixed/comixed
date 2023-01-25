@@ -74,7 +74,7 @@ export class CollectionListComponent
     private router: Router,
     private translateService: TranslateService,
     private titleService: TitleService,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.paramSubscription = this.activatedRoute.params.subscribe(params => {
       this.routableTypeName = params.collectionType;

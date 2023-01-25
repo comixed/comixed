@@ -32,11 +32,9 @@ import {
   initialState as initialComicBookListState
 } from '@app/comic-books/reducers/comic-book-list.reducer';
 import {
-  COMIC_DETAIL_1,
-  COMIC_DETAIL_2,
-  COMIC_DETAIL_3,
-  COMIC_DETAIL_4,
-  COMIC_DETAIL_5
+  COMIC_BOOK_1,
+  COMIC_BOOK_3,
+  COMIC_BOOK_5
 } from '@app/comic-books/comic-books.fixtures';
 import { SHOW_COMIC_COVERS_PREFERENCE } from '@app/library/library.constants';
 import {
@@ -45,9 +43,14 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
+import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import { MetadataProcessToolbarComponent } from '@app/comic-metadata/components/metadata-process-toolbar/metadata-process-toolbar.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MetadataProcessPageComponent', () => {
-  const IDS = [4, 17, 6];
+  const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
+  const IDS = COMIC_BOOKS.map(comic => comic.id);
   const initialState = {
     [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
     [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
@@ -64,9 +67,16 @@ describe('MetadataProcessPageComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
         MetadataProcessPageComponent,
-        MetadataProcessStatusComponent
+        MetadataProcessStatusComponent,
+        MetadataProcessToolbarComponent,
+        ComicDetailListViewComponent
       ],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatDialogModule
+      ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
@@ -87,6 +97,10 @@ describe('MetadataProcessPageComponent', () => {
     beforeEach(() => {
       store.setState({
         ...initialState,
+        [COMIC_BOOK_LIST_FEATURE_KEY]: {
+          ...initialComicBookListState,
+          comicBooks: COMIC_BOOKS
+        },
         [LIBRARY_SELECTIONS_FEATURE_KEY]: { ...initialState, ids: IDS }
       });
     });
@@ -103,40 +117,6 @@ describe('MetadataProcessPageComponent', () => {
 
     it('updates the page title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
-    });
-  });
-
-  describe('updating the displayed comics', () => {
-    beforeEach(() => {
-      component.selectedIds = [COMIC_DETAIL_1.comicId];
-      component.comicBooks = [
-        COMIC_DETAIL_1,
-        COMIC_DETAIL_2,
-        COMIC_DETAIL_3,
-        COMIC_DETAIL_4,
-        COMIC_DETAIL_5
-      ];
-      component.updateDisplayedComicBooks();
-    });
-
-    it('only displays the selected comic books', () => {
-      expect(component.displayedComicBooks).toEqual([COMIC_DETAIL_1]);
-    });
-
-    describe('when the selection changes', () => {
-      beforeEach(() => {
-        store.setState({
-          ...initialState,
-          [LIBRARY_SELECTIONS_FEATURE_KEY]: {
-            ...initialLibrarySelectionsState,
-            ids: [COMIC_DETAIL_2.comicId]
-          }
-        });
-      });
-
-      it('updates the displayed comic books', () => {
-        expect(component.displayedComicBooks).toEqual([COMIC_DETAIL_2]);
-      });
     });
   });
 

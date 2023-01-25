@@ -48,6 +48,7 @@ import {
 } from '@app/collections/reducers/publisher.reducer';
 import { PublisherEffects } from '@app/collections/effects/publisher.effects';
 import { PublisherDetailPageComponent } from './pages/publisher-detail-page/publisher-detail-page.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { PublisherDetailPageComponent } from './pages/publisher-detail-page/publ
     MatTooltipModule,
     MatSelectModule,
     MatToolbarModule,
-    MatInputModule
+    MatInputModule,
+    MatDividerModule
   ],
   exports: [CommonModule]
 })

@@ -82,7 +82,7 @@ export class SeriesListPageComponent
     private translateService: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    public urlParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService
   ) {
     this.logger.trace('Subscribing to language change updates');
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(
@@ -97,7 +97,13 @@ export class SeriesListPageComponent
     this.seriesListSubscription = this.store
       .select(selectSeriesList)
       .subscribe(series => {
+        /* istanbul ignore next */
+        const pageIndex = this.dataSource.paginator?.pageIndex;
         this.dataSource.data = series;
+        /* istanbul ignore if */
+        if (!!pageIndex) {
+          this.dataSource.paginator.pageIndex = pageIndex;
+        }
       });
   }
 

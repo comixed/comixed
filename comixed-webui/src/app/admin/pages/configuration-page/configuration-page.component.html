@@ -1,6 +1,6 @@
 <mat-tab-group
-  [selectedIndex]="urlParameterService.currentTab$ | async"
-  (selectedTabChange)="urlParameterService.onTabChange($event.index)"
+  [selectedIndex]="queryParameterService.currentTab$ | async"
+  (selectedTabChange)="queryParameterService.onTabChange($event.index)"
 >
   <mat-tab [label]="'configuration.tab.server-runtime' | translate">
     <cx-server-runtime></cx-server-runtime>
