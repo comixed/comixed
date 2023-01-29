@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicState;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +35,12 @@ import org.springframework.util.StringUtils;
 @Component
 @Log4j2
 public class ComicBookMetadataAdaptor {
-  private final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
+  public static final String UNNAMED_SERIES = "[Unnamed Series]";
+  public static final String MISSING_VOLUME = "----";
+  public static final String NO_COVER_DATE = "??/??";
+  public static final String MISSING_ISSUE_NUMBER = "##";
+  static final Object CHANGED_COMIC_MARKER = "[!]";
+  final SimpleDateFormat coverDateFormat = new SimpleDateFormat("MMM yyyy");
 
   /**
    * Clears all metadata scraped from a remove database.
@@ -64,14 +70,23 @@ public class ComicBookMetadataAdaptor {
     final String coverDate =
         comicBook.getCoverDate() != null
             ? this.coverDateFormat.format(comicBook.getCoverDate())
-            : "??/??";
+            : NO_COVER_DATE;
     final String series =
-        StringUtils.hasLength(comicBook.getSeries()) ? comicBook.getSeries() : "[Unnamed Series]";
+        StringUtils.hasLength(comicBook.getSeries()) ? comicBook.getSeries() : UNNAMED_SERIES;
     final String volume =
-        StringUtils.hasLength(comicBook.getVolume()) ? comicBook.getVolume() : "----";
+        StringUtils.hasLength(comicBook.getVolume()) ? comicBook.getVolume() : MISSING_VOLUME;
     final String issueNumber =
-        StringUtils.hasLength(comicBook.getIssueNumber()) ? comicBook.getIssueNumber() : "##";
+        StringUtils.hasLength(comicBook.getIssueNumber())
+            ? comicBook.getIssueNumber()
+            : MISSING_ISSUE_NUMBER;
     log.trace("Assembling displayable title");
-    return String.format("%s v%s #%s (%s)", series, volume, issueNumber, coverDate);
+    return String.format(
+            "%s v%s #%s (%s) %s",
+            series,
+            volume,
+            issueNumber,
+            coverDate,
+            comicBook.getComicState() == ComicState.CHANGED ? CHANGED_COMIC_MARKER : "")
+        .trim();
   }
 }
