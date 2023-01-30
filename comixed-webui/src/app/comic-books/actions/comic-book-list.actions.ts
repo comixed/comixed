@@ -25,7 +25,7 @@ export const resetComicBookList = createAction(
 
 export const loadComicBooks = createAction(
   '[Comic Book List] Load a batch of comics',
-  props<{ lastId: number }>()
+  props<{ maxRecords: number; lastId: number }>()
 );
 
 export const comicBooksReceived = createAction(

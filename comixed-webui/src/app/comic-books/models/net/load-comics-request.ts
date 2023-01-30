@@ -17,5 +17,6 @@
  */
 
 export interface LoadComicsRequest {
+  maxRecords: number;
   lastId: number;
 }

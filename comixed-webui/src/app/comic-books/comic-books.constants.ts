@@ -18,7 +18,6 @@
 
 import { API_ROOT_URL } from '../core';
 
-export const UPDATE_COMIC_INFO_URL = `${API_ROOT_URL}/comics/\${id}/metadata`;
 export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
 export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
 export const SAVE_PAGE_ORDER_URL = `${API_ROOT_URL}/comics/\${id}/pages/order`;
@@ -31,3 +30,7 @@ export const MARK_PAGES_UNDELETED_URL = `${API_ROOT_URL}/pages/undeleted`;
 export const COMIC_BOOK_UPDATE_TOPIC = `/topic/comic-book.\${id}.update`;
 
 export const MISSING_VOLUME_PLACEHOLDER = '----';
+
+// user preferences
+export const LIBRARY_LOAD_MAX_RECORDS = 'library.load.max-records';
+export const DEFAULT_LIBRARY_LOAD_MAX_RECORDS = 1000;

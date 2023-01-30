@@ -31,6 +31,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoadLibraryRequest {
+  @JsonProperty("maxRecords")
+  @Getter
+  private Integer maxRecords;
+
   @JsonProperty("lastId")
   @Getter
   private Long lastId;

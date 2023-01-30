@@ -38,6 +38,7 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 
 describe('ComicBook List Reducer', () => {
+  const MAX_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
 
@@ -140,7 +141,7 @@ describe('ComicBook List Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, loading: false },
-        loadComicBooks({ lastId: LAST_ID })
+        loadComicBooks({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
       );
     });
 

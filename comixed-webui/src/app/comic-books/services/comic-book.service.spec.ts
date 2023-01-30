@@ -57,6 +57,7 @@ import { SavePageOrderRequest } from '@app/comic-books/models/net/save-page-orde
 describe('ComicBookService', () => {
   const COMIC_BOOK = COMIC_DETAIL_2;
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const MAX_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
   const LAST_PAGE = Math.random() > 0.5;
   const PAGE = PAGE_1;
@@ -78,17 +79,22 @@ describe('ComicBookService', () => {
   });
 
   it('can load a batch of comics', () => {
-    service.loadBatch({ lastId: LAST_ID }).subscribe(response =>
-      expect(response).toEqual({
-        comicBooks: COMIC_BOOKS,
-        lastId: LAST_ID,
-        lastPayload: LAST_PAGE
-      } as LoadComicsResponse)
-    );
+    service
+      .loadBatch({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
+      .subscribe(response =>
+        expect(response).toEqual({
+          comicBooks: COMIC_BOOKS,
+          lastId: LAST_ID,
+          lastPayload: LAST_PAGE
+        } as LoadComicsResponse)
+      );
 
     const req = httpMock.expectOne(interpolate(LOAD_COMICS_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({ lastId: LAST_ID } as LoadComicsRequest);
+    expect(req.request.body).toEqual({
+      maxRecords: MAX_RECORDS,
+      lastId: LAST_ID
+    } as LoadComicsRequest);
     req.flush({
       comicBooks: COMIC_BOOKS,
       lastId: LAST_ID,

@@ -43,6 +43,10 @@ import { loadReadingLists } from '@app/lists/actions/reading-lists.actions';
 import { loadLibraryState } from '@app/library/actions/library.actions';
 import { selectLibraryState } from '@app/library/selectors/library.selectors';
 import { LibraryState } from '@app/library/reducers/library.reducer';
+import {
+  DEFAULT_LIBRARY_LOAD_MAX_RECORDS,
+  LIBRARY_LOAD_MAX_RECORDS
+} from '@app/comic-books/comic-books.constants';
 
 @Component({
   selector: 'cx-root',
@@ -160,7 +164,19 @@ export class AppComponent implements OnInit {
         }
         if (!state.loading && !this.comicsLoaded) {
           this.logger.trace('Loading a batch of comics');
-          this.store.dispatch(loadComicBooks({ lastId: state.lastId }));
+          this.store.dispatch(
+            loadComicBooks({
+              maxRecords: parseInt(
+                getUserPreference(
+                  this.user.preferences,
+                  LIBRARY_LOAD_MAX_RECORDS,
+                  `${DEFAULT_LIBRARY_LOAD_MAX_RECORDS}`
+                ),
+                10
+              ),
+              lastId: state.lastId
+            })
+          );
         }
       });
   }

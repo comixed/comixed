@@ -99,6 +99,20 @@
           </span>
         </mat-error>
       </mat-form-field>
+      <mat-form-field class="cx-width-100 cx-padding-5" appearance="fill">
+        <mat-label>
+          {{ "user.preference.label.max-records" | translate }}
+        </mat-label>
+        <mat-select
+          id="library-load-max-records-options"
+          formControlName="libraryLoadMaxRecords"
+          (selectionChange)="onSaveMaxRecords($event.value)"
+        >
+          <mat-option *ngFor="let option of maxRecordsOptions" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </form>
     <div class="cx-action-button-container-horizontal">
       <button

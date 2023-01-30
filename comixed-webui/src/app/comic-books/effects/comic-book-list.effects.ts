@@ -37,20 +37,22 @@ export class ComicBookListEffects {
       ofType(loadComicBooks),
       tap(action => this.logger.debug('Effect: load comic batch:', action)),
       switchMap(action =>
-        this.comicService.loadBatch({ lastId: action.lastId }).pipe(
-          tap(response => this.logger.debug('Response received:', response)),
-          map((response: LoadComicsResponse) =>
-            comicBooksReceived({
-              comicBooks: response.comicBooks,
-              lastId: response.lastId,
-              lastPayload: response.lastPayload
+        this.comicService
+          .loadBatch({ maxRecords: action.maxRecords, lastId: action.lastId })
+          .pipe(
+            tap(response => this.logger.debug('Response received:', response)),
+            map((response: LoadComicsResponse) =>
+              comicBooksReceived({
+                comicBooks: response.comicBooks,
+                lastId: response.lastId,
+                lastPayload: response.lastPayload
+              })
+            ),
+            catchError(error => {
+              this.logger.error('Service failure:', error);
+              return of(loadComicBooksFailed());
             })
-          ),
-          catchError(error => {
-            this.logger.error('Service failure:', error);
-            return of(loadComicBooksFailed());
-          })
-        )
+          )
       ),
       catchError(error => {
         this.logger.error('General failure:', error);

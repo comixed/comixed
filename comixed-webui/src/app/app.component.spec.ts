@@ -79,12 +79,14 @@ import {
   initialState as initialLibrarySelectionState,
   LIBRARY_SELECTIONS_FEATURE_KEY
 } from '@app/library/reducers/library-selections.reducer';
+import { LIBRARY_LOAD_MAX_RECORDS } from '@app/comic-books/comic-books.constants';
 
 describe('AppComponent', () => {
   const USER = USER_READER;
   const TIMESTAMP = new Date().getTime();
   const MAXIMUM_RECORDS = 100;
   const TIMEOUT = 300;
+  const MAX_LIBRARY_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
 
   const initialState = {
@@ -269,7 +271,18 @@ describe('AppComponent', () => {
         component.comicsLoaded = false;
         store.setState({
           ...initialState,
-          [USER_FEATURE_KEY]: { ...initialUserState, user: USER },
+          [USER_FEATURE_KEY]: {
+            ...initialUserState,
+            user: {
+              ...USER,
+              preferences: [
+                {
+                  name: LIBRARY_LOAD_MAX_RECORDS,
+                  value: `${MAX_LIBRARY_RECORDS}`
+                }
+              ]
+            }
+          },
           [COMIC_BOOK_LIST_FEATURE_KEY]: {
             ...initialComicBookListState,
             loading: false,
@@ -281,7 +294,7 @@ describe('AppComponent', () => {
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          loadComicBooks({ lastId: LAST_ID })
+          loadComicBooks({ maxRecords: MAX_LIBRARY_RECORDS, lastId: LAST_ID })
         );
       });
     });

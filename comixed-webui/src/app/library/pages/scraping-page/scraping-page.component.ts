@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  MAXIMUM_RECORDS_PREFERENCE,
+  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -84,7 +84,11 @@ export class ScrapingPageComponent implements OnInit, OnDestroy {
           `${false}`
         ) === `${true}`;
       this.maximumRecords = parseInt(
-        getUserPreference(user.preferences, MAXIMUM_RECORDS_PREFERENCE, '0'),
+        getUserPreference(
+          user.preferences,
+          MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+          '0'
+        ),
         10
       );
       this.pageSize = parseInt(
