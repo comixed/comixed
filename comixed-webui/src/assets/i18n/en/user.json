@@ -29,6 +29,11 @@
       "confirmation-title": "Logout",
       "confirmation-message": "Are you sure you want to logout?"
     },
+    "preference": {
+      "label": {
+        "max-records": "Max. Records Per Load Request"
+      }
+    },
     "reset-user-changes": {
       "confirmation-message": "Discard changes to your account?",
       "confirmation-title": "Revert Changes"

@@ -51,11 +51,13 @@ export class ComicBookService {
   /**
    * Loads a batch of comics.
    *
+   * @param args.maxRecords the max records to return
    * @param args.lastId the last id received
    */
-  loadBatch(args: { lastId: number }): Observable<any> {
+  loadBatch(args: { maxRecords: number; lastId: number }): Observable<any> {
     this.logger.trace('Service: loading a batch of comics:', args);
     return this.http.post(interpolate(LOAD_COMICS_URL), {
+      maxRecords: args.maxRecords,
       lastId: args.lastId
     } as LoadComicsRequest);
   }

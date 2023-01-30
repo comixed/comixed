@@ -48,10 +48,14 @@ import {
   saveUserPreference
 } from '@app/user/actions/user.actions';
 import { TranslateService } from '@ngx-translate/core';
-import { passwordVerifyValidator } from '@app/user/user.functions';
+import {
+  getUserPreference,
+  passwordVerifyValidator
+} from '@app/user/user.functions';
 import { MatTableDataSource } from '@angular/material/table';
 import { Preference } from '@app/user/models/preference';
 import { MatSort } from '@angular/material/sort';
+import { LIBRARY_LOAD_MAX_RECORDS } from '@app/comic-books/comic-books.constants';
 
 @Component({
   selector: 'cx-edit-account-bar',
@@ -72,6 +76,8 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
   readonly displayedColumns = ['name', 'value', 'actions'];
   dataSource = new MatTableDataSource<Preference>([]);
 
+  readonly maxRecordsOptions = ['', '100', '500', '1000', '5000'];
+
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
@@ -82,7 +88,8 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
     this.userForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: [''],
-      passwordVerify: ['']
+      passwordVerify: [''],
+      libraryLoadMaxRecords: ['']
     });
     this.userStateSubscription = this.store
       .select(selectUserState)
@@ -104,6 +111,9 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
       this.userForm.controls.email.setValue(user.email);
       this.userForm.controls.password.setValue('');
       this.userForm.controls.passwordVerify.setValue('');
+      this.userForm.controls.libraryLoadMaxRecords.setValue(
+        getUserPreference(this.user.preferences, LIBRARY_LOAD_MAX_RECORDS, null)
+      );
       this.onPasswordChanged();
       this.dataSource.data = user.preferences;
     } else {
@@ -221,6 +231,13 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
         this.store.dispatch(saveUserPreference({ name, value: null }));
       }
     });
+  }
+
+  onSaveMaxRecords(value: string): void {
+    this.logger.debug('Saving max records preference:', value);
+    this.store.dispatch(
+      saveUserPreference({ name: LIBRARY_LOAD_MAX_RECORDS, value })
+    );
   }
 
   private resetUser(): void {

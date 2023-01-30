@@ -31,7 +31,7 @@ import {
 } from '@app/user/user.functions';
 import { interpolate, PAGE_SIZE_DEFAULT } from '@app/core';
 import {
-  MAXIMUM_RECORDS_PREFERENCE,
+  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import {
@@ -165,7 +165,11 @@ export class ComicBookPageComponent
           `${this.skipCache === true}`
         ) === `${true}`;
       this.maximumRecords = parseInt(
-        getUserPreference(user.preferences, MAXIMUM_RECORDS_PREFERENCE, '0'),
+        getUserPreference(
+          user.preferences,
+          MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
+          '0'
+        ),
         10
       );
     });

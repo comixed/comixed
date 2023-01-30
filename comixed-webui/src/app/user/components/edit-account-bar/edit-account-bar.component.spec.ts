@@ -39,6 +39,7 @@ import {
   initialState as initialUserState,
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
+import { LIBRARY_LOAD_MAX_RECORDS } from '@app/comic-books/comic-books.constants';
 
 describe('EditAccountBarComponent', () => {
   const USER = USER_READER;
@@ -336,6 +337,23 @@ describe('EditAccountBarComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(PREFERENCE, 'value')
       ).toEqual(PREFERENCE.value);
+    });
+  });
+
+  describe('changing the maximum records to load', () => {
+    const MAX_RECORDS = '5000';
+
+    beforeEach(() => {
+      component.onSaveMaxRecords(MAX_RECORDS);
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        saveUserPreference({
+          name: LIBRARY_LOAD_MAX_RECORDS,
+          value: MAX_RECORDS
+        })
+      );
     });
   });
 });

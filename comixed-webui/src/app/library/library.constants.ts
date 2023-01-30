@@ -60,7 +60,8 @@ export const IMPORT_MAXIMUM_RESULTS_PREFERENCE =
   'preference.import.maximum-results';
 export const IMPORT_MAXIMUM_RESULTS_DEFAULT = 0;
 export const SKIP_CACHE_PREFERENCE = 'preference.scraping.skip-cache';
-export const MAXIMUM_RECORDS_PREFERENCE = 'preference.scraping.maximum-records';
+export const MAXIMUM_SCRAPING_RECORDS_PREFERENCE =
+  'preference.scraping.maximum-records';
 
 export const SORT_FIELD_PREFERENCE = 'preference.sort-field';
 export const SHOW_COMIC_COVERS_PREFERENCE = 'show-comic-covers';

@@ -44,6 +44,7 @@ import { GravatarModule } from 'ngx-gravatar';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { EditAccountBarComponent } from './components/edit-account-bar/edit-account-bar.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { EditAccountBarComponent } from './components/edit-account-bar/edit-acco
     MatTableModule,
     MatSortModule,
     MatTooltipModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatSelectModule
   ],
   exports: [EditAccountBarComponent]
 })

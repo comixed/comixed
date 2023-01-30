@@ -86,8 +86,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class LibraryController {
-  static final int MAXIMUM_RECORDS = 100;
-
   @Autowired private LibraryService libraryService;
   @Autowired private RemoteLibraryStateService remoteLibraryStateService;
   @Autowired private ComicBookService comicBookService;
@@ -239,13 +237,14 @@ public class LibraryController {
   @Timed(value = "comixed.library.load")
   @JsonView(View.ComicListView.class)
   public LoadLibraryResponse loadLibrary(@RequestBody() final LoadLibraryRequest request) {
+    final Integer maxRecords = request.getMaxRecords();
     final Long lastId = request.getLastId();
-    log.info("Loading library content: last id was {}", lastId);
+    log.info("Loading library content: max records={} last id was {}", maxRecords, lastId);
 
-    List<ComicDetail> comicBooks = this.comicDetailService.loadById(lastId, MAXIMUM_RECORDS + 1);
+    List<ComicDetail> comicBooks = this.comicDetailService.loadById(lastId, maxRecords + 1);
     boolean lastPayload = true;
-    if (comicBooks.size() > MAXIMUM_RECORDS) {
-      comicBooks = comicBooks.subList(0, MAXIMUM_RECORDS);
+    if (comicBooks.size() > maxRecords) {
+      comicBooks = comicBooks.subList(0, maxRecords);
       lastPayload = false;
     }
 

@@ -39,6 +39,7 @@ import { LoadComicsResponse } from '@app/comic-books/models/net/load-comics-resp
 
 describe('ComicBookListEffects', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
+  const MAX_RECORDS = 1000;
   const LAST_ID = Math.floor(Math.abs(Math.random() * 1000));
   const LAST_PAGE = Math.random() > 0.5;
 
@@ -86,7 +87,10 @@ describe('ComicBookListEffects', () => {
         lastId: LAST_ID,
         lastPayload: LAST_PAGE
       } as LoadComicsResponse;
-      const action = loadComicBooks({ lastId: LAST_ID });
+      const action = loadComicBooks({
+        maxRecords: MAX_RECORDS,
+        lastId: LAST_ID
+      });
       const outcome = comicBooksReceived({
         comicBooks: COMIC_BOOKS,
         lastId: LAST_ID,
@@ -94,7 +98,9 @@ describe('ComicBookListEffects', () => {
       });
 
       actions$ = hot('-a', { a: action });
-      comicService.loadBatch.and.returnValue(of(serviceResponse));
+      comicService.loadBatch
+        .withArgs({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
+        .and.returnValue(of(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadBatch$).toBeObservable(expected);
@@ -102,22 +108,35 @@ describe('ComicBookListEffects', () => {
 
     it('fires an action on service failure', () => {
       const serviceResponse = new HttpErrorResponse({});
-      const action = loadComicBooks({ lastId: LAST_ID });
+      const action = loadComicBooks({
+        maxRecords: MAX_RECORDS,
+        lastId: LAST_ID
+      });
       const outcome = loadComicBooksFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.loadBatch.and.returnValue(throwError(serviceResponse));
+      comicService.loadBatch
+        .withArgs({
+          maxRecords: MAX_RECORDS,
+          lastId: LAST_ID
+        })
+        .and.returnValue(throwError(serviceResponse));
 
       const expected = hot('-b', { b: outcome });
       expect(effects.loadBatch$).toBeObservable(expected);
     });
 
     it('fires an action on general failure', () => {
-      const action = loadComicBooks({ lastId: LAST_ID });
+      const action = loadComicBooks({
+        maxRecords: MAX_RECORDS,
+        lastId: LAST_ID
+      });
       const outcome = loadComicBooksFailed();
 
       actions$ = hot('-a', { a: action });
-      comicService.loadBatch.and.throwError('expected');
+      comicService.loadBatch
+        .withArgs({ maxRecords: MAX_RECORDS, lastId: LAST_ID })
+        .and.throwError('expected');
 
       const expected = hot('-(b|)', { b: outcome });
       expect(effects.loadBatch$).toBeObservable(expected);

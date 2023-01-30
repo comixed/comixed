@@ -37,7 +37,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { saveUserPreference } from '@app/user/actions/user.actions';
-import { MAXIMUM_RECORDS_PREFERENCE } from '@app/library/library.constants';
+import { MAXIMUM_SCRAPING_RECORDS_PREFERENCE } from '@app/library/library.constants';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import {
   IMPRINT_LIST_FEATURE_KEY,
@@ -231,7 +231,7 @@ describe('ComicEditComponent', () => {
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         saveUserPreference({
-          name: MAXIMUM_RECORDS_PREFERENCE,
+          name: MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
           value: `${MAXIMUM_RECORDS}`
         })
       );

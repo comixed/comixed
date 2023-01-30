@@ -32,7 +32,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import {
-  MAXIMUM_RECORDS_PREFERENCE,
+  MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
   SKIP_CACHE_PREFERENCE
 } from '@app/library/library.constants';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
@@ -249,7 +249,7 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     this.logger.trace('Changed maximum records');
     this.store.dispatch(
       saveUserPreference({
-        name: MAXIMUM_RECORDS_PREFERENCE,
+        name: MAXIMUM_SCRAPING_RECORDS_PREFERENCE,
         value: `${maximumRecords}`
       })
     );
