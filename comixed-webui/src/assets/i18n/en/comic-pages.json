@@ -70,11 +70,14 @@
   },
   "deleted-page-list": {
     "header": {
-      "comic": "Comic Issue",
-      "filename": "Page Filename",
-      "hash": "Page Hash"
+      "comic-count": "# of Comics",
+      "hash": "Page Hash",
+      "thumbnail": ""
     },
-    "page-title": "Deleted Page List ({count, plural, =1{One Page} other{# Pages}} Total)",
+    "load-all": {
+      "effect-failure": "Failed to load the list of deleted pages."
+    },
+    "page-title": "Deleted Page List ({hashCount, plural, =1{One Hash} other{# Hashes}} In {comicCount, plural, =1{One Comic} other{# Comics}})",
     "tab-title": "Deleted Page List"
   }
 }

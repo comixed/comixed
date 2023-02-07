@@ -49,6 +49,11 @@ import {
   DeleteBlockedPagesState,
   reducer as deleteBlockedPagesReducer
 } from '@app/comic-pages/reducers/delete-blocked-pages.reducer';
+import {
+  DELETED_PAGE_FEATURE_KEY,
+  DeletedPagesState,
+  reducer as deletedPageReducer
+} from '@app/comic-pages/reducers/deleted-pages.reducer';
 
 interface RouterStateUrl {
   url: string;
@@ -64,6 +69,7 @@ export interface BlockedPagesModuleState {
   [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: DownloadBlockedPagesState;
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: UploadedBlockedPagesState;
   [DELETE_BLOCKED_PAGES_FEATURE_KEY]: DeleteBlockedPagesState;
+  [DELETED_PAGE_FEATURE_KEY]: DeletedPagesState;
 }
 
 export type ModuleState = BlockedPagesModuleState;
@@ -75,5 +81,6 @@ export const reducers: ActionReducerMap<BlockedPagesModuleState> = {
   [BLOCK_PAGE_FEATURE_KEY]: blockPageReducer,
   [DOWNLOAD_BLOCKED_PAGES_FEATURE_KEY]: downloadBlockedPagesReducer,
   [UPLOAD_BLOCKED_PAGES_FEATURE_KEY]: uploadBlockedPagesReducer,
-  [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer
+  [DELETE_BLOCKED_PAGES_FEATURE_KEY]: deleteBlockedPagesReducer,
+  [DELETED_PAGE_FEATURE_KEY]: deletedPageReducer
 };

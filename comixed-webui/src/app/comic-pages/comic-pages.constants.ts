@@ -28,6 +28,7 @@ export const UPLOAD_BLOCKED_PAGE_FILE_URL = `${API_ROOT_URL}/pages/blocked/file`
 export const DELETE_BLOCKED_PAGES_URL = `${API_ROOT_URL}/pages/blocked/delete`;
 export const MARK_PAGES_WITH_HASH_URL = `${API_ROOT_URL}/pages/blocked/mark`;
 export const UNMARK_PAGES_WITH_HASH_URL = `${API_ROOT_URL}/pages/blocked/unmark`;
+export const LOAD_ALL_DELETED_PAGES_URL = `${API_ROOT_URL}/pages/deleted/`;
 
 export const BLOCKED_HASH_LIST_UPDATE_TOPIC = '/topic/blocked-hash-list.update';
 export const BLOCKED_HASH_LIST_REMOVAL_TOPIC =

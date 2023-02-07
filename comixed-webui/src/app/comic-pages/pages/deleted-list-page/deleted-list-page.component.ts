@@ -28,14 +28,18 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleService } from '@app/core/services/title.service';
 import { Subscription } from 'rxjs';
-import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { MatTableDataSource } from '@angular/material/table';
-import { DeletedPageListEntry } from '@app/comic-pages/models/ui/deleted-page-list-entry';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
-import { PAGE_SIZE_OPTIONS } from '@app/core';
+import {
+  selectDeletedPageList,
+  selectDeletedPagesState
+} from '@app/comic-pages/selectors/deleted-pages.selectors';
+import { setBusyState } from '@app/core/actions/busy.actions';
+import { DeletedPage } from '@app/comic-pages/models/deleted-page';
+import { loadDeletedPages } from '@app/comic-pages/actions/deleted-pages.actions';
 
 @Component({
   selector: 'cx-deleted-list-page',
@@ -48,12 +52,12 @@ export class DeletedListPageComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  readonly displayedColumns = ['comic', 'filename', 'hash'];
-  readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
-
+  readonly displayedColumns = ['thumbnail', 'hash', 'comic-count'];
   langChangeSubscription: Subscription;
-  comicListSubscription: Subscription;
-  dataSource = new MatTableDataSource<DeletedPageListEntry>();
+
+  deletedPageStateSubscription: Subscription;
+  deletedPageListSubscription: Subscription;
+  dataSource = new MatTableDataSource<DeletedPage>([]);
 
   constructor(
     private logger: LoggerService,
@@ -69,17 +73,28 @@ export class DeletedListPageComponent
       );
     this.logger.trace('Subscribing to user changes');
     this.logger.trace('Subscribing to comic list changes');
-    this.comicListSubscription = this.store
-      .select(selectComicBookList)
-      .subscribe(comics => {
-        let pages: DeletedPageListEntry[] = [];
-        // comics.forEach(comic =>
-        //   comic.pages
-        //     .filter(page => page.deleted)
-        //     .forEach(page => pages.push({ comic, page }))
-        // );
-        this.dataSource.data = pages;
-      });
+    this.deletedPageStateSubscription = this.store
+      .select(selectDeletedPagesState)
+      .subscribe(state =>
+        this.store.dispatch(setBusyState({ enabled: state.busy }))
+      );
+    this.deletedPageListSubscription = this.store
+      .select(selectDeletedPageList)
+      .subscribe(pages => (this.pages = pages));
+  }
+
+  get pages(): DeletedPage[] {
+    return this.dataSource.data;
+  }
+
+  set pages(pages: DeletedPage[]) {
+    this.dataSource.data = pages;
+  }
+
+  get totalComicCount(): number {
+    return this.pages
+      .map(page => page.comicCount)
+      .reduce((sum, current) => sum + current, 0);
   }
 
   ngAfterViewInit(): void {
@@ -89,12 +104,10 @@ export class DeletedListPageComponent
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'comic':
-          return data.comic.coverDate;
-        case 'filename':
-          return data.page.filename;
         case 'hash':
-          return data.page.hash;
+          return data.hash;
+        case 'comic-count':
+          return data.comicCount;
       }
     };
   }
@@ -102,9 +115,15 @@ export class DeletedListPageComponent
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language change updates');
     this.langChangeSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from deleted page state updates');
+    this.deletedPageStateSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from delete page list updates');
+    this.deletedPageListSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
+    this.logger.trace('Loading deleted page list');
+    this.store.dispatch(loadDeletedPages());
     this.loadTranslations();
   }
 

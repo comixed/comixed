@@ -71,6 +71,11 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDividerModule } from '@angular/material/divider';
 import { BlockedHashToolbarComponent } from './components/blocked-hash-toolbar/blocked-hash-toolbar.component';
+import {
+  DELETED_PAGE_FEATURE_KEY,
+  reducer as deletedPageReducer
+} from '@app/comic-pages/reducers/deleted-pages.reducer';
+import { DeletedPagesEffects } from '@app/comic-pages/effects/deleted-pages.effects';
 
 @NgModule({
   declarations: [
@@ -104,13 +109,15 @@ import { BlockedHashToolbarComponent } from './components/blocked-hash-toolbar/b
       DELETE_BLOCKED_PAGES_FEATURE_KEY,
       deleteBlockedPagesReducer
     ),
+    StoreModule.forFeature(DELETED_PAGE_FEATURE_KEY, deletedPageReducer),
     EffectsModule.forFeature([
       BlockedHashListEffects,
       BlockedPageDetailEffects,
       BlockPageEffects,
       DownloadBlockedPagesEffects,
       UploadBlockedPagesEffects,
-      DeleteBlockedPagesEffects
+      DeleteBlockedPagesEffects,
+      DeletedPagesEffects
     ]),
     MatTableModule,
     MatCheckboxModule,

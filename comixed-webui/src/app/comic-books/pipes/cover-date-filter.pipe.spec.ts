@@ -26,7 +26,7 @@ import {
 describe('CoverDateFilterPipe', () => {
   const NOW = new Date();
   const LAST_YEAR = new Date(NOW.getTime() - 365 * 24 * 60 * 60 * 1000);
-  const LAST_MONTH = new Date(NOW.getTime() - 31 * 24 * 60 * 60 * 1000);
+  const LAST_MONTH = new Date(NOW.getTime());
   const COMIC_LAST_YEAR = { ...COMIC_DETAIL_1, coverDate: LAST_YEAR.getTime() };
   const COMIC_LAST_MONTH = {
     ...COMIC_DETAIL_3,
