@@ -21,15 +21,14 @@ import { DeletedListPageComponent } from './deleted-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {
-  COMIC_BOOK_LIST_FEATURE_KEY,
-  initialState as initialComicBookListState
-} from '@app/comic-books/reducers/comic-book-list.reducer';
 import { TitleService } from '@app/core/services/title.service';
-import { COMIC_DETAIL_1 } from '@app/comic-books/comic-books.fixtures';
-import { PAGE_1, PAGE_2, PAGE_3 } from '@app/comic-pages/comic-pages.fixtures';
+import {
+  DELETED_PAGE_1,
+  DELETED_PAGE_2,
+  DELETED_PAGE_3,
+  DELETED_PAGE_4
+} from '@app/comic-pages/comic-pages.fixtures';
 import { MatTableModule } from '@angular/material/table';
-import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -39,25 +38,25 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatSortModule } from '@angular/material/sort';
+import {
+  DELETED_PAGE_FEATURE_KEY,
+  initialState as deletedPageInitiaState
+} from '@app/comic-pages/reducers/deleted-pages.reducer';
+import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 
 describe('DeletedListPageComponent', () => {
+  const DELETED_PAGE_LIST = [
+    DELETED_PAGE_1,
+    DELETED_PAGE_2,
+    DELETED_PAGE_3,
+    DELETED_PAGE_4
+  ];
   const PAGE_INDEX = 11;
   const PAGE_SIZE = 25;
   const USER = { ...USER_ADMIN };
-  const COMIC_BOOKS: ComicDetail[] = [
-    {
-      ...COMIC_DETAIL_1
-      // pages: [
-      //   { ...PAGE_1, deleted: false },
-      //   { ...PAGE_2, deleted: true },
-      //   { ...PAGE_3, deleted: true }
-      // ]
-    }
-  ];
   const initialState = {
-    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState,
+    [DELETED_PAGE_FEATURE_KEY]: deletedPageInitiaState,
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
@@ -70,7 +69,7 @@ describe('DeletedListPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeletedListPageComponent, ComicTitlePipe],
+      declarations: [DeletedListPageComponent, PageHashUrlPipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([]),
@@ -117,44 +116,45 @@ describe('DeletedListPageComponent', () => {
       component.dataSource.data = [];
       store.setState({
         ...initialState,
-        [COMIC_BOOK_LIST_FEATURE_KEY]: {
-          ...initialComicBookListState,
-          comicBooks: COMIC_BOOKS
+        [DELETED_PAGE_FEATURE_KEY]: {
+          ...deletedPageInitiaState,
+          list: DELETED_PAGE_LIST
         }
       });
     });
 
-    xit('loads the pages', () => {
-      expect(component.dataSource.data).not.toEqual([]);
-    });
-
-    it('loads only deleted pages', () => {
-      expect(
-        component.dataSource.data.every(entry => entry.page.deleted)
-      ).toBeTrue();
+    it('loads the pages', () => {
+      expect(component.dataSource.data).toEqual(DELETED_PAGE_LIST);
     });
   });
 
   describe('sorting the pages', () => {
-    const PAGE = PAGE_3;
-    const COMIC = COMIC_DETAIL_1;
-    const ENTRY = { page: PAGE, comic: COMIC };
-
-    it('sorts by comic', () => {
-      expect(component.dataSource.sortingDataAccessor(ENTRY, 'comic')).toEqual(
-        COMIC.coverDate
-      );
-    });
-
-    it('sorts by filename', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ENTRY, 'filename')
-      ).toEqual(PAGE.filename);
-    });
+    const ENTRY = DELETED_PAGE_LIST[0];
 
     it('sorts by hash', () => {
       expect(component.dataSource.sortingDataAccessor(ENTRY, 'hash')).toEqual(
-        PAGE.hash
+        ENTRY.hash
+      );
+    });
+
+    it('sorts by comic count', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
+      ).toEqual(ENTRY.comicCount);
+    });
+  });
+
+  describe('the total page count', () => {
+    beforeEach(() => {
+      component.pages = DELETED_PAGE_LIST;
+    });
+
+    it('loads the total number of comics', () => {
+      expect(component.totalComicCount).toEqual(
+        DELETED_PAGE_LIST.map(entry => entry.comicCount).reduce(
+          (sum, current) => sum + current,
+          0
+        )
       );
     });
   });

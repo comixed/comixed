@@ -4,7 +4,7 @@
     showFirstLastButtons
     [pageIndex]="queryParameterService.pageIndex$ | async"
     [pageSize]="queryParameterService.pageSize$ | async"
-    [pageSizeOptions]="pageSizeOptions"
+    [pageSizeOptions]="queryParameterService.pageSizeOptions"
     (page)="
       queryParameterService.onPageChange(
         $event.pageSize,
@@ -18,7 +18,8 @@
 <h2>
   {{
     "deleted-page-list.page-title"
-      | translate: { count: dataSource.data.length }
+      | translate
+        : { hashCount: dataSource.data.length, comicCount: totalComicCount }
   }}
 </h2>
 
@@ -31,25 +32,19 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
-  <ng-container matColumnDef="comic">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "deleted-page-list.header.comic" | translate }}
+  <ng-container matColumnDef="thumbnail">
+    <mat-header-cell *matHeaderCellDef>
+      {{ "deleted-page-list.header.thumbnail" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">
-        <a [routerLink]="['/comics', entry.comic.id]">
-          {{ entry.comic | comicTitle }}
-        </a>
+        <img
+          [src]="entry.hash | pageHashUrl"
+          [alt]="entry.hash"
+          width="100%"
+          height="auto"
+        />
       </span>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="filename">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      {{ "deleted-page-list.header.filename" | translate }}
-    </mat-header-cell>
-    <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.page.filename }}</span>
     </mat-cell>
   </ng-container>
 
@@ -58,7 +53,16 @@
       {{ "deleted-page-list.header.hash" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.page.hash }}</span>
+      <span class="cx-text-nowrap">{{ entry.hash }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="comic-count">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "deleted-page-list.header.comic-count" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-text-nowrap">{{ entry.comicCount }}</span>
     </mat-cell>
   </ng-container>
 

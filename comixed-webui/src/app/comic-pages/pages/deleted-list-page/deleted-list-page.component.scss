@@ -1,0 +1,16 @@
+@import 'styles';
+
+.mat-column-thumbnail {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+  resize: none;
+}
+
+.mat-column-hash {
+}
+
+.mat-column-comic-count {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
+  resize: none;
+}

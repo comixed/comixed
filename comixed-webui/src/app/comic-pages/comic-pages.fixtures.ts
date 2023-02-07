@@ -19,6 +19,7 @@
 import { BlockedHash } from './models/blocked-hash';
 import { DownloadDocument } from '@app/core/models/download-document';
 import { Page } from '@app/comic-books/models/page';
+import { DeletedPage } from '@app/comic-pages/models/deleted-page';
 
 export const BLOCKED_HASH_1: BlockedHash = {
   id: 1,
@@ -113,3 +114,11 @@ export const PAGE_4: Page = {
   blocked: false,
   index: 0
 };
+
+export const DELETED_PAGE_1: DeletedPage = { hash: PAGE_1.hash, comicCount: 1 };
+
+export const DELETED_PAGE_2: DeletedPage = { hash: PAGE_2.hash, comicCount: 2 };
+
+export const DELETED_PAGE_3: DeletedPage = { hash: PAGE_3.hash, comicCount: 3 };
+
+export const DELETED_PAGE_4: DeletedPage = { hash: PAGE_4.hash, comicCount: 4 };
