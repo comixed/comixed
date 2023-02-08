@@ -84,6 +84,8 @@ import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume
 import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
 import { ComicDetailListViewComponent } from './components/comic-detail-list-view/comic-detail-list-view.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -146,7 +148,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FlexModule,
     MatBadgeModule,
     DragDropModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     CommonModule,

@@ -59,6 +59,7 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { selectMetadataSourceList } from '@app/comic-metadata/selectors/metadata-source-list.selectors';
 import { loadMetadataSources } from '@app/comic-metadata/actions/metadata-source-list.actions';
 import { selectMetadataState } from '@app/comic-metadata/selectors/metadata.selectors';
+import { FileDetails } from '@app/comic-books/models/file-details';
 
 @Component({
   selector: 'cx-comic-edit',
@@ -257,8 +258,12 @@ export class ComicEditComponent implements OnInit, OnDestroy {
 
   onSaveChanges(): void {
     this.confirmationService.confirm({
-      title: this.translateService.instant('comic-book.save-changes.title'),
-      message: this.translateService.instant('comic-book.save-changes.message'),
+      title: this.translateService.instant(
+        'comic-book.save-changes.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'comic-book.save-changes.confirmation-message'
+      ),
       confirm: () => {
         const comic = this.encodeForm();
         this.logger.debug('Saving changes to comic:', comic);
@@ -336,12 +341,13 @@ export class ComicEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private encodeForm(): ComicBook {
+  encodeForm(): ComicBook {
     this.logger.trace('Encoding comic');
     return {
       ...this.comic,
       detail: {
         ...this.comic.detail,
+        id: undefined,
         publisher: this.comicForm.controls.publisher.value,
         imprint: this.comicForm.controls.imprint.value,
         series: this.comicForm.controls.series.value,
@@ -350,7 +356,8 @@ export class ComicEditComponent implements OnInit, OnDestroy {
         title: this.comicForm.controls.title.value,
         description: this.comicForm.controls.description.value
       },
-      sortName: this.comicForm.controls.sortName.value
+      sortName: this.comicForm.controls.sortName.value,
+      fileDetails: {} as FileDetails
     } as ComicBook;
   }
 }

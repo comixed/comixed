@@ -33,6 +33,7 @@ import {
 import { USER_READER } from '@app/user/user.fixtures';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SCRAPING_ISSUE_1 } from '@app/comic-metadata/comic-metadata.fixtures';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IssueMetadataDetailComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
@@ -53,6 +54,7 @@ describe('IssueMetadataDetailComponent', () => {
           IssueMetadataTitlePipe
         ],
         imports: [
+          NoopAnimationsModule,
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatCardModule,
