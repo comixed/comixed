@@ -22,7 +22,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SelectedComicsComponent } from '@app/library/components/selected-comics/selected-comics.component';
-import { ComicEditComponent } from '@app/comic-books/components/comic-edit/comic-edit.component';
+import { ComicScrapingComponent } from '@app/comic-books/components/comic-scraping/comic-scraping.component';
 import {
   initialState as initialUserState,
   USER_FEATURE_KEY
@@ -90,7 +90,7 @@ describe('ScrapingPageComponent', () => {
         declarations: [
           ScrapingPageComponent,
           SelectedComicsComponent,
-          ComicEditComponent
+          ComicScrapingComponent
         ],
         imports: [
           FormsModule,

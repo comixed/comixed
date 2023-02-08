@@ -60,11 +60,13 @@ export const NO_MATCH = 0;
 export const NO_MATCH_TEXT = 'scraping.text.no-match';
 
 @Component({
-  selector: 'cx-comic-metadata',
-  templateUrl: './comic-metadata.component.html',
-  styleUrls: ['./comic-metadata.component.scss']
+  selector: 'cx-scraping-volume-selection',
+  templateUrl: './comic-scraping-volume-selection.html',
+  styleUrls: ['./comic-scraping-volume-selection.scss']
 })
-export class ComicMetadataComponent implements OnDestroy, AfterViewInit {
+export class ComicScrapingVolumeSelectionComponent
+  implements OnDestroy, AfterViewInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 

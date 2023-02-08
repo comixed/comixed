@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ComicEditComponent } from './comic-edit.component';
+import { ComicScrapingComponent } from './comic-scraping.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -70,7 +70,7 @@ import {
   METADATA_FEATURE_KEY
 } from '@app/comic-metadata/reducers/metadata.reducer';
 
-describe('ComicEditComponent', () => {
+describe('ComicScrapingComponent', () => {
   const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const COMIC = COMIC_BOOK_2;
   const SKIP_CACHE = Math.random() > 0.5;
@@ -87,8 +87,8 @@ describe('ComicEditComponent', () => {
     [METADATA_FEATURE_KEY]: initialMetadataState
   };
 
-  let component: ComicEditComponent;
-  let fixture: ComponentFixture<ComicEditComponent>;
+  let component: ComicScrapingComponent;
+  let fixture: ComponentFixture<ComicScrapingComponent>;
   let store: MockStore<any>;
   let storeDispatchSpy: jasmine.Spy<any>;
   let confirmationService: ConfirmationService;
@@ -96,7 +96,7 @@ describe('ComicEditComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComicEditComponent],
+        declarations: [ComicScrapingComponent],
         imports: [
           NoopAnimationsModule,
           LoggerModule.forRoot(),
@@ -114,7 +114,7 @@ describe('ComicEditComponent', () => {
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicEditComponent);
+      fixture = TestBed.createComponent(ComicScrapingComponent);
       component = fixture.componentInstance;
       component.maximumRecords = MAXIMUM_RECORDS;
       component.skipCache = SKIP_CACHE;

@@ -31,7 +31,7 @@ import {
   MATCHABILITY,
   NEAR_MATCH,
   NO_MATCH
-} from '@app/comic-books/components/comic-metadata/comic-metadata.component';
+} from '@app/comic-books/components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';

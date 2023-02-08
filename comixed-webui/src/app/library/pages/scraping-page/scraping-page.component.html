@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="cx-grow-1">
-    <cx-comic-edit
+    <cx-comic-scraping
       *ngIf="!!currentComic && scrapingVolumes.length === 0"
       [comic]="currentComic"
       [metadataSource]="metadataSource"
@@ -31,8 +31,8 @@
       [maximumRecords]="maximumRecords"
       [multimode]="true"
       (scrape)="onScrape($event)"
-    ></cx-comic-edit>
-    <cx-comic-metadata
+    ></cx-comic-scraping>
+    <cx-scraping-volume-selection
       *ngIf="scrapingVolumes.length > 0"
       [comicBook]="currentComic"
       [metadataSource]="metadataSource"
@@ -43,6 +43,6 @@
       [pageSize]="pageSize"
       [multimode]="true"
       [volumes]="scrapingVolumes"
-    ></cx-comic-metadata>
+    ></cx-scraping-volume-selection>
   </div>
 </div>

@@ -38,7 +38,7 @@ import {
 import { ComicOverviewComponent } from '@app/comic-books/components/comic-overview/comic-overview.component';
 import { ComicStoryComponent } from '@app/comic-books/components/comic-story/comic-story.component';
 import { ComicPagesComponent } from '@app/comic-books/components/comic-pages/comic-pages.component';
-import { ComicEditComponent } from '@app/comic-books/components/comic-edit/comic-edit.component';
+import { ComicScrapingComponent } from '@app/comic-books/components/comic-scraping/comic-scraping.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -129,7 +129,7 @@ describe('ComicBookPageComponent', () => {
           ComicOverviewComponent,
           ComicStoryComponent,
           ComicPagesComponent,
-          ComicEditComponent,
+          ComicScrapingComponent,
           ComicTitlePipe,
           ComicPageUrlPipe
         ],
