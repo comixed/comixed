@@ -22,11 +22,11 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ComicBooksRouting } from './comic-books.routing';
 import { ComicBookPageComponent } from './pages/comic-book-page/comic-book-page.component';
-import { ComicEditComponent } from './components/comic-edit/comic-edit.component';
+import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
 import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
 import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
 import { ComicPageComponent } from './components/comic-page/comic-page.component';
-import { ComicMetadataComponent } from './components/comic-metadata/comic-metadata.component';
+import { ComicScrapingVolumeSelectionComponent } from './components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
 import { ComicStoryComponent } from './components/comic-story/comic-story.component';
 import { IssueMetadataDetailComponent } from './components/issue-metadata-detail/issue-metadata-detail.component';
 import { MatCardModule } from '@angular/material/card';
@@ -90,11 +90,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [
     ComicBookPageComponent,
-    ComicEditComponent,
+    ComicScrapingComponent,
     ComicOverviewComponent,
     ComicPagesComponent,
     ComicPageComponent,
-    ComicMetadataComponent,
+    ComicScrapingVolumeSelectionComponent,
     ComicStoryComponent,
     IssueMetadataDetailComponent,
     ComicDetailCardComponent,
@@ -155,8 +155,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   exports: [
     CommonModule,
     ComicPageComponent,
-    ComicEditComponent,
-    ComicMetadataComponent,
+    ComicScrapingComponent,
+    ComicScrapingVolumeSelectionComponent,
     ComicDetailCardComponent,
     ComicTitlePipe,
     ComicCoverUrlPipe,

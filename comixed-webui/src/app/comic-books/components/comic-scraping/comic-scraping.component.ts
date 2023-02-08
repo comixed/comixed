@@ -62,11 +62,11 @@ import { selectMetadataState } from '@app/comic-metadata/selectors/metadata.sele
 import { FileDetails } from '@app/comic-books/models/file-details';
 
 @Component({
-  selector: 'cx-comic-edit',
-  templateUrl: './comic-edit.component.html',
-  styleUrls: ['./comic-edit.component.scss']
+  selector: 'cx-comic-scraping',
+  templateUrl: './comic-scraping.component.html',
+  styleUrls: ['./comic-scraping.component.scss']
 })
-export class ComicEditComponent implements OnInit, OnDestroy {
+export class ComicScrapingComponent implements OnInit, OnDestroy {
   @Input() skipCache = false;
   @Input() maximumRecords = 0;
   @Input() metadataSource: MetadataSource = null;

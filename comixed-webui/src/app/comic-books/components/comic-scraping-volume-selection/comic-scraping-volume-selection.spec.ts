@@ -18,12 +18,12 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {
-  ComicMetadataComponent,
+  ComicScrapingVolumeSelectionComponent,
   EXACT_MATCH,
   MATCHABILITY,
   NEAR_MATCH,
   NO_MATCH
-} from './comic-metadata.component';
+} from './comic-scraping-volume-selection.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -61,7 +61,7 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { deselectComicBooks } from '@app/library/actions/library-selections.actions';
 
-describe('ComicMetadataComponent', () => {
+describe('ComicScrapingVolumeSelectionComponent', () => {
   const SCRAPING_ISSUE = SCRAPING_ISSUE_1;
   const SCRAPING_VOLUME = { ...SCRAPING_VOLUME_3 };
   const VOLUMES = [
@@ -75,8 +75,8 @@ describe('ComicMetadataComponent', () => {
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const initialState = { [METADATA_FEATURE_KEY]: { ...initialScrapingState } };
 
-  let component: ComicMetadataComponent;
-  let fixture: ComponentFixture<ComicMetadataComponent>;
+  let component: ComicScrapingVolumeSelectionComponent;
+  let fixture: ComponentFixture<ComicScrapingVolumeSelectionComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
   let spyOnStoreDispatch: jasmine.Spy;
@@ -84,7 +84,10 @@ describe('ComicMetadataComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComicMetadataComponent, IssueMetadataDetailComponent],
+        declarations: [
+          ComicScrapingVolumeSelectionComponent,
+          IssueMetadataDetailComponent
+        ],
         imports: [
           NoopAnimationsModule,
           LoggerModule.forRoot(),
@@ -102,7 +105,7 @@ describe('ComicMetadataComponent', () => {
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicMetadataComponent);
+      fixture = TestBed.createComponent(ComicScrapingVolumeSelectionComponent);
       component = fixture.componentInstance;
       component.comicSeriesName = SCRAPING_VOLUME.name;
       component.comicVolume = SCRAPING_VOLUME.startYear;

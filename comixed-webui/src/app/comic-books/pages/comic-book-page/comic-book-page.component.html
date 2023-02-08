@@ -187,9 +187,9 @@
       </mat-tab>
       <mat-tab
         *ngIf="isAdmin"
-        [label]="'comic-book.label.comic-edit' | translate"
+        [label]="'comic-book.label.comic-scraping' | translate"
       >
-        <cx-comic-edit
+        <cx-comic-scraping
           *ngIf="!!comicBook && volumes.length === 0"
           [comic]="comicBook"
           [metadataSource]="
@@ -206,8 +206,8 @@
               $event.skipCache
             )
           "
-        ></cx-comic-edit>
-        <cx-comic-metadata
+        ></cx-comic-scraping>
+        <cx-scraping-volume-selection
           *ngIf="volumes.length > 0"
           [comicBook]="comicBook"
           [metadataSource]="metadataSource"
@@ -217,7 +217,7 @@
           [skipCache]="skipCache"
           [pageSize]="pageSize"
           [volumes]="volumes"
-        ></cx-comic-metadata>
+        ></cx-scraping-volume-selection>
       </mat-tab>
     </mat-tab-group>
   </div>
