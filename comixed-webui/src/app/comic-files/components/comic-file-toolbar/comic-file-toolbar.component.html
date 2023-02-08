@@ -53,7 +53,7 @@
 </mat-toolbar>
 <div *ngIf="showLookupForm" class="cx-width-100 cx-accent-l-background">
   <form [formGroup]="loadFilesForm">
-    <mat-form-field class="cx-width-25" appearance="fill">
+    <mat-form-field class="cx-width-25" appearance="standard">
       <mat-label>
         {{ "comic-files.label.maximum-files-to-fetch" | translate }}
       </mat-label>
@@ -70,7 +70,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="cx-width-75" appearance="fill">
+    <mat-form-field class="cx-width-75" appearance="standard">
       <mat-label>
         {{ "comic-files.label.root-directory" | translate }}
       </mat-label>

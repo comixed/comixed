@@ -1,233 +1,96 @@
-<mat-grid-list cols="4" rowHeight="25px">
-  <mat-grid-tile class="cx-accent-light-background" colspan="4" rowspan="1">
-    {{ "comic-book.label.issue-details" | translate }}
-  </mat-grid-tile>
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right cx-text-nowrap">
-      {{ "comic-book.label.publisher" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      <a
-        [routerLink]="[
-          '/library/collections/publishers',
-          comic.detail.publisher
-        ]"
-      >
-        {{ comic.detail.publisher }}
-      </a>
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.series" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      <a
-        [routerLink]="[
-          '/library/collections/publishers',
-          comic.detail.publisher,
-          'series',
-          comic.detail.series,
-          'volumes',
-          comic.detail.volume
-        ]"
-      >
-        {{ comic.detail.series }}
-      </a>
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.volume" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.volume }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.issue-number" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.issueNumber }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.cover-date" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.coverDate | date: "MMMM yyyy" }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.store-date" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.storeDate | date: "longDate" }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="4" rowspan="1">
-    {{ "comic-book.label.file-details" | translate }}
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.comic-state" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ "comic-book.text.state-" + comic.detail.comicState | translate }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.filename" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-      [matTooltip]="comic.detail.filename"
-    >
-      {{ comic.detail.filename }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.filesize" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ "comic-book.text.filesize" | translate: { size: 0 } }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile class="cx-accent-light-background" colspan="1" rowspan="1">
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.added-date" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.addedDate | date: "medium" }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile
-    *ngIf="!!lastRead"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
+<mat-toolbar *ngIf="isAdmin" class="cx-accent-light-background">
+  <button
+    id="save-comic-changes"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    color="primary"
+    [matTooltip]="'comic-book.tooltip.save-changes' | translate"
+    [disabled]="!comicBookForm.valid"
+    (click)="onSaveChanges()"
   >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.last-read-date" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="!!lastRead" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ lastRead.lastRead | date: "medium" }}
-    </span>
-  </mat-grid-tile>
-
-  <mat-grid-tile
-    *ngIf="comic.detail.notes?.length > 0"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
+    <mat-icon>save</mat-icon>
+  </button>
+  <button
+    id="undo-comic-changes"
+    class="cx-toolbar-button cx-margin-left-5"
+    mat-icon-button
+    color="warn"
+    [matTooltip]="'comic-book.tooltip.undo-changes' | translate"
+    [disabled]="comicBookForm.untouched"
+    (click)="onUndoChanges()"
   >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.scraping-notes" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="comic.detail.notes?.length > 0" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.notes }}
-    </span>
-  </mat-grid-tile>
+    <mat-icon>undo</mat-icon>
+  </button>
+</mat-toolbar>
 
-  <mat-grid-tile class="cx-accent-light-background" colspan="4" rowspan="1">
-    {{ "comic-book.label.other-details" | translate }}
-  </mat-grid-tile>
+<form class="cx-width-100" [formGroup]="comicBookForm">
+  <mat-form-field class="cx-width-100" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.publisher" | translate }}</mat-label>
+    <input matInput formControlName="publisher" [readonly]="!isAdmin" />
+  </mat-form-field>
 
-  <mat-grid-tile
-    *ngIf="comic.sortName?.length > 0"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
-  >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.sort-name" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="comic.sortName?.length > 0" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.sortName }}
-    </span>
-  </mat-grid-tile>
+  <mat-form-field class="cx-width-50" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.series" | translate }}</mat-label>
+    <input matInput formControlName="series" [readonly]="!isAdmin" />
+  </mat-form-field>
 
-  <mat-grid-tile
-    *ngIf="!!comic.detail.imprint"
-    class="cx-accent-light-background"
-    colspan="1"
-    rowspan="1"
-  >
-    <span class="cx-align-text-right">
-      {{ "comic-book.label.imprint" | translate }}
-    </span>
-  </mat-grid-tile>
-  <mat-grid-tile *ngIf="!!comic.detail.imprint" colspan="3" rowspan="1">
-    <span
-      class="cx-width-100 cx-text-nowrap cx-align-text-left cx-padding-left-5"
-    >
-      {{ comic.detail.imprint }}
-    </span>
-  </mat-grid-tile>
-</mat-grid-list>
+  <mat-form-field class="cx-width-25" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.volume" | translate }}</mat-label>
+    <input matInput formControlName="volume" [readonly]="!isAdmin" />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-25" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
+    <input matInput formControlName="issueNumber" [readonly]="!isAdmin" />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-25" appearance="standard">
+    <mat-label>{{ "comic-book.label.comic-state" | translate }}</mat-label>
+    <input matInput formControlName="comicState" readonly />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-25" appearance="standard">
+    <mat-label>{{ "comic-book.label.cover-date" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="coverDate"
+      [matDatepicker]="coverDatePicker"
+      [readonly]="!isAdmin"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="coverDatePicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #coverDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-25" appearance="standard">
+    <mat-label>{{ "comic-book.label.store-date" | translate }}</mat-label>
+    <input
+      matInput
+      formControlName="storeDate"
+      [matDatepicker]="storeDatePicker"
+      [readonly]="!isAdmin"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="storeDatePicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #storeDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-25" appearance="standard">
+    <mat-label>{{ "comic-book.label.filesize" | translate }}</mat-label>
+    <input matInput formControlName="fileSize" readonly />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-100" appearance="standard">
+    <mat-label>{{ "comic-book.label.filename" | translate }}</mat-label>
+    <input matInput formControlName="filename" readonly />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-100" appearance="standard">
+    <mat-label>{{ "comic-book.label.scraping-notes" | translate }}</mat-label>
+    <input matInput formControlName="scrapingNotes" [readonly]="!isAdmin" />
+  </mat-form-field>
+</form>

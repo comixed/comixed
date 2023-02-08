@@ -254,7 +254,7 @@ describe('ComicEditComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        updateComicBook({ comicBook: COMIC })
+        updateComicBook({ comicBook: component.encodeForm() })
       );
     });
   });

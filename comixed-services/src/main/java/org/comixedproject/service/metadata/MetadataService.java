@@ -272,14 +272,20 @@ public class MetadataService {
       comicBook.getComicDetail().setSeries(issueDetails.getSeries());
       comicBook.getComicDetail().setVolume(issueDetails.getVolume());
       comicBook.getComicDetail().setIssueNumber(issueDetails.getIssueNumber());
-      if (issueDetails.getCoverDate() != null)
+      if (issueDetails.getCoverDate() != null) {
         comicBook
             .getComicDetail()
             .setCoverDate(this.adjustForTimezone(issueDetails.getCoverDate()));
-      if (issueDetails.getStoreDate() != null)
+      } else {
+        comicBook.getComicDetail().setCoverDate(null);
+      }
+      if (issueDetails.getStoreDate() != null) {
         comicBook
             .getComicDetail()
             .setStoreDate(this.adjustForTimezone(issueDetails.getStoreDate()));
+      } else {
+        comicBook.getComicDetail().setStoreDate(null);
+      }
       comicBook.getComicDetail().setTitle(issueDetails.getTitle());
       comicBook.getComicDetail().setDescription(issueDetails.getDescription());
       final ComicDetail detail = comicBook.getComicDetail();

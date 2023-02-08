@@ -86,6 +86,8 @@ public class ComicBookServiceTest {
   private static final String TEST_TITLE = "The Issue Title";
   private static final String TEST_DESCRIPTION = "This description of the issue";
   private static final Date TEST_COVER_DATE = new Date();
+  private static final Date TEST_STORE_DATE =
+      new Date(System.currentTimeMillis() - 30L * 24L * 60L * 60L * 24L);
   private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
   private static final ComicState TEST_STATE = ComicState.CHANGED;
   private static final String TEST_CHARACTER = "Manlyman";
@@ -158,8 +160,8 @@ public class ComicBookServiceTest {
     currentComicBook.getComicDetail().setSeries(TEST_SERIES);
     currentComicBook.getComicDetail().setVolume(TEST_VOLUME);
     currentComicBook.getComicDetail().setIssueNumber(TEST_CURRENT_ISSUE_NUMBER);
-    currentComicBook.getComicDetail().setCoverDate(new Date(System.currentTimeMillis()));
     currentComicBook.getComicDetail().setCoverDate(TEST_COVER_DATE);
+    currentComicBook.getComicDetail().setStoreDate(TEST_STORE_DATE);
 
     nextComicBook.setComicDetail(
         new ComicDetail(nextComicBook, TEST_COMIC_FILENAME, ArchiveType.CBZ));
@@ -395,6 +397,8 @@ public class ComicBookServiceTest {
     Mockito.when(incomingComicBook.getSortName()).thenReturn(TEST_SORTABLE_NAME);
     Mockito.when(incomingComicDetail.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(incomingComicDetail.getDescription()).thenReturn(TEST_DESCRIPTION);
+    Mockito.when(incomingComicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
+    Mockito.when(incomingComicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
 
     final ComicBook result = service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook);
 
@@ -411,6 +415,8 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBook, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
     Mockito.verify(comicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
+    Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
+    Mockito.verify(comicDetail, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.detailsUpdated);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);

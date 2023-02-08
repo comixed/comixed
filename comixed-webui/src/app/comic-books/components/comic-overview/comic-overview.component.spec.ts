@@ -25,18 +25,39 @@ import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 
 describe('ComicOverviewComponent', () => {
   const COMIC = COMIC_BOOK_1;
+  const initialState = {};
 
   let component: ComicOverviewComponent;
   let fixture: ComponentFixture<ComicOverviewComponent>;
+  let store: MockStore<any>;
+  let confirmationService: ConfirmationService;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ComicOverviewComponent, ComicCoverUrlPipe],
         imports: [
+          NoopAnimationsModule,
+          FormsModule,
+          ReactiveFormsModule,
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           RouterTestingModule.withRoutes([
@@ -45,13 +66,24 @@ describe('ComicOverviewComponent', () => {
               redirectTo: ''
             }
           ]),
-          MatGridListModule
-        ]
+          MatGridListModule,
+          MatDialogModule,
+          MatToolbarModule,
+          MatIconModule,
+          MatDatepickerModule,
+          MatInputModule,
+          MatNativeDateModule,
+          MatTooltipModule
+        ],
+        providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
       fixture = TestBed.createComponent(ComicOverviewComponent);
       component = fixture.componentInstance;
-      component.comic = COMIC;
+      component.comicBook = COMIC;
+      store = TestBed.inject(MockStore);
+      spyOn(store, 'dispatch');
+      confirmationService = TestBed.inject(ConfirmationService);
       fixture.detectChanges();
     })
   );
@@ -63,7 +95,7 @@ describe('ComicOverviewComponent', () => {
   describe('checking if a comic is changed', () => {
     describe('when ADDED', () => {
       beforeEach(() => {
-        component.comic = {
+        component.comicBook = {
           ...COMIC,
           detail: { ...COMIC.detail, comicState: ComicBookState.ADDED }
         };
@@ -80,7 +112,7 @@ describe('ComicOverviewComponent', () => {
 
     describe('when CHANGED', () => {
       beforeEach(() => {
-        component.comic = {
+        component.comicBook = {
           ...COMIC,
           detail: { ...COMIC.detail, comicState: ComicBookState.CHANGED }
         };
@@ -97,7 +129,7 @@ describe('ComicOverviewComponent', () => {
 
     describe('when STABLE', () => {
       beforeEach(() => {
-        component.comic = {
+        component.comicBook = {
           ...COMIC,
           detail: { ...COMIC.detail, comicState: ComicBookState.STABLE }
         };
@@ -114,7 +146,7 @@ describe('ComicOverviewComponent', () => {
 
     describe('when DELETED', () => {
       beforeEach(() => {
-        component.comic = {
+        component.comicBook = {
           ...COMIC,
           detail: { ...COMIC.detail, comicState: ComicBookState.DELETED }
         };
@@ -127,6 +159,98 @@ describe('ComicOverviewComponent', () => {
       it('is marked as deleted', () => {
         expect(component.deleted).toBeTrue();
       });
+    });
+  });
+
+  describe('when the dates are null', () => {
+    beforeEach(() => {
+      component.comicBook = {
+        ...COMIC,
+        detail: { ...COMIC.detail, coverDate: null, storeDate: null }
+      };
+    });
+
+    it('sets a null cover date value', () => {
+      expect(component.comicBookForm.controls.coverDate.value).toBeNull();
+    });
+
+    it('sets a null store date value', () => {
+      expect(component.comicBookForm.controls.storeDate.value).toBeNull();
+    });
+  });
+
+  describe('saving changes', () => {
+    beforeEach(() => {
+      spyOn(confirmationService, 'confirm').and.callFake(
+        (confirmation: Confirmation) => confirmation.confirm()
+      );
+      component.onSaveChanges();
+    });
+
+    it('confirms with the user', () => {
+      expect(confirmationService.confirm).toHaveBeenCalled();
+    });
+
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        updateComicBook({ comicBook: component.comicBook })
+      );
+    });
+  });
+
+  describe('undoing changes', () => {
+    beforeEach(() => {
+      component.comicBookForm.controls.publisher.setValue(
+        COMIC.detail.publisher.substr(1)
+      );
+      component.comicBookForm.controls.series.setValue(
+        COMIC.detail.series.substr(1)
+      );
+      component.comicBookForm.controls.volume.setValue(
+        COMIC.detail.volume.substr(1)
+      );
+      component.comicBookForm.controls.issueNumber.setValue(
+        COMIC.detail.issueNumber.substr(1)
+      );
+      component.comicBookForm.controls.coverDate.setValue(null);
+      component.comicBookForm.controls.storeDate.setValue(null);
+      component.onUndoChanges();
+    });
+
+    it('resets the changes to the publisher', () => {
+      expect(component.comicBookForm.controls.publisher.value).toEqual(
+        COMIC.detail.publisher
+      );
+    });
+
+    it('resets the changes to the series', () => {
+      expect(component.comicBookForm.controls.series.value).toEqual(
+        COMIC.detail.series
+      );
+    });
+
+    it('resets the changes to the volume', () => {
+      expect(component.comicBookForm.controls.volume.value).toEqual(
+        COMIC.detail.volume
+      );
+    });
+
+    it('resets the changes to the issue number', () => {
+      expect(component.comicBookForm.controls.issueNumber.value).toEqual(
+        COMIC.detail.issueNumber
+      );
+    });
+
+    it('resets the changes to the cover date', () => {
+      expect(component.comicBookForm.controls.coverDate.value).toEqual(
+        new Date(COMIC.detail.coverDate)
+      );
+    });
+
+    it('resets the changes to the store dater', () => {
+      expect(component.comicBookForm.controls.storeDate.value).toEqual(
+        new Date(COMIC.detail.storeDate)
+      );
     });
   });
 });

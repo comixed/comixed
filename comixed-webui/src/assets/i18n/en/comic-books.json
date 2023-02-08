@@ -78,8 +78,8 @@
     "save-changes": {
       "effect-failure": "Failed to save changes.",
       "effect-success": "Changes saved.",
-      "message": "Are you sure you want to manual changes to this comic?",
-      "title": "Save Changes To Comic"
+      "confirmation-message": "Are you sure you want to manual changes to this comic?",
+      "confirmation-title": "Save Changes To Comic"
     },
     "save-page-order": {
       "confirmation-message": "Are you sure you want to save the new page ordering?",

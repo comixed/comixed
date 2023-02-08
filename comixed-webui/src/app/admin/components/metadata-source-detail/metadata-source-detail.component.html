@@ -1,5 +1,5 @@
 <form [formGroup]="sourceForm">
-  <mat-form-field class="cx-width-100" appearance="fill" required>
+  <mat-form-field class="cx-width-100" appearance="standard" required>
     <mat-label>
       {{ "metadata-source.label.source-name" | translate }}
     </mat-label>
@@ -34,7 +34,7 @@
       </span>
     </mat-error>
   </mat-form-field>
-  <mat-form-field class="cx-width-100" appearance="fill" required>
+  <mat-form-field class="cx-width-100" appearance="standard" required>
     <mat-label>
       {{ "metadata-source.label.bean-name" | translate }}
     </mat-label>
@@ -87,7 +87,7 @@
         [formGroupName]="i"
       >
         <td>
-          <mat-form-field class="cx-width-100" appearance="fill" required>
+          <mat-form-field class="cx-width-100" appearance="standard" required>
             <mat-icon
               matPrefix
               color="warn"
@@ -109,7 +109,7 @@
           </mat-form-field>
         </td>
         <td>
-          <mat-form-field class="cx-width-100" appearance="fill" required>
+          <mat-form-field class="cx-width-100" appearance="standard" required>
             <input
               [id]="'property-value-' + i"
               matInput
