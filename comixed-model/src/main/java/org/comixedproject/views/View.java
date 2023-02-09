@@ -112,6 +112,9 @@ public interface View {
   /** Used when retrieving a single metadata source. */
   public interface MetadataSourceDetail extends MetadataSourceList {}
 
-  /** USed when marshalling a metadata process update. */
+  /** Used when marshalling a metadata process update. */
   public interface MetadataUpdateProcessState {}
+
+  /** Used when show the list of deleted pages. */
+  public interface DeletedPageList {}
 }

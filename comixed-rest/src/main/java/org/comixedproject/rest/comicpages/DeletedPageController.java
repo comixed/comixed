@@ -18,10 +18,12 @@
 
 package org.comixedproject.rest.comicpages;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.service.comicpages.DeletedPageService;
+import org.comixedproject.views.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,7 @@ public class DeletedPageController {
    * @return the pages list
    */
   @GetMapping(value = "/api/pages/deleted", produces = MediaType.APPLICATION_JSON_VALUE)
+  @JsonView({View.DeletedPageList.class})
   public List<DeletedPage> loadAll() {
     log.info("Loading all deleted pages");
     return this.deletedPageService.loadAll();

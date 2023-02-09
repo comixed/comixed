@@ -16,12 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DuplicatePage } from '@app/library/models/duplicate-page';
-import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
@@ -29,41 +25,26 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 
 @Component({
   selector: 'cx-comics-with-duplicate-page',
-  templateUrl: './comics-with-duplicate-page.component.html',
-  styleUrls: ['./comics-with-duplicate-page.component.scss']
+  templateUrl: './comic-detail-list-dialog.component.html',
+  styleUrls: ['./comic-detail-list-dialog.component.scss']
 })
-export class ComicsWithDuplicatePageComponent implements OnDestroy {
+export class ComicDetailListDialogComponent {
   dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
-
-  comicBookSubscription: Subscription;
 
   constructor(
     private logger: LoggerService,
-    @Inject(MAT_DIALOG_DATA) public page: DuplicatePage,
-    private store: Store<any>
+    @Inject(MAT_DIALOG_DATA) public _comics: ComicDetail[]
   ) {
-    this.comicBookSubscription = this.store
-      .select(selectComicBookList)
-      .subscribe(comicBooks => {
-        this.logger.trace('Comic book update received');
-        this.comics = comicBooks.filter(comicBook =>
-          this.page.ids.includes(comicBook.id)
-        );
-      });
+    this.comics = _comics;
   }
 
   get comics(): ComicDetail[] {
     return this.dataSource.data.map(entry => entry.item);
   }
 
-  set comics(details: ComicDetail[]) {
-    this.dataSource.data = details.map(comic => {
+  set comics(comics: ComicDetail[]) {
+    this.dataSource.data = comics.map(comic => {
       return { item: comic, selected: false };
     });
-  }
-
-  ngOnDestroy(): void {
-    this.logger.trace('Unsubscribing from comic book updates');
-    this.comicBookSubscription.unsubscribe();
   }
 }

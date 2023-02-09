@@ -29,7 +29,7 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import java.util.List;
-import org.comixedproject.model.comicpages.DeletedPage;
+import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.comixedproject.repositories.RepositoryContext;
@@ -137,10 +137,9 @@ public class PageRepositoryTest {
 
   @Test
   public void testLoadAllDeletedPages() {
-    final List<DeletedPage> result = repository.loadAllDeletedPages();
+    final List<DeletedPageAndComic> result = repository.loadAllDeletedPages();
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(deletedPage -> deletedPage.getComicCount() > 0));
   }
 }

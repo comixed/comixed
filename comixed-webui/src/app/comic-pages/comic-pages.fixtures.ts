@@ -115,10 +115,22 @@ export const PAGE_4: Page = {
   index: 0
 };
 
-export const DELETED_PAGE_1: DeletedPage = { hash: PAGE_1.hash, comicCount: 1 };
+export const DELETED_PAGE_1: DeletedPage = {
+  hash: PAGE_1.hash,
+  comics: []
+};
 
-export const DELETED_PAGE_2: DeletedPage = { hash: PAGE_2.hash, comicCount: 2 };
+export const DELETED_PAGE_2: DeletedPage = {
+  hash: PAGE_2.hash,
+  comics: []
+};
 
-export const DELETED_PAGE_3: DeletedPage = { hash: PAGE_3.hash, comicCount: 3 };
+export const DELETED_PAGE_3: DeletedPage = {
+  hash: PAGE_3.hash,
+  comics: []
+};
 
-export const DELETED_PAGE_4: DeletedPage = { hash: PAGE_4.hash, comicCount: 4 };
+export const DELETED_PAGE_4: DeletedPage = {
+  hash: PAGE_4.hash,
+  comics: []
+};

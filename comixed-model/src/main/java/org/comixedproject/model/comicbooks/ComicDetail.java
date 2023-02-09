@@ -69,7 +69,7 @@ import org.springframework.data.annotation.CreatedDate;
 public class ComicDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   private Long id;
 
@@ -81,7 +81,7 @@ public class ComicDetail {
 
   @Column(name = "Filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")
-  @JsonView({View.ComicListView.class})
+  @JsonView({View.ComicListView.class, View.DeletedPageList.class})
   @Getter
   @Setter
   @NonNull
@@ -93,7 +93,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -106,7 +107,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -117,7 +119,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -135,7 +138,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -146,7 +150,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -157,7 +162,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   private String issueNumber;
@@ -206,7 +212,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -219,7 +226,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Getter
   @Setter
@@ -232,7 +240,8 @@ public class ComicDetail {
   @JsonView({
     View.ComicListView.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   @Temporal(TemporalType.TIMESTAMP)
   @Getter
@@ -248,7 +257,8 @@ public class ComicDetail {
     View.ComicListView.class,
     View.LastReadList.class,
     View.DuplicatePageDetail.class,
-    View.ReadingListDetail.class
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
   })
   public Long getComicId() {
     return this.comicBook.getId();

@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeletedListPageComponent } from './deleted-list-page.component';
+import { DeletedPageListPageComponent } from './deleted-page-list-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -44,13 +44,29 @@ import {
   initialState as deletedPageInitiaState
 } from '@app/comic-pages/reducers/deleted-pages.reducer';
 import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
+} from '@app/comic-books/comic-books.fixtures';
+import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 
-describe('DeletedListPageComponent', () => {
+describe('DeletedPageListPageComponent', () => {
   const DELETED_PAGE_LIST = [
     DELETED_PAGE_1,
     DELETED_PAGE_2,
     DELETED_PAGE_3,
     DELETED_PAGE_4
+  ];
+  const COMICS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
   ];
   const PAGE_INDEX = 11;
   const PAGE_SIZE = 25;
@@ -60,16 +76,17 @@ describe('DeletedListPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER }
   };
 
-  let component: DeletedListPageComponent;
-  let fixture: ComponentFixture<DeletedListPageComponent>;
+  let component: DeletedPageListPageComponent;
+  let fixture: ComponentFixture<DeletedPageListPageComponent>;
   let titleService: TitleService;
   let setTitleSpy: jasmine.Spy<any>;
   let translateService: TranslateService;
   let store: MockStore<any>;
+  let dialog: MatDialog;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DeletedListPageComponent, PageHashUrlPipe],
+      declarations: [DeletedPageListPageComponent, PageHashUrlPipe],
       imports: [
         NoopAnimationsModule,
         RouterTestingModule.withRoutes([]),
@@ -78,17 +95,20 @@ describe('DeletedListPageComponent', () => {
         MatTableModule,
         MatToolbarModule,
         MatPaginatorModule,
-        MatSortModule
+        MatSortModule,
+        MatDialogModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DeletedListPageComponent);
+    fixture = TestBed.createComponent(DeletedPageListPageComponent);
     component = fixture.componentInstance;
     titleService = TestBed.inject(TitleService);
     setTitleSpy = spyOn(titleService, 'setTitle');
     translateService = TestBed.inject(TranslateService);
     store = TestBed.inject(MockStore);
+    dialog = TestBed.inject(MatDialog);
+    spyOn(dialog, 'open');
     fixture.detectChanges();
   });
 
@@ -140,7 +160,7 @@ describe('DeletedListPageComponent', () => {
     it('sorts by comic count', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
-      ).toEqual(ENTRY.comicCount);
+      ).toEqual(ENTRY.comics.length);
     });
   });
 
@@ -151,11 +171,23 @@ describe('DeletedListPageComponent', () => {
 
     it('loads the total number of comics', () => {
       expect(component.totalComicCount).toEqual(
-        DELETED_PAGE_LIST.map(entry => entry.comicCount).reduce(
+        DELETED_PAGE_LIST.map(entry => entry.comics.length).reduce(
           (sum, current) => sum + current,
           0
         )
       );
+    });
+  });
+
+  describe('showing the list of comics', () => {
+    beforeEach(() => {
+      component.onShowComics(COMICS);
+    });
+
+    it('opens the dialog', () => {
+      expect(dialog.open).toHaveBeenCalledWith(ComicDetailListDialogComponent, {
+        data: COMICS
+      });
     });
   });
 });
