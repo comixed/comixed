@@ -30,6 +30,5 @@ export interface ComicBook {
   blockedPageCount: number;
   nextIssueId: number;
   previousIssueId: number;
-  sortName: string;
   lastModifiedOn: number;
 }

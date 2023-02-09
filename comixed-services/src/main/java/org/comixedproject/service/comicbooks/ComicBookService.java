@@ -175,11 +175,12 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     comic.getComicDetail().setVolume(update.getComicDetail().getVolume());
     comic.getComicDetail().setIssueNumber(update.getComicDetail().getIssueNumber());
     comic.getComicDetail().setImprint(update.getComicDetail().getImprint());
-    comic.setSortName(update.getSortName());
+    comic.getComicDetail().setSortName(update.getComicDetail().getSortName());
     comic.getComicDetail().setTitle(update.getComicDetail().getTitle());
     comic.getComicDetail().setDescription(update.getComicDetail().getDescription());
     comic.getComicDetail().setCoverDate(update.getComicDetail().getCoverDate());
     comic.getComicDetail().setStoreDate(update.getComicDetail().getStoreDate());
+    comic.getComicDetail().setNotes(update.getComicDetail().getNotes());
 
     this.imprintService.update(comic);
 

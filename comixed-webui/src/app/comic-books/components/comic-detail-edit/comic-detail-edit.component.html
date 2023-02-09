@@ -39,6 +39,32 @@
     <input matInput formControlName="volume" [readonly]="!isAdmin" />
   </mat-form-field>
 
+  <mat-form-field class="cx-width-100" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.title" | translate }}</mat-label>
+    <input matInput formControlName="title" [readonly]="!isAdmin" />
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-50" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
+    <mat-select
+      id="imprint-select"
+      formControlName="imprint"
+      (selectionChange)="onImprintSelected($event.value)"
+    >
+      <mat-option
+        *ngFor="let option of imprintOptions"
+        [value]="option.value.name"
+      >
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="cx-width-50" appearance="standard" required>
+    <mat-label>{{ "comic-book.label.sort-name" | translate }}</mat-label>
+    <input matInput formControlName="sortName" [readonly]="!isAdmin" />
+  </mat-form-field>
+
   <mat-form-field class="cx-width-25" appearance="standard" required>
     <mat-label>{{ "comic-book.label.issue-number" | translate }}</mat-label>
     <input matInput formControlName="issueNumber" [readonly]="!isAdmin" />
@@ -91,6 +117,13 @@
 
   <mat-form-field class="cx-width-100" appearance="standard">
     <mat-label>{{ "comic-book.label.scraping-notes" | translate }}</mat-label>
-    <input matInput formControlName="scrapingNotes" [readonly]="!isAdmin" />
+    <textarea
+      matInput
+      matTextareaAutosize
+      formControlName="notes"
+      [readonly]="!isAdmin"
+    ></textarea>
   </mat-form-field>
 </form>
+
+<pre>{{ comicBookForm.controls.imprint.value }}</pre>

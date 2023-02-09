@@ -105,17 +105,6 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
-  public void testComicSortNameCanBeChanged() {
-    ComicBook record = repository.findById(TEST_COMIC_ID).get();
-
-    record.setSortName("Farkle");
-    repository.save(record);
-
-    ComicBook result = repository.findById(TEST_COMIC_ID).get();
-    assertEquals("Farkle", result.getSortName());
-  }
-
-  @Test
   public void testFindAllUnreadByUser() {
     List<ComicDetail> result = repository.findAllUnreadByUser(TEST_USER_ID);
 

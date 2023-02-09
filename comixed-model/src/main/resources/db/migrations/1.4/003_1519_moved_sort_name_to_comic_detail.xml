@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet id="003_1519_moved_sort_name_to_comic_detail.xml"
+             author="mcpierce">
+
+    <addColumn tableName="ComicDetails">
+      <column name="SortName"
+              type="varchar(128)">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+
+    <createIndex tableName="ComicDetails"
+                 indexName="ComicDetailSortNameIdx">
+      <column name="SortName"/>
+    </createIndex>
+
+    <sql>UPDATE ComicDetails d
+         SET SortName = (SELECT SortName FROM ComicBooks c WHERE c.Id = d.ComicBookId)</sql>
+
+    <dropColumn tableName="ComicBooks"
+                columnName="SortName"/>
+
+  </changeSet>
+</databaseChangeLog>

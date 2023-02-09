@@ -37,10 +37,6 @@ import {
 } from '@app/library/library.constants';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { Subscription } from 'rxjs';
-import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
-import { SelectionOption } from '@app/core/models/ui/selection-option';
-import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
-import { Imprint } from '@app/comic-books/models/imprint';
 import {
   resetScrapedMetadata,
   scrapeMetadataFromFilename
@@ -87,9 +83,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
   metadataSourceList: ListItem<MetadataSource>[] = [];
   metadataSubscription: Subscription;
   preferredMetadataSource: MetadataSource;
-  imprintSubscription: Subscription;
-  imprintOptions: SelectionOption<Imprint>[] = [];
-  imprints: Imprint[];
   confirmBeforeScraping = true;
   autoSelectExactMatch = false;
 
@@ -141,25 +134,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         this.confirmBeforeScraping = state.confirmBeforeScraping;
         this.autoSelectExactMatch = state.autoSelectExactMatch;
       });
-    this.imprintSubscription = this.store
-      .select(selectImprints)
-      .subscribe(imprints => {
-        this.logger.trace('Loading imprint options');
-        this.imprints = imprints;
-        this.imprintOptions = [
-          {
-            label: '---',
-            value: { id: -1, name: '', publisher: '' }
-          } as SelectionOption<Imprint>
-        ].concat(
-          imprints.map(imprint => {
-            return {
-              label: imprint.name,
-              value: imprint
-            } as SelectionOption<Imprint>;
-          })
-        );
-      });
   }
 
   private _comic: ComicBook;
@@ -186,9 +160,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.comicForm.controls.volume.setValue(comic.detail.volume);
     this.comicForm.controls.issueNumber.setValue(comic.detail.issueNumber);
     this.comicForm.controls.imprint.setValue(comic.detail.imprint);
-    this.comicForm.controls.sortName.setValue(comic.sortName);
-    this.comicForm.controls.title.setValue(comic.detail.title);
-    this.comicForm.controls.description.setValue(comic.detail.description);
     this.comicForm.updateValueAndValidity();
   }
 
@@ -201,15 +172,11 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     this.scrapedMetadataSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from metadata source list');
     this.metadataSourceListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from imprint updates');
-    this.imprintSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
     this.logger.trace('Loading metadata sources');
     this.store.dispatch(loadMetadataSources());
-    this.logger.trace('Loading imprints');
-    this.store.dispatch(loadImprints());
   }
 
   onUndoChanges(): void {
@@ -270,19 +237,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         this.store.dispatch(updateComicBook({ comicBook: comic }));
       }
     });
-  }
-
-  onImprintSelected(name: string): void {
-    this.logger.trace('Finding imprint');
-    const imprint = this.imprints.find(entry => entry.name === name);
-    this.logger.trace('Setting publisher name');
-    this.comicForm.controls.publisher.setValue(
-      imprint?.publisher || this.comic.detail.publisher
-    );
-    this.logger.trace('Setting imprint name');
-    this.comicForm.controls.imprint.setValue(
-      imprint?.name || this.comic.detail.imprint
-    );
   }
 
   onScrapeFilename(): void {
@@ -349,14 +303,10 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
         ...this.comic.detail,
         id: undefined,
         publisher: this.comicForm.controls.publisher.value,
-        imprint: this.comicForm.controls.imprint.value,
         series: this.comicForm.controls.series.value,
         volume: this.comicForm.controls.volume.value,
-        issueNumber: this.comicForm.controls.issueNumber.value,
-        title: this.comicForm.controls.title.value,
-        description: this.comicForm.controls.description.value
+        issueNumber: this.comicForm.controls.issueNumber.value
       },
-      sortName: this.comicForm.controls.sortName.value,
       fileDetails: {} as FileDetails
     } as ComicBook;
   }

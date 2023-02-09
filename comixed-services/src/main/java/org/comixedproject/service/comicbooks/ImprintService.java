@@ -43,7 +43,7 @@ public class ImprintService {
   public void update(final ComicBook comicBook) {
     log.trace("Looking for imprint");
     final Imprint imprint =
-        this.imprintRepository.findByName(comicBook.getComicDetail().getPublisher());
+        this.imprintRepository.findByName(comicBook.getComicDetail().getImprint());
     if (imprint == null) {
       log.trace("Publisher is not an imprint");
       comicBook.getComicDetail().setImprint("");

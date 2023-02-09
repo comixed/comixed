@@ -269,6 +269,7 @@ public class MetadataService {
       final ComicBook comicBook = result;
       log.debug("Updating comicBook with scraped data");
       comicBook.getComicDetail().setPublisher(issueDetails.getPublisher());
+      comicBook.getComicDetail().setImprint(issueDetails.getPublisher());
       comicBook.getComicDetail().setSeries(issueDetails.getSeries());
       comicBook.getComicDetail().setVolume(issueDetails.getVolume());
       comicBook.getComicDetail().setIssueNumber(issueDetails.getIssueNumber());

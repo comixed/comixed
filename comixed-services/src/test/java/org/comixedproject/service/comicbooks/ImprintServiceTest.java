@@ -49,7 +49,7 @@ public class ImprintServiceTest {
   @Before
   public void setUp() {
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
-    Mockito.when(comicDetail.getPublisher()).thenReturn(TEST_IMPRINT);
+    Mockito.when(comicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(imprint.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(imprint.getName()).thenReturn(TEST_IMPRINT);
   }

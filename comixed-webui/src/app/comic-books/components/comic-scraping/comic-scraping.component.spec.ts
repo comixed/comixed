@@ -21,12 +21,7 @@ import { ComicScrapingComponent } from './comic-scraping.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  COMIC_BOOK_2,
-  IMPRINT_1,
-  IMPRINT_2,
-  IMPRINT_3
-} from '@app/comic-books/comic-books.fixtures';
+import { COMIC_BOOK_2 } from '@app/comic-books/comic-books.fixtures';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,10 +34,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { saveUserPreference } from '@app/user/actions/user.actions';
 import { MAXIMUM_SCRAPING_RECORDS_PREFERENCE } from '@app/library/library.constants';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
-import {
-  IMPRINT_LIST_FEATURE_KEY,
-  initialState as initialImprintState
-} from '@app/comic-books/reducers/imprint-list.reducer';
 import {
   initialState as initialScrapeMetadataState,
   SCRAPE_METADATA_FEATURE_KEY
@@ -71,17 +62,14 @@ import {
 } from '@app/comic-metadata/reducers/metadata.reducer';
 
 describe('ComicScrapingComponent', () => {
-  const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
   const COMIC = COMIC_BOOK_2;
   const SKIP_CACHE = Math.random() > 0.5;
   const MAXIMUM_RECORDS = 100;
-  const ISSUE_NUMBER = '27';
   const METADATA_SOURCE = METADATA_SOURCE_1;
   const METADATA_SOURCES = [METADATA_SOURCE_1];
   const REFERENCE_ID = `${new Date().getTime()}`;
 
   const initialState = {
-    [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES },
     [SCRAPE_METADATA_FEATURE_KEY]: initialScrapeMetadataState,
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
     [METADATA_FEATURE_KEY]: initialMetadataState
@@ -256,43 +244,6 @@ describe('ComicScrapingComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         updateComicBook({ comicBook: component.encodeForm() })
       );
-    });
-  });
-
-  describe('when an imprint is selected', () => {
-    const IMPRINT = ENTRIES[0];
-
-    beforeEach(() => {
-      component.comic = COMIC;
-      component.onImprintSelected(IMPRINT.name);
-    });
-
-    it('updates the imprint', () => {
-      expect(component.comicForm.controls.imprint.value).toEqual(IMPRINT.name);
-    });
-
-    it('updates the publisher', () => {
-      expect(component.comicForm.controls.publisher.value).toEqual(
-        IMPRINT.publisher
-      );
-    });
-
-    describe('when it is cleared', () => {
-      beforeEach(() => {
-        component.onImprintSelected(null);
-      });
-
-      it('updates the imprint', () => {
-        expect(component.comicForm.controls.imprint.value).toEqual(
-          COMIC.detail.imprint
-        );
-      });
-
-      it('updates the publisher', () => {
-        expect(component.comicForm.controls.publisher.value).toEqual(
-          COMIC.detail.publisher
-        );
-      });
     });
   });
 

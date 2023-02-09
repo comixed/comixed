@@ -23,7 +23,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ComicBooksRouting } from './comic-books.routing';
 import { ComicBookPageComponent } from './pages/comic-book-page/comic-book-page.component';
 import { ComicScrapingComponent } from './components/comic-scraping/comic-scraping.component';
-import { ComicOverviewComponent } from './components/comic-overview/comic-overview.component';
+import { ComicDetailEditComponent } from './components/comic-detail-edit/comic-detail-edit.component';
 import { ComicPagesComponent } from './components/comic-pages/comic-pages.component';
 import { ComicPageComponent } from './components/comic-page/comic-page.component';
 import { ComicScrapingVolumeSelectionComponent } from './components/comic-scraping-volume-selection/comic-scraping-volume-selection.component';
@@ -91,7 +91,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   declarations: [
     ComicBookPageComponent,
     ComicScrapingComponent,
-    ComicOverviewComponent,
+    ComicDetailEditComponent,
     ComicPagesComponent,
     ComicPageComponent,
     ComicScrapingVolumeSelectionComponent,
