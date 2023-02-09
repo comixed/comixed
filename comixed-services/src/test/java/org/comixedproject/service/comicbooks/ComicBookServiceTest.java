@@ -88,13 +88,10 @@ public class ComicBookServiceTest {
   private static final Date TEST_COVER_DATE = new Date();
   private static final Date TEST_STORE_DATE =
       new Date(System.currentTimeMillis() - 30L * 24L * 60L * 60L * 24L);
+  private static final String TEST_NOTES = "These are the comic book's notes...";
   private static final int TEST_PAGE = Math.abs(RandomUtils.nextInt());
   private static final ComicState TEST_STATE = ComicState.CHANGED;
-  private static final String TEST_CHARACTER = "Manlyman";
-  private static final String TEST_TEAM = "The Boys";
-  private static final String TEST_LOCATION = "The Location";
   private static final String TEST_STORY_NAME = "The Story Name";
-  private static final String TEST_EMAIL = "reader@comixedproject.org";
   private static final long TEST_COMIC_COUNT = 239L;
   private static final String TEST_SEARCH_TERMS = "The search terms";
 
@@ -389,16 +386,16 @@ public class ComicBookServiceTest {
   public void testUpdateComic() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
     Mockito.when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
+    Mockito.when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComicDetail.getSeries()).thenReturn(TEST_SERIES);
     Mockito.when(incomingComicDetail.getVolume()).thenReturn(TEST_VOLUME);
     Mockito.when(incomingComicDetail.getIssueNumber()).thenReturn(TEST_ISSUE_NUMBER);
-    // TODO update metadata source
-    Mockito.when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
-    Mockito.when(incomingComicBook.getSortName()).thenReturn(TEST_SORTABLE_NAME);
+    Mockito.when(incomingComicDetail.getSortName()).thenReturn(TEST_SORTABLE_NAME);
     Mockito.when(incomingComicDetail.getTitle()).thenReturn(TEST_TITLE);
     Mockito.when(incomingComicDetail.getDescription()).thenReturn(TEST_DESCRIPTION);
     Mockito.when(incomingComicDetail.getCoverDate()).thenReturn(TEST_COVER_DATE);
     Mockito.when(incomingComicDetail.getStoreDate()).thenReturn(TEST_STORE_DATE);
+    Mockito.when(incomingComicDetail.getNotes()).thenReturn(TEST_NOTES);
 
     final ComicBook result = service.updateComic(TEST_COMIC_BOOK_ID, incomingComicBook);
 
@@ -407,16 +404,16 @@ public class ComicBookServiceTest {
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
     Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES);
     Mockito.verify(comicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
     Mockito.verify(comicDetail, Mockito.times(1)).setIssueNumber(TEST_ISSUE_NUMBER);
-    Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
-    // TODO update metadata source
-    Mockito.verify(comicBook, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
+    Mockito.verify(comicDetail, Mockito.times(1)).setSortName(TEST_SORTABLE_NAME);
     Mockito.verify(comicDetail, Mockito.times(1)).setTitle(TEST_TITLE);
     Mockito.verify(comicDetail, Mockito.times(1)).setDescription(TEST_DESCRIPTION);
     Mockito.verify(comicDetail, Mockito.times(1)).setCoverDate(TEST_COVER_DATE);
     Mockito.verify(comicDetail, Mockito.times(1)).setStoreDate(TEST_STORE_DATE);
+    Mockito.verify(comicDetail, Mockito.times(1)).setNotes(TEST_NOTES);
     Mockito.verify(comicStateHandler, Mockito.times(1))
         .fireEvent(comicBook, ComicEvent.detailsUpdated);
     Mockito.verify(imprintService, Mockito.times(1)).update(comicBook);

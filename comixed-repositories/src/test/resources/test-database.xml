@@ -27,7 +27,6 @@
                             Name="api-key"
                             Value="0192837465FAEBDC"/>
   <ComicBooks Id="1000"
-              sortname="My First Comic"
               FileContentsLoaded="true"
               BlockedPagesMarked="true"
               UpdateMetadata="true"
@@ -157,8 +156,8 @@
                 ComicState="STABLE"
                 Filename="C:/users/mcpierce/Documents/comicBooks/example.cbz"
                 ArchiveType="CBZ"
+                SortName="My First Comic"
                 Description="This is a comicBook book's description"
-
                 AddedDate="2017-06-16 15:21:00"/>
   <ComicDetails Id="2001"
                 ComicBookId="1001"

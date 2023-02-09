@@ -17,11 +17,16 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ComicOverviewComponent } from './comic-overview.component';
+import { ComicDetailEditComponent } from './comic-detail-edit.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { TranslateModule } from '@ngx-translate/core';
-import { COMIC_BOOK_1 } from '@app/comic-books/comic-books.fixtures';
+import {
+  COMIC_BOOK_1,
+  IMPRINT_1,
+  IMPRINT_2,
+  IMPRINT_3
+} from '@app/comic-books/comic-books.fixtures';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -40,20 +45,28 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
+import {
+  IMPRINT_LIST_FEATURE_KEY,
+  initialState as initialImprintState
+} from '@app/comic-books/reducers/imprint-list.reducer';
+import { MatSelectModule } from '@angular/material/select';
 
-describe('ComicOverviewComponent', () => {
+describe('ComicDetailEditComponent', () => {
   const COMIC = COMIC_BOOK_1;
-  const initialState = {};
+  const ENTRIES = [IMPRINT_1, IMPRINT_2, IMPRINT_3];
+  const initialState = {
+    [IMPRINT_LIST_FEATURE_KEY]: { ...initialImprintState, entries: ENTRIES }
+  };
 
-  let component: ComicOverviewComponent;
-  let fixture: ComponentFixture<ComicOverviewComponent>;
+  let component: ComicDetailEditComponent;
+  let fixture: ComponentFixture<ComicDetailEditComponent>;
   let store: MockStore<any>;
   let confirmationService: ConfirmationService;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComicOverviewComponent, ComicCoverUrlPipe],
+        declarations: [ComicDetailEditComponent, ComicCoverUrlPipe],
         imports: [
           NoopAnimationsModule,
           FormsModule,
@@ -73,12 +86,13 @@ describe('ComicOverviewComponent', () => {
           MatDatepickerModule,
           MatInputModule,
           MatNativeDateModule,
-          MatTooltipModule
+          MatTooltipModule,
+          MatSelectModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicOverviewComponent);
+      fixture = TestBed.createComponent(ComicDetailEditComponent);
       component = fixture.componentInstance;
       component.comicBook = COMIC;
       store = TestBed.inject(MockStore);
@@ -203,6 +217,9 @@ describe('ComicOverviewComponent', () => {
       component.comicBookForm.controls.publisher.setValue(
         COMIC.detail.publisher.substr(1)
       );
+      component.comicBookForm.controls.imprint.setValue(
+        COMIC.detail.imprint.substr(1)
+      );
       component.comicBookForm.controls.series.setValue(
         COMIC.detail.series.substr(1)
       );
@@ -220,6 +237,12 @@ describe('ComicOverviewComponent', () => {
     it('resets the changes to the publisher', () => {
       expect(component.comicBookForm.controls.publisher.value).toEqual(
         COMIC.detail.publisher
+      );
+    });
+
+    it('resets the changes to the imprint', () => {
+      expect(component.comicBookForm.controls.imprint.value).toEqual(
+        COMIC.detail.imprint
       );
     });
 
@@ -251,6 +274,48 @@ describe('ComicOverviewComponent', () => {
       expect(component.comicBookForm.controls.storeDate.value).toEqual(
         new Date(COMIC.detail.storeDate)
       );
+    });
+  });
+
+  describe('when an imprint is selected', () => {
+    const IMPRINT = ENTRIES[0];
+
+    beforeEach(() => {
+      component.comicBook = COMIC;
+    });
+
+    describe('when the imprint is valid', () => {
+      beforeEach(() => {
+        component.onImprintSelected(IMPRINT.name);
+      });
+
+      it('updates the imprint', () => {
+        expect(component.comicBookForm.controls.imprint.value).toEqual(
+          IMPRINT.name
+        );
+      });
+
+      it('updates the publisher', () => {
+        expect(component.comicBookForm.controls.publisher.value).toEqual(
+          IMPRINT.publisher
+        );
+      });
+    });
+
+    describe('when the imprint is invalid', () => {
+      beforeEach(() => {
+        component.onImprintSelected(IMPRINT.name.substr(1));
+      });
+
+      it('updates the imprint', () => {
+        expect(component.comicBookForm.controls.imprint.value).toEqual('');
+      });
+
+      it('updates the publisher', () => {
+        expect(component.comicBookForm.controls.publisher.value).toEqual(
+          COMIC.detail.publisher
+        );
+      });
     });
   });
 });

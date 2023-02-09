@@ -8,5 +8,6 @@
 
   <include file="/db/migrations/1.4/001_1380_split_up_comicbooks.xml"/>
   <include file="/db/migrations/1.4/002_1490_add_comic_collection_tags.xml"/>
+  <include file="/db/migrations/1.4/003_1519_moved_sort_name_to_comic_detail.xml"/>
 
 </databaseChangeLog>

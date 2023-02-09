@@ -184,13 +184,6 @@ public class ComicBook {
   @Transient @Getter @Setter private String metadataSourceName;
   @Transient @Getter @Setter private String metadataReferenceId;
 
-  @Column(name = "SortName", length = 128)
-  @JsonProperty("sortName")
-  @JsonView({View.ComicListView.class})
-  @Getter
-  @Setter
-  private String sortName;
-
   /**
    * Reports if the underlying comic file is missing.
    *
@@ -285,12 +278,11 @@ public class ComicBook {
     final ComicBook comicBook = (ComicBook) o;
     return fileDetails.equals(comicBook.fileDetails)
         && comicDetail.equals(comicBook.comicDetail)
-        && metadata.equals(comicBook.metadata)
         && pages.equals(comicBook.pages);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fileDetails, comicDetail, metadata, pages);
+    return Objects.hash(fileDetails, comicDetail, pages);
   }
 }

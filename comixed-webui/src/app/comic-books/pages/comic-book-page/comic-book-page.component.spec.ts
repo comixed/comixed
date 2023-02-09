@@ -35,7 +35,7 @@ import {
   COMIC_BOOK_1,
   COMIC_BOOK_2
 } from '@app/comic-books/comic-books.fixtures';
-import { ComicOverviewComponent } from '@app/comic-books/components/comic-overview/comic-overview.component';
+import { ComicDetailEditComponent } from '@app/comic-books/components/comic-detail-edit/comic-detail-edit.component';
 import { ComicStoryComponent } from '@app/comic-books/components/comic-story/comic-story.component';
 import { ComicPagesComponent } from '@app/comic-books/components/comic-pages/comic-pages.component';
 import { ComicScrapingComponent } from '@app/comic-books/components/comic-scraping/comic-scraping.component';
@@ -126,7 +126,7 @@ describe('ComicBookPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           ComicBookPageComponent,
-          ComicOverviewComponent,
+          ComicDetailEditComponent,
           ComicStoryComponent,
           ComicPagesComponent,
           ComicScrapingComponent,

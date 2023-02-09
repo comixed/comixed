@@ -203,33 +203,6 @@
   </mat-form-field>
   <mat-form-field class="cx-width-50" appearance="standard">
     <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
-    <mat-select
-      id="imprint-select"
-      formControlName="imprint"
-      (selectionChange)="onImprintSelected($event.value)"
-    >
-      <mat-option
-        *ngFor="let option of imprintOptions"
-        [value]="option.value.name"
-      >
-        {{ option.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="cx-width-50" appearance="standard">
-    <mat-label>{{ "comic-book.label.sort-name" | translate }}</mat-label>
-    <input id="sort-name-input" matInput formControlName="sortName" />
-  </mat-form-field>
-  <mat-form-field class="cx-width-100" appearance="standard">
-    <mat-label>{{ "comic-book.label.title" | translate }}</mat-label>
-    <input id="title-input" matInput formControlName="title" />
-  </mat-form-field>
-  <mat-form-field class="cx-width-100" appearance="standard">
-    <mat-label>{{ "comic-book.label.description" | translate }}</mat-label>
-    <textarea
-      id="description-input"
-      matInput
-      formControlName="description"
-    ></textarea>
+    <input matInput id="imprint-input" formControlName="imprint" readonly />
   </mat-form-field>
 </form>

@@ -33,6 +33,7 @@ export interface ComicDetail {
   volume: string;
   issueNumber: string;
   sortableIssueNumber: string;
+  sortName: string;
   title: string;
   notes: string;
   description: string;

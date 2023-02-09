@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
@@ -28,17 +28,26 @@ import { Store } from '@ngrx/store';
 import { updateComicBook } from '@app/comic-books/actions/comic-book.actions';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { FileDetails } from '@app/comic-books/models/file-details';
+import { Subscription } from 'rxjs';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { Imprint } from '@app/comic-books/models/imprint';
+import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
+import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 
 @Component({
   selector: 'cx-comic-overview',
-  templateUrl: './comic-overview.component.html',
-  styleUrls: ['./comic-overview.component.scss']
+  templateUrl: './comic-detail-edit.component.html',
+  styleUrls: ['./comic-detail-edit.component.scss']
 })
-export class ComicOverviewComponent {
+export class ComicDetailEditComponent implements OnInit, OnDestroy {
   @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 
   comicBookForm: FormGroup;
+
+  imprintSubscription: Subscription;
+  imprintOptions: SelectionOption<Imprint>[] = [];
+  imprints: Imprint[];
 
   constructor(
     private logger: LoggerService,
@@ -50,17 +59,39 @@ export class ComicOverviewComponent {
     this.logger.trace('Building comic book details form');
     this.comicBookForm = this.formBuilder.group({
       publisher: ['', Validators.required],
+      imprint: [''],
       series: ['', Validators.required],
       volume: ['', Validators.required],
       issueNumber: ['', Validators.required],
+      title: [''],
+      sortName: [''],
       coverDate: [''],
       storeDate: [''],
       comicState: [''],
       filename: [''],
       fileSize: [''],
       addedToLibrary: [''],
-      scrapingNotes: ['']
+      notes: ['']
     });
+    this.imprintSubscription = this.store
+      .select(selectImprints)
+      .subscribe(imprints => {
+        this.logger.trace('Loading imprint options');
+        this.imprints = imprints;
+        this.imprintOptions = [
+          {
+            label: '---',
+            value: { id: -1, name: '', publisher: '' }
+          } as SelectionOption<Imprint>
+        ].concat(
+          imprints.map(imprint => {
+            return {
+              label: imprint.name,
+              value: imprint
+            } as SelectionOption<Imprint>;
+          })
+        );
+      });
   }
 
   private _comicBook: ComicBook;
@@ -77,7 +108,10 @@ export class ComicOverviewComponent {
         issueNumber: this.comicBookForm.controls.issueNumber.value,
         coverDate: this.comicBookForm.controls.coverDate.value.getTime(),
         storeDate: this.comicBookForm.controls.storeDate.value.getTime(),
-        notes: this.comicBookForm.controls.scrapingNotes.value
+        imprint: this.comicBookForm.controls.imprint.value,
+        sortName: this.comicBookForm.controls.sortName.value,
+        title: this.comicBookForm.controls.title.value,
+        notes: this.comicBookForm.controls.notes.value
       } as ComicDetail,
       fileDetails: {} as FileDetails
     } as ComicBook;
@@ -89,6 +123,8 @@ export class ComicOverviewComponent {
     this.comicBookForm.controls.series.setValue(comic.detail.series);
     this.comicBookForm.controls.volume.setValue(comic.detail.volume);
     this.comicBookForm.controls.issueNumber.setValue(comic.detail.issueNumber);
+    this.comicBookForm.controls.imprint.setValue(comic.detail.imprint);
+    this.comicBookForm.controls.title.setValue(comic.detail.title);
     if (!!comic.detail.coverDate) {
       this.comicBookForm.controls.coverDate.setValue(
         new Date(comic.detail.coverDate)
@@ -106,7 +142,7 @@ export class ComicOverviewComponent {
     this.comicBookForm.controls.comicState.setValue(comic.detail.comicState);
     this.comicBookForm.controls.filename.setValue(comic.detail.filename);
     this.comicBookForm.controls.fileSize.setValue(0);
-    this.comicBookForm.controls.scrapingNotes.setValue(comic.detail.notes);
+    this.comicBookForm.controls.notes.setValue(comic.detail.notes);
     this.comicBookForm.markAsUntouched();
   }
 
@@ -119,6 +155,16 @@ export class ComicOverviewComponent {
       !!this.comicBook &&
       this.comicBook.detail.comicState === ComicBookState.CHANGED
     );
+  }
+
+  ngOnDestroy(): void {
+    this.logger.trace('Unsubscribing from imprint updates');
+    this.imprintSubscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.logger.trace('Loading imprints');
+    this.store.dispatch(loadImprints());
   }
 
   onSaveChanges(): void {
@@ -140,5 +186,18 @@ export class ComicOverviewComponent {
   onUndoChanges(): void {
     this.logger.debug('Resetting comic book changes');
     this.comicBook = this._comicBook;
+  }
+
+  onImprintSelected(name: string): void {
+    this.logger.trace('Finding imprint');
+    const imprint = this.imprints.find(entry => entry.name === name);
+    this.logger.trace('Setting publisher name');
+    this.comicBookForm.controls.publisher.setValue(
+      imprint?.publisher || this.comicBook.detail.publisher
+    );
+    this.logger.trace('Setting imprint name');
+    this.comicBookForm.controls.imprint.setValue(
+      imprint?.name || this.comicBook.detail.imprint
+    );
   }
 }

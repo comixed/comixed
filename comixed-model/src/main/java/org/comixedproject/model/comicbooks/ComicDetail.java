@@ -168,6 +168,13 @@ public class ComicDetail {
   @Getter
   private String issueNumber;
 
+  @Column(name = "SortName", length = 128)
+  @JsonProperty("sortName")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  @Setter
+  private String sortName;
+
   @Column(name = "Title", length = 128)
   @JsonProperty("title")
   @JsonView({View.ComicListView.class, View.DuplicatePageList.class})
@@ -327,7 +334,8 @@ public class ComicDetail {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicDetail that = (ComicDetail) o;
-    return filename.equals(that.filename)
+    return comicBook.equals(that.comicBook)
+        && filename.equals(that.filename)
         && archiveType == that.archiveType
         && comicState == that.comicState
         && Objects.equals(publisher, that.publisher)
@@ -335,6 +343,7 @@ public class ComicDetail {
         && Objects.equals(series, that.series)
         && Objects.equals(volume, that.volume)
         && Objects.equals(issueNumber, that.issueNumber)
+        && Objects.equals(sortName, that.sortName)
         && Objects.equals(title, that.title)
         && Objects.equals(notes, that.notes)
         && Objects.equals(description, that.description)
@@ -346,6 +355,7 @@ public class ComicDetail {
   @Override
   public int hashCode() {
     return Objects.hash(
+        comicBook,
         filename,
         archiveType,
         comicState,
@@ -354,6 +364,7 @@ public class ComicDetail {
         series,
         volume,
         issueNumber,
+        sortName,
         title,
         notes,
         description,

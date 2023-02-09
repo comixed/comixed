@@ -784,6 +784,7 @@ public class MetadataServiceTest {
   private void verifyComicScraping(final ComicBook comicBook) {
     // TODO verify metadata source reference
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
+    Mockito.verify(loadedComicDetail, Mockito.times(1)).setImprint(TEST_PUBLISHER);
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setSeries(TEST_SERIES_NAME);
     Mockito.verify(loadedComicDetail, Mockito.times(1)).setVolume(TEST_VOLUME);
     Mockito.verify(loadedComicDetail, Mockito.times(1))
