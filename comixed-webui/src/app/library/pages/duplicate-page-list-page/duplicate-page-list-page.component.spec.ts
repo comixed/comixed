@@ -45,7 +45,7 @@ import { duplicatePagesLoaded } from '@app/library/actions/duplicate-page-list.a
 import { TitleService } from '@app/core/services/title.service';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { DuplicatePage } from '@app/library/models/duplicate-page';
-import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics-with-duplicate-page/comics-with-duplicate-page.component';
+import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import {
   BLOCKED_HASH_LIST_FEATURE_KEY,
@@ -71,8 +71,26 @@ import {
 } from '@app/user/reducers/user.reducer';
 import { USER_ADMIN } from '@app/user/user.fixtures';
 import { saveUserPreference } from '@app/user/actions/user.actions';
+import {
+  COMIC_BOOK_LIST_FEATURE_KEY,
+  initialState as initialComicBookListState
+} from '@app/comic-books/reducers/comic-book-list.reducer';
+import {
+  COMIC_DETAIL_1,
+  COMIC_DETAIL_2,
+  COMIC_DETAIL_3,
+  COMIC_DETAIL_4,
+  COMIC_DETAIL_5
+} from '@app/comic-books/comic-books.fixtures';
 
 describe('DuplicatePageListPageComponent', () => {
+  const COMICS = [
+    COMIC_DETAIL_1,
+    COMIC_DETAIL_2,
+    COMIC_DETAIL_3,
+    COMIC_DETAIL_4,
+    COMIC_DETAIL_5
+  ];
   const DUPLICATE_PAGES = [
     DUPLICATE_PAGE_1,
     DUPLICATE_PAGE_2,
@@ -82,7 +100,8 @@ describe('DuplicatePageListPageComponent', () => {
     [USER_FEATURE_KEY]: { ...initialUserState, user: USER_ADMIN },
     [DUPLICATE_PAGE_LIST_FEATURE_KEY]: initialDuplicatePageListState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState
+    [BLOCKED_HASH_LIST_FEATURE_KEY]: initialBlockedPageListState,
+    [COMIC_BOOK_LIST_FEATURE_KEY]: initialComicBookListState
   };
 
   let component: DuplicatePageListPageComponent;
@@ -291,14 +310,14 @@ describe('DuplicatePageListPageComponent', () => {
     } as SelectableListItem<DuplicatePage>;
 
     beforeEach(() => {
+      component.comics = COMICS;
       component.onShowComicBooksWithPage(ENTRY);
     });
 
     it('opens a dialog', () => {
-      expect(dialog.open).toHaveBeenCalledWith(
-        ComicsWithDuplicatePageComponent,
-        { data: ENTRY.item }
-      );
+      expect(dialog.open).toHaveBeenCalledWith(ComicDetailListDialogComponent, {
+        data: COMICS.filter(comic => ENTRY.item.ids.includes(comic.comicId))
+      });
     });
   });
 

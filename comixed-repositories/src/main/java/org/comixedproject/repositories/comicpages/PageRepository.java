@@ -19,7 +19,7 @@
 package org.comixedproject.repositories.comicpages;
 
 import java.util.List;
-import org.comixedproject.model.comicpages.DeletedPage;
+import org.comixedproject.model.comicpages.DeletedPageAndComic;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.comicpages.PageState;
 import org.springframework.data.jpa.repository.Query;
@@ -70,11 +70,11 @@ public interface PageRepository extends CrudRepository<Page, Long> {
   List<Page> findByHashAndPageState(String hash, PageState state);
 
   /**
-   * Loads all pages marked for deletion.
+   * Loads all pages marked for deletion along with their owning comic.
    *
    * @return the page list
    */
   @Query(
-      "SELECT new org.comixedproject.model.comicpages.DeletedPage(p.hash, count(*)) FROM Page p WHERE p.pageState = 'DELETED' GROUP BY p.hash")
-  List<DeletedPage> loadAllDeletedPages();
+      "SELECT new org.comixedproject.model.comicpages.DeletedPageAndComic(p.hash, p.comicBook) FROM Page p WHERE p.pageState = 'DELETED'")
+  List<DeletedPageAndComic> loadAllDeletedPages();
 }

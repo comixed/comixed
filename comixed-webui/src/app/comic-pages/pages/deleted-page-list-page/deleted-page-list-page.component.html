@@ -62,10 +62,13 @@
       {{ "deleted-page-list.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.comicCount }}</span>
+      <span class="cx-text-nowrap">{{ entry.comics.length }}</span>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="onShowComics(row.comics)"
+  ></mat-row>
 </mat-table>

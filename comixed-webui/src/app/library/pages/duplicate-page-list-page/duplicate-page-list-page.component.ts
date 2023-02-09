@@ -42,7 +42,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { ComicsWithDuplicatePageComponent } from '@app/library/components/comics-with-duplicate-page/comics-with-duplicate-page.component';
+import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { MatSort } from '@angular/material/sort';
 import { setBlockedState } from '@app/comic-pages/actions/block-page.actions';
 import { MessagingSubscription, WebSocketService } from '@app/messaging';
@@ -58,6 +58,8 @@ import { saveUserPreference } from '@app/user/actions/user.actions';
 import { selectUser } from '@app/user/selectors/user.selectors';
 import { getUserPreference } from '@app/user';
 import * as _ from 'lodash';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { selectComicBookList } from '@app/comic-books/selectors/comic-book-list.selectors';
 
 @Component({
   selector: 'cx-duplicate-page-list-page',
@@ -81,6 +83,8 @@ export class DuplicatePageListPageComponent
   allSelected = false;
   anySelected = false;
   userSubscription: Subscription;
+  comicsSubscription: Subscription;
+  comics: ComicDetail[] = [];
   readonly displayColumns = [
     'selection',
     'thumbnail',
@@ -139,6 +143,9 @@ export class DuplicatePageListPageComponent
           );
         }
       });
+    this.comicsSubscription = this.store
+      .select(selectComicBookList)
+      .subscribe(comics => (this.comics = comics));
   }
 
   get selectedCount(): number {
@@ -199,11 +206,14 @@ export class DuplicatePageListPageComponent
       this.pageUpdatesSubscription.unsubscribe();
       this.pageUpdatesSubscription = null;
     }
+    this.comicsSubscription.unsubscribe();
   }
 
   onShowComicBooksWithPage(row: SelectableListItem<DuplicatePage>): void {
     this.logger.trace('Displaying dialog of affected comics');
-    this.dialog.open(ComicsWithDuplicatePageComponent, { data: row.item });
+    this.dialog.open(ComicDetailListDialogComponent, {
+      data: this.comics.filter(comic => row.item.ids.includes(comic.comicId))
+    });
   }
 
   onBlockPage(row: SelectableListItem<DuplicatePage>): void {

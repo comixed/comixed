@@ -18,7 +18,10 @@
 
 package org.comixedproject.service.comicpages;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicpages.DeletedPage;
 import org.comixedproject.repositories.comicpages.PageRepository;
@@ -43,6 +46,26 @@ public class DeletedPageService {
    */
   public List<DeletedPage> loadAll() {
     log.debug("Loading all deleted pages");
-    return this.pageRepository.loadAllDeletedPages();
+    final Map<String, DeletedPage> result = new HashMap<>();
+    this.pageRepository
+        .loadAllDeletedPages()
+        .forEach(
+            deletedPageAndComic -> {
+              log.trace(
+                  "Processing deleted page: hash={} id={}",
+                  deletedPageAndComic.getHash(),
+                  deletedPageAndComic.getComicBook().getId());
+              if (!result.containsKey(deletedPageAndComic.getHash())) {
+                log.trace("Creating new hash entry");
+                result.put(
+                    deletedPageAndComic.getHash(), new DeletedPage(deletedPageAndComic.getHash()));
+              }
+              log.trace("Adding comic to hash entry");
+              result
+                  .get(deletedPageAndComic.getHash())
+                  .getComics()
+                  .add(deletedPageAndComic.getComicBook().getComicDetail());
+            });
+    return result.values().stream().collect(Collectors.toList());
   }
 }

@@ -30,6 +30,7 @@ import {
 import { Store } from '@ngrx/store';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -39,6 +40,7 @@ import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 export class ComicDetailListViewComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
+  @Input()
   readonly displayedColumns = [
     'selection',
     'thumbnail',
@@ -52,10 +54,12 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     'store-date',
     'added-date'
   ];
+  @Input() followClick = true;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
+    private router: Router,
     public queryParameterService: QueryParameterService
   ) {}
 
@@ -165,6 +169,12 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     } else {
       this.logger.debug('Deselecting comic:', entry.item);
       this.store.dispatch(deselectComicBooks({ ids: [entry.item.id] }));
+    }
+  }
+
+  onRowSelected(row: SelectableListItem<ComicDetail>): void {
+    if (this.followClick) {
+      this.router.navigate(['/comics', row.item.comicId]);
     }
   }
 }

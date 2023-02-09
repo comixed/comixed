@@ -18,45 +18,33 @@
 
 package org.comixedproject.model.comicpages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.comixedproject.model.comicbooks.ComicDetail;
-import org.comixedproject.views.View;
+import org.comixedproject.model.comicbooks.ComicBook;
 
 /**
- * <code>DeletedPage</code> represents a single deleted page entry.
+ * <code>DeletedPageAndComic</code> combines a deleted page hash and a comic containing that hash.
  *
  * @author Darryl L. Pierce
  */
 @RequiredArgsConstructor
-public class DeletedPage {
-  @JsonProperty("hash")
-  @JsonView(View.DeletedPageList.class)
-  @Getter
-  @NonNull
-  private String hash;
+public class DeletedPageAndComic {
+  @Getter @NonNull private String hash;
 
-  @JsonProperty("comics")
-  @JsonView(View.DeletedPageList.class)
-  @Getter
-  private List<ComicDetail> comics = new ArrayList<>();
+  @Getter @NonNull private ComicBook comicBook;
 
   @Override
   public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final DeletedPage that = (DeletedPage) o;
-    return hash.equals(that.hash) && comics.equals(that.comics);
+    final DeletedPageAndComic that = (DeletedPageAndComic) o;
+    return hash.equals(that.hash) && comicBook.equals(that.comicBook);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(hash, comics);
+    return Objects.hash(hash, comicBook);
   }
 }

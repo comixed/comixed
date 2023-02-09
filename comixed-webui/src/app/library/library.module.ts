@@ -62,7 +62,7 @@ import {
 } from '@app/library/reducers/duplicate-page-list.reducer';
 import { DuplicatePageListEffects } from '@app/library/effects/duplicate-page-list.effects';
 import { DuplicatePageListPageComponent } from './pages/duplicate-page-list-page/duplicate-page-list-page.component';
-import { ComicsWithDuplicatePageComponent } from './components/comics-with-duplicate-page/comics-with-duplicate-page.component';
+import { ComicDetailListDialogComponent } from './components/comic-detail-list-dialog/comic-detail-list-dialog.component';
 import { DuplicatePageDetailPageComponent } from './pages/duplicate-page-detail-page/duplicate-page-detail-page.component';
 import {
   DUPLICATE_PAGE_DETAIL_FEATURE_KEY,
@@ -113,7 +113,7 @@ import { LibrarySelectionsEffects } from '@app/library/effects/library-selection
     ArchiveTypePipe,
     UnreadComicsPipe,
     DuplicatePageListPageComponent,
-    ComicsWithDuplicatePageComponent,
+    ComicDetailListDialogComponent,
     DuplicatePageDetailPageComponent,
     EditMultipleComicsComponent,
     ComicBookListComponent

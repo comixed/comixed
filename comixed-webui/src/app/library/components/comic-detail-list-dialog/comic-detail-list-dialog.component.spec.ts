@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ComicsWithDuplicatePageComponent } from './comics-with-duplicate-page.component';
+import { ComicDetailListDialogComponent } from './comic-detail-list-dialog.component';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -35,7 +35,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDividerModule } from '@angular/material/divider';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DuplicatePage } from '@app/library/models/duplicate-page';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
@@ -58,25 +57,24 @@ import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-describe('ComicsWithDuplicatePageComponent', () => {
-  const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
-  const IDS = COMIC_BOOKS.map(comic => comic.id);
+describe('ComicDetailListDialogComponent', () => {
+  const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const HASH = PAGE_1.hash;
   const initialState = {
     [COMIC_BOOK_LIST_FEATURE_KEY]: {
       ...initialComicBookListState,
-      comicBooks: COMIC_BOOKS
+      comicBooks: COMICS
     }
   };
 
-  let component: ComicsWithDuplicatePageComponent;
-  let fixture: ComponentFixture<ComicsWithDuplicatePageComponent>;
+  let component: ComicDetailListDialogComponent;
+  let fixture: ComponentFixture<ComicDetailListDialogComponent>;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [
-          ComicsWithDuplicatePageComponent,
+          ComicDetailListDialogComponent,
           ComicDetailCardComponent,
           ComicDetailListViewComponent,
           ComicTitlePipe,
@@ -116,13 +114,14 @@ describe('ComicsWithDuplicatePageComponent', () => {
           },
           {
             provide: MAT_DIALOG_DATA,
-            useValue: { ids: IDS, hash: HASH } as DuplicatePage
+            useValue: COMICS
           }
         ]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ComicsWithDuplicatePageComponent);
+      fixture = TestBed.createComponent(ComicDetailListDialogComponent);
       component = fixture.componentInstance;
+      component.comics = COMICS;
       fixture.detectChanges();
     })
   );
@@ -134,7 +133,7 @@ describe('ComicsWithDuplicatePageComponent', () => {
   describe('loading comic books', () => {
     beforeEach(() => {
       component.dataSource.data = [];
-      component.comics = COMIC_BOOKS;
+      component.comics = COMICS;
     });
 
     it('updates the data source', () => {
@@ -142,7 +141,7 @@ describe('ComicsWithDuplicatePageComponent', () => {
     });
 
     it('returns the set of comics', () => {
-      expect(component.comics).toEqual(COMIC_BOOKS);
+      expect(component.comics).toEqual(COMICS);
     });
   });
 });

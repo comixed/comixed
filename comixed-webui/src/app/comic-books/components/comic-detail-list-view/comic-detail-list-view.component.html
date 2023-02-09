@@ -142,6 +142,6 @@
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
     [class.cx-selected-row]="selectedIds.includes(row.id)"
-    [routerLink]="['/comics', row.item.id]"
+    (click)="onRowSelected(row)"
   ></mat-row>
 </mat-table>

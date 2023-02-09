@@ -40,13 +40,16 @@ import {
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { DeletedPage } from '@app/comic-pages/models/deleted-page';
 import { loadDeletedPages } from '@app/comic-pages/actions/deleted-pages.actions';
+import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { ComicDetailListDialogComponent } from '@app/library/components/comic-detail-list-dialog/comic-detail-list-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'cx-deleted-list-page',
-  templateUrl: './deleted-list-page.component.html',
-  styleUrls: ['./deleted-list-page.component.scss']
+  selector: 'cx-deleted-page-list-page',
+  templateUrl: './deleted-page-list-page.component.html',
+  styleUrls: ['./deleted-page-list-page.component.scss']
 })
-export class DeletedListPageComponent
+export class DeletedPageListPageComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -65,7 +68,8 @@ export class DeletedListPageComponent
     private translationService: TranslateService,
     private titleService: TitleService,
     private activatedRoute: ActivatedRoute,
-    public queryParameterService: QueryParameterService
+    public queryParameterService: QueryParameterService,
+    private dialog: MatDialog
   ) {
     this.langChangeSubscription =
       this.translationService.onLangChange.subscribe(() =>
@@ -93,7 +97,7 @@ export class DeletedListPageComponent
 
   get totalComicCount(): number {
     return this.pages
-      .map(page => page.comicCount)
+      .map(page => page.comics.length)
       .reduce((sum, current) => sum + current, 0);
   }
 
@@ -107,7 +111,7 @@ export class DeletedListPageComponent
         case 'hash':
           return data.hash;
         case 'comic-count':
-          return data.comicCount;
+          return data.comics.length;
       }
     };
   }
@@ -125,6 +129,10 @@ export class DeletedListPageComponent
     this.logger.trace('Loading deleted page list');
     this.store.dispatch(loadDeletedPages());
     this.loadTranslations();
+  }
+
+  onShowComics(comics: ComicDetail[]): void {
+    this.dialog.open(ComicDetailListDialogComponent, { data: comics });
   }
 
   private loadTranslations(): void {

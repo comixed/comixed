@@ -42,6 +42,7 @@ import {
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
+import { Router } from '@angular/router';
 
 describe('ComicDetailListViewComponent', () => {
   const COMICS = [
@@ -56,6 +57,7 @@ describe('ComicDetailListViewComponent', () => {
   let component: ComicDetailListViewComponent;
   let fixture: ComponentFixture<ComicDetailListViewComponent>;
   let store: MockStore<any>;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -82,6 +84,8 @@ describe('ComicDetailListViewComponent', () => {
     >([]);
     store = TestBed.inject(MockStore);
     spyOn(store, 'dispatch');
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 
@@ -266,6 +270,38 @@ describe('ComicDetailListViewComponent', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
           deselectComicBooks({ ids: [ENTRY.item.id] })
         );
+      });
+    });
+  });
+
+  describe('when a row is selected', () => {
+    const ENTRY = {
+      item: COMIC_DETAIL_1,
+      selected: Math.random() > 0.5
+    } as SelectableListItem<ComicDetail>;
+
+    describe('when following a link is disabled', () => {
+      beforeEach(() => {
+        component.followClick = false;
+        component.onRowSelected(ENTRY);
+      });
+
+      it('does nothing', () => {
+        expect(router.navigate).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when following a link is enabled', () => {
+      beforeEach(() => {
+        component.followClick = true;
+        component.onRowSelected(ENTRY);
+      });
+
+      it('does nothing', () => {
+        expect(router.navigate).toHaveBeenCalledWith([
+          '/comics',
+          ENTRY.item.comicId
+        ]);
       });
     });
   });
