@@ -74,6 +74,9 @@ export class SeriesDetailPageComponent
   name = '';
   volume = '';
   comicBooks: ComicDetail[] = [];
+  percentageComplete = 0;
+  inLibrary = 0;
+  totalIssues = 0;
 
   constructor(
     private logger: LoggerService,
@@ -108,11 +111,15 @@ export class SeriesDetailPageComponent
       .select(selectSeriesDetail)
       .subscribe(issues => {
         this.dataSource.data = issues;
+        this.calculatePercentageComplete();
       });
     this.logger.trace('Subscribing to comic book list updates');
     this.comicBookListSubscription = this.store
       .select(selectComicBookList)
-      .subscribe(comicBooks => (this.comicBooks = comicBooks));
+      .subscribe(comicBooks => {
+        this.comicBooks = comicBooks;
+        this.calculatePercentageComplete();
+      });
   }
 
   ngAfterViewInit(): void {
@@ -169,5 +176,17 @@ export class SeriesDetailPageComponent
         volume: this.volume
       })
     );
+  }
+
+  private calculatePercentageComplete(): void {
+    this.inLibrary = this.dataSource.data.filter(entry =>
+      this.getComicBookIdForRow(entry)
+    ).length;
+    this.totalIssues = this.dataSource.data.length;
+    if (this.totalIssues > 0 && this.inLibrary > 0) {
+      this.percentageComplete = (this.inLibrary / this.totalIssues) * 100;
+    } else {
+      this.percentageComplete = 0;
+    }
   }
 }
