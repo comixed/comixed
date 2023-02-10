@@ -34,6 +34,18 @@
   }}
 </h2>
 
+<h3 *ngIf="dataSource.data.length > 0">
+  {{
+    "collections.series-detail.page-title-percentage"
+      | translate
+        : {
+            percentage: percentageComplete,
+            inLibrary: inLibrary,
+            totalIssues: totalIssues
+          }
+  }}
+</h3>
+
 <mat-table
   [dataSource]="dataSource"
   matSort

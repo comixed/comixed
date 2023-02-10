@@ -74,6 +74,7 @@
     "series-detail": {
       "load-effect-failure": "Failed to load details for series.",
       "page-title": "Series Detail: {publisher} {name} v{volume}",
+      "page-title-percentage": "{percentage}% Complete ({inLibrary} Of {totalIssues, plural, =1{# Comic} other{# Comics}})",
       "placeholder": {
         "filter-issues": "Enter text to filter the issues displayed."
       },

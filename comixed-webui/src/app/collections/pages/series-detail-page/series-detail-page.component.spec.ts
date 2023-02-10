@@ -21,7 +21,7 @@ import { SeriesDetailPageComponent } from './series-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { provideMockStore } from '@ngrx/store/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { BehaviorSubject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -82,6 +82,7 @@ describe('SeriesDetailPageComponent', () => {
   let fixture: ComponentFixture<SeriesDetailPageComponent>;
   let titleService: TitleService;
   let translateService: TranslateService;
+  let store: MockStore<any>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -120,6 +121,7 @@ describe('SeriesDetailPageComponent', () => {
     component = fixture.componentInstance;
     titleService = TestBed.inject(TitleService);
     translateService = TestBed.inject(TranslateService);
+    store = TestBed.inject(MockStore);
     fixture.detectChanges();
   });
 
@@ -200,6 +202,34 @@ describe('SeriesDetailPageComponent', () => {
           publisher: COMIC_BOOK.publisher.substr(1)
         })
       ).toBeUndefined();
+    });
+  });
+
+  describe('the series percentage complete', () => {
+    beforeEach(() => {
+      component.percentageComplete = 0;
+      component.inLibrary = 0;
+      component.totalIssues = 0;
+      store.setState({
+        ...initialState,
+        [SERIES_FEATURE_KEY]: { ...initialSeriesState, detail: [ISSUE] },
+        [COMIC_BOOK_LIST_FEATURE_KEY]: {
+          ...initialComicBookListState,
+          comicBooks: COMIC_BOOKS
+        }
+      });
+    });
+
+    it('sets the total in library', () => {
+      expect(component.inLibrary).not.toEqual(0);
+    });
+
+    it('sets the total issues', () => {
+      expect(component.inLibrary).not.toEqual(0);
+    });
+
+    it('sets the percentage', () => {
+      expect(component.percentageComplete).not.toEqual(0);
     });
   });
 });
