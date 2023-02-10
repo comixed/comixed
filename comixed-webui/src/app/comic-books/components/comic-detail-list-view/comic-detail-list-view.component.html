@@ -1,3 +1,28 @@
+<div
+  *ngIf="showPopup"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <mat-card>
+    <mat-card-title class="cx-text-nowrap">
+      {{ currentComic | comicTitle }}
+    </mat-card-title>
+    <mat-card-subtitle
+      *ngIf="!!currentComic.title && currentComic.title.length > 0"
+      class="cx-text-nowrap"
+    >
+      {{ currentComic.title }}
+    </mat-card-subtitle>
+    <mat-card-content class="cx-padding-5">
+      <img
+        [src]="currentComic | comicCoverUrl"
+        width="100%"
+        height="auto"
+        [alt]="currentComic | comicTitle"
+      />
+    </mat-card-content>
+  </mat-card>
+</div>
+
 <mat-table
   *ngIf="!!dataSource"
   [dataSource]="dataSource"
@@ -36,6 +61,8 @@
           [alt]="entry.item | comicTitle"
           width="100%"
           height="auto"
+          (mouseenter)="onShowPopup(true, entry.item)"
+          (mouseleave)="onShowPopup(false, null)"
         />
       </span>
     </mat-cell>

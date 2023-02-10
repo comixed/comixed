@@ -55,6 +55,9 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     'added-date'
   ];
   @Input() followClick = true;
+  @Input() usePopups = true;
+  showPopup = false;
+  currentComic: ComicDetail;
 
   constructor(
     private logger: LoggerService,
@@ -89,8 +92,8 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     this.logger.trace('Setting data source');
     this._dataSource = dataSource;
     this.logger.trace('Setting up filtering');
+    /* istanbul ignore next */
     this._dataSource.filterPredicate = (data, filter) => {
-      /* istanbul ignore next */
       return JSON.stringify(data).toLowerCase().includes(filter.toLowerCase());
     };
   }
@@ -176,5 +179,11 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     if (this.followClick) {
       this.router.navigate(['/comics', row.item.comicId]);
     }
+  }
+
+  onShowPopup(show: boolean, comic: ComicDetail): void {
+    this.logger.debug('Setting show pup:', show, this.usePopups);
+    this.showPopup = show && this.usePopups;
+    this.currentComic = comic;
   }
 }
