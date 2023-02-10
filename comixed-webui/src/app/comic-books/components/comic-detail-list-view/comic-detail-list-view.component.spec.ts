@@ -44,7 +44,7 @@ import {
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { Router } from '@angular/router';
 
-describe('ComicDetailListViewComponent', () => {
+fdescribe('ComicDetailListViewComponent', () => {
   const COMICS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,
@@ -52,6 +52,7 @@ describe('ComicDetailListViewComponent', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const COMIC = COMICS[0];
   const initialState = {};
 
   let component: ComicDetailListViewComponent;
@@ -302,6 +303,38 @@ describe('ComicDetailListViewComponent', () => {
           '/comics',
           ENTRY.item.comicId
         ]);
+      });
+    });
+  });
+
+  describe('the comic cover overlay', () => {
+    describe('showing the cover overlay', () => {
+      beforeEach(() => {
+        component.showPopup = false;
+        component.currentComic = null;
+        component.onShowPopup(true, COMIC);
+      });
+
+      it('sets the show popup flag', () => {
+        expect(component.showPopup).toBeTrue();
+      });
+
+      it('sets the current comic', () => {
+        expect(component.currentComic).toBe(COMIC);
+      });
+
+      describe('hiding the cover overlay', () => {
+        beforeEach(() => {
+          component.onShowPopup(false, null);
+        });
+
+        it('hides the show popup flag', () => {
+          expect(component.showPopup).toBeFalse();
+        });
+
+        it('clears the current comic', () => {
+          expect(component.currentComic).toBeNull();
+        });
       });
     });
   });

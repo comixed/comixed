@@ -118,6 +118,18 @@ $cx-selected-comic-color: #ffffff;
   position: fixed;
 }
 
+.cx-hover {
+  background-color: rgba(0, 0, 0, 0.286);
+  z-index: 10;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+.cx-display-block {
+  display: block;
+}
+
 // padding
 
 .cx-padding-left-5 {
@@ -261,8 +273,11 @@ th {
 
 // component position
 
-.cx-centered {
+.cx-position-absolute {
   position: absolute !important;
+}
+
+.cx-centered {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
