@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2020, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { FileDetails } from '@app/comic-books/models/file-details';
-import { Page } from '@app/comic-books/models/page';
-import { ComicMetadataSource } from '@app/comic-books/models/comic-metadata-source';
-import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { createAction, props } from '@ngrx/store';
+import { ComicBook } from '@app/comic-books/models/comic-book';
 
-export interface ComicBook {
-  id: number;
-  fileDetails: FileDetails;
-  detail: ComicDetail;
-  metadata: ComicMetadataSource;
-  pages?: Page[];
-  duplicatePageCount: number;
-  blockedPageCount: number;
-  nextIssueId: number;
-  previousIssueId: number;
-  lastModifiedOn: number;
-}
+export const loadDuplicateComics = createAction(
+  '[Duplicate Comic] Load duplicate comics'
+);
+
+export const duplicateComicsLoaded = createAction(
+  '[Duplicate Comic] Duplicate comics loaded',
+  props<{ comics: ComicBook[] }>()
+);
+
+export const loadDuplicateComicsFailed = createAction(
+  '[Duplicate Comic] Failed to load duplicate comics'
+);

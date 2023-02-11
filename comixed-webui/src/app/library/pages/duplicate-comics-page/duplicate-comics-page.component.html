@@ -1,0 +1,21 @@
+<h2>
+  {{
+    "duplicate-comic-book-list.page-title"
+      | translate: { count: dataSource.data.length }
+  }}
+</h2>
+
+<cx-comic-detail-list-view
+  class="cx-width-100"
+  [dataSource]="dataSource"
+  [displayedColumns]="[
+    'thumbnail',
+    'publisher',
+    'series',
+    'volume',
+    'issue-number',
+    'extra-field',
+    'cover-date'
+  ]"
+  [extraFieldTitle]="'duplicate-comic-book-list.label.percent-duplicate'"
+></cx-comic-detail-list-view>

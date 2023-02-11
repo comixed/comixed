@@ -54,6 +54,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     'store-date',
     'added-date'
   ];
+  @Input() extraFieldTitle = '';
   @Input() followClick = true;
   @Input() usePopups = true;
   showPopup = false;
@@ -122,6 +123,8 @@ export class ComicDetailListViewComponent implements AfterViewInit {
           return data.item.coverDate;
         case 'store-date':
           return data.item.storeDate;
+        case 'extra-field':
+          return data.sortableExtraField;
         default:
           this.logger.error(`Invalid sort column: ${sortHeaderId}`);
           return null;

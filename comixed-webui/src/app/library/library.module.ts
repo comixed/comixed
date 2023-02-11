@@ -103,6 +103,12 @@ import {
   reducer as librarySelectionsReducer
 } from '@app/library/reducers/library-selections.reducer';
 import { LibrarySelectionsEffects } from '@app/library/effects/library-selections.effects';
+import { DuplicateComicsPageComponent } from './pages/duplicate-comics-page/duplicate-comics-page.component';
+import {
+  DUPLICATE_COMIC_FEATURE_KEY,
+  reducer as duplicateComicReducer
+} from '@app/library/reducers/duplicate-comic.reducer';
+import { DuplicateComicEffects } from '@app/library/effects/duplicate-comic.effects';
 
 @NgModule({
   declarations: [
@@ -116,7 +122,8 @@ import { LibrarySelectionsEffects } from '@app/library/effects/library-selection
     ComicDetailListDialogComponent,
     DuplicatePageDetailPageComponent,
     EditMultipleComicsComponent,
-    ComicBookListComponent
+    ComicBookListComponent,
+    DuplicateComicsPageComponent
   ],
   providers: [],
   imports: [
@@ -131,6 +138,7 @@ import { LibrarySelectionsEffects } from '@app/library/effects/library-selection
       LIBRARY_SELECTIONS_FEATURE_KEY,
       librarySelectionsReducer
     ),
+    StoreModule.forFeature(DUPLICATE_COMIC_FEATURE_KEY, duplicateComicReducer),
     StoreModule.forFeature(
       DUPLICATE_PAGE_LIST_FEATURE_KEY,
       comicsWithDuplicatePagesReducer
@@ -151,6 +159,7 @@ import { LibrarySelectionsEffects } from '@app/library/effects/library-selection
     EffectsModule.forFeature([
       LibraryEffects,
       LibrarySelectionsEffects,
+      DuplicateComicEffects,
       DuplicatePageListEffects,
       DuplicatePageDetailEffects,
       RescanComicsEffects,

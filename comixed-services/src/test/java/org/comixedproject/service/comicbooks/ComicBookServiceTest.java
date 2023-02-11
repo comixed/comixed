@@ -1280,4 +1280,16 @@ public class ComicBookServiceTest {
     Mockito.verify(comicBookRepository, Mockito.times(1))
         .getAllSeriesAndVolumesForPublisher(TEST_PUBLISHER);
   }
+
+  @Test
+  public void testFindDuplicateComics() {
+    Mockito.when(comicBookRepository.getAllWithDuplicatePages()).thenReturn(comicBookList);
+
+    final List<ComicBook> result = service.findDuplicateComics();
+
+    assertNotNull(result);
+    assertSame(comicBookList, result);
+
+    Mockito.verify(comicBookRepository, Mockito.times(1)).getAllWithDuplicatePages();
+  }
 }

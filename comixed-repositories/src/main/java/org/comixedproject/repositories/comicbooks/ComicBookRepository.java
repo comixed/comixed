@@ -602,4 +602,12 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
    */
   @Query("SELECT c FROM ComicBook c WHERE c.editDetails = true")
   List<ComicBook> findComicsWithEditDetails(Pageable pageable);
+
+  /**
+   * Returns all comics that have duplicate pages.
+   *
+   * @return the comic list
+   */
+  @Query("SELECT c FROM ComicBook c JOIN FETCH c.comicDetail d WHERE c.duplicatePageCount > 0")
+  List<ComicBook> getAllWithDuplicatePages();
 }

@@ -114,7 +114,8 @@ describe('ComicDetailListViewComponent', () => {
   describe('sorting', () => {
     const ENTRY: SelectableListItem<ComicDetail> = {
       item: COMIC_DETAIL_5,
-      selected: Math.random() > 0.5
+      selected: Math.random() > 0.5,
+      sortableExtraField: Math.random()
     };
 
     it('can sort by selection', () => {
@@ -169,6 +170,12 @@ describe('ComicDetailListViewComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'store-date')
       ).toEqual(ENTRY.item.addedDate);
+    });
+
+    it('can sort by the extra field', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ENTRY, 'extra-field')
+      ).toEqual(ENTRY.sortableExtraField);
     });
 
     it('returns null on an unknown column', () => {

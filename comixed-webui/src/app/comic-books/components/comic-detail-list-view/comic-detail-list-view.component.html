@@ -68,6 +68,17 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="extra-field">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ extraFieldTitle | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+        {{ entry.extraField }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="archive-type">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.archive-type" | translate }}

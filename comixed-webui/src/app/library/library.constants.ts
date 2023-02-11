@@ -42,6 +42,8 @@ export const START_METADATA_UPDATE_PROCESS_URL = `${API_ROOT_URL}/metadata/batch
 
 export const SET_READ_STATE_URL = `${API_ROOT_URL}/library/read`;
 
+export const LOAD_DUPLICATE_COMICS_URL = `${API_ROOT_URL}/library/comics/duplicates`;
+
 export const LOAD_COMICS_WITH_DUPLICATE_PAGES_URL = `${API_ROOT_URL}/library/pages/duplicates`;
 export const LOAD_DUPLICATE_PAGE_DETAIL_URL = `${API_ROOT_URL}/library/pages/duplicates/\${hash}`;
 
