@@ -150,6 +150,17 @@
   *ngIf="isAdmin"
   mat-button
   class="menu-button"
+  routerLink="/library/comics/duplicates"
+  routerLinkActive="active"
+>
+  <mat-icon>control_point_duplicate</mat-icon>
+  <span>{{ "navigation.option.duplicate-comics" | translate }}</span>
+</button>
+
+<button
+  *ngIf="isAdmin"
+  mat-button
+  class="menu-button"
   routerLink="/library/pages/duplicates"
   routerLinkActive="active"
 >

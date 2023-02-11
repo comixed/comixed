@@ -328,4 +328,13 @@ public class ComicBookRepositoryTest {
     assertNotNull(result);
     assertFalse(result.isEmpty());
   }
+
+  @Test
+  public void testGetAllWithDuplicatePages() {
+    final List<ComicBook> result = repository.getAllWithDuplicatePages();
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertTrue(result.stream().allMatch(comic -> comic.getDuplicatePageCount() > 0));
+  }
 }

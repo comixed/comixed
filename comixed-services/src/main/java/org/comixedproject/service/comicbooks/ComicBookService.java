@@ -842,4 +842,14 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     log.debug("Getting detail for one publisher: name={}", name);
     return this.comicBookRepository.getAllSeriesAndVolumesForPublisher(name);
   }
+
+  /**
+   * Returns the list of all comics with duplicate pages.
+   *
+   * @return the list of comics
+   */
+  public List<ComicBook> findDuplicateComics() {
+    log.debug("Finding all comics with duplicate pages");
+    return this.comicBookRepository.getAllWithDuplicatePages();
+  }
 }

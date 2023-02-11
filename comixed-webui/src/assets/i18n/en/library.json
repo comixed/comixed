@@ -1,4 +1,14 @@
 {
+  "duplicate-comic-book-list": {
+    "label": {
+      "percent-duplicate": "% Dup"
+    },
+    "load-list": {
+      "effect-failure": "Failed to load duplicate comics."
+    },
+    "page-title": "Duplicate Comics ({count} Total)",
+    "tab-title": "Duplicate Comics"
+  },
   "duplicate-page-detail": {
     "block-page": {
       "confirmation-message": "Are you sure you want to block all pages like this one?",
@@ -68,7 +78,7 @@
   "library": {
     "add-to-reading-list": {
       "confirmation-message": "Are you sure you want to add {count, plural, =1{one comic} other{# comics}} to {name}?",
-      "confirmation-title":  "Add Comics To Reading List"
+      "confirmation-title": "Add Comics To Reading List"
     },
     "all-comics": {
       "tab-title": "All Comics",

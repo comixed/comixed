@@ -19,4 +19,6 @@
 export interface SelectableListItem<T> {
   item: T;
   selected: boolean;
+  extraField?: string;
+  sortableExtraField?: any;
 }

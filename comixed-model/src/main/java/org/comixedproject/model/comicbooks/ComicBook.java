@@ -77,7 +77,7 @@ public class ComicBook {
 
   @OneToOne(mappedBy = "comicBook", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonProperty("detail")
-  @JsonView({View.ComicDetailsView.class, View.ReadingListDetail.class})
+  @JsonView({View.ComicListView.class, View.ComicDetailsView.class, View.ReadingListDetail.class})
   @Getter
   @Setter
   private ComicDetail comicDetail;
@@ -95,6 +95,13 @@ public class ComicBook {
   @JsonView({View.ComicListView.class, View.ReadingListDetail.class})
   @Getter
   List<Page> pages = new ArrayList<>();
+
+  @Formula(
+      "(SELECT COUNT(*) FROM Pages p WHERE p.ComicBookId = Id AND p.FileHash IN (SELECT d.FileHash FROM Pages d GROUP BY d.FileHash HAVING COUNT(*) > 1))")
+  @JsonProperty("duplicatePageCount")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private int duplicatePageCount;
 
   @Formula(
       value =
