@@ -25,6 +25,7 @@ import {
   LOAD_SERIES_DETAIL_URL,
   LOAD_SERIES_URL
 } from '@app/collections/collections.constants';
+import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series-detail-request';
 
 @Injectable({
   providedIn: 'root'
@@ -43,13 +44,10 @@ export class SeriesService {
     volume: string;
   }): Observable<any> {
     this.logger.debug('Loading series detail:', args);
-    return this.http.post(
-      interpolate(LOAD_SERIES_DETAIL_URL, {
-        publisher: args.publisher,
-        name: args.name,
-        volume: args.volume
-      }),
-      {}
-    );
+    return this.http.post(interpolate(LOAD_SERIES_DETAIL_URL), {
+      publisher: args.publisher,
+      name: args.name,
+      volume: args.volume
+    } as LoadSeriesDetailRequest);
   }
 }

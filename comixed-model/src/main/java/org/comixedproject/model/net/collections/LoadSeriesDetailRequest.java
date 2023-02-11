@@ -1,6 +1,6 @@
 /*
  * ComiXed - A digital comic book library management application.
- * Copyright (C) 2021, The ComiXed Project
+ * Copyright (C) 2023, The ComiXed Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { API_ROOT_URL } from '@app/core';
+package org.comixedproject.model.net.collections;
 
-export const LOAD_PUBLISHERS_URL = `${API_ROOT_URL}/collections/publishers`;
-export const LOAD_PUBLISHER_DETAIL_URL = `${API_ROOT_URL}/collections/publishers/\${name}`;
-export const LOAD_SERIES_URL = `${API_ROOT_URL}/collections/series`;
-export const LOAD_SERIES_DETAIL_URL = `${API_ROOT_URL}/collections/series/detail`;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+/**
+ * <code>LoadSeriesDetailRequest</code> represents the details for a request to load the details of
+ * a single series.
+ *
+ * @author Darryl L. Pierce
+ */
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoadSeriesDetailRequest {
+  @JsonProperty("publisher")
+  @Getter
+  private String publisher;
+
+  @JsonProperty("name")
+  @Getter
+  private String name;
+
+  @JsonProperty("volume")
+  @Getter
+  private String volume;
+}

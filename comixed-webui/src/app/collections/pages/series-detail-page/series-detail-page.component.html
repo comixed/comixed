@@ -39,7 +39,7 @@
     "collections.series-detail.page-title-percentage"
       | translate
         : {
-            percentage: percentageComplete,
+            percentage: percentageComplete | number: "1.0-2",
             inLibrary: inLibrary,
             totalIssues: totalIssues
           }
