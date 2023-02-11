@@ -24,6 +24,7 @@ import static junit.framework.TestCase.assertSame;
 import java.util.List;
 import org.comixedproject.model.collections.Issue;
 import org.comixedproject.model.collections.Series;
+import org.comixedproject.model.net.collections.LoadSeriesDetailRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesService;
 import org.junit.Test;
@@ -63,7 +64,9 @@ public class SeriesControllerTest {
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(seriesDetail);
 
-    List<Issue> result = controller.loadSeriesDetail(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME);
+    List<Issue> result =
+        controller.loadSeriesDetail(
+            new LoadSeriesDetailRequest(TEST_PUBLISHER, TEST_SERIES, TEST_VOLUME));
 
     assertNotNull(result);
     assertSame(seriesDetail, result);

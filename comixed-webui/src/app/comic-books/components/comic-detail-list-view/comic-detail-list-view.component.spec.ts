@@ -44,7 +44,7 @@ import {
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { Router } from '@angular/router';
 
-fdescribe('ComicDetailListViewComponent', () => {
+describe('ComicDetailListViewComponent', () => {
   const COMICS = [
     COMIC_DETAIL_1,
     COMIC_DETAIL_2,

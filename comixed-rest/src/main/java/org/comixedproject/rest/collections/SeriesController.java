@@ -21,13 +21,14 @@ package org.comixedproject.rest.collections;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.collections.Issue;
+import org.comixedproject.model.net.collections.LoadSeriesDetailRequest;
 import org.comixedproject.model.net.collections.LoadSeriesListResponse;
 import org.comixedproject.service.collections.SeriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -58,20 +59,18 @@ public class SeriesController {
   /**
    * Returns the list of issues for the specified series.
    *
-   * @param publisher the publisher
-   * @param name the series name
-   * @param volume the volume
+   * @param request the request body
    * @return the issues
    */
   @PostMapping(
-      value = "/api/collections/publishers/{publisher}/series/{name}/volumes/{volume}",
+      value = "/api/collections/series/detail",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasRole('READER')")
-  public List<Issue> loadSeriesDetail(
-      @PathVariable("publisher") final String publisher,
-      @PathVariable("name") final String name,
-      @PathVariable("volume") final String volume) {
+  public List<Issue> loadSeriesDetail(@RequestBody() final LoadSeriesDetailRequest request) {
+    final String publisher = request.getPublisher();
+    final String name = request.getName();
+    final String volume = request.getVolume();
     log.info("Loading series detail: publisher={} name={} volume={}", publisher, name, volume);
     return this.seriesService.loadSeriesDetail(publisher, name, volume);
   }

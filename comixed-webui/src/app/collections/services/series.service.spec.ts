@@ -39,6 +39,7 @@ import {
   LOAD_SERIES_URL
 } from '@app/collections/collections.constants';
 import { LoggerModule } from '@angular-ru/cdk/logger';
+import { LoadSeriesDetailRequest } from '@app/collections/models/net/load-series-detail-request';
 
 describe('SeriesService', () => {
   const SERIES_LIST = [SERIES_1, SERIES_2, SERIES_3, SERIES_4, SERIES_5];
@@ -85,15 +86,13 @@ describe('SeriesService', () => {
       })
       .subscribe(response => expect(response).toEqual(serviceResponse));
 
-    const req = httpMock.expectOne(
-      interpolate(LOAD_SERIES_DETAIL_URL, {
-        publisher: PUBLISHER,
-        name: SERIES,
-        volume: VOLUME
-      })
-    );
+    const req = httpMock.expectOne(interpolate(LOAD_SERIES_DETAIL_URL));
     expect(req.request.method).toEqual('POST');
-    expect(req.request.body).toEqual({});
+    expect(req.request.body).toEqual({
+      publisher: PUBLISHER,
+      name: SERIES,
+      volume: VOLUME
+    } as LoadSeriesDetailRequest);
     req.flush(serviceResponse);
   });
 });
