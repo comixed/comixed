@@ -55,7 +55,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ScrapingPageComponent } from '@app/library/pages/scraping-page/scraping-page.component';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { ArchiveTypePipe } from './pipes/archive-type.pipe';
-import { UnreadComicsPipe } from './pipes/unread-comics.pipe';
 import {
   DUPLICATE_PAGE_LIST_FEATURE_KEY,
   reducer as comicsWithDuplicatePagesReducer
@@ -117,7 +116,6 @@ import { DuplicateComicEffects } from '@app/library/effects/duplicate-comic.effe
     ComicDetailsDialogComponent,
     ScrapingPageComponent,
     ArchiveTypePipe,
-    UnreadComicsPipe,
     DuplicatePageListPageComponent,
     ComicDetailListDialogComponent,
     DuplicatePageDetailPageComponent,

@@ -16,7 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
@@ -31,6 +38,9 @@ import { Store } from '@ngrx/store';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { Router } from '@angular/router';
+import { LastRead } from '@app/last-read/models/last-read';
+import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
+import { ReadingList } from '@app/lists/models/reading-list';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -40,25 +50,28 @@ import { Router } from '@angular/router';
 export class ComicDetailListViewComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
-  @Input()
-  readonly displayedColumns = [
-    'selection',
-    'thumbnail',
-    'archive-type',
-    'comic-state',
-    'publisher',
-    'series',
-    'volume',
-    'issue-number',
-    'cover-date',
-    'store-date',
-    'added-date'
-  ];
+  @Input() isAdmin = false;
+  @Input() lastReadDates: LastRead[] = [];
+  @Input() readingLists: ReadingList[] = [];
   @Input() extraFieldTitle = '';
   @Input() followClick = true;
   @Input() usePopups = true;
   showPopup = false;
   currentComic: ComicDetail;
+  @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
+
+  @Input() showSelection = true;
+  @Input() showThumbnail = true;
+  @Input() showArchiveType = true;
+  @Input() showComicState = true;
+  @Input() showPublisher = true;
+  @Input() showSeries = true;
+  @Input() showVolume = true;
+  @Input() showIssueNumber = true;
+  @Input() showCoverDate = true;
+  @Input() showStoreDate = true;
+  @Input() showLastReadDate = false;
+  @Input() showAddedDate = true;
 
   constructor(
     private logger: LoggerService,
@@ -66,6 +79,23 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     private router: Router,
     public queryParameterService: QueryParameterService
   ) {}
+
+  get displayedColumns(): string[] {
+    return [
+      this.showSelection ? 'selection' : null,
+      this.showThumbnail ? 'thumbnail' : null,
+      this.showArchiveType ? 'archive-type' : null,
+      this.showComicState ? 'comic-state' : null,
+      this.showPublisher ? 'publisher' : null,
+      this.showSeries ? 'series' : null,
+      this.showVolume ? 'volume' : null,
+      this.showIssueNumber ? 'issue-number' : null,
+      this.showCoverDate ? 'cover-date' : null,
+      this.showStoreDate ? 'store-date' : null,
+      this.showLastReadDate ? 'last-read-date' : null,
+      this.showAddedDate ? 'added-date' : null
+    ].filter(entry => !!entry);
+  }
 
   private _selectedIds: number[] = [];
 
@@ -123,6 +153,8 @@ export class ComicDetailListViewComponent implements AfterViewInit {
           return data.item.coverDate;
         case 'store-date':
           return data.item.storeDate;
+        case 'last-read-date':
+          return this.lastReadDate(data.item);
         case 'extra-field':
           return data.sortableExtraField;
         default:
@@ -188,5 +220,17 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     this.logger.debug('Setting show pup:', show, this.usePopups);
     this.showPopup = show && this.usePopups;
     this.currentComic = comic;
+  }
+
+  isRead(comic: ComicDetail): boolean {
+    return this.lastReadDates
+      .map(entry => entry.comicDetail.id)
+      .includes(comic.id);
+  }
+
+  lastReadDate(comic: ComicDetail): number {
+    return this.lastReadDates.find(
+      entry => entry.comicDetail.comicId === comic.comicId
+    )?.lastRead;
   }
 }

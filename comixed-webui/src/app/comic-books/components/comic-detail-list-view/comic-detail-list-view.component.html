@@ -36,7 +36,10 @@
   <ng-container matColumnDef="selection">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
-        [checked]="selectedIds.length === dataSource.data.length"
+        [checked]="
+          selectedIds.length > 0 &&
+          selectedIds.length === dataSource.data.length
+        "
         (change)="onSelectAll($event.checked)"
         (click)="$event.stopPropagation()"
       ></mat-checkbox>
@@ -165,6 +168,20 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="last-read-date">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-detail-list-view.label.last-read-date" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span
+        *ngIf="isRead(entry)"
+        class="cx-width-100 cx-text-nowrap cx-padding-5"
+      >
+        {{ lastReadDate(entry.item) | date: "mediumDate" }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="added-date">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.added-date" | translate }}
@@ -181,5 +198,6 @@
     *matRowDef="let row; columns: displayedColumns"
     [class.cx-selected-row]="selectedIds.includes(row.id)"
     (click)="onRowSelected(row)"
+    (contextmenu)="onContextMenu($event)"
   ></mat-row>
 </mat-table>

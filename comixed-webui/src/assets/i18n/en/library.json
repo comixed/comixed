@@ -199,6 +199,7 @@
       "rescan-comics": "Rescan selected comics.",
       "scrape-comics": "Start scraping comics",
       "select-all": "Select all comics.",
+      "toggle-read-comics": "{enabled, select, true{Showing only unread comics.} other{Showing all comics.}}",
       "toggle-show-covers": "Toggle between cover and list views.",
       "update-metadata": "Update metadata in selected comics."
     },

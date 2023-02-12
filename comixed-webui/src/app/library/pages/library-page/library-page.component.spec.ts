@@ -63,7 +63,6 @@ import { ArchiveTypePipe } from '@app/library/pipes/archive-type.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
-import { UnreadComicsPipe } from '@app/library/pipes/unread-comics.pipe';
 import {
   initialState as initialLastReadListState,
   LAST_READ_LIST_FEATURE_KEY
@@ -81,7 +80,6 @@ import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import { CoverDateFilterPipe } from '@app/comic-books/pipes/cover-date-filter.pipe';
 import {
   clearSelectedComicBooks,
-  deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import {
@@ -104,6 +102,7 @@ import { updateMetadata } from '@app/library/actions/update-metadata.actions';
 import { purgeLibrary } from '@app/library/actions/purge-library.actions';
 import { rescanComics } from '@app/library/actions/rescan-comics.actions';
 import { startLibraryConsolidation } from '@app/library/actions/consolidate-library.actions';
+import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 
 describe('LibraryPageComponent', () => {
   const USER = USER_READER;
@@ -160,7 +159,6 @@ describe('LibraryPageComponent', () => {
           LibraryPageComponent,
           ComicDetailListViewComponent,
           ArchiveTypePipe,
-          UnreadComicsPipe,
           CoverDateFilterPipe,
           ComicCoverUrlPipe,
           ComicTitlePipe
@@ -472,122 +470,78 @@ describe('LibraryPageComponent', () => {
         expect(component.comicBooks).toEqual([UNPROCESSED]);
       });
     });
-  });
 
-  describe('selecting all comics', () => {
-    beforeEach(() => {
-      component.lastReadDates = [];
-      component.comicBooks = COMIC_BOOKS;
-    });
+    describe('for unread comics', () => {
+      const LAST_READ_DATES = [LAST_READ_1];
 
-    describe('when filtering by read status', () => {
       beforeEach(() => {
-        component.lastReadDates = [
-          {
-            id: 1,
-            lastRead: new Date().getTime(),
-            comicDetail: COMIC_BOOKS[0]
-          },
-          {
-            id: 2,
-            lastRead: new Date().getTime(),
-            comicDetail: COMIC_BOOKS[1]
-          }
-        ];
         component.unreadOnly = true;
-        component.onSelectAllComics(true);
+        component.deletedOnly = false;
+        component.unscrapedOnly = false;
+        component.changedOnly = false;
+        component.unprocessedOnly = false;
       });
 
-      it('only selects unread comics', () => {
-        const lastReadIds = component.lastReadDates.map(
-          date => date.comicDetail.id
-        );
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({
-            ids: COMIC_BOOKS.filter(book => !lastReadIds.includes(book.id)).map(
-              book => book.id
+      describe('when the unread toggle is off', () => {
+        beforeEach(() => {
+          component.unreadSwitch = false;
+          store.setState({
+            ...initialState,
+            [COMIC_BOOK_LIST_FEATURE_KEY]: {
+              ...initialComicBookListState,
+              comicBooks: COMIC_BOOKS,
+              unprocessed: [UNPROCESSED],
+              unscraped: [UNSCRAPED],
+              changed: [CHANGED],
+              deleted: [DELETED]
+            },
+            [LAST_READ_LIST_FEATURE_KEY]: {
+              ...initialLastReadListState,
+              entries: LAST_READ_DATES
+            }
+          });
+        });
+
+        it('loads all comics', () => {
+          expect(
+            component.dataSource.data.some(entry =>
+              LAST_READ_DATES.map(entry => entry.comicDetail.comicId).includes(
+                entry.item.comicId
+              )
             )
-          })
-        );
-      });
-    });
-
-    describe('deselecting comics', () => {
-      beforeEach(() => {
-        component.selectedIds = IDS;
-        component.onSelectAllComics(false);
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          deselectComicBooks({ ids: IDS })
-        );
-      });
-    });
-
-    describe('when filtering by cover year', () => {
-      const COVER_YEAR = new Date(COMIC_BOOKS[0].coverDate).getFullYear();
-
-      beforeEach(() => {
-        (
-          queryParameterService.coverYear$ as BehaviorSubject<CoverDateFilter>
-        ).next({
-          year: COVER_YEAR,
-          month: null
+          ).toBeTrue();
         });
-        component.onSelectAllComics(true);
       });
 
-      it('only selects comics published that year', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({
-            ids: COMIC_BOOKS.filter(
-              book => new Date(book.coverDate).getFullYear() === COVER_YEAR
-            ).map(book => book.id)
-          })
-        );
-      });
-    });
-
-    describe('when filtering by cover month', () => {
-      const COVER_MONTH = new Date(COMIC_BOOKS[0].coverDate).getMonth();
-
-      beforeEach(() => {
-        (
-          queryParameterService.coverYear$ as BehaviorSubject<CoverDateFilter>
-        ).next({
-          year: null,
-          month: COVER_MONTH
+      describe('when the unread toggle is on', () => {
+        beforeEach(() => {
+          component.unreadSwitch = true;
+          store.setState({
+            ...initialState,
+            [COMIC_BOOK_LIST_FEATURE_KEY]: {
+              ...initialComicBookListState,
+              comicBooks: COMIC_BOOKS,
+              unprocessed: [UNPROCESSED],
+              unscraped: [UNSCRAPED],
+              changed: [CHANGED],
+              deleted: [DELETED]
+            },
+            [LAST_READ_LIST_FEATURE_KEY]: {
+              ...initialLastReadListState,
+              entries: LAST_READ_DATES
+            }
+          });
         });
-        component.onSelectAllComics(true);
-      });
 
-      it('only selects comics published that month in any year', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({
-            ids: COMIC_BOOKS.filter(
-              book => new Date(book.coverDate).getMonth() === COVER_MONTH
-            ).map(book => book.id)
-          })
-        );
-      });
-    });
-
-    describe('when filtering by archive type', () => {
-      const ARCHIVE_TYPE = COMIC_BOOKS[0].archiveType;
-
-      beforeEach(() => {
-        (
-          queryParameterService.archiveType$ as BehaviorSubject<ArchiveType>
-        ).next(ARCHIVE_TYPE);
-        component.onSelectAllComics(true);
-      });
-
-      it('only selects comics published that month in any year', () => {
-        const ids = COMIC_BOOKS.filter(
-          book => book.archiveType === ARCHIVE_TYPE
-        ).map(book => book.id);
-        expect(store.dispatch).toHaveBeenCalledWith(selectComicBooks({ ids }));
+        it('only loads the unread comics', () => {
+          expect(
+            component.dataSource.data.some(entry =>
+              LAST_READ_DATES.map(entry => entry.comicDetail.comicId).includes(
+                entry.item.comicId
+              )
+            )
+          ).toBeFalse();
+        });
       });
     });
   });
@@ -713,6 +667,30 @@ describe('LibraryPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(startLibraryConsolidation());
+    });
+  });
+
+  describe('toggling the unread switch', () => {
+    describe('when off', () => {
+      beforeEach(() => {
+        component.unreadSwitch = false;
+        component.onToggleUnreadSwitch();
+      });
+
+      it('turns it on', () => {
+        expect(component.unreadSwitch).toBeTrue();
+      });
+    });
+
+    describe('when on', () => {
+      beforeEach(() => {
+        component.unreadSwitch = true;
+        component.onToggleUnreadSwitch();
+      });
+
+      it('turns it off', () => {
+        expect(component.unreadSwitch).toBeFalse();
+      });
     });
   });
 });

@@ -43,6 +43,7 @@ import {
 } from '@app/library/actions/library-selections.actions';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { Router } from '@angular/router';
+import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
 
 describe('ComicDetailListViewComponent', () => {
   const COMICS = [
@@ -52,6 +53,7 @@ describe('ComicDetailListViewComponent', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const LAST_READ_DATES = [LAST_READ_1];
   const COMIC = COMICS[0];
   const initialState = {};
 
@@ -176,6 +178,26 @@ describe('ComicDetailListViewComponent', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'extra-field')
       ).toEqual(ENTRY.sortableExtraField);
+    });
+
+    it('can sort by last read for unread comic', () => {
+      component.lastReadDates = [];
+      expect(
+        component.dataSource.sortingDataAccessor(
+          { ...ENTRY, item: LAST_READ_DATES[0].comicDetail },
+          'last-read-date'
+        )
+      ).toBeUndefined();
+    });
+
+    it('can sort by last read for read comic', () => {
+      component.lastReadDates = LAST_READ_DATES;
+      expect(
+        component.dataSource.sortingDataAccessor(
+          { ...ENTRY, item: LAST_READ_DATES[0].comicDetail },
+          'last-read-date'
+        )
+      ).toEqual(LAST_READ_DATES[0].lastRead);
     });
 
     it('returns null on an unknown column', () => {
@@ -343,6 +365,101 @@ describe('ComicDetailListViewComponent', () => {
           expect(component.currentComic).toBeNull();
         });
       });
+    });
+  });
+
+  describe('displayed columns', () => {
+    beforeEach(() => {
+      component.showSelection = false;
+      component.showThumbnail = false;
+      component.showArchiveType = false;
+      component.showComicState = false;
+      component.showPublisher = false;
+      component.showSeries = false;
+      component.showVolume = false;
+      component.showIssueNumber = false;
+      component.showCoverDate = false;
+      component.showStoreDate = false;
+      component.showLastReadDate = false;
+      component.showAddedDate = false;
+    });
+
+    it('can show no columns', () => {
+      expect(component.displayedColumns).toEqual([]);
+    });
+
+    it('can show the selection column', () => {
+      component.showSelection = true;
+      expect(component.displayedColumns).toContain('selection');
+    });
+
+    it('can show the thumbnail column', () => {
+      component.showThumbnail = true;
+      expect(component.displayedColumns).toContain('thumbnail');
+    });
+
+    it('can show the archive type column', () => {
+      component.showArchiveType = true;
+      expect(component.displayedColumns).toContain('archive-type');
+    });
+
+    it('can show the comic state column', () => {
+      component.showComicState = true;
+      expect(component.displayedColumns).toContain('comic-state');
+    });
+
+    it('can show the publisher column', () => {
+      component.showPublisher = true;
+      expect(component.displayedColumns).toContain('publisher');
+    });
+
+    it('can show the series column', () => {
+      component.showSeries = true;
+      expect(component.displayedColumns).toContain('series');
+    });
+
+    it('can show the volume column', () => {
+      component.showVolume = true;
+      expect(component.displayedColumns).toContain('volume');
+    });
+
+    it('can show the issue number column', () => {
+      component.showIssueNumber = true;
+      expect(component.displayedColumns).toContain('issue-number');
+    });
+
+    it('can show the cover date column', () => {
+      component.showCoverDate = true;
+      expect(component.displayedColumns).toContain('cover-date');
+    });
+
+    it('can show the store date column', () => {
+      component.showStoreDate = true;
+      expect(component.displayedColumns).toContain('store-date');
+    });
+
+    it('can show the last read date column', () => {
+      component.showLastReadDate = true;
+      expect(component.displayedColumns).toContain('last-read-date');
+    });
+
+    it('can show the added date column', () => {
+      component.showAddedDate = true;
+      expect(component.displayedColumns).toContain('added-date');
+    });
+  });
+
+  describe('checking if a comic is read', () => {
+    beforeEach(() => {
+      component.lastReadDates = LAST_READ_DATES;
+    });
+
+    it('returns false for unread comics', () => {
+      expect(component.isRead(COMIC_DETAIL_2)).toBeFalse();
+    });
+
+    it('returns true for read comics', () => {
+      expect(component.isRead(COMIC_DETAIL_1)).toBeTrue();
     });
   });
 });

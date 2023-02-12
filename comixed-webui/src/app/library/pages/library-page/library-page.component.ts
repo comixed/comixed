@@ -45,7 +45,6 @@ import { selectUserReadingLists } from '@app/lists/selectors/reading-lists.selec
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 import {
   clearSelectedComicBooks,
-  deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
@@ -90,12 +89,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   showPurge = false;
   dataSubscription: Subscription;
   unreadOnly = false;
+  unreadSwitch = false;
   unscrapedOnly = false;
   changedOnly = false;
   deletedOnly = false;
   unprocessedOnly = false;
   lastReadDatesSubscription: Subscription;
-  lastReadDates: LastRead[];
+  lastReadDates: LastRead[] = [];
   readingListsSubscription: Subscription;
   readingLists: ReadingList[] = [];
   pageContent = 'comics';
@@ -183,7 +183,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.lastReadDatesSubscription = this.store
       .select(selectLastReadEntries)
-      .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
+      .subscribe(lastReadDates => {
+        this.lastReadDates = lastReadDates;
+        console.log('*** lastReadDates:', lastReadDates);
+        this.loadDataSource();
+      });
     this.readingListsSubscription = this.store
       .select(selectUserReadingLists)
       .subscribe(lists => (this.readingLists = lists));
@@ -232,6 +236,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.logger.trace('Loading translations');
     this.loadTranslations();
   }
 
@@ -243,48 +248,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.userSubscription.unsubscribe();
     this.langChangeSubscription.unsubscribe();
     this.readingListsSubscription.unsubscribe();
-  }
-
-  onSelectAllComics(selected: boolean): void {
-    if (selected) {
-      this.logger.trace('Selecting all comics with filtering');
-      const coverDateFilter = this.queryParameterService.coverYear$.getValue();
-      const archiveTypeFilter =
-        this.queryParameterService.archiveType$.getValue();
-      this.store.dispatch(
-        selectComicBooks({
-          ids: this.comicBooks
-            .filter(
-              comicBook =>
-                coverDateFilter.year === null ||
-                coverDateFilter.year ===
-                  new Date(comicBook.coverDate).getFullYear()
-            )
-            .filter(
-              comicBook =>
-                coverDateFilter.month === null ||
-                coverDateFilter.month ===
-                  new Date(comicBook.coverDate).getMonth()
-            )
-            .filter(
-              comicBook =>
-                !archiveTypeFilter ||
-                comicBook.archiveType === archiveTypeFilter
-            )
-            .filter(
-              comicBook =>
-                !this.unreadOnly ||
-                !this.lastReadDates
-                  .map(entry => entry.comicDetail.id)
-                  .includes(comicBook.id)
-            )
-            .map(comicBook => comicBook.id)
-        })
-      );
-    } else {
-      this.logger.trace('Deselecting all comics');
-      this.store.dispatch(deselectComicBooks({ ids: this.selectedIds }));
-    }
   }
 
   onSelectAll(): void {
@@ -394,6 +357,11 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  onToggleUnreadSwitch(): void {
+    this.unreadSwitch = this.unreadSwitch === false;
+    this.loadDataSource();
+  }
+
   private loadDataSource(): void {
     this.dataSource.data = this.comicBooks
       .filter(
@@ -408,6 +376,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
           (!this.queryParameterService.archiveType$.getValue() ||
             comic.archiveType ===
               this.queryParameterService.archiveType$.getValue())
+      )
+      .filter(
+        comic =>
+          !this.unreadOnly ||
+          (this.unreadOnly &&
+            (!this.unreadSwitch || (this.unreadSwitch && !this.isRead(comic))))
       )
       .map(comic => {
         return {
@@ -446,5 +420,13 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.translateService.instant('library.all-comics.tab-title')
       );
     }
+  }
+
+  private isRead(comic: ComicDetail): boolean {
+    return (
+      this.lastReadDates.findIndex(
+        entry => entry.comicDetail.comicId === comic.comicId
+      ) !== -1
+    );
   }
 }

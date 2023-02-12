@@ -133,6 +133,21 @@
   >
     <mat-icon>document_scanner</mat-icon>
   </button>
+  <button
+    id="toggle-read-button"
+    *ngIf="unreadOnly"
+    mat-icon-button
+    color="accent"
+    class="cx-toolbar-button cx-margin-right-5"
+    [matTooltip]="
+      'library.tooltip.toggle-read-comics'
+        | translate: { enabled: unreadSwitch }
+    "
+    (click)="onToggleUnreadSwitch()"
+  >
+    <mat-icon *ngIf="!unreadSwitch">visibility</mat-icon>
+    <mat-icon *ngIf="unreadSwitch">visibility_off</mat-icon>
+  </button>
   <div class="cx-spacer"></div>
 
   <mat-paginator
@@ -160,5 +175,8 @@
 <cx-comic-detail-list-view
   class="cx-width-100"
   [dataSource]="dataSource"
+  [isAdmin]="isAdmin"
   [selectedIds]="selectedIds"
+  [lastReadDates]="lastReadDates"
+  [showLastReadDate]="unreadOnly && !unreadSwitch"
 ></cx-comic-detail-list-view>
