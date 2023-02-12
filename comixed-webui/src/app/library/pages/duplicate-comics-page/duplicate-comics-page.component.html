@@ -8,14 +8,8 @@
 <cx-comic-detail-list-view
   class="cx-width-100"
   [dataSource]="dataSource"
-  [displayedColumns]="[
-    'thumbnail',
-    'publisher',
-    'series',
-    'volume',
-    'issue-number',
-    'extra-field',
-    'cover-date'
-  ]"
+  [showSelection]="false"
+  [showStoreDate]="false"
+  [showAddedDate]="false"
   [extraFieldTitle]="'duplicate-comic-book-list.label.percent-duplicate'"
 ></cx-comic-detail-list-view>
