@@ -1,5 +1,10 @@
 @import 'src/styles';
 
+.mat-column-action {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
 .mat-column-selection {
   width: $cx-column-small;
   max-width: $cx-column-small;

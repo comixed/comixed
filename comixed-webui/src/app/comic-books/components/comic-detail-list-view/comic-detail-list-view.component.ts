@@ -41,6 +41,14 @@ import { Router } from '@angular/router';
 import { LastRead } from '@app/last-read/models/last-read';
 import { ComicContextMenuEvent } from '@app/comic-books/models/event/comic-context-menu-event';
 import { ReadingList } from '@app/lists/models/reading-list';
+import { ConfirmationService } from '@tragically-slick/confirmation';
+import { TranslateService } from '@ngx-translate/core';
+import { convertComics } from '@app/library/actions/convert-comics.actions';
+import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
+import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
+import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -60,6 +68,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   currentComic: ComicDetail;
   @Output() showContextMenu = new EventEmitter<ComicContextMenuEvent>();
 
+  @Input() showAction = true;
   @Input() showSelection = true;
   @Input() showThumbnail = true;
   @Input() showArchiveType = true;
@@ -77,11 +86,14 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     private logger: LoggerService,
     private store: Store<any>,
     private router: Router,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
     public queryParameterService: QueryParameterService
   ) {}
 
   get displayedColumns(): string[] {
     return [
+      this.showAction ? 'action' : null,
       this.showSelection ? 'selection' : null,
       this.showThumbnail ? 'thumbnail' : null,
       this.showArchiveType ? 'archive-type' : null,
@@ -223,14 +235,144 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   }
 
   isRead(comic: ComicDetail): boolean {
-    return this.lastReadDates
-      .map(entry => entry.comicDetail.id)
-      .includes(comic.id);
+    return !!this.lastReadDate(comic);
   }
 
   lastReadDate(comic: ComicDetail): number {
     return this.lastReadDates.find(
-      entry => entry.comicDetail.comicId === comic.comicId
+      entry => !!comic && entry.comicDetail.id === comic.id
     )?.lastRead;
+  }
+
+  onContextMenu(mouseEvent: MouseEvent) {
+    this.logger.trace('Stop mouse event propagation');
+    mouseEvent.stopPropagation();
+    this.logger.debug('Firing context menu event:', this.currentComic);
+    this.showContextMenu.emit({
+      comic: this.currentComic,
+      x: mouseEvent.clientX,
+      y: mouseEvent.clientY
+    } as ComicContextMenuEvent);
+  }
+
+  onConvertOne(archiveTypeString: string): void {
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.convert-comics.convert-one.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.convert-comics.convert-one.confirmation-message',
+        { format: archiveTypeString }
+      ),
+      confirm: () => {
+        this.logger.debug(
+          'Converting comic:',
+          this.currentComic,
+          archiveTypeString
+        );
+        this.doConvertComics(
+          [this.currentComic],
+          archiveTypeFromString(archiveTypeString)
+        );
+      }
+    });
+  }
+
+  onConvertSelected(archiveTypeString: string): void {
+    const selectedComics = this.dataSource.data
+      .filter(entry => entry.selected)
+      .map(entry => entry.item);
+
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.convert-comics.convert-selected.confirmation-title'
+      ),
+      message: this.translateService.instant(
+        'library.convert-comics.convert-selected.confirmation-message',
+        { count: selectedComics.length, format: archiveTypeString }
+      ),
+      confirm: () => {
+        this.logger.debug(
+          'Converting comics:',
+          selectedComics,
+          archiveTypeString
+        );
+        this.doConvertComics(
+          selectedComics,
+          archiveTypeFromString(archiveTypeString)
+        );
+      }
+    });
+  }
+
+  onAddOneToReadingList(list: ReadingList): void {
+    this.doAddToReadingList([this.currentComic], list);
+  }
+
+  onAddSelectedToReadingList(list: ReadingList): void {
+    this.doAddToReadingList(
+      this.dataSource.data
+        .filter(entry => entry.selected)
+        .map(entry => entry.item),
+      list
+    );
+  }
+
+  onMarkOneAsRead(read: boolean): void {
+    this.doMarkAsRead([this.currentComic], read);
+  }
+
+  onMarkSelectedAsRead(read: boolean): void {
+    this.doMarkAsRead(this.getSelectedComics(), read);
+  }
+
+  onMarkSelectedAsDeleted(deleted: boolean): void {
+    this.doMarkAsDeleted(this.getSelectedComics(), deleted);
+  }
+
+  isDeleted(comicDetail: ComicDetail): boolean {
+    return comicDetail?.comicState === ComicBookState.DELETED;
+  }
+
+  onMarkOneAsDeleted(deleted: boolean): void {
+    this.doMarkAsDeleted([this.currentComic], deleted);
+  }
+
+  private doMarkAsDeleted(comicBooks: ComicDetail[], deleted: boolean): void {
+    this.logger.debug('Marking comics as deleted:', comicBooks, deleted);
+    this.store.dispatch(markComicsDeleted({ comicBooks, deleted }));
+  }
+
+  private doAddToReadingList(
+    comicBooks: ComicDetail[],
+    list: ReadingList
+  ): void {
+    this.logger.debug('Adding comics to reading list:', comicBooks, list);
+    this.store.dispatch(addComicsToReadingList({ comicBooks, list }));
+  }
+
+  private doMarkAsRead(comicBooks: ComicDetail[], read: boolean): void {
+    this.logger.debug('Setting comics read:', comicBooks, read);
+    this.store.dispatch(setComicBooksRead({ comicBooks, read }));
+  }
+
+  private doConvertComics(
+    comicBooks: ComicDetail[],
+    archiveType: ArchiveType
+  ): void {
+    this.store.dispatch(
+      convertComics({
+        comicBooks,
+        archiveType,
+        deletePages: true,
+        renamePages: true
+      })
+    );
+  }
+
+  private getSelectedComics(): ComicDetail[] {
+    return this.dataSource.data
+      .filter(entry => entry.selected)
+      .map(entry => entry.item);
   }
 }

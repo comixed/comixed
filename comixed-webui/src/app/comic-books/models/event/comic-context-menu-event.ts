@@ -20,6 +20,6 @@ import { ComicDetail } from '../comic-detail';
 
 export interface ComicContextMenuEvent {
   comic: ComicDetail;
-  x: string;
-  y: string;
+  x: number;
+  y: number;
 }

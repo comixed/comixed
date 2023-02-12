@@ -185,7 +185,6 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
       .select(selectLastReadEntries)
       .subscribe(lastReadDates => {
         this.lastReadDates = lastReadDates;
-        console.log('*** lastReadDates:', lastReadDates);
         this.loadDataSource();
       });
     this.readingListsSubscription = this.store

@@ -40,6 +40,10 @@ import {
 } from '@app/comic-books/comic-books.fixtures';
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('DuplicateComicsPageComponent', () => {
   const COMIC_BOOKS = [
@@ -71,7 +75,11 @@ describe('DuplicateComicsPageComponent', () => {
         TranslateModule.forRoot(),
         MatTableModule,
         MatSortModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatDialogModule,
+        MatMenuModule,
+        MatIconModule,
+        MatFormFieldModule
       ],
       providers: [provideMockStore({ initialState })]
     }).compileComponents();

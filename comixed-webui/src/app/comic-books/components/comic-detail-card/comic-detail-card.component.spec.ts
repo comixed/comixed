@@ -112,8 +112,8 @@ describe('ComicDetailCardComponent', () => {
     it('emits an event', () => {
       expect(component.showContextMenu.emit).toHaveBeenCalledWith({
         comic: COMIC,
-        x: `${XPOS}px`,
-        y: `${YPOS}px`
+        x: XPOS,
+        y: YPOS
       });
     });
   });

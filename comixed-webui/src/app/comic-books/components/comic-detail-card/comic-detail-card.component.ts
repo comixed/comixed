@@ -71,8 +71,8 @@ export class ComicDetailCardComponent {
     this.logger.trace('Showing context menu for comic:', this.comic);
     this.showContextMenu.emit({
       comic: this.comic,
-      x: `${mouseEvent.clientX}px`,
-      y: `${mouseEvent.clientY}px`
+      x: mouseEvent.clientX,
+      y: mouseEvent.clientY
     });
   }
 

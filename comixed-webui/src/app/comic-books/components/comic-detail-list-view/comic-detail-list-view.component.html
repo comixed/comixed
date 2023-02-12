@@ -33,6 +33,18 @@
     queryParameterService.onSortChange($event.active, $event.direction)
   "
 >
+  <ng-container matColumnDef="action">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <mat-icon
+        (click)="currentComic = entry.item; $event.stopPropagation()"
+        [matMenuTriggerFor]="contextMenu"
+      >
+        more_vert
+      </mat-icon>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="selection">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       <mat-checkbox
@@ -173,10 +185,7 @@
       {{ "comic-detail-list-view.label.last-read-date" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span
-        *ngIf="isRead(entry)"
-        class="cx-width-100 cx-text-nowrap cx-padding-5"
-      >
+      <span class="cx-width-100 cx-text-nowrap cx-padding-5">
         {{ lastReadDate(entry.item) | date: "mediumDate" }}
       </span>
     </mat-cell>
@@ -198,6 +207,143 @@
     *matRowDef="let row; columns: displayedColumns"
     [class.cx-selected-row]="selectedIds.includes(row.id)"
     (click)="onRowSelected(row)"
-    (contextmenu)="onContextMenu($event)"
   ></mat-row>
 </mat-table>
+
+<!-- context menu items -->
+
+<mat-menu #contextMenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="currentComicMenu">
+    <mat-label>
+      {{ "library.context-menu.single-comic-menu" | translate }}
+    </mat-label>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="selectedComicsMenu">
+    <mat-label>
+      {{ "library.context-menu.multiple-comics-menu" | translate }}
+    </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #currentComicMenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="currentComicReadingListsMenu">
+    <mat-label>
+      {{ "library.context-menu.reading-lists" | translate }}
+    </mat-label>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="currentComicConvertMenu">
+    <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
+  </button>
+  <button
+    *ngIf="!isRead(currentComic)"
+    mat-menu-item
+    (click)="onMarkOneAsRead(true)"
+  >
+    <mat-label>{{ "library.context-menu.mark-as-read" | translate }}</mat-label>
+  </button>
+  <button
+    *ngIf="isRead(currentComic)"
+    mat-menu-item
+    (click)="onMarkOneAsRead(false)"
+  >
+    <mat-label>
+      {{ "library.context-menu.mark-as-unread" | translate }}
+    </mat-label>
+  </button>
+  <button
+    *ngIf="!isDeleted(currentComic)"
+    mat-menu-item
+    (click)="onMarkOneAsDeleted(true)"
+  >
+    <mat-label>{{ "library.context-menu.delete-one" | translate }}</mat-label>
+  </button>
+  <button
+    *ngIf="isDeleted(currentComic)"
+    mat-menu-item
+    (click)="onMarkOneAsDeleted(false)"
+  >
+    <mat-label>
+      {{ "library.context-menu.undelete-one" | translate }}
+    </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #currentComicConvertMenu="matMenu">
+  <button mat-menu-item (click)="onConvertOne('CBZ')">
+    <mat-icon>folder_zip</mat-icon>
+    <mat-label>
+      {{ "library.context-menu.convert-one-to-cbz" | translate }}
+    </mat-label>
+  </button>
+  <button mat-menu-item (click)="onConvertOne('CB7')">
+    <mat-label>
+      {{ "library.context-menu.convert-one-to-cb7" | translate }}
+    </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #currentComicReadingListsMenu="matMenu">
+  <button
+    mat-menu-item
+    *ngFor="let list of readingLists"
+    (click)="onAddOneToReadingList(list)"
+  >
+    <mat-label>{{ list.name }}</mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #selectedComicsMenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="selectedComicsReadingListsMenu">
+    <mat-label>
+      {{ "library.context-menu.reading-lists" | translate }}
+    </mat-label>
+  </button>
+  <button
+    mat-menu-item
+    [matMenuTriggerFor]="selectedComicsConvertMenu"
+    [disabled]="selectedIds.length === 0"
+  >
+    <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
+  </button>
+  <button mat-menu-item (click)="onMarkSelectedAsRead(true)">
+    <mat-label>{{ "library.context-menu.mark-as-read" | translate }}</mat-label>
+  </button>
+  <button mat-menu-item (click)="onMarkSelectedAsRead(false)">
+    <mat-label>
+      {{ "library.context-menu.mark-as-unread" | translate }}
+    </mat-label>
+  </button>
+  <button mat-menu-item (click)="onMarkSelectedAsDeleted(true)">
+    <mat-label>
+      {{ "library.context-menu.delete-selected" | translate }}
+    </mat-label>
+  </button>
+  <button mat-menu-item (click)="onMarkSelectedAsDeleted(false)">
+    <mat-label>
+      {{ "library.context-menu.undelete-selected" | translate }}
+    </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #selectedComicsConvertMenu="matMenu">
+  <button mat-menu-item (click)="onConvertSelected('CBZ')">
+    <mat-label>
+      {{ "library.context-menu.convert-selected-to-cbz" | translate }}
+    </mat-label>
+  </button>
+  <button mat-menu-item (click)="onConvertSelected('CB7')">
+    <mat-label>
+      {{ "library.context-menu.convert-selected-to-cb7" | translate }}
+    </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #selectedComicsReadingListsMenu="matMenu">
+  <button
+    mat-menu-item
+    *ngFor="let list of readingLists"
+    (click)="onAddSelectedToReadingList(list)"
+  >
+    <mat-label>{{ list.name }}</mat-label>
+  </button>
+</mat-menu>

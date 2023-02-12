@@ -47,6 +47,17 @@ import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-
 import { MetadataProcessToolbarComponent } from '@app/comic-metadata/components/metadata-process-toolbar/metadata-process-toolbar.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 
 describe('MetadataProcessPageComponent', () => {
   const COMIC_BOOKS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -69,13 +80,24 @@ describe('MetadataProcessPageComponent', () => {
         MetadataProcessPageComponent,
         MetadataProcessStatusComponent,
         MetadataProcessToolbarComponent,
-        ComicDetailListViewComponent
+        ComicDetailListViewComponent,
+        ComicCoverUrlPipe,
+        ComicTitlePipe
       ],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
-        MatDialogModule
+        MatDialogModule,
+        MatMenuModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatSortModule,
+        MatToolbarModule,
+        MatCheckboxModule,
+        MatTooltipModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();
