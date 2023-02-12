@@ -250,7 +250,6 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
       entry => entry.value.id === id
     ).value;
     this.logger.trace('Metadata source selected:', metadataSource);
-    console.log('Metadata source selected:', metadataSource);
     this.store.dispatch(setChosenMetadataSource({ metadataSource }));
   }
 

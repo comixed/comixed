@@ -44,6 +44,21 @@ import {
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { Router } from '@angular/router';
 import { LAST_READ_1 } from '@app/last-read/last-read.fixtures';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { convertComics } from '@app/library/actions/convert-comics.actions';
+import { archiveTypeFromString } from '@app/comic-books/archive-type.functions';
+import { READING_LIST_1 } from '@app/lists/lists.fixtures';
+import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
+import {
+  Confirmation,
+  ConfirmationService
+} from '@tragically-slick/confirmation';
+import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
+import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
 
 describe('ComicDetailListViewComponent', () => {
   const COMICS = [
@@ -61,6 +76,7 @@ describe('ComicDetailListViewComponent', () => {
   let fixture: ComponentFixture<ComicDetailListViewComponent>;
   let store: MockStore<any>;
   let router: Router;
+  let confirmationService: ConfirmationService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -75,9 +91,14 @@ describe('ComicDetailListViewComponent', () => {
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSortModule,
-        MatTableModule
+        MatTableModule,
+        MatDialogModule,
+        MatMenuModule,
+        MatFormFieldModule,
+        MatCheckboxModule,
+        MatIconModule
       ],
-      providers: [provideMockStore({ initialState })]
+      providers: [provideMockStore({ initialState }), ConfirmationService]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComicDetailListViewComponent);
@@ -89,6 +110,7 @@ describe('ComicDetailListViewComponent', () => {
     spyOn(store, 'dispatch');
     router = TestBed.inject(Router);
     spyOn(router, 'navigate');
+    confirmationService = TestBed.inject(ConfirmationService);
     fixture.detectChanges();
   });
 
@@ -370,6 +392,7 @@ describe('ComicDetailListViewComponent', () => {
 
   describe('displayed columns', () => {
     beforeEach(() => {
+      component.showAction = false;
       component.showSelection = false;
       component.showThumbnail = false;
       component.showArchiveType = false;
@@ -386,6 +409,11 @@ describe('ComicDetailListViewComponent', () => {
 
     it('can show no columns', () => {
       expect(component.displayedColumns).toEqual([]);
+    });
+
+    it('can show the action column', () => {
+      component.showAction = true;
+      expect(component.displayedColumns).toContain('action');
     });
 
     it('can show the selection column', () => {
@@ -460,6 +488,216 @@ describe('ComicDetailListViewComponent', () => {
 
     it('returns true for read comics', () => {
       expect(component.isRead(COMIC_DETAIL_1)).toBeTrue();
+    });
+  });
+
+  describe('showing the context menu', () => {
+    const MOUSE_EVENT = new MouseEvent('testing');
+
+    beforeEach(() => {
+      spyOn(component.showContextMenu, 'emit');
+      component.onContextMenu(MOUSE_EVENT);
+    });
+
+    it('emits an event', () => {
+      expect(component.showContextMenu.emit).toHaveBeenCalled();
+    });
+  });
+
+  describe('context menu selections', () => {
+    const ARCHIVE_TYPE = 'CB7';
+    const READING_LIST = READING_LIST_1;
+
+    beforeEach(() => {
+      component.currentComic = COMIC;
+      component.dataSource.data = COMICS.map(comic => {
+        return {
+          item: comic,
+          selected: true
+        };
+      });
+    });
+
+    describe('converting one comic', () => {
+      beforeEach(() => {
+        spyOn(confirmationService, 'confirm').and.callFake(
+          (confirmation: Confirmation) => confirmation.confirm()
+        );
+        component.onConvertOne(ARCHIVE_TYPE);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          convertComics({
+            comicBooks: [COMIC],
+            archiveType: archiveTypeFromString(ARCHIVE_TYPE),
+            renamePages: true,
+            deletePages: true
+          })
+        );
+      });
+    });
+
+    describe('converting the selected comics', () => {
+      beforeEach(() => {
+        spyOn(confirmationService, 'confirm').and.callFake(
+          (confirmation: Confirmation) => confirmation.confirm()
+        );
+        component.onConvertSelected(ARCHIVE_TYPE);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          convertComics({
+            comicBooks: COMICS,
+            archiveType: archiveTypeFromString(ARCHIVE_TYPE),
+            renamePages: true,
+            deletePages: true
+          })
+        );
+      });
+    });
+
+    describe('adding one comic to a reading list', () => {
+      beforeEach(() => {
+        component.onAddOneToReadingList(READING_LIST);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          addComicsToReadingList({ comicBooks: [COMIC], list: READING_LIST })
+        );
+      });
+    });
+
+    describe('adding the selected comics to a reading list', () => {
+      beforeEach(() => {
+        component.onAddSelectedToReadingList(READING_LIST);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          addComicsToReadingList({ comicBooks: COMICS, list: READING_LIST })
+        );
+      });
+    });
+
+    describe('marking one comic as read', () => {
+      beforeEach(() => {
+        component.onMarkOneAsRead(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicBooksRead({ comicBooks: [COMIC], read: true })
+        );
+      });
+    });
+
+    describe('marking one comic as unread', () => {
+      beforeEach(() => {
+        component.onMarkOneAsRead(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicBooksRead({ comicBooks: [COMIC], read: false })
+        );
+      });
+    });
+
+    describe('marking the selected comics as read', () => {
+      beforeEach(() => {
+        component.onMarkSelectedAsRead(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicBooksRead({ comicBooks: COMICS, read: true })
+        );
+      });
+    });
+
+    describe('marking the selected comics as unread', () => {
+      beforeEach(() => {
+        component.onMarkSelectedAsRead(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          setComicBooksRead({ comicBooks: COMICS, read: false })
+        );
+      });
+    });
+
+    describe('marking one comic as deleted', () => {
+      beforeEach(() => {
+        component.onMarkOneAsDeleted(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comicBooks: [COMIC], deleted: true })
+        );
+      });
+    });
+
+    describe('marking one comic as undeleted', () => {
+      beforeEach(() => {
+        component.onMarkOneAsDeleted(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comicBooks: [COMIC], deleted: false })
+        );
+      });
+    });
+
+    describe('marking the selected comics as deleted', () => {
+      beforeEach(() => {
+        component.onMarkSelectedAsDeleted(true);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comicBooks: COMICS, deleted: true })
+        );
+      });
+    });
+
+    describe('marking the selected comics as undeleted', () => {
+      beforeEach(() => {
+        component.onMarkSelectedAsDeleted(false);
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          markComicsDeleted({ comicBooks: COMICS, deleted: false })
+        );
+      });
+    });
+  });
+
+  describe('checking if a comic is deleted', () => {
+    it('returns true when the state is deleted', () => {
+      expect(
+        component.isDeleted({ ...COMIC, comicState: ComicBookState.DELETED })
+      ).toBeTrue();
+    });
+
+    it('returns false when the state is not deleted', () => {
+      expect(
+        component.isDeleted({ ...COMIC, comicState: ComicBookState.CHANGED })
+      ).toBeFalse();
     });
   });
 });

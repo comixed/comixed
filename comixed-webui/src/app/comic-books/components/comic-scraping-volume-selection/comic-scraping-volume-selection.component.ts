@@ -249,7 +249,6 @@ export class ComicScrapingVolumeSelectionComponent
   }
 
   matchesFilter(value: string, filter: string): boolean {
-    console.log('Looking for', filter, ' in', value);
     return (
       (value || '').toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !==
       -1
