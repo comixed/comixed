@@ -169,12 +169,12 @@
       "stories": "Stories"
     },
     "page-title": {
-      "all": "All Comics ({count} Comics)",
-      "changed-only": "Changed Comics ({count} Comics)",
-      "deleted-only": "Deleted Comics ({count} Comics)",
-      "unprocessed-only": "Unprocessed Comics ({count} Comics)",
-      "unread-only": "Unread Comics ({count} Comics)",
-      "unscraped-only": "Unscraped Comics ({count} Comics)"
+      "all": "All Comics ({shown} of {total})",
+      "changed-only": "Changed Comics ({shown} of {total})",
+      "deleted-only": "Deleted Comics ({shown} of {total})",
+      "unprocessed-only": "Unprocessed Comics ({shown} of {total})",
+      "unread-only": "Unread Comics ({shown} of {total})",
+      "unscraped-only": "Unscraped Comics ({shown} of {total})"
     },
     "purge-library": {
       "confirmation-message": "Are you sure you want to purge the selected deleted comics? This action cannot be undone.",

@@ -168,7 +168,11 @@
 <h2>
   {{
     "library.page-title." + pageContent
-      | translate: { count: dataSource.data.length }
+      | translate
+        : {
+            shown: dataSource.filteredData.length,
+            total: dataSource.data.length
+          }
   }}
 </h2>
 

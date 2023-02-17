@@ -29,7 +29,11 @@
   {{
     "collection-list.page-title"
       | translate
-        : { collection: collectionType, count: dataSource.data?.length }
+        : {
+            collection: collectionType,
+            shown: dataSource.filteredData.length,
+            total: dataSource.data.length
+          }
   }}
 </h2>
 

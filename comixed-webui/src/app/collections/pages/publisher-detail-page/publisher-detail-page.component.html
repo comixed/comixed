@@ -30,7 +30,12 @@
 <h2>
   {{
     "collections.publisher-detail.page-title"
-      | translate: { name: name, count: this.dataSource.data.length }
+      | translate
+        : {
+            name: name,
+            shown: dataSource.filteredData.length,
+            total: dataSource.data.length
+          }
   }}
 </h2>
 
