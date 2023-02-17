@@ -52,22 +52,28 @@ import {
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
 
 @Component({
   selector: 'cx-user-reading-list-page',
-  templateUrl: './reading-list-page.component.html',
-  styleUrls: ['./reading-list-page.component.scss']
+  templateUrl: './reading-list-detail-page.component.html',
+  styleUrls: ['./reading-list-detail-page.component.scss']
 })
-export class ReadingListPageComponent implements OnDestroy {
+export class ReadingListDetailPageComponent implements OnDestroy {
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+
   paramsSubscription: Subscription;
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
   messagingSubscription: Subscription;
   readingListUpdateSubscription: MessagingSubscription;
   readingListRemovalSubscription: MessagingSubscription;
+  selectionSubscription: Subscription;
   readingListForm: FormGroup;
   readingListId = -1;
-  selectedEntries: ComicDetail[] = [];
+  selectedIds: number[] = [];
   langChangeSubscription: Subscription;
 
   constructor(
@@ -121,6 +127,11 @@ export class ReadingListPageComponent implements OnDestroy {
           this.readingList = readingList;
           this.loadTranslations();
         }
+      });
+    this.selectionSubscription = this.store
+      .select(selectLibrarySelections)
+      .subscribe(selections => {
+        this.selectedIds = selections;
       });
     this.messagingSubscription = this.store
       .select(selectMessagingState)
@@ -176,6 +187,17 @@ export class ReadingListPageComponent implements OnDestroy {
     this.readingListForm.controls.name.setValue(readingList.name);
     this.readingListForm.controls.summary.setValue(readingList.summary);
     this.readingListForm.markAsPristine();
+    this.logger.trace('Loading comics from reading list');
+    this.dataSource.data = readingList.entries.map(entry => {
+      return {
+        selected: this.selectedIds.includes(entry.id),
+        item: entry
+      };
+    });
+  }
+
+  get hasSelections(): boolean {
+    return this.dataSource.data.filter(entry => entry.selected).length > 0;
   }
 
   ngOnDestroy(): void {
@@ -187,6 +209,8 @@ export class ReadingListPageComponent implements OnDestroy {
     this.readingListUpdateSubscription?.unsubscribe();
     this.logger.trace('Unsubscribing from reading list removal updates');
     this.readingListRemovalSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from selection updates');
+    this.selectionSubscription.unsubscribe();
   }
 
   onSave(): void {
@@ -230,23 +254,20 @@ export class ReadingListPageComponent implements OnDestroy {
       ),
       message: this.translateService.instant(
         'reading-list-entries.remove-comics.confirmation-message',
-        { count: this.selectedEntries.length }
+        { count: this.dataSource.data.filter(entry => entry.selected).length }
       ),
       confirm: () => {
         this.logger.trace('Firing action: remove comics from reading list');
         this.store.dispatch(
           removeComicsFromReadingList({
             list: this.readingList,
-            comicBooks: this.selectedEntries
+            comicBooks: this.dataSource.data
+              .filter(entry => entry.selected)
+              .map(entry => entry.item)
           })
         );
       }
     });
-  }
-
-  onSelectionChanged(selected: ComicDetail[]): void {
-    this.logger.debug('Selected reading list comics changed:', selected);
-    this.selectedEntries = selected;
   }
 
   onDownload(): void {

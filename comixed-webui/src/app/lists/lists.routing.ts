@@ -20,14 +20,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ReadingListsPageComponent } from '@app/lists/pages/reading-lists-page/reading-lists-page.component';
 import { ReaderGuard } from '@app/user';
-import { ReadingListPageComponent } from '@app/lists/pages/reading-list-page/reading-list-page.component';
+import { ReadingListDetailPageComponent } from '@app/lists/pages/reading-list-detail-page/reading-list-detail-page.component';
 import { StoryNameListPageComponent } from '@app/lists/pages/story-name-list-page/story-name-list-page.component';
 import { StoryListForNamePageComponent } from '@app/lists/pages/story-list-for-name-page/story-list-for-name-page.component';
 
 const routes: Routes = [
   {
     path: 'lists/reading/new',
-    component: ReadingListPageComponent,
+    component: ReadingListDetailPageComponent,
     canActivate: [ReaderGuard]
   },
   {
@@ -37,7 +37,7 @@ const routes: Routes = [
   },
   {
     path: 'lists/reading/:id',
-    component: ReadingListPageComponent,
+    component: ReadingListDetailPageComponent,
     canActivate: [ReaderGuard]
   },
   {

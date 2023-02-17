@@ -13,7 +13,7 @@
     id="remove-selected-entries"
     mat-icon-button
     color="warn"
-    [disabled]="!selectedEntries.length"
+    [disabled]="!hasSelections"
     [matTooltip]="'reading-list.tooltip.remove-comics' | translate"
     (click)="onRemoveEntries()"
   >
@@ -60,12 +60,11 @@
   </button>
 </mat-toolbar>
 
-<mat-card *ngIf="!!readingList">
-  <mat-card-title>
-    {{ readingList.name || "reading-list.text.no-name" | translate }}
-  </mat-card-title>
-  <mat-card-content>
-    <form [formGroup]="readingListForm">
+<div class="cx-width-90 cx-padding-50">
+  <h2>{{ readingList?.name || "reading-list.text.no-name" | translate }}</h2>
+
+  <div class="cx-border-primary-1">
+    <form [formGroup]="readingListForm" class="cx-padding-50">
       <mat-form-field class="cx-width-100" required>
         <input
           id="reading-list-name-input"
@@ -83,10 +82,15 @@
         />
       </mat-form-field>
     </form>
-  </mat-card-content>
-</mat-card>
-<cx-comic-list-view
-  *ngIf="!!readingList"
-  [comicBooks]="readingList.entries"
-  (selectedEntries)="onSelectionChanged($event)"
-></cx-comic-list-view>
+  </div>
+</div>
+
+<cx-comic-detail-list-view
+  [dataSource]="dataSource"
+  [selectedIds]="selectedIds"
+  [showAction]="false"
+  [showArchiveType]="false"
+  [showComicState]="false"
+  [showAddedDate]="false"
+  [showLastReadDate]="true"
+></cx-comic-detail-list-view>
