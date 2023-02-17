@@ -37,7 +37,6 @@ import {
 import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
 import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 import {
-  clearSelectedComicBooks,
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
@@ -278,15 +277,17 @@ describe('ComicDetailListViewComponent', () => {
 
     describe('selecting all comics', () => {
       beforeEach(() => {
-        component.dataSource.filteredData = COMICS.map(entry => {
-          return { item: entry, selected: true };
+        component.dataSource.data = COMICS.map(entry => {
+          return { item: entry, selected: false };
         });
         component.onSelectAll(true);
       });
 
       it('fires an action', () => {
         expect(store.dispatch).toHaveBeenCalledWith(
-          selectComicBooks({ ids: COMICS.map(entry => entry.id) })
+          selectComicBooks({
+            ids: component.dataSource.data.map(entry => entry.item.id)
+          })
         );
       });
     });
@@ -297,7 +298,11 @@ describe('ComicDetailListViewComponent', () => {
       });
 
       it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(clearSelectedComicBooks());
+        expect(store.dispatch).toHaveBeenCalledWith(
+          deselectComicBooks({
+            ids: component.dataSource.data.map(entry => entry.item.id)
+          })
+        );
       });
     });
 

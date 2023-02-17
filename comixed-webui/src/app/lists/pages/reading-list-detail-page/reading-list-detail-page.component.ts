@@ -55,6 +55,8 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
+import { LastRead } from '@app/last-read/models/last-read';
+import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 
 @Component({
   selector: 'cx-user-reading-list-page',
@@ -71,9 +73,11 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   readingListUpdateSubscription: MessagingSubscription;
   readingListRemovalSubscription: MessagingSubscription;
   selectionSubscription: Subscription;
+  lastReadDataSubscription: Subscription;
   readingListForm: FormGroup;
   readingListId = -1;
   selectedIds: number[] = [];
+  lastReadDates: LastRead[] = [];
   langChangeSubscription: Subscription;
 
   constructor(
@@ -103,7 +107,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     });
     this.readingListForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(128)]],
-      summary: ['', []]
+      summary: ['']
     });
     this.readingListStateSubscription = this.store
       .select(selectReadingListState)
@@ -133,6 +137,9 @@ export class ReadingListDetailPageComponent implements OnDestroy {
       .subscribe(selections => {
         this.selectedIds = selections;
       });
+    this.lastReadDataSubscription = this.store
+      .select(selectLastReadEntries)
+      .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
@@ -152,13 +159,26 @@ export class ReadingListDetailPageComponent implements OnDestroy {
             }
           );
         }
+
+        if (!state.started && !!this.readingListUpdateSubscription) {
+          this.logger.trace('Unsubscribing from reading list details updates');
+          this.readingListUpdateSubscription.unsubscribe();
+          this.readingListUpdateSubscription = null;
+        }
+
+        if (!state.started && !!this.readingListRemovalSubscription) {
+          this.logger.trace('Unsubscribing from reading list removal updates');
+          this.readingListRemovalSubscription.unsubscribe();
+          this.readingListRemovalSubscription = null;
+        }
+
         if (
           state.started &&
           this.readingListId !== -1 &&
           !this.readingListRemovalSubscription
         ) {
           this.logger.trace('Subscribing to reading list removal');
-          this.readingListUpdateSubscription = this.webSocketService.subscribe(
+          this.readingListRemovalSubscription = this.webSocketService.subscribe(
             READING_LIST_REMOVAL_TOPIC,
             list => {
               this.logger.trace('Reading list removal received');
@@ -196,21 +216,15 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     });
   }
 
-  get hasSelections(): boolean {
-    return this.dataSource.data.filter(entry => entry.selected).length > 0;
-  }
-
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from param updates');
     this.paramsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list details updates');
-    this.readingListUpdateSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list removal updates');
-    this.readingListRemovalSubscription?.unsubscribe();
     this.logger.trace('Unsubscribing from selection updates');
     this.selectionSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from last read updates');
+    this.lastReadDataSubscription.unsubscribe();
   }
 
   onSave(): void {
@@ -300,6 +314,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   }
 
   private loadTranslations(): void {
+    /* istanbul ignore next */
     if (!!this.readingList) {
       this.logger.trace('Loading tab title');
       this.titleService.setTitle(

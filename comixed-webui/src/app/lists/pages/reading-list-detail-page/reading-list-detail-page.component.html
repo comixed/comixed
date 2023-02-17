@@ -13,7 +13,7 @@
     id="remove-selected-entries"
     mat-icon-button
     color="warn"
-    [disabled]="!hasSelections"
+    [disabled]="!selectedIds.length"
     [matTooltip]="'reading-list.tooltip.remove-comics' | translate"
     (click)="onRemoveEntries()"
   >
@@ -60,34 +60,35 @@
   </button>
 </mat-toolbar>
 
-<div class="cx-width-90 cx-padding-50">
-  <h2>{{ readingList?.name || "reading-list.text.no-name" | translate }}</h2>
+<h2>
+  {{ readingList?.name || "reading-list.text.no-name" | translate }}
+</h2>
 
-  <div class="cx-border-primary-1">
-    <form [formGroup]="readingListForm" class="cx-padding-50">
-      <mat-form-field class="cx-width-100" required>
-        <input
-          id="reading-list-name-input"
-          matInput
-          formControlName="name"
-          [placeholder]="'reading-list.placeholder.name' | translate"
-        />
-      </mat-form-field>
-      <mat-form-field class="cx-width-100">
-        <input
-          id="reading-list-description-input"
-          matInput
-          formControlName="summary"
-          [placeholder]="'reading-list.placeholder.summary' | translate"
-        />
-      </mat-form-field>
-    </form>
-  </div>
+<div class="cx-width-90 cx-padding-50">
+  <form [formGroup]="readingListForm" class="cx-padding-50 cx-border-primary-1">
+    <mat-form-field class="cx-width-100" required>
+      <input
+        id="reading-list-name-input"
+        matInput
+        formControlName="name"
+        [placeholder]="'reading-list.placeholder.name' | translate"
+      />
+    </mat-form-field>
+    <mat-form-field class="cx-width-100">
+      <input
+        id="reading-list-description-input"
+        matInput
+        formControlName="summary"
+        [placeholder]="'reading-list.placeholder.summary' | translate"
+      />
+    </mat-form-field>
+  </form>
 </div>
 
 <cx-comic-detail-list-view
   [dataSource]="dataSource"
   [selectedIds]="selectedIds"
+  [lastReadDates]="lastReadDates"
   [showAction]="false"
   [showArchiveType]="false"
   [showComicState]="false"

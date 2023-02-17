@@ -30,7 +30,6 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import {
-  clearSelectedComicBooks,
   deselectComicBooks,
   selectComicBooks
 } from '@app/library/actions/library-selections.actions';
@@ -202,13 +201,14 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   }
 
   onSelectAll(checked: boolean): void {
+    /* istanbul ignore next */
+    const ids = this.dataSource.filteredData.map(entry => entry.item.id);
     if (checked) {
       this.logger.debug('Selecting all comics');
-      const ids = this.dataSource.filteredData.map(entry => entry.item.id);
       this.store.dispatch(selectComicBooks({ ids }));
     } else {
       this.logger.debug('Deselecting all comics');
-      this.store.dispatch(clearSelectedComicBooks());
+      this.store.dispatch(deselectComicBooks({ ids }));
     }
   }
 

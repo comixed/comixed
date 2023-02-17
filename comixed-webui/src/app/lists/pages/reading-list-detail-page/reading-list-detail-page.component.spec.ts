@@ -84,16 +84,28 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  initialState as initialLastReadListState,
+  LAST_READ_LIST_FEATURE_KEY
+} from '@app/last-read/reducers/last-read-list.reducer';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
+import { ComicCoverUrlPipe } from '@app/comic-books/pipes/comic-cover-url.pipe';
+import { ComicTitlePipe } from '@app/comic-books/pipes/comic-title.pipe';
 
 describe('ReadingListDetailPageComponent', () => {
-  const READING_LIST = READING_LIST_3;
+  const READING_LIST = {
+    ...READING_LIST_3,
+    entries: [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5]
+  };
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
     [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
-    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState,
+    [LAST_READ_LIST_FEATURE_KEY]: initialLastReadListState
   };
 
   let component: ReadingListDetailPageComponent;
@@ -103,6 +115,9 @@ describe('ReadingListDetailPageComponent', () => {
   let router: Router;
   let confirmationService: ConfirmationService;
   let webSocketService: jasmine.SpyObj<WebSocketService>;
+  let titleService: TitleService;
+  let translateService: TranslateService;
+
   const updateSubscription = jasmine.createSpyObj(['unsubscribe']);
   updateSubscription.unsubscribe = jasmine.createSpy(
     'Subscription.unsubscribe(updates)'
@@ -111,15 +126,15 @@ describe('ReadingListDetailPageComponent', () => {
   removalSubscription.unsubscribe = jasmine.createSpy(
     'Subscription.unsubscribe(removals)'
   );
-  let titleService: TitleService;
-  let translateService: TranslateService;
 
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [
           ReadingListDetailPageComponent,
-          ComicDetailListViewComponent
+          ComicDetailListViewComponent,
+          ComicCoverUrlPipe,
+          ComicTitlePipe
         ],
         imports: [
           NoopAnimationsModule,
@@ -139,14 +154,15 @@ describe('ReadingListDetailPageComponent', () => {
           MatIconModule,
           MatCardModule,
           MatMenuModule,
-          MatInputModule
+          MatInputModule,
+          MatCheckboxModule
         ],
         providers: [
           provideMockStore({ initialState }),
           {
             provide: ActivatedRoute,
             useValue: {
-              params: new BehaviorSubject<{}>({}),
+              params: new BehaviorSubject<{}>({ id: READING_LIST.id }),
               queryParams: new BehaviorSubject<{}>({}),
               snapshot: {} as ActivatedRouteSnapshot
             }
@@ -159,7 +175,8 @@ describe('ReadingListDetailPageComponent', () => {
               unsubscribe: jasmine.createSpy('WebSocketService.unsubscribe()')
             }
           },
-          TitleService
+          TitleService,
+          QueryParameterService
         ]
       }).compileComponents();
 
@@ -273,6 +290,7 @@ describe('ReadingListDetailPageComponent', () => {
 
     describe('when loading an existing reading list', () => {
       beforeEach(() => {
+        component.dataSource.data = [];
         component.readingListId = READING_LIST.id;
         store.setState({
           ...initialState,
@@ -298,6 +316,10 @@ describe('ReadingListDetailPageComponent', () => {
         expect(component.readingListForm.controls.summary.value).toEqual(
           READING_LIST.summary
         );
+      });
+
+      it('loads the comics to display', () => {
+        expect(component.dataSource.data).not.toEqual([]);
       });
     });
   });
@@ -357,7 +379,12 @@ describe('ReadingListDetailPageComponent', () => {
   describe('removing selected entries', () => {
     beforeEach(() => {
       component.readingList = READING_LIST;
-      component.dataSource.data.forEach(entry => entry.selected = true);
+      component.dataSource.data = READING_LIST.entries.map((entry, index) => {
+        return {
+          item: entry,
+          selected: index % 2 === 0
+        };
+      });
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -372,7 +399,9 @@ describe('ReadingListDetailPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         removeComicsFromReadingList({
           list: READING_LIST,
-          comicBooks: READING_LIST.entries
+          comicBooks: component.dataSource.data
+            .filter(entry => entry.selected)
+            .map(entry => entry.item)
         })
       );
     });
@@ -437,6 +466,40 @@ describe('ReadingListDetailPageComponent', () => {
         id: READING_LIST.id + 1
       });
       expect(router.navigateByUrl).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when messaging stops', () => {
+    let readingListUpdateSubscription: WebstompSubscription;
+    let readingListRemovalSubscription: WebstompSubscription;
+
+    beforeEach(() => {
+      readingListUpdateSubscription =
+        jasmine.createSpyObj<WebstompSubscription>(['unsubscribe']);
+      readingListRemovalSubscription =
+        jasmine.createSpyObj<WebstompSubscription>(['unsubscribe']);
+      component.readingListUpdateSubscription = readingListUpdateSubscription;
+      component.readingListRemovalSubscription = readingListRemovalSubscription;
+      store.setState({
+        ...initialState,
+        [MESSAGING_FEATURE_KEY]: { ...initialMessagingState, started: false }
+      });
+    });
+
+    it('unsubscribes from reading list updates', () => {
+      expect(readingListUpdateSubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('sets the reading list update subscription to null', () => {
+      expect(component.readingListUpdateSubscription).toBeNull();
+    });
+
+    it('unsubscribes from reading list removals', () => {
+      expect(readingListRemovalSubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('sets the reading list removal subscription to null', () => {
+      expect(component.readingListRemovalSubscription).toBeNull();
     });
   });
 
