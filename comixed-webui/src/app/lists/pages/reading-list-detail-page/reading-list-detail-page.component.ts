@@ -52,22 +52,32 @@ import {
 import { TitleService } from '@app/core/services/title.service';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
+import { selectLibrarySelections } from '@app/library/selectors/library-selections.selectors';
+import { LastRead } from '@app/last-read/models/last-read';
+import { selectLastReadEntries } from '@app/last-read/selectors/last-read-list.selectors';
 
 @Component({
   selector: 'cx-user-reading-list-page',
-  templateUrl: './reading-list-page.component.html',
-  styleUrls: ['./reading-list-page.component.scss']
+  templateUrl: './reading-list-detail-page.component.html',
+  styleUrls: ['./reading-list-detail-page.component.scss']
 })
-export class ReadingListPageComponent implements OnDestroy {
+export class ReadingListDetailPageComponent implements OnDestroy {
+  dataSource = new MatTableDataSource<SelectableListItem<ComicDetail>>([]);
+
   paramsSubscription: Subscription;
   readingListStateSubscription: Subscription;
   readingListSubscription: Subscription;
   messagingSubscription: Subscription;
   readingListUpdateSubscription: MessagingSubscription;
   readingListRemovalSubscription: MessagingSubscription;
+  selectionSubscription: Subscription;
+  lastReadDataSubscription: Subscription;
   readingListForm: FormGroup;
   readingListId = -1;
-  selectedEntries: ComicDetail[] = [];
+  selectedIds: number[] = [];
+  lastReadDates: LastRead[] = [];
   langChangeSubscription: Subscription;
 
   constructor(
@@ -97,7 +107,7 @@ export class ReadingListPageComponent implements OnDestroy {
     });
     this.readingListForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(128)]],
-      summary: ['', []]
+      summary: ['']
     });
     this.readingListStateSubscription = this.store
       .select(selectReadingListState)
@@ -122,6 +132,14 @@ export class ReadingListPageComponent implements OnDestroy {
           this.loadTranslations();
         }
       });
+    this.selectionSubscription = this.store
+      .select(selectLibrarySelections)
+      .subscribe(selections => {
+        this.selectedIds = selections;
+      });
+    this.lastReadDataSubscription = this.store
+      .select(selectLastReadEntries)
+      .subscribe(lastReadDates => (this.lastReadDates = lastReadDates));
     this.messagingSubscription = this.store
       .select(selectMessagingState)
       .subscribe(state => {
@@ -141,13 +159,26 @@ export class ReadingListPageComponent implements OnDestroy {
             }
           );
         }
+
+        if (!state.started && !!this.readingListUpdateSubscription) {
+          this.logger.trace('Unsubscribing from reading list details updates');
+          this.readingListUpdateSubscription.unsubscribe();
+          this.readingListUpdateSubscription = null;
+        }
+
+        if (!state.started && !!this.readingListRemovalSubscription) {
+          this.logger.trace('Unsubscribing from reading list removal updates');
+          this.readingListRemovalSubscription.unsubscribe();
+          this.readingListRemovalSubscription = null;
+        }
+
         if (
           state.started &&
           this.readingListId !== -1 &&
           !this.readingListRemovalSubscription
         ) {
           this.logger.trace('Subscribing to reading list removal');
-          this.readingListUpdateSubscription = this.webSocketService.subscribe(
+          this.readingListRemovalSubscription = this.webSocketService.subscribe(
             READING_LIST_REMOVAL_TOPIC,
             list => {
               this.logger.trace('Reading list removal received');
@@ -176,6 +207,13 @@ export class ReadingListPageComponent implements OnDestroy {
     this.readingListForm.controls.name.setValue(readingList.name);
     this.readingListForm.controls.summary.setValue(readingList.summary);
     this.readingListForm.markAsPristine();
+    this.logger.trace('Loading comics from reading list');
+    this.dataSource.data = readingList.entries.map(entry => {
+      return {
+        selected: this.selectedIds.includes(entry.id),
+        item: entry
+      };
+    });
   }
 
   ngOnDestroy(): void {
@@ -183,10 +221,10 @@ export class ReadingListPageComponent implements OnDestroy {
     this.paramsSubscription.unsubscribe();
     this.logger.trace('Unsubscribing from reading list updates');
     this.readingListSubscription.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list details updates');
-    this.readingListUpdateSubscription?.unsubscribe();
-    this.logger.trace('Unsubscribing from reading list removal updates');
-    this.readingListRemovalSubscription?.unsubscribe();
+    this.logger.trace('Unsubscribing from selection updates');
+    this.selectionSubscription.unsubscribe();
+    this.logger.trace('Unsubscribing from last read updates');
+    this.lastReadDataSubscription.unsubscribe();
   }
 
   onSave(): void {
@@ -230,23 +268,20 @@ export class ReadingListPageComponent implements OnDestroy {
       ),
       message: this.translateService.instant(
         'reading-list-entries.remove-comics.confirmation-message',
-        { count: this.selectedEntries.length }
+        { count: this.dataSource.data.filter(entry => entry.selected).length }
       ),
       confirm: () => {
         this.logger.trace('Firing action: remove comics from reading list');
         this.store.dispatch(
           removeComicsFromReadingList({
             list: this.readingList,
-            comicBooks: this.selectedEntries
+            comicBooks: this.dataSource.data
+              .filter(entry => entry.selected)
+              .map(entry => entry.item)
           })
         );
       }
     });
-  }
-
-  onSelectionChanged(selected: ComicDetail[]): void {
-    this.logger.debug('Selected reading list comics changed:', selected);
-    this.selectedEntries = selected;
   }
 
   onDownload(): void {
@@ -279,6 +314,7 @@ export class ReadingListPageComponent implements OnDestroy {
   }
 
   private loadTranslations(): void {
+    /* istanbul ignore next */
     if (!!this.readingList) {
       this.logger.trace('Loading tab title');
       this.titleService.setTitle(

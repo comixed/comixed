@@ -69,7 +69,12 @@ import org.springframework.data.annotation.CreatedDate;
 public class ComicDetail {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonView({View.ComicListView.class, View.DeletedPageList.class, View.LastReadList.class})
+  @JsonView({
+    View.ComicListView.class,
+    View.DeletedPageList.class,
+    View.LastReadList.class,
+    View.ReadingListDetail.class
+  })
   @Getter
   private Long id;
 

@@ -82,14 +82,12 @@ export class QueryParameterService {
       this.logger.debug('Using parameter for current tab:', currentTab);
       this.currentTab$.next(currentTab);
 
-      const coverYearValue = +params[QUERY_PARAM_COVER_YEAR] || null;
-      const coverMonthValue = +params[QUERY_PARAM_COVER_MONTH] || null;
-      const coverYear = {
-        year: coverYearValue,
-        month: coverMonthValue
+      const coverYearFilter = {
+        year: +params[QUERY_PARAM_COVER_YEAR] || null,
+        month: +params[QUERY_PARAM_COVER_MONTH] || null
       } as CoverDateFilter;
-      this.logger.debug('Using parameter for cover year:', coverYear);
-      this.coverYear$.next(coverYear);
+      this.logger.debug('Using parameter for cover year:', coverYearFilter);
+      this.coverYear$.next(coverYearFilter);
 
       const archiveType = params[QUERY_PARAM_ARCHIVE_TYPE] || null;
       this.logger.debug('Using parameter for archive type:', archiveType);
