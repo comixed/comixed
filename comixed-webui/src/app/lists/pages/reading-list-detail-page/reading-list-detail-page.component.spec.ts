@@ -17,7 +17,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReadingListPageComponent } from './reading-list-page.component';
+import { ReadingListDetailPageComponent } from './reading-list-detail-page.component';
 import { LoggerModule } from '@angular-ru/cdk/logger';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -31,7 +31,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Router
+} from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import {
   createReadingList,
@@ -40,7 +44,6 @@ import {
   saveReadingList
 } from '@app/lists/actions/reading-list-detail.actions';
 import { READING_LIST_3 } from '@app/lists/lists.fixtures';
-import { ComicListViewComponent } from '@app/lists/components/comic-list-view/comic-list-view.component';
 import {
   COMIC_DETAIL_1,
   COMIC_DETAIL_3,
@@ -69,18 +72,32 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { ComicDetailListViewComponent } from '@app/comic-books/components/comic-detail-list-view/comic-detail-list-view.component';
+import {
+  initialState as initialLibrarySelectionsState,
+  LIBRARY_SELECTIONS_FEATURE_KEY
+} from '@app/library/reducers/library-selections.reducer';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('ReadingListPageComponent', () => {
+describe('ReadingListDetailPageComponent', () => {
   const READING_LIST = READING_LIST_3;
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
   const initialState = {
     [READING_LIST_DETAIL_FEATURE_KEY]: initialReadingListDetailsState,
     [MESSAGING_FEATURE_KEY]: initialMessagingState,
-    [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState
+    [DOWNLOAD_READING_LIST_FEATURE_KEY]: initialDownloadReadingListState,
+    [LIBRARY_SELECTIONS_FEATURE_KEY]: initialLibrarySelectionsState
   };
 
-  let component: ReadingListPageComponent;
-  let fixture: ComponentFixture<ReadingListPageComponent>;
+  let component: ReadingListDetailPageComponent;
+  let fixture: ComponentFixture<ReadingListDetailPageComponent>;
   let store: MockStore<any>;
   let activatedRoute: ActivatedRoute;
   let router: Router;
@@ -100,8 +117,12 @@ describe('ReadingListPageComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ReadingListPageComponent, ComicListViewComponent],
+        declarations: [
+          ReadingListDetailPageComponent,
+          ComicDetailListViewComponent
+        ],
         imports: [
+          NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
           FormsModule,
           ReactiveFormsModule,
@@ -110,14 +131,24 @@ describe('ReadingListPageComponent', () => {
           MatDialogModule,
           MatToolbarModule,
           MatIconModule,
-          MatTooltipModule
+          MatTooltipModule,
+          MatFormFieldModule,
+          MatTableModule,
+          MatSortModule,
+          MatPaginatorModule,
+          MatIconModule,
+          MatCardModule,
+          MatMenuModule,
+          MatInputModule
         ],
         providers: [
           provideMockStore({ initialState }),
           {
             provide: ActivatedRoute,
             useValue: {
-              params: new BehaviorSubject<{}>({})
+              params: new BehaviorSubject<{}>({}),
+              queryParams: new BehaviorSubject<{}>({}),
+              snapshot: {} as ActivatedRouteSnapshot
             }
           },
           ConfirmationService,
@@ -132,7 +163,7 @@ describe('ReadingListPageComponent', () => {
         ]
       }).compileComponents();
 
-      fixture = TestBed.createComponent(ReadingListPageComponent);
+      fixture = TestBed.createComponent(ReadingListDetailPageComponent);
       component = fixture.componentInstance;
       store = TestBed.inject(MockStore);
       spyOn(store, 'dispatch');
@@ -152,6 +183,7 @@ describe('ReadingListPageComponent', () => {
   );
 
   it('should create', () => {
+    console.log('*** component:', component);
     expect(component).toBeTruthy();
   });
 
@@ -322,20 +354,10 @@ describe('ReadingListPageComponent', () => {
     });
   });
 
-  describe('setting selected entries', () => {
-    beforeEach(() => {
-      component.onSelectionChanged(COMICS);
-    });
-
-    it('stores the selection', () => {
-      expect(component.selectedEntries).toEqual(COMICS);
-    });
-  });
-
   describe('removing selected entries', () => {
     beforeEach(() => {
       component.readingList = READING_LIST;
-      component.selectedEntries = COMICS;
+      component.dataSource.data.forEach(entry => entry.selected = true);
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
@@ -350,7 +372,7 @@ describe('ReadingListPageComponent', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
         removeComicsFromReadingList({
           list: READING_LIST,
-          comicBooks: COMICS
+          comicBooks: READING_LIST.entries
         })
       );
     });

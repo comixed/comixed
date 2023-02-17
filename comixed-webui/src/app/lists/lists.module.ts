@@ -35,7 +35,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ReadingListPageComponent } from './pages/reading-list-page/reading-list-page.component';
+import { ReadingListDetailPageComponent } from './pages/reading-list-detail-page/reading-list-detail-page.component';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -69,15 +69,14 @@ import {
 import { StoryListEffects } from '@app/lists/effects/story-list.effects';
 import { StoryNameListPageComponent } from './pages/story-name-list-page/story-name-list-page.component';
 import { StoryListForNamePageComponent } from './pages/story-list-for-name-page/story-list-for-name-page.component';
-import { ComicListViewComponent } from '@app/lists/components/comic-list-view/comic-list-view.component';
+import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 
 @NgModule({
   declarations: [
     ReadingListsPageComponent,
-    ReadingListPageComponent,
+    ReadingListDetailPageComponent,
     StoryNameListPageComponent,
-    StoryListForNamePageComponent,
-    ComicListViewComponent
+    StoryListForNamePageComponent
   ],
   imports: [
     CommonModule,
@@ -121,7 +120,8 @@ import { ComicListViewComponent } from '@app/lists/components/comic-list-view/co
     MatFormFieldModule,
     MatInputModule,
     LibraryModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ComicBooksModule
   ],
   exports: [CommonModule]
 })
