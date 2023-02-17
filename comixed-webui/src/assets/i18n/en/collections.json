@@ -9,7 +9,7 @@
         "volume": "Volume"
       },
       "list-publishers": {
-        "page-title": "Publishers ({count} Total)",
+        "page-title": "Publishers ({shown} of {total})",
         "tab-title": "Publishers"
       },
       "load-publisher-detail": {
@@ -32,7 +32,7 @@
         "total-issues": "# Of Issues",
         "volume": "Volume"
       },
-      "page-title": "Publisher: {name} ({count, plural, =1{One Series} other{# Series}})",
+      "page-title": "Publisher: {name} ({shown} of {total})",
       "placeholder": {
         "filter-series": "Enter text to filter the series displayed."
       },
@@ -55,7 +55,7 @@
         "volume": "Volume"
       },
       "list-page": {
-        "page-title": "Series List ({count} Total)",
+        "page-title": "Series List ({shown} of {total})",
         "tab-title": "Collections: Series List"
       },
       "load-series": {
@@ -101,7 +101,7 @@
       "comic-count": "# Comics",
       "name": "Collection Name"
     },
-    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({count} Total)",
+    "page-title": "Collections: {collection, select, characters{Characters} teams{Teams} locations{Locations} stories{Stories} publishers{Publishers} series{Series} other{Unknown}} ({shown} of {total})",
     "placeholder": {
       "filter-entries": "Enter text to filer the entries displayed."
     },

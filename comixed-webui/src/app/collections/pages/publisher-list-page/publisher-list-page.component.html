@@ -30,7 +30,11 @@
 <h2>
   {{
     "collections.publishers.list-publishers.page-title"
-      | translate: { count: dataSource.data?.length }
+      | translate
+        : {
+            shown: dataSource.filteredData.length,
+            total: dataSource.data.length
+          }
   }}
 </h2>
 
