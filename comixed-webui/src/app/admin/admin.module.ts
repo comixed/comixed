@@ -68,6 +68,16 @@ import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-so
 import { MatDividerModule } from '@angular/material/divider';
 import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  METRICS_FEATURE_KEY,
+  reducer as metricsReducer
+} from '@app/admin/reducers/metrics.reducer';
+import { MetricsEffects } from '@app/admin/effects/metrics.effects';
+import { ServerMetricsComponent } from './components/server-metrics/server-metrics.component';
+import { MatSelectModule } from '@angular/material/select';
+import { ServerMetricDetailsComponent } from './components/server-metric-details/server-metric-details.component';
+import { MetricMeasurementPipe } from './pipes/metric-measurement.pipe';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -77,7 +87,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ServerRuntimeComponent,
     MetadataSourceListComponent,
     MetadataSourceDetailComponent,
-    MetadataSourcesViewComponent
+    MetadataSourcesViewComponent,
+    ServerMetricsComponent,
+    ServerMetricDetailsComponent,
+    MetricMeasurementPipe
   ],
   imports: [
     CommonModule,
@@ -97,11 +110,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
       filenameScrapingRulesReducer
     ),
     StoreModule.forFeature(SERVER_RUNTIME_FEATURE_KEY, serverRuntimeReducer),
+    StoreModule.forFeature(METRICS_FEATURE_KEY, metricsReducer),
     EffectsModule.forFeature([
       ConfigurationOptionListEffects,
       SaveConfigurationOptionsEffects,
       FilenameScrapingRuleListEffects,
-      ServerRuntimeEffects
+      ServerRuntimeEffects,
+      MetricsEffects
     ]),
     MatTableModule,
     MatToolbarModule,
@@ -120,7 +135,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FlexModule,
     MatDividerModule,
     ComicBooksModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSelectModule,
+    MatListModule
   ],
   exports: [CommonModule, CoreModule]
 })

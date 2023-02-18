@@ -18,8 +18,9 @@
     "tab": {
       "library": "Library",
       "metadata-sources": "Metadata Sources",
-      "server-runtime": "Runtime",
-      "scraping-rules": "Scraping Rules"
+      "scraping-rules": "Scraping Rules",
+      "server-metrics": "Server Metrics",
+      "server-runtime": "Runtime"
     },
     "tab-title": "Configuration",
     "text": {
@@ -59,6 +60,21 @@
     },
     "tab-title": "Filename Scraping Rules"
   },
+  "metrics": {
+    "metric-details": {
+      "effect-failure": "Failed to load details for metric: {name}.",
+      "label": {
+        "description": "Description",
+        "measurements": "Measurements",
+        "name": "Metric Name"
+      },
+      "page-title": "Details For Metric: {name}"
+    },
+    "metric-list": {
+      "effect-failure": "Failed to load the list of metrics.",
+      "name-options": "Select A Metric"
+    }
+  },
   "save-configuration": {
     "confirmation-message": "Save changes to the configuration?",
     "confirmation-title": "Save Configuration",
@@ -69,7 +85,7 @@
     "database-status": {
       "title": "Database Status"
     },
-    "disk-status":  {
+    "disk-status": {
       "exists": "Exists: {exists}",
       "free-space": "Free Space: {size}MB",
       "total-space": "Total Space: {size}MB",
