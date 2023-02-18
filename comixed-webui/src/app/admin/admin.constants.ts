@@ -31,5 +31,8 @@ export const LOAD_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/
 export const SAVE_FILENAME_SCRAPING_RULES_URL = `${API_ROOT_URL}/admin/scraping/rules`;
 
 // actuator URLS
+export const LOAD_METRIC_LIST_URL = `/actuator/metrics`;
+export const LOAD_METRIC_DETAIL_URL = `/actuator/metrics/\${name}`;
+
 export const LOAD_SERVER_HEALTH_URL = `/actuator/health`;
 export const SHUTDOWN_SERVER_URL = `/actuator/shutdown`;

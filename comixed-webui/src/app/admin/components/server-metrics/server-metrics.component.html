@@ -1,0 +1,19 @@
+<mat-form-field class="cx-width-100" appearance="standard">
+  <mat-label>{{ "metrics.metric-list.name-options" | translate }}</mat-label>
+  <mat-select
+    [value]="metricDetail?.name"
+    (selectionChange)="onMetricNameSelected($event.value)"
+  >
+    <mat-option *ngFor="let name of metricList?.names" [value]="name">
+      {{ name }}
+    </mat-option>
+  </mat-select>
+  <input matInput readonly hidden />
+</mat-form-field>
+
+<div class="cx-width-100">
+  <cx-metric-details
+    class="cx-width-100"
+    [metricDetail]="metricDetail"
+  ></cx-metric-details>
+</div>

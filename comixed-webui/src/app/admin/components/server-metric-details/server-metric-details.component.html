@@ -1,0 +1,25 @@
+<div *ngIf="!!metricDetail" class="cx-width-100">
+  <h3>
+    {{
+      "metrics.metric-details.page-title"
+        | translate: { name: metricDetail.name }
+    }}
+  </h3>
+
+  <table class="cx-width-100">
+    <tbody>
+      <tr>
+        <td>{{ "metrics.metric-details.label.name" | translate }}</td>
+        <td>{{ metricDetail.name }}</td>
+      </tr>
+      <tr>
+        <td>{{ "metrics.metric-details.label.description" | translate }}</td>
+        <td>{{ metricDetail.description }}</td>
+      </tr>
+      <tr *ngFor="let measurement of metricDetail.measurements">
+        <td></td>
+        <td>{{ metricDetail | metricMeasurement: measurement.statistic }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

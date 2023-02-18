@@ -20,6 +20,8 @@ import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { FilenameScrapingRule } from '@app/admin/models/filename-scraping-rule';
 import { ServerHealth } from '@app/admin/models/server-health';
 import { ServerStatus } from '@app/admin/models/server-status.enum';
+import { MetricList } from '@app/admin/models/metric-list';
+import { MetricDetail } from '@app/admin/models/metric-detail';
 
 export const CONFIGURATION_OPTION_1: ConfigurationOption = {
   name: 'OPTION1',
@@ -104,4 +106,23 @@ export const SERVER_HEALTH: ServerHealth = {
       status: ServerStatus.UP
     }
   }
+};
+
+export const METRIC_LIST: MetricList = {
+  names: ['first', 'second', 'third', 'fourth', 'fifth']
+};
+
+export const METRIC_DETAIL: MetricDetail = {
+  name: 'first',
+  description: 'The first metric detail',
+  baseUnit: 'seconds',
+  measurements: [
+    { statistic: 'COUNT', value: Math.random() },
+    {
+      statistic: 'TOTAL_TIME',
+      value: Math.random()
+    },
+    { statistic: 'MAX', value: Math.random() }
+  ],
+  availableTags: [{ tag: 'exception', values: ['TAG1', 'TAG2'] }]
 };

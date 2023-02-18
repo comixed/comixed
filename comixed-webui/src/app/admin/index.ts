@@ -39,6 +39,11 @@ import {
   SERVER_RUNTIME_FEATURE_KEY,
   ShutdownState
 } from '@app/admin/reducers/server-runtime.reducer';
+import {
+  METRICS_FEATURE_KEY,
+  MetricsState,
+  reducer as metricsReducer
+} from '@app/admin/reducers/metrics.reducer';
 
 export * from './admin.functions';
 
@@ -54,6 +59,7 @@ export interface AdminModuleState {
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: SaveConfigurationOptionsState;
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: FilenameScrapingRulesState;
   [SERVER_RUNTIME_FEATURE_KEY]: ShutdownState;
+  [METRICS_FEATURE_KEY]: MetricsState;
 }
 
 export type ModuleState = AdminModuleState;
@@ -63,5 +69,6 @@ export const reducers: ActionReducerMap<AdminModuleState> = {
   [CONFIGURATION_OPTION_LIST_FEATURE_KEY]: configurationOptionListReducer,
   [SAVE_CONFIGURATION_OPTIONS_FEATURE_KEY]: saveConfigurationOptionsReducer,
   [FILENAME_SCRAPING_RULES_FEATURE_KEY]: filenameScrapingRulesReducer,
-  [SERVER_RUNTIME_FEATURE_KEY]: serverRuntimeReducer
+  [SERVER_RUNTIME_FEATURE_KEY]: serverRuntimeReducer,
+  [METRICS_FEATURE_KEY]: metricsReducer
 };
