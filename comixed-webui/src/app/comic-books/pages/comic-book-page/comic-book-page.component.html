@@ -21,6 +21,40 @@
   >
     <mat-icon>arrow_forward</mat-icon>
   </button>
+  <div
+    *ngIf="
+      !!comicBook.detail.publisher &&
+      !!comicBook.detail.series &&
+      !!comicBook.detail.volume
+    "
+  >
+    <mat-divider class="cx-height-100" vertical="true"></mat-divider>
+    <a [routerLink]="['/library/all']">
+      <mat-icon>home</mat-icon>
+    </a>
+    &#62;
+    <a
+      [routerLink]="[
+        '/library/collections/publishers',
+        comicBook.detail.publisher
+      ]"
+    >
+      {{ comicBook.detail.publisher }}
+    </a>
+    &#62;
+    <a
+      [routerLink]="[
+        '/library/collections/publishers',
+        comicBook.detail.publisher,
+        'series',
+        comicBook.detail.series,
+        'volumes',
+        comicBook.detail.volume
+      ]"
+    >
+      {{ comicBook.detail.series }}
+    </a>
+  </div>
   <div class="cx-spacer"></div>
   <button
     id="toggle-page-view-button"
@@ -55,7 +89,7 @@
     mat-icon-button
     color="warn"
     [matTooltip]="'comic-book.tooltip.update-comic-info' | translate"
-    [disabled]="!isAdmin"
+    [disabled]="!isAdmin || !hasChangedState"
     (click)="onUpdateMetadata()"
   >
     <mat-icon>sync_alt</mat-icon>
@@ -116,10 +150,7 @@
   </button>
 </mat-toolbar>
 
-<div
-  *ngIf="!!comicBook"
-  class="cx-width-100 cx-padding-5 cx-accent-dark-background"
->
+<div *ngIf="!!comicBook" class="cx-width-100 cx-accent-light-background">
   <h1>
     {{ comicBook.detail | comicTitle }}
   </h1>
@@ -156,9 +187,19 @@
         <mat-icon>navigate_next</mat-icon>
       </button>
     </div>
-    <cx-comic-page
-      [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
-    ></cx-comic-page>
+    <mat-card class="cx-padding-0">
+      <mat-card-title
+        class="cx-text-nowrap"
+        [matTooltip]="comicBook.detail.title"
+      >
+        {{ comicBook.detail.title }}
+      </mat-card-title>
+      <mat-card-content>
+        <cx-comic-page
+          [imageUrl]="comicBook.pages[pageIndex] | comicPageUrl"
+        ></cx-comic-page>
+      </mat-card-content>
+    </mat-card>
   </div>
   <div class="cx-padding-left-5" fxFlex.gt-sm="80%" fxFlex.sm="100%">
     <mat-tab-group

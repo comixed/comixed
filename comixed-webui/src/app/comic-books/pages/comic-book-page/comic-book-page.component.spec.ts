@@ -490,4 +490,32 @@ describe('ComicBookPageComponent', () => {
       expect(component.isDeleted).toBeFalse();
     });
   });
+
+  describe('checking if a comic has been changes', () => {
+    describe('when is has been changed', () => {
+      beforeEach(() => {
+        component.comicBook = {
+          ...COMIC_BOOK,
+          detail: { ...COMIC_BOOK.detail, comicState: ComicBookState.CHANGED }
+        };
+      });
+
+      it('returns true', () => {
+        expect(component.hasChangedState).toBeTrue();
+      });
+    });
+
+    describe('when is has not been changed', () => {
+      beforeEach(() => {
+        component.comicBook = {
+          ...COMIC_BOOK,
+          detail: { ...COMIC_BOOK.detail, comicState: ComicBookState.STABLE }
+        };
+      });
+
+      it('returns false', () => {
+        expect(component.hasChangedState).toBeFalse();
+      });
+    });
+  });
 });

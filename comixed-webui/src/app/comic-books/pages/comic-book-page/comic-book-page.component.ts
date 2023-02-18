@@ -199,6 +199,10 @@ export class ComicBookPageComponent
       });
   }
 
+  get hasChangedState(): boolean {
+    return this.comicBook.detail.comicState === ComicBookState.CHANGED;
+  }
+
   get isDeleted(): boolean {
     return this.comicBook.detail.comicState === ComicBookState.DELETED;
   }
