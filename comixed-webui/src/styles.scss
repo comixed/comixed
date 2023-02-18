@@ -8,6 +8,12 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+// fonts
+
+.cx-font-larger {
+  font-size: larger;
+}
+
 // links
 
 a:link, a:visited {
@@ -131,6 +137,10 @@ $cx-selected-comic-color: #ffffff;
 }
 
 // padding
+
+.cx-padding-0 {
+  padding: 0px !important;
+}
 
 .cx-padding-left-5 {
   padding-left: 5px !important;
