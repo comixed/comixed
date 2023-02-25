@@ -8,38 +8,8 @@
 
   <div class="cx-spacer"></div>
 
-  <button
-    id="set-deleted-button"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
-    [disabled]="!hasSelections"
-    (click)="markSelected.emit()"
-  >
-    <mat-icon>flag</mat-icon>
-  </button>
-  <button
-    id="clear-deleted-button"
-    mat-icon-button
-    color="primary"
-    [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
-    [disabled]="!hasSelections"
-    (click)="clearSelected.emit()"
-  >
-    <mat-icon>outlined_flag</mat-icon>
-  </button>
   <mat-divider vertical="true"></mat-divider>
-  <button
-    id="delete-entries"
-    mat-icon-button
-    color="warn"
-    [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
-    [disabled]="!hasSelections"
-    (click)="deleteSelected.emit()"
-  >
-    <mat-icon>delete</mat-icon>
-  </button>
-  <mat-divider vertical="true"></mat-divider>
+
   <button
     id="upload-button"
     mat-icon-button

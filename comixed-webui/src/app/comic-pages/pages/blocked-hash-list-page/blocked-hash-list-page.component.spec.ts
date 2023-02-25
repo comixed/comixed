@@ -26,7 +26,6 @@ import {
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import {
   BLOCKED_HASH_1,
   BLOCKED_HASH_2,
@@ -42,7 +41,6 @@ import { downloadBlockedPages } from '@app/comic-pages/actions/download-blocked-
 import { MatDialogModule } from '@angular/material/dialog';
 import { uploadBlockedPages } from '@app/comic-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { markPagesWithHash } from '@app/comic-pages/actions/blocked-hash-list.actions';
@@ -60,6 +58,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 
 describe('BlockedHashListPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
@@ -81,7 +80,8 @@ describe('BlockedHashListPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           BlockedHashListPageComponent,
-          BlockedHashToolbarComponent
+          BlockedHashToolbarComponent,
+          PageHashUrlPipe
         ],
         imports: [
           NoopAnimationsModule,
@@ -135,6 +135,7 @@ describe('BlockedHashListPageComponent', () => {
 
   describe('receiving blocked page updates', () => {
     beforeEach(() => {
+      component.dataSource.data = [];
       store.setState({
         ...initialState,
         [BLOCKED_HASH_LIST_FEATURE_KEY]: {
@@ -142,102 +143,10 @@ describe('BlockedHashListPageComponent', () => {
           entries: ENTRIES
         }
       });
-      component.dataSource.data.forEach(entry => (entry.selected = true));
-      store.setState({
-        ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
-          entries: ENTRIES.concat(ENTRY)
-        }
-      });
     });
 
-    it('maintains the existing selections', () => {
-      component.dataSource.data
-        .filter(entry =>
-          ENTRIES.map(mapEntry => mapEntry.id).includes(entry.item.id)
-        )
-        .forEach(entry => expect(entry.selected).toBeTrue());
-    });
-
-    it('does not select the addition', () => {
-      component.dataSource.data
-        .filter(entry => entry.item.id === ENTRY.id)
-        .forEach(entry => expect(entry.selected).toBeFalse());
-    });
-  });
-
-  describe('toggling a selection', () => {
-    let entry: SelectableListItem<BlockedHash>;
-
-    beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
-          entries: ENTRIES
-        }
-      });
-      entry = component.dataSource.data[0];
-      component.hasSelections = false;
-      component.onSelectOne(entry, true);
-    });
-
-    it('sets the checked state for the item', () => {
-      expect(entry.selected).toBeTrue();
-    });
-
-    it('sets the has selections flag', () => {
-      expect(component.hasSelections).toBeTrue();
-    });
-  });
-
-  describe('toggling all selections', () => {
-    beforeEach(() => {
-      component.entries = ENTRIES;
-      component.onSelectAll(true);
-    });
-
-    it('selects all items', () => {
-      expect(
-        component.dataSource.data.every(entry => entry.selected)
-      ).toBeTrue();
-    });
-
-    it('sets the all selected flag', () => {
-      expect(component.allSelected).toBeTrue();
-    });
-
-    it('sets the some selection flag', () => {
-      expect(component.hasSelections).toBeTrue();
-    });
-
-    describe('unselecting one item', () => {
-      beforeEach(() => {
-        component.onSelectOne(component.dataSource.data[0], false);
-      });
-
-      it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
-      });
-
-      it('sets the some selection flag', () => {
-        expect(component.hasSelections).toBeTrue();
-      });
-    });
-
-    describe('deselecting all items', () => {
-      beforeEach(() => {
-        component.onSelectAll(false);
-      });
-
-      it('clears the all selected flag', () => {
-        expect(component.allSelected).toBeFalse();
-      });
-
-      it('clears the some selection flag', () => {
-        expect(component.hasSelections).toBeFalse();
-      });
+    it('updates the blocked hash list', () => {
+      expect(component.dataSource.data).toEqual(ENTRIES);
     });
   });
 
@@ -274,19 +183,10 @@ describe('BlockedHashListPageComponent', () => {
 
   describe('deleting blocked pages', () => {
     beforeEach(() => {
-      store.setState({
-        ...initialState,
-        [BLOCKED_HASH_LIST_FEATURE_KEY]: {
-          ...initialBlockedPageListState,
-          entries: ENTRIES
-        }
-      });
-      component.dataSource.data.forEach(entry => (entry.selected = false));
-      component.dataSource.data[0].selected = true;
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onDeleteEntries();
+      component.onDeleteEntry(ENTRY);
     });
 
     it('confirms with the user', () => {
@@ -295,107 +195,102 @@ describe('BlockedHashListPageComponent', () => {
 
     it('fires an action', () => {
       expect(store.dispatch).toHaveBeenCalledWith(
-        deleteBlockedPages({ entries: [ENTRIES[0]] })
+        deleteBlockedPages({ entries: [ENTRY] })
       );
     });
   });
 
-  describe('processing blocked pages', () => {
+  describe('deleting pages with a hash', () => {
+    const ENTRY = ENTRIES[0];
+
     beforeEach(() => {
-      component.entries = ENTRIES;
-      component.dataSource.data.forEach(entry => (entry.selected = true));
+      component.onMarkSelectedForDeletion(ENTRY, true);
     });
 
-    describe('marking them for deletion', () => {
-      beforeEach(() => {
-        spyOn(confirmationService, 'confirm').and.callFake(
-          (confirmation: Confirmation) => confirmation.confirm()
-        );
-        component.onMarkSelectedForDeletion();
-      });
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        markPagesWithHash({
+          hashes: [ENTRY.hash],
+          deleted: true
+        })
+      );
+    });
+  });
 
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
+  describe('undeleting pages with a hash', () => {
+    const ENTRY = ENTRIES[0];
 
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          markPagesWithHash({
-            hashes: ENTRIES.map(entry => entry.hash),
-            deleted: true
-          })
-        );
-      });
+    beforeEach(() => {
+      component.onMarkSelectedForDeletion(ENTRY, false);
     });
 
-    describe('clearing them for deletion', () => {
-      beforeEach(() => {
-        spyOn(confirmationService, 'confirm').and.callFake(
-          (confirmation: Confirmation) => confirmation.confirm()
-        );
-        component.onClearSelectedForDeletion();
-      });
-
-      it('confirms with the user', () => {
-        expect(confirmationService.confirm).toHaveBeenCalled();
-      });
-
-      it('fires an action', () => {
-        expect(store.dispatch).toHaveBeenCalledWith(
-          markPagesWithHash({
-            hashes: ENTRIES.map(entry => entry.hash),
-            deleted: false
-          })
-        );
-      });
+    it('fires an action', () => {
+      expect(store.dispatch).toHaveBeenCalledWith(
+        markPagesWithHash({
+          hashes: [ENTRY.hash],
+          deleted: false
+        })
+      );
     });
   });
 
   describe('sorting the list', () => {
-    const ITEM = {
-      item: ENTRY,
-      selected: Math.random() > 0.5
-    } as SelectableListItem<BlockedHash>;
-
-    it('can sort by selected state', () => {
-      expect(
-        component.dataSource.sortingDataAccessor(ITEM, 'selected')
-      ).toEqual(`${ITEM.selected}`);
-    });
-
     it('can sort by label', () => {
-      expect(component.dataSource.sortingDataAccessor(ITEM, 'label')).toEqual(
-        `${ITEM.item.label}`
+      expect(component.dataSource.sortingDataAccessor(ENTRY, 'label')).toEqual(
+        `${ENTRY.label}`
       );
     });
 
     it('can sort by hash', () => {
-      expect(component.dataSource.sortingDataAccessor(ITEM, 'hash')).toEqual(
-        `${ITEM.item.hash}`
+      expect(component.dataSource.sortingDataAccessor(ENTRY, 'hash')).toEqual(
+        `${ENTRY.hash}`
       );
     });
 
     it('can sort by comic count', () => {
       expect(
-        component.dataSource.sortingDataAccessor(ITEM, 'comic-count')
-      ).toEqual(ITEM.item.comicCount);
+        component.dataSource.sortingDataAccessor(ENTRY, 'comic-count')
+      ).toEqual(ENTRY.comicCount);
     });
 
     it('can sort by created', () => {
       expect(
-        component.dataSource.sortingDataAccessor(ITEM, 'created-on')
-      ).toEqual(ITEM.item.createdOn);
+        component.dataSource.sortingDataAccessor(ENTRY, 'created-on')
+      ).toEqual(ENTRY.createdOn);
     });
   });
 
-  describe('getting the selected hashes', () => {
-    beforeEach(() => {
-      component.entries = ENTRIES;
-      component.dataSource.data.forEach(entry => (entry.selected = true));
+  describe('showing the blocked page popup', () => {
+    describe('showing the popup', () => {
+      beforeEach(() => {
+        component.showPopup = false;
+        component.currentBlockedHash = null;
+        component.onShowPopup(true, ENTRY);
+      });
+
+      it('sets the show popup flag', () => {
+        expect(component.showPopup).toBeTrue();
+      });
+
+      it('sets the current blocked hash', () => {
+        expect(component.currentBlockedHash).toBe(ENTRY);
+      });
     });
 
-    it('returns the selected entries', () => {
-      expect(component.selectedHashes).toEqual(ENTRIES);
+    describe('hiding the popup', () => {
+      beforeEach(() => {
+        component.currentBlockedHash = ENTRY;
+        component.showPopup = true;
+        component.onShowPopup(false, null);
+      });
+
+      it('clears the show popup flag', () => {
+        expect(component.showPopup).toBeFalse();
+      });
+
+      it('clears the current blocked hash', () => {
+        expect(component.currentBlockedHash).toBeNull();
+      });
     });
   });
 });

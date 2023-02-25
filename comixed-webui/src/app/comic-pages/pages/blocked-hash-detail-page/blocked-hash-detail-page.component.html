@@ -1,72 +1,52 @@
-<form *ngIf="!!blockedPage" [formGroup]="blockedPageForm">
-  <mat-toolbar *ngIf="isAdmin" class="cx-primary-light-background">
-    <button
-      id="go-back-button"
-      mat-icon-button
-      class="cx-primary-light-background"
-      (click)="onGoBack()"
+<mat-toolbar *ngIf="isAdmin" class="cx-primary-light-background">
+  <button
+    id="go-back-button"
+    mat-icon-button
+    class="cx-primary-light-background"
+    (click)="onGoBack()"
+  >
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <div class="cx-spacer"></div>
+  <button
+    id="save-button"
+    mat-icon-button
+    class="cx-toolbar-button"
+    color="primary"
+    [disabled]="!blockedPageForm.valid || !blockedPageForm.dirty"
+    (click)="onSave()"
+  >
+    <mat-icon>save</mat-icon>
+  </button>
+  <button
+    id="reset-button"
+    mat-icon-button
+    class="cx-toolbar-button"
+    color="warn"
+    [disabled]="!blockedPageForm.dirty"
+    (click)="onReset()"
+  >
+    <mat-icon>undo</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div *ngIf="!!blockedPage" class="cx-horizontal-container cx-padding-5">
+  <div class="cx-grow-1">
+    <h2>{{ "blocked-hash.page-title" | translate: { hash: hash } }}</h2>
+
+    <form
+      *ngIf="!!blockedPage"
+      [formGroup]="blockedPageForm"
+      class="cx-padding-50 cx-border-primary-1"
     >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <div class="cx-spacer"></div>
-    <button
-      id="edit-button"
-      mat-raised-button
-      class="cx-toolbar-button"
-      color="primary"
-      [disabled]="editing"
-      (click)="onEdit()"
-    >
-      <mat-icon>edit</mat-icon>
-      <mat-label>{{ "button.edit" | translate }}</mat-label>
-    </button>
-    <button
-      id="save-button"
-      mat-raised-button
-      class="cx-toolbar-button"
-      color="accent"
-      [disabled]="!editing"
-      (click)="onSave()"
-    >
-      <mat-icon>save</mat-icon>
-      <mat-label>{{ "button.save" | translate }}</mat-label>
-    </button>
-    <button
-      id="reset-button"
-      mat-raised-button
-      class="cx-toolbar-button"
-      color="warn"
-      [disabled]="!blockedPageForm.dirty"
-      (click)="onReset()"
-    >
-      <mat-icon>save</mat-icon>
-      <mat-label>{{ "button.reset" | translate }}</mat-label>
-    </button>
-  </mat-toolbar>
-  <mat-card>
-    <mat-card-title>
-      {{ "blocked-hash.page-title" | translate: { hash: hash } }}
-    </mat-card-title>
-    <mat-card-content>
       <mat-form-field class="cx-width-100" appearance="standard">
         <mat-label>{{ "blocked-hash.label.label" | translate }}</mat-label>
-        <tsm-edit-in-place
-          [displayTemplate]="displayLabel"
-          [editingTemplate]="editLabel"
-          [editing]="editing"
-        >
-          <ng-template #displayLabel>
-            <span class="cx-width-100">{{ blockedPage.label }}</span>
-          </ng-template>
-          <ng-template #editLabel>
-            <input
-              id="label-input"
-              matInput
-              class="cx-width-100"
-              formControlName="label"
-            />
-          </ng-template>
-        </tsm-edit-in-place>
+        <input
+          id="label-input"
+          matInput
+          class="cx-width-100"
+          formControlName="label"
+        />
         <input matInput hidden />
       </mat-form-field>
       <mat-form-field class="cx-width-100" appearance="standard">
@@ -79,6 +59,17 @@
           formControlName="hash"
         />
       </mat-form-field>
-    </mat-card-content>
-  </mat-card>
-</form>
+    </form>
+  </div>
+
+  <div class="cx-grow-0 cx-width-25 cx-padding-5">
+    <img
+      [src]="blockedPage.hash | pageHashUrl"
+      width="100%"
+      height="auto"
+      [alt]="
+        'blocked-hash.text.hash-value' | translate: { hash: blockedPage.hash }
+      "
+    />
+  </div>
+</div>

@@ -4,6 +4,11 @@ mat-divider {
   height: 50%;
 }
 
+.mat-column-thumbnail {
+  width: $cx-column-small;
+  max-width: $cx-column-small;
+}
+
 .mat-column-selected {
   width: $cx-column-small;
   max-width: $cx-column-small;
@@ -25,4 +30,9 @@ mat-divider {
 .mat-column-created-on {
   width: $cx-column-large;
   max-width: $cx-column-large;
+}
+
+.mat-column-action {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
 }

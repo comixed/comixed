@@ -34,12 +34,8 @@ import { PAGE_SIZE_DEFAULT } from '@app/core';
 export class BlockedHashToolbarComponent {
   @ViewChild('MatPagination') paginator: MatPaginator;
 
-  @Input() hasSelections = false;
   @Input() pageSize = PAGE_SIZE_DEFAULT;
 
-  @Output() markSelected = new EventEmitter<void>();
-  @Output() clearSelected = new EventEmitter<void>();
-  @Output() deleteSelected = new EventEmitter<void>();
   @Output() uploadFile = new EventEmitter<File>();
   @Output() downloadFile = new EventEmitter<void>();
 

@@ -49,6 +49,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { PageHashUrlPipe } from '@app/comic-books/pipes/page-hash-url.pipe';
 
 describe('BlockedHashDetailPageComponent', () => {
   const ENTRIES = [BLOCKED_HASH_1, BLOCKED_HASH_3, BLOCKED_HASH_5];
@@ -70,7 +71,7 @@ describe('BlockedHashDetailPageComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BlockedHashDetailPageComponent],
+        declarations: [BlockedHashDetailPageComponent, PageHashUrlPipe],
         imports: [
           NoopAnimationsModule,
           RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
@@ -123,7 +124,6 @@ describe('BlockedHashDetailPageComponent', () => {
 
   describe('when the blocked page is loaded', () => {
     beforeEach(() => {
-      component.editing = true;
       component.blockedPage = ENTRY;
     });
 
@@ -133,13 +133,8 @@ describe('BlockedHashDetailPageComponent', () => {
       );
     });
 
-    it('clears the editing flag', () => {
-      expect(component.editing).toBeFalse();
-    });
-
     describe('when the page label is null', () => {
       beforeEach(() => {
-        component.editing = true;
         store.setState({
           ...initialState,
           [BLOCKED_PAGE_DETAIL_FEATURE_KEY]: {
@@ -154,17 +149,6 @@ describe('BlockedHashDetailPageComponent', () => {
       it('uses an empty string for the label', () => {
         expect(component.blockedPageForm.controls.label.value).toEqual('');
       });
-    });
-  });
-
-  describe('editing the blocked page', () => {
-    beforeEach(() => {
-      component.editing = false;
-      component.onEdit();
-    });
-
-    it('sets the editing flag', () => {
-      expect(component.editing).toBeTrue();
     });
   });
 
@@ -194,7 +178,6 @@ describe('BlockedHashDetailPageComponent', () => {
         (confirmation: Confirmation) => confirmation.confirm()
       );
       component.blockedPage = ENTRY;
-      component.editing = true;
       component.blockedPageForm.controls.label.setValue(ENTRY.label.substr(1));
       component.onReset();
     });
@@ -207,10 +190,6 @@ describe('BlockedHashDetailPageComponent', () => {
       expect(component.blockedPageForm.controls.label.value).toEqual(
         ENTRY.label
       );
-    });
-
-    it('clears the editing flag', () => {
-      expect(component.editing).toBeFalse();
     });
   });
 

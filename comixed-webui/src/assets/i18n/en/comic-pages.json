@@ -25,6 +25,9 @@
     "set-state": {
       "effect-failure": "Failed to {blocked, select, true{block} other{unblock}} page hash.",
       "effect-success": "Successfully {blocked, select, true{blocked} other{unblocked}} page hash."
+    },
+    "text": {
+      "hash-value": "The hash value is {hash}"
     }
   },
   "blocked-hash-list": {
@@ -52,14 +55,17 @@
       "effect-failure": "Failed to {deleted, select, true{mark} other{clear}} the deletion flag.",
       "effect-success": "{deleted, select, true{Marked} other{Cleared}} for deletion."
     },
-    "page-title": "Blocked Hash List ({selected} of {count} Selected)",
+    "page-title": "Blocked Hash List ({count} Total)",
+    "placeholder": {
+      "filter-entries": "Enter text to filter the list of blocked hashes."
+    },
     "tab-title": "Blocked Hash List",
     "tooltip": {
-      "clear-deleted": "Clear selected pages from deletion.",
-      "delete-entries": "Delete selected blocked page entries.",
-      "download-file": "Download blocked pages file.",
-      "upload-file": "Upload a blocked pages file.",
-      "set-deleted": "Mark selected pages for deletion."
+      "clear-deleted": "Unmark pages with this hash for deletion.",
+      "delete-entries": "Delete this blocked hash entry.",
+      "download-file": "Download blocked hash file.",
+      "upload-file": "Upload a blocked hash file.",
+      "set-deleted": "Mark pages with this hash for deletion."
     },
     "upload-file": {
       "confirmation-message": "Are you sure you want to upload \"{filename}\"?",

@@ -41,7 +41,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { uploadBlockedPages } from '@app/comic-pages/actions/upload-blocked-pages.actions';
 import { deleteBlockedPages } from '@app/comic-pages/actions/delete-blocked-pages.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
-import { SelectableListItem } from '@app/core/models/ui/selectable-list-item';
 import { TitleService } from '@app/core/services/title.service';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -54,6 +53,7 @@ import {
   PAGE_SIZE_OPTIONS,
   PAGE_SIZE_PREFERENCE
 } from '@app/core';
+import { QueryParameterService } from '@app/core/services/query-parameter.service';
 
 @Component({
   selector: 'cx-blocked-hash-list',
@@ -72,17 +72,17 @@ export class BlockedHashListPageComponent
   userSubscription: Subscription;
   pageSize = PAGE_SIZE_DEFAULT;
   readonly pageOptions = PAGE_SIZE_OPTIONS;
-  dataSource = new MatTableDataSource<SelectableListItem<BlockedHash>>([]);
+  dataSource = new MatTableDataSource<BlockedHash>([]);
   readonly displayedColumns = [
-    'selected',
+    'thumbnail',
     'label',
     'hash',
     'comic-count',
-    'created-on'
+    'created-on',
+    'action'
   ];
-  hasSelections = false;
-  allSelected = false;
-  private _blockedHashes: BlockedHash[] = [];
+  currentBlockedHash: BlockedHash = null;
+  showPopup = false;
 
   constructor(
     private logger: LoggerService,
@@ -90,7 +90,8 @@ export class BlockedHashListPageComponent
     private router: Router,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    public queryParameterService: QueryParameterService
   ) {
     this.hashStateSubscription = this.store
       .select(selectBlockedPageListState)
@@ -116,24 +117,11 @@ export class BlockedHashListPageComponent
   }
 
   get entries(): BlockedHash[] {
-    return this._blockedHashes;
+    return this.dataSource.data;
   }
 
   set entries(entries: BlockedHash[]) {
-    this._blockedHashes = entries;
-    const oldData = this.dataSource.data;
-    this.dataSource.data = entries.map(item => {
-      const selected =
-        oldData.find(entry => entry.item.id === item.id)?.selected || false;
-      return { selected, item };
-    });
-    this.hasSelections = this.dataSource.data.some(entry => entry.selected);
-  }
-
-  get selectedHashes(): BlockedHash[] {
-    return this.dataSource.data
-      .filter(entry => entry.selected)
-      .map(entry => entry.item);
+    this.dataSource.data = entries;
   }
 
   ngOnDestroy(): void {
@@ -152,27 +140,19 @@ export class BlockedHashListPageComponent
     this.loadTranslations();
   }
 
-  onSelectOne(entry: SelectableListItem<BlockedHash>, checked: boolean): void {
-    this.logger.debug('Changing selection to', checked);
-    entry.selected = checked;
-    this.updateSelections();
-  }
-
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
       switch (sortHeaderId) {
-        case 'selected':
-          return `${data.selected}`;
         case 'label':
-          return data.item.label;
+          return data.label;
         case 'hash':
-          return data.item.hash;
+          return data.hash;
         case 'comic-count':
-          return data.item.comicCount;
+          return data.comicCount;
         case 'created-on':
-          return data.item.createdOn;
+          return data.createdOn;
       }
     };
   }
@@ -198,83 +178,32 @@ export class BlockedHashListPageComponent
     });
   }
 
-  onDeleteEntries(): void {
+  onDeleteEntry(blockedHash: BlockedHash): void {
+    const entries = [blockedHash];
     this.confirmationService.confirm({
       title: this.translateService.instant(
         'blocked-hash-list.delete-entries.confirmation-title'
       ),
       message: this.translateService.instant(
         'blocked-hash-list.delete-entries.confirmation-message',
-        { count: this.dataSource.data.filter(entry => entry.selected).length }
+        { count: entries.length }
       ),
       confirm: () => {
-        const entries = this.dataSource.data
-          .filter(entry => entry.selected)
-          .map(entry => entry.item);
         this.logger.debug('Deleting selected blocked pages:', entries);
         this.store.dispatch(deleteBlockedPages({ entries }));
       }
     });
   }
 
-  onMarkSelectedForDeletion(): void {
-    this.logger.trace('Confirming marking selected pages for deletion');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'blocked-hash-list.mark-pages-with-hash.confirm-mark-title'
-      ),
-      message: this.translateService.instant(
-        'blocked-hash-list.mark-pages-with-hash.confirm-mark-message'
-      ),
-      confirm: () => {
-        this.logger.trace(
-          'Firing action: mark selected blocked pages for deletion'
-        );
-        this.doSetDeletionFlag(true);
-      }
-    });
-  }
-
-  onClearSelectedForDeletion(): void {
-    this.logger.trace('Confirming clearing selected pages for deletion');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'blocked-hash-list.mark-pages-with-hash.confirm-clear-title'
-      ),
-      message: this.translateService.instant(
-        'blocked-hash-list.mark-pages-with-hash.confirm-clear-message'
-      ),
-      confirm: () => {
-        this.logger.trace(
-          'Firing action: clearing selected blocked pages for deletion'
-        );
-        this.doSetDeletionFlag(false);
-      }
-    });
-  }
-
-  onSelectAll(checked: boolean): void {
-    this.logger.trace('Selecting all:', checked);
-    this.dataSource.data.forEach(entry => (entry.selected = checked));
-    this.updateSelections();
-  }
-
-  private doSetDeletionFlag(deleted: boolean): void {
+  onMarkSelectedForDeletion(blockedHash: BlockedHash, deleted: boolean): void {
     this.store.dispatch(
-      markPagesWithHash({
-        hashes: this.dataSource.data
-          .filter(entry => entry.selected)
-          .map(entry => entry.item.hash),
-        deleted
-      })
+      markPagesWithHash({ hashes: [blockedHash.hash], deleted })
     );
   }
 
-  private updateSelections(): void {
-    this.allSelected = this.dataSource.data.every(entry => entry.selected);
-    this.hasSelections =
-      this.allSelected ||
-      this.dataSource.data.some(listEntry => listEntry.selected);
+  onShowPopup(showPopup: boolean, blockedHash: BlockedHash): void {
+    this.currentBlockedHash = blockedHash;
+    this.showPopup = showPopup;
   }
 
   private loadTranslations(): void {

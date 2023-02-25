@@ -1,38 +1,83 @@
+<div
+  *ngIf="showPopup"
+  class="cx-hover cx-centered cx-width-25 cx-border-primary-1"
+>
+  <mat-card>
+    <mat-card-title class="cx-text-nowrap">
+      {{ currentBlockedHash.hash }}
+    </mat-card-title>
+    <mat-card-content class="cx-padding-5">
+      <img
+        [src]="currentBlockedHash.hash | pageHashUrl"
+        width="100%"
+        height="auto"
+        [alt]="
+          'blocked-hash.text.hash-value' | translate: { hash: blockedPage.hash }
+        "
+      />
+    </mat-card-content>
+  </mat-card>
+</div>
+
 <cx-blocked-hash-toolbar
-  [hasSelections]="hasSelections"
-  (markSelected)="onMarkSelectedForDeletion()"
-  (clearSelected)="onClearSelectedForDeletion()"
-  (deleteSelected)="onDeleteEntries()"
   (uploadFile)="onFileSelected($event)"
   (downloadFile)="onDownloadFile()"
 ></cx-blocked-hash-toolbar>
 
 <h2>
-  {{
-    "blocked-hash-list.page-title"
-      | translate: { selected: selectedHashes.length, count: entries.length }
-  }}
+  {{ "blocked-hash-list.page-title" | translate: { count: entries.length } }}
 </h2>
 
-<mat-paginator
-  [pageSizeOptions]="pageOptions"
-  [pageSize]="pageSize"
-></mat-paginator>
+<mat-toolbar class="cx-accent-light-background">
+  <mat-form-field class="cx-width-50" appearance="standard">
+    <input
+      matInput
+      #filterInput
+      id="volume-search-text-input"
+      [placeholder]="'blocked-hash-list.placeholder.filter-entries' | translate"
+      (keyup)="dataSource.filter = filterInput.value"
+    />
+  </mat-form-field>
+  <div class="cx-spacer"></div>
+  <mat-paginator
+    class="cx-accent-light-background cx-height-100"
+    showFirstLastButtons="true"
+    [pageSize]="queryParameterService.pageSize$ | async"
+    [pageSizeOptions]="pageOptions"
+    (page)="
+      queryParameterService.onPageChange(
+        $event.pageSize,
+        $event.pageIndex,
+        $event.previousPageIndex
+      )
+    "
+  ></mat-paginator>
+</mat-toolbar>
 
-<mat-table [dataSource]="dataSource" matSort>
-  <ng-container matColumnDef="selected">
-    <mat-header-cell mat-sort-header *matHeaderCellDef>
-      <mat-checkbox
-        [checked]="allSelected"
-        (change)="onSelectAll($event.checked)"
-      ></mat-checkbox>
-    </mat-header-cell>
+<mat-table
+  [dataSource]="dataSource"
+  matSort
+  [matSortActive]="queryParameterService.sortBy$ | async"
+  [matSortDirection]="queryParameterService.sortDirection$ | async"
+  (matSortChange)="
+    queryParameterService.onSortChange($event.active, $event.direction)
+  "
+>
+  <ng-container matColumnDef="thumbnail">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <mat-checkbox
-        [checked]="entry.selected"
-        (click)="$event.stopImmediatePropagation()"
-        (change)="onSelectOne(entry, $event.checked)"
-      ></mat-checkbox>
+      <span class="cx-text-nowrap">
+        <img
+          [src]="entry.hash | pageHashUrl"
+          width="100%"
+          height="auto"
+          [alt]="
+            'blocked-hash.text.hash-value' | translate: { hash: entry.hash }
+          "
+          (mouseenter)="onShowPopup(true, entry)"
+          (mouseleave)="onShowPopup(false, null)"
+        />
+      </span>
     </mat-cell>
   </ng-container>
 
@@ -41,7 +86,7 @@
       {{ "blocked-hash-list.header.label" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.item.label }}</span>
+      <span class="cx-text-nowrap cx-padding-5">{{ entry.label }}</span>
     </mat-cell>
   </ng-container>
 
@@ -50,7 +95,7 @@
       {{ "blocked-hash-list.header.hash" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.item.hash }}</span>
+      <span class="cx-text-nowrap cx-padding-5">{{ entry.hash }}</span>
     </mat-cell>
   </ng-container>
 
@@ -59,7 +104,7 @@
       {{ "blocked-hash-list.header.comic-count" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-text-nowrap">{{ entry.item.comicCount }}</span>
+      <span class="cx-text-nowrap">{{ entry.comicCount }}</span>
     </mat-cell>
   </ng-container>
 
@@ -69,14 +114,52 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">
-        {{ entry.item.createdOn | date: "medium" }}
+        {{ entry.createdOn | date: "medium" }}
       </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <mat-header-cell mat-sort-header *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <button
+        id="set-deleted-button"
+        mat-icon-button
+        color="primary"
+        [matTooltip]="'blocked-hash-list.tooltip.set-deleted' | translate"
+        (click)="
+          $event.stopPropagation(); onMarkSelectedForDeletion(entry, true)
+        "
+      >
+        <mat-icon>flag</mat-icon>
+      </button>
+      <button
+        id="clear-deleted-button"
+        mat-icon-button
+        color="primary"
+        [matTooltip]="'blocked-hash-list.tooltip.clear-deleted' | translate"
+        (click)="
+          $event.stopPropagation(); onMarkSelectedForDeletion(entry, false)
+        "
+      >
+        <mat-icon>outlined_flag</mat-icon>
+      </button>
+
+      <button
+        id="delete-entries"
+        mat-icon-button
+        color="warn"
+        [matTooltip]="'blocked-hash-list.tooltip.delete-entries' | translate"
+        (click)="$event.stopPropagation(); onDeleteEntry(entry)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
     </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row
     *matRowDef="let row; columns: displayedColumns"
-    [routerLink]="['/library', 'pages', 'blocked', row.item.hash]"
+    [routerLink]="['/library', 'pages', 'blocked', row.hash]"
   ></mat-row>
 </mat-table>
