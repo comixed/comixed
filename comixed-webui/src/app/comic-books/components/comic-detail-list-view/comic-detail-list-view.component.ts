@@ -48,6 +48,10 @@ import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { addComicsToReadingList } from '@app/lists/actions/reading-list-entries.actions';
 import { setComicBooksRead } from '@app/last-read/actions/set-comics-read.actions';
 import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.actions';
+import { editMultipleComics } from '@app/library/actions/library.actions';
+import { EditMultipleComicsComponent } from '@app/library/components/edit-multiple-comics/edit-multiple-comics.component';
+import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'cx-comic-detail-list-view',
@@ -87,6 +91,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
     private router: Router,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private dialog: MatDialog,
     public queryParameterService: QueryParameterService
   ) {}
 
@@ -336,6 +341,37 @@ export class ComicDetailListViewComponent implements AfterViewInit {
 
   onMarkOneAsDeleted(deleted: boolean): void {
     this.doMarkAsDeleted([this.currentComic], deleted);
+  }
+
+  onEditMultipleComics(): void {
+    this.logger.debug('Editing multiple comics:', this.selectedIds);
+    const selections = this.dataSource.data
+      .filter(entry => entry.selected)
+      .map(entry => entry.item);
+    const dialog = this.dialog.open(EditMultipleComicsComponent, {
+      data: selections
+    });
+    dialog.afterClosed().subscribe((response: EditMultipleComics) => {
+      if (!!response) {
+        const count = selections.length;
+        this.confirmationService.confirm({
+          title: this.translateService.instant(
+            'library.edit-multiple-comics.confirm-title',
+            { count }
+          ),
+          message: this.translateService.instant(
+            'library.edit-multiple-comics.confirm-message',
+            { count }
+          ),
+          confirm: () => {
+            this.logger.trace('Editing multiple comics');
+            this.store.dispatch(
+              editMultipleComics({ comicBooks: selections, details: response })
+            );
+          }
+        });
+      }
+    });
   }
 
   private doMarkAsDeleted(comicBooks: ComicDetail[], deleted: boolean): void {

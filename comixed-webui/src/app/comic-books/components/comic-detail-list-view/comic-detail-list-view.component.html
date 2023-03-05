@@ -224,7 +224,11 @@
       {{ "library.context-menu.single-comic-menu" | translate }}
     </mat-label>
   </button>
-  <button mat-menu-item [matMenuTriggerFor]="selectedComicsMenu">
+  <button
+    *ngIf="selectedIds.length > 0"
+    mat-menu-item
+    [matMenuTriggerFor]="selectedComicsMenu"
+  >
     <mat-label>
       {{ "library.context-menu.multiple-comics-menu" | translate }}
     </mat-label>
@@ -276,7 +280,6 @@
 
 <mat-menu #currentComicConvertMenu="matMenu">
   <button mat-menu-item (click)="onConvertOne('CBZ')">
-    <mat-icon>folder_zip</mat-icon>
     <mat-label>
       {{ "library.context-menu.convert-one-to-cbz" | translate }}
     </mat-label>
@@ -311,6 +314,20 @@
   >
     <mat-label>{{ "library.context-menu.convert" | translate }}</mat-label>
   </button>
+  <button mat-menu-item [matMenuTriggerFor]="selectedMarkAsMenu">
+    <mat-label>{{ "library.context-menu.mark-as" | translate }}</mat-label>
+  </button>
+  <button mat-menu-item (click)="onEditMultipleComics()">
+    <mat-label>
+      {{
+        "library.context-menu.edit-multiple-comics"
+          | translate: { count: selectedIds.length }
+      }}
+    </mat-label>
+  </button>
+</mat-menu>
+
+<mat-menu #selectedMarkAsMenu="matMenu">
   <button mat-menu-item (click)="onMarkSelectedAsRead(true)">
     <mat-label>{{ "library.context-menu.mark-as-read" | translate }}</mat-label>
   </button>

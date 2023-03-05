@@ -98,21 +98,17 @@
       "effect-success": "Library consolidation started."
     },
     "context-menu": {
-      "comic-details": "Show comic details...",
       "convert": "Recreate Archive",
-      "convert-one-to-cb7": "Convert Current To CB7",
-      "convert-one-to-cbz": "Convert Current To CBZ",
-      "convert-selected-to-cb7": "Convert Selections To CB7",
-      "convert-selected-to-cbz": "Convert Selections To CBZ",
-      "delete-one": "Mark As Deleted",
-      "delete-selected": "Mark As Deletion",
-      "download": "Download...",
-      "download-one-data": "This comic's data",
-      "download-selected-data": "Selected comics' data",
-      "edit-multiple-comics": "Edit Selected Comics' Details",
-      "mark-as": "Mark...",
-      "mark-as-read": "Mark As Read",
-      "mark-as-unread": "Mark As Unread",
+      "convert-one-to-cb7": "Convert this comic to CB7",
+      "convert-one-to-cbz": "Convert this comic to CBZ",
+      "convert-selected-to-cb7": "Convert selected comics To CB7",
+      "convert-selected-to-cbz": "Convert selected comics To CBZ",
+      "delete-one": "Mark as deleted",
+      "delete-selected": "Mark as deleted",
+      "edit-multiple-comics": "Edit details for {count, plural, =1{one comic} other{# comics}}",
+      "mark-as": "Mark",
+      "mark-as-read": "Mark as read",
+      "mark-as-unread": "Mark as unread",
       "multiple-comics-menu": "Selected Comics",
       "reading-lists": "Add to list...",
       "set-page-blocked": "Block Pages Like This",
@@ -120,8 +116,8 @@
       "set-page-unblocked": "Don't Block Pages Like This",
       "set-page-undeleted": "Don't Delete This Page",
       "single-comic-menu": "This Comic",
-      "undelete-one": "Mark As Undeleted",
-      "undelete-selected": "Mark As Undeleted"
+      "undelete-one": "Mark as undeleted",
+      "undelete-selected": "Mark as undeleted"
     },
     "convert-comics": {
       "convert-one": {
