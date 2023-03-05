@@ -19,4 +19,4 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           workdir: ./docker
-          tags: "latest,1.4-SNAPSHOT"
+          tags: "latest,1.5-SNAPSHOT"
