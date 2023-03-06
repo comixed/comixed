@@ -84,7 +84,8 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * @param publisher the publisher
    * @return the series
    */
-  @Query("SELECT DISTINCT d.series FROM ComicDetail d WHERE d.publisher = :publisher")
+  @Query(
+      "SELECT DISTINCT d.series FROM ComicDetail d WHERE d.publisher = :publisher AND d.series IS NOT NULL")
   Set<String> getAllSeriesForPublisher(@Param("publisher") String publisher);
 
   /**
