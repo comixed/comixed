@@ -58,16 +58,22 @@ For details on building things locally, please see the [CONTRIBUTING.md](CONTRIB
 
 ## Participating
 
+### Reddit
+
+We are now on Reddit! You can discuss the project, and related topics, in the [ComiXed](https://www.reddit.com/r/comixed/) subreddit! While our [old group](https://www.reddit.com/r/comixedmanager) is still available, please move all conversations to the new group.
+
+### Mailing Lists
+
 There are two mailing lists available for getting involved in the community.
 
-### ComiXed Users
+#### ComiXed Users
 
 For users of the project. please sign up for our [user list](https://www.freelists.org/list/comixed). It's where
 general questions, comments and discussions around the application take place.
 
 You can also go [here](https://www.freelists.org/archive/comixed) to search the archives.
 
-### ComiXed Developers
+#### ComiXed Developers
 
 For contributors to the project, please sign up for our [developer list](https://www.freelists.org/list/comixed-dev).
 It's where feature, coding and bug fix discussions take place.
