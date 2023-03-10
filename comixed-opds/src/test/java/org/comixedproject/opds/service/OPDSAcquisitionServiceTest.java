@@ -18,10 +18,7 @@
 
 package org.comixedproject.opds.service;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +61,7 @@ public class OPDSAcquisitionServiceTest {
   private static final Integer TEST_YEAR = 2022;
   private static final Integer TEST_WEEK = RandomUtils.nextInt(52);
   private static final String TEST_SEARCH_TERM = "the search term";
+  private static final String TEST_TAG_NAME = "Tag value";
 
   @InjectMocks private OPDSAcquisitionService service;
   @Mock private ComicBookService comicBookService;
@@ -91,7 +89,10 @@ public class OPDSAcquisitionServiceTest {
   public void testGetEntriesForCollectionFeedForCharacter() {
     Mockito.when(
             comicDetailService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()))
         .thenReturn(comicDetailList);
 
     final OPDSAcquisitionFeed result =
@@ -102,14 +103,18 @@ public class OPDSAcquisitionServiceTest {
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
-        .getAllComicsForTag(ComicTagType.CHARACTER, TEST_EMAIL, TEST_UNREAD);
+        .getAllComicsForTag(
+            ComicTagType.CHARACTER, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetEntriesForCollectionFeedForTeam() {
     Mockito.when(
             comicDetailService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()))
         .thenReturn(comicDetailList);
 
     final OPDSAcquisitionFeed result =
@@ -120,14 +125,17 @@ public class OPDSAcquisitionServiceTest {
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
-        .getAllComicsForTag(ComicTagType.TEAM, TEST_EMAIL, TEST_UNREAD);
+        .getAllComicsForTag(ComicTagType.TEAM, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetEntriesForCollectionFeedForLocation() {
     Mockito.when(
             comicDetailService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()))
         .thenReturn(comicDetailList);
 
     final OPDSAcquisitionFeed result =
@@ -138,14 +146,18 @@ public class OPDSAcquisitionServiceTest {
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
-        .getAllComicsForTag(ComicTagType.LOCATION, TEST_EMAIL, TEST_UNREAD);
+        .getAllComicsForTag(
+            ComicTagType.LOCATION, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
   public void testGetEntriesForCollectionFeedForStory() {
     Mockito.when(
             comicDetailService.getAllComicsForTag(
-                Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyBoolean()))
+                Mockito.any(ComicTagType.class),
+                Mockito.anyString(),
+                Mockito.anyString(),
+                Mockito.anyBoolean()))
         .thenReturn(comicDetailList);
 
     final OPDSAcquisitionFeed result =
@@ -156,7 +168,8 @@ public class OPDSAcquisitionServiceTest {
     assertFalse(result.getEntries().isEmpty());
 
     Mockito.verify(comicDetailService, Mockito.times(1))
-        .getAllComicsForTag(ComicTagType.STORY, TEST_EMAIL, TEST_UNREAD);
+        .getAllComicsForTag(
+            ComicTagType.STORY, TEST_COLLECTION_ENTRY_NAME, TEST_EMAIL, TEST_UNREAD);
   }
 
   @Test
