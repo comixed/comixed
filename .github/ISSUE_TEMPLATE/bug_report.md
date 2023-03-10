@@ -31,17 +31,25 @@ Steps to reproduce the behavior. Please be as complete as possible and describe 
 **Expected Behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**ComiXed Runtime Environment**
 
-**Desktop (please complete the following information):**
- - ComiXed version [from **Help** -> **Build Details**]
- - OS: [e.g. iOS]
- - Browser name [e.g. chrome, safari]
- - Browser version [e.g. 22]
+ - [ ] Windows
+ - [ ] Linux (any distro)
+ - [ ] MacOS
+ - [ ] Docker (if so, please select the host OS)
+
+**Browser (If A Web Issue)**
+
+ - [ ] Chrome
+ - [ ] Firefox
+ - [ ] Safari
+ - [ ] Other (if so, please provide a name)
 
 **ComiXed Build Detail:**
 Copy and past the details from **Build Details** menu option.
+
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
 
 **Additional Context**
 Add any other context about the problem here.
