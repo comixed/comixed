@@ -30,6 +30,7 @@ JVMOPTIONS=""
 COMIXED_JAR_FILE=$(echo "${BINDIR}"/comixed-app-*.jar)
 DEBUG=false
 FULL_DEBUG=false
+METADATA_DEBUG=false
 DB_CONSOLE=false
 VERBOSE=false
 JDBCURL="${JDBCURL}"
@@ -53,6 +54,7 @@ usage() {
   echo "Other options:"
   echo " -d            - Debug mode (def. false)"
   echo " -D            - Turn on ALL debugging (def. false)"
+  echo " -M            - Turn on metadata activity logging (def. false)"
   echo " -C            - Turn on H2 database console"
   echo " -v            - Verbose mode (def. false)"
   echo " -L [LOGFILE]  - Write logs to a file"
@@ -62,7 +64,7 @@ usage() {
   exit 0
 }
 
-while getopts "j:u:p:i:l:P:dDCvL:" option; do
+while getopts "j:u:p:i:l:P:dDMCvL:" option; do
   case ${option} in
   j) JDBCURL="${OPTARG}" ;;
   u) DBUSER="${OPTARG}" ;;
@@ -72,6 +74,7 @@ while getopts "j:u:p:i:l:P:dDCvL:" option; do
   P) PLUGINDIR="${OPTARG}" ;;
   d) DEBUG=true ;;
   D) FULL_DEBUG=true ;;
+  M) METADATA_DEBUG=true ;;
   C) DB_CONSOLE=true ;;
   v) VERBOSE=true ;;
   L) LOGFILE="${OPTARG}" ;;
@@ -96,6 +99,11 @@ fi
 if $FULL_DEBUG; then
   # enable all debugging for all dependencies
   JAROPTIONS="${JAROPTIONS} --logging.level.root=DEBUG"
+fi
+
+if $METADATA_DEBUG; then
+  # enable all debugging for all dependencies
+  JAROPTIONS="${JAROPTIONS} --logging.level.org.comixedproject.metadata=DEBUG"
 fi
 
 if $DB_CONSOLE; then

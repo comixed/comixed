@@ -29,6 +29,7 @@ SET ARG=%~2
 IF "%PARAM%" == "-h" GOTO show_help
 IF "%PARAM%" == "-d" SET DEBUG="ON"
 IF "%PARAM%" == "-D" SET FULLDEBUG="ON"
+IF "%PARAM%" == "-M" SET METADATADEBUG="ON"
 IF "%PARAM%" == "-C" SET DBCONSOLE="ON"
 IF "%PARAM%" == "-j" GOTO set_jdbc_url
 IF "%PARAM%" == "-u" GOTO set_jdbc_user
@@ -96,6 +97,7 @@ ECHO.
 ECHO OTHER OPTIONS:
 ECHO  -d            - Enable debugging (def. off)
 ECHO  -D            - Turn on ALL debugging (def. off)
+ECHO  -M            - Turn on metadata activity logging (def. false)
 ECHO  -C            - Turn on H2 database console"
 ECHO  -L [LOGFILE]  - Write logs to a logfile
 ECHO  -h            - Show help (this text)
@@ -115,6 +117,10 @@ SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject=DEBUG
 IF "%FULLDEBUG%" == "" GOTO skip_full_debug
 SET OPTIONS=%OPTIONS% --logging.level.root=DEBUG
 :skip_full_debug
+
+IF "%METADATADEBUG%" == "" GOTO skip_metadata_debug
+SET OPTIONS=%OPTIONS% --logging.level.org.comixedproject.metadata=DEBUG
+:skip_metadata_debug
 
 IF "%DBCONSOLE%" == "" GOTO skip_db_console
 SET OPTIONS=%OPTIONS% --spring.h2.console.enabled=true
