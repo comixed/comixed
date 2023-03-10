@@ -54,6 +54,7 @@ public class ComicDetailServiceTest {
   private static final int TEST_YEAR = 2023;
   private static final int TEST_WEEK = 17;
   private static final String TEST_SEARCH_TERM = "Random text...";
+  private static final String TEST_TAG_VALUE = "tag value";
 
   @InjectMocks private ComicDetailService service;
   @Mock private ComicDetailRepository comicDetailRepository;
@@ -430,28 +431,33 @@ public class ComicDetailServiceTest {
   public void testGetComicsForTagWithUnread() {
     Mockito.when(
             comicDetailRepository.getAllUnreadComicsForTagType(
-                Mockito.any(ComicTagType.class), Mockito.anyString()))
+                Mockito.any(ComicTagType.class), Mockito.anyString(), Mockito.anyString()))
         .thenReturn(comicDetailList);
 
-    final List<ComicDetail> result = service.getAllComicsForTag(TEST_TAG, TEST_EMAIL, true);
+    final List<ComicDetail> result =
+        service.getAllComicsForTag(TEST_TAG, TEST_TAG_VALUE, TEST_EMAIL, true);
 
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
     Mockito.verify(comicDetailRepository, Mockito.times(1))
-        .getAllUnreadComicsForTagType(TEST_TAG, TEST_EMAIL);
+        .getAllUnreadComicsForTagType(TEST_TAG, TEST_TAG_VALUE, TEST_EMAIL);
   }
 
   @Test
   public void testGetComicsForTag() {
-    Mockito.when(comicDetailRepository.getAllComicsForTagType(Mockito.any(ComicTagType.class)))
+    Mockito.when(
+            comicDetailRepository.getAllComicsForTagType(
+                Mockito.any(ComicTagType.class), Mockito.anyString()))
         .thenReturn(comicDetailList);
 
-    final List<ComicDetail> result = service.getAllComicsForTag(TEST_TAG, TEST_EMAIL, false);
+    final List<ComicDetail> result =
+        service.getAllComicsForTag(TEST_TAG, TEST_TAG_VALUE, TEST_EMAIL, false);
 
     assertNotNull(result);
     assertSame(comicDetailList, result);
 
-    Mockito.verify(comicDetailRepository, Mockito.times(1)).getAllComicsForTagType(TEST_TAG);
+    Mockito.verify(comicDetailRepository, Mockito.times(1))
+        .getAllComicsForTagType(TEST_TAG, TEST_TAG_VALUE);
   }
 }

@@ -19,9 +19,7 @@
 package org.comixedproject.opds.service;
 
 import static org.comixedproject.opds.model.OPDSNavigationFeed.NAVIGATION_FEED_LINK_TYPE;
-import static org.comixedproject.opds.service.OPDSNavigationService.COMIC_STORE_DATE_FOR_YEAR_ID;
-import static org.comixedproject.opds.service.OPDSNavigationService.READING_LIST_FACTOR_ID;
-import static org.comixedproject.opds.service.OPDSNavigationService.SELF;
+import static org.comixedproject.opds.service.OPDSNavigationService.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -81,7 +79,7 @@ public class OPDSAcquisitionService {
                 collectionName),
             String.valueOf(collectionType.getOpdsIdKey())),
         this.comicDetailService.getAllComicsForTag(
-            collectionType.getComicTagType(), email, unread));
+            collectionType.getComicTagType(), collectionName, email, unread));
   }
 
   private OPDSAcquisitionFeed createCollectionEntriesFeed(

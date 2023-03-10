@@ -284,21 +284,26 @@ public interface ComicDetailRepository extends JpaRepository<ComicDetail, Long> 
    * user.
    *
    * @param tagType the tag type
+   * @param tagValue the tag value
    * @param email the user's email
    * @return the matching comics
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType) AND d NOT IN (SELECT r.comicDetail from LastRead r WHERE r.user.email = :email)")
+      "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue) AND d NOT IN (SELECT r.comicDetail from LastRead r WHERE r.user.email = :email)")
   List<ComicDetail> getAllUnreadComicsForTagType(
-      @Param("tagType") ComicTagType tagType, @Param("email") String email);
+      @Param("tagType") ComicTagType tagType,
+      @Param("tagValue") String tagValue,
+      @Param("email") String email);
 
   /**
    * Returns all comics with the given tag type.
    *
    * @param tagType the tag type
+   * @param tagValue the tag value
    * @return the matching comics
    */
   @Query(
-      "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType)")
-  List<ComicDetail> getAllComicsForTagType(@Param("tagType") ComicTagType tagType);
+      "SELECT d FROM ComicDetail d WHERE d IN (SELECT t.comicDetail FROM ComicTag t WHERE t.type = :tagType AND t.value = :tagValue)")
+  List<ComicDetail> getAllComicsForTagType(
+      @Param("tagType") ComicTagType tagType, @Param("tagValue") String tagValue);
 }

@@ -18,12 +18,7 @@
 
 package org.comixedproject.service.comicbooks;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -333,22 +328,23 @@ public class ComicDetailService {
   }
 
   /**
-   * Returns all comics with the given tag type. Optionally filters by the unread state for the
-   * given user.
+   * Returns all comics with the given tag type and value. Optionally filters by the unread state
+   * for the given user.
    *
    * @param tagType the tag type
+   * @param tagValue the tag value
    * @param email the use's email
    * @param unread the unread flag
    * @return the matching comics
    */
   public List<ComicDetail> getAllComicsForTag(
-      final ComicTagType tagType, final String email, final boolean unread) {
+      final ComicTagType tagType, final String tagValue, final String email, final boolean unread) {
     if (unread) {
       log.debug("Loading all unread comics for tag type: tag type={} email={}", tagType, email);
-      return this.comicDetailRepository.getAllUnreadComicsForTagType(tagType, email);
+      return this.comicDetailRepository.getAllUnreadComicsForTagType(tagType, tagValue, email);
     } else {
       log.debug("Loading all comics for tag type: tag type={}", tagType);
-      return this.comicDetailRepository.getAllComicsForTagType(tagType);
+      return this.comicDetailRepository.getAllComicsForTagType(tagType, tagValue);
     }
   }
 }
