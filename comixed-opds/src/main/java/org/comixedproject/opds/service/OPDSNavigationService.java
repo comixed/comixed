@@ -426,11 +426,12 @@ public class OPDSNavigationService {
         this.comicDetailService.getAllValuesForTag(collectionType.getComicTagType(), email, unread)
             .stream()
             .map(
-                character ->
+                value ->
                     new CollectionFeedEntry(
-                        character,
+                        value,
                         this.opdsUtils.createIdForEntry(
-                            collectionType.getComicTagType(), character)))
+                            collectionType.getComicTagType(),
+                            this.opdsUtils.urlEncodeString(value))))
             .collect(Collectors.toUnmodifiableList()),
         unread);
   }

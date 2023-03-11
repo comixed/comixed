@@ -49,6 +49,7 @@ public class OPDSUtils {
   public static final String OPDS_IMAGE_RELATION = "http://opds-spec.org/image";
   public static final String OPDS_IMAGE_THUMBNAIL = "http://opds-spec.org/image/thumbnail";
   public static final String MIME_TYPE_IMAGE = "image/*";
+  public static final String ENCODED_SLASH = "[SLASH]";
 
   @Autowired private FileTypeAdaptor fileTypeAdaptor;
   @Autowired private ComicBookAdaptor comicBookAdaptor;
@@ -92,7 +93,8 @@ public class OPDSUtils {
    */
   public String urlEncodeString(final String value) {
     try {
-      return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+      return URLEncoder.encode(
+          value.replace("/", ENCODED_SLASH), StandardCharsets.UTF_8.toString());
     } catch (UnsupportedEncodingException error) {
       log.error("Failed to encode string", error);
       return value;
@@ -107,7 +109,8 @@ public class OPDSUtils {
    */
   public String urlDecodeString(final String value) {
     try {
-      return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
+      return URLDecoder.decode(value, StandardCharsets.UTF_8.toString())
+          .replace(ENCODED_SLASH, "/");
     } catch (UnsupportedEncodingException error) {
       log.error("Failed to decode string", error);
       return value;
