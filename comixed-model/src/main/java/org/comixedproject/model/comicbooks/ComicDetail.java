@@ -52,6 +52,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.views.View;
 import org.springframework.data.annotation.CreatedDate;
@@ -313,13 +314,21 @@ public class ComicDetail {
     this.issueNumber = issueNumber;
   }
 
+  /**
+   * Returns an issue number that can be used for sorting.
+   *
+   * @return the sortable issue number
+   */
   @Transient
   @JsonProperty("sortableIssueNumber")
   @JsonView({View.ComicListView.class})
   public String getSortableIssueNumber() {
-    final String result = "00000" + (this.issueNumber != null ? this.issueNumber : "");
-
-    return result.substring(result.length() - 5);
+    if (NumberUtils.isNumber(this.issueNumber)) {
+      return String.format("%010.3f", Double.valueOf(this.issueNumber));
+    } else {
+      final String result = "0000000000" + (this.issueNumber != null ? this.issueNumber : "");
+      return result.substring(result.length() - 10);
+    }
   }
 
   @Transient

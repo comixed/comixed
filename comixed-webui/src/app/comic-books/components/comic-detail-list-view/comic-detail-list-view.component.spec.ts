@@ -192,7 +192,7 @@ describe('ComicDetailListViewComponent', () => {
     it('can sort by issue number', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'issue-number')
-      ).toEqual(ENTRY.item.issueNumber);
+      ).toEqual(ENTRY.item.sortableIssueNumber);
     });
 
     it('can sort by cover date', () => {

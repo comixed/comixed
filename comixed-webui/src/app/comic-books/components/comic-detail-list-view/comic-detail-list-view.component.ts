@@ -164,7 +164,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
         case 'volume':
           return data.item.volume;
         case 'issue-number':
-          return data.item.issueNumber;
+          return data.item.sortableIssueNumber;
         case 'cover-date':
           return data.item.coverDate;
         case 'store-date':
