@@ -88,7 +88,7 @@
     "terser": "~5.14.2",
     "tslib": "^2.0.0",
     "ua-parser-js": "^0.7.33",
-    "webpack": "5.4.0",
+    "webpack": "5.76.0",
     "webpack-subresource-integrity": "^1.5.1",
     "webstomp-client": "^1.2.6",
     "ws": "^7.4.6",
