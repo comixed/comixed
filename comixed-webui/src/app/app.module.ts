@@ -21,7 +21,7 @@ import { NgModule } from '@angular/core';
 import { AppRouting } from './app.routing';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
 import { HttpInterceptor } from '@app/interceptors/http.interceptor';
 import { HomeComponent } from './pages/home/home.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
@@ -58,7 +58,6 @@ import { MessagingModule } from '@app/messaging/messaging.module';
 import { ImportCountEffects } from '@app/effects/import-count.effects';
 import { MatSelectModule } from '@angular/material/select';
 import { FooterComponent } from './components/footer/footer.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { MatListModule } from '@angular/material/list';
@@ -78,6 +77,8 @@ import { CollectionsChartComponent } from './components/collections-chart/collec
 import { ComicStateChartComponent } from './components/comic-state-chart/comic-state-chart.component';
 import { ComicsByYearChartComponent } from './components/comics-by-year-chart/comics-by-year-chart.component';
 import { ReadComicsChartComponent } from './components/read-comics-chart/read-comics-chart.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,7 @@ import { ReadComicsChartComponent } from './components/read-comics-chart/read-co
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        deps: [HttpBackend]
       },
       compiler: {
         provide: TranslateCompiler,
@@ -146,7 +147,8 @@ import { ReadComicsChartComponent } from './components/read-comics-chart/read-co
     BarChartModule,
     NgxChartsModule,
     MatProgressBarModule,
-    MatGridListModule
+    MatGridListModule,
+    MatDialogModule
   ],
   providers: [
     [{ provide: HTTP_INTERCEPTORS, useClass: HttpInterceptor, multi: true }]

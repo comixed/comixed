@@ -46,6 +46,7 @@ import {
   LAST_READ_LIST_FEATURE_KEY
 } from '@app/last-read/reducers/last-read-list.reducer';
 import { ReadComicsChartComponent } from '@app/components/read-comics-chart/read-comics-chart.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 describe('HomeComponent', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
@@ -79,6 +80,7 @@ describe('HomeComponent', () => {
           MatSelectModule,
           MatFormFieldModule,
           MatGridListModule,
+          MatProgressBarModule,
           NgxChartsModule
         ],
         providers: [TitleService, provideMockStore({ initialState })]

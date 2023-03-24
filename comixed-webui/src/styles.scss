@@ -354,7 +354,7 @@ th {
   display: inline-block;
 }
 
-.mat-card {
+.mat-mdc-card {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
@@ -392,10 +392,10 @@ th {
 
 // buttons
 
-.mat-button,
-.mat-icon-button,
-.mat-stroked-button,
-.mat-flat-button {
+.mat-mdc-button,
+.mat-mdc-icon-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
   overflow-y: hidden !important;
 }
 
@@ -495,9 +495,9 @@ th {
 
 // workarounds
 
-mat-toolbar.mat-toolbar mat-form-field.mat-form-field {
+mat-toolbar.mat-toolbar mat-form-field.mat-mdc-form-field {
   font-size: medium;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
   label.mat-form-field-label {
     font-weight: lighter;
   }

@@ -17,7 +17,11 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
@@ -54,7 +58,7 @@ import { selectFetchIssuesForSeriesState } from '@app/comic-metadata/selectors/f
   styleUrls: ['./fetch-issues-page.component.scss']
 })
 export class FetchIssuesPageComponent implements OnInit, OnDestroy {
-  fetchIssuesForm: FormGroup;
+  fetchIssuesForm: UntypedFormGroup;
   publisher = '';
   series = '';
   volume = '';
@@ -80,7 +84,7 @@ export class FetchIssuesPageComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private translateService: TranslateService,
     private titleService: TitleService,
     private confirmationService: ConfirmationService

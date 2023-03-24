@@ -17,10 +17,12 @@
  */
 
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { HttpClient } from '@angular/common/http';
+import { HttpBackend } from '@angular/common/http';
 
-export function HttpLoaderFactory(http: HttpClient): MultiTranslateHttpLoader {
-  return new MultiTranslateHttpLoader(http, [
+export function HttpLoaderFactory(
+  httpBackend: HttpBackend
+): MultiTranslateHttpLoader {
+  return new MultiTranslateHttpLoader(httpBackend, [
     { prefix: './assets/i18n/', suffix: '/admin.json' },
     { prefix: './assets/i18n/', suffix: '/app.json' },
     { prefix: './assets/i18n/', suffix: '/collections.json' },

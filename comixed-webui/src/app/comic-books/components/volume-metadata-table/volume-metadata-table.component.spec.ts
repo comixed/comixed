@@ -27,6 +27,14 @@ import {
 } from '@app/comic-metadata/comic-metadata.fixtures';
 import { SortableListItem } from '@app/core/models/ui/sortable-list-item';
 import { VolumeMetadata } from '@app/comic-metadata/models/volume-metadata';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { VolumeMetadataTitlePipe } from '@app/comic-books/pipes/volume-metadata-title.pipe';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('VolumeMetadataTableComponent', () => {
   const VOLUMES = [SCRAPING_VOLUME_1, SCRAPING_VOLUME_2, SCRAPING_VOLUME_3];
@@ -36,8 +44,18 @@ describe('VolumeMetadataTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VolumeMetadataTableComponent],
-      imports: [LoggerModule.forRoot(), TranslateModule.forRoot()]
+      declarations: [VolumeMetadataTableComponent, VolumeMetadataTitlePipe],
+      imports: [
+        NoopAnimationsModule,
+        LoggerModule.forRoot(),
+        TranslateModule.forRoot(),
+        MatFormFieldModule,
+        MatToolbarModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatInputModule,
+        MatIconModule
+      ]
     }).compileComponents();
   });
 

@@ -20,8 +20,8 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -44,7 +44,7 @@ import {
   styleUrls: ['./login-page.component.scss']
 })
 export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   userSubscription: Subscription;
   langChangeSubscription: Subscription;
   busy = false;
@@ -52,7 +52,7 @@ export class LoginPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private logger: LoggerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store<UserModuleState>,
     private titleService: TitleService,
     private translateService: TranslateService,

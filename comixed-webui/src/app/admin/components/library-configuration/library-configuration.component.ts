@@ -17,7 +17,11 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { ListItem } from '@app/core/models/ui/list-item';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
@@ -39,7 +43,7 @@ import { ConfirmationService } from '@tragically-slick/confirmation';
   styleUrls: ['./library-configuration.component.scss']
 })
 export class LibraryConfigurationComponent {
-  @Input() libraryConfigurationForm: FormGroup;
+  @Input() libraryConfigurationForm: UntypedFormGroup;
 
   readonly comicVariableOptions: ListItem<string>[] = [
     {
@@ -81,7 +85,7 @@ export class LibraryConfigurationComponent {
 
   constructor(
     private logger: LoggerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService

@@ -21,7 +21,11 @@ import { ComicBook } from '@app/comic-books/models/comic-book';
 import { LastRead } from '@app/last-read/models/last-read';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { LoggerService } from '@angular-ru/cdk/logger';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { ConfirmationService } from '@tragically-slick/confirmation';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
@@ -43,7 +47,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   @Input() lastRead: LastRead;
   @Input() isAdmin = false;
 
-  comicBookForm: FormGroup;
+  comicBookForm: UntypedFormGroup;
 
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
@@ -51,7 +55,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: LoggerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService

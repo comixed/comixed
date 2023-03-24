@@ -49,6 +49,7 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('ReadingListsPageComponent', () => {
   const READING_LISTS = [READING_LIST_1, READING_LIST_3, READING_LIST_5];
@@ -80,7 +81,8 @@ describe('ReadingListsPageComponent', () => {
           MatIconModule,
           MatTableModule,
           MatTooltipModule,
-          MatDialogModule
+          MatDialogModule,
+          MatCheckboxModule
         ],
         providers: [
           provideMockStore({ initialState }),

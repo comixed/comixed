@@ -39,6 +39,8 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('LibraryConfigurationComponent', () => {
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
@@ -84,7 +86,9 @@ describe('LibraryConfigurationComponent', () => {
           MatInputModule,
           MatExpansionModule,
           MatDialogModule,
-          MatCheckboxModule
+          MatCheckboxModule,
+          MatToolbarModule,
+          MatIconModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();

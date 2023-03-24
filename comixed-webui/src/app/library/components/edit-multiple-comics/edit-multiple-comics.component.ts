@@ -18,7 +18,11 @@
 
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Subscription } from 'rxjs';
 import { SelectionOption } from '@app/core/models/ui/selection-option';
@@ -35,14 +39,14 @@ import { ComicDetail } from '@app/comic-books/models/comic-detail';
   styleUrls: ['./edit-multiple-comics.component.scss']
 })
 export class EditMultipleComicsComponent implements OnInit, OnDestroy {
-  detailsForm: FormGroup;
+  detailsForm: UntypedFormGroup;
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
 
   constructor(
     private logger: LoggerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store<any>,
     @Inject(MAT_DIALOG_DATA) comicBooks: ComicDetail[]
   ) {

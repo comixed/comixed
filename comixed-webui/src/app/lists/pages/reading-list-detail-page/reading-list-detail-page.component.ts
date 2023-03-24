@@ -34,7 +34,11 @@ import {
 } from '@app/lists/selectors/reading-list-detail.selectors';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { ReadingList } from '@app/lists/models/reading-list';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { removeComicsFromReadingList } from '@app/lists/actions/reading-list-entries.actions';
@@ -74,7 +78,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
   readingListRemovalSubscription: MessagingSubscription;
   selectionSubscription: Subscription;
   lastReadDataSubscription: Subscription;
-  readingListForm: FormGroup;
+  readingListForm: UntypedFormGroup;
   readingListId = -1;
   selectedIds: number[] = [];
   lastReadDates: LastRead[] = [];
@@ -86,7 +90,7 @@ export class ReadingListDetailPageComponent implements OnDestroy {
     private webSocketService: WebSocketService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private titleService: TitleService

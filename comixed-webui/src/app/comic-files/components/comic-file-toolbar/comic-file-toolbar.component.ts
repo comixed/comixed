@@ -23,7 +23,11 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import { getUserPreference } from '@app/user';
@@ -64,7 +68,7 @@ export class ComicFileToolbarComponent {
 
   @Output() selectAll = new EventEmitter<void>();
 
-  loadFilesForm: FormGroup;
+  loadFilesForm: UntypedFormGroup;
 
   readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   maximumOptions = [
@@ -78,7 +82,7 @@ export class ComicFileToolbarComponent {
 
   constructor(
     private logger: LoggerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService

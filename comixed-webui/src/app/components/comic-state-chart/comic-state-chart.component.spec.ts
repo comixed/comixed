@@ -68,7 +68,9 @@ describe('ComicStateChartComponent', () => {
       component.libraryState = LIBRARY_STATE;
     });
 
-    it('loads the chart data', () => {});
+    it('loads the chart data', () => {
+      expect(component.comicStateData).not.toEqual([]);
+    });
   });
 
   describe('when the comics are set', () => {
