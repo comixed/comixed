@@ -40,6 +40,10 @@ import { TitleService } from '@app/core/services/title.service';
 import { QueryParameterService } from '@app/core/services/query-parameter.service';
 import { MatSortModule } from '@angular/material/sort';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 describe('CollectionListComponent', () => {
   const COMICS = [COMIC_DETAIL_1, COMIC_DETAIL_3, COMIC_DETAIL_5];
@@ -69,7 +73,11 @@ describe('CollectionListComponent', () => {
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
           MatTableModule,
-          MatSortModule
+          MatSortModule,
+          MatToolbarModule,
+          MatPaginatorModule,
+          MatFormFieldModule,
+          MatInputModule
         ],
         providers: [
           provideMockStore({ initialState }),

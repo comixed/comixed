@@ -29,7 +29,11 @@ import {
   selectBlockedPageDetail,
   selectBlockedPageDetailState
 } from '@app/comic-pages/selectors/blocked-page-detail.selectors';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { setBusyState } from '@app/core/actions/busy.actions';
 import { BlockedHash } from '@app/comic-pages/models/blocked-hash';
 import { selectUser } from '@app/user/selectors/user.selectors';
@@ -52,14 +56,14 @@ export class BlockedHashDetailPageComponent implements OnDestroy {
   hash = '';
   editing = false;
 
-  blockedPageForm: FormGroup;
+  blockedPageForm: UntypedFormGroup;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {

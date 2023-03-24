@@ -1,17 +1,17 @@
 /**
 * Generated theme by Material Theme Generator
 * https://materialtheme.arcsine.dev
-* Fork at: https://materialtheme.arcsine.dev/?c=YHBhbGV0dGU$YHByaW1hcnk$YF48IzAwMDA2NiIsIj9lcjwjYjNiM2QxIiwiO2VyPCMwMDAwNDl$LCIlPmBePCMwMDY2MDAiLCI~ZXI8I2IzZDFiMyIsIjtlcjwjMDA0OTAwfiwid2Fybj5gXjwjNjYwMDAwIiwiP2VyPCNkMWIzYjMiLCI7ZXI8IzQ5MDAwMH4sIj9UZXh0PCMwMDAwMDAiLCI~PTwjZmFmYWZhIiwiO1RleHQ8I2ZmZmZmZiIsIjs9PCMyYzJjMmN$LCJmb250cz5bYEA8KC00fixgQDwoLTN$LGBAPCgtMn4sYEA8KC0xfixgQDxoZWFkbGluZX4sYEA8dGl0bGV$LGBAPHN1YiktMn4sYEA8c3ViKS0xfixgQDxib2R5LTJ$LGBAPGJvZHktMX4sYEA8YnV0dG9ufixgQDxjYXB0aW9ufixgQDxpbnB1dCIsInNpemU$bnVsbH1dLCJpY29uczxGaWxsZWQiLCI~bmVzcz50cnVlLCJ2ZXJzaW9uPjEyfQ==
+* Fork at: https://materialtheme.arcsine.dev/?c=YHBhbGV0dGU$YHByaW1hcnk$YF48IzIxYWZkZSIsIj9lcjwjYmNlN2Y1IiwiO2VyPCMxNDk2ZDF$LCIlPmBePCNkZTIxYWYiLCI~ZXI8I2Y1YmNlNyIsIjtlcjwjZDExNDk2fiwid2Fybj5gXjwjYWZkZTIxIiwiP2VyPCNlN2Y1YmMiLCI7ZXI8Izk2ZDExNH4sIj9UZXh0PCMwMDAwMDAiLCI~PTwjZmFmYWZhIiwiO1RleHQ8I2ZmZmZmZiIsIjs9PCMyYzJjMmN$LCJmb250cz5bYEA8KC00fixgQDwoLTN$LGBAPCgtMn4sYEA8KC0xfixgQDxoZWFkbGluZX4sYEA8dGl0bGV$LGBAPHN1YiktMn4sYEA8c3ViKS0xfixgQDxib2R5LTJ$LGBAPGJvZHktMX4sYEA8YnV0dG9ufixgQDxjYXB0aW9ufixgQDxpbnB1dCIsInNpemU$bnVsbH1dLCJpY29uczxUd29Ub25lIiwiP25lc3M$dHJ1ZSwidmVyc2lvbj4xM30=
 */
 
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 
 // Fonts
-@import 'https://fonts.googleapis.com/css?family=Material+Icons';
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons+Two+Tone';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
 
 $fontConfig: (
   display-4: mat.define-typography-level(112px, 112px, 300, 'Roboto', -0.0134em),
@@ -144,28 +144,29 @@ $mat-dark-theme-background: (
 );
 
 // Compute font config
-@include mat.core($fontConfig);
+//@include mat.core($fontConfig);
+@include mat.core();
 
 // Theme Config
 
 body {
-  --primary-color: #000066;
-  --primary-lighter-color: #b3b3d1;
-  --primary-darker-color: #000049;
-  --text-primary-color: #{$light-primary-text};
+  --primary-color: #21afde;
+  --primary-lighter-color: #bce7f5;
+  --primary-darker-color: #1496d1;
+  --text-primary-color: #{$dark-primary-text};
   --text-primary-lighter-color: #{$dark-primary-text};
   --text-primary-darker-color: #{$light-primary-text};
 }
 
 $mat-primary: (
-  main: #000066,
-  lighter: #b3b3d1,
-  darker: #000049,
-  200: #000066,
+  main: #21afde,
+  lighter: #bce7f5,
+  darker: #1496d1,
+  200: #21afde,
   // For slide toggle,
   contrast:
     (
-      main: $light-primary-text,
+      main: $dark-primary-text,
       lighter: $dark-primary-text,
       darker: $light-primary-text
     )
@@ -173,19 +174,19 @@ $mat-primary: (
 $theme-primary: mat.define-palette($mat-primary, main, lighter, darker);
 
 body {
-  --accent-color: #006600;
-  --accent-lighter-color: #b3d1b3;
-  --accent-darker-color: #004900;
+  --accent-color: #de21af;
+  --accent-lighter-color: #f5bce7;
+  --accent-darker-color: #d11496;
   --text-accent-color: #{$light-primary-text};
   --text-accent-lighter-color: #{$dark-primary-text};
   --text-accent-darker-color: #{$light-primary-text};
 }
 
 $mat-accent: (
-  main: #006600,
-  lighter: #b3d1b3,
-  darker: #004900,
-  200: #006600,
+  main: #de21af,
+  lighter: #f5bce7,
+  darker: #d11496,
+  200: #de21af,
   // For slide toggle,
   contrast:
     (
@@ -197,52 +198,57 @@ $mat-accent: (
 $theme-accent: mat.define-palette($mat-accent, main, lighter, darker);
 
 body {
-  --warn-color: #660000;
-  --warn-lighter-color: #d1b3b3;
-  --warn-darker-color: #490000;
-  --text-warn-color: #{$light-primary-text};
+  --warn-color: #afde21;
+  --warn-lighter-color: #e7f5bc;
+  --warn-darker-color: #96d114;
+  --text-warn-color: #{$dark-primary-text};
   --text-warn-lighter-color: #{$dark-primary-text};
-  --text-warn-darker-color: #{$light-primary-text};
+  --text-warn-darker-color: #{$dark-primary-text};
 }
 
 $mat-warn: (
-  main: #660000,
-  lighter: #d1b3b3,
-  darker: #490000,
-  200: #660000,
+  main: #afde21,
+  lighter: #e7f5bc,
+  darker: #96d114,
+  200: #afde21,
   // For slide toggle,
   contrast:
     (
-      main: $light-primary-text,
+      main: $dark-primary-text,
       lighter: $dark-primary-text,
-      darker: $light-primary-text
+      darker: $dark-primary-text
     )
 );
 $theme-warn: mat.define-palette($mat-warn, main, lighter, darker);
-
 $theme: (
-  primary: $theme-primary,
-  accent: $theme-accent,
-  warn: $theme-warn,
-  is-dark: false,
-  foreground: $mat-light-theme-foreground,
-  background: $mat-light-theme-background
+  color: (
+    primary: $theme-primary,
+    accent: $theme-accent,
+    warn: $theme-warn,
+    is-dark: false,
+    foreground: $mat-light-theme-foreground,
+    background: $mat-light-theme-background
+  ),
+  typography: $fontConfig
 );
 $altTheme: (
-  primary: $theme-primary,
-  accent: $theme-accent,
-  warn: $theme-warn,
-  is-dark: true,
-  foreground: $mat-dark-theme-foreground,
-  background: $mat-dark-theme-background
+  color: (
+    primary: $theme-primary,
+    accent: $theme-accent,
+    warn: $theme-warn,
+    foreground: $mat-dark-theme-foreground,
+    background: $mat-dark-theme-background,
+    is-dark: true
+  ),
+  typography: $fontConfig
 );
 
 // Theme Init
 @include mat.all-component-themes($theme);
 
-.theme-alternate {
-  @include mat.all-component-themes($altTheme);
-}
+//.theme-alternate {
+//  @include mat.all-component-themes($altTheme);
+//}
 
 // Specific component overrides, pieces that are not in line with the general theming
 
@@ -263,7 +269,7 @@ $altTheme: (
 
 .material-icons {
   font-size: 24px;
-  font-family: 'Material Icons', sans-serif;
+  font-family: 'Material Icons Two Tone', 'Material Icons', sans-serif;
 
   .mat-badge-content {
     font-family: 'Roboto', sans-serif;

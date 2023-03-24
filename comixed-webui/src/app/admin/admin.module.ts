@@ -61,7 +61,6 @@ import {
   SERVER_RUNTIME_FEATURE_KEY
 } from '@app/admin/reducers/server-runtime.reducer';
 import { ServerRuntimeEffects } from '@app/admin/effects/server-runtime.effects';
-import { FlexModule } from '@angular/flex-layout';
 import { MetadataSourceListComponent } from './components/metadata-source-list/metadata-source-list.component';
 import { MetadataSourcesViewComponent } from './components/metadata-sources-view/metadata-sources-view.component';
 import { MetadataSourceDetailComponent } from '@app/admin/components/metadata-source-detail/metadata-source-detail.component';
@@ -78,6 +77,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ServerMetricDetailsComponent } from './components/server-metric-details/server-metric-details.component';
 import { MetricMeasurementPipe } from './pipes/metric-measurement.pipe';
 import { MatListModule } from '@angular/material/list';
+import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
 @NgModule({
   declarations: [
@@ -132,7 +132,7 @@ import { MatListModule } from '@angular/material/list';
     MatTooltipModule,
     DragDropModule,
     TragicallySlickEditInPlaceModule,
-    FlexModule,
+    FlexLayoutModule,
     MatDividerModule,
     ComicBooksModule,
     MatCheckboxModule,

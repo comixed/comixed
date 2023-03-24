@@ -20,9 +20,9 @@ import { Component, Input } from '@angular/core';
 import { MetadataSource } from '@app/comic-metadata/models/metadata-source';
 import {
   AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
@@ -35,12 +35,12 @@ import { MetadataSourceProperty } from '@app/comic-metadata/models/metadata-sour
   styleUrls: ['./metadata-source-detail.component.scss']
 })
 export class MetadataSourceDetailComponent {
-  sourceForm: FormGroup;
+  sourceForm: UntypedFormGroup;
 
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
     this.sourceForm = this.formBuilder.group({
       name: [
@@ -79,8 +79,8 @@ export class MetadataSourceDetailComponent {
     this.sourceForm.markAsPristine();
   }
 
-  get properties(): FormArray {
-    return this.sourceForm.controls.properties as FormArray;
+  get properties(): UntypedFormArray {
+    return this.sourceForm.controls.properties as UntypedFormArray;
   }
 
   get controls(): { [p: string]: AbstractControl } {

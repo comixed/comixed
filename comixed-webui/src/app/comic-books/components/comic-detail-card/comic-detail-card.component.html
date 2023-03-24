@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card appearance="outlined">
   <mat-card-title *ngIf="!!title" class="cx-text-nowrap" [matTooltip]="title">
     {{ title }}
   </mat-card-title>
@@ -26,7 +26,7 @@
         (click)="onCoverClicked()"
         (contextmenu)="onContextMenu($event)"
       />
-      <mat-chip-list *ngIf="showActions">
+      <mat-chip-listbox *ngIf="showActions">
         <mat-basic-chip
           *ngIf="detailLink"
           color="accent"
@@ -53,7 +53,7 @@
         >
           <mat-icon>deleted</mat-icon>
         </mat-basic-chip>
-      </mat-chip-list>
+      </mat-chip-listbox>
     </div>
     <div *ngIf="!!description" [innerHTML]="description"></div>
     <mat-progress-spinner

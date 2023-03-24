@@ -19,7 +19,11 @@
 import { Preference } from '@app/user/models/preference';
 import { User } from '@app/user/models/user';
 import { ROLE_NAME_ADMIN, ROLE_NAME_READER } from '@app/user/user.constants';
-import { FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn
+} from '@angular/forms';
 import { PAGE_SIZE_DEFAULT, PAGE_SIZE_PREFERENCE } from '@app/core';
 
 /** Find a specific user preference. */
@@ -61,7 +65,7 @@ export function getPageSize(user: User): number {
 }
 
 export const passwordVerifyValidator: ValidatorFn = (
-  formGroup: FormGroup
+  formGroup: UntypedFormGroup
 ): ValidationErrors | null => {
   const password = formGroup.controls.password.value;
   const passwordVerify = formGroup.controls.passwordVerify.value;

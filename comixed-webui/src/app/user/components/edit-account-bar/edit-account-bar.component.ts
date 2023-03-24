@@ -33,8 +33,8 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { Store } from '@ngrx/store';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { ConfirmationService } from '@tragically-slick/confirmation';
@@ -67,7 +67,7 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   @Output() closeSidebar = new EventEmitter<void>();
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   userStateSubscription: Subscription;
   userSubscription: Subscription;
   avatarWidth$ = new BehaviorSubject<number>(40);
@@ -81,7 +81,7 @@ export class EditAccountBarComponent implements OnDestroy, AfterViewInit {
   constructor(
     private logger: LoggerService,
     private store: Store<any>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) {

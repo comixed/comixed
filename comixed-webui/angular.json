@@ -65,8 +65,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "150kb",
-                  "maximumError": "150kb"
+                  "maximumWarning": "250kb",
+                  "maximumError": "500kb"
                 }
               ]
             },
@@ -139,8 +139,10 @@
       }
     }
   },
-  "defaultProject": "comixed-webui",
   "cli": {
-    "defaultCollection": "@ngrx/schematics"
+    "schematicCollections": [
+      "@ngrx/schematics"
+    ],
+    "analytics": false
   }
 }

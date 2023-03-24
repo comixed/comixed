@@ -28,7 +28,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { MatTableModule } from '@angular/material/table';
-import { FlexModule } from '@angular/flex-layout';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
@@ -108,6 +107,7 @@ import {
   reducer as duplicateComicReducer
 } from '@app/library/reducers/duplicate-comic.reducer';
 import { DuplicateComicEffects } from '@app/library/effects/duplicate-comic.effects';
+import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
 @NgModule({
   declarations: [
@@ -170,7 +170,7 @@ import { DuplicateComicEffects } from '@app/library/effects/duplicate-comic.effe
     MatSelectModule,
     MatButtonModule,
     MatTableModule,
-    FlexModule,
+    FlexLayoutModule,
     MatCheckboxModule,
     MatSortModule,
     MatCardModule,

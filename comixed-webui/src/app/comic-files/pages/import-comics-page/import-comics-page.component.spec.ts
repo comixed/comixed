@@ -71,6 +71,7 @@ import {
   ConfirmationService
 } from '@tragically-slick/confirmation';
 import { PAGE_SIZE_PREFERENCE } from '@app/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 describe('ImportComicsPageComponent', () => {
   const USER = USER_READER;
@@ -119,7 +120,8 @@ describe('ImportComicsPageComponent', () => {
           MatCardModule,
           MatTooltipModule,
           MatToolbarModule,
-          MatMenuModule
+          MatMenuModule,
+          MatPaginatorModule
         ],
         providers: [
           provideMockStore({ initialState }),

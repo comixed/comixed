@@ -57,6 +57,7 @@ import {
 import { metadataUpdateProcessStatusUpdated } from '@app/comic-metadata/actions/metadata-update-process.actions';
 import { MetadataUpdateProcessUpdate } from '@app/comic-metadata/models/net/metadata-update-process-update';
 import { FetchIssuesForSeriesRequest } from '@app/comic-metadata/models/net/fetch-issues-for-series-request';
+import { LoadVolumeMetadataRequest } from '@app/comic-metadata/models/net/load-volume-metadata-request';
 
 describe('MetadataService', () => {
   const SERIES = 'The Series';
@@ -123,6 +124,12 @@ describe('MetadataService', () => {
     const req = httpMock.expectOne(
       interpolate(LOAD_SCRAPING_VOLUMES_URL, { sourceId: METADATA_SOURCE.id })
     );
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual({
+      series: SERIES,
+      maxRecords: MAXIMUM_RECORDS,
+      skipCache: SKIP_CACHE
+    } as LoadVolumeMetadataRequest);
   });
 
   it('can load a scraping issue', () => {

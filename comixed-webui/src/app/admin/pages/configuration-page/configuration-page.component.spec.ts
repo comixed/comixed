@@ -75,6 +75,13 @@ import {
   initialState as initialFilenameScrapingRulesState
 } from '@app/admin/reducers/filename-scraping-rule-list.reducer';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ServerMetricsComponent } from '@app/admin/components/server-metrics/server-metrics.component';
+import { MatSelectModule } from '@angular/material/select';
+import { ServerMetricDetailsComponent } from '@app/admin/components/server-metric-details/server-metric-details.component';
+import {
+  initialState as initialMetricState,
+  METRICS_FEATURE_KEY
+} from '@app/admin/reducers/metrics.reducer';
 
 describe('ConfigurationPageComponent', () => {
   const OPTIONS = [
@@ -92,7 +99,8 @@ describe('ConfigurationPageComponent', () => {
     },
     [METADATA_SOURCE_LIST_FEATURE_KEY]: initialMetadataSourceListState,
     [METADATA_SOURCE_FEATURE_KEY]: initialMetadataSourceState,
-    [FILENAME_SCRAPING_RULES_FEATURE_KEY]: initialFilenameScrapingRulesState
+    [FILENAME_SCRAPING_RULES_FEATURE_KEY]: initialFilenameScrapingRulesState,
+    [METRICS_FEATURE_KEY]: initialMetricState
   };
 
   let component: ConfigurationPageComponent;
@@ -107,6 +115,8 @@ describe('ConfigurationPageComponent', () => {
       TestBed.configureTestingModule({
         declarations: [
           ConfigurationPageComponent,
+          ServerMetricsComponent,
+          ServerMetricDetailsComponent,
           LibraryConfigurationComponent,
           ServerRuntimeComponent,
           FilenameScrapingRulesConfigurationComponent,
@@ -133,7 +143,8 @@ describe('ConfigurationPageComponent', () => {
           MatTableModule,
           MatTooltipModule,
           MatCheckboxModule,
-          DragDropModule
+          DragDropModule,
+          MatSelectModule
         ],
         providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();

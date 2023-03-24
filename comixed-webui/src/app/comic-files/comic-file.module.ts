@@ -57,9 +57,9 @@ import {
   SCRAPE_METADATA_FEATURE_KEY
 } from '@app/comic-files/reducers/scrape-metadata.reducer';
 import { ScrapeMetadataEffects } from '@app/comic-files/effects/scrape-metadata.effects';
-import { FlexModule } from '@angular/flex-layout';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
 
 @NgModule({
   declarations: [
@@ -100,7 +100,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     LibraryModule,
     MatProgressBarModule,
     ComicBooksModule,
-    FlexModule,
+    FlexLayoutModule,
     MatMenuModule,
     MatPaginatorModule
   ],

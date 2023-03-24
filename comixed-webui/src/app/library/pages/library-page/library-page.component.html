@@ -1,5 +1,5 @@
 <mat-toolbar class="cx-primary-light-background">
-  <mat-form-field class="cx-width-25" appearance="standard">
+  <mat-form-field class="cx-width-25">
     <input
       matInput
       #filterInput
@@ -8,7 +8,7 @@
       (keyup)="dataSource.filter = filterInput.value"
     />
   </mat-form-field>
-  <mat-form-field *ngIf="showComicFilters" appearance="standard">
+  <mat-form-field *ngIf="showComicFilters">
     <mat-label>{{ "filtering.label.year" | translate }}</mat-label>
     <mat-select
       (selectionChange)="queryParameterService.onCoverYearChanged($event.value)"
@@ -19,7 +19,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field *ngIf="showComicFilters" appearance="standard">
+  <mat-form-field *ngIf="showComicFilters">
     <mat-label>{{ "filtering.label.month" | translate }}</mat-label>
     <mat-select
       (selectionChange)="
@@ -32,7 +32,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field *ngIf="showComicFilters" appearance="standard">
+  <mat-form-field *ngIf="showComicFilters">
     <mat-label>{{ "archive-type.label.select" | translate }}</mat-label>
     <mat-select
       (selectionChange)="

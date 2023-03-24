@@ -34,6 +34,9 @@ import {
   Confirmation,
   ConfirmationService
 } from '@tragically-slick/confirmation';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ServerRuntimeComponent', () => {
   const initialState = {
@@ -52,7 +55,10 @@ describe('ServerRuntimeComponent', () => {
         imports: [
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
-          MatDialogModule
+          MatDialogModule,
+          MatIconModule,
+          MatToolbarModule,
+          MatTooltipModule
         ],
         providers: [provideMockStore({ initialState }), ConfirmationService]
       }).compileComponents();

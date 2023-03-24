@@ -1,6 +1,10 @@
 <div class="cx-vertical-container cx-height-100 cx-overflow-y-scroll">
   <div *ngFor="let comic of comics" class="cx-vertical-container">
-    <mat-card class="cx-width-100" (click)="onSelectionChanged(comic)">
+    <mat-card
+      appearance="outlined"
+      class="cx-width-100"
+      (click)="onSelectionChanged(comic)"
+    >
       <mat-card-title>
         <button
           mat-icon-button

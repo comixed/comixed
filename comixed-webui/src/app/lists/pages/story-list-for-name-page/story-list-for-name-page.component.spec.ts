@@ -42,6 +42,7 @@ import {
   USER_FEATURE_KEY
 } from '@app/user/reducers/user.reducer';
 import { USER_READER } from '@app/user/user.fixtures';
+import { MatSortModule } from '@angular/material/sort';
 
 describe('StoryListForNamePageComponent', () => {
   const STORIES = [STORY_1, STORY_2, STORY_3];
@@ -72,7 +73,8 @@ describe('StoryListForNamePageComponent', () => {
           MatIconModule,
           MatPaginatorModule,
           MatTableModule,
-          MatTooltipModule
+          MatTooltipModule,
+          MatSortModule
         ],
         providers: [
           provideMockStore({ initialState }),

@@ -85,7 +85,7 @@ export class MetadataSourceListEffects {
             metadataSourcesLoaded({ sources: response })
           ),
           catchError(error => {
-            this.logger.error("Service failure:', error");
+            this.logger.error('Service failure:', error);
             this.alertService.error(
               this.translateService.instant(
                 'metadata-source-list.mark-preferred.effect-failure'
@@ -96,7 +96,7 @@ export class MetadataSourceListEffects {
         )
       ),
       catchError(error => {
-        this.logger.error("General failure:', error");
+        this.logger.error('General failure:', error);
         this.alertService.error(
           this.translateService.instant('app.general-effect-failure')
         );

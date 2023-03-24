@@ -33,6 +33,13 @@ import {
   initialState as initialPublisherState,
   PUBLISHER_FEATURE_KEY
 } from '@app/collections/reducers/publisher.reducer';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PublisherDetailPageComponent', () => {
   const initialState = { [PUBLISHER_FEATURE_KEY]: initialPublisherState };
@@ -49,9 +56,16 @@ describe('PublisherDetailPageComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PublisherDetailPageComponent],
       imports: [
+        NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: '*', redirectTo: '' }]),
         LoggerModule.forRoot(),
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        MatTableModule,
+        MatPaginatorModule,
+        MatToolbarModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule
       ],
       providers: [provideMockStore({ initialState }), TitleService]
     }).compileComponents();

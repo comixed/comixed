@@ -26,7 +26,11 @@ import {
 } from '@angular/core';
 import { ComicBook } from '@app/comic-books/models/comic-book';
 import { Store } from '@ngrx/store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { TranslateService } from '@ngx-translate/core';
 import { MetadataEvent } from '@app/comic-metadata/models/event/metadata-event';
@@ -76,7 +80,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
     { value: 1000, label: 'scraping.label.1000-records' }
   ];
 
-  comicForm: FormGroup;
+  comicForm: UntypedFormGroup;
   scrapingMode = false;
   scrapedMetadataSubscription: Subscription;
   metadataSourceListSubscription: Subscription;
@@ -88,7 +92,7 @@ export class ComicScrapingComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: LoggerService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store<any>,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
