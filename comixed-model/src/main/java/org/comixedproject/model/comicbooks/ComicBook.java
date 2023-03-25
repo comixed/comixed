@@ -283,13 +283,11 @@ public class ComicBook {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicBook comicBook = (ComicBook) o;
-    return fileDetails.equals(comicBook.fileDetails)
-        && comicDetail.equals(comicBook.comicDetail)
-        && pages.equals(comicBook.pages);
+    return fileDetails.equals(comicBook.fileDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(fileDetails, comicDetail, pages);
+    return Objects.hash(fileDetails);
   }
 }
