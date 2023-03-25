@@ -121,8 +121,7 @@ public class Page {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final Page page = (Page) o;
-    return comicBook.equals(page.comicBook)
-        && pageState == page.pageState
+    return pageState == page.pageState
         && filename.equals(page.filename)
         && hash.equals(page.hash)
         && pageNumber.equals(page.pageNumber);
@@ -130,7 +129,7 @@ public class Page {
 
   @Override
   public int hashCode() {
-    return Objects.hash(comicBook, pageState, filename, hash, pageNumber);
+    return Objects.hash(pageState, filename, hash, pageNumber);
   }
 
   @Transient

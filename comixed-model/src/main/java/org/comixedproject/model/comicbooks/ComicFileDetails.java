@@ -19,6 +19,7 @@
 package org.comixedproject.model.comicbooks;
 
 import com.fasterxml.jackson.annotation.*;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 import org.comixedproject.views.View;
@@ -54,4 +55,17 @@ public class ComicFileDetails {
   @Getter
   @Setter
   private String hash;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ComicFileDetails that = (ComicFileDetails) o;
+    return hash.equals(that.hash);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(hash);
+  }
 }

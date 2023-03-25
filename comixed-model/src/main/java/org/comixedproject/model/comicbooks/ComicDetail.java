@@ -348,8 +348,7 @@ public class ComicDetail {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     final ComicDetail that = (ComicDetail) o;
-    return comicBook.equals(that.comicBook)
-        && filename.equals(that.filename)
+    return filename.equals(that.filename)
         && archiveType == that.archiveType
         && comicState == that.comicState
         && Objects.equals(publisher, that.publisher)
@@ -369,7 +368,6 @@ public class ComicDetail {
   @Override
   public int hashCode() {
     return Objects.hash(
-        comicBook,
         filename,
         archiveType,
         comicState,
