@@ -51,6 +51,10 @@ This will launch the application in the current window as a text-only applicatio
 
 ![account administration](images/account_change.png)
 
+Now that your server is up and running, you need to connect to it with your browser and log into the server.
+
+Point your browser to ```http://localhost:7171``` and login. This assumes you're running ComiXed on the same computer as your browser: if your server is on another computer then replaced ```localhost``` with that computer's name or IP address.
+
 When run for the first time, ComiXed creates two default accounts for logging into the system:
 
 1. Username: comixedadmin@localhost Password: comixedadmin
