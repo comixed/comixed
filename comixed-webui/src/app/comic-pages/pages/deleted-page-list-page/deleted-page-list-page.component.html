@@ -39,6 +39,7 @@
     <mat-cell *matCellDef="let entry">
       <span class="cx-text-nowrap">
         <img
+          loading="lazy"
           [src]="entry.hash | pageHashUrl"
           [alt]="entry.hash"
           width="100%"

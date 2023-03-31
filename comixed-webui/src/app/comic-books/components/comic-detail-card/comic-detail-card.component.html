@@ -16,6 +16,7 @@
     >
       <img
         *ngIf="!!imageUrl"
+        loading="lazy"
         [class.cx-detail-card-blurred]="blurred"
         [src]="imageUrl"
         [style.width]="'100%'"
