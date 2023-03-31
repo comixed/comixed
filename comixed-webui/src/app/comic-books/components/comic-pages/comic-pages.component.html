@@ -37,6 +37,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let page">
       <img
+        loading="lazy"
         [src]="page | comicPageUrl"
         [alt]="page.filename"
         width="100%"

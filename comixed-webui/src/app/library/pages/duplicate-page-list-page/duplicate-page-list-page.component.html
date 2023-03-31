@@ -69,6 +69,7 @@
     <mat-cell *matCellDef="let row">
       <div class="cx-text-nowrap cx-table-thumbnail cx-width-100">
         <img
+          loading="lazy"
           [src]="row.item.hash | pageHashUrl"
           alt="thumbnail"
           width="100%"

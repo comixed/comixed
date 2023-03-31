@@ -14,6 +14,7 @@
     </mat-card-subtitle>
     <mat-card-content class="cx-padding-5">
       <img
+        loading="lazy"
         [src]="currentComic | comicCoverUrl"
         width="100%"
         height="auto"
@@ -72,6 +73,7 @@
     <mat-cell *matCellDef="let entry">
       <span class="cx-width-100 cx-text-nowrap cx-padding-5">
         <img
+          loading="lazy"
           [src]="entry.item | comicCoverUrl"
           [alt]="entry.item | comicTitle"
           width="100%"

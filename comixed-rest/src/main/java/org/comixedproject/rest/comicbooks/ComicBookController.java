@@ -23,6 +23,7 @@ import io.micrometer.core.annotation.Timed;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
@@ -39,6 +40,7 @@ import org.comixedproject.service.comicpages.PageCacheService;
 import org.comixedproject.views.View.ComicDetailsView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -237,6 +239,7 @@ public class ComicBookController {
         .contentLength(content.length)
         .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
         .contentType(MediaType.valueOf(type))
+        .cacheControl(CacheControl.maxAge(24, TimeUnit.DAYS))
         .body(content);
   }
 
