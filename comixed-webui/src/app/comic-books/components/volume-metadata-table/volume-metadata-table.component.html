@@ -52,6 +52,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <img
+        loading="lazy"
         [src]="element.item.imageUrl"
         [alt]="element.item | volumeMetadataTitle"
       />

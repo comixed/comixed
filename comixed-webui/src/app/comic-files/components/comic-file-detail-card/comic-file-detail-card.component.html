@@ -8,6 +8,7 @@
       [class.cx-detail-card-selected]="selected"
     >
       <img
+        loading="lazy"
         [src]="file | comicFileCoverUrl"
         [alt]="file | comicFileCoverUrl"
         [style.width]="'100%'"

@@ -46,7 +46,7 @@
     [matTooltip]="'navigation.tooltip.account' | translate"
     (click)="onToggleAccountBar()"
   >
-    <img ngxGravatar [alt]="user.email" [email]="user.email" />
+    <img loading="lazy" ngxGravatar [alt]="user.email" [email]="user.email" />
   </button>
 
   <button
