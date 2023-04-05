@@ -86,31 +86,18 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
         comicBook.setMetadataSourceName(comicInfo.getMetadata().getName());
         comicBook.setMetadataReferenceId(comicInfo.getMetadata().getReferenceId());
       }
-      this.addElementsToList(
-          comicInfo.getCharacters(),
-          comicBook.getComicDetail().getTags().stream()
-              .filter(tag -> tag.getType() == ComicTagType.CHARACTER)
-              .map(ComicTag::getValue)
-              .collect(Collectors.toList()));
-      this.addElementsToList(
-          comicInfo.getTeams(),
-          comicBook.getComicDetail().getTags().stream()
-              .filter(tag -> tag.getType() == ComicTagType.TEAM)
-              .map(ComicTag::getValue)
-              .collect(Collectors.toList()));
-      this.addElementsToList(
-          comicInfo.getLocations(),
-          comicBook.getComicDetail().getTags().stream()
-              .filter(tag -> tag.getType() == ComicTagType.LOCATION)
-              .map(ComicTag::getValue)
-              .collect(Collectors.toList()));
-      this.addElementsToList(
-          comicInfo.getAlternateSeries(),
-          comicBook.getComicDetail().getTags().stream()
-              .filter(tag -> tag.getType() == ComicTagType.STORY)
-              .map(ComicTag::getValue)
-              .collect(Collectors.toList()));
       final ComicDetail detail = comicBook.getComicDetail();
+      log.debug("Clearing comic tags");
+      detail.getTags().clear();
+      this.commandSeparatedList(comicInfo.getCharacters())
+          .forEach(
+              name -> detail.getTags().add(new ComicTag(detail, ComicTagType.CHARACTER, name)));
+      this.commandSeparatedList(comicInfo.getTeams())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.TEAM, name)));
+      this.commandSeparatedList(comicInfo.getLocations())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.LOCATION, name)));
+      this.commandSeparatedList(comicInfo.getAlternateSeries())
+          .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.STORY, name)));
       this.commandSeparatedList(comicInfo.getWriter())
           .forEach(name -> detail.getTags().add(new ComicTag(detail, ComicTagType.WRITER, name)));
       this.commandSeparatedList(comicInfo.getEditor())
@@ -129,10 +116,6 @@ public class ComicMetadataContentAdaptor extends AbstractContentAdaptor
     } catch (IOException error) {
       throw new ContentAdaptorException("Failed to load ComicInfo.xml", error);
     }
-  }
-
-  private void addElementsToList(final String elementText, final List<String> list) {
-    this.commandSeparatedList(elementText).stream().forEach(list::add);
   }
 
   private List<String> commandSeparatedList(String text) {
