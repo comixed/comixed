@@ -106,7 +106,6 @@
   },
   "navigation": {
     "heading": {
-      "account": "My Account",
       "admin": "Administration",
       "collections": "Collections",
       "comics": "Comics",
@@ -136,8 +135,7 @@
       "team-collection": "Teams",
       "unprocessed-comics": "Unprocessed Imports",
       "unread-comics": "Unread Comics",
-      "unscraped-comics": "Unscraped Comics",
-      "user-preferences": "Preferences"
+      "unscraped-comics": "Unscraped Comics"
     },
     "tooltip": {
       "account": "View account details.",
