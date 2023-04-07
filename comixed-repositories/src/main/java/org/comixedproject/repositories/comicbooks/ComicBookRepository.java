@@ -497,13 +497,6 @@ public interface ComicBookRepository extends JpaRepository<ComicBook, Long> {
       @Param("volume") String volume);
 
   /**
-   * Returns the number of comics that are unscraped.
-   *
-   * @return the unscraped comic count
-   */
-  long countByMetadataIsNull();
-
-  /**
    * Returns the publishers state for the library.
    *
    * @return the publishers state

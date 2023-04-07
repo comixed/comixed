@@ -290,13 +290,6 @@ public class ComicBookRepositoryTest {
   }
 
   @Test
-  public void testCountByMetadataIsNull() {
-    final long result = repository.countByMetadataIsNull();
-
-    assertTrue(result > 0L);
-  }
-
-  @Test
   public void testGetByPublisherAndYear() {
     final List<PublisherAndYearSegment> result = repository.getByPublisherAndYear();
 

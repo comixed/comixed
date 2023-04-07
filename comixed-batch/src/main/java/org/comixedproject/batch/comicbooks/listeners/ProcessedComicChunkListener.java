@@ -38,21 +38,25 @@ public class ProcessedComicChunkListener extends AbstractComicProcessingListener
     implements ChunkListener {
   @Override
   public void beforeChunk(final ChunkContext context) {
-    // nothing to do
+    this.doPublishChunkState(context);
   }
 
   @Override
   public void afterChunk(final ChunkContext context) {
+    this.doPublishChunkState(context);
+  }
+
+  @Override
+  public void afterChunkError(final ChunkContext context) {
+    this.doPublishChunkState(context);
+  }
+
+  private void doPublishChunkState(ChunkContext context) {
     final ExecutionContext executionContext =
         context.getStepContext().getStepExecution().getJobExecution().getExecutionContext();
     log.trace("Publishing status after chunk");
     executionContext.putLong(
         PROCESSED_COMICS, context.getStepContext().getStepExecution().getWriteCount());
     this.doPublishState(executionContext);
-  }
-
-  @Override
-  public void afterChunkError(final ChunkContext context) {
-    // nothing to do
   }
 }

@@ -75,7 +75,7 @@ public class RemoteLibraryStateService implements InitializingBean, ComicStateCh
     final RemoteLibraryState result =
         new RemoteLibraryState(
             this.comicBookService.getComicBookCount(),
-            this.comicBookService.getUnscrapedComicBookCount(),
+            this.comicBookService.getCountForState(ComicState.UNPROCESSED),
             this.comicBookService.getDeletedComicCount(),
             selectedIds);
     result.setPublishers(this.comicBookService.getPublishersState());
