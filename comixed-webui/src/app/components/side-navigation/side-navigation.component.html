@@ -23,14 +23,14 @@
   routerLinkActive="active"
 >
   <mat-icon>local_library</mat-icon>
-  <span
-    [matBadge]="totalComicBooks$ | async"
-    matBadgePosition="after"
-    matBadgeOverlap="false"
-    matBadgeColor="accent"
-  >
-    {{ "navigation.option.all-comics" | translate }}
-  </span>
+  <mat-label>
+    <span class="cx-align-left">
+      {{ "navigation.option.all-comics" | translate }}
+    </span>
+    <span class="cx-align-right">
+      ({{ totalComicBooks$ | async | number }})
+    </span>
+  </mat-label>
 </button>
 
 <button
@@ -42,14 +42,12 @@
   routerLinkActive="active"
 >
   <mat-icon>incomplete_circle</mat-icon>
-  <span
-    [matBadge]="unprocessedComicBooks$ | async"
-    matBadgePosition="after"
-    matBadgeOverlap="false"
-    matBadgeColor="accent"
-  >
+  <mat-label>
     {{ "navigation.option.unprocessed-comics" | translate }}
-  </span>
+    <span class="cx-align-right">
+      ({{ unprocessedComicBooks$ | async | number }})
+    </span>
+  </mat-label>
 </button>
 
 <button
@@ -60,14 +58,12 @@
   routerLinkActive="active"
 >
   <mat-icon>read_more</mat-icon>
-  <span
-    [matBadge]="unreadComicBooks$ | async"
-    matBadgePosition="after"
-    matBadgeOverlap="false"
-    matBadgeColor="accent"
-  >
+  <mat-label>
     {{ "navigation.option.unread-comics" | translate }}
-  </span>
+    <span class="cx-align-right">
+      ({{ unreadComicBooks$ | async | number }})
+    </span>
+  </mat-label>
 </button>
 
 <button
@@ -78,14 +74,12 @@
   routerLinkActive="active"
 >
   <mat-icon>cloud_download</mat-icon>
-  <span
-    [matBadge]="unscrapedComicBooks$ | async"
-    matBadgePosition="after"
-    matBadgeOverlap="false"
-    matBadgeColor="accent"
-  >
+  <mat-label>
     {{ "navigation.option.unscraped-comics" | translate }}
-  </span>
+    <span class="cx-align-right">
+      ({{ unscrapedComicBooks$ | async | number }})
+    </span>
+  </mat-label>
 </button>
 
 <button
@@ -96,14 +90,12 @@
   routerLinkActive="active"
 >
   <mat-icon>cloud_download</mat-icon>
-  <span
-    [matBadge]="changedComicBooks$ | async"
-    matBadgePosition="after"
-    matBadgeOverlap="false"
-    matBadgeColor="accent"
-  >
+  <mat-label>
     {{ "navigation.option.changed-comics" | translate }}
-  </span>
+    <span class="cx-align-right">
+      ({{ changedComicBooks$ | async | number }})
+    </span>
+  </mat-label>
 </button>
 
 <button
@@ -114,14 +106,12 @@
   routerLinkActive="active"
 >
   <mat-icon>delete_sweep</mat-icon>
-  <span
-    [matBadge]="deletedComicBooks$ | async"
-    matBadgePosition="after"
-    matBadgeOverlap="false"
-    matBadgeColor="accent"
-  >
+  <mat-label class="cx-width-100">
     {{ "navigation.option.deleted-comics" | translate }}
-  </span>
+    <span class="cx-align-right">
+      ({{ deletedComicBooks$ | async | number }})
+    </span>
+  </mat-label>
 </button>
 
 <button

@@ -76,7 +76,6 @@ import {
   reducer as imprintListReducer
 } from '@app/comic-books/reducers/imprint-list.reducer';
 import { ImprintListEffects } from '@app/comic-books/effects/imprint-list.effects';
-import { MatBadgeModule } from '@angular/material/badge';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CoverDateFilterPipe } from './pipes/cover-date-filter.pipe';
 import { VolumeMetadataTableComponent } from '@app/comic-books/components/volume-metadata-table/volume-metadata-table.component';
@@ -146,7 +145,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     MatGridListModule,
     MatDividerModule,
     FlexLayoutModule,
-    MatBadgeModule,
     DragDropModule,
     MatCheckboxModule,
     MatDatepickerModule,
