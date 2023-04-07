@@ -6,7 +6,7 @@
   },
   "build-details": {
     "label": {
-      "branch": "The code was build from a branch named {name}",
+      "branch": "The code was built from a branch named {name}",
       "build-host": "Code was built on a machine named {name}.",
       "build-time": "The code was built on {time}.",
       "build-version": "The code was marked with a Build version of {version}.",
