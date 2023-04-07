@@ -14,14 +14,12 @@
   font-size: 1rem;
 
   mat-icon {
-    margin-right: 8px;
+    margin-left: 0;
   }
 
-  .mat-badge-content {
-    display: inline-block;
-    position: relative;
-    top: 0 !important;
-    right: 0 !important;
+  mat-label {
+    display: block !important;
+    width: 100% !important;
   }
 }
 

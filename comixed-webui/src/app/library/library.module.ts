@@ -44,7 +44,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTreeModule } from '@angular/material/tree';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SelectedComicsComponent } from './components/selected-comics/selected-comics.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -183,7 +182,6 @@ import { FlexLayoutModule } from '@angular-ru/cdk/flex-layout';
     MatListModule,
     MatPaginatorModule,
     MatTreeModule,
-    MatBadgeModule,
     MatSidenavModule,
     OverlayModule,
     MatMenuModule,

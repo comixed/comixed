@@ -30,7 +30,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatBadgeModule } from '@angular/material/badge';
 import { TitleService } from '@app/core/services/title.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -172,7 +171,6 @@ describe('LibraryPageComponent', () => {
           MatToolbarModule,
           MatIconModule,
           MatTreeModule,
-          MatBadgeModule,
           MatPaginatorModule,
           MatFormFieldModule,
           MatTooltipModule,
