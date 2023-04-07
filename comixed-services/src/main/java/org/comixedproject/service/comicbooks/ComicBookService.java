@@ -683,11 +683,6 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
     return this.comicBookRepository.count();
   }
 
-  public long getUnscrapedComicBookCount() {
-    log.trace("Getting unscraped comics count");
-    return this.comicBookRepository.countByMetadataIsNull();
-  }
-
   /**
    * Returns the total number of comics marked for deletion.
    *
