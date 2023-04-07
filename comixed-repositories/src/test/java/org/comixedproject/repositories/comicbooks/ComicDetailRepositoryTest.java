@@ -25,6 +25,7 @@ import static junit.framework.TestCase.assertTrue;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.repositories.RepositoryContext;
 import org.junit.Test;
@@ -86,5 +87,16 @@ public class ComicDetailRepositoryTest {
 
     assertNotNull(result);
     assertFalse(result.isEmpty());
+  }
+
+  @Test
+  public void testUnscrapedComicDetails() {
+    List<ComicDetail> result = repository.findAll();
+
+    assertFalse(
+        result.stream()
+            .filter(entry -> entry.getUnscraped())
+            .collect(Collectors.toList())
+            .isEmpty());
   }
 }
