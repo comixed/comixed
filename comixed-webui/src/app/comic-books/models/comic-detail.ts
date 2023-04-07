@@ -27,6 +27,7 @@ export interface ComicDetail {
   baseFilename: string;
   archiveType: ArchiveType;
   comicState: ComicBookState;
+  unscraped: boolean;
   publisher: string;
   imprint: string;
   series: string;
