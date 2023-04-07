@@ -303,23 +303,6 @@
   <span class="cx-text-nowrap">{{ list.name }}</span>
 </button>
 
-<mat-divider *ngIf="!!user"></mat-divider>
-
-<h4 class="section-title" *ngIf="!!user">
-  {{ "navigation.heading.account" | translate }}
-</h4>
-
-<button
-  *ngIf="!!user"
-  mat-button
-  class="menu-button"
-  routerLink="/account/preferences"
-  routerLinkActive="active"
->
-  <mat-icon>account_circle</mat-icon>
-  <span>{{ "navigation.option.user-preferences" | translate }}</span>
-</button>
-
 <mat-divider *ngIf="isAdmin"></mat-divider>
 
 <h4 class="section-title" *ngIf="isAdmin">
