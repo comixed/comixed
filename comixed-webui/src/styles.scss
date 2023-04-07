@@ -339,8 +339,18 @@ th {
   text-align: left !important;
 }
 
+.cx-align-left {
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .cx-align-text-right {
   text-align: right !important;
+}
+
+.cx-align-right {
+  margin-left: auto;
+  margin-right: 0;
 }
 
 .cx-detail-card-container {

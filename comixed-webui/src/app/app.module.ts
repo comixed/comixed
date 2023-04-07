@@ -69,7 +69,6 @@ import { ComicBooksModule } from '@app/comic-books/comic-books.module';
 import { ComicFileModule } from '@app/comic-files/comic-file.module';
 import { GravatarModule } from 'ngx-gravatar';
 import { ListsModule } from '@app/lists/lists.module';
-import { MatBadgeModule } from '@angular/material/badge';
 import { BarChartModule, NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ComicMetadataModule } from '@app/comic-metadata/comic-metadata.module';
@@ -142,7 +141,6 @@ import { ReadComicsChartComponent } from './components/read-comics-chart/read-co
     MatSidenavModule,
     MatListModule,
     GravatarModule,
-    MatBadgeModule,
     BarChartModule,
     NgxChartsModule,
     MatProgressBarModule,
