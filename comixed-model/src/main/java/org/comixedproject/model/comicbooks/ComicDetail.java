@@ -55,6 +55,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.views.View;
+import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 
 /**
@@ -84,6 +85,13 @@ public class ComicDetail {
   @NonNull
   @Getter
   private ComicBook comicBook;
+
+  @Formula(
+      "(SELECT CASE WHEN (ComicBookId IN (SELECT m.ComicBookId FROM ComicMetadataSources m)) THEN false ELSE true END)")
+  @JsonProperty("unscraped")
+  @JsonView({View.ComicListView.class})
+  @Getter
+  private Boolean unscraped;
 
   @Column(name = "Filename", nullable = false, unique = true, length = 1024)
   @JsonProperty("filename")

@@ -105,13 +105,7 @@ function comicListUpdate(
     unprocessed: comicDetails.filter(
       comic => comic.comicState === ComicBookState.UNPROCESSED
     ),
-    unscraped: comicDetails.filter(
-      comic =>
-        isEmpty(comic.publisher) ||
-        isEmpty(comic.series) ||
-        !comic.storeDate ||
-        !comic.coverDate
-    ),
+    unscraped: comicDetails.filter(comic => comic.unscraped),
     changed: comicDetails.filter(
       comic => comic.comicState == ComicBookState.CHANGED
     ),
