@@ -1084,17 +1084,6 @@ public class ComicBookServiceTest {
   }
 
   @Test
-  public void testGetUnscrapedComicBookCount() {
-    Mockito.when(comicBookRepository.countByMetadataIsNull()).thenReturn(TEST_COMIC_COUNT);
-
-    final long result = service.getUnscrapedComicBookCount();
-
-    assertEquals(TEST_COMIC_COUNT, result);
-
-    Mockito.verify(comicBookRepository, Mockito.times(1)).countByMetadataIsNull();
-  }
-
-  @Test
   public void testGetDeletedComicBookCount() {
     Mockito.when(comicBookRepository.findForStateCount(Mockito.any())).thenReturn(TEST_COMIC_COUNT);
 

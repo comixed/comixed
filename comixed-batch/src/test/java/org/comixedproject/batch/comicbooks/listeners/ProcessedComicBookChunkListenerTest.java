@@ -73,11 +73,53 @@ public class ProcessedComicBookChunkListenerTest {
   }
 
   @Test
+  public void testBeforeChunk() throws PublishingException {
+    Mockito.when(executionContext.containsKey(JOB_STARTED)).thenReturn(true);
+    Mockito.when(executionContext.containsKey(JOB_FINISHED)).thenReturn(false);
+
+    listener.beforeChunk(chunkContext);
+
+    final ProcessComicStatus status = processComicStatusArgumentCaptor.getValue();
+
+    assertNotNull(status);
+    assertTrue(status.isActive());
+    assertEquals(TEST_JOB_STARTED, status.getStarted());
+    assertEquals(TEST_STEP_NAME, status.getStepName());
+    assertEquals(TEST_TOTAL_COMICS, status.getTotal());
+    assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
+
+    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
+
+    Mockito.verify(executionContext, Mockito.times(1)).putLong(PROCESSED_COMICS, TEST_WRITE_COUNT);
+  }
+
+  @Test
   public void testAfterChunk() throws PublishingException {
     Mockito.when(executionContext.containsKey(JOB_STARTED)).thenReturn(true);
     Mockito.when(executionContext.containsKey(JOB_FINISHED)).thenReturn(false);
 
     listener.afterChunk(chunkContext);
+
+    final ProcessComicStatus status = processComicStatusArgumentCaptor.getValue();
+
+    assertNotNull(status);
+    assertTrue(status.isActive());
+    assertEquals(TEST_JOB_STARTED, status.getStarted());
+    assertEquals(TEST_STEP_NAME, status.getStepName());
+    assertEquals(TEST_TOTAL_COMICS, status.getTotal());
+    assertEquals(TEST_PROCESSED_COMICS, status.getProcessed());
+
+    Mockito.verify(publishProcessComicsStatusAction, Mockito.times(1)).publish(status);
+
+    Mockito.verify(executionContext, Mockito.times(1)).putLong(PROCESSED_COMICS, TEST_WRITE_COUNT);
+  }
+
+  @Test
+  public void testAfterChunkError() throws PublishingException {
+    Mockito.when(executionContext.containsKey(JOB_STARTED)).thenReturn(true);
+    Mockito.when(executionContext.containsKey(JOB_FINISHED)).thenReturn(false);
+
+    listener.afterChunkError(chunkContext);
 
     final ProcessComicStatus status = processComicStatusArgumentCaptor.getValue();
 
