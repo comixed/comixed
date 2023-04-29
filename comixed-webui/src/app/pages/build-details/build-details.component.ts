@@ -26,6 +26,7 @@ import { setBusyState } from '@app/core/actions/busy.actions';
 import { loadCurrentReleaseDetails } from '@app/actions/release.actions';
 import { TitleService } from '@app/core/services/title.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'cx-build-details',
@@ -41,7 +42,8 @@ export class BuildDetailsComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private store: Store<any>,
     private translateService: TranslateService,
-    private titleService: TitleService
+    private titleService: TitleService,
+    private clipboard: Clipboard
   ) {
     this.detailsSubscription = this.store
       .select(selectReleaseDetailsState)
@@ -62,6 +64,45 @@ export class BuildDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.logger.trace('Unsubscribing from language changes');
     this.langChangeSubscription.unsubscribe();
+  }
+
+  copyToClipboard(): void {
+    this.clipboard.copy(
+      `
+${this.translateService.instant('build-details.label.branch', {
+  name: this.details.branch
+})}
+${this.translateService.instant('build-details.label.build-time', {
+  time: this.details.buildTime
+})}
+${this.translateService.instant('build-details.label.build-host', {
+  time: this.details.buildHost
+})}
+${this.translateService.instant('build-details.label.build-version', {
+  time: this.details.buildVersion
+})}
+${this.translateService.instant('build-details.label.commit-id', {
+  time: this.details.commitId
+})}
+${this.translateService.instant('build-details.label.comit-time', {
+  time: this.details.commitTime
+})}
+${this.translateService.instant('build-details.label.commit-message', {
+  time: this.details.commitMessage
+})}
+${this.translateService.instant('build-details.label.commit-user', {
+  time: this.details.commitUser
+})}
+${this.translateService.instant('build-details.label.dirty', {
+  time: this.details.dirty
+})}
+${this.translateService.instant('build-details.label.remote-origin-url', {
+  time: this.details.remoteOriginURL
+})}
+${this.translateService.instant('build-details.label.jdbcUrl', {
+  time: this.details.jdbcUrl
+})}`
+    );
   }
 
   private loadTranslations(): void {
