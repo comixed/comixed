@@ -22,6 +22,7 @@ import static junit.framework.TestCase.*;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
 
 import java.io.File;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
@@ -44,6 +45,7 @@ public class DeleteComicBookProcessorTest {
   @InjectMocks private DeleteComicProcessor processor;
   @Mock private ComicBookService comicBookService;
   @Mock private FileAdaptor fileAdaptor;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private StepExecution stepExecution;
   @Mock private JobExecution jobExecution;
   @Mock private ExecutionContext executionContext;
@@ -74,6 +76,7 @@ public class DeleteComicBookProcessorTest {
 
     Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).deleteMetadataFile(comicBook);
   }
 
   @Test
@@ -89,6 +92,7 @@ public class DeleteComicBookProcessorTest {
 
     Mockito.verify(comicBookService, Mockito.times(1)).deleteComic(comicBook);
     Mockito.verify(fileAdaptor, Mockito.times(1)).deleteFile(file);
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).deleteMetadataFile(comicBook);
   }
 
   @Test

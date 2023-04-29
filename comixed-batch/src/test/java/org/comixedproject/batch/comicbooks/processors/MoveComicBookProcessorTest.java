@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PAR
 
 import java.io.File;
 import java.io.IOException;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.archives.ArchiveType;
@@ -46,10 +47,12 @@ public class MoveComicBookProcessorTest {
   private static final String TEST_NEW_FILENAME = "comicBook";
   private static final String TEST_NEW_FILENAME_WITH_PATH =
       TEST_TARGET_DIRECTORY + "/" + "comicBook";
-  private static final String TEST_EXTENSION = "cbz";
+  private static final String TEST_NEW_FILENAME_EXTENSION = "cbz";
   private static final String TEST_NEW_FILENAME_WITH_EXTENSION =
-      TEST_NEW_FILENAME_WITH_PATH + "." + TEST_EXTENSION;
+      TEST_NEW_FILENAME_WITH_PATH + "." + TEST_NEW_FILENAME_EXTENSION;
   private static final String TEST_ORIGINAL_FILENAME = "The original filename";
+  private static final String TEST_SOURCE_METADATA_FILE_NAME = "src/test/resources/example.meta";
+  private static final String TEST_TARGET_METADATA_FILE_NAME = "target/test/resources/example.meta";
 
   @InjectMocks private MoveComicProcessor processor;
   @Mock private StepExecution stepExecution;
@@ -57,6 +60,7 @@ public class MoveComicBookProcessorTest {
   @Mock private JobParameters jobParameters;
   @Mock private ComicFileAdaptor comicFileAdaptor;
   @Mock private FileAdaptor fileAdaptor;
+  @Mock private ComicBookAdaptor comicBookAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
   @Mock private File comicFile;
@@ -65,7 +69,7 @@ public class MoveComicBookProcessorTest {
   @Captor private ArgumentCaptor<File> sourceFileArgumentCaptor;
   @Captor private ArgumentCaptor<File> targetFileArgumentCaptor;
 
-  private ArchiveType archiveType = ArchiveType.CBZ;
+  private final ArchiveType archiveType = ArchiveType.CBZ;
 
   @Before
   public void setUp() {
@@ -74,6 +78,8 @@ public class MoveComicBookProcessorTest {
     processor.beforeStep(stepExecution);
     Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
     Mockito.when(comicDetail.getArchiveType()).thenReturn(archiveType);
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME);
   }
 
   @Test
@@ -86,6 +92,9 @@ public class MoveComicBookProcessorTest {
             comicFileAdaptor.createFilenameFromRule(
                 Mockito.any(ComicBook.class), Mockito.anyString()))
         .thenReturn(TEST_NEW_FILENAME);
+
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME.substring(1));
     Mockito.when(
             comicFileAdaptor.findAvailableFilename(
                 Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
@@ -114,9 +123,60 @@ public class MoveComicBookProcessorTest {
         .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
     Mockito.verify(comicFileAdaptor, Mockito.times(1))
         .findAvailableFilename(
-            TEST_ORIGINAL_FILENAME, TEST_NEW_FILENAME_WITH_PATH, 0, TEST_EXTENSION);
+            TEST_ORIGINAL_FILENAME, TEST_NEW_FILENAME_WITH_PATH, 0, TEST_NEW_FILENAME_EXTENSION);
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(sourceFileArgumentCaptor.getValue(), targetFileArgumentCaptor.getValue());
+  }
+
+  @Test
+  public void testProcessWithExternalMetadataFile() throws Exception {
+    Mockito.when(jobParameters.getString(PARAM_TARGET_DIRECTORY)).thenReturn(TEST_TARGET_DIRECTORY);
+    Mockito.when(jobParameters.getString(PARAM_RENAMING_RULE)).thenReturn(TEST_RENAMING_RULE);
+    Mockito.doNothing().when(fileAdaptor).createDirectory(createDirectoryArgumentCaptor.capture());
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_ORIGINAL_FILENAME);
+    Mockito.when(
+            comicFileAdaptor.createFilenameFromRule(
+                Mockito.any(ComicBook.class), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME);
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_SOURCE_METADATA_FILE_NAME, TEST_TARGET_METADATA_FILE_NAME);
+    Mockito.when(
+            comicFileAdaptor.findAvailableFilename(
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyString()))
+        .thenReturn(TEST_NEW_FILENAME_WITH_EXTENSION);
+    Mockito.when(comicDetail.getFile()).thenReturn(comicFile);
+    Mockito.doNothing()
+        .when(fileAdaptor)
+        .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    assertEquals(
+        new File(TEST_TARGET_DIRECTORY).getAbsolutePath(),
+        createDirectoryArgumentCaptor.getValue().getAbsolutePath());
+    assertEquals(comicFile, sourceFileArgumentCaptor.getAllValues().get(0));
+    assertEquals(
+        new File(TEST_SOURCE_METADATA_FILE_NAME).getAbsolutePath(),
+        sourceFileArgumentCaptor.getAllValues().get(1).getAbsolutePath());
+    assertEquals(
+        new File(TEST_NEW_FILENAME_WITH_EXTENSION).getAbsolutePath(),
+        targetFileArgumentCaptor.getAllValues().get(0).getAbsolutePath());
+    assertEquals(
+        new File(TEST_TARGET_METADATA_FILE_NAME).getAbsolutePath(),
+        targetFileArgumentCaptor.getAllValues().get(1).getAbsolutePath());
+
+    Mockito.verify(fileAdaptor, Mockito.times(1))
+        .createDirectory(createDirectoryArgumentCaptor.getValue());
+    Mockito.verify(comicFileAdaptor, Mockito.times(1))
+        .createFilenameFromRule(comicBook, TEST_RENAMING_RULE);
+    Mockito.verify(comicFileAdaptor, Mockito.times(1))
+        .findAvailableFilename(
+            TEST_ORIGINAL_FILENAME, TEST_NEW_FILENAME_WITH_PATH, 0, TEST_NEW_FILENAME_EXTENSION);
+    Mockito.verify(fileAdaptor, Mockito.times(2))
+        .moveFile(sourceFileArgumentCaptor.capture(), targetFileArgumentCaptor.capture());
   }
 
   @Test

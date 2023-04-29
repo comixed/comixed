@@ -210,9 +210,7 @@ public class ComicBookAdaptor {
    * @throws AdaptorException if an error occurs while writing the file
    */
   public void saveMetadataFile(final ComicBook comicBook) throws AdaptorException {
-    final String filename =
-        String.format(
-            "%s.meta", FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()));
+    final String filename = this.getMetadataFilename(comicBook);
     log.debug(
         "Creating external metadata file for comic: id={} filename={}",
         comicBook.getId(),
@@ -223,6 +221,17 @@ public class ComicBookAdaptor {
     } catch (IOException | ContentAdaptorException error) {
       throw new AdaptorException("failed to write metadata file: " + filename, error);
     }
+  }
+
+  public void deleteMetadataFile(final ComicBook comicBook) {
+    final String filename = this.getMetadataFilename(comicBook);
+    log.debug("Deleting external metadata file (if exists): {}", filename);
+    this.fileAdaptor.deleteFile(new File(filename));
+  }
+
+  public String getMetadataFilename(ComicBook comicBook) {
+    return String.format(
+        "%s.meta", FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()));
   }
 
   /**
