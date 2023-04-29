@@ -18,10 +18,7 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static junit.framework.TestCase.assertSame;
+import static junit.framework.TestCase.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +61,7 @@ public class ComicBookAdaptorTest {
   private static final byte[] TEST_COMICINFO_XML_CONTENT = "ComicInfo.xml content".getBytes();
   private static final int TEST_PAGE_INDEX = 0;
   private static final String TEST_REAL_COMIC_FILE = "target/test-classes/example.cbz";
+  private static final String TEST_REAL_COMIC_METADATA_FILE = "target/test-classes/example.meta";
   private static final String TEST_PAGE_RENAMING_RULE = "page renaming rule";
   private static final String TEST_NEW_PAGE_FILENAME = "new page filename";
   private static final String TEST_MISSING_FILE = "farkle.png";
@@ -424,6 +422,37 @@ public class ComicBookAdaptorTest {
     Mockito.verify(fileAdaptor, Mockito.times(1))
         .moveFile(moveSourceFile.getValue(), moveDestinationFile.getValue());
     Mockito.verify(comicDetail, Mockito.times(1)).setFilename(TEST_FINAL_FILENAME);
+  }
+
+  @Test(expected = AdaptorException.class)
+  public void testSaveMetadataFileMetadataAdaptorException()
+      throws ContentAdaptorException, AdaptorException {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_REAL_COMIC_FILE);
+
+    Mockito.when(comicMetadataContentAdaptor.createContent(Mockito.any(ComicBook.class)))
+        .thenThrow(ContentAdaptorException.class);
+
+    try {
+      adaptor.saveMetadataFile(comicBook);
+    } finally {
+      Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comicBook);
+    }
+  }
+
+  @Test
+  public void testSaveMetadataFile() throws ContentAdaptorException, AdaptorException {
+    Mockito.when(comicBook.getComicDetail()).thenReturn(comicDetail);
+    Mockito.when(comicDetail.getFilename()).thenReturn(TEST_REAL_COMIC_FILE);
+
+    Mockito.when(comicMetadataContentAdaptor.createContent(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_COMICINFO_XML_CONTENT);
+
+    adaptor.saveMetadataFile(comicBook);
+
+    assertTrue(new File(TEST_REAL_COMIC_METADATA_FILE).exists());
+
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1)).createContent(comicBook);
   }
 
   @Test(expected = AdaptorException.class)

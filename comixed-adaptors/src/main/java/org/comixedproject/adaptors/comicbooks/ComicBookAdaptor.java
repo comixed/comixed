@@ -18,14 +18,14 @@
 
 package org.comixedproject.adaptors.comicbooks;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.archive.ArchiveAdaptor;
@@ -199,6 +199,29 @@ public class ComicBookAdaptor {
         | IOException
         | ContentAdaptorException error) {
       throw new AdaptorException("Failed to save comic book file", error);
+    }
+  }
+
+  /**
+   * Writes the comic's metadata to a separate file. The file's name is based on that of the comic,
+   * but with an extension of ".meta".
+   *
+   * @param comicBook the comic book
+   * @throws AdaptorException if an error occurs while writing the file
+   */
+  public void saveMetadataFile(final ComicBook comicBook) throws AdaptorException {
+    final String filename =
+        String.format(
+            "%s.meta", FilenameUtils.removeExtension(comicBook.getComicDetail().getFilename()));
+    log.debug(
+        "Creating external metadata file for comic: id={} filename={}",
+        comicBook.getId(),
+        filename);
+    try (OutputStream outstream = new FileOutputStream(new File(filename), false)) {
+      log.debug("Writing metadata content");
+      outstream.write(this.comicMetadataContentAdaptor.createContent(comicBook));
+    } catch (IOException | ContentAdaptorException error) {
+      throw new AdaptorException("failed to write metadata file: " + filename, error);
     }
   }
 

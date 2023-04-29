@@ -29,6 +29,7 @@ import { LoggerService } from '@angular-ru/cdk/logger';
 import { ConfigurationOption } from '@app/admin/models/configuration-option';
 import { getConfigurationOption } from '@app/admin';
 import {
+  CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
   LIBRARY_PAGE_RENAMING_RULE,
@@ -92,6 +93,7 @@ export class LibraryConfigurationComponent {
   ) {
     this.libraryConfigurationForm = this.formBuilder.group({
       deleteEmptyDirectories: ['', []],
+      createExternalMetadataFile: ['', []],
       rootDirectory: ['', [Validators.required]],
       comicRenamingRule: ['', []],
       pageRenamingRule: ['', []]
@@ -113,6 +115,13 @@ export class LibraryConfigurationComponent {
       getConfigurationOption(
         options,
         LIBRARY_DELETE_EMPTY_DIRECTORIES,
+        `${false}`
+      ) === `${true}`
+    );
+    this.libraryConfigurationForm.controls.createExternalMetadataFile.setValue(
+      getConfigurationOption(
+        options,
+        CREATE_EXTERNAL_METADATA_FILES,
         `${false}`
       ) === `${true}`
     );
@@ -141,6 +150,10 @@ export class LibraryConfigurationComponent {
       {
         name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
         value: `${this.libraryConfigurationForm.controls.deleteEmptyDirectories.value}`
+      },
+      {
+        name: CREATE_EXTERNAL_METADATA_FILES,
+        value: `${this.libraryConfigurationForm.controls.createExternalMetadataFile.value}`
       },
       {
         name: LIBRARY_ROOT_DIRECTORY,

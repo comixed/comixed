@@ -21,8 +21,10 @@ package org.comixedproject.batch.comicbooks.processors;
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ConfigurationService configurationService;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
@@ -43,11 +46,17 @@ public class UpdateMetadataProcessor implements ItemProcessor<ComicBook, ComicBo
       log.warn("Cannot write CBR files");
     } else {
       try {
-        log.debug("Updating comicBook metadata: id={}", comicBook.getId());
+        log.debug("Updating comic book metadata: id={}", comicBook.getId());
         this.comicBookAdaptor.save(
             comicBook, comicBook.getComicDetail().getArchiveType(), false, "");
+        if (Boolean.parseBoolean(
+            this.configurationService.getOptionValue(
+                ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString()))) {
+          log.debug("Creating external metadata file for comic: id={}", comicBook.getId());
+          this.comicBookAdaptor.saveMetadataFile(comicBook);
+        }
       } catch (AdaptorException error) {
-        log.error("Failed to update metadata for comicBook", error);
+        log.error("Failed to update metadata for comic book", error);
       }
     }
     return comicBook;
