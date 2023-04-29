@@ -28,6 +28,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CURRENT_RELEASE } from '@app/app.fixtures';
 import { MatCardModule } from '@angular/material/card';
 import { TitleService } from '@app/core/services/title.service';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 
 describe('BuildDetailsComponent', () => {
   const initialState = {
@@ -41,6 +42,7 @@ describe('BuildDetailsComponent', () => {
   let fixture: ComponentFixture<BuildDetailsComponent>;
   let titleService: TitleService;
   let translateService: TranslateService;
+  let clipboard: Clipboard;
 
   beforeEach(
     waitForAsync(() => {
@@ -49,7 +51,8 @@ describe('BuildDetailsComponent', () => {
         imports: [
           LoggerModule.forRoot(),
           TranslateModule.forRoot(),
-          MatCardModule
+          MatCardModule,
+          ClipboardModule
         ],
         providers: [provideMockStore({ initialState }), TitleService]
       }).compileComponents();
@@ -59,6 +62,7 @@ describe('BuildDetailsComponent', () => {
       titleService = TestBed.inject(TitleService);
       spyOn(titleService, 'setTitle');
       translateService = TestBed.inject(TranslateService);
+      clipboard = TestBed.inject(Clipboard);
       fixture.detectChanges();
     })
   );
@@ -74,6 +78,17 @@ describe('BuildDetailsComponent', () => {
 
     it('loads the title', () => {
       expect(titleService.setTitle).toHaveBeenCalledWith(jasmine.any(String));
+    });
+  });
+
+  describe('copying build details to the clipboard', () => {
+    beforeEach(() => {
+      spyOn(clipboard, 'copy');
+      component.copyToClipboard();
+    });
+
+    it('performs the copy', () => {
+      expect(clipboard.copy).toHaveBeenCalledWith(jasmine.any(String));
     });
   });
 });
