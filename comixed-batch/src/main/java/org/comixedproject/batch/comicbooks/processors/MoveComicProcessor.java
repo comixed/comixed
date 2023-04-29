@@ -24,6 +24,7 @@ import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PAR
 import java.io.File;
 import java.io.IOException;
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.comicbooks.ComicFileAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
@@ -47,6 +48,7 @@ public class MoveComicProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private FileAdaptor fileAdaptor;
   @Autowired private ComicFileAdaptor comicFileAdaptor;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   private JobParameters jobParameters;
 
@@ -64,16 +66,23 @@ public class MoveComicProcessor
       final String comicExtension = comicBook.getComicDetail().getArchiveType().getExtension();
       log.trace("Generating new comicBook filename");
       String targetFilename = this.comicFileAdaptor.createFilenameFromRule(comicBook, renamingRule);
+      final File metadataFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
       log.trace("Finding available filename");
       targetFilename = String.format("%s/%s", targetDirectory, targetFilename);
       targetFilename =
           this.comicFileAdaptor.findAvailableFilename(
               comicBook.getComicDetail().getFilename(), targetFilename, 0, comicExtension);
-      final File targetFile = new File(targetFilename);
+      File targetFile = new File(targetFilename);
       log.trace("Moving comicBook file");
       this.fileAdaptor.moveFile(comicBook.getComicDetail().getFile(), targetFile);
       log.trace("Updating comicBook filename: {}", targetFile.getAbsoluteFile());
       comicBook.getComicDetail().setFilename(targetFile.getAbsolutePath());
+
+      if (metadataFile.exists()) {
+        targetFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
+        log.trace("Moving comic metadata file: {} => {}");
+        this.fileAdaptor.moveFile(metadataFile, targetFile);
+      }
     } catch (IOException error) {
       log.error("Failed to move comics", error);
     }

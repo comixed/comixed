@@ -21,6 +21,7 @@ package org.comixedproject.batch.comicbooks.processors;
 import static org.comixedproject.batch.comicbooks.ConsolidationConfiguration.PARAM_DELETE_REMOVED_COMIC_FILES;
 
 import lombok.extern.log4j.Log4j2;
+import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
 import org.comixedproject.adaptors.file.FileAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.service.comicbooks.ComicBookService;
@@ -44,6 +45,7 @@ public class DeleteComicProcessor
     implements ItemProcessor<ComicBook, ComicBook>, StepExecutionListener {
   @Autowired private ComicBookService comicBookService;
   @Autowired private FileAdaptor fileAdaptor;
+  @Autowired private ComicBookAdaptor comicBookAdaptor;
 
   private ExecutionContext executionContext;
 
@@ -55,6 +57,7 @@ public class DeleteComicProcessor
         this.executionContext.getString(PARAM_DELETE_REMOVED_COMIC_FILES, String.valueOf(false)))) {
       log.trace("Deleting physical file: {}", comicBook.getComicDetail().getFilename());
       this.fileAdaptor.deleteFile(comicBook.getComicDetail().getFile());
+      this.comicBookAdaptor.deleteMetadataFile(comicBook);
     }
     return comicBook;
   }
