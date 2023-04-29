@@ -24,6 +24,8 @@ export const LIBRARY_COMIC_RENAMING_RULE = 'library.comic-book.renaming-rule';
 export const LIBRARY_PAGE_RENAMING_RULE = 'library.comic-page.renaming-rule';
 export const LIBRARY_DELETE_EMPTY_DIRECTORIES =
   'library.directories.delete-empty';
+export const CREATE_EXTERNAL_METADATA_FILES =
+  'library.metadata.create-external-files';
 
 export const LOAD_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;
 export const SAVE_CONFIGURATION_OPTIONS_URL = `${API_ROOT_URL}/admin/config`;

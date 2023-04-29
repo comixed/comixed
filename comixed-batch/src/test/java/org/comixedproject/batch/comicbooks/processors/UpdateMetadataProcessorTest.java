@@ -23,9 +23,11 @@ import static junit.framework.TestCase.assertSame;
 
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.model.admin.ConfigurationOption;
 import org.comixedproject.model.archives.ArchiveType;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.service.admin.ConfigurationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +39,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateMetadataProcessorTest {
   private static final ArchiveType TEST_ARCHIVE_TYPE = ArchiveType.CB7;
+  private static final String TEST_TRUE = Boolean.TRUE.toString();
+  private static final String TEST_FALSE = Boolean.FALSE.toString();
 
   @InjectMocks private UpdateMetadataProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ConfigurationService configurationService;
   @Mock private ComicBook comicBook;
   @Mock private ComicDetail comicDetail;
 
@@ -87,6 +92,9 @@ public class UpdateMetadataProcessorTest {
 
   @Test
   public void testProcess() throws Exception {
+    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_FALSE);
+
     final ComicBook result = processor.process(comicBook);
 
     assertNotNull(result);
@@ -94,5 +102,26 @@ public class UpdateMetadataProcessorTest {
 
     Mockito.verify(comicBookAdaptor, Mockito.times(1))
         .save(comicBook, TEST_ARCHIVE_TYPE, false, "");
+    Mockito.verify(configurationService, Mockito.times(1))
+        .getOptionValue(
+            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString());
+  }
+
+  @Test
+  public void testProcessCreateExternalFile() throws Exception {
+    Mockito.when(configurationService.getOptionValue(Mockito.anyString(), Mockito.anyString()))
+        .thenReturn(TEST_TRUE);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1))
+        .save(comicBook, TEST_ARCHIVE_TYPE, false, "");
+    Mockito.verify(configurationService, Mockito.times(1))
+        .getOptionValue(
+            ConfigurationOption.CREATE_EXTERNAL_METADATA_FILE, Boolean.FALSE.toString());
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).saveMetadataFile(comicBook);
   }
 }

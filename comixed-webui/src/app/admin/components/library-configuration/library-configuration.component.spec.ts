@@ -28,6 +28,7 @@ import { LoggerModule } from '@angular-ru/cdk/logger';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import {
+  CREATE_EXTERNAL_METADATA_FILES,
   LIBRARY_COMIC_RENAMING_RULE,
   LIBRARY_DELETE_EMPTY_DIRECTORIES,
   LIBRARY_PAGE_RENAMING_RULE,
@@ -44,6 +45,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 describe('LibraryConfigurationComponent', () => {
   const DELETE_EMPTY_DIRECTORIES = Math.random() > 0.5;
+  const CREATE_EXERNAL_METADATA = Math.random() > 0.5;
   const LIBRARY_ROOT = 'The library root';
   const COMIC_RENAMING_RULE = 'The comic renaming rule';
   const PAGE_RENAMING_RULE = 'The page renaming rule';
@@ -63,6 +65,10 @@ describe('LibraryConfigurationComponent', () => {
     {
       name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
       value: `${DELETE_EMPTY_DIRECTORIES}`
+    },
+    {
+      name: CREATE_EXTERNAL_METADATA_FILES,
+      value: `${CREATE_EXERNAL_METADATA}`
     }
   ];
   const initialState = {};
@@ -156,6 +162,10 @@ describe('LibraryConfigurationComponent', () => {
             {
               name: LIBRARY_DELETE_EMPTY_DIRECTORIES,
               value: `${DELETE_EMPTY_DIRECTORIES}`
+            },
+            {
+              name: CREATE_EXTERNAL_METADATA_FILES,
+              value: `${CREATE_EXERNAL_METADATA}`
             },
             { name: LIBRARY_ROOT_DIRECTORY, value: LIBRARY_ROOT },
             { name: LIBRARY_COMIC_RENAMING_RULE, value: COMIC_RENAMING_RULE },

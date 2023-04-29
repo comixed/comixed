@@ -22,6 +22,16 @@
     <input hidden matInput />
   </mat-form-field>
   <mat-form-field class="cx-width-100">
+    <mat-checkbox
+      id="create-external-metadata-file-checkbox"
+      color="primary"
+      formControlName="createExternalMetadataFile"
+    >
+      {{ "configuration.label.create-external-metadata-files" | translate }}
+    </mat-checkbox>
+    <input hidden matInput />
+  </mat-form-field>
+  <mat-form-field class="cx-width-100">
     <mat-label>
       {{ "configuration.label.root-directory" | translate }}
     </mat-label>
