@@ -40,6 +40,9 @@ $cx-selected-comic-color: #ffffff;
 
 // component sizes
 
+$cx-min-image-width: 450px;
+$cx-max-image-width: 600px;
+
 .cx-width-5 {
   width: 5% !important;
 }
@@ -52,11 +55,15 @@ $cx-selected-comic-color: #ffffff;
   width: 20% !important;
 }
 
+.cx-max-width-20 {
+  max-width: 20% !important;
+}
+
 .cx-width-25 {
   width: 25% !important;
 }
 
-.cx-width-max-25 {
+.cx-max-width-25 {
   max-width: 25% !important;
 }
 
@@ -393,11 +400,11 @@ th {
 }
 
 .cx-grow-0 {
-  flex-grow: 0;
+  flex: 0 0 auto;
 }
 
 .cx-grow-1 {
-  flex-grow: 1;
+  flex-basis: auto;
 }
 
 // buttons
