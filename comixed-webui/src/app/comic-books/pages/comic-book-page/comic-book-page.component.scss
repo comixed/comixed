@@ -1,0 +1,11 @@
+@import 'styles';
+
+#comic-cover-container {
+  flex: 1 1 0;
+  min-width: $cx-min-image-width;
+  max-width: $cx-max-image-width;
+}
+
+#comic-tab-container {
+  flex: 2 1 0;
+}

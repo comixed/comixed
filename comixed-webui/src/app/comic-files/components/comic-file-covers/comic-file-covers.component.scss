@@ -15,3 +15,7 @@
   max-width: $cx-column-medium;
   resize: none;
 }
+
+.cx-comic-file-card {
+  min-width: $cx-min-image-width !important;
+}

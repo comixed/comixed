@@ -157,12 +157,7 @@
 </div>
 
 <div *ngIf="!!comicBook" class="cx-detail-card-container">
-  <div
-    id="comic-cover-container"
-    class="cx-padding-left-5"
-    fxFlex.gt-sm="20%"
-    fxFlex.sm="0%"
-  >
+  <div id="comic-cover-container" class="x-padding-left-5">
     <div class="cx-width-100 cx-align-content-center">
       <button
         mat-icon-button
@@ -201,8 +196,9 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div class="cx-padding-left-5" fxFlex.gt-sm="80%" fxFlex.sm="100%">
+  <div id="comic-tab-container" class="cx-padding-left-5 cx-grow-1">
     <mat-tab-group
+      class="cx-width-100"
       animationDuration="0ms"
       [selectedIndex]="queryParameterService.currentTab$ | async"
       (selectedTabChange)="queryParameterService.onTabChange($event.index)"
@@ -232,6 +228,7 @@
       >
         <cx-comic-scraping
           *ngIf="!!comicBook && volumes.length === 0"
+          class="cx-width-100"
           [comic]="comicBook"
           [metadataSource]="
             comicBook.metadata?.metadataSource || metadataSource
