@@ -23,24 +23,76 @@ import static junit.framework.TestCase.*;
 import java.util.List;
 import org.comixedproject.adaptors.AdaptorException;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
+import org.comixedproject.adaptors.content.ContentAdaptorException;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicpages.Page;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoadFileContentsProcessorTest {
+  private static final String TEST_METADATA_FILENAME = "src/test/resources/example.meta";
+
   @InjectMocks private LoadFileContentsProcessor processor;
   @Mock private ComicBookAdaptor comicBookAdaptor;
+  @Mock private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
   @Mock private ComicBook comicBook;
   @Mock private List<Page> pageList;
 
+  @Captor private ArgumentCaptor<byte[]> contentArgumentAdaptor;
+
+  @Before
+  public void setUp() throws ContentAdaptorException {
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_METADATA_FILENAME);
+    Mockito.doNothing()
+        .when(comicMetadataContentAdaptor)
+        .loadContent(
+            Mockito.any(ComicBook.class), Mockito.anyString(), contentArgumentAdaptor.capture());
+  }
+
   @Test
   public void testProcess() throws Exception {
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    final byte[] content = contentArgumentAdaptor.getValue();
+    assertNotNull(content);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook);
+    Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.times(1))
+        .loadContent(comicBook, "", content);
+  }
+
+  @Test
+  public void testProcessNoExternalMetadataFile() throws Exception {
+    Mockito.when(comicBook.getPages()).thenReturn(pageList);
+    Mockito.when(comicBookAdaptor.getMetadataFilename(Mockito.any(ComicBook.class)))
+        .thenReturn(TEST_METADATA_FILENAME.substring(1));
+
+    final ComicBook result = processor.process(comicBook);
+
+    assertNotNull(result);
+    assertSame(comicBook, result);
+
+    Mockito.verify(comicBookAdaptor, Mockito.times(1)).load(comicBook);
+    Mockito.verify(pageList, Mockito.times(1)).sort(Mockito.any());
+    Mockito.verify(comicMetadataContentAdaptor, Mockito.never())
+        .loadContent(
+            Mockito.any(ComicBook.class), Mockito.anyString(), contentArgumentAdaptor.capture());
+  }
+
+  @Test
+  public void testProcessWithExternalMetadataFile() throws Exception {
     Mockito.when(comicBook.getPages()).thenReturn(pageList);
 
     final ComicBook result = processor.process(comicBook);

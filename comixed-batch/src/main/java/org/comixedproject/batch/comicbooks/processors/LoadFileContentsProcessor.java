@@ -18,8 +18,11 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
+import java.io.File;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.comixedproject.adaptors.comicbooks.ComicBookAdaptor;
+import org.comixedproject.adaptors.content.ComicMetadataContentAdaptor;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, ComicBook> {
   @Autowired private ComicBookAdaptor comicBookAdaptor;
+  @Autowired private ComicMetadataContentAdaptor comicMetadataContentAdaptor;
 
   @Override
   public ComicBook process(final ComicBook comicBook) {
@@ -42,6 +46,12 @@ public class LoadFileContentsProcessor implements ItemProcessor<ComicBook, Comic
       this.comicBookAdaptor.load(comicBook);
       log.trace("Sorting comicBook pages");
       comicBook.getPages().sort((o1, o2) -> o1.getFilename().compareTo(o2.getFilename()));
+      final File metadataFile = new File(this.comicBookAdaptor.getMetadataFilename(comicBook));
+      if (metadataFile.exists()) {
+        log.trace("Loading external metadata file: {}", metadataFile.getAbsolutePath());
+        this.comicMetadataContentAdaptor.loadContent(
+            comicBook, "", FileUtils.readFileToByteArray(metadataFile));
+      }
       log.trace("Returning updated comicBook");
       return comicBook;
     } catch (Exception error) {
