@@ -165,6 +165,12 @@ describe('ComicDetailListViewComponent', () => {
       ).toEqual(ENTRY.item.archiveType);
     });
 
+    it('can sort by comic type', () => {
+      expect(
+        component.dataSource.sortingDataAccessor(ENTRY, 'comic-type')
+      ).toEqual(ENTRY.item.comicType);
+    });
+
     it('can sort by comic state', () => {
       expect(
         component.dataSource.sortingDataAccessor(ENTRY, 'comic-state')
@@ -413,6 +419,7 @@ describe('ComicDetailListViewComponent', () => {
       component.showSelection = false;
       component.showThumbnail = false;
       component.showArchiveType = false;
+      component.showComicType = false;
       component.showComicState = false;
       component.showPublisher = false;
       component.showSeries = false;
@@ -446,6 +453,11 @@ describe('ComicDetailListViewComponent', () => {
     it('can show the archive type column', () => {
       component.showArchiveType = true;
       expect(component.displayedColumns).toContain('archive-type');
+    });
+
+    it('can show the comic type column', () => {
+      component.showComicType = true;
+      expect(component.displayedColumns).toContain('comic-type');
     });
 
     it('can show the comic state column', () => {

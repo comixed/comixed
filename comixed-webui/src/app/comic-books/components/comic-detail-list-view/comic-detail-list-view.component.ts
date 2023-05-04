@@ -76,6 +76,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
   @Input() showThumbnail = true;
   @Input() showArchiveType = true;
   @Input() showComicState = true;
+  @Input() showComicType = true;
   @Input() showPublisher = true;
   @Input() showSeries = true;
   @Input() showVolume = true;
@@ -102,6 +103,7 @@ export class ComicDetailListViewComponent implements AfterViewInit {
       this.showThumbnail ? 'thumbnail' : null,
       this.showArchiveType ? 'archive-type' : null,
       this.showComicState ? 'comic-state' : null,
+      this.showComicType ? 'comic-type' : null,
       this.showPublisher ? 'publisher' : null,
       this.showSeries ? 'series' : null,
       this.showVolume ? 'volume' : null,
@@ -155,6 +157,8 @@ export class ComicDetailListViewComponent implements AfterViewInit {
           return `${data.selected}`;
         case 'archive-type':
           return data.item.archiveType.toString();
+        case 'comic-type':
+          return data.item.comicType.toString();
         case 'comic-state':
           return data.item.comicState.toString();
         case 'publisher':

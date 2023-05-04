@@ -122,6 +122,20 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="comic-type">
+    <mat-header-cell mat-sort-header *matHeaderCellDef>
+      {{ "comic-detail-list-view.label.comic-type" | translate }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let entry">
+      <span
+        class="cx-width-100 cx-text-nowrap cx-padding-5"
+        [matTooltip]="entry.item.comicType"
+      >
+        {{ entry.item.comicType }}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="publisher">
     <mat-header-cell mat-sort-header *matHeaderCellDef>
       {{ "comic-detail-list-view.label.publisher" | translate }}
