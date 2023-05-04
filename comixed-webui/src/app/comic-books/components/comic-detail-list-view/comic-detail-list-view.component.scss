@@ -21,13 +21,18 @@
 }
 
 .mat-column-archive-type {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
 }
 
 .mat-column-comic-state {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+}
+
+.mat-column-comic-type {
+  width: $cx-column-medium;
+  max-width: $cx-column-medium;
 }
 
 .mat-column-publisher {
