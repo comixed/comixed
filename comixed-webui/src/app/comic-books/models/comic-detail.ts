@@ -19,6 +19,7 @@
 import { ArchiveType } from '@app/comic-books/models/archive-type.enum';
 import { ComicBookState } from '@app/comic-books/models/comic-book-state';
 import { ComicTag } from '@app/comic-books/models/comic-tag';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 export interface ComicDetail {
   id: number;
@@ -27,6 +28,7 @@ export interface ComicDetail {
   baseFilename: string;
   archiveType: ArchiveType;
   comicState: ComicBookState;
+  comicType: ComicType;
   unscraped: boolean;
   publisher: string;
   imprint: string;

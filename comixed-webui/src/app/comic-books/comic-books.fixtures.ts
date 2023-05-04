@@ -29,6 +29,7 @@ import {
 import { Imprint } from '@app/comic-books/models/imprint';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
 import { ComicTagType } from '@app/comic-books/models/comic-tag-type';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 export const FILE_DETAILS_1: FileDetails = {
   id: 1,
@@ -60,6 +61,7 @@ export const COMIC_DETAIL_1: ComicDetail = {
   baseFilename: 'comicfile1.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicBookState.STABLE,
+  comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'First Publisher',
   imprint: '',
@@ -88,6 +90,7 @@ export const COMIC_DETAIL_2: ComicDetail = {
   id: 102,
   comicId: 2,
   comicState: ComicBookState.STABLE,
+  comicType: ComicType.ISSUE,
   archiveType: ArchiveType.CBR,
   filename: '/Users/comixedreader/Documents/library/comicfile2.cbz',
   baseFilename: 'comicfile2.cbz',
@@ -116,6 +119,7 @@ export const COMIC_DETAIL_3: ComicDetail = {
   filename: '/Users/comixedreader/Documents/library/comicfile3.cbz',
   baseFilename: 'comicfile3.cbz',
   comicState: ComicBookState.STABLE,
+  comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'Second Publisher',
   imprint: null,
@@ -141,6 +145,7 @@ export const COMIC_DETAIL_4: ComicDetail = {
   baseFilename: 'comicfile4.cbz',
   archiveType: ArchiveType.CBZ,
   comicState: ComicBookState.STABLE,
+  comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'Third Publisher',
   imprint: null,
@@ -166,6 +171,7 @@ export const COMIC_DETAIL_5: ComicDetail = {
   filename: '/Users/comixedreader/Documents/library/comicfile5.cbz',
   baseFilename: 'comicfile1.cbz',
   comicState: ComicBookState.STABLE,
+  comicType: ComicType.ISSUE,
   unscraped: false,
   publisher: 'Second Publisher',
   imprint: null,

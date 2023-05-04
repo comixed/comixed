@@ -115,7 +115,3 @@ function comicListUpdate(
     loading: false
   };
 }
-
-function isEmpty(text: string): boolean {
-  return !!text && text.length > 0;
-}

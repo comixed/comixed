@@ -128,6 +128,19 @@ public class ComicDetail {
   @Setter
   private ComicState comicState = ComicState.ADDED;
 
+  @Column(name = "ComicType", nullable = false, updatable = true)
+  @Enumerated(EnumType.STRING)
+  @JsonProperty("comicType")
+  @JsonView({
+    View.ComicListView.class,
+    View.DuplicatePageDetail.class,
+    View.ReadingListDetail.class,
+    View.DeletedPageList.class
+  })
+  @Getter
+  @Setter
+  private ComicType comicType;
+
   @Column(name = "Publisher", length = 255)
   @JsonProperty("publisher")
   @JsonView({
@@ -359,6 +372,7 @@ public class ComicDetail {
     return filename.equals(that.filename)
         && archiveType == that.archiveType
         && comicState == that.comicState
+        && comicType == that.comicType
         && Objects.equals(publisher, that.publisher)
         && Objects.equals(imprint, that.imprint)
         && Objects.equals(series, that.series)
@@ -379,6 +393,7 @@ public class ComicDetail {
         filename,
         archiveType,
         comicState,
+        comicType,
         publisher,
         imprint,
         series,
