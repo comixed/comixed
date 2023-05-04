@@ -50,6 +50,7 @@ import {
   initialState as initialImprintState
 } from '@app/comic-books/reducers/imprint-list.reducer';
 import { MatSelectModule } from '@angular/material/select';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('ComicDetailEditComponent', () => {
   const COMIC = COMIC_BOOK_1;
@@ -214,6 +215,7 @@ describe('ComicDetailEditComponent', () => {
 
   describe('undoing changes', () => {
     beforeEach(() => {
+      component.comicBookForm.controls.comicType.setValue(ComicType.MANGA);
       component.comicBookForm.controls.publisher.setValue(
         COMIC.detail.publisher.substr(1)
       );
@@ -232,6 +234,12 @@ describe('ComicDetailEditComponent', () => {
       component.comicBookForm.controls.coverDate.setValue(null);
       component.comicBookForm.controls.storeDate.setValue(null);
       component.onUndoChanges();
+    });
+
+    it('resets the comic type', () => {
+      expect(component.comicBookForm.controls.comicType.value).toEqual(
+        COMIC.detail.comicType
+      );
     });
 
     it('resets the changes to the publisher', () => {
@@ -316,6 +324,20 @@ describe('ComicDetailEditComponent', () => {
           COMIC.detail.publisher
         );
       });
+    });
+  });
+
+  describe('changing the comic type', () => {
+    const COMIC_TYPE = ComicType.TRADEPAPERBACK;
+
+    beforeEach(() => {
+      component.onComicTypeSelected(COMIC_TYPE);
+    });
+
+    it('updates the comic type', () => {
+      expect(component.comicBookForm.controls.comicType.value).toEqual(
+        COMIC_TYPE
+      );
     });
   });
 });

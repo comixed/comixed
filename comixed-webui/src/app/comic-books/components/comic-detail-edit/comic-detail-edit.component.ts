@@ -37,9 +37,10 @@ import { SelectionOption } from '@app/core/models/ui/selection-option';
 import { Imprint } from '@app/comic-books/models/imprint';
 import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 @Component({
-  selector: 'cx-comic-overview',
+  selector: 'cx-comic-detail-edit',
   templateUrl: './comic-detail-edit.component.html',
   styleUrls: ['./comic-detail-edit.component.scss']
 })
@@ -52,6 +53,23 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
+  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+    {
+      label: 'comic-book.label.comic-type-issue',
+      value: ComicType.ISSUE,
+      selected: false
+    },
+    {
+      label: 'comic-book.label.comic-type-trade-paperback',
+      value: ComicType.TRADEPAPERBACK,
+      selected: false
+    },
+    {
+      label: 'comic-book.label.comic-type-manga',
+      value: ComicType.MANGA,
+      selected: false
+    }
+  ];
 
   constructor(
     private logger: LoggerService,
@@ -62,6 +80,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   ) {
     this.logger.trace('Building comic book details form');
     this.comicBookForm = this.formBuilder.group({
+      comicType: ['', Validators.required],
       publisher: ['', Validators.required],
       imprint: [''],
       series: ['', Validators.required],
@@ -123,6 +142,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
 
   @Input() set comicBook(comic: ComicBook) {
     this._comicBook = comic;
+    this.comicBookForm.controls.comicType.setValue(comic.detail.comicType);
     this.comicBookForm.controls.publisher.setValue(comic.detail.publisher);
     this.comicBookForm.controls.series.setValue(comic.detail.series);
     this.comicBookForm.controls.volume.setValue(comic.detail.volume);
@@ -203,5 +223,10 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
     this.comicBookForm.controls.imprint.setValue(
       imprint?.name || this.comicBook.detail.imprint
     );
+  }
+
+  onComicTypeSelected(comicType: ComicType) {
+    this.logger.trace('Setting comic type:', comicType);
+    this.comicBookForm.controls.comicType.setValue(comicType);
   }
 }
