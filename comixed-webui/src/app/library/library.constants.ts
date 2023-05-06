@@ -21,6 +21,8 @@ import { API_ROOT_URL } from '../core';
 export const UNKNOWN_VALUE_PLACEHOLDER = 'UNKNOWN';
 
 export const MISSING_COMIC_IMAGE_URL = '/assets/img/missing-comic-file.png';
+export const LIBRARY_CONSOLIDATION_CONFIG_URL = '/admin/configuration?tab=2';
+
 export const GET_COMIC_COVER_URL = `${API_ROOT_URL}/comics/\${id}/cover/content`;
 export const GET_PAGE_CONTENT_URL = `${API_ROOT_URL}/pages/\${id}/content`;
 
