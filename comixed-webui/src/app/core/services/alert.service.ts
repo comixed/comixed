@@ -20,6 +20,7 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 export const INFO_MESSAGE_DURATION = 5000;
 export const ERROR_MESSAGE_DURATION = undefined;
@@ -36,7 +37,8 @@ export class AlertService {
   constructor(
     private logger: LoggerService,
     private translateService: TranslateService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private router: Router
   ) {}
 
   /** Shows an information alert. */
@@ -55,9 +57,9 @@ export class AlertService {
   }
 
   /** Shows an error alert. */
-  error(message: string): void {
+  error(message: string, routerLink: string | null = null): void {
     this.logger.trace('Showing error message:', message);
-    this.snackbar.open(
+    const alert = this.snackbar.open(
       message,
       this.translateService.instant('alert.error-action'),
       {
@@ -67,5 +69,18 @@ export class AlertService {
         panelClass: ['cx-error-alert']
       }
     );
+
+    if (!!routerLink) {
+      alert.afterOpened().subscribe(() => {
+        this.router
+          .navigateByUrl(routerLink)
+          .catch(error =>
+            this.logger.error(
+              'Failed to redirect to library configuration page',
+              error
+            )
+          );
+      });
+    }
   }
 }

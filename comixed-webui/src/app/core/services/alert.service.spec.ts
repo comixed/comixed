@@ -25,27 +25,51 @@ import {
   INFO_MESSAGE_DURATION
 } from './alert.service';
 import { LoggerModule } from '@angular-ru/cdk/logger';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {
+  MatSnackBar,
+  MatSnackBarModule,
+  MatSnackBarRef,
+  TextOnlySnackBar
+} from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AlertService', () => {
   const TEST_MESSAGE = 'This is the alert message';
 
   let service: AlertService;
   let snackbar: MatSnackBar;
+  let snackbarRef: jasmine.SpyObj<MatSnackBarRef<TextOnlySnackBar>>;
+  let router: Router;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        NoopAnimationsModule,
+        RouterTestingModule.withRoutes([{ path: '**', redirectTo: '' }]),
         LoggerModule.forRoot(),
         TranslateModule.forRoot(),
         MatSnackBarModule
+      ],
+      providers: [
+        {
+          provide: MatSnackBarRef,
+          useValue: {
+            afterOpened: jasmine.createSpy('MatSnackBarRef.afterOpened()')
+          }
+        }
       ]
     });
 
     service = TestBed.inject(AlertService);
     snackbar = TestBed.inject(MatSnackBar);
-    spyOn(snackbar, 'open');
+    snackbarRef = TestBed.inject(MatSnackBarRef) as jasmine.SpyObj<
+      MatSnackBarRef<TextOnlySnackBar>
+    >;
+    router = TestBed.inject(Router);
   });
 
   it('should be created', () => {
@@ -54,6 +78,7 @@ describe('AlertService', () => {
 
   describe('showing an information alert', () => {
     beforeEach(() => {
+      spyOn(snackbar, 'open');
       service.info(TEST_MESSAGE);
     });
 
@@ -72,19 +97,61 @@ describe('AlertService', () => {
 
   describe('showing an error alert', () => {
     beforeEach(() => {
-      service.error(TEST_MESSAGE);
+      spyOn(router, 'navigateByUrl').and.callThrough();
+      spyOn(snackbar, 'open').and.returnValue(snackbarRef);
     });
 
-    it('opens the message popup', () => {
-      expect(snackbar.open).toHaveBeenCalledWith(
-        TEST_MESSAGE,
-        jasmine.any(String),
-        jasmine.objectContaining({
-          duration: ERROR_MESSAGE_DURATION,
-          horizontalPosition: ALERT_HORZ_POSITION,
-          verticalPosition: ALERT_VERT_POSITION
-        })
-      );
+    describe('without an error url', () => {
+      beforeEach(() => {
+        service.error(TEST_MESSAGE);
+      });
+
+      it('opens the message popup', () => {
+        expect(snackbar.open).toHaveBeenCalledWith(
+          TEST_MESSAGE,
+          jasmine.any(String),
+          jasmine.objectContaining({
+            duration: ERROR_MESSAGE_DURATION,
+            horizontalPosition: ALERT_HORZ_POSITION,
+            verticalPosition: ALERT_VERT_POSITION
+          })
+        );
+      });
+
+      it('does not navigate away from the page', () => {
+        expect(router.navigateByUrl).not.toHaveBeenCalledWith(
+          jasmine.any(String)
+        );
+      });
+    });
+
+    describe('with an error url', () => {
+      const ERROR_URL = '/error/url';
+      const afterOpenObservable = new BehaviorSubject<void>(null);
+
+      beforeEach(() => {
+        snackbarRef.afterOpened.and.returnValue(
+          afterOpenObservable.asObservable()
+        );
+        service.error(TEST_MESSAGE, ERROR_URL);
+      });
+
+      it('opens the message popup', () => {
+        expect(snackbar.open).toHaveBeenCalledWith(
+          TEST_MESSAGE,
+          jasmine.any(String),
+          jasmine.objectContaining({
+            duration: ERROR_MESSAGE_DURATION,
+            horizontalPosition: ALERT_HORZ_POSITION,
+            verticalPosition: ALERT_VERT_POSITION
+          })
+        );
+      });
+
+      it('navigates to the provided url', () => {
+        afterOpenObservable.next(null);
+        expect(router.navigateByUrl).toHaveBeenCalledWith(ERROR_URL);
+      });
     });
   });
 });

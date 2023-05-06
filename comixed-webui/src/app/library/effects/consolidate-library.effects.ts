@@ -30,6 +30,7 @@ import { LibraryService } from '@app/library/services/library.service';
 import { LoggerService } from '@angular-ru/cdk/logger';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { LIBRARY_CONSOLIDATION_CONFIG_URL } from '@app/library/library.constants';
 
 @Injectable()
 export class ConsolidateLibraryEffects {
@@ -55,7 +56,8 @@ export class ConsolidateLibraryEffects {
             this.alertService.error(
               this.translateService.instant(
                 'library.consolidate.effect-failure'
-              )
+              ),
+              LIBRARY_CONSOLIDATION_CONFIG_URL
             );
             return of(startLibraryConsolidationFailed());
           })
