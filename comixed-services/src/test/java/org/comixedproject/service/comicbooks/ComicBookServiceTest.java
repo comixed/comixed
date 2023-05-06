@@ -42,6 +42,7 @@ import org.comixedproject.model.collections.Series;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
 import org.comixedproject.model.comicbooks.ComicState;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.comixedproject.model.comicpages.Page;
 import org.comixedproject.model.library.LastRead;
 import org.comixedproject.model.net.comicbooks.PageOrderEntry;
@@ -73,6 +74,8 @@ import org.springframework.statemachine.state.State;
 public class ComicBookServiceTest {
   private static final long TEST_COMIC_BOOK_ID = 5;
   private static final String TEST_COMIC_FILENAME = "src/test/resources/example.cbz";
+  private static final ComicType TEST_COMIC_TYPE =
+      ComicType.values()[RandomUtils.nextInt(ComicType.values().length)];
   private static final String TEST_PUBLISHER = "Awesome Publications";
   private static final String TEST_SERIES = "Series Name";
   private static final String TEST_VOLUME = "Volume Name";
@@ -385,6 +388,7 @@ public class ComicBookServiceTest {
   @Test
   public void testUpdateComic() throws ComicBookException {
     Mockito.when(comicBookRepository.getById(Mockito.anyLong())).thenReturn(comicBook);
+    Mockito.when(incomingComicDetail.getComicType()).thenReturn(TEST_COMIC_TYPE);
     Mockito.when(incomingComicDetail.getPublisher()).thenReturn(TEST_PUBLISHER);
     Mockito.when(incomingComicDetail.getImprint()).thenReturn(TEST_IMPRINT);
     Mockito.when(incomingComicDetail.getSeries()).thenReturn(TEST_SERIES);
@@ -403,6 +407,7 @@ public class ComicBookServiceTest {
     assertSame(comicBook, result);
 
     Mockito.verify(comicBookRepository, Mockito.times(2)).getById(TEST_COMIC_BOOK_ID);
+    Mockito.verify(comicDetail, Mockito.times(1)).setComicType(TEST_COMIC_TYPE);
     Mockito.verify(comicDetail, Mockito.times(1)).setPublisher(TEST_PUBLISHER);
     Mockito.verify(comicDetail, Mockito.times(1)).setImprint(TEST_IMPRINT);
     Mockito.verify(comicDetail, Mockito.times(1)).setSeries(TEST_SERIES);

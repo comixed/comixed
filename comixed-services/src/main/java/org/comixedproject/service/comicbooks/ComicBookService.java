@@ -170,6 +170,7 @@ public class ComicBookService implements InitializingBean, ComicStateChangeListe
 
     log.trace("Updating the comic fields");
 
+    comic.getComicDetail().setComicType(update.getComicDetail().getComicType());
     comic.getComicDetail().setPublisher(update.getComicDetail().getPublisher());
     comic.getComicDetail().setSeries(update.getComicDetail().getSeries());
     comic.getComicDetail().setVolume(update.getComicDetail().getVolume());
