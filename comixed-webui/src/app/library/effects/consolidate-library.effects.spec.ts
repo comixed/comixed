@@ -37,6 +37,7 @@ import {
 } from '@app/library/actions/consolidate-library.actions';
 import { hot } from 'jasmine-marbles';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LIBRARY_CONSOLIDATION_CONFIG_URL } from '@app/library/library.constants';
 
 describe('ConsolidateLibraryEffects', () => {
   const COMICS = [COMIC_BOOK_1, COMIC_BOOK_3, COMIC_BOOK_5];
@@ -108,7 +109,10 @@ describe('ConsolidateLibraryEffects', () => {
 
       const expected = hot('-b', { b: outcome });
       expect(effects.consolidateLibrary$).toBeObservable(expected);
-      expect(alertService.error).toHaveBeenCalledWith(jasmine.any(String));
+      expect(alertService.error).toHaveBeenCalledWith(
+        jasmine.any(String),
+        LIBRARY_CONSOLIDATION_CONFIG_URL
+      );
     });
 
     it('fires an action on general failure', () => {

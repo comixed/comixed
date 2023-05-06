@@ -94,7 +94,7 @@
     "consolidate": {
       "confirmation-message": "This process can take a long time and will move all comics based on the consolidation rules. Are you sure you want to continue?",
       "confirmation-title": "Consolidate Library",
-      "effect-failure": "Failed to start library consolidation.",
+      "effect-failure": "Failed to start library consolidation. Please verify your library confirmation and try again.",
       "effect-success": "Library consolidation started."
     },
     "context-menu": {
