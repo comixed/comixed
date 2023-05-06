@@ -18,14 +18,11 @@
 
 package org.comixedproject.batch.comicbooks.processors;
 
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_IMPRINT;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_ISSUENO;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_PUBLISHER;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_SERIES;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.comixedproject.model.comicbooks.ComicBook;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.StepExecution;
@@ -53,6 +50,7 @@ public class UpdateComicBooksProcessor
     final String volume = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_VOLUME);
     final String issueNumber = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_ISSUENO);
     final String imprint = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_IMPRINT);
+    final String comicType = this.jobParameters.getString(JOB_UPDATE_COMICBOOKS_COMIC_TYPE);
 
     if (StringUtils.hasLength(publisher)) {
       log.debug("Setting publisher to {}", publisher);
@@ -73,6 +71,10 @@ public class UpdateComicBooksProcessor
     if (StringUtils.hasLength(imprint)) {
       log.debug("Setting imprint to {}", imprint);
       comicBook.getComicDetail().setImprint(imprint);
+    }
+    if (StringUtils.hasLength(comicType)) {
+      log.debug("Setting comic type: {}", comicType);
+      comicBook.getComicDetail().setComicType(ComicType.valueOf(comicType));
     }
     return comicBook;
   }

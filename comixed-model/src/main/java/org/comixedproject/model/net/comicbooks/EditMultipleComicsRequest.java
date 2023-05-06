@@ -23,6 +23,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.comixedproject.model.comicbooks.ComicType;
 
 /**
  * <code>EditMultipleComicsRequest</code> contains the details to be changed for a set of comics.
@@ -55,4 +56,8 @@ public class EditMultipleComicsRequest {
   @JsonProperty("imprint")
   @Getter
   private String imprint;
+
+  @JsonProperty("comicType")
+  @Getter
+  private ComicType comicType;
 }

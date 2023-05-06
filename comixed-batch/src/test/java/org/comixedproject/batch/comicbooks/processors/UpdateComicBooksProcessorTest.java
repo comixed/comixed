@@ -19,14 +19,12 @@
 package org.comixedproject.batch.comicbooks.processors;
 
 import static junit.framework.TestCase.assertNull;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_IMPRINT;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_ISSUENO;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_PUBLISHER;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_SERIES;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.comixedproject.model.comicbooks.ComicBook;
 import org.comixedproject.model.comicbooks.ComicDetail;
+import org.comixedproject.model.comicbooks.ComicType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +43,8 @@ public class UpdateComicBooksProcessorTest {
   private static final String TEST_VOLUME = "2022";
   private static final String TEST_ISSUENO = "723.1";
   private static final String TEST_IMPRINT = "The imprint";
+  private static final String TEST_COMIC_TYPE =
+      ComicType.values()[RandomUtils.nextInt(ComicType.values().length)].name();
 
   @InjectMocks private UpdateComicBooksProcessor processor;
   @Mock private StepExecution stepExecution;
@@ -67,6 +67,8 @@ public class UpdateComicBooksProcessorTest {
     Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_VOLUME)).thenReturn(TEST_VOLUME);
     Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_ISSUENO)).thenReturn(TEST_ISSUENO);
     Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_IMPRINT)).thenReturn(TEST_IMPRINT);
+    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_COMIC_TYPE))
+        .thenReturn(TEST_COMIC_TYPE);
   }
 
   @Test
@@ -123,6 +125,15 @@ public class UpdateComicBooksProcessorTest {
     processor.process(comicBook);
 
     Mockito.verify(comicDetail, Mockito.never()).setImprint(Mockito.anyString());
+  }
+
+  @Test
+  public void testProcessNoComicType() throws Exception {
+    Mockito.when(jobParameters.getString(JOB_UPDATE_COMICBOOKS_COMIC_TYPE)).thenReturn(null);
+
+    processor.process(comicBook);
+
+    Mockito.verify(comicDetail, Mockito.never()).setComicType(Mockito.any(ComicType.class));
   }
 
   @Test

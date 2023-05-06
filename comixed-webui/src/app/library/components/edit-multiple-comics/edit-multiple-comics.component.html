@@ -60,7 +60,7 @@
         {{ "validation.field-required" | translate }}
       </mat-error>
     </mat-form-field>
-    <mat-form-field class="cx-width-50">
+    <mat-form-field class="cx-width-25">
       <mat-label>{{ "comic-book.label.imprint" | translate }}</mat-label>
       <mat-select
         id="imprint-select"
@@ -72,6 +72,21 @@
           [value]="option.value.name"
         >
           {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="cx-width-25">
+      <mat-label>{{ "comic-book.label.comic-type" | translate }}</mat-label>
+      <mat-select
+        id="comic-type-select"
+        formControlName="comicType"
+        (selectionChange)="onComicTypeSelected($event.value)"
+      >
+        <mat-option
+          *ngFor="let option of comicTypeOptions"
+          [value]="option.value"
+        >
+          {{ option.label | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>

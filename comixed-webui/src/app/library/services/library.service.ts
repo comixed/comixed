@@ -152,7 +152,8 @@ export class LibraryService {
       series: args.details.series,
       volume: args.details.volume,
       issueNumber: args.details.issueNumber,
-      imprint: args.details.imprint
+      imprint: args.details.imprint,
+      comicType: args.details.comicType
     } as EditMultipleComicsRequest);
   }
 }

@@ -48,6 +48,7 @@ public class UpdateComicBooksConfiguration {
   public static final String JOB_UPDATE_COMICBOOKS_VOLUME = "job.update-comic.volume";
   public static final String JOB_UPDATE_COMICBOOKS_ISSUENO = "job.update-comic.issue-number";
   public static final String JOB_UPDATE_COMICBOOKS_IMPRINT = "job.update-comic.imprint";
+  public static final String JOB_UPDATE_COMICBOOKS_COMIC_TYPE = "job.update-comic.comic-type";
 
   @Value("${comixed.batch.chunk-size}")
   private int batchChunkSize = 10;
