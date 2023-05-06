@@ -61,6 +61,7 @@ import { markComicsDeleted } from '@app/comic-books/actions/mark-comics-deleted.
 import { editMultipleComics } from '@app/library/actions/library.actions';
 import { of } from 'rxjs';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('ComicDetailListViewComponent', () => {
   const COMIC_DETAILS = [
@@ -75,7 +76,8 @@ describe('ComicDetailListViewComponent', () => {
     series: 'The Series',
     volume: '1234',
     issueNumber: '777',
-    imprint: 'The Imprint'
+    imprint: 'The Imprint',
+    comicType: ComicType.TRADEPAPERBACK
   };
   const LAST_READ_DATES = [LAST_READ_1];
   const COMIC = COMIC_DETAILS[0];

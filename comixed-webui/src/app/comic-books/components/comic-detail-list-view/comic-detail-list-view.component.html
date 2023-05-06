@@ -38,6 +38,7 @@
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let entry">
       <mat-icon
+        color="primary"
         (click)="currentComic = entry.item; $event.stopPropagation()"
         [matMenuTriggerFor]="contextMenu"
       >
@@ -71,7 +72,7 @@
       {{ "comic-detail-list-view.label.thumbnail" | translate }}
     </mat-header-cell>
     <mat-cell *matCellDef="let entry">
-      <span class="cx-width-100 cx-text-nowrap cx-padding-5">
+      <span class="cx-width-100 cx-text-nowrap cx-padding-2">
         <img
           loading="lazy"
           [src]="entry.item | comicCoverUrl"

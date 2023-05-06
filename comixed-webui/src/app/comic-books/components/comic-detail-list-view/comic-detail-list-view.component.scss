@@ -1,74 +1,92 @@
 @import 'src/styles';
 
-.mat-column-action {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+.mat-column-selection {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
 }
 
-.mat-column-selection {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+.mat-column-action {
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
 }
 
 .mat-column-thumbnail {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
 }
 
 .mat-column-extra-field {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
 }
 
 .mat-column-archive-type {
   width: $cx-column-smallish;
   max-width: $cx-column-smallish;
+  resize: none;
 }
 
 .mat-column-comic-state {
   width: $cx-column-smallish;
   max-width: $cx-column-smallish;
+  resize: none;
 }
 
 .mat-column-comic-type {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
 }
 
 .mat-column-publisher {
   width: $cx-column-large;
   max-width: $cx-column-large;
+  resize: none;
 }
 
 .mat-column-series {
 }
 
 .mat-column-volume {
-  width: $cx-column-small;
-  max-width: $cx-column-small;
+  width: $cx-column-smallish;
+  max-width: $cx-column-smallish;
+  resize: none;
 }
 
 .mat-column-issue-number {
   width: $cx-column-smallish;
   max-width: $cx-column-smallish;
+  resize: none;
 }
 
 .mat-column-cover-date {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
 }
 
 .mat-column-store-date {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
 }
 
 .mat-column-last-read-date {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
 }
 
 .mat-column-added-date {
   width: $cx-column-medium;
   max-width: $cx-column-medium;
+  resize: none;
+}
+
+.mat-table {
+  overflow-x: scroll;
 }

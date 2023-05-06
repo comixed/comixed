@@ -32,6 +32,8 @@ import { selectImprints } from '@app/comic-books/selectors/imprint-list.selector
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { EditMultipleComics } from '@app/library/models/ui/edit-multiple-comics';
 import { ComicDetail } from '@app/comic-books/models/comic-detail';
+import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 @Component({
   selector: 'cx-edit-multiple-comics',
@@ -43,6 +45,13 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
+  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
+    {
+      label: '---',
+      value: null,
+      selected: false
+    } as SelectionOption<ComicType>
+  ].concat(COMIC_TYPE_SELECTION_OPTIONS);
 
   constructor(
     private logger: LoggerService,
@@ -58,7 +67,8 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.minLength(4), Validators.maxLength(4)]
       ],
       issueNumber: ['', [Validators.required, Validators.maxLength(16)]],
-      imprint: ['', [Validators.required, Validators.maxLength(64)]]
+      imprint: ['', [Validators.required, Validators.maxLength(64)]],
+      comicType: ['', [Validators.required]]
     });
     this.imprintSubscription = this.store
       .select(selectImprints)
@@ -105,6 +115,12 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
     this.detailsForm.controls.imprint.setValue(
       this.findOption(comics.map(comic => comic.imprint))
     );
+    this.detailsForm.controls.comicType.setValue(
+      this.findOption(
+        comics.map(comic => comic.comicType),
+        null
+      )
+    );
   }
 
   ngOnInit(): void {
@@ -132,11 +148,20 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
       series: this.detailsForm.controls.series.value,
       volume: this.detailsForm.controls.volume.value,
       issueNumber: this.detailsForm.controls.issueNumber.value,
-      imprint: this.detailsForm.controls.imprint.value
+      imprint: this.detailsForm.controls.imprint.value,
+      comicType: this.detailsForm.controls.comicType.value
     };
   }
 
-  private findOption(values: string[]): string {
+  onComicTypeSelected(comicType: ComicType): void {
+    this.logger.debug('Setting comic type:', comicType);
+    this.detailsForm.controls.comicType.setValue(comicType);
+  }
+
+  private findOption(
+    values: string[],
+    defaultValue: string | null = ''
+  ): string | null {
     const options = values
       .filter(value => !!value)
       .filter((value, index, self) => self.indexOf(value) === index);
@@ -144,7 +169,7 @@ export class EditMultipleComicsComponent implements OnInit, OnDestroy {
     if (options.length === 1) {
       return options[0];
     } else {
-      return '';
+      return defaultValue;
     }
   }
 }

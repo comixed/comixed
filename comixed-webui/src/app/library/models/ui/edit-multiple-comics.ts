@@ -16,10 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { ComicType } from '@app/comic-books/models/comic-type';
+
 export interface EditMultipleComics {
   publisher: string;
   series: string;
   volume: string;
   issueNumber: string;
   imprint: string;
+  comicType: ComicType;
 }

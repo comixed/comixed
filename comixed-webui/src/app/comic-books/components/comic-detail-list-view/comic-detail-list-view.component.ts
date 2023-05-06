@@ -356,6 +356,8 @@ export class ComicDetailListViewComponent implements AfterViewInit {
       data: selections
     });
     dialog.afterClosed().subscribe((response: EditMultipleComics) => {
+      this.logger.debug('Edit multiple comics response:', response);
+      console.log('Edit multiple comics response:', response);
       if (!!response) {
         const count = selections.length;
         this.confirmationService.confirm({

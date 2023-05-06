@@ -45,6 +45,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('EditMultipleComicsComponent', () => {
   const COMICS = [
@@ -113,15 +114,30 @@ describe('EditMultipleComicsComponent', () => {
       component.onImprintSelected(IMPRINT.name);
     });
 
-    it('sets the publisher', () => {
+    it('sets the publisher form field', () => {
       expect(component.detailsForm.controls.publisher.value).toEqual(
         IMPRINT.publisher
       );
     });
 
-    it('sets the imprint', () => {
+    it('sets the imprint form field', () => {
       expect(component.detailsForm.controls.imprint.value).toEqual(
         IMPRINT.name
+      );
+    });
+  });
+
+  describe('selecting a comic type', () => {
+    const COMIC_TYPE = ComicType.MANGA;
+
+    beforeEach(() => {
+      component.detailsForm.controls.comicType.setValue(null);
+      component.onComicTypeSelected(COMIC_TYPE);
+    });
+
+    it('sets the comic type form field', () => {
+      expect(component.detailsForm.controls.comicType.value).toEqual(
+        COMIC_TYPE
       );
     });
   });

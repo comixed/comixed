@@ -42,6 +42,7 @@ import {
 import { hot } from 'jasmine-marbles';
 import { RemoteLibraryState } from '@app/library/models/net/remote-library-state';
 import { comicBookSelectionsUpdated } from '@app/library/actions/library-selections.actions';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryEffects', () => {
   const COMIC_BOOKS = [COMIC_DETAIL_1, COMIC_DETAIL_3];
@@ -52,7 +53,8 @@ describe('LibraryEffects', () => {
     series: 'The Series',
     volume: '1234',
     issueNumber: '77a',
-    imprint: 'The Imprint'
+    imprint: 'The Imprint',
+    comicType: ComicType.MANGA
   };
 
   let actions$: Observable<any>;

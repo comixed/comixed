@@ -60,6 +60,7 @@ import {
 import { WebSocketService } from '@app/messaging';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { libraryStateLoaded } from '@app/library/actions/library.actions';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 describe('LibraryService', () => {
   const COMIC_BOOK = COMIC_DETAIL_1;
@@ -79,7 +80,8 @@ describe('LibraryService', () => {
     series: 'The Series',
     volume: '2022',
     issueNumber: '17b',
-    imprint: 'The Imprint'
+    imprint: 'The Imprint',
+    comicType: ComicType.ISSUE
   };
   const LIBRARY_STATE = {} as RemoteLibraryState;
   const initialState = { [MESSAGING_FEATURE_KEY]: initialMessagingState };
@@ -230,7 +232,8 @@ describe('LibraryService', () => {
       series: COMIC_DETAILS.series,
       volume: COMIC_DETAILS.volume,
       issueNumber: COMIC_DETAILS.issueNumber,
-      imprint: COMIC_DETAILS.imprint
+      imprint: COMIC_DETAILS.imprint,
+      comicType: COMIC_DETAILS.comicType
     } as EditMultipleComicsRequest);
     req.flush(new HttpResponse({ status: 200 }));
   });

@@ -26,12 +26,7 @@ import static org.comixedproject.batch.comicbooks.PurgeLibraryConfiguration.JOB_
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_DELETE_MARKED_PAGES;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_RECREATE_COMICS_STARTED;
 import static org.comixedproject.batch.comicbooks.RecreateComicFilesConfiguration.JOB_TARGET_ARCHIVE;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_IMPRINT;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_ISSUENO;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_PUBLISHER;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_SERIES;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_STARTED;
-import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.JOB_UPDATE_COMICBOOKS_VOLUME;
+import static org.comixedproject.batch.comicbooks.UpdateComicBooksConfiguration.*;
 import static org.comixedproject.rest.library.LibrarySelectionsController.LIBRARY_SELECTIONS;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -348,6 +343,9 @@ public class LibraryController {
             .addString(JOB_UPDATE_COMICBOOKS_VOLUME, request.getVolume())
             .addString(JOB_UPDATE_COMICBOOKS_ISSUENO, request.getIssueNumber())
             .addString(JOB_UPDATE_COMICBOOKS_IMPRINT, request.getImprint())
+            .addString(
+                JOB_UPDATE_COMICBOOKS_COMIC_TYPE,
+                request.getComicType() != null ? request.getComicType().name() : "")
             .toJobParameters());
   }
 }

@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses>
  */
 
+import { ComicType } from '@app/comic-books/models/comic-type';
+
 export interface EditMultipleComicsRequest {
   ids: number[];
   publisher: string;
@@ -23,4 +25,5 @@ export interface EditMultipleComicsRequest {
   volume: string;
   issueNumber: string;
   imprint: string;
+  comicType: ComicType;
 }

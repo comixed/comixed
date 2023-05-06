@@ -17,6 +17,8 @@
  */
 
 import { API_ROOT_URL } from '../core';
+import { SelectionOption } from '@app/core/models/ui/selection-option';
+import { ComicType } from '@app/comic-books/models/comic-type';
 
 export const MARK_COMICS_DELETED_URL = `${API_ROOT_URL}/comics/mark/deleted`;
 export const MARK_COMICS_UNDELETED_URL = `${API_ROOT_URL}/comics/mark/undeleted`;
@@ -34,3 +36,21 @@ export const MISSING_VOLUME_PLACEHOLDER = '----';
 // user preferences
 export const LIBRARY_LOAD_MAX_RECORDS = 'library.load.max-records';
 export const DEFAULT_LIBRARY_LOAD_MAX_RECORDS = 1000;
+
+export const COMIC_TYPE_SELECTION_OPTIONS: SelectionOption<ComicType>[] = [
+  {
+    label: 'comic-book.label.comic-type-issue',
+    value: ComicType.ISSUE,
+    selected: false
+  },
+  {
+    label: 'comic-book.label.comic-type-trade-paperback',
+    value: ComicType.TRADEPAPERBACK,
+    selected: false
+  },
+  {
+    label: 'comic-book.label.comic-type-manga',
+    value: ComicType.MANGA,
+    selected: false
+  }
+];

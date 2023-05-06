@@ -38,6 +38,7 @@ import { Imprint } from '@app/comic-books/models/imprint';
 import { selectImprints } from '@app/comic-books/selectors/imprint-list.selectors';
 import { loadImprints } from '@app/comic-books/actions/imprint-list.actions';
 import { ComicType } from '@app/comic-books/models/comic-type';
+import { COMIC_TYPE_SELECTION_OPTIONS } from '@app/comic-books/comic-books.constants';
 
 @Component({
   selector: 'cx-comic-detail-edit',
@@ -53,23 +54,7 @@ export class ComicDetailEditComponent implements OnInit, OnDestroy {
   imprintSubscription: Subscription;
   imprintOptions: SelectionOption<Imprint>[] = [];
   imprints: Imprint[];
-  readonly comicTypeOptions: SelectionOption<ComicType>[] = [
-    {
-      label: 'comic-book.label.comic-type-issue',
-      value: ComicType.ISSUE,
-      selected: false
-    },
-    {
-      label: 'comic-book.label.comic-type-trade-paperback',
-      value: ComicType.TRADEPAPERBACK,
-      selected: false
-    },
-    {
-      label: 'comic-book.label.comic-type-manga',
-      value: ComicType.MANGA,
-      selected: false
-    }
-  ];
+  readonly comicTypeOptions = COMIC_TYPE_SELECTION_OPTIONS;
 
   constructor(
     private logger: LoggerService,
