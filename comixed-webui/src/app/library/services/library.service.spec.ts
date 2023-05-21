@@ -70,11 +70,11 @@ describe('LibraryService', () => {
     COMIC_DETAIL_3,
     COMIC_DETAIL_4
   ];
+  const IDS = COMIC_BOOKS.map(comic => comic.id);
   const READ = Math.random() > 0.5;
   const ARCHIVE_TYPE = ArchiveType.CBZ;
   const RENAME_PAGES = Math.random() > 0.5;
   const DELETE_PAGES = Math.random() > 0.5;
-  const IDS = [203, 204, 205];
   const COMIC_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -146,7 +146,7 @@ describe('LibraryService', () => {
 
   it('can start library consolidation', () => {
     service
-      .startLibraryConsolidation()
+      .startLibraryConsolidation({ ids: IDS })
       .subscribe(response => expect(response).toEqual(COMIC_BOOKS));
 
     const req = httpMock.expectOne(
@@ -154,6 +154,7 @@ describe('LibraryService', () => {
     );
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({
+      ids: IDS,
       deletePhysicalFiles: false
     } as ConsolidateLibraryRequest);
   });

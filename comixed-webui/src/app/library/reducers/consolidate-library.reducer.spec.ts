@@ -28,6 +28,8 @@ import {
 } from '@app/library/actions/consolidate-library.actions';
 
 describe('ConsolidateLibrary Reducer', () => {
+  const IDS = [1000, 1001, 1002, 1003];
+
   let state: ConsolidateLibraryState;
 
   beforeEach(() => {
@@ -48,7 +50,7 @@ describe('ConsolidateLibrary Reducer', () => {
     beforeEach(() => {
       state = reducer(
         { ...state, sending: false },
-        startLibraryConsolidation()
+        startLibraryConsolidation({ ids: IDS })
       );
     });
 

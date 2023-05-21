@@ -93,11 +93,13 @@
     },
     "consolidate": {
       "confirmation-message": "This process can take a long time and will move all comics based on the consolidation rules. Are you sure you want to continue?",
-      "confirmation-title": "Consolidate Library",
+      "confirmation-title": "Consolidate {count, plural, =0{Entire Library} =1{One Comic} other{# Comics}}",
       "effect-failure": "Failed to start library consolidation. Please verify your library confirmation and try again.",
       "effect-success": "Library consolidation started."
     },
     "context-menu": {
+      "consolidate-one": "Consolidate comic...",
+      "consolidate-selected": "Consolidate {count, plural, =1{1 comic} other{# comics}}...",
       "convert": "Recreate Archive",
       "convert-one-to-cb7": "Convert this comic to CB7",
       "convert-one-to-cbz": "Convert this comic to CBZ",

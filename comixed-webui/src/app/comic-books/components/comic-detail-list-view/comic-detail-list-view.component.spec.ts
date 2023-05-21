@@ -71,6 +71,7 @@ describe('ComicDetailListViewComponent', () => {
     COMIC_DETAIL_4,
     COMIC_DETAIL_5
   ];
+  const IDS = COMIC_DETAILS.map(detail => detail.comicId);
   const EDIT_DETAILS: EditMultipleComics = {
     publisher: 'The Publisher',
     series: 'The Series',
@@ -784,6 +785,17 @@ describe('ComicDetailListViewComponent', () => {
       it('does not fire an action', () => {
         expect(store.dispatch).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('consolidating comics', () => {
+    beforeEach(() => {
+      spyOn(component.consolidateComics, 'emit');
+      component.onConsolidateComics(IDS);
+    });
+
+    it('emits the provided ids', () => {
+      expect(component.consolidateComics.emit).toHaveBeenCalledWith(IDS);
     });
   });
 });

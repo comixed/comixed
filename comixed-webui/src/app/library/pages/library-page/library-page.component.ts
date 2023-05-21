@@ -284,20 +284,12 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onConsolidateLibrary(): void {
-    this.logger.trace('Confirming with the user to consolidate the library');
-    this.confirmationService.confirm({
-      title: this.translateService.instant(
-        'library.consolidate.confirmation-title'
-      ),
-      message: this.translateService.instant(
-        'library.consolidate.confirmation-message'
-      ),
-      confirm: () => {
-        this.logger.trace('Firing action: consolidate library');
-        this.store.dispatch(startLibraryConsolidation());
-      }
-    });
+  onConsolidateSelectedComics(ids: number[]): void {
+    this.doConsolidateLibrary(ids);
+  }
+
+  onConsolidateEntireLibrary(): void {
+    this.doConsolidateLibrary([]);
   }
 
   onPurgeLibrary(): void {
@@ -359,6 +351,23 @@ export class LibraryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   onToggleUnreadSwitch(): void {
     this.unreadSwitch = this.unreadSwitch === false;
     this.loadDataSource();
+  }
+
+  private doConsolidateLibrary(ids: number[]): void {
+    this.logger.debug('Confirming with the user to consolidate library:', ids);
+    this.confirmationService.confirm({
+      title: this.translateService.instant(
+        'library.consolidate.confirmation-title',
+        { count: ids.length }
+      ),
+      message: this.translateService.instant(
+        'library.consolidate.confirmation-message'
+      ),
+      confirm: () => {
+        this.logger.trace('Firing action: consolidate library');
+        this.store.dispatch(startLibraryConsolidation({ ids }));
+      }
+    });
   }
 
   private loadDataSource(): void {

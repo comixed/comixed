@@ -656,15 +656,39 @@ describe('LibraryPageComponent', () => {
       spyOn(confirmationService, 'confirm').and.callFake(
         (confirmation: Confirmation) => confirmation.confirm()
       );
-      component.onConsolidateLibrary();
+      component.selectedIds = IDS;
     });
 
-    it('confirms with the user', () => {
-      expect(confirmationService.confirm).toHaveBeenCalled();
+    describe('consolidating the entire library', () => {
+      beforeEach(() => {
+        component.onConsolidateEntireLibrary();
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          startLibraryConsolidation({ ids: [] })
+        );
+      });
     });
 
-    it('fires an action', () => {
-      expect(store.dispatch).toHaveBeenCalledWith(startLibraryConsolidation());
+    describe('consolidating a selected set of comics', () => {
+      beforeEach(() => {
+        component.onConsolidateSelectedComics(IDS);
+      });
+
+      it('confirms with the user', () => {
+        expect(confirmationService.confirm).toHaveBeenCalled();
+      });
+
+      it('fires an action', () => {
+        expect(store.dispatch).toHaveBeenCalledWith(
+          startLibraryConsolidation({ ids: IDS })
+        );
+      });
     });
   });
 

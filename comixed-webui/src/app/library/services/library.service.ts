@@ -98,9 +98,10 @@ export class LibraryService {
     } as SetComicReadRequest);
   }
 
-  startLibraryConsolidation(): Observable<any> {
+  startLibraryConsolidation(args: { ids: number[] }): Observable<any> {
     this.logger.trace('Start library consolidation');
     return this.http.post(interpolate(START_LIBRARY_CONSOLIDATION_URL), {
+      ids: args.ids,
       deletePhysicalFiles: false
     } as ConsolidateLibraryRequest);
   }

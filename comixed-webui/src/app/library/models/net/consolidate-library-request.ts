@@ -17,5 +17,6 @@
  */
 
 export interface ConsolidateLibraryRequest {
+  ids: number[];
   deletePhysicalFiles: boolean;
 }
